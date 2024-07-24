@@ -1,0 +1,4 @@
+const generalManagements =[
+    
+]
+export { generalManagements }

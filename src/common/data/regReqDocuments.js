@@ -1,0 +1,4 @@
+const regReqDocuments=[
+
+]
+export {regReqDocuments};

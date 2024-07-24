@@ -1,0 +1,4 @@
+const studentManagements=[
+ 
+]
+export {studentManagements}

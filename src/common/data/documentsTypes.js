@@ -1,0 +1,4 @@
+const documentsTypes=[
+
+]
+export {documentsTypes};

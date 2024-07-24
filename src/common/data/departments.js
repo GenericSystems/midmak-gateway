@@ -1,0 +1,6 @@
+const departments = [
+    {
+
+    }
+]
+export { departments }

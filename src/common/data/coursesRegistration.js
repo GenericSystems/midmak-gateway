@@ -1,0 +1,4 @@
+const coursesRegistration =[
+    
+]
+export { coursesRegistration }

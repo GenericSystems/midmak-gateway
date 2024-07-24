@@ -1,0 +1,13 @@
+export const LOGIN_USER = "LOGIN_USER"
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS"
+export const LOGIN_FAILED = "LOGIN_FAILED"
+
+export const LOGOUT_USER = "LOGOUT_USER"
+export const LOGOUT_USER_SUCCESS = "LOGOUT_USER_SUCCESS"
+export const API_ERROR = "LOGIN_API_ERROR"
+
+export const SOCIAL_LOGIN = "SOCIAL_LOGIN"
+
+export const GET_USER_ID = "GET_USER_ID"
+export const GET_USER_ID_SUCCESS = "GET_USER_ID_SUCCESS"
+export const GET_USER_ID_FAIL = "GET_USER_ID_FAIL"

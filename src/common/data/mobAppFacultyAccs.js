@@ -1,0 +1,4 @@
+const mobAppFacultyAccs =[
+    
+]
+export { mobAppFacultyAccs}

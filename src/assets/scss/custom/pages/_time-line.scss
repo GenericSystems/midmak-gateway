@@ -1,0 +1,119 @@
+
+.tree {
+  list-style: none;
+  background-color: #f8f8f8;
+  margin: 0;
+  padding: 0;
+  color: gery;
+  font-family: lucida grande, tahoma, verdana, arial, sans-serif;
+  font-size: 14px;
+
+  .node {
+    position: relative;
+
+    .link {
+      cursor: pointer;
+      position: relative;
+      padding: 0px 5px;
+      display: block;
+
+      &.active {
+        background: #eee;
+      }
+    }
+
+    .toggle {
+      position: relative;
+      display: inline-block;
+      vertical-align: top;
+      margin-left: -5px;
+      width: 24px;
+      height: 24px;
+
+      .wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -7px 0 0 -7px;
+        height: 14px;
+      }
+
+      height: 14px;
+      width: 14px;
+
+      .arrow {
+        fill: lightblue;
+        position:"left";
+      }
+    }
+
+    .header {
+      display: inline-block;
+      vertical-align: top;
+      color: #333;
+
+      .connector {
+        width: 2px;
+        height: 12px;
+        border-left: solid 2px black;
+        border-bottom: solid 2px black;
+        position: absolute;
+        top: 0px;
+        left: -21px;
+      }
+
+      .title {
+        line-height: 24px;
+        vertical-align: middle;
+      }
+    }
+
+    .subtree {
+      list-style: none;
+      padding-left: 30px;
+    }
+
+    .loading {
+      color: #e2c089;
+    }
+  }
+}
+
+.css-1cf7s5m{
+  color:black;
+}
+
+.css-79elbk{
+  color: rgb(16, 58, 105);
+}
+
+.roles-users-select div div{
+  justify-content: center;
+}
+.duallistbox-user-faculties div div select option{
+  font-size: larger;
+}
+.duallistbox-user-faculties{
+  height: 11rem;
+}
+.radio-buttons-gender-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.radio-button-gender-item {
+  margin-right: 20px; 
+}
+
+
+.preview-file-modal iframe {
+  width: 100%;
+  height: 50vh;
+}
+
+
+.preview-file-modal img {
+  width: 100%;
+  height: 50vh;
+  object-fit: contain;
+}

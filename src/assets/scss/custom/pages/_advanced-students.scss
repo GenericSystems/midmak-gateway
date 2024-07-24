@@ -1,0 +1,55 @@
+// accordion.scss
+
+.accordion{
+    margin-top: 20px;
+}
+
+.accordion-header{
+    background-color: #556ee6;
+}
+
+.accordion-item{
+    margin-bottom: 20px;
+}
+
+.accordion-button{
+    font-size: large;
+    font-weight: bold;
+    color: #ffffffe0 !important;
+}
+
+.accordion-button {
+    &:not(.collapsed) {
+        background-color:  rgb(255, 219, 120);
+        color: #464141e0;
+              }
+      }
+
+.text-danger{
+    margin-right: 10%;
+    font-weight: bold;
+}
+
+.bordered{
+    border: 1px solid #c9c9c9;
+    padding: 10px;
+    margin: 10px 0px;
+}
+
+.cardBody{
+margin-top: -10px;
+}
+
+.input-group-text{
+    background-color: rgb(209, 0, 0);
+    color: white;
+    font-weight: bold;
+}
+
+.transfer-student{
+    margin-top: 25px;
+}
+
+.documents-table{
+    margin-top: 20px;
+}

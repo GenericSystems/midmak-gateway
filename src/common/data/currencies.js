@@ -1,0 +1,4 @@
+const currencies =[
+
+]
+export {currencies};

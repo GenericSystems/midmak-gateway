@@ -1,0 +1,24 @@
+[
+    {
+        "operation": "getData",
+        "tablename": "v_studentcourses",
+        "fields": "studentid, code",
+        "limit": "1000" ,
+        "sorting": "studentId",
+        "filter": "studentid = ''121010001''",
+        "apikey": "must be defined"
+    },
+    {
+        "operation": "execProc",
+        "procedure": "sp_procname",
+        "parameters": "{param1: v1, param2: v2}",
+        "apikey": ""
+    },
+
+    {
+        "operation": "execProc",
+        "procedure": "SisApp_getFinance",
+        "parameters": "''30294470-b4dd-11ea-8c20-b036fd52a43e''",
+        "apikey": "30294470-b4dd-11ea-8c20-b036fd52a43e"
+    }
+]

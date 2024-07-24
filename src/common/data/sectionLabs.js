@@ -1,0 +1,5 @@
+const sectionLabs =[
+
+]
+
+export{sectionLabs};

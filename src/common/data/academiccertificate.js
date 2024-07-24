@@ -1,0 +1,4 @@
+const AcademicCertificate =[
+    
+]
+export {AcademicCertificate}

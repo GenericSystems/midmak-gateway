@@ -1,0 +1,5 @@
+const schedulingLectures =[
+
+]
+
+export{schedulingLectures};

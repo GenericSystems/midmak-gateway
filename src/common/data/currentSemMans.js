@@ -1,0 +1,4 @@
+const currentSemMans =[
+    
+]
+export { currentSemMans }

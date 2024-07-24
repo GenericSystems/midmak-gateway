@@ -1,0 +1,7 @@
+const passwords= [
+    {
+
+    }
+]
+
+export {passwords}

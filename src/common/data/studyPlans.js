@@ -1,0 +1,4 @@
+const studyPlans =[
+    
+]
+export { studyPlans }

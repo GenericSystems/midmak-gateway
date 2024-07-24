@@ -1,0 +1,4 @@
+const admissionConditions = [
+
+]
+export {admissionConditions}

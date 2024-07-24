@@ -1,0 +1,6 @@
+const preReqTypes =[
+    {
+        
+    }
+]
+export { preReqTypes }

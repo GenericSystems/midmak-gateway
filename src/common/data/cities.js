@@ -1,0 +1,5 @@
+const cities = [
+
+]
+
+export {cities}
