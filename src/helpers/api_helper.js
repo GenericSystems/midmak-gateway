@@ -7,7 +7,7 @@ import { GET_DATA_ITEMS } from "./url_helper"
 const token = accessToken
 
 //apply base url for axios
-const API_URL = "http://www.keyinhands.com:4000"
+const API_URL = "https://www.keyinhands.com:5555"
 
 const axiosApi = axios.create({
   baseURL: "",

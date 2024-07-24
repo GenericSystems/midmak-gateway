@@ -52,23 +52,25 @@ function* loginUser2({ payload: { user, history } }) {
   console.log(`loginUser2 ..`, user, history)
   console.log('process env', process.env)
   //getDataFromProcedure
-  const get_menu_items_req = {
+
+/*   const get_menu_items_req = {
     source: 'db',
     procedure: "webums_get_menu_items",
     parameters:"''30294470-b4dd-11ea-8c20-b036fd52a43e'', '' ''",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     email: user.email,
     password: user.password,
-  }
+  } */
   const get_login_req = {
     source: 'db',
-    procedure: "webums_login",
+    procedure: "web_login",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     email: user.email,
     password: user.password,
   }
   try {
       const response = yield call(postDbLogin, get_login_req )
+      console.log("in saga resp",response)
       if (response[0].statusLogin==0){
         localStorage.setItem("authUser", JSON.stringify(response))
         yield put(loginSuccess(response))
