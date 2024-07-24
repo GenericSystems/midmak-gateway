@@ -218,11 +218,15 @@ class CertificatesList2 extends Component {
     document.title =
       "Certificate List | keyInHands - React Admin & Dashboard Template";
 
+
+
     // const { certificates } = this.state
     const { SearchBar } = Search;
     const { certificates, certificatelevel } = this.props;
 
     const { isEdit, deleteModal } = this.state;
+
+    console.log("certificates",certificates)
 
     const { onAddNewCertificate, onUpdateCertificate } = this.props;
     const certificate = this.state.certificate;

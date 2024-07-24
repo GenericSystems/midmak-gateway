@@ -134,8 +134,10 @@ class Certificates extends Component {
       deleteModal: !prevState.deleteModal,
     }));
   };
+
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
+  
   };
 
   handleAddRow = () => {
@@ -172,7 +174,7 @@ class Certificates extends Component {
   handleDeleteRow = () => {
     const { onDeleteCertificate } = this.props;
     const { selectedRowId } = this.state;
-
+console.log("selectedRowId",selectedRowId)
     if (selectedRowId !== null) {
       onDeleteCertificate(selectedRowId);
 
@@ -226,7 +228,7 @@ class Certificates extends Component {
 
   render() {
     const { SearchBar } = Search;
-    const { certificates, certificatelevels, deleted } = this.props;
+    const { certificates, user_menu, deleted } = this.props;
     const { selectedCertLevel } = this.state;
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
@@ -240,6 +242,9 @@ class Certificates extends Component {
       showEditButton,
       showSearchButton,
     } = this.state;
+
+    console.log("user_menu",user_menu)
+
     const defaultSorting = [
       {
         dataField: "Id",
@@ -253,47 +258,25 @@ class Certificates extends Component {
         dataField: "arTitle",
         text: this.props.t("Certification(ar)"),
         sort: true,
-        editable: showEditButton,
+       // editable: showEditButton,
       },
       {
         dataField: "enTitle",
         text: "Certification",
         sort: true,
-        editable: showEditButton,
+      //  editable: showEditButton,
       },
       {
-        dataField: "totalGrades",
-        text: this.props.t("Total Grade"),
+        dataField: "code",
+        text: this.props.t("Code"),
         sort: true,
-        editable: showEditButton,
-      },
-      {
-        dataField: "certificateLevelId",
-        text: this.props.t("Certificate Level"),
-        formatter: (cell, row) => (
-          <Select
-            key={`pre_req_condition_select`}
-            options={certificatelevels}
-            onChange={newValue => {
-              this.handleSelectCertificateLevel(
-                row.Id,
-                "certificateLevelId",
-                newValue.value
-              );
-            }}
-            defaultValue={certificatelevels.find(
-              opt => opt.value == row.certificateLevelId
-            )}
-            isDisabled={!showEditButton}
-          />
-        ),
-        editable: false,
+       // editable: showEditButton,
       },
 
       {
         dataField: "delete",
         text: "",
-        hidden: !showDeleteButton,
+     //   hidden: !showDeleteButton,
         isDummyField: true,
         editable: false, // Set the "Action" column to not editable
         formatter: (cellContent, certificate) => (
@@ -411,7 +394,7 @@ class Certificates extends Component {
                                     </div>
                                   </Col>
                                   <Col sm="8">
-                                    {showAddButton && (
+                                   {/*  {showAddButton && ( */}
                                       <div className="text-sm-end">
                                         <Tooltip
                                           title={this.props.t("Add")}
@@ -425,7 +408,7 @@ class Certificates extends Component {
                                           </IconButton>
                                         </Tooltip>
                                       </div>
-                                    )}
+                                    {/* )} */}
                                   </Col>
                                 </Row>
 
