@@ -320,7 +320,7 @@ function* onDeleteSchedulingLecture({ payload, schedulingLecture }) {
 }
 function* fetchSectionLabs(obj) {
   let sectionLabCourse = obj.payload;
-  console.log("in saga obj",obj.payload)
+  console.log("obj",obj.payload)
   const facultyId = sectionLabCourse.facultyId === null ? 0 : sectionLabCourse.facultyId;
 
   const get_halls_req = {

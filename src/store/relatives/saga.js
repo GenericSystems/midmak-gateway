@@ -69,7 +69,7 @@ function* onAddNewRelative({ payload, relative }) {
   
   try {
     const response = yield call(addNewRelative, payload)
-    console.log("in saga add resp",response)
+    console.log("add resp",response)
 
     yield put(addRelativeSuccess(response[0]))
   } catch (error) {
@@ -89,8 +89,8 @@ function* onImportRelatives({ payload, relative }) {
   
   try {
     const response = yield call(importRelatives, payload)
-    console.log("in saga import resp",response)
-    console.log("in saga payload",payload)
+    console.log("import resp",response)
+    console.log("payload",payload)
     yield put(importRelativesSuccess(response))
   } catch (error) {
 

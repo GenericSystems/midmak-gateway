@@ -47,7 +47,7 @@ function* fetchSidbarContents() {
           });
         });
     });
-
+console.log("response",response)
     yield put(getSidebarContentSuccess(response));
   } catch (error) {
     yield put(getSidebarContentFail(error));
@@ -115,7 +115,7 @@ function* fetchRoleSidbar() {
 function* fetchSearch(obj) {
   let SearchValue = obj.payload.search;
   let userId = obj.payload.userId;
-  console.log("In saga obj", obj);
+  console.log("obj", obj);
   const get_Search_req = {
     source: "db",
     procedure: "SisApp_getData",

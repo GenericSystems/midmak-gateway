@@ -66,7 +66,7 @@ function* onAddNewStudentHistory({ payload }) {
 }
 
 function* onCalculateStudentHistory(obj) {
-  console.log("in saga obj",obj)
+  console.log("obj",obj)
   const payload = obj.payload
   const calculate_history = {
     source: "db",
@@ -85,7 +85,7 @@ function* onCalculateStudentHistory(obj) {
 }
 
 function* onCalculateAllStudentHistory(obj) {
-  console.log("in saga obj",obj)
+  console.log("obj",obj)
   const calculate_all_history = {
     source: "db",
     procedure: "Student_setAchHistory",

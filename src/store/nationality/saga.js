@@ -69,7 +69,7 @@ function* onAddNewNationality({ payload, nationality }) {
   
   try {
     const response = yield call(addNewNationality, payload)
-    console.log("in saga add resp",response)
+    console.log("add resp",response)
 
     yield put(addNationalitySuccess(response[0]))
   } catch (error) {
@@ -89,8 +89,8 @@ function* onImportNationalities({ payload, nationality }) {
   
   try {
     const response = yield call(importNationalities, payload)
-    console.log("in saga import resp",response)
-    console.log("in saga payload",payload)
+    console.log("import resp",response)
+    console.log("payload",payload)
     yield put(importNationalitiesSuccess(response))
   } catch (error) {
 

@@ -45,7 +45,7 @@ function* fetchCountries() {
   };
   try {
     const response = yield call(getCountries, get_countries_req);
-    console.log("In saga get resp",response)
+    console.log("get resp",response)
 
     yield put(getCountriesSuccess(response));
   } catch (error) {
@@ -92,8 +92,8 @@ function* onImportCountries({ payload, nationality }) {
   
   try {
     const response = yield call(importCountries, payload)
-    console.log("in saga import resp",response)
-    console.log("in saga payload",payload)
+    console.log("import resp",response)
+    console.log("payload",payload)
     yield put(importCountriesSuccess(response))
   } catch (error) {
 

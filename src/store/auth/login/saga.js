@@ -70,7 +70,7 @@ function* loginUser2({ payload: { user, history } }) {
   }
   try {
       const response = yield call(postDbLogin, get_login_req )
-      console.log("in saga resp",response)
+      console.log("resp",response)
       if (response[0].statusLogin==0){
         localStorage.setItem("authUser", JSON.stringify(response))
         yield put(loginSuccess(response))

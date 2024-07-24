@@ -68,8 +68,8 @@ function* fetchCities() {
     
     try {
       const response = yield call(importCities, payload)
-      console.log("in saga import resp",response)
-      console.log("in saga payload",payload)
+      console.log("import resp",response)
+      console.log("payload",payload)
       yield put(importCitiesSuccess(response))
     } catch (error) {
   

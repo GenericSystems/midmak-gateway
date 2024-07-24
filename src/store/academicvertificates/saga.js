@@ -118,7 +118,7 @@ function* fetchAcademicCertificates() {
     };
     try {
       const response = yield call(getMajorsTypes, get_majors_types);
-      console.log("in saga response",response)
+      console.log("response",response)
       yield put(getMajorsTypesSuccess(response));
     } catch (error) {
       yield put(getMajorsTypesFail(error));

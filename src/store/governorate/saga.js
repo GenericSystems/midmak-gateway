@@ -87,8 +87,8 @@ function* onImportGovernorates({ payload, nationality }) {
   
   try {
     const response = yield call(importGovernorates, payload)
-    console.log("in saga import resp",response)
-    console.log("in saga payload",payload)
+    console.log("import resp",response)
+    console.log("payload",payload)
     yield put(importGovernoratesSuccess(response))
   } catch (error) {
 

@@ -228,7 +228,7 @@ function* fetchCourses() {
 }
 function* fetchFilteredDepartments(obj) {
   let faculty = obj.payload;
-  console.log("in saga faculty",faculty)
+  console.log("faculty",faculty)
   const get_department_opt = {
     source: "db",
     procedure: "Generic_getOptions",

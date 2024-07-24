@@ -94,7 +94,7 @@ function* fetchTransportLines() {
 }
 
 function* onAddNewTransportLine({ payload }) {
-  console.log("in saga payload",payload)
+  console.log("payload",payload)
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
@@ -223,7 +223,7 @@ function* onGetTransportLineDetailsDeletedValue() {
 }
 
 function* fetchStdsTransportLine(payload) {
-  console.log("in saga pay",payload)
+  console.log("pay",payload)
   const get_transportLines_req = {
     source: "db",
     procedure: "SisApp_getData",
@@ -241,7 +241,7 @@ function* fetchStdsTransportLine(payload) {
 }
 
 function* onAddNewStdTransportLine({ payload }) {
-  console.log("in saga payload",payload)
+  console.log("payload",payload)
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
