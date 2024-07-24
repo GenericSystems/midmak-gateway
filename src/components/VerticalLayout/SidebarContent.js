@@ -37,6 +37,7 @@ class SidebarContent extends Component {
     if (user_menu && !user_menu.length) {
       onGetUserSideBar({ userId });
       this.setState({ user_menu });
+
     }
   }
 
@@ -152,7 +153,7 @@ class SidebarContent extends Component {
   render() {
     const { user_menu, filtered_items, t } = this.props;
     const { searchTerm } = this.state;
-
+console.log("in side bar user_menu",user_menu)
     return (
       <React.Fragment>
         <SimpleBar className="h-100" ref={this.refDiv}>

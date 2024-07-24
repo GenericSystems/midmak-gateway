@@ -414,7 +414,7 @@ function* fetchLastRequestNum(obj) {
      }  
   try {
     const response = yield call(getLastReqNum, get_lastReqNum)
-    console.log("response",response)
+    
     yield put(getLastReqNumSuccess(response[0]))
   } catch (error) {
     yield put(getLastReqNumFail(error))
