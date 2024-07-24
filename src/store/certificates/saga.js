@@ -38,27 +38,11 @@ getCertificateDeletedValue,
 
 function* fetchCertificates() {
 
-   //get certificate level options
-const get_certificatelevel_opt = {
-  source: "db",
-  procedure: "Generic_getOptions",
-  apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  tablename: "settings_certificateLevel",
-  fields: "Id,arcertificatelevel",
-  filter: "checkLevel=1"
-};
-try {
-  const response = yield call(getCertificateLevels, get_certificatelevel_opt);
-  yield put(getCertificateLevelsSuccess(response));
-} catch (error) {
-  yield put(getCertificateLevelsFail(error));
-}
-
   const get_Certificates_req = {
     source: 'db',
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_Certificates"
+    tablename: "Settings_CertificateType"
     } ;  
   try {
   const response = yield call(getCertificates, get_Certificates_req)
@@ -75,7 +59,7 @@ delete payload["id"];
 payload["source"] = 'db';
 payload["procedure"] = 'SisApp_addData';
 payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-payload["tablename"] = 'settings_Certificates';
+payload["tablename"] = 'Settings_CertificateType';
 try {
         const response = yield call(addNewCertificate, payload)
         yield put(addCertificateSuccess(response[0]))
@@ -88,7 +72,7 @@ function* onUpdateCertificate({ payload }) {
     payload["source"] = 'db';
     payload["procedure"] = 'SisApp_updateData';
     payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-    payload["tablename"] = 'settings_Certificates';
+    payload["tablename"] = 'Settings_CertificateType';
     try {
         const respupdate = yield call(updateCertificate, payload)
         yield put(updateCertificateSuccess(respupdate[0]))
@@ -101,7 +85,7 @@ function* onDeleteCertificate({ payload}) {
     payload["source"] = 'db';
     payload["procedure"] = 'SisApp_removeData';
     payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-    payload["tablename"] = 'settings_Certificates';
+    payload["tablename"] = 'Settings_CertificateType';
     try {
         const respdelete = yield call(deleteCertificate, payload)
         yield put(deleteCertificateSuccess(respdelete[0]))
