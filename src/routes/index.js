@@ -210,8 +210,8 @@ import StudyPlansList from "../pages/Faculties/study-plans";
 //TempStudentsStatistics
 import TempStudentsStatisticsDiagrams from "../pages/Addmission/Reports/students-statistics";
 
-//Hall
-import HallsList from "../pages/Setting/Faculties/halls";
+//Sector
+import SectorsList from "../pages/Setting/Faculties/sectors";
 //Academic  loads
 
 import AcademicLoadList from "../pages/Setting/Faculties/Academic-Load";
@@ -496,8 +496,8 @@ const authProtectedRoutes = [
   //mobAppFacultyAccs
   { path: "/mob-app-faculty-accs", component: MobAppFacultyAccsList },
 
-  //halls
-  { path: "/halls", component: HallsList },
+  //sectors
+  { path: "/sectors", component: SectorsList },
 
   //Academic loads
   { path: "/Academic-Load", component: AcademicLoadList },

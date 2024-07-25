@@ -67,8 +67,8 @@ export * from "./general-management/actions";
 //mobAppFacultyAcc
 export * from "./mob-app-faculty-accs/actions";
 
-//hall
-export * from "./halls/actions";
+//sector
+export * from "./sectors/actions";
 //StudyPlan
 export * from "./study-plans/actions";
 

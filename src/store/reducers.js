@@ -70,8 +70,8 @@ import studyPlans from "./study-plans/reducer"
 //StudentsStatistics
 import studentsStatistics from "./students-statistics/reducer"
 
-//halls
-import halls from "./halls/reducer"
+//sectors
+import sectors from "./sectors/reducer"
 
 //preReqTypes
 import reqTypes from "./req-types/reducer"
@@ -321,7 +321,7 @@ const rootReducer = combineReducers({
   generateSIDs,
   generalManagements,
   mobAppFacultyAccs,
-  halls,
+  sectors,
   studentsStatistics,
   studyPlans,
   courses,

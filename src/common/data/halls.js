@@ -1,4 +1,4 @@
-const halls=[
+const sectors=[
 
 ]
-export {halls};
+export {sectors};

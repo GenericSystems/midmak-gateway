@@ -13,7 +13,7 @@ import {
   generateSIDs,
   mobAppFacultyAccs,
   admissionConditions,
-  Halls,
+  Sectors,
   prereqs,
   studyPlans,
   preReqTypes,
@@ -1198,53 +1198,53 @@ const fakeBackend = () => {
     });
   });
 
-  // Hall
-  mock.onGet(url.GET_HALLS).reply(() => {
-    console.log("Calling mock get halls");
+  // Sector
+  mock.onGet(url.GET_SECTORS).reply(() => {
+    console.log("Calling mock get sectors");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (halls) {
+        if (sectors) {
           // Passing fake JSON data as response
-          resolve([200, halls]);
+          resolve([200, sectors]);
         } else {
-          reject([400, "Cannot get halls"]);
+          reject([400, "Cannot get sectors"]);
         }
       });
     });
   });
 
-  mock.onPut(url.UPDATE_HALL).reply(hall => {
-    console.log("in mock onPut reply updating ...", hall);
+  mock.onPut(url.UPDATE_SECTOR).reply(sector => {
+    console.log("in mock onPut reply updating ...", sector);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("updated hall");
-        if (hall && hall.data) {
+        console.log("updated sector");
+        if (sector && sector.data) {
           // Passing fake JSON data as response
-          resolve([200, hall.data]);
+          resolve([200, sector.data]);
         } else {
-          reject([400, "Cannot update hall"]);
+          reject([400, "Cannot update sector"]);
         }
       });
     });
   });
-  mock.onDelete(url.DELETE_HALL).reply(config => {
+  mock.onDelete(url.DELETE_SECTOR).reply(config => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("deleted hall");
+        console.log("deleted sector");
         if (config && config.headers) {
           // Passing fake JSON data as response
-          resolve([200, config.headers.hall]);
+          resolve([200, config.headers.sector]);
         } else {
-          reject([400, "Cannot delete hall"]);
+          reject([400, "Cannot delete sector"]);
         }
       });
     });
   });
 
-  mock.onPost(url.ADD_NEW_HALL).reply(order => {
+  mock.onPost(url.ADD_NEW_SECTOR).reply(order => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("added hall");
+        console.log("added sector");
         if (order && order.data) {
           // Passing fake JSON data as response
           resolve([200, order.data]);

@@ -20,7 +20,7 @@ import {
   GET_SCHEDULE_TIMING_DESCS,
   GET_DEFAULT_SETTINGS,
   GET_SCHEDULE_MSG_VALUE,
-  GET_HALL_TIMINGS
+  GET_SECTOR_TIMINGS
 } from "./actionTypes";
 
 import { GET_FILTERED_DEPARTMENTS } from "../departments/actionTypes";
@@ -61,8 +61,8 @@ import {
   getScheduleTimingDescsFail,
 getScheduleMsgValueSuccess,
 getScheduleMsgValueFail,
-getHallTimingsSuccess,
-getHallTimingsFail
+getSectorTimingsSuccess,
+getSectorTimingsFail
 } from "./actions";
 import {
   getDepartmentsSuccess,
@@ -75,7 +75,7 @@ import {
   getFilteredAcademicCertificatesSuccess,
   getFilteredAcademicCertificatesFail,
 } from "../academicvertificates/actions";
-import { getHallsSuccess, getHallsFail } from "../halls/actions";
+import { getSectorsSuccess, getSectorsFail } from "../sectors/actions";
 import { getWeekDaysSuccess, getWeekDaysFail } from "../weekdays/actions";
 import { GET_FILTERED_ACADEMIC_CERTIFICATES } from "../academicvertificates/actionTypes";
 
@@ -91,7 +91,7 @@ import {
   addNewSchedulingLecture,
   updateSchedulingLecture,
   deleteSchedulingLecture,
-  getHalls,
+  getSectors,
   getInstructors,
   getSectionLabs,
   getSectionLabProfile,
@@ -110,7 +110,7 @@ import {
   getFilteredDepartments,
   getFilteredAcademicCertificates,
   getScheduleMsgValue,
-  getHallTimings
+  getSectorTimings
 } from "../../helpers/fakebackend_helper";
 import {
   getFacultiesSuccess,
@@ -333,10 +333,10 @@ function* fetchSectionLabs(obj) {
   };
 
   try {
-    const response = yield call(getHalls, get_halls_req);
-    yield put(getHallsSuccess(response));
+    const response = yield call(getSectors, get_halls_req);
+    yield put(getSectorsSuccess(response));
   } catch (error) {
-    yield put(getHallsFail(error));
+    yield put(getSectorsFail(error));
   }
   const get_sectionLabs_req = {
     source: "db",
@@ -425,7 +425,7 @@ function* fetchScheduleTimings(obj) {
   }
 }
 
-function* fetchHallTimings(obj) {
+function* fetchSectorTimings(obj) {
   let hallTimingSL = obj.payload;
   let filter 
   if(hallTimingSL.check==0){
@@ -441,11 +441,11 @@ function* fetchHallTimings(obj) {
     filter: filter,
   };
   try {
-    const response = yield call(getHallTimings, get_hall_timings);
+    const response = yield call(getSectorTimings, get_hall_timings);
 
-    yield put(getHallTimingsSuccess(response));
+    yield put(getSectorTimingsSuccess(response));
   } catch (error) {
-    yield put(getHallTimingsFail(error));
+    yield put(getSectorTimingsFail(error));
   }
 }
 
@@ -545,7 +545,7 @@ function* schedulingLecturesSaga() {
   );
   yield takeEvery(GET_DEFAULT_SETTINGS, fetchDefaultSettings);
   yield takeEvery(GET_SCHEDULE_MSG_VALUE, onGetScheduleMsgValue);
-  yield takeEvery(GET_HALL_TIMINGS, fetchHallTimings);
+  yield takeEvery(GET_SECTOR_TIMINGS, fetchSectorTimings);
 }
 
 export default schedulingLecturesSaga;

@@ -74,11 +74,11 @@ import {
   getScheduleTimingDescs,
   fetchDefaultSettings,
   getScheduleMsgValue,
-  getHallTimings,
+  getSectorTimings,
 } from "store/scheduling-lectures/actions";
 import {
-  getHalls
-} from "store/halls/actions";
+  getSectors
+} from "store/sectors/actions";
 import { fetchYearsSemesters } from "store/general-management/actions";
 import { getFilteredAcademicCertificates } from "store/academicvertificates/actions";
 import { returnMessage, schedulingLectures } from "common/data";
@@ -110,7 +110,7 @@ class SchedulingLecture extends Component {
       selectedRowData: null,
       selectedRowSectionLab: null,
       isNestedModalOpen: false,
-      isHallModalOpen: false,
+      isSectorModalOpen: false,
       selectedOption: "",
       values: "",
       deleteModal: false,
@@ -124,10 +124,10 @@ class SchedulingLecture extends Component {
       ifUpdateSchedule: 0,
       selectedSchedule: null,
       showMessage: false,
-      oldHallId: null,
-      newHallId: null,
-      defaultHallName: "",
-      matchingHallModal: null,
+      oldSectorId: null,
+      newSectorId: null,
+      defaultSectorName: "",
+      matchingSectorModal: null,
       matchingTimings: [],
       matchingError: null,
       showAddButton: false,
@@ -172,7 +172,7 @@ class SchedulingLecture extends Component {
     const {
       onGetSchedulingLectures,
       offeringLectures,
-      halls,
+      sectors,
       instructors,
       sectionLabs,
       departments,
@@ -195,7 +195,7 @@ class SchedulingLecture extends Component {
       onfetchSetting();
       onfetchDefaultSettings();
       this.setState({ offeringLectures });
-      this.setState({ halls });
+      this.setState({ sectors });
       this.setState({ faculties });
       this.setState({ instructors });
       this.setState({ departments });
@@ -417,7 +417,7 @@ class SchedulingLecture extends Component {
       sectionLabData,
       onGetScheduleTimingDescs,
       onGetScheduleTimings,
-      onGetHallTimings,
+      onGetSectorTimings,
     } = this.props;
     this.setState(prevState => ({
       isModalOpen: !prevState.isModalOpen,
@@ -425,14 +425,14 @@ class SchedulingLecture extends Component {
     this.setState({ selectedRowSectionLab: null });
     onGetScheduleTimings(0);
     onGetScheduleTimingDescs(0);
-    onGetHallTimings(0);
+    onGetSectorTimings(0);
     this.setState({ selectedRow: null, 
       selectedType: ""
     });
   }
   toggleNestedModal = () => {
     const { isEdit, selectedOption, selectedSchedule } = this.state;
-    const { onGetScheduleTimings,onGetScheduleTimingDescs,onGetHallTimings } = this.props;
+    const { onGetScheduleTimings,onGetScheduleTimingDescs,onGetSectorTimings } = this.props;
     console.log("isEdit",isEdit)
     if (selectedOption === "Section") {
       if (isEdit) {
@@ -445,7 +445,7 @@ class SchedulingLecture extends Component {
           },
           isEdit: false,
           selectedOption: "",
-          defaultHallName: "",
+          defaultSectorName: "",
         });
 
           }
@@ -460,7 +460,7 @@ class SchedulingLecture extends Component {
           },
           isEdit: false,
           selectedOption: "",
-          defaultHallName: "",
+          defaultSectorName: "",
         });
         
       }
@@ -474,18 +474,18 @@ class SchedulingLecture extends Component {
       selectedRowSectionLab: null,
     });
   };
-  toggleHallModal = () => {
+  toggleSectorModal = () => {
     this.setState(prevState => ({
-      isHallModalOpen: !prevState.isHallModalOpen,
+      isSectorModalOpen: !prevState.isSectorModalOpen,
     }));
   };
   toggleMatchingModal = () => {
     this.setState(prevState => ({
-      matchingHallModal: !prevState.matchingHallModal,
+      matchingSectorModal: !prevState.matchingSectorModal,
     }));
   };
   handleChangeOption = event => {
-  const {onGetScheduleTimings,onGetScheduleTimingDescs,onGetHallTimings} = this.props
+  const {onGetScheduleTimings,onGetScheduleTimingDescs,onGetSectorTimings} = this.props
     this.setState({
       selectedOption: event.target.value,
     });
@@ -496,12 +496,12 @@ class SchedulingLecture extends Component {
         instructorName: "",
         hallName: "",
       },
-      defaultHallName: "",
+      defaultSectorName: "",
     });
 
     onGetScheduleTimings(0);
         onGetScheduleTimingDescs(0);
-        onGetHallTimings(0);
+        onGetSectorTimings(0);
   };
   handleSave = values => {
     let flag = 0;
@@ -511,13 +511,13 @@ class SchedulingLecture extends Component {
       isEdit,
       sectionLabData,
       selectedSchedule,
-      oldHallId,
-      newHallId,
+      oldSectorId,
+      newSectorId,
     } = this.state;
 
     const {
       onAddNewSectionLab,
-      halls,
+      sectors,
       onUpdateSectionLab,
       instructors,
       sectionLabs,
@@ -562,9 +562,9 @@ class SchedulingLecture extends Component {
     }
 
     if (sectionInfo.hallId) {
-      const hallExists = halls.some(hall => hall.value === sectionInfo.hallId);
+      const hallExists = sectors.some(sector => sector.value === sectionInfo.hallId);
       if (!hallExists) {
-        fieldErrors.hallId = "Please select a valid hall.";
+        fieldErrors.hallId = "Please select a valid sector.";
       }
     }
     if (sectionInfo.facultyId) {
@@ -615,13 +615,13 @@ class SchedulingLecture extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       if (sectionInfo.hallId !== undefined) {
-        const selectedHallName = sectionInfo.hallId;
-        const selectedHall = halls.find(
-          hall => hall.value === selectedHallName
+        const selectedSectorName = sectionInfo.hallId;
+        const selectedSector = sectors.find(
+          sector => sector.value === selectedSectorName
         );
 
-        if (selectedHall) {
-          sectionInfo.hallId = selectedHall.key;
+        if (selectedSector) {
+          sectionInfo.hallId = selectedSector.key;
         } else if (isEdit) {
           sectionInfo.hallId = 0;
         } else {
@@ -779,7 +779,7 @@ class SchedulingLecture extends Component {
 
 console.log("in edit SLD",SLD)   
  this.setState({
-      defaultHallName: SLD.hallName,
+      defaultSectorName: SLD.hallName,
       isEdit: true,
       sectionLabData: {
         Id: SLD.Id,
@@ -800,25 +800,25 @@ console.log("in edit SLD",SLD)
       yearSemesterId: this.state.selectedSchedule["value"],
       check: 1,
     };
-    this.props.onGetHallTimings(OB);
+    this.props.onGetSectorTimings(OB);
 
     this.toggleNestedModal();
   };
-  handleViewHallSchedule = SLD => {
-    const { halls, currentSemester, onGetHallTimings } = this.props;
+  handleViewSectorSchedule = SLD => {
+    const { sectors, currentSemester, onGetSectorTimings } = this.props;
     const { selectedSchedule } = this.state;
-    const findingHallId = halls.find(
-      hall => hall.value === SLD.hallName
+    const findingSectorId = sectors.find(
+      sector => sector.value === SLD.hallName
     ).key;
 
     const OB = {
-      hallId: findingHallId,
+      hallId: findingSectorId,
       yearSemesterId: selectedSchedule["value"],
       check: 0,
     };
 
-    onGetHallTimings(OB);
-    this.toggleHallModal();
+    onGetSectorTimings(OB);
+    this.toggleSectorModal();
   };
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
@@ -971,35 +971,35 @@ console.log("in edit SLD",SLD)
     this.setState({ selectedSchedule: value });
     onGetSchedulingLectures(value["value"]);
   };
-  onChangeHall(oldValue,newValue) {
+  onChangeSector(oldValue,newValue) {
 console.log("oldValue",oldValue)
-    const { halls, hallTimings,scheduleTimings } = this.props;
+    const { sectors, hallTimings,scheduleTimings } = this.props;
     if(oldValue===null || oldValue ===undefined|| oldValue === "") {
       oldValue = ""
     }
     console.log("oldValue after condition",oldValue)
-    this.setState({ defaultHallName: newValue });
+    this.setState({ defaultSectorName: newValue });
     console.log("scheduleTimings",scheduleTimings)
-    if (halls.some(hall => hall.value === newValue)) {
-      let oldHallId = null
+    if (sectors.some(sector => sector.value === newValue)) {
+      let oldSectorId = null
       if(oldValue !== ""){
-       oldHallId = halls.find(hall => hall.value === oldValue).key;
+       oldSectorId = sectors.find(sector => sector.value === oldValue).key;
     }
-      const newHallId = halls.find(hall => hall.value === newValue).key;
-      if (oldValue === "" || oldHallId != newHallId) {
-        const newHallTimings = hallTimings.filter(
-          timing => timing.hallId === newHallId
+      const newSectorId = sectors.find(sector => sector.value === newValue).key;
+      if (oldValue === "" || oldSectorId != newSectorId) {
+        const newSectorTimings = hallTimings.filter(
+          timing => timing.hallId === newSectorId
         );
         const isMatching = this.hasMatchingTimings(
           scheduleTimings,
-          newHallTimings
+          newSectorTimings
         );
         if (isMatching == true) {
           const matchingTimings = this.joinMatchingTimings(
             scheduleTimings,
-            newHallTimings
+            newSectorTimings
           );
-          this.setState({ defaultHallName: oldValue, matchingTimings });
+          this.setState({ defaultSectorName: oldValue, matchingTimings });
           this.setState({
             matchingError: `${newValue} Intersects `,
           });
@@ -1013,7 +1013,7 @@ console.log("oldValue",oldValue)
       schedulingLectures,
       t,
       offeringLectures,
-      halls,
+      sectors,
       sectionLabs,
       instructors,
       faculties,
@@ -1034,7 +1034,7 @@ console.log("oldValue",oldValue)
       isModalOpen,
       selectedRowData,
       isNestedModalOpen,
-      isHallModalOpen,
+      isSectorModalOpen,
       selectedOption,
       deleteModal,
       isEdit,
@@ -1046,7 +1046,7 @@ console.log("oldValue",oldValue)
       selectedRowSectionLab,
       selectedSchedule,
       showMessage,
-      matchingHallModal,
+      matchingSectorModal,
       matchingTimings,
       matchingError,
       showEditButton,
@@ -1332,7 +1332,7 @@ console.log("oldValue",oldValue)
       },
       {
         dataField: "hallName",
-        text: t("Hall"),
+        text: t("Sector"),
         editable: false,
         sort: true,
       },
@@ -1364,12 +1364,12 @@ console.log("oldValue",oldValue)
                 ></i>
               </Link>
             </Tooltip>
-            <Tooltip title={t("View Hall Timing")} placement="top">
+            <Tooltip title={t("View Sector Timing")} placement="top">
               <Link className="" to="#">
                 <i
                   className="mdi mdi-google-classroom font-size-18"
                   id="edittooltip"
-                  onClick={() => this.handleViewHallSchedule(sectionLabData)}
+                  onClick={() => this.handleViewSectorSchedule(sectionLabData)}
                 ></i>
               </Link>
             </Tooltip>
@@ -1785,11 +1785,11 @@ const isSelectedType = row.type ===this.state.selectedType
                                                               scheduledTiming.msg ===
                                                               1
                                                                 ? t(
-                                                                    "Busy Hall & Instructor"
+                                                                    "Busy Sector & Instructor"
                                                                   )
                                                                 : scheduledTiming.msg ===
                                                                   2
-                                                                ? t("Busy Hall")
+                                                                ? t("Busy Sector")
                                                                 : scheduledTiming.msg ===
                                                                   3
                                                                 ? t(
@@ -1915,7 +1915,7 @@ const isSelectedType = row.type ===this.state.selectedType
                                               }}
                                             ></div>
                                             <p className="description">
-                                              {t("Busy Hall")}
+                                              {t("Busy Sector")}
                                             </p>
                                           </div>
                                           <div className="col-2">
@@ -1948,7 +1948,7 @@ const isSelectedType = row.type ===this.state.selectedType
                                               }}
                                             ></div>
                                             <p className="description">
-                                              {t("Busy Hall & Instructor")}
+                                              {t("Busy Sector & Instructor")}
                                             </p>
                                           </div>
                                         </div>
@@ -1958,12 +1958,12 @@ const isSelectedType = row.type ===this.state.selectedType
                                 </Col>
                               </Row>
                               <Modal
-                                isOpen={isHallModalOpen}
-                                toggle={this.toggleHallModal}
+                                isOpen={isSectorModalOpen}
+                                toggle={this.toggleSectorModal}
                                 className="modal-lg"
                               >
                                 <ModalHeader
-                                  toggle={this.toggleHallModal}
+                                  toggle={this.toggleSectorModal}
                                 ></ModalHeader>
                                 <ModalBody>
                                   <div className="timetable-container">
@@ -2006,10 +2006,10 @@ const isSelectedType = row.type ===this.state.selectedType
                                                       title={
                                                         hallTiming.msg === 1
                                                           ? t(
-                                                              "Busy Hall & Instructor"
+                                                              "Busy Sector & Instructor"
                                                             )
                                                           : hallTiming.msg === 2
-                                                          ? t("Busy Hall")
+                                                          ? t("Busy Sector")
                                                           : hallTiming.msg === 3
                                                           ? t("Busy Instructor")
                                                           : null
@@ -2069,7 +2069,7 @@ const isSelectedType = row.type ===this.state.selectedType
                                 </ModalBody>
                               </Modal>
                               <Modal
-                                isOpen={matchingHallModal}
+                                isOpen={matchingSectorModal}
                                 toggle={this.toggleMatchingModal}
                                 className="modal-lg"
                               >
@@ -2135,11 +2135,11 @@ const isSelectedType = row.type ===this.state.selectedType
                                                       title={
                                                         matchingTiming.msg === 1
                                                           ? t(
-                                                              "Busy Hall & Instructor"
+                                                              "Busy Sector & Instructor"
                                                             )
                                                           : matchingTiming.msg ===
                                                             2
-                                                          ? t("Busy Hall")
+                                                          ? t("Busy Sector")
                                                           : matchingTiming.msg ===
                                                             3
                                                           ? t("Busy Instructor")
@@ -2273,13 +2273,13 @@ const isSelectedType = row.type ===this.state.selectedType
 
                                             if (
                                               values.hallId &&
-                                              !halls.some(
-                                                hall =>
-                                                  hall.value === values.hallId
+                                              !sectors.some(
+                                                sector =>
+                                                  sector.value === values.hallId
                                               )
                                             ) {
                                               errors.hallId =
-                                                "Please select a valid hall.";
+                                                "Please select a valid sector.";
                                             }
                                             if (
                                               values.facultyId &&
@@ -2439,7 +2439,7 @@ const isSelectedType = row.type ===this.state.selectedType
                                                           }
                                                           value={
                                                             this.state
-                                                              .defaultHallName
+                                                              .defaultSectorName
                                                           }
                                                           onChange={e => {
                                                             handleChange(e);
@@ -2450,7 +2450,7 @@ const isSelectedType = row.type ===this.state.selectedType
                                                                 sectionLabData.hallName) ||
                                                               "";
 
-                                                            this.onChangeHall(
+                                                            this.onChangeSector(
                                                               defaultValue,
                                                               newValue
                                                             );
@@ -2460,10 +2460,10 @@ const isSelectedType = row.type ===this.state.selectedType
                                                         />
                                                         <datalist id="hallIdList">
                                                           {" "}
-                                                          {halls.map(hall => (
+                                                          {sectors.map(sector => (
                                                             <option
-                                                              key={hall.key}
-                                                              value={hall.value}
+                                                              key={sector.key}
+                                                              value={sector.value}
                                                             />
                                                           ))}
                                                         </datalist>
@@ -2682,9 +2682,9 @@ const isSelectedType = row.type ===this.state.selectedType
                                             }
                                             if (
                                               values.hallId &&
-                                              !halls.some(
-                                                hall =>
-                                                  hall.value === values.hallId
+                                              !sectors.some(
+                                                sector =>
+                                                  sector.value === values.hallId
                                               )
                                             ) {
                                               errors.hallId =
@@ -2846,7 +2846,7 @@ const isSelectedType = row.type ===this.state.selectedType
                                                           autoComplete="Off"
                                                           value={
                                                             this.state
-                                                              .defaultHallName
+                                                              .defaultSectorName
                                                           }
                                                           onChange={e => {
                                                             handleChange(e);
@@ -2857,7 +2857,7 @@ const isSelectedType = row.type ===this.state.selectedType
                                                                 sectionLabData.hallName) ||
                                                               "";
 
-                                                            this.onChangeHall(
+                                                            this.onChangeSector(
                                                               defaultValue,
                                                               newValue
                                                             );
@@ -2865,10 +2865,10 @@ const isSelectedType = row.type ===this.state.selectedType
                                                         />
                                                         <datalist id="hallIdList">
                                                           {" "}
-                                                          {halls.map(hall => (
+                                                          {sectors.map(sector => (
                                                             <option
-                                                              key={hall.key}
-                                                              value={hall.value}
+                                                              key={sector.key}
+                                                              value={sector.value}
                                                             />
                                                           ))}
                                                         </datalist>
@@ -3146,7 +3146,7 @@ const isSelectedType = row.type ===this.state.selectedType
 
 const mapStateToProps = ({
   schedulingLectures,
-  halls,
+  sectors,
   mobAppFacultyAccs,
   departments,
   weekDays,
@@ -3159,7 +3159,7 @@ const mapStateToProps = ({
   return {
     schedulingLectures: schedulingLectures.schedulingLectures,
     offeringLectures: schedulingLectures.offeringLectures,
-    halls: halls.halls,
+    sectors: sectors.sectors,
     instructors: schedulingLectures.instructors,
     sectionLabs: schedulingLectures.sectionLabs,
     scheduleTimings: schedulingLectures.scheduleTimings,
@@ -3205,7 +3205,7 @@ const mapDispatchToProps = dispatch => ({
   onfetchSetting: () => dispatch(fetchYearsSemesters()),
   onfetchDefaultSettings: () => dispatch(fetchDefaultSettings()),
   onGetScheduleMsgValue: () => dispatch(getScheduleMsgValue()),
-  onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
+  onGetSectorTimings: SectLab => dispatch(getSectorTimings(SectLab)),
 });
 
 export default connect(

@@ -37,8 +37,8 @@ import {
   GET_FILTERED_SECTIONS_FAIL,
 GET_SCHEDULE_MSG_VALUE_SUCCESS,
 GET_SCHEDULE_MSG_VALUE_FAIL,
-GET_HALL_TIMINGS_SUCCESS,
-GET_HALL_TIMINGS_FAIL
+GET_SECTOR_TIMINGS_SUCCESS,
+GET_SECTOR_TIMINGS_FAIL
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -301,12 +301,12 @@ const schedulingLectures = (state = INIT_STATE, action) => {
           error: action.payload,
         };
       
-  case GET_HALL_TIMINGS_SUCCESS:
+  case GET_SECTOR_TIMINGS_SUCCESS:
     return {
       ...state,
       hallTimings: action.payload,
     };
-  case GET_HALL_TIMINGS_FAIL:
+  case GET_SECTOR_TIMINGS_FAIL:
     return {
       ...state,
       error: action.payload,

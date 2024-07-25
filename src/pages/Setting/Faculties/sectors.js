@@ -30,21 +30,20 @@ import ToolkitProvider, {
 import Breadcrumbs from "components/Common/Breadcrumb";
 import Tooltip from "@mui/material/Tooltip";
 import {
-  getHalls,
-  addNewHall,
-  updateHall,
-  deleteHall,
-  getHallDeletedValue,
-} from "store/halls/actions";
+  getSectors,
+  addNewSector,
+  updateSector,
+  deleteSector,
+  getSectorDeletedValue,
+} from "store/sectors/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
 } from "react-bootstrap-table2-paginator";
-import { getFaculties } from "store/mob-app-faculty-accs/actions";
 
 import { isEmpty, size, map } from "lodash";
 
-const HALL_STORAGE_KEY = "editableHall";
+const SECTOR_STORAGE_KEY = "editableSector";
 
 import Select from "react-select";
 import {
@@ -53,12 +52,12 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-class HallsList extends Component {
+class SectorsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      halls: [],
-      hall: "",
+      sectors: [],
+      sector: "",
       showAlert: null,
       showAddButton: false,
       showEditButton: false,
@@ -71,17 +70,17 @@ class HallsList extends Component {
   }
 
   componentDidMount() {
-    const { halls, onGetHalls, faculties, deleted, user_menu,onGetFaculties } = this.props;
+    const { sectors, onGetSectors, deleted, user_menu } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (halls && !halls.length) {
-      onGetFaculties();
+    if (sectors && !sectors.length) {
+      onGetSectors();
 
     }
-    this.setState({ halls });
-    this.setState({ faculties, deleted });
+    this.setState({ sectors });
+    this.setState({  deleted });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -149,34 +148,32 @@ class HallsList extends Component {
   };
 
   handleAddRow = () => {
-    const {selectedFacultyId} = this.state
-    const { onAddNewHall, halls } = this.props;
+    const { onAddNewSector, sectors } = this.props;
     const newRow = {
-      hallName: "-----",
-      facultyId: selectedFacultyId
+      arTitle: "-----",
 
     };
 
-    const emptyRowsExist = halls.some(
-      hall => hall.hallName.trim() === "-----"
+    const emptyRowsExist = sectors.some(
+      sector => sector.arTitle.trim() === "-----"
       // ||
-      // hall.facultyId.trim() === ""
+      // sector.facultyId.trim() === ""
     );
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewHall(newRow);
+      onAddNewSector(newRow);
     }
   };
 
   handleDeleteRow = () => {
-    const { onDeleteHall } = this.props;
+    const { onDeleteSector } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteHall(selectedRowId);
+      onDeleteSector(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -185,23 +182,23 @@ class HallsList extends Component {
       });
     }
   };
-  handleHallDataChange = (rowId, fieldName, fieldValue) => {
-    const { onUpdateHall, halls } = this.props;
+  handleSectorDataChange = (rowId, fieldName, fieldValue) => {
+    const { onUpdateSector, sectors } = this.props;
 
-    const isDuplicate = halls.some(
-      hall => hall.Id !== rowId && hall.hallName.trim() === fieldValue.trim()
-      // hall.facultyId.trim() === fieldValue.trim())
+    const isDuplicate = sectors.some(
+      sector => sector.Id !== rowId && sector.arTitle.trim() === fieldValue.trim()
+      // sector.facultyId.trim() === fieldValue.trim())
     );
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateHall(onUpdate);
+      onUpdateSector(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateHall(onUpdate);
+      onUpdateSector(onUpdate);
     }
   };
 
@@ -210,44 +207,24 @@ class HallsList extends Component {
   };
 
   handleSelectFaculty(rowId, fieldName, selectedValue) {
-    const { onUpdateHall } = this.props;
+    const { onUpdateSector } = this.props;
     let onUpdate = { Id: rowId, [fieldName]: selectedValue };
-    onUpdateHall(onUpdate);
+    onUpdateSector(onUpdate);
   }
 
   handleSuccessClose = () => {
-    const { onGetHallDeletedValue } = this.props;
+    const { onGetSectorDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetHallDeletedValue();
+    onGetSectorDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetHallDeletedValue } = this.props;
+    const { onGetSectorDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetHallDeletedValue();
+    onGetSectorDeletedValue();
   };
-  handleFacultyChange = e =>{
-    const {
-      onGetHalls,
-      faculties
-    } = this.props;
-
-    const selectedValue = e.target.value;
-    const selectedFaculty = faculties.find(
-      faculty => faculty.title === selectedValue
-    );
-    
-    console.log(selectedFaculty)
-    if(selectedFaculty){
-      onGetHalls({facultyId :selectedFaculty.Id})
-      this.setState({
-        selectedFacultyId: selectedFaculty.Id
-      })
-    }
-    
-  }
   render() {
-    const { halls, t, faculties, deleted } = this.props;
+    const { sectors, t, deleted } = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -269,36 +246,36 @@ class HallsList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "hallName",
-        text: this.props.t("Hall Name"),
+        dataField: "arTitle",
+        text: this.props.t("Sector (ar)"),
         sort: true,
-        editable: showEditButton,
+       // editable: showEditButton,
       },
      
       {
-        dataField: "teachingCapacity",
-        text: this.props.t("Teaching Capacity"),
+        dataField: "enTitle",
+        text: this.props.t("Sector"),
         sort: true,
-        editable: showEditButton,
+       // editable: showEditButton,
       },
       {
-        dataField: "examinationCapacity",
-        text: this.props.t("Examination Capacity"),
+        dataField: "code",
+        text: this.props.t("Code"),
         sort: true,
-        editable: showEditButton,
+       // editable: showEditButton,
       },
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
-        hidden: !showDeleteButton,
-        formatter: (cellContent, hall) => (
+       // hidden: !showDeleteButton,
+        formatter: (cellContent, sector) => (
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
               id="deletetooltip"
-              onClick={() => this.onClickDelete(hall)}
+              onClick={() => this.onClickDelete(sector)}
             ></i>
           </Link>
         ),
@@ -306,7 +283,7 @@ class HallsList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: halls.length,
+      totalSize: sectors.length,
       custom: true,
     };
 
@@ -322,8 +299,8 @@ class HallsList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={this.props.t("Halls")}
-              breadcrumbItem={this.props.t("Halls List")}
+              title={this.props.t("Sectors")}
+              breadcrumbItem={this.props.t("Sectors List")}
             />
 
             <Row>
@@ -382,12 +359,12 @@ class HallsList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={halls}
+                        data={sectors}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={halls}
+                            data={sectors}
                             columns={columns}
                             search
                           >
@@ -396,44 +373,17 @@ class HallsList extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {showSearchButton && (
+                                
                                         <div className="position-relative">
                                           <SearchBar
                                             {...toolkitprops.searchProps}
                                           />
                                         </div>
-                                      )}
+                               
                                     </div>
                                   </Col>
-                                  <Col sm="4">
-                                  <div className="justify-content-center mb-2 input-container">
-                                    <Col sm="5">
-                         <CardTitle id="horizontalTitles">
-                            {this.props.t("Choose Faculty")}
-                          </CardTitle> 
-                          </Col>
-                          <Col sm="7">
-                          <input
-                            className={`form-control ${this.state.inputClass}`}
-                            list="datalistOptions"
-                            id="exampleDataList"
-                            placeholder="Type to search..."
-                            autoComplete="off"
-                            onChange={this.handleFacultyChange}
-                          />
-                         <datalist id="datalistOptions">
-                            {faculties.map(faculty => (
-                              <option
-                                key={faculty.Id}
-                                value={faculty.title}
-                              />
-                            ))}
-                          </datalist> 
-                          </Col>
-                        </div>
-                        </Col> 
-                                  <Col sm="4">
-                                    {showAddButton && (
+                                
+                                  <Col sm="8">
                                       <div className="text-sm-end">
                                         <Tooltip
                                           title={this.props.t("Add")}
@@ -447,7 +397,7 @@ class HallsList extends Component {
                                           </IconButton>
                                         </Tooltip>
                                       </div>
-                                    )}
+                                   
                                   </Col>
                                 </Row>
 
@@ -455,7 +405,7 @@ class HallsList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={halls}
+                                  data={sectors}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
@@ -466,7 +416,7 @@ class HallsList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handleHallDataChange(
+                                      this.handleSectorDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
@@ -474,7 +424,7 @@ class HallsList extends Component {
                                     },
                                   })}
                                   noDataIndication={this.props.t(
-                                    "No Halls found"
+                                    "No Sectors found"
                                   )}
                                   defaultSorted={defaultSorting}
                                 />
@@ -500,23 +450,21 @@ class HallsList extends Component {
   }
 }
 
-const mapStateToProps = ({ halls, mobAppFacultyAccs, menu_items }) => ({
-  halls: halls.halls,
-  deleted: halls.deleted,
-  faculties: mobAppFacultyAccs.faculties,
+const mapStateToProps = ({ sectors, menu_items }) => ({
+  sectors: sectors.sectors,
+  deleted: sectors.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetHalls: hall => dispatch(getHalls(hall)),
-  onGetFaculties: () => dispatch(getFaculties()),
-  onAddNewHall: hall => dispatch(addNewHall(hall)),
-  onUpdateHall: hall => dispatch(updateHall(hall)),
-  onDeleteHall: hall => dispatch(deleteHall(hall)),
-  onGetHallDeletedValue: () => dispatch(getHallDeletedValue()),
+  onGetSectors: sector => dispatch(getSectors(sector)),
+  onAddNewSector: sector => dispatch(addNewSector(sector)),
+  onUpdateSector: sector => dispatch(updateSector(sector)),
+  onDeleteSector: sector => dispatch(deleteSector(sector)),
+  onGetSectorDeletedValue: () => dispatch(getSectorDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(HallsList));
+)(withTranslation()(SectorsList));

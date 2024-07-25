@@ -210,13 +210,13 @@ export const ADD_NEW_MOB_APP_FACULTY_ACC = "/add/mobAppFacultyAcc";
 export const UPDATE_MOB_APP_FACULTY_ACC = "/update/mobAppFacultyAcc";
 export const DELETE_MOB_APP_FACULTY_ACC = "/delete/mobAppFacultyAcc";
 
-//HALLS
-export const GET_HALLS = "/halls";
-export const GET_HALL_PROFILE = "/hall";
-export const ADD_NEW_HALL = "/add/hall";
-export const UPDATE_HALL = "/update/hall";
-export const DELETE_HALL = "/delete/hall";
-export const GET_HALL_DELETED_VALUE = "/deleted";
+//SECTORS
+export const GET_SECTORS = "/sectors";
+export const GET_SECTOR_PROFILE = "/sector";
+export const ADD_NEW_SECTOR = "/add/sector";
+export const UPDATE_SECTOR = "/update/sector";
+export const DELETE_SECTOR = "/delete/sector";
+export const GET_SECTOR_DELETED_VALUE = "/deleted";
 
 //REQUIREMENT_TYPES
 export const GET_REQUIREMENT_TYPES = "/preReqTypes";
@@ -627,8 +627,8 @@ export const ADD_NEW_SCHEDULE_TIMING = "/add/ScheduleTiming";
 export const DELETE_SCHEDULE_TIMING = "/delete/ScheduleTiming";
 export const GET_SCHEDULE_MSG_VALUE = "/get/msg";
 
-//HallTiming
-export const GET_HALL_TIMINGS = "/HallTimings";
+//SectorTiming
+export const GET_SECTOR_TIMINGS = "/SectorTimings";
 //ScheduleTimingDesc
 export const GET_SCHEDULE_TIMING_DESCS = "/ScheduleTimingDescs";
 

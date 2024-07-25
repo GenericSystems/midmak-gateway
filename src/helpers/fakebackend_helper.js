@@ -470,16 +470,16 @@ export const updateMobAppFacultyAcc = data =>
 export const deleteMobAppFacultyAcc = data =>
   post(url.DELETE_MOB_APP_FACULTY_ACC, data);
 
-// get Halls
-export const getHalls = data => post(url.GET_HALLS, data);
+// get Sectors
+export const getSectors = data => post(url.GET_SECTORS, data);
 
-//get Halls profile
-export const getHallProfile = () => get(url.GET_HALL_PROFILE);
+//get Sectors profile
+export const getSectorProfile = () => get(url.GET_SECTOR_PROFILE);
 
-// add Hall
-export const addNewHall = data => post(url.ADD_NEW_HALL, data);
+// add Sector
+export const addNewSector = data => post(url.ADD_NEW_SECTOR, data);
 
-export const getHallDeletedValue = () => get(url.GET_HALL_DELETED_VALUE);
+export const getSectorDeletedValue = () => get(url.GET_SECTOR_DELETED_VALUE);
 
 // GET UNIVERSITYINFO
 export const getUniversityInfo = data => post(url.GET_UNIVERSITYINFO, data);
@@ -505,11 +505,11 @@ export const updateUniversityOrgStructure = data =>
 export const getUniversityOrgStructureDeletedValue = () =>
   get(url.GET_UNIVERSITY_ORG_STRUCTURE_DELETED_VALUE);
 
-//update Hall
-export const updateHall = data => post(url.UPDATE_HALL, data);
+//update Sector
+export const updateSector = data => post(url.UPDATE_SECTOR, data);
 
-//delete Hall
-export const deleteHall = data => post(url.DELETE_HALL, data);
+//delete Sector
+export const deleteSector = data => post(url.DELETE_SECTOR, data);
 
 // get PreReqTypes
 export const getReqTypes = data => post(url.GET_REQUIREMENT_TYPES, data);
@@ -1455,8 +1455,8 @@ export const deleteSectionLab = data => post(url.DELETE_SECTION_LAB, data);
 // get ScheduleTiming
 export const getScheduleTimings = data => post(url.GET_SCHEDULE_TIMINGS, data);
 
-// get HallTiming
-export const getHallTimings = data => post(url.GET_HALL_TIMINGS, data);
+// get SectorTiming
+export const getSectorTimings = data => post(url.GET_SECTOR_TIMINGS, data);
 
 //get ScheduleTiming profile
 export const getScheduleTimingProfile = () =>
