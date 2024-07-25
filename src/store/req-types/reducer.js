@@ -1,43 +1,43 @@
 import {
-    GET_REQUIREMENT_TYPES_SUCCESS,
-    GET_REQUIREMENT_TYPES_FAIL,
-    ADD_REQUIREMENT_TYPE_SUCCESS,
-    ADD_REQUIREMENT_TYPE_FAIL,
-    UPDATE_REQUIREMENT_TYPE_SUCCESS,
-    UPDATE_REQUIREMENT_TYPE_FAIL,
-    DELETE_REQUIREMENT_TYPE_SUCCESS,
-    DELETE_REQUIREMENT_TYPE_FAIL,
+    GET_USER_TYPES_SUCCESS,
+    GET_USER_TYPES_FAIL,
+    ADD_USER_TYPE_SUCCESS,
+    ADD_USER_TYPE_FAIL,
+    UPDATE_USER_TYPE_SUCCESS,
+    UPDATE_USER_TYPE_FAIL,
+    DELETE_USER_TYPE_SUCCESS,
+    DELETE_USER_TYPE_FAIL,
     GET_REQUIREMENT_DELETED_VALUE_SUCCESS,
     GET_REQUIREMENT_DELETED_VALUE_FAIL,
   } from "./actionTypes"
   
   const INIT_STATE = {
-    reqTypes: [],
+    userTypes: [],
     deleted: {},
     error: {},
   }
   
-  const reqTypes = (state = INIT_STATE, action) => {
+  const userTypes = (state = INIT_STATE, action) => {
     switch (action.type) {
-      case GET_REQUIREMENT_TYPES_SUCCESS:
+      case GET_USER_TYPES_SUCCESS:
         return {
           ...state,
-          reqTypes: action.payload,
+          userTypes: action.payload,
         }
   
-      case GET_REQUIREMENT_TYPES_FAIL:
+      case GET_USER_TYPES_FAIL:
         return {
           ...state,
           error: action.payload,
         }
   
-      case ADD_REQUIREMENT_TYPE_SUCCESS:
+      case ADD_USER_TYPE_SUCCESS:
         return {
           ...state,
-          reqTypes: [...state.reqTypes, action.payload],
+          userTypes: [...state.userTypes, action.payload],
         }
   
-      case ADD_REQUIREMENT_TYPE_FAIL:
+      case ADD_USER_TYPE_FAIL:
         return {
           ...state,
           error: action.payload,
@@ -49,32 +49,32 @@ import {
           deleted: action.payload,
         }
   
-        case UPDATE_REQUIREMENT_TYPE_SUCCESS:
+        case UPDATE_USER_TYPE_SUCCESS:
           return {
             ...state,
-            reqTypes: state.reqTypes.map(reqType =>
-              reqType.Id.toString() === action.payload.Id.toString()
-                ? { reqType, ...action.payload }
-                : reqType
+            userTypes: state.userTypes.map(userType =>
+              userType.Id.toString() === action.payload.Id.toString()
+                ? { userType, ...action.payload }
+                : userType
             ),
           }
     
-        case UPDATE_REQUIREMENT_TYPE_FAIL:
+        case UPDATE_USER_TYPE_FAIL:
           return {
             ...state,
             error: action.payload,
           }
     
-        case DELETE_REQUIREMENT_TYPE_SUCCESS:
+        case DELETE_USER_TYPE_SUCCESS:
           return {
             ...state,
-            reqTypes: state.reqTypes.filter(
-              reqType => reqType.Id.toString() !== action.payload.Id.toString()
+            userTypes: state.userTypes.filter(
+              userType => userType.Id.toString() !== action.payload.Id.toString()
             ),
             deleted: action.payload.deleted,
           }
     
-        case DELETE_REQUIREMENT_TYPE_FAIL:
+        case DELETE_USER_TYPE_FAIL:
           return {
             ...state,
             error: action.payload,
@@ -91,5 +91,5 @@ import {
     }
   }
   
-  export default reqTypes
+  export default userTypes
   

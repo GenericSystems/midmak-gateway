@@ -199,7 +199,7 @@ import warningsList from "../pages/Setting/Faculties/warning";
 import PrereqsList from "../pages/Setting/Faculties/prereq-conditions";
 
 //PreReqType
-import RequirementTypesList from "../pages/Setting/Faculties/requirement-Types";
+import UserTypesList from "../pages/UserTypes/user-types";
 
 //Certifcates
 import Certificates from "../pages/Certificates/certificates";
@@ -411,7 +411,7 @@ const authProtectedRoutes = [
   { path: "/warning", component: warningsList },
 
   //PreReqTypes
-  { path: "/requirement-Types", component: RequirementTypesList },
+  { path: "/user-types", component: UserTypesList },
 
 
   //prerequisites

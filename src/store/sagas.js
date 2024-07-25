@@ -15,7 +15,7 @@ import StudentsSaga from "./students/saga";
 import projectsSaga from "./projects/saga";
 import tasksSaga from "./tasks/saga";
 import mailsSaga from "./mails/saga";
-import reqTypesSaga from "./req-types/saga";
+import userTypesSaga from "./req-types/saga";
 import admissionConditionsSaga from "./admissionConditions/saga";
 import levelingDecisionsSaga from "./leveling-decisions/saga";
 import StudentsHistorySaga from "./students-history/saga";
@@ -114,7 +114,7 @@ export default function* rootSaga() {
     fork(contactsSaga),
     fork(sectorsSaga),
     fork(StudyPlansSaga),
-    fork(reqTypesSaga),
+    fork(userTypesSaga),
     fork(LecturePeriodsSaga),
     fork(levelingDecisionsSaga),
     fork(coursesRegistrationSaga),

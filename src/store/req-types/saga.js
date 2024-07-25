@@ -2,11 +2,11 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 // Crypto Redux States
 import {
-  GET_REQUIREMENT_TYPES,
+  GET_USER_TYPES,
   GET_REQUIREMENT_DELETED_VALUE,
-  ADD_NEW_REQUIREMENT_TYPE,
-  DELETE_REQUIREMENT_TYPE,
-  UPDATE_REQUIREMENT_TYPE,
+  ADD_NEW_USER_TYPE,
+  DELETE_USER_TYPE,
+  UPDATE_USER_TYPE,
 } from "./actionTypes";
 
 import {
@@ -14,45 +14,42 @@ import {
 } from "../mob-app-faculty-accs/actionTypes";
 
 import {
-  getReqTypesSuccess,
-  getReqTypesFail,
-  getReqTypeDeletedValueSuccess,
-  getReqTypeDeletedValueFail,
-  addReqTypeFail,
-  addReqTypeSuccess,
-  updateReqTypeSuccess,
-  updateReqTypeFail,
-  deleteReqTypeSuccess,
-  deleteReqTypeFail,
+  getUserTypesSuccess,
+  getUserTypesFail,
+  getUserTypeDeletedValueSuccess,
+  getUserTypeDeletedValueFail,
+  addUserTypeFail,
+  addUserTypeSuccess,
+  updateUserTypeSuccess,
+  updateUserTypeFail,
+  deleteUserTypeSuccess,
+  deleteUserTypeFail,
 } from "./actions";
 
 // Include Both Helper File with needed methods
 import {
-  getReqTypes,
-  getReqTypeDeletedValue,
-  addNewReqType,
-  updateReqType,
-  deleteReqType,
+  getUserTypes,
+  getUserTypeDeletedValue,
+  addNewUserType,
+  updateUserType,
+  deleteUserType,
   getFaculties
 } from "../../helpers/fakebackend_helper";
 
 import { getFacultiesSuccess, getFacultiesFail } from "../mob-app-faculty-accs/actions";
 
-function* fetchReqTypes(obj) {
-  const payload= obj.payload
-  console.log("payload,",payload)
-  const get_reqTypes_req = {
+function* fetchUserTypes() {
+  const get_userTypes_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_RequirementType",
-    filter : `facultyId= ${payload.facultyId}`
+    tablename: "Settings_UserType",
   };
   try {
-    const response = yield call(getReqTypes, get_reqTypes_req);
-    yield put(getReqTypesSuccess(response));
+    const response = yield call(getUserTypes, get_userTypes_req);
+    yield put(getUserTypesSuccess(response));
   } catch (error) {
-    yield put(getReqTypesFail(error));
+    yield put(getUserTypesFail(error));
   }
 }
 
@@ -72,65 +69,65 @@ try {
 }
 }
 
-function* fetchReqTypeDeletedValue() {
+function* fetchUserTypeDeletedValue() {
   try {
-    const response = yield call(getReqTypeDeletedValue);
-    yield put(getReqTypeDeletedValueSuccess(response));
+    const response = yield call(getUserTypeDeletedValue);
+    yield put(getUserTypeDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getReqTypeDeletedValueFail(error));
+    yield put(getUserTypeDeletedValueFail(error));
   }
 }
 
-function* onAddNewReqType({ payload, reqType }) {
+function* onAddNewUserType({ payload, userType }) {
   delete payload["Id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_RequirementType";
+  payload["tablename"] = "Settings_UserType";
 
   try {
-    const response = yield call(addNewReqType, payload);
-    yield put(addReqTypeSuccess(response[0]));
+    const response = yield call(addNewUserType, payload);
+    yield put(addUserTypeSuccess(response[0]));
   } catch (error) {
-    yield put(addReqTypeFail(error));
+    yield put(addUserTypeFail(error));
   }
 }
 
-function* onUpdateReqType({ payload }) {
+function* onUpdateUserType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_RequirementType";
+  payload["tablename"] = "Settings_UserType";
 
   try {
-    const respupdate = yield call(updateReqType, payload);
-    yield put(updateReqTypeSuccess(respupdate[0]));
+    const respupdate = yield call(updateUserType, payload);
+    yield put(updateUserTypeSuccess(respupdate[0]));
   } catch (error) {
-    yield put(updateReqTypeFail(error));
+    yield put(updateUserTypeFail(error));
   }
 }
 
-function* onDeleteReqType({ payload, reqType }) {
+function* onDeleteUserType({ payload, userType }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_RequirementType";
+  payload["tablename"] = "Settings_UserType";
 
   try {
-    const respdelete = yield call(deleteReqType, payload);
-    yield put(deleteReqTypeSuccess(respdelete[0]));
+    const respdelete = yield call(deleteUserType, payload);
+    yield put(deleteUserTypeSuccess(respdelete[0]));
   } catch (error) {
-    yield put(deleteReqTypeFail(error));
+    yield put(deleteUserTypeFail(error));
   }
 }
 
-function* reqTypesSaga() {
-  yield takeEvery(GET_REQUIREMENT_TYPES, fetchReqTypes);
+function* userTypesSaga() {
+  yield takeEvery(GET_USER_TYPES, fetchUserTypes);
   yield takeEvery(GET_FACULTIES, fetchFaculties);
-  yield takeEvery(GET_REQUIREMENT_DELETED_VALUE, fetchReqTypeDeletedValue);
-  yield takeEvery(ADD_NEW_REQUIREMENT_TYPE, onAddNewReqType);
-  yield takeEvery(UPDATE_REQUIREMENT_TYPE, onUpdateReqType);
-  yield takeEvery(DELETE_REQUIREMENT_TYPE, onDeleteReqType);
+  yield takeEvery(GET_REQUIREMENT_DELETED_VALUE, fetchUserTypeDeletedValue);
+  yield takeEvery(ADD_NEW_USER_TYPE, onAddNewUserType);
+  yield takeEvery(UPDATE_USER_TYPE, onUpdateUserType);
+  yield takeEvery(DELETE_USER_TYPE, onDeleteUserType);
 }
 
-export default reqTypesSaga;
+export default userTypesSaga;

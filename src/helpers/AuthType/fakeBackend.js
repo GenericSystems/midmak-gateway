@@ -1256,7 +1256,7 @@ const fakeBackend = () => {
   });
 
   // PreReqType
-  mock.onGet(url.GET_REQUIREMENT_TYPES).reply(() => {
+  mock.onGet(url.GET_USER_TYPES).reply(() => {
     console.log("Calling mock get preReqTypes");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -1270,7 +1270,7 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onPut(url.UPDATE_REQUIREMENT_TYPE).reply(preReqType => {
+  mock.onPut(url.UPDATE_USER_TYPE).reply(preReqType => {
     console.log("in mock onPut reply updating ...", preReqType);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -1284,7 +1284,7 @@ const fakeBackend = () => {
       });
     });
   });
-  mock.onDelete(url.DELETE_REQUIREMENT_TYPE).reply(config => {
+  mock.onDelete(url.DELETE_USER_TYPE).reply(config => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         console.log("deleted preReqType");
@@ -1298,7 +1298,7 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onPost(url.ADD_NEW_REQUIREMENT_TYPE).reply(order => {
+  mock.onPost(url.ADD_NEW_USER_TYPE).reply(order => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         console.log("added preReqType");
@@ -1356,7 +1356,7 @@ const fakeBackend = () => {
   });
 
   // PreReqType
-  mock.onGet(url.GET_REQUIREMENT_TYPES).reply(() => {
+  mock.onGet(url.GET_USER_TYPES).reply(() => {
     console.log("Calling mock get preReqTypes");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -1370,7 +1370,7 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onPut(url.UPDATE_REQUIREMENT_TYPE).reply(preReqType => {
+  mock.onPut(url.UPDATE_USER_TYPE).reply(preReqType => {
     console.log("in mock onPut reply updating ...", preReqType);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -1384,7 +1384,7 @@ const fakeBackend = () => {
       });
     });
   });
-  mock.onDelete(url.DELETE_REQUIREMENT_TYPE).reply(config => {
+  mock.onDelete(url.DELETE_USER_TYPE).reply(config => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         console.log("deleted preReqType");
@@ -1398,7 +1398,7 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onPost(url.ADD_NEW_REQUIREMENT_TYPE).reply(order => {
+  mock.onPost(url.ADD_NEW_USER_TYPE).reply(order => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         console.log("added preReqType");

@@ -118,10 +118,10 @@ export const deleteCoursesRegistrationFail = error => ({
   payload: error,
 });
 
-export const getAvailableCourses = (reqType, studentId) => ({
+export const getAvailableCourses = (userType, studentId) => ({
   type: GET_AVAILABLE_COURSES,
   payload: {
-    reqType,
+    userType,
     studentId,
   },
 });

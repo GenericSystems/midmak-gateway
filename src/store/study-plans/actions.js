@@ -34,12 +34,12 @@ GET_ALL_STUDY_PLANS_SUCCESS,
 GET_ALL_STUDY_PLANS_FAIL,
 } from "./actionTypes";
 
-export const getStudyPlans = (faculty, planId, reqTypeId) => ({
+export const getStudyPlans = (faculty, planId, userTypeId) => ({
   type: GET_STUDY_PLANS,
   payload: {
     faculty,
     planId,
-    reqTypeId,
+    userTypeId,
   },
 });
 
@@ -130,12 +130,12 @@ export const getFilteredCoursesFail = error => ({
   payload: error,
 });
 
-export const getPlanHours = (faculty, planId, reqTypeId) => ({
+export const getPlanHours = (faculty, planId, userTypeId) => ({
   type: GET_PLAN_HOURS,
   payload: {
     faculty,
     planId,
-    reqTypeId,
+    userTypeId,
   },
 });
 
@@ -179,12 +179,12 @@ export const updatePlanHourFail = error => ({
   payload: error,
 });
 
-export const generalizeStudyPlans = (faculty, planId, reqTypeId) => ({
+export const generalizeStudyPlans = (faculty, planId, userTypeId) => ({
   type: GENERALIZE_STUDY_PLANS,
   payload: {
     faculty,
     planId,
-    reqTypeId,
+    userTypeId,
   },
 });
 
@@ -198,12 +198,12 @@ export const generalizeStudyPlansFail = error => ({
   payload: error,
 });
 
-export const getAllStudyPlans = (faculty, planId, reqTypeId) => ({
+export const getAllStudyPlans = (faculty, planId, userTypeId) => ({
   type: GET_ALL_STUDY_PLANS,
   payload: {
     faculty,
     planId,
-    reqTypeId,
+    userTypeId,
   },
 });
 

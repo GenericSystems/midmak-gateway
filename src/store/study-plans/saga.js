@@ -75,12 +75,12 @@ function* fetchFilteredCourses(obj) {
 
 function* fetchStudyPlans(obj) {
   let faculty = obj.payload.faculty;
-  let reqTypeId = obj.payload.reqTypeId;
+  let userTypeId = obj.payload.userTypeId;
   let planId = obj.payload.planId;
   let filter = `facultyId = ${faculty} AND PlanId = ${planId}`;
 
-  if (reqTypeId !== null) {
-    filter += ` AND CoursePlanTypeId = ${reqTypeId}`;
+  if (userTypeId !== null) {
+    filter += ` AND CoursePlanTypeId = ${userTypeId}`;
   }
   const get_studyPlans_req = {
     source: "db",
@@ -99,12 +99,12 @@ function* fetchStudyPlans(obj) {
 
 function* fetcsectorstudyPlans(obj) {
   let faculty = obj.payload.faculty;
-  let reqTypeId = obj.payload.reqTypeId;
+  let userTypeId = obj.payload.userTypeId;
   let planId = obj.payload.planId;
   let filter = `facultyId = ${faculty} AND PlanId = ${planId}`;
 
-  if (reqTypeId !== null) {
-    filter += ` AND CoursePlanTypeId = ${reqTypeId}`;
+  if (userTypeId !== null) {
+    filter += ` AND CoursePlanTypeId = ${userTypeId}`;
   }
   const get_studyPlans_req = {
     source: "db",
@@ -123,14 +123,14 @@ function* fetcsectorstudyPlans(obj) {
 
 function* genStudyPlans(obj) {
   let faculty = obj.payload.faculty;
-  let reqTypeId = obj.payload.reqTypeId;
+  let userTypeId = obj.payload.userTypeId;
   let planId = obj.payload.planId;
   const generalize_studyPlans_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_CoursePlan",
-    filter: `facultyId = ${faculty} AND PlanId = ${planId} and CoursePlanTypeId =${reqTypeId}`,
+    filter: `facultyId = ${faculty} AND PlanId = ${planId} and CoursePlanTypeId =${userTypeId}`,
   };
   try {
     const response = yield call(
@@ -205,14 +205,14 @@ function* onDeleteStudyPlan({ payload, studyPlan }) {
 
 function* fetchPlanHours(obj) {
   let faculty = obj.payload.faculty;
-  let reqTypeId = obj.payload.reqTypeId;
+  let userTypeId = obj.payload.userTypeId;
   let planId = obj.payload.planId;
   const get_planHours_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_PlanRequiredHours",
-    filter: `facultyId = ${faculty} AND PlanId = ${planId} and requermentTypeId =${reqTypeId}`,
+    filter: `facultyId = ${faculty} AND PlanId = ${planId} and requermentTypeId =${userTypeId}`,
   };
   try {
     const response = yield call(getPlanHours, get_planHours_req);

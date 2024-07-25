@@ -1,92 +1,92 @@
 import {
-    GET_REQUIREMENT_TYPES,
-    GET_REQUIREMENT_TYPES_FAIL,
-    GET_REQUIREMENT_TYPES_SUCCESS,
+    GET_USER_TYPES,
+    GET_USER_TYPES_FAIL,
+    GET_USER_TYPES_SUCCESS,
     GET_REQUIREMENT_DELETED_VALUE,
     GET_REQUIREMENT_DELETED_VALUE_FAIL,
     GET_REQUIREMENT_DELETED_VALUE_SUCCESS,
-    ADD_NEW_REQUIREMENT_TYPE,
-    ADD_REQUIREMENT_TYPE_SUCCESS,
-    ADD_REQUIREMENT_TYPE_FAIL,
-    UPDATE_REQUIREMENT_TYPE,
-    UPDATE_REQUIREMENT_TYPE_SUCCESS,
-    UPDATE_REQUIREMENT_TYPE_FAIL,
-    DELETE_REQUIREMENT_TYPE,
-    DELETE_REQUIREMENT_TYPE_SUCCESS,
-    DELETE_REQUIREMENT_TYPE_FAIL,
+    ADD_NEW_USER_TYPE,
+    ADD_USER_TYPE_SUCCESS,
+    ADD_USER_TYPE_FAIL,
+    UPDATE_USER_TYPE,
+    UPDATE_USER_TYPE_SUCCESS,
+    UPDATE_USER_TYPE_FAIL,
+    DELETE_USER_TYPE,
+    DELETE_USER_TYPE_SUCCESS,
+    DELETE_USER_TYPE_FAIL,
   } from "./actionTypes"
   
-  export const getReqTypes = reqTypes => ({
-    type: GET_REQUIREMENT_TYPES,
-    payload: reqTypes
+  export const getUserTypes = () => ({
+    type: GET_USER_TYPES,
+
   })
   
-  export const getReqTypesSuccess = reqTypes => ({
-    type: GET_REQUIREMENT_TYPES_SUCCESS,
-    payload: reqTypes,
+  export const getUserTypesSuccess = userTypes => ({
+    type: GET_USER_TYPES_SUCCESS,
+    payload: userTypes,
   })
   
-  export const getReqTypesFail = error => ({
-    type: GET_REQUIREMENT_TYPES_FAIL,
+  export const getUserTypesFail = error => ({
+    type: GET_USER_TYPES_FAIL,
     payload: error,
   })
   
-  export const getReqTypeDeletedValue = reqTypeId => ({
+  export const getUserTypeDeletedValue = userTypeId => ({
     type: GET_REQUIREMENT_DELETED_VALUE,
-    reqTypeId,
+    userTypeId,
   })
   
-  export const getReqTypeDeletedValueSuccess = reqTypeProfiles => ({
+  export const getUserTypeDeletedValueSuccess = userTypeProfiles => ({
     type: GET_REQUIREMENT_DELETED_VALUE_SUCCESS,
-    payload: reqTypeProfiles,
+    payload: userTypeProfiles,
   })
   
-  export const getReqTypeDeletedValueFail = error => ({
+  export const getUserTypeDeletedValueFail = error => ({
     type: GET_REQUIREMENT_DELETED_VALUE_FAIL,
     payload: error,
   })
   
-  export const addNewReqType = reqType => ({
-    type: ADD_NEW_REQUIREMENT_TYPE,
-    payload: reqType,
+  export const addNewUserType = userType => ({
+    type: ADD_NEW_USER_TYPE,
+    payload: userType,
   })
   
-  export const addReqTypeSuccess = reqType => ({
-    type: ADD_REQUIREMENT_TYPE_SUCCESS,
-    payload: reqType,
+  export const addUserTypeSuccess = userType => ({
+    type: ADD_USER_TYPE_SUCCESS,
+    payload: userType,
   })
   
-  export const addReqTypeFail = error => ({
-    type: ADD_REQUIREMENT_TYPE_FAIL,
+  export const addUserTypeFail = error => ({
+    type: ADD_USER_TYPE_FAIL,
     payload: error,
   })
   
-  export const updateReqType = reqType => ({
-    type: UPDATE_REQUIREMENT_TYPE,
-    payload: reqType,
+  export const updateUserType = userType => ({
+    type: UPDATE_USER_TYPE,
+    payload: userType,
   })
   
-  export const updateReqTypeSuccess = reqType => ({
-    type: UPDATE_REQUIREMENT_TYPE_SUCCESS,
-    payload: reqType,
+  export const updateUserTypeSuccess = userType => ({
+    type: UPDATE_USER_TYPE_SUCCESS,
+    payload: userType,
   })
   
-  export const updateReqTypeFail = error => ({
-    type: UPDATE_REQUIREMENT_TYPE_FAIL,
+  export const updateUserTypeFail = error => ({
+    type: UPDATE_USER_TYPE_FAIL,
     payload: error,
   })
   
-  export const deleteReqType = reqType => ({
-    type: DELETE_REQUIREMENT_TYPE,
-    payload: reqType,
+  export const deleteUserType = userType => ({
+    type: DELETE_USER_TYPE,
+    payload: userType,
   })
   
-  export const deleteReqTypeSuccess = reqType => ({
-    type: DELETE_REQUIREMENT_TYPE_SUCCESS,
-    payload: reqType,
+  export const deleteUserTypeSuccess = userType => ({
+    type: DELETE_USER_TYPE_SUCCESS,
+    payload: userType,
   })
   
-  export const deleteReqTypeFail = error => ({
-    type: DELETE_REQUIREMENT_TYPE_FAIL,
+  export const deleteUserTypeFail = error => ({
+    type: DELETE_USER_TYPE_FAIL,
     payload: error,
   })

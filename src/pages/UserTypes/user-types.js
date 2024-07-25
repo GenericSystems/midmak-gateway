@@ -5,7 +5,7 @@ import cellEditFactory from "react-bootstrap-table2-editor";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import ToolkitProvider, {
@@ -13,11 +13,11 @@ import ToolkitProvider, {
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 import Select from "react-select";
 import {
-  getReqTypes,
-  addNewReqType,
-  updateReqType,
-  deleteReqType,
-  getReqTypeDeletedValue,
+  getUserTypes,
+  addNewUserType,
+  updateUserType,
+  deleteUserType,
+  getUserTypeDeletedValue,
 } from "store/req-types/actions";
 import paginationFactory, {
   PaginationProvider,
@@ -25,23 +25,22 @@ import paginationFactory, {
 } from "react-bootstrap-table2-paginator";
 import { Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
-const REQUIREMENT_TYPE_STORAGE_KEY = "editableReqType";
+const USER_TYPE_STORAGE_KEY = "editableUserType";
 import Tooltip from "@mui/material/Tooltip";
 import {
   checkIsAddForPage,
   checkIsDeleteForPage,
   checkIsEditForPage,
   checkIsSearchForPage,
-} from "../../../utils/menuUtils";
-import { getFaculties } from "store/mob-app-faculty-accs/actions";
+} from "../../utils/menuUtils";
 import { selectFilter } from "react-bootstrap-table2-filter";
-class RequirementTypesList extends Component {
+class UserTypesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       duplicateError: null,
       selectedLevel: {},
-      reqTypes: props.reqTypes || [],
+      userTypes: props.userTypes || [],
       showAlert: null,
       showAddButton: false,
       showDeleteButton: false,
@@ -50,26 +49,25 @@ class RequirementTypesList extends Component {
     };
   }
   componentDidMount() {
-    const { reqTypes, onGetReqTypes, requirementlevels, deleted,onGetFaculties,faculties, user_menu } =
+    const { userTypes, onGetUserTypes, requirementlevels, deleted, user_menu } =
       this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (reqTypes && !reqTypes.length) {
-     // onGetReqTypes();
-     onGetFaculties();
-      this.setState({ reqTypes });
-      this.setState({ requirementlevels, deleted, faculties });
+    if (userTypes && !userTypes.length) {
+      onGetUserTypes();
+      this.setState({ userTypes });
+      this.setState({ requirementlevels, deleted });
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { reqTypes } = this.props;
+    const { userTypes } = this.props;
 
     // Check if the preReqTypes prop has been updated
-    if (reqTypes !== prevProps.reqTypes) {
-      this.setState({ reqTypes });
+    if (userTypes !== prevProps.userTypes) {
+      this.setState({ userTypes });
     }
     if (
       this.props.user_menu !== prevProps.user_menu ||
@@ -134,16 +132,14 @@ class RequirementTypesList extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
   handleAddRow = () => {
-    const { onAddNewReqType, reqTypes } = this.props;
+    const { onAddNewUserType, userTypes } = this.props;
     const {selectedFacultyId} =this.state
 
     const newRow = {
       arTitle: "-----",
-      enTitle: "",
-      facultyId: selectedFacultyId
     };
-    const emptyRowsExist = reqTypes.some(
-      reqType => reqType.arTitle.trim() === "-----"
+    const emptyRowsExist = userTypes.some(
+      userType => userType.arTitle.trim() === "-----"
     );
 
     if (emptyRowsExist) {
@@ -151,22 +147,22 @@ class RequirementTypesList extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewReqType(newRow);
+      onAddNewUserType(newRow);
     }
   };
 
   handleDeleteRow = () => {
-    const { onDeleteReqType } = this.props;
+    const { onDeleteUserType } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteReqType(selectedRowId);
+      onDeleteUserType(selectedRowId);
 
       this.setState({ deleteModal: false, showAlert: true });
     }
   };
-  handleReqTypeDataChange = (rowId, fieldName, fieldValue) => {
-    const { onUpdateReqType, reqTypes } = this.props;
+  handleUserTypeDataChange = (rowId, fieldName, fieldValue) => {
+    const { onUpdateUserType, userTypes } = this.props;
     const { selectedLevel } = this.state;
 
     this.setState({
@@ -176,31 +172,31 @@ class RequirementTypesList extends Component {
       },
     });
 
-    const isDuplicate = reqTypes.some(
-      reqType =>
-        reqType.Id !== rowId &&
-        ((reqType.arTitle && reqType.arTitle.trim()) === fieldValue.trim() ||
-          (reqType.enTitle && reqType.enTitle.trim()) === fieldValue.trim())
+    const isDuplicate = userTypes.some(
+      userType =>
+        userType.Id !== rowId &&
+        ((userType.arTitle && userType.arTitle.trim()) === fieldValue.trim() ||
+          (userType.enTitle && userType.enTitle.trim()) === fieldValue.trim())
     );
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateReqType(onUpdate);
+      onUpdateUserType(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateReqType(onUpdate);
+      onUpdateUserType(onUpdate);
     }
   };
 
   handleChangeCheckbox = (rowId, currentStatus, fieldName) => {
-    const { onUpdateReqType } = this.props;
+    const { onUpdateUserType } = this.props;
     const newStatus = currentStatus ? 1 : 0;
     let ob = {};
     ob["Id"] = rowId;
     ob[fieldName] = newStatus;
-    onUpdateReqType(ob);
+    onUpdateUserType(ob);
   };
 
   handleAlertClose = () => {
@@ -208,39 +204,20 @@ class RequirementTypesList extends Component {
   };
 
   handleSuccessClose = () => {
-    const { onGetReqTypeDeletedValue } = this.props;
+    const { onGetUserTypeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetReqTypeDeletedValue();
+    onGetUserTypeDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetReqTypeDeletedValue } = this.props;
+    const { onGetUserTypeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetReqTypeDeletedValue();
+    onGetUserTypeDeletedValue();
   };
 
-  handleFacultyChange = e =>{
-    const {
-      onGetReqTypes,
-      faculties
-    } = this.props;
-
-    const selectedValue = e.target.value;
-    const selectedFaculty = faculties.find(
-      faculty => faculty.title === selectedValue
-    );
-    console.log(selectedFaculty)
-    if(selectedFaculty){
-      onGetReqTypes({facultyId :selectedFaculty.Id})
-      this.setState({
-        selectedFacultyId: selectedFaculty.Id
-      })
-    }
-   
-  }
 
   render() {
-    const { reqTypes, deleted,faculties, t } = this.props;
+    const { userTypes, deleted, t } = this.props;
     const {
       selectedLevel,
       showAlert,
@@ -270,65 +247,22 @@ class RequirementTypesList extends Component {
       { dataField: "Id", text: t("ID"), hidden: true },
       {
         dataField: "arTitle",
-        text: t("Requisite Type(ar)"),
+        text: t("User Type(ar)"),
         sort: true,
-        editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "enTitle",
-        text: "Requisite Type",
+        text: "User Type",
         sort: true,
-        editable: showEditButton,
+        // editable: showEditButton,
       },
+     
       {
-        dataField: "required",
-        text: t("Required"),
-        editable: false,
-        formatter: (cellContent, row, column) => (
-          <Input
-            type="checkbox"
-            className={`form-check-input input-mini warning}`}
-            id="behaviorButton"
-            disabled={row.levelId === null || !showEditButton}
-            defaultChecked={cellContent == 1}
-            onChange={event =>
-              this.handleChangeCheckbox(
-                row.Id,
-                event.target.checked,
-                "required"
-              )
-            }
-          />
-        ),
-      },
-      {
-        dataField: "requirementLevel",
-        text: t("Requirement Level"),
-        editable: false,
-        sort: true,
-        formatter: (cellContent, row, column) => (
-          <Select
-            key={`level_select`}
-            options={requirementlevels}
-            defaultValue={requirementlevels.find(
-              opt => opt.label == row.requirementLevel
-            )}
-            onChange={newValue => {
-              this.handleReqTypeDataChange(
-                row.Id,
-                "requirementLevel",
-                newValue.value
-              );
-            }}
-            isDisabled={!showEditButton}
-          />
-        ),
-      },
-      {
-        dataField: "requirementCode",
+        dataField: "code",
         text: t("Code"),
         sort: true,
-        editable: showEditButton,
+        // editable: showEditButton,
       },
 
       {
@@ -336,13 +270,13 @@ class RequirementTypesList extends Component {
         text: "",
         isDummyField: true,
         editable: false,
-        hidden: !showDeleteButton,
-        formatter: (cellContent, reqType) => (
+      //  hidden: !showDeleteButton,
+        formatter: (cellContent, userType) => (
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
               id="deletetooltip"
-              onClick={() => this.onClickDelete(reqType)}
+              onClick={() => this.onClickDelete(userType)}
             ></i>
           </Link>
         ),
@@ -350,7 +284,7 @@ class RequirementTypesList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: reqTypes.length,
+      totalSize: userTypes.length,
       custom: true,
     };
 
@@ -366,8 +300,8 @@ class RequirementTypesList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={t("ReqTypes")}
-              breadcrumbItem={t("ReqTypes List")}
+              title={t("UserTypes")}
+              breadcrumbItem={t("UserTypes List")}
             />
 
             <Row>
@@ -431,12 +365,12 @@ class RequirementTypesList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={reqTypes}
+                        data={userTypes}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={reqTypes}
+                            data={userTypes}
                             columns={columns}
                             search
                           >
@@ -446,45 +380,21 @@ class RequirementTypesList extends Component {
 
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {showSearchButton && (
+                                     {/*  {showSearchButton && ( */}
                                         <div className="position-relative">
                                           <SearchBar
                                             {...toolkitprops.searchProps}
                                           />
                                         </div>
-                                      )}
+                              
                                     </div>
                               
                                   </Col>
                                  <Col sm="4">
-                                  <div className="justify-content-center mb-2 input-container">
-                                    <Col sm="5">
-                         <CardTitle id="horizontalTitles">
-                            {this.props.t("Choose Faculty")}
-                          </CardTitle> 
-                          </Col>
-                          <Col sm="7">
-                          <input
-                            className={`form-control ${this.state.inputClass}`}
-                            list="datalistOptions"
-                            id="exampleDataList"
-                            placeholder="Type to search..."
-                            autoComplete="off"
-                            onChange={this.handleFacultyChange}
-                          />
-                         <datalist id="datalistOptions">
-                            {faculties.map(faculty => (
-                              <option
-                                key={faculty.Id}
-                                value={faculty.title}
-                              />
-                            ))}
-                          </datalist> 
-                          </Col>
-                        </div>
+                                
                         </Col> 
                                   <Col sm="4">
-                                    {showAddButton && (
+                               {/*      {showAddButton && ( */}
                                       <div className="text-sm-end">
                                         <Tooltip
                                           title={this.props.t("Add")}
@@ -498,7 +408,7 @@ class RequirementTypesList extends Component {
                                           </IconButton>
                                         </Tooltip>
                                       </div>
-                                    )}
+                                   
                                   </Col>
                                 </Row>
 
@@ -506,7 +416,7 @@ class RequirementTypesList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={reqTypes}
+                                  data={userTypes}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
@@ -518,7 +428,7 @@ class RequirementTypesList extends Component {
                                       column
                                     ) => {
                                       if (column.dataField != "required") {
-                                        this.handleReqTypeDataChange(
+                                        this.handleUserTypeDataChange(
                                           row.Id,
                                           column.dataField,
                                           newValue
@@ -553,23 +463,21 @@ class RequirementTypesList extends Component {
   }
 }
 
-const mapStateToProps = ({ reqTypes, menu_items, mobAppFacultyAccs }) => ({
-  reqTypes: reqTypes.reqTypes,
-  deleted: reqTypes.deleted,
-  faculties: mobAppFacultyAccs.faculties,
+const mapStateToProps = ({ userTypes, menu_items }) => ({
+  userTypes: userTypes.userTypes,
+  deleted: userTypes.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetFaculties: () => dispatch(getFaculties()),
-  onGetReqTypes: reqType => dispatch(getReqTypes(reqType)),
-  onAddNewReqType: reqType => dispatch(addNewReqType(reqType)),
-  onUpdateReqType: reqType => dispatch(updateReqType(reqType)),
-  onDeleteReqType: reqType => dispatch(deleteReqType(reqType)),
-  onGetReqTypeDeletedValue: () => dispatch(getReqTypeDeletedValue()),
+  onGetUserTypes: userType => dispatch(getUserTypes(userType)),
+  onAddNewUserType: userType => dispatch(addNewUserType(userType)),
+  onUpdateUserType: userType => dispatch(updateUserType(userType)),
+  onDeleteUserType: userType => dispatch(deleteUserType(userType)),
+  onGetUserTypeDeletedValue: () => dispatch(getUserTypeDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(RequirementTypesList));
+)(withTranslation()(UserTypesList));

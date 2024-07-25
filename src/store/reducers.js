@@ -74,7 +74,7 @@ import studentsStatistics from "./students-statistics/reducer"
 import sectors from "./sectors/reducer"
 
 //preReqTypes
-import reqTypes from "./req-types/reducer"
+import userTypes from "./req-types/reducer"
 
 //certificates
 import certificates from "./certificates/reducer"
@@ -314,7 +314,7 @@ const rootReducer = combineReducers({
   dataitems,
   universityrequirements,
   academiccertificates,
-  reqTypes,
+  userTypes,
   lecturePeriods,
   currSemMans,
   coursesRegistration,

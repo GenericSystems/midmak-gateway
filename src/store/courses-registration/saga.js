@@ -75,7 +75,7 @@ import {
 let theObj
 function* fetchAvailableCourses(obj) {
    theObj = obj
-  let reqType = obj.payload.reqType;
+  let userType = obj.payload.userType;
   let studentId = obj.payload.studentId;
   const get_availablecourse_req = {
     source: "db",

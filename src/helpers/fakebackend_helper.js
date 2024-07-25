@@ -512,20 +512,20 @@ export const updateSector = data => post(url.UPDATE_SECTOR, data);
 export const deleteSector = data => post(url.DELETE_SECTOR, data);
 
 // get PreReqTypes
-export const getReqTypes = data => post(url.GET_REQUIREMENT_TYPES, data);
+export const getUserTypes = data => post(url.GET_USER_TYPES, data);
 
 //get PreReqTypes profile
-export const getReqTypeDeletedValue = () =>
+export const getUserTypeDeletedValue = () =>
   get(url.GET_REQUIREMENT_DELETED_VALUE);
 
 // add PreReqType
-export const addNewReqType = data => post(url.ADD_NEW_REQUIREMENT_TYPE, data);
+export const addNewUserType = data => post(url.ADD_NEW_USER_TYPE, data);
 
 //update PreReqType
-export const updateReqType = data => post(url.UPDATE_REQUIREMENT_TYPE, data);
+export const updateUserType = data => post(url.UPDATE_USER_TYPE, data);
 
 //delete PreReqType
-export const deleteReqType = data => post(url.DELETE_REQUIREMENT_TYPE, data);
+export const deleteUserType = data => post(url.DELETE_USER_TYPE, data);
 
 // get StudyPlans
 export const getStudyPlans = data => post(url.GET_STUDY_PLANS, data);
