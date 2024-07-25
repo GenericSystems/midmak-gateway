@@ -171,24 +171,7 @@ class Certificates extends Component {
   };
 
   handleAddRow = () => {
-    /* const { certificates, onAddNewCertificate } = this.props;
-    const newRow = {
-      academicCode: "-----",
-    };
-  
-    // Check if the same value already exists in the table
-    const emptyRowsExist = certificates.some(certificate => {
-      const arTitle = certificate.arTitle || "";
-      return arTitle.trim() === "-----";
-    });
-  
-    if (emptyRowsExist) {
-      const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateError: errorMessage });
-    } else {
-      this.setState({ duplicateError: null });
-      onAddNewCertificate(newRow);
-    } */
+   
 
     this.setState({
       certificate: "",
@@ -347,15 +330,9 @@ class Certificates extends Component {
           sectionInfo[key] = values[key];
       });
       if (isEdit) {
-        const isDuplicateCertificateCode = certificates.some(
-          cert =>
-            cert.academicCode === sectionInfo.academicCode &&
-            cert.Id !== sectionInfo.Id
-        );
-
-        if (!isDuplicateCertificateCode) {
+       
           onUpdateCertificate(sectionInfo);
-        }
+        
       } else {
         const isDuplicateCertificateCode = certificates.some(
           certificate =>
@@ -480,7 +457,7 @@ class Certificates extends Component {
         editable: false,
       },
       {
-        dataField: "trainer",
+        dataField: "trainerName",
         text: this.props.t("Trainer"),
         sort: true,
         editable: false,
@@ -716,7 +693,7 @@ class Certificates extends Component {
                                         academicCode:
                                           (certificate &&
                                             certificate.academicCode) ||
-                                          "",
+                                          "01",
                                         userTypeId:
                                           (certificate &&
                                             certificate.userTypeId) ||
@@ -759,7 +736,9 @@ class Certificates extends Component {
                                                 <Col lg="6">
                                                   <Label>
                                                     {t("Academic Code")}
-                                                   
+                                                    <span className="text-danger">
+                                                      *
+                                                    </span>
                                                   </Label>
                                                 </Col>
                                                 <Col lg="6">
