@@ -247,7 +247,7 @@ class TrainersGrades extends Component {
       },
       {
         dataField: "code",
-        text: "Code",
+        text: this.props.t("Code"),
         sort: true,
        // editable: showEditButton,
       },
@@ -290,7 +290,7 @@ class TrainersGrades extends Component {
               title={`${this.props.t("Settings")} / ${this.props.t(
                 "University Admission"
               )}`}
-              breadcrumbItem={this.props.t("TrainersGrades")}
+              breadcrumbItem={this.props.t("Trainers Grades")}
             />
 
             <Row>

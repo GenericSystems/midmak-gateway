@@ -217,19 +217,19 @@ class TrainersList extends Component {
       { dataField: "Id", text: t("ID"), hidden: true },
       {
         dataField: "name",
-        text: t("Name"),
+        text: t("Trainer Name"),
         sort: true,
        // editable: showEditButton,
       },
       {
         dataField: "phone",
-        text: "Phone",
+        text: t("Phone"),
         sort: true,
        // editable: showEditButton,
       },
       {
         dataField: "email",
-        text: "Email",
+        text: t("Email"),
         sort: true,
        // editable: showEditButton,
       },

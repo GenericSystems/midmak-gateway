@@ -177,7 +177,6 @@ class Certificates extends Component {
   handleDeleteRow = () => {
     const { onDeleteCertificate } = this.props;
     const { selectedRowId } = this.state;
-console.log("selectedRowId",selectedRowId)
     if (selectedRowId !== null) {
       onDeleteCertificate(selectedRowId);
 
@@ -268,7 +267,7 @@ console.log("selectedRowId",selectedRowId)
       },
       {
         dataField: "certificateTypeId",
-        text: "User Type",
+        text: this.props.t("Certificate Type"),
         sort: true,
         formatter: (cellContent, row) => (
           <Select
@@ -291,7 +290,7 @@ console.log("selectedRowId",selectedRowId)
       },
       {
         dataField: "userTypeId",
-        text: "User Type",
+        text: this.props.t("User Type"),
         sort: true,
         formatter: (cellContent, row) => (
           <Select

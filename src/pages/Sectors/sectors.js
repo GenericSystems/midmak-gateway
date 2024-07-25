@@ -254,7 +254,7 @@ class SectorsList extends Component {
      
       {
         dataField: "enTitle",
-        text: this.props.t("Sector"),
+        text: "Sector",
         sort: true,
        // editable: showEditButton,
       },
