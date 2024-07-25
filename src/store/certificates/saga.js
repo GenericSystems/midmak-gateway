@@ -37,6 +37,11 @@ import {
 } from "../certificateTypes/actions";
 
 import {
+  getTrainersFail,
+  getTrainersSuccess,
+} from "../trainers/actions";
+
+import {
   getYearsFail,
   getYearsSuccess,
 } from "../years/actions";
@@ -51,7 +56,8 @@ import {
   getTrainersGrades,
   getCertificateTypes,
   getCertificateDeletedValue,
-  getYears
+  getYears,
+  getTrainers
 } from "../../helpers/fakebackend_helper";
 
 function* fetchCertificates() {
@@ -135,19 +141,40 @@ function* fetchCertificates() {
     yield put(getYearsFail(error));
   }
 
+  const get_trainer_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Trainer",
+    fields: "Id,name",
+
+  };
+  try {
+    const response = yield call(getTrainers, get_trainer_req);
+
+    yield put(getTrainersSuccess(response));
+  } catch (error) {
+    yield put(getTrainersFail(error));
+  }
+
   const get_Certificates_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Certificates",
+    tablename: "_Common_Certificates",
   };
   try {
     const response = yield call(getCertificates, get_Certificates_req);
-
+    console.log("in saga response",response)
+    /* response.map(resp => {
+      resp["sector"] = JSON.parse(resp["sector"]);
+    }); */
     yield put(getCertificatesSuccess(response));
   } catch (error) {
     yield put(getCertificatesFail(error));
   }
+
+  
 }
 
 function* onAddNewCertificate({ payload }) {
@@ -156,6 +183,8 @@ function* onAddNewCertificate({ payload }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_Certificates";
+  payload["queryname"] = "_Common_Certificates";
+
   try {
     const response = yield call(addNewCertificate, payload);
     yield put(addCertificateSuccess(response[0]));
@@ -169,6 +198,8 @@ function* onUpdateCertificate({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_Certificates";
+  payload["queryname"] = "_Common_Certificates";
+
   try {
     const respupdate = yield call(updateCertificate, payload);
     yield put(updateCertificateSuccess(respupdate[0]));
