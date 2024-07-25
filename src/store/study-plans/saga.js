@@ -97,7 +97,7 @@ function* fetchStudyPlans(obj) {
   }
 }
 
-function* fetchAllStudyPlans(obj) {
+function* fetcsectorstudyPlans(obj) {
   let faculty = obj.payload.faculty;
   let reqTypeId = obj.payload.reqTypeId;
   let planId = obj.payload.planId;
@@ -258,7 +258,7 @@ function* onUpdatePlanHour({ payload }) {
 function* studyPlansSaga() {
   yield takeEvery(GET_FILTERED_COURSES, fetchFilteredCourses);
   yield takeEvery(GET_STUDY_PLANS, fetchStudyPlans);
-  yield takeEvery(GET_ALL_STUDY_PLANS, fetchAllStudyPlans);
+  yield takeEvery(GET_ALL_STUDY_PLANS, fetcsectorstudyPlans);
   yield takeEvery(GENERALIZE_STUDY_PLANS, genStudyPlans);
   yield takeEvery(GET_STUDY_PLAN_PROFILE, fetchStudyPlanProfile);
   yield takeEvery(ADD_NEW_STUDY_PLAN, onAddNewStudyPlan);

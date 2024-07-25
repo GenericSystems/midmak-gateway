@@ -32,11 +32,9 @@ import {
 } from "../../helpers/fakebackend_helper";
 
 
-function* fetchSectors(obj) {
+function* fetchSectors() {
 
-  const payload= obj.payload
-
-  const get_halls_req = {
+  const get_sectors_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -45,7 +43,7 @@ function* fetchSectors(obj) {
   };
 
   try {
-    const response = yield call(getSectors, get_halls_req);
+    const response = yield call(getSectors, get_sectors_req);
     yield put(getSectorsSuccess(response));
   } catch (error) {
     yield put(getSectorsFail(error));
@@ -104,7 +102,7 @@ function* onGetSectorDeletedValue() {
 }
 
 
-function* hallsSaga() {
+function* sectorsSaga() {
   yield takeEvery(GET_SECTORS, fetchSectors);
   yield takeEvery(ADD_NEW_SECTOR, onAddNewSector);
   yield takeEvery(UPDATE_SECTOR, onUpdateSector);
@@ -112,4 +110,4 @@ function* hallsSaga() {
   yield takeEvery(GET_SECTOR_DELETED_VALUE, onGetSectorDeletedValue);
 }
 
-export default hallsSaga;
+export default sectorsSaga;

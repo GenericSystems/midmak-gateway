@@ -25,7 +25,7 @@ import coursesRegistrationSaga from "./courses-registration/saga";
 import GenerateSIDsSaga from "./generate-SIDs/saga";
 import GeneralManagementsSaga from "./general-management/saga";
 import MobAppFacultyAccsSaga from "./mob-app-faculty-accs/saga";
-import hallsSaga from "./sectors/saga";
+import sectorsSaga from "./sectors/saga";
 import StudyPlansSaga from "./study-plans/saga";
 import nationalitiesSaga from "./nationality/saga";
 import relativesSaga from "./relatives/saga";
@@ -112,7 +112,7 @@ export default function* rootSaga() {
     fork(projectsSaga),
     fork(tasksSaga),
     fork(contactsSaga),
-    fork(hallsSaga),
+    fork(sectorsSaga),
     fork(StudyPlansSaga),
     fork(reqTypesSaga),
     fork(LecturePeriodsSaga),

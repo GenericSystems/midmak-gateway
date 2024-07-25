@@ -187,11 +187,6 @@ import RolesList from "../pages/PriveledgeManagement/UserManagement/roles";
 //CoursesRegistration
 import CoursesRegistrationList from "../pages/Faculties/Student-Affairs/courses-registration";
 
-//GeneralManagement
-import GeneralManagementsList from "../pages/MobileApps/general-managements/generalManagements";
-
-//mobAppFacultyAccs
-import MobAppFacultyAccsList from "../pages/MobileApps/mob-app-faculty-accs/mobAppFacultyAccs";
 
 //StudyPlans
 import StudyPlansList from "../pages/Faculties/study-plans";
@@ -219,9 +214,6 @@ import TrainersGrades from "../pages/TrainersGrades/trainers-grades";
 
 //cERTIFICATELEVELS
 import CertificateLevelsList from "../pages/Certificateslevels/certificate-level";
-
-//StudentManagementsList
-import StudentManagementsList from "../pages/MobileApps/StudentManagements/student-management.js";
 
 //Countries
 import CountriesList from "../pages/Country/Country";
@@ -341,9 +333,6 @@ import GendersList from "../pages/Genders/genders";
 
 import GrantsList from "../pages/Grants/grants";
 
-//reset password
-import ResetPassword from "../pages/MobileApps/reset-password/reset-password";
-
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -430,12 +419,6 @@ const authProtectedRoutes = [
   //coursesregistrations
   { path: "/courses-registration", component: CoursesRegistrationList },
 
-  //general managements
-  { path: "/general-managements", component: GeneralManagementsList },
-
-  //mobAppFacultyAccs
-  { path: "/mob-app-faculty-accs", component: MobAppFacultyAccsList },
-
   //sectors
   { path: "/sectors", component: SectorsList },
 
@@ -460,8 +443,6 @@ const authProtectedRoutes = [
   { path: "/trainers-grades", component: TrainersGrades },
 
   { path: "/certificate-Level", component: CertificateLevelsList },
-  // StudentManagement
-  { path: "/student-management", component: StudentManagementsList },
 
   //Nationalities
   { path: "/nationality-list", component: NationalitiesList },
@@ -561,8 +542,6 @@ const authProtectedRoutes = [
 
   { path: "/leveling-decisions", component: LevelingDecisionsTree },
 
-  //reset-password
-  { path: "/reset-password", component: ResetPassword },
 
   // Contacts
   { path: "/contacts-grid", component: ContactsGrid },

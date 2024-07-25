@@ -16,9 +16,8 @@ import {
   DELETE_SECTOR_FAIL,
 } from "./actionTypes";
 
-export const getSectors = sectors => ({
+export const getSectors = () => ({
   type: GET_SECTORS,
-  payload:sectors
 });
 
 export const getSectorsSuccess = sectors => ({

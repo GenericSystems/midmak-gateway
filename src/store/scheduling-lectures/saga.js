@@ -235,7 +235,7 @@ function* fetchSchedulingLectures(obj) {
   }
 }
 
-function* fetchAllSchedulingLectures(obj) {
+function* fetcsectorschedulingLectures(obj) {
   let yearSemesterId = obj.payload;
   const get_allSchedulingLectures_req = {
     source: "db",
@@ -289,7 +289,7 @@ function* onUpdateSchedulingLecture({ payload }) {
     const respupdate = yield call(updateSchedulingLecture, payload.newRow);
     yield put(updateSchedulingLectureSuccess(respupdate[0]));
     if(payload.showAll==true){
-      yield (fetchAllSchedulingLectures({type:GET_ALL_SCHEDULING_LECTURES,payload:payload.semester}))
+      yield (fetcsectorschedulingLectures({type:GET_ALL_SCHEDULING_LECTURES,payload:payload.semester}))
     } 
     else {
       yield (fetchSchedulingLectures({type:GET_SCHEDULING_LECTURES,payload:payload.semester}))
@@ -309,7 +309,7 @@ function* onDeleteSchedulingLecture({ payload, schedulingLecture }) {
     const respdelete = yield call(deleteSchedulingLecture, payload.delId);
     yield put(deleteSchedulingLectureSuccess(respdelete[0]));
     if(payload.showAll==true){
-      yield (fetchAllSchedulingLectures({type:GET_ALL_SCHEDULING_LECTURES,payload:payload.semester}))
+      yield (fetcsectorschedulingLectures({type:GET_ALL_SCHEDULING_LECTURES,payload:payload.semester}))
     } 
     else {
       yield (fetchSchedulingLectures({type:GET_SCHEDULING_LECTURES,payload:payload.semester}))
@@ -323,17 +323,17 @@ function* fetchSectionLabs(obj) {
   console.log("obj",obj.payload)
   const facultyId = sectionLabCourse.facultyId === null ? 0 : sectionLabCourse.facultyId;
 
-  const get_halls_req = {
+  const get_sectors_req = {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_halls",
+    tablename: "settings_sectors",
     fields: "Id,hallName",
     filter: `facultyId = ${facultyId}`
   };
 
   try {
-    const response = yield call(getSectors, get_halls_req);
+    const response = yield call(getSectors, get_sectors_req);
     yield put(getSectorsSuccess(response));
   } catch (error) {
     yield put(getSectorsFail(error));
@@ -519,7 +519,7 @@ function* onGetScheduleMsgValue() {
 }
 
 function* schedulingLecturesSaga() {
-  yield takeEvery(GET_ALL_SCHEDULING_LECTURES, fetchAllSchedulingLectures);
+  yield takeEvery(GET_ALL_SCHEDULING_LECTURES, fetcsectorschedulingLectures);
   yield takeEvery(GET_SCHEDULING_LECTURES, fetchSchedulingLectures);
   yield takeEvery(
     GET_SCHEDULING_LECTURE_PROFILE,

@@ -457,7 +457,7 @@ const mapStateToProps = ({ sectors, menu_items }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetSectors: sector => dispatch(getSectors(sector)),
+  onGetSectors: () => dispatch(getSectors()),
   onAddNewSector: sector => dispatch(addNewSector(sector)),
   onUpdateSector: sector => dispatch(updateSector(sector)),
   onDeleteSector: sector => dispatch(deleteSector(sector)),
