@@ -55,19 +55,7 @@ import {
 } from "../../helpers/fakebackend_helper";
 
 function* fetchCertificates() {
-  const get_Certificates_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Certificates",
-  };
-  try {
-    const response = yield call(getCertificates, get_Certificates_req);
-
-    yield put(getCertificatesSuccess(response));
-  } catch (error) {
-    yield put(getCertificatesFail(error));
-  }
+  
 
   //user types
   const get_userTypes_req = {
@@ -145,6 +133,20 @@ function* fetchCertificates() {
     yield put(getYearsSuccess(response));
   } catch (error) {
     yield put(getYearsFail(error));
+  }
+
+  const get_Certificates_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Certificates",
+  };
+  try {
+    const response = yield call(getCertificates, get_Certificates_req);
+
+    yield put(getCertificatesSuccess(response));
+  } catch (error) {
+    yield put(getCertificatesFail(error));
   }
 }
 

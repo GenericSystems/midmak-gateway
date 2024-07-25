@@ -37,6 +37,7 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
+import certificateTypes from "pages/CertificatesTypes/certificates-types";
 class Certificates extends Component {
   constructor(props) {
     super(props);
@@ -149,14 +150,15 @@ class Certificates extends Component {
   handleAddRow = () => {
     const { certificates, onAddNewCertificate } = this.props;
     const newRow = {
-      arTitle: "-----",
+      academicCode: "-----",
     };
-
+  
     // Check if the same value already exists in the table
-    const emptyRowsExist = certificates.some(
-      certificate => certificate.arTitle.trim() === "-----"
-    );
-
+    const emptyRowsExist = certificates.some(certificate => {
+      const arTitle = certificate.arTitle || "";
+      return arTitle.trim() === "-----";
+    });
+  
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
       this.setState({ duplicateError: errorMessage });
@@ -165,17 +167,12 @@ class Certificates extends Component {
       onAddNewCertificate(newRow);
     }
   };
+  
 
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
   };
-  /*
-  handleDeleteRow = rowId => {
-    const { onDeleteCertificate } = this.props;
-    let obDelete = { Id: rowId };
-    onDeleteCertificate(obDelete);
-  };
-*/
+
 
   handleDeleteRow = () => {
     const { onDeleteCertificate } = this.props;
@@ -232,6 +229,12 @@ console.log("selectedRowId",selectedRowId)
     onGetCertificateDeletedValue();
   };
 
+  handleSelectChange = (rowId, fieldName, selectedValue) => {
+    const { onUpdateCertificate } = this.props;
+    let onUpdate = { Id: rowId, [fieldName]: selectedValue };
+    onUpdateCertificate(onUpdate);
+  };
+
   render() {
     const { SearchBar } = Search;
     const { certificates, user_menu, deleted , userTypes, years, sectors,certificateTypes,trainersGrades} = this.props;
@@ -262,38 +265,129 @@ console.log("selectedRowId",selectedRowId)
         dataField: "academicCode",
         text: this.props.t("Academic Code"),
         sort: true,
-       // editable: showEditButton,
+      },
+      {
+        dataField: "certificateTypeId",
+        text: "User Type",
+        sort: true,
+        formatter: (cellContent, row) => (
+          <Select
+            key={`${row.Id}_select`}
+            options={certificateTypes}
+            onChange={newValue => {
+              this.handleSelectChange(
+                row.Id,
+                "certificateTypeId",
+                newValue.value
+              );
+            }}
+            defaultValue={certificateTypes.find(
+              opt => opt.value == row.certificateTypeId
+            )}
+            //// isDisabled={!showEditButton}
+          />
+        ),
+       editable: false,
       },
       {
         dataField: "userTypeId",
         text: "User Type",
         sort: true,
-      //  editable: showEditButton,
+        formatter: (cellContent, row) => (
+          <Select
+            key={`${row.Id}_select`}
+            options={userTypes}
+            onChange={newValue => {
+              this.handleSelectChange(
+                row.Id,
+                "userTypeId",
+                newValue.value
+              );
+            }}
+            defaultValue={userTypes.find(
+              opt => opt.value == row.userTypeId
+            )}
+            //// isDisabled={!showEditButton}
+          />
+        ),
+       editable: false,
       },
+
       {
         dataField: "trainerGradeId",
         text: this.props.t("Trainer Grade"),
         sort: true,
-       // editable: showEditButton,
+        editable: false,
+        formatter: (cellContent, row) => (
+          <Select
+            key={`${row.Id}_select`}
+            options={trainersGrades}
+            onChange={newValue => {
+              this.handleSelectChange(
+                row.Id,
+                "trainerGradeId",
+                newValue.value
+              );
+            }}
+            defaultValue={trainersGrades.find(
+              opt => opt.value == row.trainerGradeId
+            )}
+            // isDisabled={!showEditButton}
+          />
+        ),
       },
       {
         dataField: "sectorId",
         text: this.props.t("Sector"),
         sort: true,
-       // editable: showEditButton,
+        editable: false,
+        formatter: (cellContent, row) => (
+          <Select
+            key={`${row.Id}_select`}
+            options={sectors}
+            onChange={newValue => {
+              this.handleSelectChange(
+                row.Id,
+                "sectorId",
+                newValue.value
+              );
+            }}
+            defaultValue={sectors.find(
+              opt => opt.value == row.sectorId
+            )}
+            // isDisabled={!showEditButton}
+          />
+        ),
       },
       
       {
         dataField: "yearId",
         text: this.props.t("Year"),
         sort: true,
-       // editable: showEditButton,
+       editable: false,
+       formatter: (cellContent, row) => (
+        <Select
+          key={`${row.Id}_select`}
+          options={years}
+          onChange={newValue => {
+            this.handleSelectChange(
+              row.Id,
+              "yearId",
+              newValue.value
+            );
+          }}
+          defaultValue={years.find(
+            opt => opt.value == row.yearId
+          )}
+          // isDisabled={!showEditButton}
+        />
+      ),
       },
       {
         dataField: "certificateNum",
         text: this.props.t("Certificate Number"),
         sort: true,
-       // editable: showEditButton,
+       editable: false,
       },
 
       {
