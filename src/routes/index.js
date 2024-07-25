@@ -211,7 +211,7 @@ import StudyPlansList from "../pages/Faculties/study-plans";
 import TempStudentsStatisticsDiagrams from "../pages/Addmission/Reports/students-statistics";
 
 //Sector
-import SectorsList from "../pages/Setting/Faculties/sectors";
+import SectorsList from "../pages/Sectors/sectors";
 //Academic  loads
 
 import AcademicLoadList from "../pages/Setting/Faculties/Academic-Load";
@@ -236,10 +236,10 @@ import PrereqsList from "../pages/Setting/Faculties/prereq-conditions";
 import RequirementTypesList from "../pages/Setting/Faculties/requirement-Types";
 
 //Certifcates
-import Certificates from "../pages/Setting/UniAdmission/certificates";
+import Certificates from "../pages/Certificates/certificates";
 
 //TrainersGrades
-import TrainersGrades from "../pages/Setting/UniAdmission/trainers-grades";
+import TrainersGrades from "../pages/TrainersGrades/trainers-grades";
 
 //cERTIFICATELEVELS
 import CertificateLevelsList from "../pages/Certificateslevels/certificate-level";

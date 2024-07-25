@@ -51,7 +51,7 @@ import {
   checkIsDeleteForPage,
   checkIsEditForPage,
   checkIsSearchForPage,
-} from "../../../utils/menuUtils";
+} from "../../utils/menuUtils";
 class SectorsList extends Component {
   constructor(props) {
     super(props);

@@ -8,17 +8,17 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import Select from "react-select";
 import {
-  getTrainersGrades,
-  addNewTrainerGrade,
-  updateTrainerGrade,
-  deleteTrainerGrade,
-  getTrainerGradeDeletedValue,
-} from "store/trainersGrades/actions"
+  getCertificates,
+  addNewCertificate,
+  updateCertificate,
+  deleteCertificate,
+  getCertificateDeletedValue,
+} from "store/certificates/actions";
 
 import ToolkitProvider, {
   Search,
@@ -30,18 +30,19 @@ import paginationFactory, {
 import { isEmpty, size, map } from "lodash";
 import { Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
+const CERTIFICATE_STORAGE_KEY = "editableCertificate";
 import {
   checkIsAddForPage,
   checkIsDeleteForPage,
   checkIsEditForPage,
   checkIsSearchForPage,
-} from "../../../utils/menuUtils";
-class TrainersGrades extends Component {
+} from "../../utils/menuUtils";
+class Certificates extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      trainersGrades: [],
-      trainerGrade: "",
+      certificates: [],
+      certificate: "",
       selectedCertLevel: null,
       deleteModal: false,
       duplicateError: null,
@@ -56,8 +57,9 @@ class TrainersGrades extends Component {
 
   componentDidMount() {
     const {
-      trainersGrades,
-      onGetTrainersGrades,
+      certificates,
+      certificatelevels,
+      onGetCertificates,
       deleted,
       user_menu,
     } = this.props;
@@ -65,10 +67,10 @@ class TrainersGrades extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (trainersGrades && !trainersGrades.length) {
-      onGetTrainersGrades();
+    if (certificates && !certificates.length) {
+      onGetCertificates();
     }
-    this.setState({ trainersGrades, deleted });
+    this.setState({ certificates, certificatelevels, deleted });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -132,19 +134,21 @@ class TrainersGrades extends Component {
       deleteModal: !prevState.deleteModal,
     }));
   };
+
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
+  
   };
 
   handleAddRow = () => {
-    const { trainersGrades, onAddNewTrainerGrade } = this.props;
+    const { certificates, onAddNewCertificate } = this.props;
     const newRow = {
       arTitle: "-----",
     };
 
     // Check if the same value already exists in the table
-    const emptyRowsExist = trainersGrades.some(
-      trainerGrade => trainerGrade.arTitle.trim() === "-----"
+    const emptyRowsExist = certificates.some(
+      certificate => certificate.arTitle.trim() === "-----"
     );
 
     if (emptyRowsExist) {
@@ -152,20 +156,27 @@ class TrainersGrades extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewTrainerGrade(newRow);
+      onAddNewCertificate(newRow);
     }
   };
 
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
   };
+  /*
+  handleDeleteRow = rowId => {
+    const { onDeleteCertificate } = this.props;
+    let obDelete = { Id: rowId };
+    onDeleteCertificate(obDelete);
+  };
+*/
 
   handleDeleteRow = () => {
-    const { onDeleteTrainerGrade } = this.props;
+    const { onDeleteCertificate } = this.props;
     const { selectedRowId } = this.state;
-
+console.log("selectedRowId",selectedRowId)
     if (selectedRowId !== null) {
-      onDeleteTrainerGrade(selectedRowId);
+      onDeleteCertificate(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -174,47 +185,54 @@ class TrainersGrades extends Component {
       });
     }
   };
-  handleTrainerGradeDataChange = (rowId, fieldName, fieldValue) => {
-    const { trainersGrades, onUpdateTrainerGrade } = this.props;
-    const isDuplicate = trainersGrades.some(
-      trainerGrade =>
-        trainerGrade.Id !== rowId &&
-        trainerGrade.arTitle.trim() === fieldValue.trim()
+  handleCertificateDataChange = (rowId, fieldName, fieldValue) => {
+    const { certificates, onUpdateCertificate } = this.props;
+    const isDuplicate = certificates.some(
+      certificate =>
+        certificate.Id !== rowId &&
+        certificate.arTitle.trim() === fieldValue.trim()
     );
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateTrainerGrade(onUpdate);
+      onUpdateCertificate(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      console.log("on update",onUpdate)
-      onUpdateTrainerGrade(onUpdate);
+      onUpdateCertificate(onUpdate);
     }
   };
 
-
+  handleSelectCertificateLevel = (rowId, fieldName, selectedValue) => {
+    this.setState({
+      selectedCertLevel: selectedValue,
+    });
+    const { onUpdateCertificate } = this.props;
+    let onUpdate = { Id: rowId, [fieldName]: selectedValue };
+    onUpdateCertificate(onUpdate);
+  };
 
   handleSuccessClose = () => {
-    const { onGetTrainerGradeDeletedValue } = this.props;
+    const { onGetCertificateDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetTrainerGradeDeletedValue();
+    onGetCertificateDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetTrainerGradeDeletedValue } = this.props;
+    const { onGetCertificateDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetTrainerGradeDeletedValue();
+    onGetCertificateDeletedValue();
   };
 
   render() {
     const { SearchBar } = Search;
-    const { trainersGrades, deleted } = this.props;
+    const { certificates, user_menu, deleted } = this.props;
+    const { selectedCertLevel } = this.state;
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
-    const { onUpdateTrainerGrade, onDeleteTrainerGrade } = this.props;
+    const { onUpdateCertificate, onDeleteCertificate } = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -224,6 +242,9 @@ class TrainersGrades extends Component {
       showEditButton,
       showSearchButton,
     } = this.state;
+
+    console.log("user_menu",user_menu)
+
     const defaultSorting = [
       {
         dataField: "Id",
@@ -235,35 +256,35 @@ class TrainersGrades extends Component {
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "arTitle",
-        text: this.props.t("Trainers Grades(ar)"),
+        text: this.props.t("Certification(ar)"),
         sort: true,
        // editable: showEditButton,
       },
       {
         dataField: "enTitle",
-        text: "Trainerts Grades",
+        text: "Certification",
         sort: true,
-       // editable: showEditButton,
+      //  editable: showEditButton,
       },
       {
         dataField: "code",
-        text: "Code",
+        text: this.props.t("Code"),
         sort: true,
        // editable: showEditButton,
       },
-     
+
       {
         dataField: "delete",
         text: "",
-      //  hidden: !showDeleteButton,
+     //   hidden: !showDeleteButton,
         isDummyField: true,
-        editable: false, 
-        formatter: (cellContent, trainerGrade) => (
+        editable: false, // Set the "Action" column to not editable
+        formatter: (cellContent, certificate) => (
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
               id="deletetooltip"
-              onClick={() => this.onClickDelete(trainerGrade)}
+              onClick={() => this.onClickDelete(certificate)}
             ></i>
           </Link>
         ),
@@ -271,7 +292,7 @@ class TrainersGrades extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: trainersGrades.length,
+      totalSize: certificates.length,
       custom: true,
     };
 
@@ -290,7 +311,7 @@ class TrainersGrades extends Component {
               title={`${this.props.t("Settings")} / ${this.props.t(
                 "University Admission"
               )}`}
-              breadcrumbItem={this.props.t("TrainersGrades")}
+              breadcrumbItem={this.props.t("Certificates")}
             />
 
             <Row>
@@ -349,12 +370,12 @@ class TrainersGrades extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={trainersGrades}
+                        data={certificates}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={trainersGrades}
+                            data={certificates}
                             columns={columns}
                             search
                           >
@@ -363,17 +384,17 @@ class TrainersGrades extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                     {/*  {showSearchButton && ( */}
+                                      {showSearchButton && (
                                         <div className="position-relative">
                                           <SearchBar
                                             {...toolkitprops.searchProps}
                                           />
                                         </div>
-                                    
+                                      )}
                                     </div>
                                   </Col>
                                   <Col sm="8">
-                             {/*        {showAddButton && ( */}
+                                   {/*  {showAddButton && ( */}
                                       <div className="text-sm-end">
                                         <Tooltip
                                           title={this.props.t("Add")}
@@ -387,7 +408,7 @@ class TrainersGrades extends Component {
                                           </IconButton>
                                         </Tooltip>
                                       </div>
-                                    
+                                    {/* )} */}
                                   </Col>
                                 </Row>
 
@@ -395,7 +416,7 @@ class TrainersGrades extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={trainersGrades}
+                                  data={certificates}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
@@ -406,7 +427,7 @@ class TrainersGrades extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handleTrainerGradeDataChange(
+                                      this.handleCertificateDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
@@ -414,7 +435,7 @@ class TrainersGrades extends Component {
                                     },
                                   })}
                                   noDataIndication={this.props.t(
-                                    "No TrainerGradeType Types found"
+                                    "No Certificate Types found"
                                   )}
                                   defaultSorted={defaultSorting}
                                 />
@@ -440,21 +461,22 @@ class TrainersGrades extends Component {
   }
 }
 
-const mapStateToProps = ({ trainersGrades, menu_items }) => ({
-  trainersGrades: trainersGrades.trainersGrades,
-  deleted: trainersGrades.deleted,
+const mapStateToProps = ({ certificates, certificatelevels, menu_items }) => ({
+  certificates: certificates.certificates,
+  certificatelevels: certificatelevels.certificatelevels,
+  deleted: certificates.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetTrainersGrades: () => dispatch(getTrainersGrades()),
-  onAddNewTrainerGrade: trainerGrade => dispatch(addNewTrainerGrade(trainerGrade)),
-  onUpdateTrainerGrade: trainerGrade => dispatch(updateTrainerGrade(trainerGrade)),
-  onDeleteTrainerGrade: trainerGrade => dispatch(deleteTrainerGrade(trainerGrade)),
-  onGetTrainerGradeDeletedValue: () => dispatch(getTrainerGradeDeletedValue()),
+  onGetCertificates: () => dispatch(getCertificates()),
+  onAddNewCertificate: certificate => dispatch(addNewCertificate(certificate)),
+  onUpdateCertificate: certificate => dispatch(updateCertificate(certificate)),
+  onDeleteCertificate: certificate => dispatch(deleteCertificate(certificate)),
+  onGetCertificateDeletedValue: () => dispatch(getCertificateDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(withTranslation()(TrainersGrades)));
+)(withRouter(withTranslation()(Certificates)));
