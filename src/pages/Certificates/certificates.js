@@ -62,6 +62,8 @@ class Certificates extends Component {
       onGetCertificates,
       deleted,
       user_menu,
+      userTypes,
+      sectors
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -70,7 +72,7 @@ class Certificates extends Component {
     if (certificates && !certificates.length) {
       onGetCertificates();
     }
-    this.setState({ certificates, certificateTypes, deleted });
+    this.setState({ certificates, certificateTypes, deleted , userTypes, sectors});
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -228,11 +230,13 @@ console.log("selectedRowId",selectedRowId)
 
   render() {
     const { SearchBar } = Search;
-    const { certificates, user_menu, deleted } = this.props;
+    const { certificates, user_menu, deleted , userTypes, sectors} = this.props;
     const { selectedCertLevel } = this.state;
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
     const { onUpdateCertificate, onDeleteCertificate } = this.props;
+
+    console.log("sectors",sectors)
     const {
       duplicateError,
       deleteModal,
@@ -255,20 +259,39 @@ console.log("selectedRowId",selectedRowId)
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "arTitle",
-        text: this.props.t("Certification(ar)"),
+        dataField: "academicCode",
+        text: this.props.t("Academic Code"),
         sort: true,
        // editable: showEditButton,
       },
       {
-        dataField: "enTitle",
-        text: "Certification",
+        dataField: "userTypeId",
+        text: "User Type",
         sort: true,
       //  editable: showEditButton,
       },
       {
-        dataField: "code",
-        text: this.props.t("Code"),
+        dataField: "trainerGradeId",
+        text: this.props.t("Trainer Grade"),
+        sort: true,
+       // editable: showEditButton,
+      },
+      {
+        dataField: "sectorId",
+        text: this.props.t("Sector"),
+        sort: true,
+       // editable: showEditButton,
+      },
+      
+      {
+        dataField: "yearId",
+        text: this.props.t("Year"),
+        sort: true,
+       // editable: showEditButton,
+      },
+      {
+        dataField: "certificateNum",
+        text: this.props.t("Certificate Number"),
         sort: true,
        // editable: showEditButton,
       },
@@ -461,9 +484,11 @@ console.log("selectedRowId",selectedRowId)
   }
 }
 
-const mapStateToProps = ({ certificates, certificateTypes, menu_items }) => ({
+const mapStateToProps = ({ certificates, certificateTypes, menu_items, userTypes, sectors }) => ({
   certificates: certificates.certificates,
   certificateTypes: certificateTypes.certificateTypes,
+  userTypes: userTypes.userTypes,
+  sectors: sectors.sectors,
   deleted: certificates.deleted,
   user_menu: menu_items.user_menu || [],
 });

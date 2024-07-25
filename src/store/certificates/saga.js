@@ -23,16 +23,22 @@ getCertificateDeletedValueFail,
 } from "./actions"
 
 import {
-    getCertificateTypesFail,
-    getCertificateTypesSuccess,
-  } from "../certificateTypes/actions";
-// Include Both Helper File with needed methods
+    getUserTypesFail,
+    getUserTypesSuccess,
+  } from "../user-types/actions";
+
+  import {
+    getSectorsFail,
+    getSectorsSuccess,
+  } from "../sectors/actions";
+
 import {
 getCertificates,
 addNewCertificate,
 updateCertificate,
 deleteCertificate,
-getCertificateTypes,
+getUserTypes,
+getSectors,
 getCertificateDeletedValue,
 } from "../../helpers/fakebackend_helper"
 
@@ -42,7 +48,7 @@ function* fetchCertificates() {
     source: 'db',
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_CertificateType"
+    tablename: "Common_Certificates"
     } ;  
   try {
   const response = yield call(getCertificates, get_Certificates_req)
@@ -50,6 +56,38 @@ function* fetchCertificates() {
   yield put(getCertificatesSuccess(response))
   } catch (error) {
   yield put(getCertificatesFail(error))
+  }
+
+  //user types
+  const get_userTypes_req = {
+    source: 'db',
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_UserType",
+    fields: "Id,arTitle"
+    } ;  
+
+  try {
+  const response = yield call(getUserTypes, get_userTypes_req)
+  yield put(getUserTypesSuccess(response))
+  } catch (error) {
+  yield put(getUserTypesFail(error))
+  }
+
+   //Sectors
+   const get_sectors_req = {
+    source: 'db',
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Sector",
+    fields: "Id,arTitle"
+    } ;  
+
+  try {
+  const response = yield call(getSectors, get_sectors_req)
+  yield put(getSectorsSuccess(response))
+  } catch (error) {
+  yield put(getSectorsFail(error))
   }
  
 }
@@ -59,7 +97,7 @@ delete payload["id"];
 payload["source"] = 'db';
 payload["procedure"] = 'SisApp_addData';
 payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-payload["tablename"] = 'Settings_CertificateType';
+payload["tablename"] = 'Common_Certificates';
 try {
         const response = yield call(addNewCertificate, payload)
         yield put(addCertificateSuccess(response[0]))
@@ -72,7 +110,7 @@ function* onUpdateCertificate({ payload }) {
     payload["source"] = 'db';
     payload["procedure"] = 'SisApp_updateData';
     payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-    payload["tablename"] = 'Settings_CertificateType';
+    payload["tablename"] = 'Common_Certificates';
     try {
         const respupdate = yield call(updateCertificate, payload)
         yield put(updateCertificateSuccess(respupdate[0]))
@@ -85,7 +123,7 @@ function* onDeleteCertificate({ payload}) {
     payload["source"] = 'db';
     payload["procedure"] = 'SisApp_removeData';
     payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-    payload["tablename"] = 'Settings_CertificateType';
+    payload["tablename"] = 'Common_Certificates';
     try {
         const respdelete = yield call(deleteCertificate, payload)
         yield put(deleteCertificateSuccess(respdelete[0]))
