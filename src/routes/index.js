@@ -184,12 +184,7 @@ import CurrSemMansList from "../pages/PriveledgeManagement/SystemManagement/curr
 import UserMngsList from "../pages/PriveledgeManagement/UserManagement/UserMngs";
 //Roles
 import RolesList from "../pages/PriveledgeManagement/UserManagement/roles";
-//CoursesRegistration
-import CoursesRegistrationList from "../pages/Faculties/Student-Affairs/courses-registration";
 
-
-//StudyPlans
-import StudyPlansList from "../pages/Faculties/study-plans";
 
 //Sector
 import SectorsList from "../pages/Sectors/sectors";
@@ -273,9 +268,6 @@ import LevelsList from "pages/Levels/levels";
 //Schedules
 import Schedules from "pages/Setting/Faculties/schedules";
 
-//SchedulingLectures
-import SchedulingLectures from "pages/Faculties/scheduling-lectures";
-
 //Week Days
 import WeekDays from "pages/WeekDays/weekDays";
 
@@ -304,9 +296,6 @@ import contactsList from "../pages/Contacts/ContactList/contacts-list";
 //City
 import CitiesList from "../pages/Cities/cities";
 
-//DistributingCoursesMethods
-
-import DistributingCoursesMethods from "../pages/Faculties/Exams/Distributing-courses-methods";
 
 // letter Grades
 
@@ -320,10 +309,6 @@ import StdsTransportLine from "pages/TransportationLines/trans-lines-stds";
 
 import LevelingDecisionsTree from "pages/Setting/Faculties/leveling-decisions";
 
-//Grades
-import GradesList from "../pages/Faculties/Exams/grades";
-
-import CheckGradesList from "../pages/Faculties/Exams/check-grades";
 
 // gender
 
@@ -416,8 +401,6 @@ const authProtectedRoutes = [
   //RolesList
   { path: "/roles", component: RolesList },
 
-  //coursesregistrations
-  { path: "/courses-registration", component: CoursesRegistrationList },
 
   //sectors
   { path: "/sectors", component: SectorsList },
@@ -430,8 +413,6 @@ const authProtectedRoutes = [
   //PreReqTypes
   { path: "/requirement-Types", component: RequirementTypesList },
 
-  //StudyPlans
-  { path: "/study-plans", component: StudyPlansList },
 
   //prerequisites
   { path: "/prereq-conditions", component: PrereqsList },
@@ -504,9 +485,6 @@ const authProtectedRoutes = [
   //Schedules
   { path: "/schedules", component: Schedules },
 
-  //SchedulingLectures
-  { path: "/scheduling-lectures", component: SchedulingLectures },
-
   //Week Days
   { path: "/weekDays", component: WeekDays },
 
@@ -524,15 +502,7 @@ const authProtectedRoutes = [
 
   //Estimates
   { path: "/estimate", component: estimates },
-
-  //grades
-  { path: "/grades", component: GradesList },
-  { path: "/check-grades", component: CheckGradesList },
-
-  {
-    path: "/Distributing-courses-methods",
-    component: DistributingCoursesMethods,
-  },
+,
 
   { path: "/letter-grades", component: LetterGradesTree },
 
