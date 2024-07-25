@@ -208,16 +208,6 @@ import AcademicLoadList from "../pages/Setting/Faculties/Academic-Load";
 //Warning
 import warningsList from "../pages/Setting/Faculties/warning";
 
-//WarningRules
-import WarningRules from "../pages/LawsAndRegulations/warning-rules";
-
-//StdWarningTest
-import StdWarningTest from "../pages/LawsAndRegulations/std-warning-test";
-
-
-//ExceptionalPeriods
-import ExceptionalPeriods from "../pages/LawsAndRegulations/exceptional-periods";
-
 //PREREQS
 import PrereqsList from "../pages/Setting/Faculties/prereq-conditions";
 
@@ -360,13 +350,7 @@ import CheckGradesList from "../pages/Faculties/Exams/check-grades";
 // gender
 
 import GendersList from "../pages/Genders/genders";
-// student-decrees
 
-import StudentsDecreesList from "../pages/LawsAndRegulations/student-decrees";
-
-// decisions
-
-import DecisionsList from "../pages/LawsAndRegulations/decisions";
 // grants
 
 import GrantsList from "../pages/Grants/grants";
@@ -395,10 +379,6 @@ const authProtectedRoutes = [
   { path: "/cities", component: CitiesList },
   //gender
   { path: "/genders", component: GendersList },
-  //students-decrees
-  { path: "/student-decrees", component: StudentsDecreesList },
-  //decision
-  { path: "/decisions", component: DecisionsList },
 
   //grant
   { path: "/grants", component: GrantsList },
@@ -480,12 +460,6 @@ const authProtectedRoutes = [
   { path: "/Academic-Load", component: AcademicLoadList },
 
   { path: "/warning", component: warningsList },
-
-  { path: "/warning-rules", component: WarningRules },
-
-  { path: "/std-warning-test", component: StdWarningTest },
-
-  { path: "/exceptional-periods", component: ExceptionalPeriods },
 
   //PreReqTypes
   { path: "/requirement-Types", component: RequirementTypesList },
