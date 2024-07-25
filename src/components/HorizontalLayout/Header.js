@@ -123,7 +123,7 @@ class Header extends Component {
                     <img src={logoLightSvg} alt="" height="22" />
                   </span>
                   <span className="logo-lg">
-                    <img src={logoLight} alt="" height="19" />
+                    <img src={logoLight} alt="" height="19" style={{ borderRadius: '50px' }} />
                   </span>
                 </Link>
               </div>

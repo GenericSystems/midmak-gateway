@@ -100,11 +100,16 @@
   .logo {
     span.logo-lg {
       display: none;
+      
+    }
+    .logo-lg img{
+      border-radius: 50px;
     }
 
     span.logo-sm {
       display: inline-block;
     }
+  
   }
 }
 

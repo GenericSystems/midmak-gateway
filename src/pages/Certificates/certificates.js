@@ -233,13 +233,11 @@ console.log("selectedRowId",selectedRowId)
 
   render() {
     const { SearchBar } = Search;
-    const { certificates, user_menu, deleted , userTypes, sectors,trainersGrades} = this.props;
+    const { certificates, user_menu, deleted , userTypes, sectors,certificateTypes,trainersGrades} = this.props;
     const { selectedCertLevel } = this.state;
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
-    const { onUpdateCertificate, onDeleteCertificate } = this.props;
-
-    console.log("trainersGrades",trainersGrades)
+    console.log("certificateTypes",certificateTypes)
     const {
       duplicateError,
       deleteModal,
@@ -487,7 +485,7 @@ console.log("selectedRowId",selectedRowId)
   }
 }
 
-const mapStateToProps = ({ certificates, certificateTypes, menu_items, userTypes, sectors,trainersGrades }) => ({
+const mapStateToProps = ({ certificates, menu_items, userTypes,certificateTypes, sectors,trainersGrades }) => ({
   certificates: certificates.certificates,
   certificateTypes: certificateTypes.certificateTypes,
   userTypes: userTypes.userTypes,
