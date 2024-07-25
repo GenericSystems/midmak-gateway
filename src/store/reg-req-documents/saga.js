@@ -17,9 +17,9 @@ import {
 } from "../years/actions";
 
 import {
-getCertificateLevelsSuccess,
-getCertificateLevelsFail,
-} from "../certificatelevels/actions";
+getCertificateTypesSuccess,
+getCertificateTypesFail,
+} from "../certificateTypes/actions";
 
 import {
   GET_REG_REQ_DOCUMENTS,
@@ -57,7 +57,7 @@ import {
   getCurrentSemester,
   copyRegReqDoc,
   getCertificates,
-  getCertificateLevels,
+  getCertificateTypes,
   getYears,
 
 
@@ -88,7 +88,7 @@ function* fetchRegReqDocuments(obj) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "settings_RequiredRegistrationDocuments",
-    filter: ` yearId = ${regReqDoc.yearId} and certificateLevelId = ${regReqDoc.certificateLevelId} `,
+    filter: ` yearId = ${regReqDoc.yearId} and certificateTypeId = ${regReqDoc.certificateTypeId} `,
   };
   try {
     const response = yield call(getRegReqDocuments, get_settings_req);
@@ -113,19 +113,19 @@ try {
   yield put(getYearsFail(error));
 } 
 
-   //get certificateLevel
-   const get_certificateLevel_opt = {
+   //get certificateType
+   const get_certificateType_opt = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_certificateLevel",
+    tablename: "settings_certificateType",
     filter: "checkLevel = 1"
   };
   try {
-    const response = yield call(getCertificateLevels, get_certificateLevel_opt);
-    yield put(getCertificateLevelsSuccess(response));
+    const response = yield call(getCertificateTypes, get_certificateType_opt);
+    yield put(getCertificateTypesSuccess(response));
   } catch (error) {
-    yield put(getCertificateLevelsFail(error));
+    yield put(getCertificateTypesFail(error));
   }
 
 }

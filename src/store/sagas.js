@@ -31,7 +31,7 @@ import nationalitiesSaga from "./nationality/saga";
 import relativesSaga from "./relatives/saga";
 import CertificatesSaga from "./certificates/saga";
 import TrainersGradesSaga from "./trainersGrades/saga";
-import CertificatelevelSaga from "./certificatelevels/saga";
+import CertificatelevelSaga from "./certificateTypes/saga";
 import StudentManagementSaga from "./studentManagements/saga";
 import universityStudentsSaga from "./university-students/saga";
 import contactsSaga from "./contacts/saga";

@@ -263,12 +263,12 @@ export const UPDATE_MAJOR_TYPE = "/update/trainerGrade";
 export const DELETE_MAJOR_TYPE = "/delete/trainerGrade";
 export const GET_MAJOR_TYPE_DELETED_VALUE = "/deleted";
 
-//CERTIFICATELEVELS
-export const GET_CERTIFICATESLEVELS = "/certificateLevels";
-export const GET_CERTIFICATELEVEL_DELETED_VALUE = "/deleted";
-export const ADD_NEW_CERTIFICATELEVEL = "/add/certificateLevels";
-export const UPDATE_CERTIFICATELEVEL = "/update/certificateLevels";
-export const DELETE_CERTIFICATELEVEL = "/delete/certificateLevels";
+//CERTIFICATE_TYPES
+export const GET_CERTIFICATESLEVELS = "/certificateTypes";
+export const GET_CERTIFICATE_TYPE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_CERTIFICATE_TYPE = "/add/certificateTypes";
+export const UPDATE_CERTIFICATE_TYPE = "/update/certificateTypes";
+export const DELETE_CERTIFICATE_TYPE = "/delete/certificateTypes";
 
 //STUDENTMANAGEMENTS
 export const GET_STUDENTMANAGEMENTS = "/studentManagements";

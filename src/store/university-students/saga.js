@@ -78,9 +78,9 @@ import {
 import { getGendersSuccess, getGendersFail } from "../genders/actions";
 
 import {
-  getCertificateLevelsSuccess,
-  getCertificateLevelsFail,
-} from "../certificatelevels/actions";
+  getCertificateTypesSuccess,
+  getCertificateTypesFail,
+} from "../certificateTypes/actions";
 
 import {
   getAcademicCertificatesSuccess,
@@ -153,7 +153,7 @@ import {
   getDocuments,
   getRegReqDocuments,
   getGenders,
-  getCertificateLevels,
+  getCertificateTypes,
   getAdmissionConditions,
   getFilteredFaculties,
   getAcademicCertificates,
@@ -366,19 +366,19 @@ function* fetchUniversityStudents() {
     yield put(getGendersFail(error));
   }
 
-  //get certificateLevels
-  const get_certificateLevel = {
+  //get certificateTypes
+  const get_certificateType = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_certificateLevel",
-    fields: "Id,arcertificatelevel",
+    tablename: "settings_certificateType",
+    fields: "Id,arcertificateType",
   };
   try {
-    const response = yield call(getCertificateLevels, get_certificateLevel);
-    yield put(getCertificateLevelsSuccess(response));
+    const response = yield call(getCertificateTypes, get_certificateType);
+    yield put(getCertificateTypesSuccess(response));
   } catch (error) {
-    yield put(getCertificateLevelsFail(error));
+    yield put(getCertificateTypesFail(error));
   }
 
   //get admission conditions

@@ -55,7 +55,7 @@ import {
   octEarningData,
   certificates,
   trainersGrades,
-  certificatelevels,
+  certificateTypes,
   studentManagements,
   countries,
   grades,
@@ -2747,11 +2747,11 @@ const fakeBackend = () => {
     });
   });
 
-  //CERTIFICATELEVELS
-  mock.onPost(url.ADD_NEW_CERTIFICATELEVEL).reply(order => {
+  //CERTIFICATE_TYPES
+  mock.onPost(url.ADD_NEW_CERTIFICATE_TYPE).reply(order => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("added certificateLevel");
+        console.log("added certificateType");
         if (order && order.data) {
           // Passing fake JSON data as response
           resolve([200, order.data]);
@@ -2762,43 +2762,43 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onPut(url.UPDATE_CERTIFICATELEVEL).reply(certificateLevel => {
-    console.log("in mock onPut reply updating ...", certificateLevel);
+  mock.onPut(url.UPDATE_CERTIFICATE_TYPE).reply(certificateType => {
+    console.log("in mock onPut reply updating ...", certificateType);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("updated certificateLevel");
-        if (certificateLevel && certificateLevel.data) {
+        console.log("updated certificateType");
+        if (certificateType && certificateType.data) {
           // Passing fake JSON data as response
-          resolve([200, certificateLevel.data]);
+          resolve([200, certificateType.data]);
         } else {
-          reject([400, "Cannot update certificateLevel"]);
+          reject([400, "Cannot update certificateType"]);
         }
       });
     });
   });
-  mock.onDelete(url.DELETE_CERTIFICATELEVEL).reply(config => {
+  mock.onDelete(url.DELETE_CERTIFICATE_TYPE).reply(config => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("deleted certificateLevel");
+        console.log("deleted certificateType");
         if (config && config.headers) {
           // Passing fake JSON data as response
-          resolve([200, config.headers.certificateLevelData]);
+          resolve([200, config.headers.certificateTypeData]);
         } else {
-          reject([400, "Cannot delete certificateLevel"]);
+          reject([400, "Cannot delete certificateType"]);
         }
       });
     });
   });
 
   mock.onGet(url.GET_CERTIFICATESLEVELS).reply(() => {
-    console.log("Calling mock get certificateLevel");
+    console.log("Calling mock get certificateType");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (certificatelevels) {
+        if (certificateTypes) {
           // Passing fake JSON data as response
-          resolve([200, certificatelevels]);
+          resolve([200, certificateTypes]);
         } else {
-          reject([400, "Cannot get certificateLevel"]);
+          reject([400, "Cannot get certificateType"]);
         }
       });
     });

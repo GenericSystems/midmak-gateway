@@ -208,7 +208,7 @@ import Certificates from "../pages/Certificates/certificates";
 import TrainersGrades from "../pages/TrainersGrades/trainers-grades";
 
 //cERTIFICATELEVELS
-import CertificateLevelsList from "../pages/Certificateslevels/certificate-level";
+import CertificateTypesList from "../pages/CertificatesTypes/certificates-types";
 
 //Countries
 import CountriesList from "../pages/Country/Country";
@@ -423,7 +423,7 @@ const authProtectedRoutes = [
   // TrainersGrades
   { path: "/trainers-grades", component: TrainersGrades },
 
-  { path: "/certificate-Level", component: CertificateLevelsList },
+  { path: "/certificates-types", component: CertificateTypesList },
 
   //Nationalities
   { path: "/nationality-list", component: NationalitiesList },

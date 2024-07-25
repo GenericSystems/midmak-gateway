@@ -74,9 +74,9 @@ import {
 import { getGendersSuccess, getGendersFail } from "../genders/actions";
 
 import {
-  getCertificateLevelsSuccess,
-  getCertificateLevelsFail,
-} from "../certificatelevels/actions";
+  getCertificateTypesSuccess,
+  getCertificateTypesFail,
+} from "../certificateTypes/actions";
 
 import {
   getAdmissionConditionsSuccess,
@@ -146,7 +146,7 @@ import {
   getDocuments,
   getRegReqDocuments,
   getGenders,
-  getCertificateLevels,
+  getCertificateTypes,
   getAdmissionConditions,
   getAcademicCertificates,
   getFilteredFaculties,
@@ -353,19 +353,19 @@ function* fetchStudents() {
     yield put(getGendersFail(error));
   }
 
-  //get certificateLevels
-  const get_certificateLevel = {
+  //get certificateTypes
+  const get_certificateType = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_certificateLevel",
-    fields: "Id,arcertificatelevel",
+    tablename: "settings_certificateType",
+    fields: "Id,arcertificateType",
   };
   try {
-    const response = yield call(getCertificateLevels, get_certificateLevel);
-    yield put(getCertificateLevelsSuccess(response));
+    const response = yield call(getCertificateTypes, get_certificateType);
+    yield put(getCertificateTypesSuccess(response));
   } catch (error) {
-    yield put(getCertificateLevelsFail(error));
+    yield put(getCertificateTypesFail(error));
   }
 
   //get admission conditions
@@ -580,7 +580,7 @@ function* fetchDefaultRegReqDocs(obj) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_RegReqDocs",
-    filter: `yearId = ${object.yearId} and certificateLevelId = ${object.certificateLevelId} `,
+    filter: `yearId = ${object.yearId} and certificateTypeId = ${object.certificateTypeId} `,
   };
   try {
     const response = yield call(getDefaultRegReqDocs, get_student_regReqDocs);

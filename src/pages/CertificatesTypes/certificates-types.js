@@ -30,12 +30,12 @@ import ToolkitProvider, {
 import Breadcrumbs from "components/Common/Breadcrumb";
 import DeleteModal from "components/Common/DeleteModal";
 import {
-  getCertificateLevels,
-  addNewCertificateLevel,
-  updateCertificateLevel,
-  deleteCertificateLevel,
-  getCertificateLevelDeletedValue,
-} from "store/certificatelevels/actions";
+  getCertificateTypes,
+  addNewCertificateType,
+  updateCertificateType,
+  deleteCertificateType,
+  getCertificateTypeDeletedValue,
+} from "store/certificateTypes/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -48,12 +48,12 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
-class CertificateLevelsList extends Component {
+class CertificateTypesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      certificatelevels: [],
-      certificatelevel: "",
+      certificateTypes: [],
+      certificateType: "",
       showAlert: null,
       showAddButton: false,
       showDeleteButton: false,
@@ -68,20 +68,20 @@ class CertificateLevelsList extends Component {
   }
 
   componentDidMount() {
-    const { certificatelevels, onGetCertificateLevels, deleted, user_menu } =
+    const { certificateTypes, onGetCertificateTypes, deleted, user_menu } =
       this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (certificatelevels && !certificatelevels.length) {
-      onGetCertificateLevels();
+    if (certificateTypes && !certificateTypes.length) {
+      onGetCertificateTypes();
     }
-    this.setState({ certificatelevels, deleted });
+    this.setState({ certificateTypes, deleted });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { certificatelevels } = this.props;
+    const { certificateTypes } = this.props;
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -146,19 +146,19 @@ class CertificateLevelsList extends Component {
   };
 
   handleAddRow = () => {
-    const { onAddNewCertificateLevel, certificatelevels } = this.props;
+    const { onAddNewCertificateType, certificateTypes } = this.props;
 
     const newRow = {
-      arcertificatelevel: "-----",
-      encertificatelevel: "",
+      arTitle: "-----",
+      enTitle: "",
     };
 
     // Check if the same value already exists in the table
-    const emptyRowsExist = certificatelevels.some(
-      certificatelevels =>
-        certificatelevels.arcertificatelevel.trim() === "-----"
+    const emptyRowsExist = certificateTypes.some(
+      certificateTypes =>
+        certificateTypes.arTitle.trim() === "-----"
       // ||
-      // certificatelevel.encertificatelevel.trim() === ""
+      // certificateType.enTitle.trim() === ""
     );
 
     if (emptyRowsExist) {
@@ -166,16 +166,16 @@ class CertificateLevelsList extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewCertificateLevel(newRow);
+      onAddNewCertificateType(newRow);
     }
   };
 
   handleDeleteRow = () => {
-    const { onDeleteCertificateLevel } = this.props;
+    const { onDeleteCertificateType } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteCertificateLevel(selectedRowId);
+      onDeleteCertificateType(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -185,54 +185,58 @@ class CertificateLevelsList extends Component {
     }
   };
 
-  handleCertificateLevelDataChange = (rowId, fieldName, fieldValue) => {
-    const { onUpdateCertificateLevel, certificatelevels } = this.props;
-    const isDuplicate = certificatelevels.some(
-      certificatelevel =>
-        certificatelevel.Id !== rowId &&
-        (certificatelevel.arcertificatelevel.trim() === fieldValue.trim() ||
-          certificatelevel.encertificatelevel.trim() === fieldValue.trim())
-    );
-
+  handleCertificateTypeDataChange = (rowId, fieldName, fieldValue) => {
+    const { onUpdateCertificateType, certificateTypes } = this.props;
+    
+    const isDuplicate = certificateTypes.some(certificateType => {
+      if (certificateType.Id !== rowId) {
+        const arTitle = certificateType.arTitle || "";
+        const enTitle = certificateType.enTitle || "";
+        return arTitle.trim() === fieldValue.trim() || enTitle.trim() === fieldValue.trim();
+      }
+      return false;
+    });
+  
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateCertificateLevel(onUpdate);
+      onUpdateCertificateType(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateCertificateLevel(onUpdate);
+      onUpdateCertificateType(onUpdate);
     }
   };
+  
 
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
   };
 
   handleSuccessClose = () => {
-    const { onGetCertificateLevelDeletedValue } = this.props;
+    const { onGetCertificateTypeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetCertificateLevelDeletedValue();
+    onGetCertificateTypeDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetCertificateLevelDeletedValue } = this.props;
+    const { onGetCertificateTypeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetCertificateLevelDeletedValue();
+    onGetCertificateTypeDeletedValue();
   };
   handleChangeCheckbox = (row, fieldName) => {
-    const { onUpdateCertificateLevel } = this.props;
+    const { onUpdateCertificateType } = this.props;
     const newStatus = row[fieldName] ? 0 : 1;
     let ob = {
       Id: row.Id,
       [fieldName]: newStatus,
     };
-    onUpdateCertificateLevel(ob);
+    onUpdateCertificateType(ob);
   };
 
   render() {
-    const { certificatelevels, t, deleted } = this.props;
+    const { certificateTypes, t, deleted } = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -257,46 +261,36 @@ class CertificateLevelsList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "arcertificatelevel",
-        text: this.props.t("Certificate Level(ar)"),
+        dataField: "arTitle",
+        text: this.props.t("Certificate Type(ar)"),
         sort: true,
-        editable: showEditButton,
+      //  editable: showEditButton,
       },
       {
-        dataField: "encertificatelevel",
-        text: "Certificate Level",
+        dataField: "enTitle",
+        text: "Certificate Type",
         sort: true,
-        editable: showEditButton,
+      //  editable: showEditButton,
       },
       {
-        dataField: "checkLevel",
-        text: t("is certificate"),
+        dataField: "code",
+        text: "Code",
         sort: true,
-        editable: false,
-        formatter: (cellContent, row, column) => (
-          <Input
-            type="checkbox"
-            name="RequireAttestation"
-            className={`form-check-input input-mini warning}`}
-            id="attestationButton"
-            defaultChecked={cellContent == 1}
-            onChange={event => this.handleChangeCheckbox(row, "checkLevel")}
-            disabled={!showEditButton}
-          />
-        ),
+      //  editable: showEditButton,
       },
+     
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
-        hidden: !showDeleteButton,
-        formatter: (cellContent, certificatelevel) => (
+      //  hidden: !showDeleteButton,
+        formatter: (cellContent, certificateType) => (
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
               id="deletetooltip"
-              onClick={() => this.onClickDelete(certificatelevel)}
+              onClick={() => this.onClickDelete(certificateType)}
             ></i>
           </Link>
         ),
@@ -304,7 +298,7 @@ class CertificateLevelsList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: certificatelevels.length,
+      totalSize: certificateTypes.length,
       custom: true,
     };
 
@@ -320,8 +314,8 @@ class CertificateLevelsList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={this.props.t("CertificateLevels")}
-              breadcrumbItem={this.props.t("CertificateLevels List")}
+              title={this.props.t("CertificateTypes")}
+              breadcrumbItem={this.props.t("CertificateTypes List")}
             />
             <Row>
               <Col>
@@ -379,12 +373,12 @@ class CertificateLevelsList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={certificatelevels}
+                        data={certificateTypes}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={certificatelevels}
+                            data={certificateTypes}
                             columns={columns}
                             search
                           >
@@ -393,16 +387,16 @@ class CertificateLevelsList extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {showSearchButton && (
+                                    {/*   {showSearchButton && ( */}
                                         <div className="position-relative">
                                           <SearchBar
                                             {...toolkitprops.searchProps}
                                           />
                                         </div>
-                                      )}
+                                   
                                     </div>
                                   </Col>
-                                  {showAddButton && (
+                               {/*    {showAddButton && ( */}
                                     <Col sm="8">
                                       <div className="text-sm-end">
                                         <Tooltip
@@ -418,14 +412,14 @@ class CertificateLevelsList extends Component {
                                         </Tooltip>
                                       </div>
                                     </Col>
-                                  )}
+                                  
                                 </Row>
 
                                 <BootstrapTable
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={certificatelevels}
+                                  data={certificateTypes}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
@@ -436,7 +430,7 @@ class CertificateLevelsList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handleCertificateLevelDataChange(
+                                      this.handleCertificateTypeDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
@@ -444,7 +438,7 @@ class CertificateLevelsList extends Component {
                                     },
                                   })}
                                   noDataIndication={this.props.t(
-                                    "No CertificateLevels found"
+                                    "No CertificateTypes found"
                                   )}
                                   defaultSorted={defaultSorting}
                                 />
@@ -470,25 +464,25 @@ class CertificateLevelsList extends Component {
   }
 }
 
-const mapStateToProps = ({ certificatelevels, menu_items }) => ({
-  certificatelevels: certificatelevels.certificatelevels,
-  deleted: certificatelevels.deleted,
+const mapStateToProps = ({ certificateTypes, menu_items }) => ({
+  certificateTypes: certificateTypes.certificateTypes,
+  deleted: certificateTypes.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetCertificateLevels: () => dispatch(getCertificateLevels()),
-  onAddNewCertificateLevel: certificatelevel =>
-    dispatch(addNewCertificateLevel(certificatelevel)),
-  onUpdateCertificateLevel: certificatelevel =>
-    dispatch(updateCertificateLevel(certificatelevel)),
-  onDeleteCertificateLevel: certificatelevel =>
-    dispatch(deleteCertificateLevel(certificatelevel)),
-  onGetCertificateLevelDeletedValue: () =>
-    dispatch(getCertificateLevelDeletedValue()),
+  onGetCertificateTypes: () => dispatch(getCertificateTypes()),
+  onAddNewCertificateType: certificateType =>
+    dispatch(addNewCertificateType(certificateType)),
+  onUpdateCertificateType: certificateType =>
+    dispatch(updateCertificateType(certificateType)),
+  onDeleteCertificateType: certificateType =>
+    dispatch(deleteCertificateType(certificateType)),
+  onGetCertificateTypeDeletedValue: () =>
+    dispatch(getCertificateTypeDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(CertificateLevelsList));
+)(withTranslation()(CertificateTypesList));

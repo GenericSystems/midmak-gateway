@@ -49,7 +49,6 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-import certificateLevel from "pages/Certificateslevels/certificate-level";
 class RegReqDocumentsTable extends Component {
   constructor(props) {
     super(props);
@@ -82,7 +81,7 @@ class RegReqDocumentsTable extends Component {
       deleted,
       currentSemester,
       years,
-      certificatelevels,
+      certificateTypes,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -96,7 +95,7 @@ class RegReqDocumentsTable extends Component {
       onGetRegReqDocuments(ob);
 
       this.setState({ regReqDocuments, deleted });
-      this.setState({ documents, currentSemester, years, certificatelevels });
+      this.setState({ documents, currentSemester, years, certificateTypes });
     }
 
     this.setState({ defaultYear: defaultYear, isCurrentYear: true });
@@ -388,7 +387,7 @@ else{
       deleted,
       years,
       currentSemester,
-      certificatelevels,
+      certificateTypes,
     } = this.props;
     console.log("currentSemester",currentSemester);
     console.log("years",years);
@@ -631,7 +630,7 @@ else{
                           {t("Certificate Levels")}
                         </CardTitle>
                         <CardBody>
-                          {certificatelevels.map((certificate, index) => (
+                          {certificateTypes.map((certificate, index) => (
                             <div className="mb-1" key={certificate.Id}>
                               <Row>
                                 <Col>
@@ -653,7 +652,7 @@ else{
                                     htmlFor={`btncheck${certificate.Id}`}
                                   >
                                     {this.props.t(
-                                      certificate.arcertificatelevel
+                                      certificate.arcertificateType
                                     )}
                                   </label>
                                 </Col>
@@ -827,7 +826,7 @@ const mapStateToProps = ({
   semesters,
   menu_items,
   years,
-  certificatelevels,
+  certificateTypes,
 }) => ({
   regReqDocuments: regReqDocuments.regReqDocuments,
   deleted: regReqDocuments.deleted,
@@ -835,7 +834,7 @@ const mapStateToProps = ({
   currentSemester: semesters.currentSemester,
   years: years.years,
   user_menu: menu_items.user_menu || [],
-  certificatelevels: certificatelevels.certificatelevels,
+  certificateTypes: certificateTypes.certificateTypes,
 });
 
 const mapDispatchToProps = dispatch => ({

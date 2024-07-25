@@ -82,8 +82,8 @@ import certificates from "./certificates/reducer"
 //trainersGrades
 import trainersGrades from "./trainersGrades/reducer"
 
-//certificateLevels
-import certificatelevels from "./certificatelevels/reducer"
+//certificateTypes
+import certificateTypes from "./certificateTypes/reducer"
 
 //studentManagements
 import studentManagements from "./studentManagements/reducer"
@@ -289,7 +289,7 @@ const rootReducer = combineReducers({
   tasks,
   contacts,
   nationalities,
-  certificatelevels,
+  certificateTypes,
   trainersGrades,
   studentManagements,
   nationalities,

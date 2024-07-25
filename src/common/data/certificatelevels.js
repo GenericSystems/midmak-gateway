@@ -1,4 +1,0 @@
-const certificatelevels=[
- 
-]
-export {certificatelevels}

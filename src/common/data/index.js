@@ -31,7 +31,7 @@ import { file } from "./file";
 import { users, userProfile } from "./contacts";
 import { certificates} from "./certificates";
 import { trainersGrades} from "./trainersGrades";
-import { certificatelevels } from "./certificatelevels";
+import { certificateTypes } from "./certificateTypes";
 import { studentManagements } from "./studentManagements";
 import { generateSIDs} from "./generateSIDs";
 import { lecturePeriods} from "./lecturePeriods";
@@ -131,7 +131,7 @@ export {
   studyPlans,
   certificates,
   trainersGrades,
-  certificatelevels,
+  certificateTypes,
   studentManagements,
   countries,
   studentsStatistics,

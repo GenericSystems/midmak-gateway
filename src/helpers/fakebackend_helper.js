@@ -593,24 +593,24 @@ export const getTrainerGradeDeletedValue = () =>
   get(url.GET_MAJOR_TYPE_DELETED_VALUE);
 
 // get CertificateLEVEL
-export const getCertificateLevels = data =>
+export const getCertificateTypes = data =>
   post(url.GET_CERTIFICATESLEVELS, data);
 
-// add certificateLevels
-export const addNewCertificateLevel = data =>
-  post(url.ADD_NEW_CERTIFICATELEVEL, data);
+// add certificateTypes
+export const addNewCertificateType = data =>
+  post(url.ADD_NEW_CERTIFICATE_TYPE, data);
 
-//CERTIFICATELEVEL
-export const getCertificateLevelDeletedValue = () =>
-  get(url.GET_CERTIFICATELEVEL_DELETED_VALUE);
+//CERTIFICATE_TYPE
+export const getCertificateTypeDeletedValue = () =>
+  get(url.GET_CERTIFICATE_TYPE_DELETED_VALUE);
 
-//update certificateLevel
-export const updateCertificateLevel = data =>
-  post(url.UPDATE_CERTIFICATELEVEL, data);
+//update certificateType
+export const updateCertificateType = data =>
+  post(url.UPDATE_CERTIFICATE_TYPE, data);
 
-//delete certificatelevel
-export const deleteCertificateLevel = data =>
-  post(url.DELETE_CERTIFICATELEVEL, data);
+//delete certificateType
+export const deleteCertificateType = data =>
+  post(url.DELETE_CERTIFICATE_TYPE, data);
 
 // get studentManagement
 export const getStudentManagements = data =>

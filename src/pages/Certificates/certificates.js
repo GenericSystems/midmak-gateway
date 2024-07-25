@@ -58,7 +58,7 @@ class Certificates extends Component {
   componentDidMount() {
     const {
       certificates,
-      certificatelevels,
+      certificateTypes,
       onGetCertificates,
       deleted,
       user_menu,
@@ -70,7 +70,7 @@ class Certificates extends Component {
     if (certificates && !certificates.length) {
       onGetCertificates();
     }
-    this.setState({ certificates, certificatelevels, deleted });
+    this.setState({ certificates, certificateTypes, deleted });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -205,7 +205,7 @@ console.log("selectedRowId",selectedRowId)
     }
   };
 
-  handleSelectCertificateLevel = (rowId, fieldName, selectedValue) => {
+  handleSelectCertificateType = (rowId, fieldName, selectedValue) => {
     this.setState({
       selectedCertLevel: selectedValue,
     });
@@ -461,9 +461,9 @@ console.log("selectedRowId",selectedRowId)
   }
 }
 
-const mapStateToProps = ({ certificates, certificatelevels, menu_items }) => ({
+const mapStateToProps = ({ certificates, certificateTypes, menu_items }) => ({
   certificates: certificates.certificates,
-  certificatelevels: certificatelevels.certificatelevels,
+  certificateTypes: certificateTypes.certificateTypes,
   deleted: certificates.deleted,
   user_menu: menu_items.user_menu || [],
 });

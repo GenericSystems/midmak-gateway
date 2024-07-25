@@ -81,8 +81,8 @@ export * from "./certificates/actions";
 //trainersGrades
 export * from "./trainersGrades/actions";
 
-//certificateLevels
-export * from "./certificatelevels/actions";
+//certificateTypes
+export * from "./certificateTypes/actions";
 //studentManagements
 export * from "./studentManagements/actions";
 

@@ -23,16 +23,16 @@ getCertificateDeletedValueFail,
 } from "./actions"
 
 import {
-    getCertificateLevelsFail,
-    getCertificateLevelsSuccess,
-  } from "../certificatelevels/actions";
+    getCertificateTypesFail,
+    getCertificateTypesSuccess,
+  } from "../certificateTypes/actions";
 // Include Both Helper File with needed methods
 import {
 getCertificates,
 addNewCertificate,
 updateCertificate,
 deleteCertificate,
-getCertificateLevels,
+getCertificateTypes,
 getCertificateDeletedValue,
 } from "../../helpers/fakebackend_helper"
 
