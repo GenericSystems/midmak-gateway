@@ -63,7 +63,8 @@ class Certificates extends Component {
       deleted,
       user_menu,
       userTypes,
-      sectors
+      sectors,
+      trainersGrades
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -72,7 +73,9 @@ class Certificates extends Component {
     if (certificates && !certificates.length) {
       onGetCertificates();
     }
-    this.setState({ certificates, certificateTypes, deleted , userTypes, sectors});
+    this.setState({ certificates, certificateTypes, deleted , userTypes, sectors,
+      trainersGrades
+    });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -230,13 +233,13 @@ console.log("selectedRowId",selectedRowId)
 
   render() {
     const { SearchBar } = Search;
-    const { certificates, user_menu, deleted , userTypes, sectors} = this.props;
+    const { certificates, user_menu, deleted , userTypes, sectors,trainersGrades} = this.props;
     const { selectedCertLevel } = this.state;
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
     const { onUpdateCertificate, onDeleteCertificate } = this.props;
 
-    console.log("sectors",sectors)
+    console.log("trainersGrades",trainersGrades)
     const {
       duplicateError,
       deleteModal,
@@ -484,11 +487,12 @@ console.log("selectedRowId",selectedRowId)
   }
 }
 
-const mapStateToProps = ({ certificates, certificateTypes, menu_items, userTypes, sectors }) => ({
+const mapStateToProps = ({ certificates, certificateTypes, menu_items, userTypes, sectors,trainersGrades }) => ({
   certificates: certificates.certificates,
   certificateTypes: certificateTypes.certificateTypes,
   userTypes: userTypes.userTypes,
   sectors: sectors.sectors,
+  trainersGrades: trainersGrades.trainersGrades,
   deleted: certificates.deleted,
   user_menu: menu_items.user_menu || [],
 });

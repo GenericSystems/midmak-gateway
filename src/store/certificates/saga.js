@@ -32,6 +32,11 @@ import {
     getSectorsSuccess,
   } from "../sectors/actions";
 
+  import {
+    getTrainersGradesFail,
+    getTrainersGradesSuccess,
+  } from "../trainersGrades/actions";
+
 import {
 getCertificates,
 addNewCertificate,
@@ -39,6 +44,7 @@ updateCertificate,
 deleteCertificate,
 getUserTypes,
 getSectors,
+getTrainersGrades,
 getCertificateDeletedValue,
 } from "../../helpers/fakebackend_helper"
 
@@ -90,6 +96,22 @@ function* fetchCertificates() {
   yield put(getSectorsFail(error))
   }
  
+  // trainer grade
+  const get_TrainerGrades_req = {
+    source: 'db',
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_TrainerGrade",
+    fields: "Id,arTitle"
+
+    } ;  
+  try {
+  const response = yield call(getTrainersGrades, get_TrainerGrades_req)
+
+  yield put(getTrainersGradesSuccess(response))
+  } catch (error) {
+  yield put(getTrainersGradesFail(error))
+  }
 }
 
 function* onAddNewCertificate({ payload, }) {
