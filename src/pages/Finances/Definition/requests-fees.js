@@ -25,7 +25,6 @@ import { connect } from "react-redux";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
-import TempStudentsChart from "../../generate-SIDs/TempStudentsChart";
 import Accordion from "react-bootstrap/Accordion";
 
 import {
@@ -44,7 +43,6 @@ import paginationFactory, {
 
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
-import OtherChart from "pages/generate-SIDs/OtherChart";
 
 import { getCurrentSemester } from "store/semesters/actions";
 import { getFilteredPeriods } from "store/periods/actions";

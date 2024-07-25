@@ -25,7 +25,6 @@ import { connect } from "react-redux";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
-import TempStudentsChart from "../../generate-SIDs/TempStudentsChart";
 import Accordion from "react-bootstrap/Accordion";
 
 import {
@@ -44,7 +43,6 @@ import paginationFactory, {
 
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
-import OtherChart from "pages/generate-SIDs/OtherChart";
 import {
   checkIsAddForPage,
   checkIsDeleteForPage,
@@ -747,35 +745,9 @@ class GradesList extends Component {
                                             <DropdownMenu className="dropdown-megamenu dropdown-mega-menu-analytics">
                                               {" "}
                                               <Row>
-                                                <Col className="col-5">
-                                                  {courseStatistics[1] &&
-                                                    combinedArray && (
-                                                      <TempStudentsChart
-                                                        series={combinedArray.map(
-                                                          item => item
-                                                        )}
-                                                        labels={[
-                                                          "Success",
-                                                          "Fail",
-                                                        ]}
-                                                      />
-                                                    )}
-                                                </Col>
+                                               
                                                 <Col className="col-2"></Col>
-                                                <Col className="col-5">
-                                                  {courseStatistics[1] && (
-                                                    <OtherChart
-                                                      series={courseStatistics[1].map(
-                                                        item =>
-                                                          item.letterGradeCount
-                                                      )}
-                                                      labels={courseStatistics[1].map(
-                                                        item =>
-                                                          item.letter_grade
-                                                      )}
-                                                    />
-                                                  )}
-                                                </Col>
+                                                
                                               </Row>
                                             </DropdownMenu>
                                           </Dropdown>

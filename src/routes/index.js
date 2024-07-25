@@ -187,8 +187,6 @@ import RolesList from "../pages/PriveledgeManagement/UserManagement/roles";
 //CoursesRegistration
 import CoursesRegistrationList from "../pages/Faculties/Student-Affairs/courses-registration";
 
-//GenerateSID
-import GenerateSIDsList from "../pages/generate-SIDs/generate-SIDs";
 //GeneralManagement
 import GeneralManagementsList from "../pages/MobileApps/general-managements/generalManagements";
 
@@ -443,9 +441,6 @@ const authProtectedRoutes = [
 
   //coursesregistrations
   { path: "/courses-registration", component: CoursesRegistrationList },
-
-  //GenerateSIDs
-  { path: "/generate-SIDs", component: GenerateSIDsList },
 
   //general managements
   { path: "/general-managements", component: GeneralManagementsList },
