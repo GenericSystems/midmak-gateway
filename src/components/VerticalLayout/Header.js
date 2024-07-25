@@ -34,8 +34,6 @@ import { withTranslation } from "react-i18next";
 // Redux Store
 import { toggleRightSidebar } from "../../store/actions";
 
-import { getCurrentSemester } from "store/semesters/actions";
-import { fetchYearsSemesters } from "store/general-management/actions";
 
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -53,14 +51,13 @@ class Header extends Component {
 
   componentDidMount() {
     const {
-      onGetCurrentSemester,
+      
       onGetYearSemester,
       yearSemesters,
       currentSemester,
     } = this.props;
     this.setState({ yearSemesters });
     this.setState({ currentSemester });
-    onGetYearSemester() && onGetCurrentSemester();
   }
 
   /**
@@ -455,8 +452,6 @@ const mapStatetoProps = ({ state, semesters, generalManagements }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetCurrentSemester: () => dispatch(getCurrentSemester()),
-  onGetYearSemester: () => dispatch(fetchYearsSemesters()),
 });
 
 export default connect(

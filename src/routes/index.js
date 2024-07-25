@@ -441,14 +441,8 @@ const authProtectedRoutes = [
   { path: "/tasks-kanban", component: TasksKanban },
   { path: "/tasks-create", component: TasksCreate },
 
-  //Students
-  { path: "/new-student", component: StudentsCreate },
-  { path: "/students-list", component: StudentsList },
-  { path: "/university-students", component: UniversityStudentsList },
-  { path: "/Header", component: Header },
 
-  //Admission Conditions
-  { path: "/admission-conditions", component: AdmissionConditionsList },
+  { path: "/Header", component: Header },
 
   //Projects
   { path: "/projects-grid", component: ProjectsGrid },
@@ -498,9 +492,6 @@ const authProtectedRoutes = [
 
   //StudyPlans
   { path: "/study-plans", component: StudyPlansList },
-
-  //TempStudentsStatistics
-  { path: "/students-statistics", component: TempStudentsStatisticsDiagrams },
 
   //prerequisites
   { path: "/prereq-conditions", component: PrereqsList },
@@ -574,12 +565,6 @@ const authProtectedRoutes = [
 
   //StudentsHistory
   { path: "/students-history", component: StudentsHistory },
-
-  //StudentsRequests
-  { path: "/students-requests", component: StudentsRequests },
-
-    //GeneralStdReport
-    { path: "/general-std-report", component: GeneralStdReport },
 
   //Courses
   { path: "/courses", component: Courses },

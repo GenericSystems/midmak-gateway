@@ -37,7 +37,6 @@ import { toggleRightSidebar } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 import Select from "react-select";
 
-import { getCurrentSemester } from "store/semesters/actions";
 
 class Header extends Component {
   constructor(props) {
@@ -466,7 +465,6 @@ const mapStatetoProps = ({ state, semesters , generalManagements}) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetCurrentSemester: () => dispatch(getCurrentSemester()),
 });
 
 export default connect(mapStatetoProps, mapDispatchToProps, {
