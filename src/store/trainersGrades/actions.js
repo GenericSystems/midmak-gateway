@@ -16,78 +16,78 @@ import {
     GET_MAJOR_TYPE_DELETED_VALUE_SUCCESS,
   } from "./actionTypes"
   
-  export const getMajorsTypes = () => ({
+  export const getTrainersGrades = () => ({
     type: GET_MAJORS_TYPES,
   })
   
-  export const getMajorsTypesSuccess = majorsTypes => ({
+  export const getTrainersGradesSuccess = trainersGrades => ({
     type: GET_MAJORS_TYPES_SUCCESS,
-    payload: majorsTypes,
+    payload: trainersGrades,
   })
   
-  export const getMajorsTypesFail = error => ({
+  export const getTrainersGradesFail = error => ({
     type: GET_MAJORS_TYPES_FAIL,
     payload: error,
   })
   
   
-  export const addNewMajorType = majorType => ({
+  export const addNewTrainerGrade = trainerGrade => ({
     type: ADD_NEW_MAJOR_TYPE,
-    payload: majorType,
+    payload: trainerGrade,
   })
   
-  export const addMajorTypeSuccess = majorType => ({
+  export const addTrainerGradeSuccess = trainerGrade => ({
     type: ADD_MAJOR_TYPE_SUCCESS,
-    payload: majorType,
+    payload: trainerGrade,
   })
   
-  export const addMajorTypeFail = error => ({
+  export const addTrainerGradeFail = error => ({
     type: ADD_MAJOR_TYPE_FAIL,
     payload: error,
   })
   
-  export const updateMajorType = majorType =>{
+  export const updateTrainerGrade = trainerGrade =>{
     return ({
       type: UPDATE_MAJOR_TYPE,
-      payload: majorType,
+      payload: trainerGrade,
     })
   } 
   
-  export const updateMajorTypeSuccess = majorType => ({
+  export const updateTrainerGradeSuccess = trainerGrade => ({
     type: UPDATE_MAJOR_TYPE_SUCCESS,
-    payload: majorType,
+    payload: trainerGrade,
   })
   
-  export const updateMajorTypeFail = error => ({
+  export const updateTrainerGradeFail = error => ({
     type: UPDATE_MAJOR_TYPE_FAIL,
     payload: error,
   })
   
-  export const deleteMajorType = majorType => ({
+  export const deleteTrainerGrade = trainerGrade => ({
     type: DELETE_MAJOR_TYPE,
-    payload: majorType,
+    payload: trainerGrade,
   })
   
-  export const deleteMajorTypeSuccess = majorType => ({
+  export const deleteTrainerGradeSuccess = trainerGrade => ({
     type: DELETE_MAJOR_TYPE_SUCCESS,
-    payload: majorType,
+    payload: trainerGrade,
   })
   
-  export const deleteMajorTypeFail = error => ({
+  export const deleteTrainerGradeFail = error => ({
     type: DELETE_MAJOR_TYPE_FAIL,
     payload: error,
   })
   
-  export const getMajorTypeDeletedValue = () => ({
+  export const getTrainerGradeDeletedValue = () => ({
     type: GET_MAJOR_TYPE_DELETED_VALUE,
   });
   
-  export const getMajorTypeDeletedValueSuccess = deleted => ({
+  export const getTrainerGradeDeletedValueSuccess = deleted => ({
     type: GET_MAJOR_TYPE_DELETED_VALUE_SUCCESS,
     payload: deleted,
   });
   
-  export const getMajorTypeDeletedValueFail = error => ({
+  export const getTrainerGradeDeletedValueFail = error => ({
     type: GET_MAJOR_TYPE_DELETED_VALUE_FAIL,
     payload: error,
   });

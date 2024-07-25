@@ -238,8 +238,8 @@ import RequirementTypesList from "../pages/Setting/Faculties/requirement-Types";
 //Certifcates
 import Certificates from "../pages/Setting/UniAdmission/certificates";
 
-//MajorsTypes
-import MajorsTypes from "../pages/Setting/UniAdmission/majors-types";
+//TrainersGrades
+import TrainersGrades from "../pages/Setting/UniAdmission/trainers-grades";
 
 //cERTIFICATELEVELS
 import CertificateLevelsList from "../pages/Certificateslevels/certificate-level";
@@ -525,8 +525,8 @@ const authProtectedRoutes = [
   // Certificates
   { path: "/certificates", component: Certificates },
 
-  // MajorsTypes
-  { path: "/majors-types", component: MajorsTypes },
+  // TrainersGrades
+  { path: "/trainers-grades", component: TrainersGrades },
 
   { path: "/certificate-Level", component: CertificateLevelsList },
   // StudentManagement

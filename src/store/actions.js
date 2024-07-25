@@ -78,8 +78,8 @@ export * from "./req-types/actions";
 //certificate
 export * from "./certificates/actions";
 
-//majorsTypes
-export * from "./majorsTypes/actions";
+//trainersGrades
+export * from "./trainersGrades/actions";
 
 //certificateLevels
 export * from "./certificatelevels/actions";

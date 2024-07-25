@@ -13,12 +13,12 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import Select from "react-select";
 import {
-  getMajorsTypes,
-  addNewMajorType,
-  updateMajorType,
-  deleteMajorType,
-  getMajorTypeDeletedValue,
-} from "store/majorsTypes/actions"
+  getTrainersGrades,
+  addNewTrainerGrade,
+  updateTrainerGrade,
+  deleteTrainerGrade,
+  getTrainerGradeDeletedValue,
+} from "store/trainersGrades/actions"
 
 import ToolkitProvider, {
   Search,
@@ -36,12 +36,12 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-class MajorsTypes extends Component {
+class TrainersGrades extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      majorsTypes: [],
-      majorType: "",
+      trainersGrades: [],
+      trainerGrade: "",
       selectedCertLevel: null,
       deleteModal: false,
       duplicateError: null,
@@ -56,8 +56,8 @@ class MajorsTypes extends Component {
 
   componentDidMount() {
     const {
-      majorsTypes,
-      onGetMajorsTypes,
+      trainersGrades,
+      onGetTrainersGrades,
       deleted,
       user_menu,
     } = this.props;
@@ -65,10 +65,10 @@ class MajorsTypes extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (majorsTypes && !majorsTypes.length) {
-      onGetMajorsTypes();
+    if (trainersGrades && !trainersGrades.length) {
+      onGetTrainersGrades();
     }
-    this.setState({ majorsTypes, deleted });
+    this.setState({ trainersGrades, deleted });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -137,14 +137,14 @@ class MajorsTypes extends Component {
   };
 
   handleAddRow = () => {
-    const { majorsTypes, onAddNewMajorType } = this.props;
+    const { trainersGrades, onAddNewTrainerGrade } = this.props;
     const newRow = {
       arTitle: "-----",
     };
 
     // Check if the same value already exists in the table
-    const emptyRowsExist = majorsTypes.some(
-      majorType => majorType.arTitle.trim() === "-----"
+    const emptyRowsExist = trainersGrades.some(
+      trainerGrade => trainerGrade.arTitle.trim() === "-----"
     );
 
     if (emptyRowsExist) {
@@ -152,27 +152,20 @@ class MajorsTypes extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewMajorType(newRow);
+      onAddNewTrainerGrade(newRow);
     }
   };
 
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
   };
-  /*
-  handleDeleteRow = rowId => {
-    const { onDeleteMajorType } = this.props;
-    let obDelete = { Id: rowId };
-    onDeleteMajorType(obDelete);
-  };
-*/
 
   handleDeleteRow = () => {
-    const { onDeleteMajorType } = this.props;
+    const { onDeleteTrainerGrade } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteMajorType(selectedRowId);
+      onDeleteTrainerGrade(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -181,47 +174,47 @@ class MajorsTypes extends Component {
       });
     }
   };
-  handleMajorTypeDataChange = (rowId, fieldName, fieldValue) => {
-    const { majorsTypes, onUpdateMajorType } = this.props;
-    const isDuplicate = majorsTypes.some(
-      majorType =>
-        majorType.Id !== rowId &&
-        majorType.arTitle.trim() === fieldValue.trim()
+  handleTrainerGradeDataChange = (rowId, fieldName, fieldValue) => {
+    const { trainersGrades, onUpdateTrainerGrade } = this.props;
+    const isDuplicate = trainersGrades.some(
+      trainerGrade =>
+        trainerGrade.Id !== rowId &&
+        trainerGrade.arTitle.trim() === fieldValue.trim()
     );
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateMajorType(onUpdate);
+      onUpdateTrainerGrade(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
       console.log("on update",onUpdate)
-      onUpdateMajorType(onUpdate);
+      onUpdateTrainerGrade(onUpdate);
     }
   };
 
 
 
   handleSuccessClose = () => {
-    const { onGetMajorTypeDeletedValue } = this.props;
+    const { onGetTrainerGradeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetMajorTypeDeletedValue();
+    onGetTrainerGradeDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetMajorTypeDeletedValue } = this.props;
+    const { onGetTrainerGradeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetMajorTypeDeletedValue();
+    onGetTrainerGradeDeletedValue();
   };
 
   render() {
     const { SearchBar } = Search;
-    const { majorsTypes, deleted } = this.props;
+    const { trainersGrades, deleted } = this.props;
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
-    const { onUpdateMajorType, onDeleteMajorType } = this.props;
+    const { onUpdateTrainerGrade, onDeleteTrainerGrade } = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -242,29 +235,35 @@ class MajorsTypes extends Component {
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "arTitle",
-        text: this.props.t("Major Type(ar)"),
+        text: this.props.t("Trainers Grades(ar)"),
         sort: true,
-        editable: showEditButton,
+       // editable: showEditButton,
       },
       {
         dataField: "enTitle",
-        text: "Major Type",
+        text: "Trainerts Grades",
         sort: true,
-        editable: showEditButton,
+       // editable: showEditButton,
+      },
+      {
+        dataField: "code",
+        text: "Code",
+        sort: true,
+       // editable: showEditButton,
       },
      
       {
         dataField: "delete",
         text: "",
-        hidden: !showDeleteButton,
+      //  hidden: !showDeleteButton,
         isDummyField: true,
         editable: false, 
-        formatter: (cellContent, majorType) => (
+        formatter: (cellContent, trainerGrade) => (
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
               id="deletetooltip"
-              onClick={() => this.onClickDelete(majorType)}
+              onClick={() => this.onClickDelete(trainerGrade)}
             ></i>
           </Link>
         ),
@@ -272,7 +271,7 @@ class MajorsTypes extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: majorsTypes.length,
+      totalSize: trainersGrades.length,
       custom: true,
     };
 
@@ -291,7 +290,7 @@ class MajorsTypes extends Component {
               title={`${this.props.t("Settings")} / ${this.props.t(
                 "University Admission"
               )}`}
-              breadcrumbItem={this.props.t("MajorsTypes")}
+              breadcrumbItem={this.props.t("TrainersGrades")}
             />
 
             <Row>
@@ -350,12 +349,12 @@ class MajorsTypes extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={majorsTypes}
+                        data={trainersGrades}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={majorsTypes}
+                            data={trainersGrades}
                             columns={columns}
                             search
                           >
@@ -364,17 +363,17 @@ class MajorsTypes extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {showSearchButton && (
+                                     {/*  {showSearchButton && ( */}
                                         <div className="position-relative">
                                           <SearchBar
                                             {...toolkitprops.searchProps}
                                           />
                                         </div>
-                                      )}
+                                    
                                     </div>
                                   </Col>
                                   <Col sm="8">
-                                    {showAddButton && (
+                             {/*        {showAddButton && ( */}
                                       <div className="text-sm-end">
                                         <Tooltip
                                           title={this.props.t("Add")}
@@ -388,7 +387,7 @@ class MajorsTypes extends Component {
                                           </IconButton>
                                         </Tooltip>
                                       </div>
-                                    )}
+                                    
                                   </Col>
                                 </Row>
 
@@ -396,7 +395,7 @@ class MajorsTypes extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={majorsTypes}
+                                  data={trainersGrades}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
@@ -407,7 +406,7 @@ class MajorsTypes extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handleMajorTypeDataChange(
+                                      this.handleTrainerGradeDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
@@ -415,7 +414,7 @@ class MajorsTypes extends Component {
                                     },
                                   })}
                                   noDataIndication={this.props.t(
-                                    "No MajorTypeType Types found"
+                                    "No TrainerGradeType Types found"
                                   )}
                                   defaultSorted={defaultSorting}
                                 />
@@ -441,21 +440,21 @@ class MajorsTypes extends Component {
   }
 }
 
-const mapStateToProps = ({ majorsTypes, menu_items }) => ({
-  majorsTypes: majorsTypes.majorsTypes,
-  deleted: majorsTypes.deleted,
+const mapStateToProps = ({ trainersGrades, menu_items }) => ({
+  trainersGrades: trainersGrades.trainersGrades,
+  deleted: trainersGrades.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetMajorsTypes: () => dispatch(getMajorsTypes()),
-  onAddNewMajorType: majorType => dispatch(addNewMajorType(majorType)),
-  onUpdateMajorType: majorType => dispatch(updateMajorType(majorType)),
-  onDeleteMajorType: majorType => dispatch(deleteMajorType(majorType)),
-  onGetMajorTypeDeletedValue: () => dispatch(getMajorTypeDeletedValue()),
+  onGetTrainersGrades: () => dispatch(getTrainersGrades()),
+  onAddNewTrainerGrade: trainerGrade => dispatch(addNewTrainerGrade(trainerGrade)),
+  onUpdateTrainerGrade: trainerGrade => dispatch(updateTrainerGrade(trainerGrade)),
+  onDeleteTrainerGrade: trainerGrade => dispatch(deleteTrainerGrade(trainerGrade)),
+  onGetTrainerGradeDeletedValue: () => dispatch(getTrainerGradeDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(withTranslation()(MajorsTypes)));
+)(withRouter(withTranslation()(TrainersGrades)));

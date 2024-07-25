@@ -54,7 +54,7 @@ import {
   novEarningData,
   octEarningData,
   certificates,
-  majorsTypes,
+  trainersGrades,
   certificatelevels,
   studentManagements,
   countries,

@@ -12,16 +12,16 @@ import {
   } from "./actionTypes"
   
   const INIT_STATE = {
-    majorsTypes: [],
+    trainersGrades: [],
     error: {},
   }
   
-  const majorsTypes = (state = INIT_STATE, action) => {
+  const trainersGrades = (state = INIT_STATE, action) => {
     switch (action.type) {
       case GET_MAJORS_TYPES_SUCCESS:
         return {
           ...state,
-          majorsTypes: action.payload,
+          trainersGrades: action.payload,
           deleted: {}
         }
   
@@ -34,7 +34,7 @@ import {
       case ADD_MAJOR_TYPE_SUCCESS:
         return {
           ...state,
-          majorsTypes: [...state.majorsTypes, action.payload],
+          trainersGrades: [...state.trainersGrades, action.payload],
         }
   
       case ADD_MAJOR_TYPE_FAIL:
@@ -46,10 +46,10 @@ import {
         case UPDATE_MAJOR_TYPE_SUCCESS:
           return {
             ...state,
-            majorsTypes: state.majorsTypes.map(majorType =>
-              majorType.Id.toString() === action.payload.Id.toString()
-                ? { majorType, ...action.payload }
-                : majorType
+            trainersGrades: state.trainersGrades.map(trainerGrade =>
+              trainerGrade.Id.toString() === action.payload.Id.toString()
+                ? { trainerGrade, ...action.payload }
+                : trainerGrade
             ),
           }
     
@@ -62,8 +62,8 @@ import {
         case DELETE_MAJOR_TYPE_SUCCESS:
           return {
             ...state,
-            majorsTypes: state.majorsTypes.filter(
-              majorType => majorType.Id !== action.payload.Id
+            trainersGrades: state.trainersGrades.filter(
+              trainerGrade => trainerGrade.Id !== action.payload.Id
             ),
             deleted: action.payload.deleted,
           }
@@ -93,5 +93,5 @@ import {
     }
   }
   
-  export default majorsTypes
+  export default trainersGrades
   

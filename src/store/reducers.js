@@ -79,8 +79,8 @@ import reqTypes from "./req-types/reducer"
 //certificates
 import certificates from "./certificates/reducer"
 
-//majorsTypes
-import majorsTypes from "./majorsTypes/reducer"
+//trainersGrades
+import trainersGrades from "./trainersGrades/reducer"
 
 //certificateLevels
 import certificatelevels from "./certificatelevels/reducer"
@@ -290,7 +290,7 @@ const rootReducer = combineReducers({
   contacts,
   nationalities,
   certificatelevels,
-  majorsTypes,
+  trainersGrades,
   studentManagements,
   nationalities,
   relatives,

@@ -70,7 +70,7 @@ class AcademicCertificates extends Component {
       modal: false,
       deleteModal: false,
       selectedFaculty: null,
-      selectedMajorType: null,
+      selectedTrainerGrade: null,
       selectedDepartment: null,
       selectedBeginSemester: null,
       selectedEndSemester: null,
@@ -96,7 +96,7 @@ class AcademicCertificates extends Component {
       academiccertificates,
       onGetAcademicCertificates,
       faculties,
-      majorsTypes,
+      trainersGrades,
       yearSemesters,
       filteredDepartments,
       departments,
@@ -115,7 +115,7 @@ class AcademicCertificates extends Component {
     this.setState({ yearSemesters });
     this.setState({ filteredDepartments });
     this.setState({ departments });
-    this.setState({ majorsTypes });
+    this.setState({ trainersGrades });
   }
 
   toggle() {
@@ -146,9 +146,9 @@ class AcademicCertificates extends Component {
       this.setState({
         selectedEndSemester: selectedValue,
       });
-    }else if (fieldName == "majorTypeId") {
+    }else if (fieldName == "trainerGradeId") {
       this.setState({
-        selectedMajorType: selectedValue,
+        selectedTrainerGrade: selectedValue,
       });
     }
   };
@@ -259,7 +259,7 @@ class AcademicCertificates extends Component {
     this.setState({
       academiccertificate: arg,
       selectedFaculty: arg.facultyId,
-      selectedMajorType: arg.majorTypeId,
+      selectedTrainerGrade: arg.trainerGradeId,
       selectedEducation: arg.educationType,
       isEdit: true,
     });
@@ -272,7 +272,7 @@ class AcademicCertificates extends Component {
       isEdit,
       selectedDepartment,
       selectedFaculty,
-      selectedMajorType,
+      selectedTrainerGrade,
       selectedBeginSemester,
       selectedEndSemester,
       selectedEducation,
@@ -286,7 +286,7 @@ class AcademicCertificates extends Component {
 
     values["educationType"] = selectedEducation;
     values["facultyId"] = selectedFaculty;
-    values['majorTypeId']= selectedMajorType;
+    values['trainerGradeId']= selectedTrainerGrade;
     values["departmentId"] = selectedDepartment;
     values["yearSemesterBeginnigId"] = selectedBeginSemester;
     values["yearSemesteEndId"] = selectedEndSemester;
@@ -433,7 +433,7 @@ class AcademicCertificates extends Component {
     const {
       academiccertificates,
       faculties,
-      majorsTypes,
+      trainersGrades,
       yearSemesters,
       filteredDepartments,
       departments,
@@ -454,7 +454,7 @@ class AcademicCertificates extends Component {
       showSearchButton,
     } = this.state;
 
-    console.log("in render major types",majorsTypes)
+    console.log("in render major types",trainersGrades)
 
     const { onAddNewAcademicCertificate, onUpdateAcademicCertificate } =
       this.props;
@@ -617,13 +617,13 @@ class AcademicCertificates extends Component {
       },
       {
         text: this.props.t("Major Types"),
-        dataField: "majorType",
+        dataField: "trainerGrade",
         sort: true,
         formatter: (cellContent, academiccertificates) => (
           <>
             <h5 className="font-size-14 mb-1">
               <Link to="#" className="text-dark">
-                {academiccertificates.majorType}
+                {academiccertificates.trainerGrade}
               </Link>
             </h5>
           </>
@@ -1088,19 +1088,19 @@ class AcademicCertificates extends Component {
                                                       </label>
                                                       <Select
                                                         className="select-style"
-                                                        name="majorTypeId"
-                                                        key={`majorType_select`}
-                                                        options={majorsTypes}
+                                                        name="trainerGradeId"
+                                                        key={`trainerGrade_select`}
+                                                        options={trainersGrades}
                                                         onChange={newValue => {
                                                           this.handleSelectChange(
-                                                            "majorTypeId",
+                                                            "trainerGradeId",
                                                             newValue.value
                                                           );
                                                         }}
-                                                        defaultValue={majorsTypes.find(
+                                                        defaultValue={trainersGrades.find(
                                                           opt =>
                                                             opt.value ===
-                                                            academiccertificate.majorTypeId
+                                                            academiccertificate.trainerGradeId
                                                         )}
                                                       />
                                                     </div>
@@ -1422,7 +1422,7 @@ const mapStateToProps = ({
   mobAppFacultyAccs,
   departments,
   menu_items,
-  majorsTypes
+  trainersGrades
 }) => ({
   academiccertificates: academiccertificates.academiccertificates,
   deleted: academiccertificates.deleted,
@@ -1430,7 +1430,7 @@ const mapStateToProps = ({
   yearSemesters: generalManagements.yearSemesters,
   filteredDepartments: departments.filteredDepartments,
   departments: departments.departments,
-  majorsTypes: majorsTypes.majorsTypes,
+  trainersGrades: trainersGrades.trainersGrades,
   user_menu: menu_items.user_menu || [],
 });
 

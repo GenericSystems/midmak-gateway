@@ -78,7 +78,7 @@ class StudentsHistory extends Component {
       modal: false,
       deleteModal: false,
       selectedFaculty: null,
-      selectedMajorType: null,
+      selectedTrainerGrade: null,
       selectedDepartment: null,
       selectedBeginSemester: null,
       selectedEndSemester: null,
@@ -100,7 +100,7 @@ class StudentsHistory extends Component {
       studentsHistory,
       onGetStudentsHistory,
       faculties,
-      majorsTypes,
+      trainersGrades,
       yearSemesters,
       filteredDepartments,
       departments,
@@ -121,7 +121,7 @@ class StudentsHistory extends Component {
     this.setState({ yearSemesters });
     this.setState({ filteredDepartments });
     this.setState({ departments });
-    this.setState({ majorsTypes });
+    this.setState({ trainersGrades });
   }
 
   toggle() {
@@ -276,7 +276,7 @@ class StudentsHistory extends Component {
     const {
       studentsHistory,
       faculties,
-      majorsTypes,
+      trainersGrades,
       yearSemesters,
       filteredDepartments,
       departments,
@@ -797,7 +797,7 @@ const mapStateToProps = ({
   mobAppFacultyAccs,
   departments,
   menu_items,
-  majorsTypes,
+  trainersGrades,
   semesters,
 }) => ({
   studentsHistory: studentsHistory.studentsHistory,
@@ -808,7 +808,7 @@ const mapStateToProps = ({
   yearSemesters: generalManagements.yearSemesters,
   filteredDepartments: departments.filteredDepartments,
   departments: departments.departments,
-  majorsTypes: majorsTypes.majorsTypes,
+  trainersGrades: trainersGrades.trainersGrades,
   user_menu: menu_items.user_menu || [],
 });
 

@@ -30,7 +30,7 @@ import StudyPlansSaga from "./study-plans/saga";
 import nationalitiesSaga from "./nationality/saga";
 import relativesSaga from "./relatives/saga";
 import CertificatesSaga from "./certificates/saga";
-import MajorsTypesSaga from "./majorsTypes/saga";
+import TrainersGradesSaga from "./trainersGrades/saga";
 import CertificatelevelSaga from "./certificatelevels/saga";
 import StudentManagementSaga from "./studentManagements/saga";
 import universityStudentsSaga from "./university-students/saga";
@@ -184,7 +184,7 @@ export default function* rootSaga() {
     fork(DistributingCoursesMethodsSaga),
     fork(letterGradesSaga),
     fork(transportLinesSaga),
-    fork(MajorsTypesSaga),
+    fork(TrainersGradesSaga),
     fork(StudentsHistorySaga),
     fork(StudentsRequestsSaga),
   ]);

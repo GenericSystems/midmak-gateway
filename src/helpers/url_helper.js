@@ -257,10 +257,10 @@ export const DELETE_CERTIFICATE = "/delete/certificate";
 export const GET_CERTIFICATE_DELETED_VALUE = "/deleted";
 
 //CERTIFICATES_TYPES
-export const GET_MAJORS_TYPES = "/majorsTypes";
-export const ADD_NEW_MAJOR_TYPE = "/add/majorType";
-export const UPDATE_MAJOR_TYPE = "/update/majorType";
-export const DELETE_MAJOR_TYPE = "/delete/majorType";
+export const GET_MAJORS_TYPES = "/trainersGrades";
+export const ADD_NEW_MAJOR_TYPE = "/add/trainerGrade";
+export const UPDATE_MAJOR_TYPE = "/update/trainerGrade";
+export const DELETE_MAJOR_TYPE = "/delete/trainerGrade";
 export const GET_MAJOR_TYPE_DELETED_VALUE = "/deleted";
 
 //CERTIFICATELEVELS
