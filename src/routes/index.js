@@ -18,16 +18,7 @@ import TasksList from "../pages/Tasks/tasks-list";
 import TasksKanban from "../pages/Tasks/tasks-kanban";
 import TasksCreate from "../pages/Tasks/tasks-create";
 
-//Students
-import StudentsCreate from "../pages/Addmission/StudentAcceptance/new-student";
-import StudentsList from "../pages/Addmission/StudentAcceptance/students-list";
 import Header from "../components/VerticalLayout/Header";
-
-//University Students
-import UniversityStudentsList from "../pages/Addmission/UniversityStudents/university-students";
-
-//Admission Conditions
-import AdmissionConditionsList from "../pages/Addmission/StudentAcceptance/admission-conditions";
 
 //Projects
 import ProjectsGrid from "../pages/Projects/projects-grid";
@@ -207,8 +198,6 @@ import MobAppFacultyAccsList from "../pages/MobileApps/mob-app-faculty-accs/mobA
 //StudyPlans
 import StudyPlansList from "../pages/Faculties/study-plans";
 
-//TempStudentsStatistics
-import TempStudentsStatisticsDiagrams from "../pages/Addmission/Reports/students-statistics";
 
 //Sector
 import SectorsList from "../pages/Sectors/sectors";
@@ -300,12 +289,6 @@ import AcademicCertificates from "pages/AcademicCertificates/academic-certificat
 
 //StudentsHistory
 import StudentsHistory from "pages/StudentsHistory/students-history";
-
-//StudentsRequests
-import StudentsRequests from "pages/Addmission/students-requests";
-
-//GeneralStdReport
-import GeneralStdReport from "../pages/Addmission/Reports/general-std-report";
 
 //Course
 import Courses from "pages/Courses/courses";
