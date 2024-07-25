@@ -64,6 +64,7 @@ class Certificates extends Component {
       user_menu,
       userTypes,
       sectors,
+      years,
       trainersGrades
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -74,7 +75,7 @@ class Certificates extends Component {
       onGetCertificates();
     }
     this.setState({ certificates, certificateTypes, deleted , userTypes, sectors,
-      trainersGrades
+      trainersGrades, years
     });
   }
 
@@ -233,11 +234,11 @@ console.log("selectedRowId",selectedRowId)
 
   render() {
     const { SearchBar } = Search;
-    const { certificates, user_menu, deleted , userTypes, sectors,certificateTypes,trainersGrades} = this.props;
+    const { certificates, user_menu, deleted , userTypes, years, sectors,certificateTypes,trainersGrades} = this.props;
     const { selectedCertLevel } = this.state;
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
-    console.log("certificateTypes",certificateTypes)
+    console.log("years",years)
     const {
       duplicateError,
       deleteModal,
@@ -247,8 +248,6 @@ console.log("selectedRowId",selectedRowId)
       showEditButton,
       showSearchButton,
     } = this.state;
-
-    console.log("user_menu",user_menu)
 
     const defaultSorting = [
       {
@@ -485,12 +484,13 @@ console.log("selectedRowId",selectedRowId)
   }
 }
 
-const mapStateToProps = ({ certificates, menu_items, userTypes,certificateTypes, sectors,trainersGrades }) => ({
+const mapStateToProps = ({ certificates, menu_items, years, userTypes,certificateTypes, sectors,trainersGrades }) => ({
   certificates: certificates.certificates,
   certificateTypes: certificateTypes.certificateTypes,
   userTypes: userTypes.userTypes,
   sectors: sectors.sectors,
   trainersGrades: trainersGrades.trainersGrades,
+  years: years.years,
   deleted: certificates.deleted,
   user_menu: menu_items.user_menu || [],
 });

@@ -31,11 +31,15 @@ import {
   getTrainersGradesSuccess,
 } from "../trainersGrades/actions";
 
-
 import {
   getCertificateTypesFail,
   getCertificateTypesSuccess,
 } from "../certificateTypes/actions";
+
+import {
+  getYearsFail,
+  getYearsSuccess,
+} from "../years/actions";
 
 import {
   getCertificates,
@@ -47,6 +51,7 @@ import {
   getTrainersGrades,
   getCertificateTypes,
   getCertificateDeletedValue,
+  getYears
 } from "../../helpers/fakebackend_helper";
 
 function* fetchCertificates() {
@@ -114,17 +119,32 @@ function* fetchCertificates() {
 
   //certificate Type
   const get_certificateType_req = {
-    source: 'db',
+    source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_CertificateType",
     fields: "Id,arTitle",
-     } 
+  };
   try {
-    const response = yield call(getCertificateTypes, get_certificateType_req)
-    yield put(getCertificateTypesSuccess(response))
+    const response = yield call(getCertificateTypes, get_certificateType_req);
+    yield put(getCertificateTypesSuccess(response));
   } catch (error) {
-    yield put(getCertificateTypesFail(error))
+    yield put(getCertificateTypesFail(error));
+  }
+
+  //years
+  const get_years_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Years",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getYears, get_years_req);
+    yield put(getYearsSuccess(response));
+  } catch (error) {
+    yield put(getYearsFail(error));
   }
 }
 
