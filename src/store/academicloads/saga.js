@@ -29,28 +29,11 @@ import {
   addNewAcademicLoad,
   updateAcademicLoad,
   deleteAcademicLoad,
-  getWarnings,
   getAcademicLoadDeletedValue,
 } from "../../helpers/fakebackend_helper";
 
-import { getWarningsSuccess, getWarningsFail } from "../warning/actions";
-
 function* fetchAcademicLoads() {
-  //get warning
-  const get_warning_opt = {
-    source: "db",
-    procedure: "Generic_Optiondatalist",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_Warnings",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getWarnings, get_warning_opt);
-    yield put(getWarningsSuccess(response));
-  } catch (error) {
-    yield put(getWarningsFail(error));
-  }
-
+ 
   const get_academicLoad_req = {
     source: "db",
     procedure: "SisApp_getData",

@@ -5,7 +5,7 @@ import cellEditFactory from "react-bootstrap-table2-editor";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
@@ -14,26 +14,25 @@ import ToolkitProvider, {
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 
 import {
-  getWarnings,
-  addNewWarning,
-  updateWarning,
-  deleteWarning,
-  getWarningDeletedValue,
-} from "store/warning/actions";
+  getTrainers,
+  addNewTrainer,
+  updateTrainer,
+  deleteTrainer,
+  getTrainerDeletedValue,
+} from "store/trainers/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
 } from "react-bootstrap-table2-paginator";
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
-const warning_STORAGE_KEY = "editablewarning";
 import {
   checkIsAddForPage,
   checkIsDeleteForPage,
   checkIsEditForPage,
   checkIsSearchForPage,
-} from "../../../utils/menuUtils";
-class warningsList extends Component {
+} from "../../utils/menuUtils";
+class TrainersList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,14 +47,14 @@ class warningsList extends Component {
     };
   }
   componentDidMount() {
-    const { warnings, onGetwarnings, deleted, user_menu } = this.props;
+    const { trainers, onGetTrainers, deleted, user_menu } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (warnings && !warnings.length) {
-      onGetwarnings();
-      this.setState({ warnings, deleted });
+    if (trainers && !trainers.length) {
+      onGetTrainers();
+      this.setState({ trainers, deleted });
     }
   }
 
@@ -124,15 +123,14 @@ class warningsList extends Component {
   };
 
   handleAddRow = () => {
-    const { onAddNewwarning, warnings } = this.props;
+    const { onAddNewtrainer, trainers } = this.props;
 
     const newRow = {
-      arTitle: "-----",
-      enTitle: "",
+      name: "-----",
     };
 
-    const emptyRowsExist = warnings.some(
-      warning => warning.arTitle.trim() === "-----"
+    const emptyRowsExist = trainers.some(
+      trainer => trainer.name.trim() === "-----"
     );
 
     if (emptyRowsExist) {
@@ -140,16 +138,16 @@ class warningsList extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewwarning(newRow);
+      onAddNewtrainer(newRow);
     }
   };
 
   handleDeleteRow = () => {
-    const { onDeletewarning } = this.props;
+    const { onDeletetrainer } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeletewarning(selectedRowId);
+      onDeletetrainer(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -159,25 +157,24 @@ class warningsList extends Component {
     }
   };
 
-  handlewarningDataChange = (rowId, fieldName, fieldValue) => {
-    const { onUpdateWarning, warnings } = this.props;
+  handletrainerDataChange = (rowId, fieldName, fieldValue) => {
+    const { onUpdateTrainer, trainers } = this.props;
 
-    const isDuplicate = warnings.some(
-      warning =>
-        warning.Id !== rowId &&
-        ((warning.arTitle && warning.arTitle.trim() === fieldValue.trim()) ||
-          (warning.enTitle && warning.enTitle.trim() === fieldValue.trim()))
+    const isDuplicate = trainers.some(
+      trainer =>
+        trainer.Id !== rowId &&
+        (trainer.arTitle && trainer.arTitle.trim() === fieldValue.trim()) 
     );
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateWarning(onUpdate);
+      onUpdateTrainer(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateWarning(onUpdate);
+      onUpdateTrainer(onUpdate);
     }
   };
   handleAlertClose = () => {
@@ -185,19 +182,19 @@ class warningsList extends Component {
   };
 
   handleSuccessClose = () => {
-    const { onGetWarningDeletedValue } = this.props;
+    const { onGetTrainerDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetWarningDeletedValue();
+    onGetTrainerDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetWarningDeletedValue } = this.props;
+    const { onGetTrainerDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetWarningDeletedValue();
+    onGetTrainerDeletedValue();
   };
 
   render() {
-    const { warnings, t, deleted } = this.props;
+    const { trainers, t, deleted } = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -219,29 +216,35 @@ class warningsList extends Component {
     const columns = [
       { dataField: "Id", text: t("ID"), hidden: true },
       {
-        dataField: "arTitle",
-        text: t("warning(ar)"),
+        dataField: "name",
+        text: t("Name"),
         sort: true,
-        editable: showEditButton,
+       // editable: showEditButton,
       },
       {
-        dataField: "enTitle",
-        text: "warning",
+        dataField: "phone",
+        text: "Phone",
         sort: true,
-        editable: showEditButton,
+       // editable: showEditButton,
+      },
+      {
+        dataField: "email",
+        text: "Email",
+        sort: true,
+       // editable: showEditButton,
       },
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
-        hidden: !showDeleteButton,
-        formatter: (cellContent, warning) => (
+      //  hidden: !showDeleteButton,
+        formatter: (cellContent, trainer) => (
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
               id="deletetooltip"
-              onClick={() => this.onClickDelete(warning)}
+              onClick={() => this.onClickDelete(trainer)}
             ></i>
           </Link>
         ),
@@ -249,7 +252,7 @@ class warningsList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: warnings.length,
+      totalSize: trainers.length,
       custom: true,
     };
 
@@ -265,8 +268,8 @@ class warningsList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={t("warnings")}
-              breadcrumbItem={t("warnings List")}
+              title={t("trainers")}
+              breadcrumbItem={t("trainers List")}
             />
 
             <Row>
@@ -326,12 +329,12 @@ class warningsList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={warnings}
+                        data={trainers}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={warnings}
+                            data={trainers}
                             columns={columns}
                             search
                           >
@@ -340,17 +343,16 @@ class warningsList extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {showSearchButton && (
+                                    {/*   {showSearchButton && ( */}
                                         <div className="position-relative">
                                           <SearchBar
                                             {...toolkitprops.searchProps}
                                           />
                                         </div>
-                                      )}
                                     </div>
                                   </Col>
                                   <Col sm="8">
-                                    {showAddButton && (
+                                    {/* {showAddButton && ( */}
                                       <div className="text-sm-end">
                                         <Tooltip
                                           title={this.props.t("Add")}
@@ -364,7 +366,6 @@ class warningsList extends Component {
                                           </IconButton>
                                         </Tooltip>
                                       </div>
-                                    )}
                                   </Col>
                                 </Row>
 
@@ -372,7 +373,7 @@ class warningsList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={warnings}
+                                  data={trainers}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
@@ -383,14 +384,14 @@ class warningsList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handlewarningDataChange(
+                                      this.handletrainerDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
                                       );
                                     },
                                   })}
-                                  noDataIndication={t("No warnings found")}
+                                  noDataIndication={t("No trainers found")}
                                   defaultSorted={defaultSorting}
                                 />
                                 <Col className="pagination pagination-rounded justify-content-end mb-2">
@@ -415,21 +416,21 @@ class warningsList extends Component {
   }
 }
 
-const mapStateToProps = ({ warnings, menu_items }) => ({
-  warnings: warnings.warnings,
-  deleted: warnings.deleted,
+const mapStateToProps = ({ trainers, menu_items }) => ({
+  trainers: trainers.trainers,
+  deleted: trainers.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetwarnings: () => dispatch(getWarnings()),
-  onAddNewwarning: warning => dispatch(addNewWarning(warning)),
-  onUpdateWarning: warning => dispatch(updateWarning(warning)),
-  onDeletewarning: warning => dispatch(deleteWarning(warning)),
-  onGetWarningDeletedValue: () => dispatch(getWarningDeletedValue()),
+  onGetTrainers: () => dispatch(getTrainers()),
+  onAddNewtrainer: trainer => dispatch(addNewTrainer(trainer)),
+  onUpdateTrainer: trainer => dispatch(updateTrainer(trainer)),
+  onDeletetrainer: trainer => dispatch(deleteTrainer(trainer)),
+  onGetTrainerDeletedValue: () => dispatch(getTrainerDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(warningsList));
+)(withTranslation()(TrainersList));

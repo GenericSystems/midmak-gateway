@@ -193,7 +193,7 @@ import SectorsList from "../pages/Sectors/sectors";
 import AcademicLoadList from "../pages/Setting/Faculties/Academic-Load";
 
 //Warning
-import warningsList from "../pages/Setting/Faculties/warning";
+import warningsList from "../pages/Trainers/trainers";
 
 //PREREQS
 import PrereqsList from "../pages/Setting/Faculties/prereq-conditions";
@@ -237,6 +237,8 @@ import DocumentTypesList from "../pages/Setting/UniAdmission/documents-types";
 
 //regReqDocuments
 import RegReqDocumentsTable from "../pages/Setting/UniAdmission/reg-req-documents";
+
+import TrainersList from "../pages/Trainers/trainers";
 
 //Documents
 import UniDocumentsList from "../pages/Setting/UniAdmission/uni-documents";
@@ -497,6 +499,8 @@ const authProtectedRoutes = [
   //Semesters
   { path: "/semesters", component: SemestersList },
 
+    //Trainers
+    { path: "/trainers", component: TrainersList },
   //GrantSponsors
   { path: "/grant-sponsors", component: GrantSponsors },
 

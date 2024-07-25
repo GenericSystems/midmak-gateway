@@ -793,15 +793,15 @@ export const GET_SEARCH_MENU = "/searchMenu";
 
 // Warning
 
-export const GET_WARNINGS = "/warnings";
+export const GET_TRAINERS = "/trainers";
 
-export const ADD_NEW_WARNING = "/add/warning";
+export const ADD_NEW_TRAINER = "/add/trainer";
 
-export const UPDATE_WARNING = "/update/warning";
+export const UPDATE_TRAINER = "/update/trainer";
 
-export const DELETE_WARNING = "/delete/warning";
+export const DELETE_TRAINER = "/delete/trainer";
 
-export const GET_WARNING_DELETED_VALUE = "/deleted";
+export const GET_TRAINER_DELETED_VALUE = "/deleted";
 
 // WarningRule
 
