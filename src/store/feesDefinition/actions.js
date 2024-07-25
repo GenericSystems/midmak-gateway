@@ -1,4 +1,4 @@
-import feesDefinition from "pages/Finances/Definition/fees-definition";
+
 import {
   GET_FEES_DEFINITION_DELETED_VALUE,
   GET_FEES_DEFINITION_DELETED_VALUE_FAIL,

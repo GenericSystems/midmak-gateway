@@ -196,7 +196,6 @@ import MobAppFacultyAccsList from "../pages/MobileApps/mob-app-faculty-accs/mobA
 //StudyPlans
 import StudyPlansList from "../pages/Faculties/study-plans";
 
-
 //Sector
 import SectorsList from "../pages/Sectors/sectors";
 //Academic  loads
@@ -239,17 +238,6 @@ import CurrenciesList from "../pages/Setting/Finances/currencies";
 //fines
 import FinesList from "../pages/Setting/Finances/fines";
 
-//fines
-import FinesDefinitionList from "../pages/Finances/Definition/fines-definition";
-
-//request fees
-import RequestsFeesList from "../pages/Finances/Definition/requests-fees";
-
-//fees
-import FeesDefinitionList from "../pages/Finances/Definition/fees-definition";
-
-//fines
-import PeriodsList from "../pages/Finances/Definition/periods";
 
 //services
 import ServicesList from "../pages/Setting/Finances/services";
@@ -504,18 +492,6 @@ const authProtectedRoutes = [
 
   //Fines
   { path: "/fines", component: FinesList },
-
-  //Fines Definition
-  { path: "/fines-definition", component: FinesDefinitionList },
-
-  //requests Fees
-  { path: "/requests-fees", component: RequestsFeesList },
-
-  //fees Definition
-  { path: "/fees-definition", component: FeesDefinitionList },
-
-  //Periods
-  { path: "/periods", component: PeriodsList },
 
   //Services
   { path: "/services", component: ServicesList },

@@ -1,4 +1,4 @@
-import finesDefinition from "pages/Finances/Definition/fines-definition";
+
 import {
     GET_FINE_DEFINITION_DELETED_VALUE,
     GET_FINE_DEFINITION_DELETED_VALUE_FAIL,
