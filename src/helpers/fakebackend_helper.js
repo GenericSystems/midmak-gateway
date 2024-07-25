@@ -516,7 +516,7 @@ export const getUserTypes = data => post(url.GET_USER_TYPES, data);
 
 //get PreReqTypes profile
 export const getUserTypeDeletedValue = () =>
-  get(url.GET_REQUIREMENT_DELETED_VALUE);
+  get(url.GET_USER_TYPE_DELETED_VALUE);
 
 // add PreReqType
 export const addNewUserType = data => post(url.ADD_NEW_USER_TYPE, data);

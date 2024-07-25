@@ -18,7 +18,7 @@ import {
   updateUserType,
   deleteUserType,
   getUserTypeDeletedValue,
-} from "store/req-types/actions";
+} from "store/user-types/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -206,13 +206,13 @@ class UserTypesList extends Component {
   handleSuccessClose = () => {
     const { onGetUserTypeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetUserTypeDeletedValue();
+   // onGetUserTypeDeletedValue();
   };
 
   handleErrorClose = () => {
     const { onGetUserTypeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetUserTypeDeletedValue();
+   // onGetUserTypeDeletedValue();
   };
 
 
@@ -474,7 +474,7 @@ const mapDispatchToProps = dispatch => ({
   onAddNewUserType: userType => dispatch(addNewUserType(userType)),
   onUpdateUserType: userType => dispatch(updateUserType(userType)),
   onDeleteUserType: userType => dispatch(deleteUserType(userType)),
-  onGetUserTypeDeletedValue: () => dispatch(getUserTypeDeletedValue()),
+ // onGetUserTypeDeletedValue: () => dispatch(getUserTypeDeletedValue()),
 });
 
 export default connect(

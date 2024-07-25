@@ -15,7 +15,7 @@ import StudentsSaga from "./students/saga";
 import projectsSaga from "./projects/saga";
 import tasksSaga from "./tasks/saga";
 import mailsSaga from "./mails/saga";
-import userTypesSaga from "./req-types/saga";
+import userTypesSaga from "./user-types/saga";
 import admissionConditionsSaga from "./admissionConditions/saga";
 import levelingDecisionsSaga from "./leveling-decisions/saga";
 import StudentsHistorySaga from "./students-history/saga";

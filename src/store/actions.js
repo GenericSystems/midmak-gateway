@@ -73,7 +73,7 @@ export * from "./sectors/actions";
 export * from "./study-plans/actions";
 
 //preReqType
-export * from "./req-types/actions";
+export * from "./user-types/actions";
 
 //certificate
 export * from "./certificates/actions";

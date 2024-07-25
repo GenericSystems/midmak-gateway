@@ -74,7 +74,7 @@ import studentsStatistics from "./students-statistics/reducer"
 import sectors from "./sectors/reducer"
 
 //preReqTypes
-import userTypes from "./req-types/reducer"
+import userTypes from "./user-types/reducer"
 
 //certificates
 import certificates from "./certificates/reducer"

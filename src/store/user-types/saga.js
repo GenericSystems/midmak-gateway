@@ -3,7 +3,7 @@ import { call, put, takeEvery } from "redux-saga/effects";
 // Crypto Redux States
 import {
   GET_USER_TYPES,
-  GET_REQUIREMENT_DELETED_VALUE,
+  GET_USER_TYPE_DELETED_VALUE,
   ADD_NEW_USER_TYPE,
   DELETE_USER_TYPE,
   UPDATE_USER_TYPE,
@@ -72,6 +72,7 @@ try {
 function* fetchUserTypeDeletedValue() {
   try {
     const response = yield call(getUserTypeDeletedValue);
+    console.log("in saga response",response)
     yield put(getUserTypeDeletedValueSuccess(response));
   } catch (error) {
     yield put(getUserTypeDeletedValueFail(error));
@@ -124,7 +125,7 @@ function* onDeleteUserType({ payload, userType }) {
 function* userTypesSaga() {
   yield takeEvery(GET_USER_TYPES, fetchUserTypes);
   yield takeEvery(GET_FACULTIES, fetchFaculties);
-  yield takeEvery(GET_REQUIREMENT_DELETED_VALUE, fetchUserTypeDeletedValue);
+  yield takeEvery(GET_USER_TYPE_DELETED_VALUE, fetchUserTypeDeletedValue);
   yield takeEvery(ADD_NEW_USER_TYPE, onAddNewUserType);
   yield takeEvery(UPDATE_USER_TYPE, onUpdateUserType);
   yield takeEvery(DELETE_USER_TYPE, onDeleteUserType);

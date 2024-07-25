@@ -2,9 +2,9 @@ import {
     GET_USER_TYPES,
     GET_USER_TYPES_FAIL,
     GET_USER_TYPES_SUCCESS,
-    GET_REQUIREMENT_DELETED_VALUE,
-    GET_REQUIREMENT_DELETED_VALUE_FAIL,
-    GET_REQUIREMENT_DELETED_VALUE_SUCCESS,
+    GET_USER_TYPE_DELETED_VALUE,
+    GET_USER_TYPE_DELETED_VALUE_FAIL,
+    GET_USER_TYPE_DELETED_VALUE_SUCCESS,
     ADD_NEW_USER_TYPE,
     ADD_USER_TYPE_SUCCESS,
     ADD_USER_TYPE_FAIL,
@@ -31,18 +31,17 @@ import {
     payload: error,
   })
   
-  export const getUserTypeDeletedValue = userTypeId => ({
-    type: GET_REQUIREMENT_DELETED_VALUE,
-    userTypeId,
+  export const getUserTypeDeletedValue = () => ({
+    type: GET_USER_TYPE_DELETED_VALUE,
   })
   
-  export const getUserTypeDeletedValueSuccess = userTypeProfiles => ({
-    type: GET_REQUIREMENT_DELETED_VALUE_SUCCESS,
-    payload: userTypeProfiles,
+  export const getUserTypeDeletedValueSuccess = userType => ({
+    type: GET_USER_TYPE_DELETED_VALUE_SUCCESS,
+    payload: userType,
   })
   
   export const getUserTypeDeletedValueFail = error => ({
-    type: GET_REQUIREMENT_DELETED_VALUE_FAIL,
+    type: GET_USER_TYPE_DELETED_VALUE_FAIL,
     payload: error,
   })
   

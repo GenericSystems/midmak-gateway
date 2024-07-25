@@ -7,8 +7,8 @@ import {
     UPDATE_USER_TYPE_FAIL,
     DELETE_USER_TYPE_SUCCESS,
     DELETE_USER_TYPE_FAIL,
-    GET_REQUIREMENT_DELETED_VALUE_SUCCESS,
-    GET_REQUIREMENT_DELETED_VALUE_FAIL,
+    GET_USER_TYPE_DELETED_VALUE_SUCCESS,
+    GET_USER_TYPE_DELETED_VALUE_FAIL,
   } from "./actionTypes"
   
   const INIT_STATE = {
@@ -43,7 +43,7 @@ import {
           error: action.payload,
         }
   
-      case GET_REQUIREMENT_DELETED_VALUE_SUCCESS:
+      case GET_USER_TYPE_DELETED_VALUE_SUCCESS:
         return {
           ...state,
           deleted: action.payload,
@@ -80,7 +80,7 @@ import {
             error: action.payload,
           }
   
-      case GET_REQUIREMENT_DELETED_VALUE_FAIL:
+      case GET_USER_TYPE_DELETED_VALUE_FAIL:
         return {
           ...state,
           error: action.payload,

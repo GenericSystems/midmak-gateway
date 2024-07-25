@@ -219,11 +219,11 @@ export const DELETE_SECTOR = "/delete/sector";
 export const GET_SECTOR_DELETED_VALUE = "/deleted";
 
 //USER_TYPES
-export const GET_USER_TYPES = "/preReqTypes";
-export const GET_REQUIREMENT_DELETED_VALUE = "/preReqType";
-export const ADD_NEW_USER_TYPE = "/add/preReqType";
-export const UPDATE_USER_TYPE = "/update/preReqType";
-export const DELETE_USER_TYPE = "/delete/preReqType";
+export const GET_USER_TYPES = "/user-Types";
+export const GET_USER_TYPE_DELETED_VALUE = "/user-Type";
+export const ADD_NEW_USER_TYPE = "/add/user-Type";
+export const UPDATE_USER_TYPE = "/update/user-Type";
+export const DELETE_USER_TYPE = "/delete/user-Type";
 //STUDY_PLANS
 export const GET_STUDY_PLANS = "/studyPlans";
 export const GET_STUDY_PLAN_PROFILE = "/studyPlan";
