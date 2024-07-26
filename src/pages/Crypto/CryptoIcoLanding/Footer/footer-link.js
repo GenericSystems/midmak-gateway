@@ -15,12 +15,10 @@ class FooterLink extends Component {
             </div>
 
             <p className="mb-2">
-              2021 © keyInHands. Design & Develop by Themesbrand
+              2024 © keyInHands.
             </p>
             <p>
-              It will be as simple as occidental in fact, it will be to an
-              english person, it will seem like simplified English, as a
-              skeptical
+             
             </p>
           </Col>
         </Row>
