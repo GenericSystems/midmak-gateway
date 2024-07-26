@@ -139,12 +139,12 @@ class TrainersGrades extends Component {
   handleAddRow = () => {
     const { trainersGrades, onAddNewTrainerGrade } = this.props;
     const newRow = {
-      arTitle: "-----",
+      arTitle: "---",
     };
 
     // Check if the same value already exists in the table
     const emptyRowsExist = trainersGrades.some(
-      trainerGrade => trainerGrade.arTitle.trim() === "-----"
+      trainerGrade => trainerGrade.arTitle.trim() === "---"
     );
 
     if (emptyRowsExist) {
@@ -211,9 +211,9 @@ class TrainersGrades extends Component {
 
   render() {
     const { SearchBar } = Search;
-    const { trainersGrades, deleted } = this.props;
+    const { trainersGrades, deleted ,t} = this.props;
     const alertMessage =
-      deleted == 0 ? "Can't Delete " : "Deleted Successfully";
+      deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const { onUpdateTrainerGrade, onDeleteTrainerGrade } = this.props;
     const {
       duplicateError,

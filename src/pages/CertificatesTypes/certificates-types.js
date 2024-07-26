@@ -150,7 +150,6 @@ class CertificateTypesList extends Component {
 
     const newRow = {
       arTitle: "-----",
-      enTitle: "",
     };
 
     // Check if the same value already exists in the table

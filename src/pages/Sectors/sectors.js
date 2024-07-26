@@ -235,7 +235,7 @@ class SectorsList extends Component {
       showSearchButton,
     } = this.state;
     const alertMessage =
-      deleted == 0 ? "Can't Delete " : "Deleted Successfully";
+    deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const { SearchBar } = Search;
     const defaultSorting = [
       {
@@ -247,7 +247,7 @@ class SectorsList extends Component {
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "arTitle",
-        text: this.props.t("Sector (ar)"),
+        text: this.props.t("Sector(ar)"),
         sort: true,
        // editable: showEditButton,
       },

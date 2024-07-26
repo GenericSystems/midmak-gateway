@@ -205,7 +205,7 @@ class TrainersList extends Component {
       showSearchButton,
     } = this.state;
     const alertMessage =
-      deleted == 0 ? "Can't Delete " : "Deleted Successfully";
+    deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const { SearchBar } = Search;
     const defaultSorting = [
       {

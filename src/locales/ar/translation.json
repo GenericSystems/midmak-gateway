@@ -72,9 +72,20 @@
   "User Type":"المسمى التدريبي",
   "Year":"السنة",
   "Trainer Grade":"درجة المدرب",
-  "Trainer": "المدرب"
-
-
+  "Trainer": "المدرب",
+  "Code":"الرمز",
+  "Deleted Successfully":"تم الحذف بنجاح",
+  "Fill in the empty row":"املا الفراغ",
+  "Can't Delete":"لا يمكنك الحذف",
+  "Are you sure?": "هل أنت متأكد؟",
+  "You won't be able to revert this": "لن تتمكن من التراجع عن هذا",
+  "Sectors List":"قائمة القطاعات",
+  "CertificateTypes List":"قائمة انواع الشهادات",
+  "Add Certificate":"اضافة شهادة",
+  "Edit Certificate":"تعديل الشهادة",
+  "Search...":"بحث...",
+  "Edit":"تعديل",
+  "Delete":"حذف"
 
 
 }
