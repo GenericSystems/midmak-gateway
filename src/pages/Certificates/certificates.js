@@ -24,6 +24,7 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import Select from "react-select";
 import { Formik, Field, Form, ErrorMessage } from "formik";
+import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import {
   getCertificates,
   addNewCertificate,
@@ -334,19 +335,9 @@ class Certificates extends Component {
           onUpdateCertificate(sectionInfo);
         
       } else {
-        const isDuplicateCertificateCode = certificates.some(
-          certificate =>
-            certificate.Id &&
-            !certificate.Id &&
-            certificate.academicCode &&
-            certificate.academicCode === sectionInfo.academicCode
-        );
-
-        if (!isDuplicateCertificateCode) {
+    
           onAddNewCertificate(sectionInfo);
-        } else {
-          console.log("isDuplicateCertificateCode");
-        }
+       
       }
       this.setState({
         selectedAcademicCertificate: null,
@@ -437,17 +428,26 @@ class Certificates extends Component {
 
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
-      {
+       {
         dataField: "academicCode",
         text: this.props.t("Academic Code"),
         sort: true,
-      },
+       editable: false,
+       filter: textFilter({
+        placeholder: this.props.t("Search..."),
+      //  hidden: !showSearchButton,
+      }),
+      }, 
       {
         dataField: "certificateType",
         text: this.props.t("Certificate Type"),
         sort: true,
 
         editable: false,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "userType",
@@ -455,18 +455,30 @@ class Certificates extends Component {
         sort: true,
 
         editable: false,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "trainerName",
         text: this.props.t("Trainer"),
         sort: true,
         editable: false,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "trainerGrade",
         text: this.props.t("Trainer Grade"),
         sort: true,
         editable: false,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "sector",
@@ -479,18 +491,30 @@ class Certificates extends Component {
           }
           return "";
         },
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "certificateYear",
         text: this.props.t("Year"),
         sort: true,
         editable: false,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "certificateNum",
         text: this.props.t("Certificate Number"),
         sort: true,
         editable: false,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        //  hidden: !showSearchButton,
+        }),
       },
 
       {
@@ -510,6 +534,15 @@ class Certificates extends Component {
                   }
                 ></i>
               </Link>
+              <Link className="text-primary" to="#">
+                <i
+                  className="mdi mdi-qrcode font-size-18"
+                  id="edittooltip"
+                  onClick={() =>
+                    this.handleCertificateQR(certificate)
+                  }
+                ></i>
+              </Link>
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
@@ -520,7 +553,7 @@ class Certificates extends Component {
         ),
       },
     ];
-
+   
     const pageOptions = {
       sizePerPage: 10,
       totalSize: certificates.length,
@@ -669,6 +702,7 @@ class Certificates extends Component {
                                     "No Certificate Types found"
                                   )}
                                   defaultSorted={defaultSorting}
+                                  filter={filterFactory()}
                                 />
                                 <Col className="pagination pagination-rounded justify-content-end mb-2">
                                   <PaginationListStandalone
@@ -733,39 +767,32 @@ class Certificates extends Component {
                                           <Row>
                                             <Col>
                                               <Row>
-                                                <Col lg="6">
+                                                <Col lg="3"className="col-padding">
                                                   <Label>
-                                                    {t("Academic Code")}
-                                                    <span className="text-danger">
-                                                      *
+                                                  <strong>{t("Trainer")}</strong>
+                                                    <span className="" style={{color:"red"}}>
+                                                        *
                                                     </span>
                                                   </Label>
                                                 </Col>
                                                 <Col lg="6">
-                                                  <Field
-                                                    name="academicCode"
-                                                    type="text"
-                                                    className={
-                                                      "form-control" +
-                                                      ((errors.academicCode &&
-                                                        touched.academicCode) ||
-                                                      academicCodeError
-                                                        ? " is-invalid"
-                                                        : "")
-                                                    }
+                                                <Select
+                                                    name="trainerId"
+                                                    key={`select_fromSemester`}
+                                                    options={trainers}
+                                                    onChange={newValue => {
+                                                      this.handleSelectChange(
+                                                        "trainerId",
+                                                        newValue.value
+                                                      );
+                                                    }}
+                                                    defaultValue={trainers.find(
+                                                      opt =>
+                                                        opt.value ===
+                                                        certificate.trainerId
+                                                    )}
                                                   />
-                                                  {academicCodeError && (
-                                                    <div className="invalid-feedback">
-                                                      {t(
-                                                        "Academic Code is required"
-                                                      )}
-                                                    </div>
-                                                  )}
-                                                  <ErrorMessage
-                                                    name="academicCode"
-                                                    component="div"
-                                                    className="invalid-feedback"
-                                                  />
+                                                
                                                 </Col>
                                               </Row>
 
@@ -775,7 +802,10 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    {t("Certificate Type")}
+                                                   <strong> {t("Certificate Type")}</strong>
+                                                   <span className="" style={{color:"red"}}>
+                                                        *
+                                                    </span>
                                                   </label>
                                                 </Col>
 
@@ -784,7 +814,10 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    {t("User Type")}
+                                                    <strong>{t("User Type")}</strong>
+                                                    <span className="" style={{color:"red"}}>
+                                                        *
+                                                    </span>
                                                   </label>
                                                 </Col>
                                               </Row>
@@ -836,7 +869,10 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    {t("Trainer")}
+                                                    <strong>{t("Academic Code")}</strong> 
+                                                    <span className="" style={{color:"red"}}>
+                                                        *
+                                                    </span>
                                                   </label>
                                                 </Col>
 
@@ -845,7 +881,10 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    {t("Trainer Grade")}
+                                                    <strong>{t("Trainer Grade")}</strong>
+                                                    <span className="" style={{color:"red"}}>
+                                                        *
+                                                    </span>
                                                   </label>
                                                 </Col>
                                               </Row>
@@ -853,21 +892,29 @@ class Certificates extends Component {
                                               <Row className="mb-3">
                                                 <Col sm="6">
                                                   {" "}
-                                                  <Select
-                                                    name="trainerId"
-                                                    key={`select_fromSemester`}
-                                                    options={trainers}
-                                                    onChange={newValue => {
-                                                      this.handleSelectChange(
-                                                        "trainerId",
-                                                        newValue.value
-                                                      );
-                                                    }}
-                                                    defaultValue={trainers.find(
-                                                      opt =>
-                                                        opt.value ===
-                                                        certificate.trainerId
-                                                    )}
+                                                  <Field
+                                                    name="academicCode"
+                                                    type="text"
+                                                    className={
+                                                      "form-control" +
+                                                      ((errors.academicCode &&
+                                                        touched.academicCode) ||
+                                                      academicCodeError
+                                                        ? " is-invalid"
+                                                        : "")
+                                                    }
+                                                  />
+                                                  {academicCodeError && (
+                                                    <div className="invalid-feedback">
+                                                      {t(
+                                                        "Academic Code is required"
+                                                      )}
+                                                    </div>
+                                                  )}
+                                                  <ErrorMessage
+                                                    name="academicCode"
+                                                    component="div"
+                                                    className="invalid-feedback"
                                                   />
                                                 </Col>
 
@@ -897,7 +944,10 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    {t("Sector")}
+                                                    <strong>{t("Sector")}</strong> 
+                                                    <span className="" style={{color:"red"}}>
+                                                        *
+                                                    </span>
                                                   </label>
                                                 </Col>
 
@@ -906,7 +956,10 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    {t("Year")}
+                                                    <strong>{t("Year")}</strong>
+                                                    <span className="" style={{color:"red"}}>
+                                                        *
+                                                    </span>
                                                   </label>
                                                 </Col>
                                               </Row>
