@@ -154,8 +154,7 @@ class CertificateTypesList extends Component {
 
     // Check if the same value already exists in the table
     const emptyRowsExist = certificateTypes.some(
-      certificateTypes =>
-        certificateTypes.arTitle.trim() === "-----"
+      certificateTypes => certificateTypes.arTitle.trim() === "-----"
       // ||
       // certificateType.enTitle.trim() === ""
     );
@@ -186,16 +185,19 @@ class CertificateTypesList extends Component {
 
   handleCertificateTypeDataChange = (rowId, fieldName, fieldValue) => {
     const { onUpdateCertificateType, certificateTypes } = this.props;
-    
+
     const isDuplicate = certificateTypes.some(certificateType => {
       if (certificateType.Id !== rowId) {
         const arTitle = certificateType.arTitle || "";
         const enTitle = certificateType.enTitle || "";
-        return arTitle.trim() === fieldValue.trim() || enTitle.trim() === fieldValue.trim();
+        return (
+          arTitle.trim() === fieldValue.trim() ||
+          enTitle.trim() === fieldValue.trim()
+        );
       }
       return false;
     });
-  
+
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
@@ -207,7 +209,6 @@ class CertificateTypesList extends Component {
       onUpdateCertificateType(onUpdate);
     }
   };
-  
 
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
@@ -263,35 +264,37 @@ class CertificateTypesList extends Component {
         dataField: "arTitle",
         text: this.props.t("Certificate Type(ar)"),
         sort: true,
-      //  editable: showEditButton,
+        //  editable: showEditButton,
       },
       {
         dataField: "enTitle",
         text: "Certificate Type",
         sort: true,
-      //  editable: showEditButton,
+        //  editable: showEditButton,
       },
       {
         dataField: "code",
         text: "Code",
         sort: true,
-      //  editable: showEditButton,
+        //  editable: showEditButton,
       },
-     
+
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
-      //  hidden: !showDeleteButton,
+        //  hidden: !showDeleteButton,
         formatter: (cellContent, certificateType) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.onClickDelete(certificateType)}
-            ></i>
-          </Link>
+          <Tooltip title={this.props.t("Delete")} placement="top">
+            <Link className="text-danger" to="#">
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                onClick={() => this.onClickDelete(certificateType)}
+              ></i>
+            </Link>
+          </Tooltip>
         ),
       },
     ];
@@ -385,32 +388,30 @@ class CertificateTypesList extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                    {/*   {showSearchButton && ( */}
-                                        <div className="position-relative">
-                                          <SearchBar
-                                            {...toolkitprops.searchProps}
-                                          />
-                                        </div>
-                                   
+                                      {/*   {showSearchButton && ( */}
+                                      <div className="position-relative">
+                                        <SearchBar
+                                          {...toolkitprops.searchProps}
+                                        />
+                                      </div>
                                     </div>
                                   </Col>
-                               {/*    {showAddButton && ( */}
-                                    <Col sm="8">
-                                      <div className="text-sm-end">
-                                        <Tooltip
-                                          title={this.props.t("Add")}
-                                          placement="top"
+                                  {/*    {showAddButton && ( */}
+                                  <Col sm="8">
+                                    <div className="text-sm-end">
+                                      <Tooltip
+                                        title={this.props.t("Add")}
+                                        placement="top"
+                                      >
+                                        <IconButton
+                                          color="primary"
+                                          onClick={this.handleAddRow}
                                         >
-                                          <IconButton
-                                            color="primary"
-                                            onClick={this.handleAddRow}
-                                          >
-                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                          </IconButton>
-                                        </Tooltip>
-                                      </div>
-                                    </Col>
-                                  
+                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </div>
+                                  </Col>
                                 </Row>
 
                                 <BootstrapTable

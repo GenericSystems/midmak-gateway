@@ -172,7 +172,6 @@ class Certificates extends Component {
 
   onClickDelete = row => {
     this.setState({ selectedRowId: row.Id, deleteModal: true });
-
   };
 
   handleAddRow = () => {
@@ -191,7 +190,7 @@ class Certificates extends Component {
     const { onDeleteCertificate } = this.props;
     const { selectedRowId } = this.state;
     if (selectedRowId !== null) {
-      onDeleteCertificate({Id: selectedRowId});
+      onDeleteCertificate({ Id: selectedRowId });
 
       this.setState({
         selectedRowId: null,
@@ -476,7 +475,7 @@ class Certificates extends Component {
           //  hidden: !showSearchButton,
         }),
       },
-     
+
       {
         dataField: "certificateType",
         text: this.props.t("Certificate Type"),
@@ -555,27 +554,33 @@ class Certificates extends Component {
         editable: false, // Set the "Action" column to not editable
         formatter: (cellContent, certificate) => (
           <div className="d-flex gap-3">
-            <Link className="text-secondary" to="#">
-              <i
-                className="mdi mdi-pencil font-size-18"
-                id="edittooltip"
-                onClick={() => this.handleCertificateClick(certificate)}
-              ></i>
-            </Link>
-            <Link className="text-primary" to="#">
-              <i
-                className="mdi mdi-qrcode font-size-18"
-                id="edittooltip"
-                onClick={() => this.handleGenerateQR(certificate)}
-              ></i>
-            </Link>
-            <Link className="text-danger" to="#">
-              <i
-                className="mdi mdi-delete font-size-18"
-                id="deletetooltip"
-                onClick={() => this.onClickDelete(certificate)}
-              ></i>
-            </Link>
+            <Tooltip title={this.props.t("Edit")} placement="top">
+              <Link className="text-secondary" to="#">
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  onClick={() => this.handleCertificateClick(certificate)}
+                ></i>
+              </Link>
+            </Tooltip>
+            <Tooltip title={this.props.t("QR")} placement="top">
+              <Link className="text-primary" to="#">
+                <i
+                  className="mdi mdi-qrcode font-size-18"
+                  id="edittooltip"
+                  onClick={() => this.handleGenerateQR(certificate)}
+                ></i>
+              </Link>
+            </Tooltip>
+            <Tooltip title={this.props.t("Delete")} placement="top">
+              <Link className="text-danger" to="#">
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  id="deletetooltip"
+                  onClick={() => this.onClickDelete(certificate)}
+                ></i>
+              </Link>
+            </Tooltip>
           </div>
         ),
       },
@@ -598,10 +603,7 @@ class Certificates extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs
-             
-              breadcrumbItem={this.props.t("Certificates")}
-            />
+            <Breadcrumbs breadcrumbItem={this.props.t("Certificates")} />
 
             <Row>
               <Col>

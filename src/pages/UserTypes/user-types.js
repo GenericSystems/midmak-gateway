@@ -1,5 +1,16 @@
 import React, { Component } from "react";
-import { Row, Col, Card, Alert, CardBody, Input,CardTitle, Label, Form, FormGroup } from "reactstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Alert,
+  CardBody,
+  Input,
+  CardTitle,
+  Label,
+  Form,
+  FormGroup,
+} from "reactstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
 import AddIcon from "@mui/icons-material/Add";
@@ -133,7 +144,7 @@ class UserTypesList extends Component {
   };
   handleAddRow = () => {
     const { onAddNewUserType, userTypes } = this.props;
-    const {selectedFacultyId} =this.state
+    const { selectedFacultyId } = this.state;
 
     const newRow = {
       arTitle: "-----",
@@ -206,15 +217,14 @@ class UserTypesList extends Component {
   handleSuccessClose = () => {
     const { onGetUserTypeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-   // onGetUserTypeDeletedValue();
+    // onGetUserTypeDeletedValue();
   };
 
   handleErrorClose = () => {
     const { onGetUserTypeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-   // onGetUserTypeDeletedValue();
+    // onGetUserTypeDeletedValue();
   };
-
 
   render() {
     const { userTypes, deleted, t } = this.props;
@@ -257,7 +267,7 @@ class UserTypesList extends Component {
         sort: true,
         // editable: showEditButton,
       },
-     
+
       {
         dataField: "code",
         text: t("Code"),
@@ -270,15 +280,17 @@ class UserTypesList extends Component {
         text: "",
         isDummyField: true,
         editable: false,
-      //  hidden: !showDeleteButton,
+        //  hidden: !showDeleteButton,
         formatter: (cellContent, userType) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.onClickDelete(userType)}
-            ></i>
-          </Link>
+          <Tooltip title={this.props.t("Delete")} placement="top">
+            <Link className="text-danger" to="#">
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                onClick={() => this.onClickDelete(userType)}
+              ></i>
+            </Link>
+          </Tooltip>
         ),
       },
     ];
@@ -299,9 +311,7 @@ class UserTypesList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs
-              breadcrumbItem={t("UserTypes List")}
-            />
+            <Breadcrumbs breadcrumbItem={t("UserTypes List")} />
 
             <Row>
               <Col>
@@ -356,9 +366,7 @@ class UserTypesList extends Component {
                         )}
                       </div>
                     }
-                               <Card>
-                       
-                      </Card>
+                    <Card></Card>
                     <div className="table-responsive">
                       <PaginationProvider
                         pagination={paginationFactory(pageOptions)}
@@ -376,38 +384,32 @@ class UserTypesList extends Component {
                             {toolkitprops => (
                               <React.Fragment>
                                 <Row>
-
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                     {/*  {showSearchButton && ( */}
-                                        <div className="position-relative">
-                                          <SearchBar
-                                            {...toolkitprops.searchProps}
-                                          />
-                                        </div>
-                              
-                                    </div>
-                              
-                                  </Col>
-                                 <Col sm="4">
-                                
-                        </Col> 
-                                  <Col sm="4">
-                               {/*      {showAddButton && ( */}
-                                      <div className="text-sm-end">
-                                        <Tooltip
-                                          title={this.props.t("Add")}
-                                          placement="top"
-                                        >
-                                          <IconButton
-                                            color="primary"
-                                            onClick={this.handleAddRow}
-                                          >
-                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                          </IconButton>
-                                        </Tooltip>
+                                      {/*  {showSearchButton && ( */}
+                                      <div className="position-relative">
+                                        <SearchBar
+                                          {...toolkitprops.searchProps}
+                                        />
                                       </div>
-                                   
+                                    </div>
+                                  </Col>
+                                  <Col sm="4"></Col>
+                                  <Col sm="4">
+                                    {/*      {showAddButton && ( */}
+                                    <div className="text-sm-end">
+                                      <Tooltip
+                                        title={this.props.t("Add")}
+                                        placement="top"
+                                      >
+                                        <IconButton
+                                          color="primary"
+                                          onClick={this.handleAddRow}
+                                        >
+                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </div>
                                   </Col>
                                 </Row>
 
@@ -473,7 +475,7 @@ const mapDispatchToProps = dispatch => ({
   onAddNewUserType: userType => dispatch(addNewUserType(userType)),
   onUpdateUserType: userType => dispatch(updateUserType(userType)),
   onDeleteUserType: userType => dispatch(deleteUserType(userType)),
- // onGetUserTypeDeletedValue: () => dispatch(getUserTypeDeletedValue()),
+  // onGetUserTypeDeletedValue: () => dispatch(getUserTypeDeletedValue()),
 });
 
 export default connect(

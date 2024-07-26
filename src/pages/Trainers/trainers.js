@@ -163,7 +163,8 @@ class TrainersList extends Component {
     const isDuplicate = trainers.some(
       trainer =>
         trainer.Id !== rowId &&
-        (trainer.arTitle && trainer.arTitle.trim() === fieldValue.trim()) 
+        trainer.arTitle &&
+        trainer.arTitle.trim() === fieldValue.trim()
     );
 
     if (isDuplicate) {
@@ -205,7 +206,7 @@ class TrainersList extends Component {
       showSearchButton,
     } = this.state;
     const alertMessage =
-    deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
+      deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const { SearchBar } = Search;
     const defaultSorting = [
       {
@@ -219,34 +220,36 @@ class TrainersList extends Component {
         dataField: "name",
         text: t("Trainer Name"),
         sort: true,
-       // editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "phone",
         text: t("Phone"),
         sort: true,
-       // editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "email",
         text: t("Email"),
         sort: true,
-       // editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
-      //  hidden: !showDeleteButton,
+        //  hidden: !showDeleteButton,
         formatter: (cellContent, trainer) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.onClickDelete(trainer)}
-            ></i>
-          </Link>
+          <Tooltip title={this.props.t("Delete")} placement="top">
+            <Link className="text-danger" to="#">
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                onClick={() => this.onClickDelete(trainer)}
+              ></i>
+            </Link>
+          </Tooltip>
         ),
       },
     ];
@@ -267,9 +270,7 @@ class TrainersList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs
-              breadcrumbItem={t("trainers List")}
-            />
+            <Breadcrumbs breadcrumbItem={t("trainers List")} />
 
             <Row>
               <Col>
@@ -342,29 +343,29 @@ class TrainersList extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                    {/*   {showSearchButton && ( */}
-                                        <div className="position-relative">
-                                          <SearchBar
-                                            {...toolkitprops.searchProps}
-                                          />
-                                        </div>
+                                      {/*   {showSearchButton && ( */}
+                                      <div className="position-relative">
+                                        <SearchBar
+                                          {...toolkitprops.searchProps}
+                                        />
+                                      </div>
                                     </div>
                                   </Col>
                                   <Col sm="8">
                                     {/* {showAddButton && ( */}
-                                      <div className="text-sm-end">
-                                        <Tooltip
-                                          title={this.props.t("Add")}
-                                          placement="top"
+                                    <div className="text-sm-end">
+                                      <Tooltip
+                                        title={this.props.t("Add")}
+                                        placement="top"
+                                      >
+                                        <IconButton
+                                          color="primary"
+                                          onClick={this.handleAddRow}
                                         >
-                                          <IconButton
-                                            color="primary"
-                                            onClick={this.handleAddRow}
-                                          >
-                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                          </IconButton>
-                                        </Tooltip>
-                                      </div>
+                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </div>
                                   </Col>
                                 </Row>
 

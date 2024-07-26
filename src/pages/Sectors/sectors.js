@@ -16,7 +16,7 @@ import {
   ModalBody,
   Label,
   Alert,
-  CardTitle
+  CardTitle,
 } from "reactstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
@@ -77,10 +77,9 @@ class SectorsList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (sectors && !sectors.length) {
       onGetSectors();
-
     }
     this.setState({ sectors });
-    this.setState({  deleted });
+    this.setState({ deleted });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -151,7 +150,6 @@ class SectorsList extends Component {
     const { onAddNewSector, sectors } = this.props;
     const newRow = {
       arTitle: "-----",
-
     };
 
     const emptyRowsExist = sectors.some(
@@ -186,7 +184,8 @@ class SectorsList extends Component {
     const { onUpdateSector, sectors } = this.props;
 
     const isDuplicate = sectors.some(
-      sector => sector.Id !== rowId && sector.arTitle.trim() === fieldValue.trim()
+      sector =>
+        sector.Id !== rowId && sector.arTitle.trim() === fieldValue.trim()
       // sector.facultyId.trim() === fieldValue.trim())
     );
 
@@ -235,7 +234,7 @@ class SectorsList extends Component {
       showSearchButton,
     } = this.state;
     const alertMessage =
-    deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
+      deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const { SearchBar } = Search;
     const defaultSorting = [
       {
@@ -249,35 +248,37 @@ class SectorsList extends Component {
         dataField: "arTitle",
         text: this.props.t("Sector(ar)"),
         sort: true,
-       // editable: showEditButton,
+        // editable: showEditButton,
       },
-     
+
       {
         dataField: "enTitle",
         text: "Sector",
         sort: true,
-       // editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "code",
         text: this.props.t("Code"),
         sort: true,
-       // editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
-       // hidden: !showDeleteButton,
+        // hidden: !showDeleteButton,
         formatter: (cellContent, sector) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.onClickDelete(sector)}
-            ></i>
-          </Link>
+          <Tooltip title={this.props.t("Delete")} placement="top">
+            <Link className="text-danger" to="#">
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                onClick={() => this.onClickDelete(sector)}
+              ></i>
+            </Link>
+          </Tooltip>
         ),
       },
     ];
@@ -298,9 +299,7 @@ class SectorsList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs
-              breadcrumbItem={this.props.t("Sectors List")}
-            />
+            <Breadcrumbs breadcrumbItem={this.props.t("Sectors List")} />
 
             <Row>
               <Col>
@@ -372,31 +371,28 @@ class SectorsList extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                
-                                        <div className="position-relative">
-                                          <SearchBar
-                                            {...toolkitprops.searchProps}
-                                          />
-                                        </div>
-                               
+                                      <div className="position-relative">
+                                        <SearchBar
+                                          {...toolkitprops.searchProps}
+                                        />
+                                      </div>
                                     </div>
                                   </Col>
-                                
+
                                   <Col sm="8">
-                                      <div className="text-sm-end">
-                                        <Tooltip
-                                          title={this.props.t("Add")}
-                                          placement="top"
+                                    <div className="text-sm-end">
+                                      <Tooltip
+                                        title={this.props.t("Add")}
+                                        placement="top"
+                                      >
+                                        <IconButton
+                                          color="primary"
+                                          onClick={this.handleAddRow}
                                         >
-                                          <IconButton
-                                            color="primary"
-                                            onClick={this.handleAddRow}
-                                          >
-                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                          </IconButton>
-                                        </Tooltip>
-                                      </div>
-                                   
+                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </div>
                                   </Col>
                                 </Row>
 

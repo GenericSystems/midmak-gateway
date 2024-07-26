@@ -18,7 +18,7 @@ import {
   updateTrainerGrade,
   deleteTrainerGrade,
   getTrainerGradeDeletedValue,
-} from "store/trainersGrades/actions"
+} from "store/trainersGrades/actions";
 
 import ToolkitProvider, {
   Search,
@@ -55,12 +55,8 @@ class TrainersGrades extends Component {
   }
 
   componentDidMount() {
-    const {
-      trainersGrades,
-      onGetTrainersGrades,
-      deleted,
-      user_menu,
-    } = this.props;
+    const { trainersGrades, onGetTrainersGrades, deleted, user_menu } =
+      this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
@@ -190,12 +186,10 @@ class TrainersGrades extends Component {
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      console.log("on update",onUpdate)
+      console.log("on update", onUpdate);
       onUpdateTrainerGrade(onUpdate);
     }
   };
-
-
 
   handleSuccessClose = () => {
     const { onGetTrainerGradeDeletedValue } = this.props;
@@ -211,7 +205,7 @@ class TrainersGrades extends Component {
 
   render() {
     const { SearchBar } = Search;
-    const { trainersGrades, deleted ,t} = this.props;
+    const { trainersGrades, deleted, t } = this.props;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const { onUpdateTrainerGrade, onDeleteTrainerGrade } = this.props;
@@ -237,35 +231,37 @@ class TrainersGrades extends Component {
         dataField: "arTitle",
         text: this.props.t("Trainers Grades(ar)"),
         sort: true,
-       // editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "enTitle",
         text: "Trainerts Grades",
         sort: true,
-       // editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "code",
         text: this.props.t("Code"),
         sort: true,
-       // editable: showEditButton,
+        // editable: showEditButton,
       },
-     
+
       {
         dataField: "delete",
         text: "",
-      //  hidden: !showDeleteButton,
+        //  hidden: !showDeleteButton,
         isDummyField: true,
-        editable: false, 
+        editable: false,
         formatter: (cellContent, trainerGrade) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.onClickDelete(trainerGrade)}
-            ></i>
-          </Link>
+          <Tooltip title={this.props.t("Delete")} placement="top">
+            <Link className="text-danger" to="#">
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                onClick={() => this.onClickDelete(trainerGrade)}
+              ></i>
+            </Link>
+          </Tooltip>
         ),
       },
     ];
@@ -286,10 +282,7 @@ class TrainersGrades extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs
-             
-              breadcrumbItem={this.props.t("Trainers Grades")}
-            />
+            <Breadcrumbs breadcrumbItem={this.props.t("Trainers Grades")} />
 
             <Row>
               <Col>
@@ -361,31 +354,29 @@ class TrainersGrades extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                     {/*  {showSearchButton && ( */}
-                                        <div className="position-relative">
-                                          <SearchBar
-                                            {...toolkitprops.searchProps}
-                                          />
-                                        </div>
-                                    
+                                      {/*  {showSearchButton && ( */}
+                                      <div className="position-relative">
+                                        <SearchBar
+                                          {...toolkitprops.searchProps}
+                                        />
+                                      </div>
                                     </div>
                                   </Col>
                                   <Col sm="8">
-                             {/*        {showAddButton && ( */}
-                                      <div className="text-sm-end">
-                                        <Tooltip
-                                          title={this.props.t("Add")}
-                                          placement="top"
+                                    {/*        {showAddButton && ( */}
+                                    <div className="text-sm-end">
+                                      <Tooltip
+                                        title={this.props.t("Add")}
+                                        placement="top"
+                                      >
+                                        <IconButton
+                                          color="primary"
+                                          onClick={this.handleAddRow}
                                         >
-                                          <IconButton
-                                            color="primary"
-                                            onClick={this.handleAddRow}
-                                          >
-                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                          </IconButton>
-                                        </Tooltip>
-                                      </div>
-                                    
+                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </div>
                                   </Col>
                                 </Row>
 
@@ -446,9 +437,12 @@ const mapStateToProps = ({ trainersGrades, menu_items }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onGetTrainersGrades: () => dispatch(getTrainersGrades()),
-  onAddNewTrainerGrade: trainerGrade => dispatch(addNewTrainerGrade(trainerGrade)),
-  onUpdateTrainerGrade: trainerGrade => dispatch(updateTrainerGrade(trainerGrade)),
-  onDeleteTrainerGrade: trainerGrade => dispatch(deleteTrainerGrade(trainerGrade)),
+  onAddNewTrainerGrade: trainerGrade =>
+    dispatch(addNewTrainerGrade(trainerGrade)),
+  onUpdateTrainerGrade: trainerGrade =>
+    dispatch(updateTrainerGrade(trainerGrade)),
+  onDeleteTrainerGrade: trainerGrade =>
+    dispatch(deleteTrainerGrade(trainerGrade)),
   onGetTrainerGradeDeletedValue: () => dispatch(getTrainerGradeDeletedValue()),
 });
 
