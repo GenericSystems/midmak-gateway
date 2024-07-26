@@ -287,9 +287,7 @@ class TrainersGrades extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={`${this.props.t("Settings")} / ${this.props.t(
-                "University Admission"
-              )}`}
+             
               breadcrumbItem={this.props.t("Trainers Grades")}
             />
 

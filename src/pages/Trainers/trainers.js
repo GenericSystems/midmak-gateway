@@ -268,7 +268,6 @@ class TrainersList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={t("trainers")}
               breadcrumbItem={t("trainers List")}
             />
 

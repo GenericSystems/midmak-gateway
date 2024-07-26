@@ -314,7 +314,6 @@ class CertificateTypesList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={this.props.t("CertificateTypes")}
               breadcrumbItem={this.props.t("CertificateTypes List")}
             />
             <Row>

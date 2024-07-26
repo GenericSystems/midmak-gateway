@@ -170,8 +170,9 @@ class Certificates extends Component {
     }));
   };
 
-  onClickDelete = rowId => {
-    this.setState({ selectedRowId: rowId, deleteModal: true });
+  onClickDelete = row => {
+    this.setState({ selectedRowId: row.Id, deleteModal: true });
+
   };
 
   handleAddRow = () => {
@@ -190,7 +191,7 @@ class Certificates extends Component {
     const { onDeleteCertificate } = this.props;
     const { selectedRowId } = this.state;
     if (selectedRowId !== null) {
-      onDeleteCertificate(selectedRowId);
+      onDeleteCertificate({Id: selectedRowId});
 
       this.setState({
         selectedRowId: null,
@@ -598,9 +599,7 @@ class Certificates extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={`${this.props.t("Settings")} / ${this.props.t(
-                "University Admission"
-              )}`}
+             
               breadcrumbItem={this.props.t("Certificates")}
             />
 

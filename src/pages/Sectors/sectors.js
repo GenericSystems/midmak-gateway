@@ -299,7 +299,6 @@ class SectorsList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={this.props.t("Sectors")}
               breadcrumbItem={this.props.t("Sectors List")}
             />
 

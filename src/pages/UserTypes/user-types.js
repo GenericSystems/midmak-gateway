@@ -300,7 +300,6 @@ class UserTypesList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={t("UserTypes")}
               breadcrumbItem={t("UserTypes List")}
             />
 
