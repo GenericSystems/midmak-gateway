@@ -50,6 +50,7 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
+import QRCode from "qrcode";
 
 class Certificates extends Component {
   constructor(props) {
@@ -69,7 +70,9 @@ class Certificates extends Component {
       modal: false,
       academicCodeError: false,
       isEdit: false,
-      sectorsArray: []
+      sectorsArray: [],
+      QRModal: false,
+      qr: "",
     };
   }
 
@@ -84,7 +87,7 @@ class Certificates extends Component {
       sectors,
       years,
       trainersGrades,
-      trainers
+      trainers,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -172,8 +175,6 @@ class Certificates extends Component {
   };
 
   handleAddRow = () => {
-   
-
     this.setState({
       certificate: "",
       isEdit: false,
@@ -280,7 +281,7 @@ class Certificates extends Component {
     if (fieldName === "sector") {
       this.setState({ sectorsArray: selectedMulti });
     }
-  }
+  };
 
   handleSave = values => {
     const {
@@ -292,13 +293,10 @@ class Certificates extends Component {
       selectedSector,
       selectedYear,
       certificate,
-      sectorsArray
+      sectorsArray,
     } = this.state;
-    const {
-      onAddNewCertificate,
-      onUpdateCertificate,
-      certificates,
-    } = this.props;
+    const { onAddNewCertificate, onUpdateCertificate, certificates } =
+      this.props;
 
     values["yearId"] = selectedYear;
     values["trainerId"] = selectedTrainer;
@@ -331,13 +329,9 @@ class Certificates extends Component {
           sectionInfo[key] = values[key];
       });
       if (isEdit) {
-       
-          onUpdateCertificate(sectionInfo);
-        
+        onUpdateCertificate(sectionInfo);
       } else {
-    
-          onAddNewCertificate(sectionInfo);
-       
+        onAddNewCertificate(sectionInfo);
       }
       this.setState({
         selectedAcademicCertificate: null,
@@ -375,20 +369,45 @@ class Certificates extends Component {
 
   handleCertificateClick = arg => {
     const { certificate } = this.state;
-    console.log("arg",arg)
+    console.log("arg", arg);
 
     this.setState({
       certificate: arg,
-      selectedUserType :arg.userTypeId,
-      selectedTrainer :arg.trainerId,
-      selectedCertificateType :arg.certificateTypeId,
-      selectedTrainerGrade :arg.trainerGradeId,
+      selectedUserType: arg.userTypeId,
+      selectedTrainer: arg.trainerId,
+      selectedCertificateType: arg.certificateTypeId,
+      selectedTrainerGrade: arg.trainerGradeId,
       sectorsArray: arg.sector,
-      selectedYear:arg.yearId,
+      selectedYear: arg.yearId,
       isEdit: true,
     });
 
     this.toggle();
+  };
+
+  handleGenerateQR = certificate => {
+    console.log("certificate in QR", certificate);
+    this.setState({ QRModal: true, certificate });
+    QRCode.toDataURL(
+      certificate.certificateNum,
+      {
+        width: 200,
+        margin: 2,
+        color: {
+          dark: "#000",
+          light: "#EEEEEEFF",
+        },
+      },
+      (err, url) => {
+        if (err) return console.error(err);
+        console.log(url);
+        this.setState({ qr: url, QRModal: true });
+      }
+    );
+  };
+
+  onCloseQRModal = () => {
+    this.setState({ QRModal: false });
   };
 
   render() {
@@ -405,7 +424,15 @@ class Certificates extends Component {
       trainers,
       t,
     } = this.props;
-    const { modal, certificate, isEdit, academicCodeError ,sectorsArray} = this.state;
+    const {
+      modal,
+      certificate,
+      isEdit,
+      academicCodeError,
+      sectorsArray,
+      QRModal,
+      qr,
+    } = this.state;
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
     const {
@@ -417,7 +444,7 @@ class Certificates extends Component {
       showEditButton,
       showSearchButton,
     } = this.state;
-   // console.log("certificate", certificate);
+    console.log("certificate", certificate);
 
     const defaultSorting = [
       {
@@ -428,16 +455,27 @@ class Certificates extends Component {
 
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
-       {
+      {
+        dataField: "trainerName",
+        text: this.props.t("Trainer"),
+        sort: true,
+        editable: false,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          //  hidden: !showSearchButton,
+        }),
+      },
+      {
         dataField: "academicCode",
         text: this.props.t("Academic Code"),
         sort: true,
-       editable: false,
-       filter: textFilter({
-        placeholder: this.props.t("Search..."),
-      //  hidden: !showSearchButton,
-      }),
-      }, 
+        editable: false,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          //  hidden: !showSearchButton,
+        }),
+      },
+     
       {
         dataField: "certificateType",
         text: this.props.t("Certificate Type"),
@@ -446,7 +484,7 @@ class Certificates extends Component {
         editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-        //  hidden: !showSearchButton,
+          //  hidden: !showSearchButton,
         }),
       },
       {
@@ -457,19 +495,10 @@ class Certificates extends Component {
         editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-        //  hidden: !showSearchButton,
+          //  hidden: !showSearchButton,
         }),
       },
-      {
-        dataField: "trainerName",
-        text: this.props.t("Trainer"),
-        sort: true,
-        editable: false,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-        //  hidden: !showSearchButton,
-        }),
-      },
+
       {
         dataField: "trainerGrade",
         text: this.props.t("Trainer Grade"),
@@ -477,7 +506,7 @@ class Certificates extends Component {
         editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-        //  hidden: !showSearchButton,
+          //  hidden: !showSearchButton,
         }),
       },
       {
@@ -487,13 +516,13 @@ class Certificates extends Component {
         editable: false,
         formatter: (cellContent, row) => {
           if (row.sector && Array.isArray(row.sector)) {
-            return row.sector.map((item) => item.label).join(", ");
+            return row.sector.map(item => item.label).join(", ");
           }
           return "";
         },
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-        //  hidden: !showSearchButton,
+          //  hidden: !showSearchButton,
         }),
       },
       {
@@ -503,7 +532,7 @@ class Certificates extends Component {
         editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-        //  hidden: !showSearchButton,
+          //  hidden: !showSearchButton,
         }),
       },
       {
@@ -513,7 +542,7 @@ class Certificates extends Component {
         editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-        //  hidden: !showSearchButton,
+          //  hidden: !showSearchButton,
         }),
       },
 
@@ -524,36 +553,33 @@ class Certificates extends Component {
         isDummyField: true,
         editable: false, // Set the "Action" column to not editable
         formatter: (cellContent, certificate) => (
-        <div className="d-flex gap-3"> 
-          <Link className="text-secondary" to="#">
-                <i
-                  className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
-                  onClick={() =>
-                    this.handleCertificateClick(certificate)
-                  }
-                ></i>
-              </Link>
-              <Link className="text-primary" to="#">
-                <i
-                  className="mdi mdi-qrcode font-size-18"
-                  id="edittooltip"
-                  onClick={() =>
-                    this.handleCertificateQR(certificate)
-                  }
-                ></i>
-              </Link>
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.onClickDelete(certificate)}
-            ></i>
-          </Link></div>
+          <div className="d-flex gap-3">
+            <Link className="text-secondary" to="#">
+              <i
+                className="mdi mdi-pencil font-size-18"
+                id="edittooltip"
+                onClick={() => this.handleCertificateClick(certificate)}
+              ></i>
+            </Link>
+            <Link className="text-primary" to="#">
+              <i
+                className="mdi mdi-qrcode font-size-18"
+                id="edittooltip"
+                onClick={() => this.handleGenerateQR(certificate)}
+              ></i>
+            </Link>
+            <Link className="text-danger" to="#">
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                onClick={() => this.onClickDelete(certificate)}
+              ></i>
+            </Link>
+          </div>
         ),
       },
     ];
-   
+
     const pageOptions = {
       sizePerPage: 10,
       totalSize: certificates.length,
@@ -744,8 +770,7 @@ class Certificates extends Component {
                                             certificate.trainerId) ||
                                           "",
                                         sector:
-                                          (certificate &&
-                                            certificate.sector) ||
+                                          (certificate && certificate.sector) ||
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
@@ -767,16 +792,24 @@ class Certificates extends Component {
                                           <Row>
                                             <Col>
                                               <Row>
-                                                <Col lg="3"className="col-padding">
+                                                <Col
+                                                  lg="3"
+                                                  className="col-padding"
+                                                >
                                                   <Label>
-                                                  <strong>{t("Trainer")}</strong>
-                                                    <span className="" style={{color:"red"}}>
-                                                        *
+                                                    <strong>
+                                                      {t("Trainer")}
+                                                    </strong>
+                                                    <span
+                                                      className=""
+                                                      style={{ color: "red" }}
+                                                    >
+                                                      *
                                                     </span>
                                                   </Label>
                                                 </Col>
                                                 <Col lg="6">
-                                                <Select
+                                                  <Select
                                                     name="trainerId"
                                                     key={`select_fromSemester`}
                                                     options={trainers}
@@ -792,7 +825,6 @@ class Certificates extends Component {
                                                         certificate.trainerId
                                                     )}
                                                   />
-                                                
                                                 </Col>
                                               </Row>
 
@@ -802,9 +834,15 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                   <strong> {t("Certificate Type")}</strong>
-                                                   <span className="" style={{color:"red"}}>
-                                                        *
+                                                    <strong>
+                                                      {" "}
+                                                      {t("Certificate Type")}
+                                                    </strong>
+                                                    <span
+                                                      className=""
+                                                      style={{ color: "red" }}
+                                                    >
+                                                      *
                                                     </span>
                                                   </label>
                                                 </Col>
@@ -814,9 +852,14 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    <strong>{t("User Type")}</strong>
-                                                    <span className="" style={{color:"red"}}>
-                                                        *
+                                                    <strong>
+                                                      {t("User Type")}
+                                                    </strong>
+                                                    <span
+                                                      className=""
+                                                      style={{ color: "red" }}
+                                                    >
+                                                      *
                                                     </span>
                                                   </label>
                                                 </Col>
@@ -869,9 +912,14 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    <strong>{t("Academic Code")}</strong> 
-                                                    <span className="" style={{color:"red"}}>
-                                                        *
+                                                    <strong>
+                                                      {t("Academic Code")}
+                                                    </strong>
+                                                    <span
+                                                      className=""
+                                                      style={{ color: "red" }}
+                                                    >
+                                                      *
                                                     </span>
                                                   </label>
                                                 </Col>
@@ -881,9 +929,14 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    <strong>{t("Trainer Grade")}</strong>
-                                                    <span className="" style={{color:"red"}}>
-                                                        *
+                                                    <strong>
+                                                      {t("Trainer Grade")}
+                                                    </strong>
+                                                    <span
+                                                      className=""
+                                                      style={{ color: "red" }}
+                                                    >
+                                                      *
                                                     </span>
                                                   </label>
                                                 </Col>
@@ -944,9 +997,14 @@ class Certificates extends Component {
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
                                                   >
-                                                    <strong>{t("Sector")}</strong> 
-                                                    <span className="" style={{color:"red"}}>
-                                                        *
+                                                    <strong>
+                                                      {t("Sector")}
+                                                    </strong>
+                                                    <span
+                                                      className=""
+                                                      style={{ color: "red" }}
+                                                    >
+                                                      *
                                                     </span>
                                                   </label>
                                                 </Col>
@@ -957,8 +1015,11 @@ class Certificates extends Component {
                                                     className="form-label"
                                                   >
                                                     <strong>{t("Year")}</strong>
-                                                    <span className="" style={{color:"red"}}>
-                                                        *
+                                                    <span
+                                                      className=""
+                                                      style={{ color: "red" }}
+                                                    >
+                                                      *
                                                     </span>
                                                   </label>
                                                 </Col>
@@ -977,10 +1038,8 @@ class Certificates extends Component {
                                                         selectedOption
                                                       )
                                                     }
-                                                   value={sectorsArray}
-                                                    isMulti={
-                                                      true
-                                                    }
+                                                    value={sectorsArray}
+                                                    isMulti={true}
                                                   />
                                                 </Col>
 
@@ -1025,6 +1084,57 @@ class Certificates extends Component {
                                     </Formik>
                                   </ModalBody>
                                 </Modal>
+                                <Modal isOpen={QRModal} centered={true}>
+                                  <ModalHeader
+                                    toggle={this.onCloseQRModal}
+                                    tag="h4"
+                                  >
+                                    <div className="text-center">
+                                      {this.props.t("QR Code")}
+                                    </div>
+                                  </ModalHeader>
+                                  <ModalBody className="py-3 px-5">
+                                    <Row>
+                                      <Col lg={12}>
+                                        <div className="text-center">
+                                          <h4 className="text-primary">
+                                            {certificate.trainerName}
+                                          </h4>
+                                          <h6 className="text-primary">
+                                            {certificate.certificateNum}
+                                          </h6>
+
+                                          {qr && <img src={qr} alt="QR Code" />}
+                                        </div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col>
+                                        <div className="text-center mt-3">
+                                          {qr && (
+                                            <Button
+                                              color="success"
+                                              size="lg"
+                                              className="me-2"
+                                              onClick={() => {
+                                                const link =
+                                                  document.createElement("a");
+                                                link.href = qr;
+                                                link.download = `${
+                                                  certificate.trainerName +
+                                                  certificate.certificateNum
+                                                }.png`;
+                                                link.click();
+                                              }}
+                                            >
+                                              {this.props.t("Download")}
+                                            </Button>
+                                          )}
+                                        </div>
+                                      </Col>
+                                    </Row>
+                                  </ModalBody>
+                                </Modal>
                               </React.Fragment>
                             )}
                           </ToolkitProvider>
@@ -1050,7 +1160,7 @@ const mapStateToProps = ({
   certificateTypes,
   sectors,
   trainersGrades,
-  trainers
+  trainers,
 }) => ({
   certificates: certificates.certificates,
   certificateTypes: certificateTypes.certificateTypes,
