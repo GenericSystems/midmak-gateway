@@ -374,6 +374,7 @@ class SectorsList extends Component {
                                       <div className="position-relative">
                                         <SearchBar
                                           {...toolkitprops.searchProps}
+                                          placeholder={t("Search...")}
                                         />
                                       </div>
                                     </div>
