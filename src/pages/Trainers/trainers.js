@@ -229,6 +229,12 @@ class TrainersList extends Component {
         // editable: showEditButton,
       },
       {
+        dataField: "IdNum",
+        text: t("Id Number"),
+        sort: true,
+        // editable: showEditButton,
+      },
+      {
         dataField: "email",
         text: t("Email"),
         sort: true,
