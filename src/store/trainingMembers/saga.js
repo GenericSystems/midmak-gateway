@@ -35,6 +35,22 @@ import {
 } from "../../helpers/fakebackend_helper";
 
 function* fetchTrainingMembers() {
+    //user types
+    const get_userTypes_req = {
+      source: "db",
+      procedure: "Generic_getOptions",
+      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+      tablename: "Settings_UserType",
+      fields: "Id,arTitle",
+    };
+  
+    try {
+      const response = yield call(getUserTypes, get_userTypes_req);
+      yield put(getUserTypesSuccess(response));
+    } catch (error) {
+      yield put(getUserTypesFail(error));
+    }
+    
   const get_trainingMembers_req = {
     source: "db",
     procedure: "SisApp_getData",
@@ -48,21 +64,7 @@ function* fetchTrainingMembers() {
     yield put(getTrainingMembersFail(error));
   }
 
-   //user types
-   const get_userTypes_req = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_UserType",
-    fields: "Id,arTitle",
-  };
-
-  try {
-    const response = yield call(getUserTypes, get_userTypes_req);
-    yield put(getUserTypesSuccess(response));
-  } catch (error) {
-    yield put(getUserTypesFail(error));
-  }
+ 
 
 }
 
