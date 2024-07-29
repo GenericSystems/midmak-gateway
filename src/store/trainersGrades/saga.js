@@ -22,23 +22,40 @@ getTrainerGradeDeletedValueSuccess,
 getTrainerGradeDeletedValueFail,
 } from "./actions"
 
+import { getUserTypesFail, getUserTypesSuccess } from "../user-types/actions";
+
 import {
 getTrainersGrades,
 addNewTrainerGrade,
 updateTrainerGrade,
 deleteTrainerGrade,
 getTrainerGradeDeletedValue,
+getUserTypes
 } from "../../helpers/fakebackend_helper"
 
 function* fetchTrainerGrades() {
 
-   
+     //user types
+     const get_userTypes_req = {
+      source: "db",
+      procedure: "Generic_getOptions",
+      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+      tablename: "Settings_UserType",
+      fields: "Id,arTitle",
+    };
+  
+    try {
+      const response = yield call(getUserTypes, get_userTypes_req);
+      yield put(getUserTypesSuccess(response));
+    } catch (error) {
+      yield put(getUserTypesFail(error));
+    }
 
   const get_TrainerGrades_req = {
     source: 'db',
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_TrainerGrade"
+    tablename: "Settings_Grades"
     } ;  
   try {
   const response = yield call(getTrainersGrades, get_TrainerGrades_req)
@@ -55,7 +72,7 @@ delete payload["id"];
 payload["source"] = 'db';
 payload["procedure"] = 'SisApp_addData';
 payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-payload["tablename"] = 'Settings_TrainerGrade';
+payload["tablename"] = 'Settings_Grades';
 try {
         const response = yield call(addNewTrainerGrade, payload)
         yield put(addTrainerGradeSuccess(response[0]))
@@ -68,7 +85,7 @@ function* onUpdateTrainerGrade({ payload }) {
     payload["source"] = 'db';
     payload["procedure"] = 'SisApp_updateData';
     payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-    payload["tablename"] = 'Settings_TrainerGrade';
+    payload["tablename"] = 'Settings_Grades';
     try {
         const respupdate = yield call(updateTrainerGrade, payload)
         yield put(updateTrainerGradeSuccess(respupdate[0]))
@@ -81,7 +98,7 @@ function* onDeleteTrainerGrade({ payload}) {
     payload["source"] = 'db';
     payload["procedure"] = 'SisApp_removeData';
     payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-    payload["tablename"] = 'Settings_TrainerGrade';
+    payload["tablename"] = 'Settings_Grades';
     try {
         const respdelete = yield call(deleteTrainerGrade, payload)
         yield put(deleteTrainerGradeSuccess(respdelete[0]))

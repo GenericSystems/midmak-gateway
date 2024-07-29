@@ -55,7 +55,7 @@ class TrainersGrades extends Component {
   }
 
   componentDidMount() {
-    const { trainersGrades, onGetTrainersGrades, deleted, user_menu } =
+    const { trainersGrades, onGetTrainersGrades, deleted, user_menu, userTypes } =
       this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -64,7 +64,7 @@ class TrainersGrades extends Component {
     if (trainersGrades && !trainersGrades.length) {
       onGetTrainersGrades();
     }
-    this.setState({ trainersGrades, deleted });
+    this.setState({ trainersGrades, deleted,userTypes });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -205,10 +205,9 @@ class TrainersGrades extends Component {
 
   render() {
     const { SearchBar } = Search;
-    const { trainersGrades, deleted, t } = this.props;
+    const { trainersGrades, deleted, t,userTypes} = this.props;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
-    const { onUpdateTrainerGrade, onDeleteTrainerGrade } = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -228,6 +227,32 @@ class TrainersGrades extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
+        dataField: "userTypeId",
+        text: t("Type"),
+        sort: true,
+        editable: false,
+        formatter: (cellContent, row) => (
+          <Select
+          name="userTypeId"
+          key={`select_endSemester`}
+          options={userTypes}
+          onChange={newValue => {
+            this.handleSelectChangeUserType(
+              row.Id,
+              "userTypeId",
+              newValue.value
+            );
+          }}
+          defaultValue ={userTypes.find(
+            opt =>
+              opt.value ===
+            row.userTypeId
+          )}
+         //  isDisabled={!showEditButton}
+        />
+        )
+      },
+      {
         dataField: "arTitle",
         text: this.props.t("Trainers Grades(ar)"),
         sort: true,
@@ -245,6 +270,7 @@ class TrainersGrades extends Component {
         sort: true,
         // editable: showEditButton,
       },
+
 
       {
         dataField: "delete",
@@ -431,9 +457,10 @@ class TrainersGrades extends Component {
   }
 }
 
-const mapStateToProps = ({ trainersGrades, menu_items }) => ({
+const mapStateToProps = ({ trainersGrades,userTypes, menu_items }) => ({
   trainersGrades: trainersGrades.trainersGrades,
   deleted: trainersGrades.deleted,
+  userTypes: userTypes.userTypes,
   user_menu: menu_items.user_menu || [],
 });
 
