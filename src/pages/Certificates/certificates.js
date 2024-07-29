@@ -183,7 +183,7 @@ class Certificates extends Component {
   };
 
   handleAlertClose = () => {
-    this.setState({ duplicateError: null });
+    this.setState({ duplicateError: null, emptyError:null });
   };
 
   handleDeleteRow = () => {
@@ -297,6 +297,7 @@ class Certificates extends Component {
     } = this.state;
     const { onAddNewCertificate, onUpdateCertificate, certificates } =
       this.props;
+      console.log("values",values)
 
     values["yearId"] = selectedYear;
     values["trainerId"] = selectedTrainer;
@@ -339,31 +340,27 @@ class Certificates extends Component {
       });
       this.toggle();
     } else {
-      const errorMessages = {
-        academicCode: !values.academicCode ? "Academic Code is required" : "",
-      };
-      if (selectedUserType === null) {
-        errorMessages.userTypeId = "user type is required";
+      let emptyError ="";
+      console.log("selectedUserType",selectedUserType)
+      if (selectedUserType === undefined ) {
+        emptyError = "Fill the empty select";
       }
-      if (selectedTrainer === null) {
-        errorMessages.trainerId = "trainer is required";
+      if (selectedTrainer === undefined) {
+        emptyError =  "Fill the empty select";
       }
-      if (selectedTrainerGrade === null) {
-        errorMessages.trainerGradeId = "trainer grade is required";
+      if (selectedTrainerGrade === undefined) {
+        emptyError = "Fill the empty select"; 
       }
-      if (selectedYear === null) {
-        errorMessages.yearId = "year is required";
+      if (selectedYear === undefined) {
+        emptyError = "Fill the empty select";
       }
       if (sectorsArray.length == 0) {
-        errorMessages.sector = "sector is required";
+        emptyError = "Fill the empty select";
       }
-      if (selectedCertificateType === null) {
-        errorMessages.certificateTypeId = "Certificate Type is required";
+      if (selectedCertificateType === undefined) {
+        emptyError =  "Fill the empty select"; 
       }
-
-      this.setState({
-        errorMessages,
-      });
+      this.setState({ emptyError :emptyError });
     }
   };
 
@@ -437,6 +434,8 @@ class Certificates extends Component {
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
     const {
       duplicateError,
+      errorMessage,
+      emptyError,
       deleteModal,
       showAlert,
       showAddButton,
@@ -444,7 +443,7 @@ class Certificates extends Component {
       showEditButton,
       showSearchButton,
     } = this.state;
-    console.log("certificate", certificate);
+    console.log("emptyError",emptyError)
 
     const defaultSorting = [
       {
@@ -791,6 +790,21 @@ class Certificates extends Component {
                                       }) => (
                                         <Form>
                                           <Row>
+                                          {emptyError && (
+                        <Alert
+                          color="danger"
+                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                          role="alert"
+                        >
+                          {emptyError}
+                          <button
+                            type="button"
+                            className="btn-close"
+                            aria-label="Close"
+                            onClick={this.handleAlertClose}
+                          ></button>
+                        </Alert>
+                      )}
                                             <Col>
                                               <Row>
                                                 <Col
@@ -903,6 +917,11 @@ class Certificates extends Component {
                                                         opt.value ===
                                                         certificate.userTypeId
                                                     )}
+                                                  />
+                                                   <ErrorMessage
+                                                    name="userTypeId"
+                                                    component="div"
+                                                    className="invalid-feedback"
                                                   />
                                                 </Col>
                                               </Row>

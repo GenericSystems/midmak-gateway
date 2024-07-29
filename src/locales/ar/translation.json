@@ -85,8 +85,9 @@
   "Edit Certificate":"تعديل الشهادة",
   "Search...":"بحث...",
   "Edit":"تعديل",
-  "Delete":"حذف"
-
+  "Delete":"حذف",
+  "Save":"حفظ",
+  "Fill the empty select":"اختر الخانة الفارغة"
 
 }
 
