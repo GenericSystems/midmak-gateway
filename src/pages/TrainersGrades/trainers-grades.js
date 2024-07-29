@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Row, Col, Card, CardBody, Alert } from "reactstrap";
+import { Row, Col, Card, CardBody, Alert, CardTitle, Label } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
@@ -51,12 +51,19 @@ class TrainersGrades extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      sidebarOpen: true,
+      selectedUser: "",
     };
   }
 
   componentDidMount() {
-    const { trainersGrades, onGetTrainersGrades, deleted, user_menu, userTypes } =
-      this.props;
+    const {
+      trainersGrades,
+      onGetTrainersGrades,
+      deleted,
+      user_menu,
+      userTypes,
+    } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
@@ -64,7 +71,7 @@ class TrainersGrades extends Component {
     if (trainersGrades && !trainersGrades.length) {
       onGetTrainersGrades();
     }
-    this.setState({ trainersGrades, deleted,userTypes });
+    this.setState({ trainersGrades, deleted, userTypes });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -203,9 +210,19 @@ class TrainersGrades extends Component {
     onGetTrainerGradeDeletedValue();
   };
 
+  toggleSidebar = () => {
+    this.setState(prevState => ({
+      sidebarOpen: !prevState.sidebarOpen,
+    }));
+  }
+
+  handleSelectUser = (fieldName, selectedValue) => {
+
+  };
+
   render() {
     const { SearchBar } = Search;
-    const { trainersGrades, deleted, t,userTypes} = this.props;
+    const { trainersGrades, deleted, t, userTypes } = this.props;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const {
@@ -216,6 +233,8 @@ class TrainersGrades extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      sidebarOpen,
+      selectedUser,
     } = this.state;
     const defaultSorting = [
       {
@@ -226,7 +245,7 @@ class TrainersGrades extends Component {
 
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
-      {
+      /* {
         dataField: "userTypeId",
         text: t("Type"),
         sort: true,
@@ -251,7 +270,7 @@ class TrainersGrades extends Component {
          //  isDisabled={!showEditButton}
         />
         )
-      },
+      }, */
       {
         dataField: "arTitle",
         text: this.props.t("Trainers Grades(ar)"),
@@ -270,7 +289,6 @@ class TrainersGrades extends Component {
         sort: true,
         // editable: showEditButton,
       },
-
 
       {
         dataField: "delete",
@@ -313,139 +331,195 @@ class TrainersGrades extends Component {
             <Row>
               <Col>
                 <Card>
-                  <CardBody>
-                    <div>
-                      {duplicateError && (
-                        <Alert
-                          color="danger"
-                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                          role="alert"
-                        >
-                          {duplicateError}
-                          <button
-                            type="button"
-                            className="btn-close"
-                            aria-label="Close"
-                            onClick={this.handleAlertClose}
-                          ></button>
-                        </Alert>
-                      )}
-                      {deleted == 0 && showAlert && (
-                        <Alert
-                          color="danger"
-                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                          role="alert"
-                        >
-                          {alertMessage}
-                          <button
-                            type="button"
-                            className="btn-close"
-                            aria-label="Close"
-                            onClick={this.handleErrorClose}
-                          ></button>
-                        </Alert>
-                      )}
-                      {deleted == 1 && showAlert && (
-                        <Alert
-                          color="success"
-                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                          role="alert"
-                        >
-                          {alertMessage}
-                          <button
-                            type="button"
-                            className="btn-close"
-                            aria-label="Close"
-                            onClick={this.handleSuccessClose}
-                          ></button>
-                        </Alert>
-                      )}
-                    </div>
-                    <div className="table-responsive">
-                      <PaginationProvider
-                        pagination={paginationFactory(pageOptions)}
-                        keyField="Id"
-                        columns={columns}
-                        data={trainersGrades}
-                      >
-                        {({ paginationProps, paginationTableProps }) => (
-                          <ToolkitProvider
-                            keyField="Id"
-                            data={trainersGrades}
-                            columns={columns}
-                            search
-                          >
-                            {toolkitprops => (
-                              <React.Fragment>
-                                <Row>
-                                  <Col sm="4">
-                                    <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {/*  {showSearchButton && ( */}
-                                      <div className="position-relative">
-                                        <SearchBar
-                                          {...toolkitprops.searchProps}
-                                          placeholder={t("Search...")}
-
-                                        />
-                                      </div>
-                                    </div>
-                                  </Col>
-                                  <Col sm="8">
-                                    {/*        {showAddButton && ( */}
-                                    <div className="text-sm-end">
-                                      <Tooltip
-                                        title={this.props.t("Add")}
-                                        placement="top"
-                                      >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleAddRow}
-                                        >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </div>
-                                  </Col>
-                                </Row>
-
-                                <BootstrapTable
-                                  keyField="Id"
-                                  {...toolkitprops.baseProps}
-                                  {...paginationTableProps}
-                                  data={trainersGrades}
-                                  columns={columns}
-                                  cellEdit={cellEditFactory({
-                                    mode: "click",
-                                    blurToSave: true,
-                                    afterSaveCell: (
-                                      oldValue,
-                                      newValue,
-                                      row,
-                                      column
-                                    ) => {
-                                      this.handleTrainerGradeDataChange(
-                                        row.Id,
-                                        column.dataField,
-                                        newValue
-                                      );
-                                    },
-                                  })}
-                                  noDataIndication={this.props.t(
-                                    "No TrainerGradeType Types found"
-                                  )}
-                                  defaultSorted={defaultSorting}
-                                />
-                                <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                  <PaginationListStandalone
-                                    {...paginationProps}
+                  <CardBody className="card-style">
+                    {sidebarOpen && (
+                      <Col lg="3">
+                        <Card>
+                          <CardTitle id="course_header">
+                            {t("Search for the user grades")}
+                          </CardTitle>
+                          <CardBody>
+                            <div className="mb-3">
+                              <Row>
+                                <Col lg="4">
+                                  <Label className="form-label">
+                                    {t("User Type")}
+                                  </Label>
+                                </Col>
+                                <Col lg="4">
+                                  <Select
+                                    className="select-style"
+                                    name="userTypeId"
+                                    key="courseType_select"
+                                    options={userTypes}
+                                    onChange={newValue =>
+                                      this.handleSelectUser(
+                                        "userTypeId",
+                                        newValue.value
+                                      )
+                                    }
+                                    defaultValue={
+                                      selectedUser == 0
+                                        ? " "
+                                        : userTypes.find(
+                                            opt => opt.label === selectedUser
+                                          )
+                                    }
                                   />
                                 </Col>
-                              </React.Fragment>
+                              </Row>
+                            </div>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                    )}
+
+                    <Col lg="auto" className="p-0">
+                      <div className="collapse-course">
+                        <i
+                          onClick={this.toggleSidebar}
+                          className="bx bx-menu"
+                        ></i>
+                      </div>
+                    </Col>
+
+                    <Col lg={sidebarOpen ? "" : "11"}>
+                      <Card>
+                        <CardBody >
+                          <div>
+                            {duplicateError && (
+                              <Alert
+                                color="danger"
+                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                role="alert"
+                              >
+                                {duplicateError}
+                                <button
+                                  type="button"
+                                  className="btn-close"
+                                  aria-label="Close"
+                                  onClick={this.handleAlertClose}
+                                ></button>
+                              </Alert>
                             )}
-                          </ToolkitProvider>
-                        )}
-                      </PaginationProvider>
-                    </div>
+                            {deleted == 0 && showAlert && (
+                              <Alert
+                                color="danger"
+                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                role="alert"
+                              >
+                                {alertMessage}
+                                <button
+                                  type="button"
+                                  className="btn-close"
+                                  aria-label="Close"
+                                  onClick={this.handleErrorClose}
+                                ></button>
+                              </Alert>
+                            )}
+                            {deleted == 1 && showAlert && (
+                              <Alert
+                                color="success"
+                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                role="alert"
+                              >
+                                {alertMessage}
+                                <button
+                                  type="button"
+                                  className="btn-close"
+                                  aria-label="Close"
+                                  onClick={this.handleSuccessClose}
+                                ></button>
+                              </Alert>
+                            )}
+                          </div>
+                          <div className="table-responsive">
+                            <PaginationProvider
+                              pagination={paginationFactory(pageOptions)}
+                              keyField="Id"
+                              columns={columns}
+                              data={trainersGrades}
+                            >
+                              {({ paginationProps, paginationTableProps }) => (
+                                <ToolkitProvider
+                                  keyField="Id"
+                                  data={trainersGrades}
+                                  columns={columns}
+                                  search
+                                >
+                                  {toolkitprops => (
+                                    <React.Fragment>
+                                      <Row>
+                                        <Col sm="4">
+                                          <div className="search-box ms-2 mb-2 d-inline-block">
+                                            {/*  {showSearchButton && ( */}
+                                            <div className="position-relative">
+                                              <SearchBar
+                                                {...toolkitprops.searchProps}
+                                                placeholder={t("Search...")}
+                                              />
+                                            </div>
+                                          </div>
+                                        </Col>
+                                        <Col sm="8">
+                                          {/*        {showAddButton && ( */}
+                                          <div className="text-sm-end">
+                                            <Tooltip
+                                              title={this.props.t("Add")}
+                                              placement="top"
+                                            >
+                                              <IconButton
+                                                color="primary"
+                                                onClick={this.handleAddRow}
+                                              >
+                                                <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                              </IconButton>
+                                            </Tooltip>
+                                          </div>
+                                        </Col>
+                                      </Row>
+
+                                      <BootstrapTable
+                                        keyField="Id"
+                                        {...toolkitprops.baseProps}
+                                        {...paginationTableProps}
+                                        data={trainersGrades}
+                                        columns={columns}
+                                        cellEdit={cellEditFactory({
+                                          mode: "click",
+                                          blurToSave: true,
+                                          afterSaveCell: (
+                                            oldValue,
+                                            newValue,
+                                            row,
+                                            column
+                                          ) => {
+                                            this.handleTrainerGradeDataChange(
+                                              row.Id,
+                                              column.dataField,
+                                              newValue
+                                            );
+                                          },
+                                        })}
+                                        noDataIndication={this.props.t(
+                                          "No TrainerGradeType Types found"
+                                        )}
+                                        defaultSorted={defaultSorting}
+                                      />
+                                      <Col className="pagination pagination-rounded justify-content-end mb-2">
+                                        <PaginationListStandalone
+                                          {...paginationProps}
+                                        />
+                                      </Col>
+                                    </React.Fragment>
+                                  )}
+                                </ToolkitProvider>
+                              )}
+                            </PaginationProvider>
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </Col>
                   </CardBody>
                 </Card>
               </Col>
@@ -457,7 +531,7 @@ class TrainersGrades extends Component {
   }
 }
 
-const mapStateToProps = ({ trainersGrades,userTypes, menu_items }) => ({
+const mapStateToProps = ({ trainersGrades, userTypes, menu_items }) => ({
   trainersGrades: trainersGrades.trainersGrades,
   deleted: trainersGrades.deleted,
   userTypes: userTypes.userTypes,
