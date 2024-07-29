@@ -81,7 +81,7 @@ import userMngsSaga from "./user-mngs/saga";
 import universityInfoSaga from "./universitydef/saga";
 import universityOrgStructure from "./universityOrgStructure/saga";
 import sidbarcontentsSaga from "./sidebarcontent/saga";
-import trainersSaga from "./trainers/saga";
+import trainingMembersSaga from "./trainingMembers/saga";
 import warningRulesSaga from "./warningRules/saga";
 import stdWarningTestSaga from "./stdWarningTest/saga";
 import exceptionalPeriodsSaga from "./exceptionalPeriods/saga";
@@ -174,7 +174,7 @@ export default function* rootSaga() {
     fork(universityInfoSaga),
     fork(universityOrgStructure),
     fork(sidbarcontentsSaga),
-    fork(trainersSaga),
+    fork(trainingMembersSaga),
     fork(warningRulesSaga),
     fork(stdWarningTestSaga),
     fork(exceptionalPeriodsSaga),

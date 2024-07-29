@@ -1693,16 +1693,16 @@ export const getRoleSidebar = data => post(url.GET_ROLE_SIDEBAR, data);
 
 export const getSearchMenu = data => post(url.GET_SEARCH_MENU, data);
 
-//GET Trainers
-export const getTrainers = data => post(url.GET_TRAINERS, data);
+//GET TrainingMembers
+export const getTrainingMembers = data => post(url.GET_TRAINING_MEMBERS, data);
 
-export const addNewTrainer = data => post(url.ADD_NEW_TRAINER, data);
+export const addNewTrainingMember = data => post(url.ADD_NEW_TRAINING_MEMBER, data);
 
-export const updateTrainer = data => post(url.UPDATE_TRAINER, data);
+export const updateTrainingMember = data => post(url.UPDATE_TRAINING_MEMBER, data);
 
-export const deleteTrainer = data => post(url.DELETE_TRAINER, data);
+export const deleteTrainingMember = data => post(url.DELETE_TRAINING_MEMBER, data);
 
-export const getTrainerDeletedValue = () => get(url.GET_TRAINER_DELETED_VALUE);
+export const getTrainingMemberDeletedValue = () => get(url.GET_TRAINING_MEMBER_DELETED_VALUE);
 
 //GET WarningRules
 export const getWarningRules = data => post(url.GET_WARNING_RULES, data);

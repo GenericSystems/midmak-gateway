@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Card, Alert, CardBody } from "reactstrap";
+import Select from "react-select";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
 import AddIcon from "@mui/icons-material/Add";
@@ -14,12 +15,12 @@ import ToolkitProvider, {
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 
 import {
-  getTrainers,
-  addNewTrainer,
-  updateTrainer,
-  deleteTrainer,
-  getTrainerDeletedValue,
-} from "store/trainers/actions";
+  getTrainingMembers,
+  addNewTrainingMember,
+  updateTrainingMember,
+  deleteTrainingMember,
+  getTrainingMemberDeletedValue,
+} from "store/trainingMembers/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -32,7 +33,7 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
-class TrainersList extends Component {
+class TrainingMembersList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,14 +48,14 @@ class TrainersList extends Component {
     };
   }
   componentDidMount() {
-    const { trainers, onGetTrainers, deleted, user_menu } = this.props;
+    const { trainingMembers, onGetTrainingMembers, deleted, user_menu, userTypes } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (trainers && !trainers.length) {
-      onGetTrainers();
-      this.setState({ trainers, deleted });
+    if (trainingMembers && !trainingMembers.length) {
+      onGetTrainingMembers();
+      this.setState({ trainingMembers, deleted, userTypes });
     }
   }
 
@@ -123,14 +124,14 @@ class TrainersList extends Component {
   };
 
   handleAddRow = () => {
-    const { onAddNewtrainer, trainers } = this.props;
+    const { onAddNewTrainingMember, trainingMembers } = this.props;
 
     const newRow = {
       name: "-----",
     };
 
-    const emptyRowsExist = trainers.some(
-      trainer => trainer.name.trim() === "-----"
+    const emptyRowsExist = trainingMembers.some(
+      trainingMember => trainingMember.name.trim() === "-----"
     );
 
     if (emptyRowsExist) {
@@ -138,16 +139,16 @@ class TrainersList extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewtrainer(newRow);
+      onAddNewTrainingMember(newRow);
     }
   };
 
   handleDeleteRow = () => {
-    const { onDeletetrainer } = this.props;
+    const { onDeleteTrainingMember } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeletetrainer(selectedRowId);
+      onDeleteTrainingMember(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -157,25 +158,25 @@ class TrainersList extends Component {
     }
   };
 
-  handletrainerDataChange = (rowId, fieldName, fieldValue) => {
-    const { onUpdateTrainer, trainers } = this.props;
+  handletrainingMemberDataChange = (rowId, fieldName, fieldValue) => {
+    const { onUpdateTrainingMember, trainingMembers } = this.props;
 
-    const isDuplicate = trainers.some(
-      trainer =>
-        trainer.Id !== rowId &&
-        trainer.arTitle &&
-        trainer.arTitle.trim() === fieldValue.trim()
+    const isDuplicate = trainingMembers.some(
+      trainingMember =>
+        trainingMember.Id !== rowId &&
+        trainingMember.arTitle &&
+        trainingMember.arTitle.trim() === fieldValue.trim()
     );
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateTrainer(onUpdate);
+      onUpdateTrainingMember(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateTrainer(onUpdate);
+      onUpdateTrainingMember(onUpdate);
     }
   };
   handleAlertClose = () => {
@@ -183,19 +184,25 @@ class TrainersList extends Component {
   };
 
   handleSuccessClose = () => {
-    const { onGetTrainerDeletedValue } = this.props;
+    const { onGetTrainingMemberDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetTrainerDeletedValue();
+    onGetTrainingMemberDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetTrainerDeletedValue } = this.props;
+    const { onGetTrainingMemberDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetTrainerDeletedValue();
+    onGetTrainingMemberDeletedValue();
   };
 
+  handleSelectChangeUserType = (rowId, fieldName, fieldValue) =>{
+    const {onUpdateTrainingMember} =this.props;
+    let onUpdate= {Id: rowId, [fieldName]: fieldValue}
+    onUpdateTrainingMember(onUpdate)
+  }
+
   render() {
-    const { trainers, t, deleted } = this.props;
+    const { trainingMembers, t, deleted ,userTypes} = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -207,6 +214,7 @@ class TrainersList extends Component {
     } = this.state;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
+      console.log("userTypes",userTypes)
     const { SearchBar } = Search;
     const defaultSorting = [
       {
@@ -218,7 +226,7 @@ class TrainersList extends Component {
       { dataField: "Id", text: t("ID"), hidden: true },
       {
         dataField: "name",
-        text: t("Trainer Name"),
+        text: t("Name"),
         sort: true,
         // editable: showEditButton,
       },
@@ -241,18 +249,44 @@ class TrainersList extends Component {
         // editable: showEditButton,
       },
       {
+        dataField: "userTypeId",
+        text: t("Type"),
+        sort: true,
+        editable: false,
+        formatter: (cellContent, row) => (
+          <Select
+          name="userTypeId"
+          key={`select_endSemester`}
+          options={userTypes}
+          onChange={newValue => {
+            this.handleSelectChangeUserType(
+              row.Id,
+              "userTypeId",
+              newValue.value
+            );
+          }}
+          defaultValue ={userTypes.find(
+            opt =>
+              opt.value ===
+            row.userTypeId
+          )}
+         //  isDisabled={!showEditButton}
+        />
+        )
+      },
+      {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
         //  hidden: !showDeleteButton,
-        formatter: (cellContent, trainer) => (
+        formatter: (cellContent, trainingMember) => (
           <Tooltip title={this.props.t("Delete")} placement="top">
             <Link className="text-danger" to="#">
               <i
                 className="mdi mdi-delete font-size-18"
                 id="deletetooltip"
-                onClick={() => this.onClickDelete(trainer)}
+                onClick={() => this.onClickDelete(trainingMember)}
               ></i>
             </Link>
           </Tooltip>
@@ -261,7 +295,7 @@ class TrainersList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: trainers.length,
+      totalSize: trainingMembers.length,
       custom: true,
     };
 
@@ -276,7 +310,7 @@ class TrainersList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={t("trainers List")} />
+            <Breadcrumbs breadcrumbItem={t("trainingMembers List")} />
 
             <Row>
               <Col>
@@ -335,12 +369,12 @@ class TrainersList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={trainers}
+                        data={trainingMembers}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={trainers}
+                            data={trainingMembers}
                             columns={columns}
                             search
                           >
@@ -381,7 +415,7 @@ class TrainersList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={trainers}
+                                  data={trainingMembers}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
@@ -392,14 +426,14 @@ class TrainersList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handletrainerDataChange(
+                                      this.handletrainingMemberDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
                                       );
                                     },
                                   })}
-                                  noDataIndication={t("No trainers found")}
+                                  noDataIndication={t("No trainingMembers found")}
                                   defaultSorted={defaultSorting}
                                 />
                                 <Col className="pagination pagination-rounded justify-content-end mb-2">
@@ -424,21 +458,22 @@ class TrainersList extends Component {
   }
 }
 
-const mapStateToProps = ({ trainers, menu_items }) => ({
-  trainers: trainers.trainers,
-  deleted: trainers.deleted,
+const mapStateToProps = ({ trainingMembers, menu_items, userTypes }) => ({
+  trainingMembers: trainingMembers.trainingMembers,
+  deleted: trainingMembers.deleted,
+  userTypes: userTypes.userTypes,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetTrainers: () => dispatch(getTrainers()),
-  onAddNewtrainer: trainer => dispatch(addNewTrainer(trainer)),
-  onUpdateTrainer: trainer => dispatch(updateTrainer(trainer)),
-  onDeletetrainer: trainer => dispatch(deleteTrainer(trainer)),
-  onGetTrainerDeletedValue: () => dispatch(getTrainerDeletedValue()),
+  onGetTrainingMembers: () => dispatch(getTrainingMembers()),
+  onAddNewTrainingMember: trainingMember => dispatch(addNewTrainingMember(trainingMember)),
+  onUpdateTrainingMember: trainingMember => dispatch(updateTrainingMember(trainingMember)),
+  onDeleteTrainingMember: trainingMember => dispatch(deleteTrainingMember(trainingMember)),
+  onGetTrainingMemberDeletedValue: () => dispatch(getTrainingMemberDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(TrainersList));
+)(withTranslation()(TrainingMembersList));

@@ -37,9 +37,9 @@ import {
 } from "../certificateTypes/actions";
 
 import {
-  getTrainersFail,
-  getTrainersSuccess,
-} from "../trainers/actions";
+  getTrainingMembersFail,
+  getTrainingMembersSuccess,
+} from "../trainingMembers/actions";
 
 import {
   getYearsFail,
@@ -57,7 +57,7 @@ import {
   getCertificateTypes,
   getCertificateDeletedValue,
   getYears,
-  getTrainers
+  getTrainingMembers
 } from "../../helpers/fakebackend_helper";
 
 function* fetchCertificates() {
@@ -145,16 +145,16 @@ function* fetchCertificates() {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Trainer",
+    tablename: "Common_TrainingMembers",
     fields: "Id,name",
 
   };
   try {
-    const response = yield call(getTrainers, get_trainer_req);
+    const response = yield call(getTrainingMembers, get_trainer_req);
 
-    yield put(getTrainersSuccess(response));
+    yield put(getTrainingMembersSuccess(response));
   } catch (error) {
-    yield put(getTrainersFail(error));
+    yield put(getTrainingMembersFail(error));
   }
 
   const get_Certificates_req = {

@@ -87,7 +87,7 @@ class Certificates extends Component {
       sectors,
       years,
       trainersGrades,
-      trainers,
+      trainingMembers,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -103,7 +103,7 @@ class Certificates extends Component {
       userTypes,
       sectors,
       trainersGrades,
-      trainers,
+      trainingMembers,
       years,
     });
   }
@@ -418,7 +418,7 @@ class Certificates extends Component {
       sectors,
       certificateTypes,
       trainersGrades,
-      trainers,
+      trainingMembers,
       t,
     } = this.props;
     const {
@@ -827,14 +827,14 @@ class Certificates extends Component {
                                                   <Select
                                                     name="trainerId"
                                                     key={`select_fromSemester`}
-                                                    options={trainers}
+                                                    options={trainingMembers}
                                                     onChange={newValue => {
                                                       this.handleSelectChange(
                                                         "trainerId",
                                                         newValue.value
                                                       );
                                                     }}
-                                                    defaultValue={trainers.find(
+                                                    defaultValue={trainingMembers.find(
                                                       opt =>
                                                         opt.value ===
                                                         certificate.trainerId
@@ -1180,13 +1180,13 @@ const mapStateToProps = ({
   certificateTypes,
   sectors,
   trainersGrades,
-  trainers,
+  trainingMembers,
 }) => ({
   certificates: certificates.certificates,
   certificateTypes: certificateTypes.certificateTypes,
   userTypes: userTypes.userTypes,
   sectors: sectors.sectors,
-  trainers: trainers.trainers,
+  trainingMembers: trainingMembers.trainingMembers,
   trainersGrades: trainersGrades.trainersGrades,
   years: years.years,
   deleted: certificates.deleted,

@@ -222,7 +222,7 @@ import universityOrgStructures from "./universityOrgStructure/reducer"
 import menu_items from "./sidebarcontent/reducer"
 
 //trainer
-import trainers from "./trainers/reducer";
+import trainingMembers from "./trainingMembers/reducer";
 
 //warningRule
 import warningRules from "./warningRules/reducer";
@@ -345,7 +345,7 @@ const rootReducer = combineReducers({
   universityInfo,
   universityOrgStructures,
   menu_items,
-  trainers,
+  trainingMembers,
   warningRules,
   stdWarningTest,
   exceptionalPeriods,

@@ -205,7 +205,7 @@ export * from "./sidebarcontent/actions"
 
 //warning
 
-export * from "./trainers/actions";
+export * from "./trainingMembers/actions";
 
 //warningRules
 

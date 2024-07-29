@@ -793,15 +793,15 @@ export const GET_SEARCH_MENU = "/searchMenu";
 
 // Warning
 
-export const GET_TRAINERS = "/trainers";
+export const GET_TRAINING_MEMBERS = "/trainingMembers";
 
-export const ADD_NEW_TRAINER = "/add/trainer";
+export const ADD_NEW_TRAINING_MEMBER = "/add/trainer";
 
-export const UPDATE_TRAINER = "/update/trainer";
+export const UPDATE_TRAINING_MEMBER = "/update/trainer";
 
-export const DELETE_TRAINER = "/delete/trainer";
+export const DELETE_TRAINING_MEMBER = "/delete/trainer";
 
-export const GET_TRAINER_DELETED_VALUE = "/deleted";
+export const GET_TRAINING_MEMBER_DELETED_VALUE = "/deleted";
 
 // WarningRule
 
