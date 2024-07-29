@@ -4,27 +4,13 @@ import { Redirect } from "react-router-dom";
 // Pages Component
 import Chat from "../pages/Chat/Chat";
 
-// Pages File Manager
-import FileManager from "../pages/FileManager/index";
-
 // Pages Calendar
 import Calendar from "../pages/Calendar/index";
 
 // User profile
 import UserProfile from "../pages/Authentication/UserProfile";
 
-//Tasks
-import TasksList from "../pages/Tasks/tasks-list";
-import TasksKanban from "../pages/Tasks/tasks-kanban";
-import TasksCreate from "../pages/Tasks/tasks-create";
-
 import Header from "../components/VerticalLayout/Header";
-
-//Projects
-import ProjectsGrid from "../pages/Projects/projects-grid";
-import ProjectsList from "../pages/Projects/projects-list";
-import ProjectsOverview from "../pages/Projects/ProjectOverview/projects-overview";
-import ProjectsCreate from "../pages/Projects/projects-create";
 
 //Ecommerce Pages
 import EcommerceProducts from "../pages/Ecommerce/EcommerceProducts/index";
@@ -35,18 +21,6 @@ import EcommerceCart from "../pages/Ecommerce/EcommerceCart";
 import EcommerceCheckout from "../pages/Ecommerce/EcommerceCheckout";
 import EcommerceShops from "../pages/Ecommerce/EcommerceShops/index";
 import EcommerceAddProduct from "../pages/Ecommerce/EcommerceAddProduct";
-
-//Email
-import EmailInbox from "../pages/Email/email-inbox";
-import EmailRead from "../pages/Email/email-read";
-import EmailBasicTemplte from "../pages/Email/email-basic-templte";
-import EmailAlertTemplte from "../pages/Email/email-template-alert";
-import EmailTemplateBilling from "../pages/Email/email-template-billing";
-
-//Invoices
-import InvoicesList from "../pages/Invoices/invoices-list";
-import InvoiceDetail from "../pages/Invoices/invoices-detail";
-
 // Authentication related pages
 import Login from "../pages/Authentication/Login";
 import Logout from "../pages/Authentication/Logout";
@@ -95,11 +69,6 @@ import SparklineChart from "../pages/Charts/SparklineChart";
 import ChartsKnob from "../pages/Charts/charts-knob";
 import ReCharts from "../pages/Charts/ReCharts";
 
-// Maps
-import MapsGoogle from "../pages/Maps/MapsGoogle";
-import MapsVector from "../pages/Maps/MapsVector";
-import MapsLeaflet from "../pages/Maps/MapsLeaflet";
-
 //Icons
 import IconBoxicons from "../pages/Icons/IconBoxicons";
 import IconDripicons from "../pages/Icons/IconDripicons";
@@ -125,10 +94,6 @@ import FormUpload from "../pages/Forms/FormUpload";
 import FormWizard from "../pages/Forms/FormWizard";
 import FormXeditable from "../pages/Forms/FormXeditable";
 import DualListbox from "../pages/Forms/DualListbox";
-
-//university
-import UniversityInfo from "../pages/university/university-def";
-import UniversityTree from "../pages/university/university-organize-structure";
 
 //Ui
 import UiAlert from "../pages/Ui/UiAlert";
@@ -165,38 +130,16 @@ import PagesPricing from "../pages/Utility/pages-pricing";
 import Pages404 from "../pages/Utility/pages-404";
 import Pages500 from "../pages/Utility/pages-500";
 
-//Faculties
-import EditableCourse from "../pages/Courses/courses";
-
-//Nationality
-import NationalitiesList from "../pages/Nationality/nationality-list";
-
-//Relative
-import RelativesList from "../pages/Relatives/relatives";
-
-//LecturePeriod
-import LecturePeriodsList from "../pages/Setting/Faculties/lecture-periods";
-
-//CurrSemMan
-import CurrSemMansList from "../pages/PriveledgeManagement/SystemManagement/current-semester";
-
 //UserMng
 import UserMngsList from "../pages/PriveledgeManagement/UserManagement/UserMngs";
 //Roles
 import RolesList from "../pages/PriveledgeManagement/UserManagement/roles";
 
-
 //Sector
 import SectorsList from "../pages/Sectors/sectors";
-//Academic  loads
-
-import AcademicLoadList from "../pages/Setting/Faculties/Academic-Load";
 
 //Warning
 import warningsList from "../pages/TrainingMembers/training-members";
-
-//PREREQS
-import PrereqsList from "../pages/Setting/Faculties/prereq-conditions";
 
 //PreReqType
 import UserTypesList from "../pages/UserTypes/user-types";
@@ -210,115 +153,18 @@ import TrainersGrades from "../pages/TrainersGrades/trainers-grades";
 //cERTIFICATELEVELS
 import CertificateTypesList from "../pages/CertificatesTypes/certificates-types";
 
-//Countries
-import CountriesList from "../pages/Country/Country";
-
-//governorates
-import GovernoratesList from "../pages/Governorates/governorate";
-
-//structures
-import UniversityStructureList from "../pages/Universitystructures/university-structure";
-
-//currencies
-import CurrenciesList from "../pages/Setting/Finances/currencies";
-
-//fines
-import FinesList from "../pages/Setting/Finances/fines";
-
-
-//services
-import ServicesList from "../pages/Setting/Finances/services";
-
-//requests
-import RequestsList from "../pages/Setting/Finances/requests";
-
-//Documents
-import DocumentTypesList from "../pages/Setting/UniAdmission/documents-types";
-
-//regReqDocuments
-import RegReqDocumentsTable from "../pages/Setting/UniAdmission/reg-req-documents";
-
 import TrainingMembersList from "../pages/TrainingMembers/training-members";
-
-//Documents
-import UniDocumentsList from "../pages/Setting/UniAdmission/uni-documents";
-
-//Course Content
-import coursecontents from "../pages/CourseContents/course-contents";
-
-//Course Types
-import courseTypes from "../pages/CourseTypes/course-types";
-
-//Academiccertificate
-import AcademicCertificates from "pages/AcademicCertificates/academic-certificates";
-
-//StudentsHistory
-import StudentsHistory from "pages/StudentsHistory/students-history";
-
-//Course
-import Courses from "pages/Courses/courses";
-
-//Universityrequirement
-import Universityrequirement from "../pages/Universityrequirements/university-requirement";
-
-//Estimates
-import estimates from "pages/Estimates/estimate";
-
-//Levels
-import LevelsList from "pages/Levels/levels";
-
-//Schedules
-import Schedules from "pages/Setting/Faculties/schedules";
 
 //Week Days
 import WeekDays from "pages/WeekDays/weekDays";
 
-import TimeLines from "pages/TimeLines/timeLine";
-
 //Years
 import YearsList from "pages/Years/years";
-
-//Semesters
-import SemestersList from "pages/Semesters/semesters";
-
-//GrantSponsors
-import GrantSponsors from "pages/GrantSponsors/grantSponsors";
-
-//Contacts
-import ContactsGrid from "../pages/Contacts/contacts-grid";
-import ContactsList from "../pages/Contacts/ContactList/contacts-list";
-import ContactsProfile from "../pages/Contacts/ContactsProfile/contacts-profile";
 
 //Blog
 import BlogList from "../pages/Blog/BlogList/index";
 import BlogGrid from "../pages/Blog/BlogGrid/index";
 import BlogDetails from "../pages/Blog/BlogDetails";
-import contactsList from "../pages/Contacts/ContactList/contacts-list";
-
-//City
-import CitiesList from "../pages/Cities/cities";
-
-
-// letter Grades
-
-import LetterGradesTree from "pages/Setting/Faculties/letter-grades";
-
-import TransportLinesTree from "pages/TransportationLines/transport-lines-def";
-
-import StdsTransportLine from "pages/TransportationLines/trans-lines-stds";
-
-// leveling Decisions
-
-import LevelingDecisionsTree from "pages/Setting/Faculties/leveling-decisions";
-
-
-// gender
-
-import GendersList from "../pages/Genders/genders";
-
-// grants
-
-import GrantsList from "../pages/Grants/grants";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -337,19 +183,8 @@ const authProtectedRoutes = [
   //profile
   { path: "/profile", component: UserProfile },
 
-  //City
-  { path: "/cities", component: CitiesList },
-  //gender
-  { path: "/genders", component: GendersList },
-
-  //grant
-  { path: "/grants", component: GrantsList },
-
   //chat
   { path: "/chat", component: Chat },
-
-  //File Manager
-  { path: "/apps-filemanager", component: FileManager },
 
   //calendar
   { path: "/calendar", component: Calendar },
@@ -366,58 +201,18 @@ const authProtectedRoutes = [
   { path: "/ecommerce-shops", component: EcommerceShops },
   { path: "/ecommerce-add-product", component: EcommerceAddProduct },
 
-  //Email
-  { path: "/email-inbox", component: EmailInbox },
-  { path: "/email-read", component: EmailRead },
-  { path: "/email-template-basic", component: EmailBasicTemplte },
-  { path: "/email-template-alert", component: EmailAlertTemplte },
-  { path: "/email-template-billing", component: EmailTemplateBilling },
-
-  //Invoices
-  { path: "/invoices-list", component: InvoicesList },
-  { path: "/invoices-detail", component: InvoiceDetail },
-  { path: "/invoices-detail/:id", component: InvoiceDetail },
-
-  // Tasks
-  { path: "/tasks-list", component: TasksList },
-  { path: "/tasks-kanban", component: TasksKanban },
-  { path: "/tasks-create", component: TasksCreate },
-
-
   { path: "/Header", component: Header },
 
-  //Projects
-  { path: "/projects-grid", component: ProjectsGrid },
-  { path: "/projects-list", component: ProjectsList },
-  { path: "/projects-overview", component: ProjectsOverview },
-  { path: "/projects-overview/:id", component: ProjectsOverview },
-  { path: "/projects-create", component: ProjectsCreate },
-
-  //lecturePeriods
-  { path: "/lecture-periods", component: LecturePeriodsList },
-
-  //CurrSemMansList
-  { path: "/current-semester", component: CurrSemMansList },
   //UserMngsList
   { path: "/users", component: UserMngsList },
   //RolesList
   { path: "/roles", component: RolesList },
 
-
   //sectors
   { path: "/sectors", component: SectorsList },
 
-  //Academic loads
-  { path: "/Academic-Load", component: AcademicLoadList },
-
-  { path: "/warning", component: warningsList },
-
-  //PreReqTypes
+  //UserTypes
   { path: "/user-types", component: UserTypesList },
-
-
-  //prerequisites
-  { path: "/prereq-conditions", component: PrereqsList },
 
   // Certificates
   { path: "/certificates", component: Certificates },
@@ -427,100 +222,14 @@ const authProtectedRoutes = [
 
   { path: "/certificates-types", component: CertificateTypesList },
 
-  //Nationalities
-  { path: "/nationality-list", component: NationalitiesList },
-
-  //Relatives
-  { path: "/relatives", component: RelativesList },
-
-  //Countries
-  { path: "/country", component: CountriesList },
-
-  //Governorates
-  { path: "/governorate", component: GovernoratesList },
-
-  //Documents Types
-  { path: "/documents-types", component: DocumentTypesList },
-
-  //Uni Documents
-  { path: "/uni-documents", component: UniDocumentsList },
-
-  //Reg Req Documents
-  { path: "/reg-req-documents", component: RegReqDocumentsTable },
-
-  //university Structure
-  { path: "/university-structure", component: UniversityStructureList },
-
-  //Currencies
-  { path: "/currencies", component: CurrenciesList },
-
-  //Fines
-  { path: "/fines", component: FinesList },
-
-  //Services
-  { path: "/services", component: ServicesList },
-
-  //Requests
-  { path: "/requests", component: RequestsList },
-
-  //Course Contents
-  { path: "/course-contents", component: coursecontents },
-
-  //Course Types
-  { path: "/course-types", component: courseTypes },
-
-  //AcademicCertificates
-  { path: "/academic-certificates", component: AcademicCertificates },
-
-  //StudentsHistory
-  { path: "/students-history", component: StudentsHistory },
-
-  //Courses
-  { path: "/courses", component: Courses },
-
-  //Universityrequirement
-  { path: "/university-requirement", component: Universityrequirement },
-
-  //Levels
-  { path: "/levels", component: LevelsList },
-
-  //Schedules
-  { path: "/schedules", component: Schedules },
-
   //Week Days
   { path: "/weekDays", component: WeekDays },
-
-  //timelines
-  { path: "/timeLine", component: TimeLines },
 
   //Years
   { path: "/years", component: YearsList },
 
-  //Semesters
-  { path: "/semesters", component: SemestersList },
-
-    //Trainers
-    { path: "/training-members", component: TrainingMembersList },
-  //GrantSponsors
-  { path: "/grant-sponsors", component: GrantSponsors },
-
-  //Estimates
-  { path: "/estimate", component: estimates },
-,
-
-  { path: "/letter-grades", component: LetterGradesTree },
-
-  { path: "/transport-lines-def", component: TransportLinesTree },
-
-  { path: "/trans-lines-stds", component: StdsTransportLine },
-
-  { path: "/leveling-decisions", component: LevelingDecisionsTree },
-
-
-  // Contacts
-  { path: "/contacts-grid", component: ContactsGrid },
-  { path: "/contacts-list", component: ContactsList },
-  { path: "/contacts-profile", component: ContactsProfile },
+  //Trainers
+  { path: "/training-members", component: TrainingMembersList },
 
   //Blog
   { path: "/blog-list", component: BlogList },
@@ -549,11 +258,6 @@ const authProtectedRoutes = [
   { path: "/tables-editable", component: EditableTables },
   { path: "/tables-dragndrop", component: DragDropTables },
 
-  // Maps
-  { path: "/maps-google", component: MapsGoogle },
-  { path: "/maps-vector", component: MapsVector },
-  { path: "/maps-leaflet", component: MapsLeaflet },
-
   // Forms
   { path: "/form-elements", component: FormElements },
   { path: "/form-layouts", component: FormLayouts },
@@ -567,9 +271,6 @@ const authProtectedRoutes = [
   { path: "/form-xeditable", component: FormXeditable },
   { path: "/dual-listbox", component: DualListbox },
 
-  //University
-  { path: "/university-def", component: UniversityInfo },
-  { path: "/university-organize-structure", component: UniversityTree },
   // Ui
   { path: "/ui-alerts", component: UiAlert },
   { path: "/ui-buttons", component: UiButtons },
@@ -603,8 +304,7 @@ const authProtectedRoutes = [
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
   { path: "/", exact: true, component: () => <Redirect to="/dashboard" /> },
-  //Faculties
-  { path: "/courses", component: EditableCourse },
+
 ];
 
 const publicRoutes = [
