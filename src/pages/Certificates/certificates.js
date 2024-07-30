@@ -77,8 +77,7 @@ class Certificates extends Component {
       QRModal: false,
       qr: "",
       sidebarOpen: true,
-      selectedUserType:1
-
+      selectedUserType:""
     };
   }
 
@@ -92,7 +91,6 @@ class Certificates extends Component {
     const {
       certificates,
       certificateTypes,
-      onGetCertificates,
       deleted,
       user_menu,
       userTypesOpt,
@@ -107,7 +105,7 @@ class Certificates extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (certificates && !certificates.length) {
-     onGetUsers() && onGetCertificates({userTypeId : 1})
+     onGetUsers();
     }
     this.setState({
       certificates,
@@ -524,7 +522,7 @@ class Certificates extends Component {
       },
       {
         dataField: "userType",
-        text: this.props.t("User Type"),
+        text: this.props.t("Member Type"),
         sort: true,
 
         editable: false,
@@ -645,22 +643,24 @@ class Certificates extends Component {
                 <Card>
                   <CardBody className="card-style">
                   {sidebarOpen && (
-                      <Col lg="3">
+                      <Col lg="2">
                         <Card>
                           <CardTitle id="course_header">
-                            {t("Search for the user certificates")}
+                            {t("Select Member Type")}
                           </CardTitle>
                           <CardBody>
                             <div className="mb-3">
                               <Row>
                                 <Col lg="4">
                                   <Label className="form-label user-style">
-                                    {t("User Type")}
+                                    {t("Member Type")}
                                   </Label>
                                 </Col>
-                                <Col lg="4">
+                                </Row>
+                                <Row>
+                                <Col lg="6">
                                   <Select
-                                    className="select-style"
+                                    className="select-style "
                                     name="userTypeId"
                                     key="courseType_select"
                                     options={userTypesOpt}
@@ -955,7 +955,7 @@ class Certificates extends Component {
                                                     className="form-label"
                                                   >
                                                     <strong>
-                                                      {t("User Type")}
+                                                      {t("Member Type")}
                                                     </strong>
                                                     <span
                                                       className=""

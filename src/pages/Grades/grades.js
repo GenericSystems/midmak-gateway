@@ -53,7 +53,7 @@ class GradesList extends Component {
       showEditButton: false,
       showSearchButton: false,
       sidebarOpen: true,
-      selectedUser: 1,
+      selectedUser: "",
     };
   }
 
@@ -64,7 +64,6 @@ class GradesList extends Component {
       deleted,
       user_menu,
       userTypesOpt,
-      onGetGrades
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -72,7 +71,7 @@ class GradesList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (grades && !grades.length || grades == undefined ) {
       console.log("in did mount",grades)
-      onGetUsers() && onGetGrades({ userTypeId: 1 });
+      onGetUsers();
     }
     this.setState({ grades, deleted, userTypesOpt });
     console.log("in did mount 2222",grades)
@@ -321,20 +320,22 @@ class GradesList extends Component {
                 <Card>
                   <CardBody className="card-style">
                     {sidebarOpen && (
-                      <Col lg="3">
+                      <Col lg="2">
                         <Card>
                           <CardTitle id="course_header">
-                            {t("Search for the user grades")}
+                          {t("Select Member Type")}
                           </CardTitle>
                           <CardBody>
                             <div className="mb-3">
                               <Row>
                                 <Col lg="4">
                                   <Label className="form-label user-style">
-                                    {t("User Type")}
+                                    {t("Member Type")}
                                   </Label>
                                 </Col>
-                                <Col lg="4">
+                                </Row>
+                                <Row>
+                                <Col lg="6">
                                   <Select
                                     className="select-style"
                                     name="userTypeId"
@@ -447,7 +448,7 @@ class GradesList extends Component {
                                           </div>
                                         </Col>
                                         <Col sm="8">
-                                          {/*        {showAddButton && ( */}
+                                                {selectedUser && (
                                           <div className="text-sm-end">
                                             <Tooltip
                                               title={this.props.t("Add")}
@@ -461,6 +462,7 @@ class GradesList extends Component {
                                               </IconButton>
                                             </Tooltip>
                                           </div>
+                                                )}
                                         </Col>
                                       </Row>
 
