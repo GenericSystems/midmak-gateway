@@ -1,6 +1,8 @@
 import {
   GET_TRAINING_MEMBERS_SUCCESS,
   GET_TRAINING_MEMBERS_FAIL,
+  GET_FILTERED_MEMBERS_SUCCESS,
+  GET_FILTERED_MEMBERS_FAIL,
   ADD_TRAINING_MEMBER_SUCCESS,
   ADD_TRAINING_MEMBER_FAIL,
   UPDATE_TRAINING_MEMBER_SUCCESS,
@@ -13,6 +15,7 @@ import {
 
 const INIT_STATE = {
   trainingMembers: [],
+  filteredMembers: [],
   deleted: {},
   error: {},
 };
@@ -25,6 +28,17 @@ const trainingMembers = (state = INIT_STATE, action) => {
         trainingMembers: action.payload,
       };
     case GET_TRAINING_MEMBERS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+      case GET_FILTERED_MEMBERS_SUCCESS:
+      return {
+        ...state,
+        filteredMembers: action.payload,
+      };
+    case GET_FILTERED_MEMBERS_FAIL:
       return {
         ...state,
         error: action.payload,

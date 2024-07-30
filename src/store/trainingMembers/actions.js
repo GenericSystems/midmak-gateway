@@ -2,6 +2,9 @@ import {
 GET_TRAINING_MEMBERS,
 GET_TRAINING_MEMBERS_FAIL,
 GET_TRAINING_MEMBERS_SUCCESS,
+GET_FILTERED_MEMBERS,
+GET_FILTERED_MEMBERS_FAIL,
+GET_FILTERED_MEMBERS_SUCCESS,
 ADD_NEW_TRAINING_MEMBER,
 ADD_TRAINING_MEMBER_FAIL,
 ADD_TRAINING_MEMBER_SUCCESS,
@@ -20,13 +23,29 @@ GET_TRAINING_MEMBER_DELETED_VALUE_SUCCESS,
     type: GET_TRAINING_MEMBERS,
   });
   
-  export const getTrainingMembersSuccess = warnings => ({
+  export const getTrainingMembersSuccess = members => ({
     type: GET_TRAINING_MEMBERS_SUCCESS,
-    payload: warnings,
+    payload: members,
   });
   
   export const getTrainingMembersFail = error => ({
     type: GET_TRAINING_MEMBERS_FAIL,
+    payload: error,
+  });
+
+  export const getFilteredMembers = members => ({
+    type: GET_FILTERED_MEMBERS,
+    payload: members,
+
+  });
+  
+  export const getFilteredMembersSuccess = members => ({
+    type: GET_FILTERED_MEMBERS_SUCCESS,
+    payload: members,
+  });
+  
+  export const getFilteredMembersFail = error => ({
+    type: GET_FILTERED_MEMBERS_FAIL,
     payload: error,
   });
   

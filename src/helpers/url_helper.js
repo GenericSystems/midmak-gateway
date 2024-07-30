@@ -796,6 +796,8 @@ export const GET_SEARCH_MENU = "/searchMenu";
 
 export const GET_TRAINING_MEMBERS = "/trainingMembers";
 
+export const GET_FILTERED_MEMBERS = "/filteredMembers";
+
 export const ADD_NEW_TRAINING_MEMBER = "/add/trainer";
 
 export const UPDATE_TRAINING_MEMBER = "/update/trainer";

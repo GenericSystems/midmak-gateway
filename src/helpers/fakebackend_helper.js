@@ -1698,6 +1698,8 @@ export const getSearchMenu = data => post(url.GET_SEARCH_MENU, data);
 //GET TrainingMembers
 export const getTrainingMembers = data => post(url.GET_TRAINING_MEMBERS, data);
 
+export const getFilteredMembers = data => post(url.GET_FILTERED_MEMBERS, data);
+
 export const addNewTrainingMember = data => post(url.ADD_NEW_TRAINING_MEMBER, data);
 
 export const updateTrainingMember = data => post(url.UPDATE_TRAINING_MEMBER, data);

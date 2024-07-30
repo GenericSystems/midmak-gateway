@@ -97,7 +97,7 @@ class Certificates extends Component {
       sectors,
       years,
       grades,
-      trainingMembers,
+      filteredMembers,
       onGetUsers,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -114,7 +114,7 @@ class Certificates extends Component {
       userTypesOpt,
       sectors,
       grades,
-      trainingMembers,
+      filteredMembers,
       years,
     });
   }
@@ -448,7 +448,7 @@ class Certificates extends Component {
       sectors,
       certificateTypes,
       grades,
-      trainingMembers,
+      filteredMembers,
       t,
     } = this.props;
     const {
@@ -476,7 +476,7 @@ class Certificates extends Component {
       showEditButton,
       showSearchButton,
     } = this.state;
-    console.log("grades", grades);
+    console.log("filteredMembers", filteredMembers);
 
     const defaultSorting = [
       {
@@ -929,7 +929,7 @@ class Certificates extends Component {
                                                           name="trainerId"
                                                           key={`select_fromSemester`}
                                                           options={
-                                                            trainingMembers
+                                                            filteredMembers
                                                           }
                                                           onChange={newValue => {
                                                             this.handleSelectChange(
@@ -937,7 +937,7 @@ class Certificates extends Component {
                                                               newValue.value
                                                             );
                                                           }}
-                                                          defaultValue={trainingMembers.find(
+                                                          defaultValue={filteredMembers.find(
                                                             opt =>
                                                               opt.value ===
                                                               certificate.trainerId
@@ -1269,7 +1269,7 @@ const mapStateToProps = ({
   certificateTypes: certificateTypes.certificateTypes,
   userTypesOpt: userTypes.userTypesOpt,
   sectors: sectors.sectors,
-  trainingMembers: trainingMembers.trainingMembers,
+  filteredMembers: trainingMembers.filteredMembers,
   grades: grades.grades,
   years: years.years,
   deleted: certificates.deleted,

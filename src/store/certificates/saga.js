@@ -40,8 +40,8 @@ import {
 } from "../certificateTypes/actions";
 
 import {
-  getTrainingMembersFail,
-  getTrainingMembersSuccess,
+  getFilteredMembersFail,
+  getFilteredMembersSuccess,
 } from "../trainingMembers/actions";
 
 import {
@@ -60,7 +60,7 @@ import {
   getCertificateTypes,
   getCertificateDeletedValue,
   getYears,
-  getTrainingMembers
+  getFilteredMembers
 } from "../../helpers/fakebackend_helper";
 
 
@@ -143,21 +143,7 @@ function* fetchUsers() {
     yield put(getYearsFail(error));
   }
 
-  const get_trainer_req = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_TrainingMembers",
-    fields: "Id,name",
 
-  };
-  try {
-    const response = yield call(getTrainingMembers, get_trainer_req);
-
-    yield put(getTrainingMembersSuccess(response));
-  } catch (error) {
-    yield put(getTrainingMembersFail(error));
-  }
 }
 
 function* fetchCertificates(obj) {
@@ -182,6 +168,23 @@ function* fetchCertificates(obj) {
     yield put(getCertificatesSuccess(response));
   } catch (error) {
     yield put(getCertificatesFail(error));
+  }
+
+  const get_trainer_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_TrainingMembers",
+    fields: "Id,name",
+    filter: `userTypeId = ${userTypeId}`,
+
+  };
+  try {
+    const response = yield call(getFilteredMembers, get_trainer_req);
+
+    yield put(getFilteredMembersSuccess(response));
+  } catch (error) {
+    yield put(getFilteredMembersFail(error));
   }
 
   
