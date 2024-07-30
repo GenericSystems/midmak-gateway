@@ -250,7 +250,7 @@ class TrainingMembersList extends Component {
       },
       {
         dataField: "userTypeId",
-        text: t("Type"),
+        text: t("Member Type"),
         sort: true,
         editable: false,
         formatter: (cellContent, row) => (
