@@ -53,7 +53,7 @@ class GradesList extends Component {
       showEditButton: false,
       showSearchButton: false,
       sidebarOpen: true,
-      selectedUser: "",
+      selectedUser: 1,
     };
   }
 
@@ -247,6 +247,8 @@ class GradesList extends Component {
       selectedUser,
     } = this.state;
 
+    console.log("selectedUser",selectedUser)
+
     console.log("grades in render", grades)
     const defaultSorting = [
       {
@@ -345,10 +347,7 @@ class GradesList extends Component {
                                         newValue.value
                                       )
                                     }
-                                    defaultValue={
-                                      selectedUser == 0
-                                        ? " "
-                                        : userTypesOpt.find(
+                                    value={ userTypesOpt.find(
                                             opt => opt.label === selectedUser
                                           )
                                     }
