@@ -259,6 +259,7 @@ export const GET_CERTIFICATE_DELETED_VALUE = "/deleted";
 
 //CERTIFICATES_TYPES
 export const GET_GRADES = "/grades";
+export const GET_FILTERED_GRADES = "/filteredGrades";
 export const ADD_NEW_GRADE = "/add/trainerGrade";
 export const UPDATE_GRADE = "/update/trainerGrade";
 export const DELETE_GRADE = "/delete/trainerGrade";

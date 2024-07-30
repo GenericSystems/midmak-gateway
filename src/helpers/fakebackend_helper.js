@@ -582,6 +582,8 @@ export const getCertificateDeletedValue = () =>
 // get Grades
 export const getGrades = data => post(url.GET_GRADES, data);
 
+export const getFilteredGrades = data => post(url.GET_FILTERED_GRADES, data);
+
 // add certificate
 export const addNewGrade = data => post(url.ADD_NEW_GRADE, data);
 

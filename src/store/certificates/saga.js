@@ -11,7 +11,6 @@ import {
 
 import { GET_USER_TYPES_OPT } from "../user-types/actionTypes";
 
-
 import {
   getCertificatesSuccess,
   getCertificatesFail,
@@ -25,13 +24,16 @@ import {
   getCertificateDeletedValueFail,
 } from "./actions";
 
-import { getUserTypesOptFail, getUserTypesOptSuccess } from "../user-types/actions";
+import {
+  getUserTypesOptFail,
+  getUserTypesOptSuccess,
+} from "../user-types/actions";
 
 import { getSectorsFail, getSectorsSuccess } from "../sectors/actions";
 
 import {
-  getGradesFail,
-  getGradesSuccess,
+  getFilteredGradesFail,
+  getFilteredGradesSuccess,
 } from "../grades/actions";
 
 import {
@@ -44,10 +46,7 @@ import {
   getFilteredMembersSuccess,
 } from "../trainingMembers/actions";
 
-import {
-  getYearsFail,
-  getYearsSuccess,
-} from "../years/actions";
+import { getYearsFail, getYearsSuccess } from "../years/actions";
 
 import {
   getCertificates,
@@ -56,13 +55,12 @@ import {
   deleteCertificate,
   getUserTypesOpt,
   getSectors,
-  getGrades,
+  getFilteredGrades,
   getCertificateTypes,
   getCertificateDeletedValue,
   getYears,
-  getFilteredMembers
+  getFilteredMembers,
 } from "../../helpers/fakebackend_helper";
-
 
 function* fetchUsers() {
   //user types
@@ -81,8 +79,8 @@ function* fetchUsers() {
     yield put(getUserTypesOptFail(error));
   }
 
-   //Sectors
-   const get_sectors_req = {
+  //Sectors
+  const get_sectors_req = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -95,22 +93,6 @@ function* fetchUsers() {
     yield put(getSectorsSuccess(response));
   } catch (error) {
     yield put(getSectorsFail(error));
-  }
-
-  // trainer grade
-  const get_TrainerGrades_req = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Grades",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getGrades, get_TrainerGrades_req);
-
-    yield put(getGradesSuccess(response));
-  } catch (error) {
-    yield put(getGradesFail(error));
   }
 
   //certificate Type
@@ -142,15 +124,11 @@ function* fetchUsers() {
   } catch (error) {
     yield put(getYearsFail(error));
   }
-
-
 }
 
 function* fetchCertificates(obj) {
-
-  console.log("in saga obj",obj)
+  console.log("in saga obj", obj);
   const userTypeId = obj.payload.userTypeId;
- 
 
   const get_Certificates_req = {
     source: "db",
@@ -158,7 +136,6 @@ function* fetchCertificates(obj) {
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_Certificates",
     filter: `userTypeId = ${userTypeId}`,
-
   };
   try {
     const response = yield call(getCertificates, get_Certificates_req);
@@ -177,7 +154,6 @@ function* fetchCertificates(obj) {
     tablename: "Common_TrainingMembers",
     fields: "Id,name",
     filter: `userTypeId = ${userTypeId}`,
-
   };
   try {
     const response = yield call(getFilteredMembers, get_trainer_req);
@@ -187,7 +163,22 @@ function* fetchCertificates(obj) {
     yield put(getFilteredMembersFail(error));
   }
 
-  
+  // trainer grade
+  const get_TrainerGrades_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Grades",
+    fields: "Id,arTitle",
+    filter: `userTypeId = ${userTypeId}`,
+  };
+  try {
+    const response = yield call(getFilteredGrades, get_TrainerGrades_req);
+
+    yield put(getFilteredGradesSuccess(response));
+  } catch (error) {
+    yield put(getFilteredGradesFail(error));
+  }
 }
 
 function* onAddNewCertificate({ payload }) {

@@ -96,7 +96,7 @@ class Certificates extends Component {
       userTypesOpt,
       sectors,
       years,
-      grades,
+      filteredGrades,
       filteredMembers,
       onGetUsers,
     } = this.props;
@@ -113,7 +113,7 @@ class Certificates extends Component {
       deleted,
       userTypesOpt,
       sectors,
-      grades,
+      filteredGrades,
       filteredMembers,
       years,
     });
@@ -447,7 +447,7 @@ class Certificates extends Component {
       years,
       sectors,
       certificateTypes,
-      grades,
+      filteredGrades,
       filteredMembers,
       t,
     } = this.props;
@@ -1063,14 +1063,14 @@ class Certificates extends Component {
                                                         <Select
                                                           name="trainerGradeId"
                                                           key={`select_endSemester`}
-                                                          options={grades}
+                                                          options={filteredGrades}
                                                           onChange={newValue => {
                                                             this.handleSelectChange(
                                                               "trainerGradeId",
                                                               newValue.value
                                                             );
                                                           }}
-                                                          defaultValue={grades.find(
+                                                          defaultValue={filteredGrades.find(
                                                             opt =>
                                                               opt.value ===
                                                               certificate.trainerGradeId
@@ -1270,7 +1270,7 @@ const mapStateToProps = ({
   userTypesOpt: userTypes.userTypesOpt,
   sectors: sectors.sectors,
   filteredMembers: trainingMembers.filteredMembers,
-  grades: grades.grades,
+  filteredGrades: grades.filteredGrades,
   years: years.years,
   deleted: certificates.deleted,
   user_menu: menu_items.user_menu || [],
