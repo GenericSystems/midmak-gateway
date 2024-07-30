@@ -33,7 +33,7 @@ import {
   deleteCertificate,
   getCertificateDeletedValue,
 } from "store/certificates/actions";
-import{getUserTypesOpt} from "store/user-types/actions";
+import { getUserTypesOpt } from "store/user-types/actions";
 
 import * as Yup from "yup";
 import ToolkitProvider, {
@@ -77,11 +77,11 @@ class Certificates extends Component {
       QRModal: false,
       qr: "",
       sidebarOpen: true,
-      selectedUserType:""
+      selectedUserType: "",
     };
   }
 
- /*  initializeState() {
+  /*  initializeState() {
     const {selectedUserType} = this.state
     console.log("selectedUserType in initail state", selectedUserType)
     this.setState({selectedUserType :selectedUserType})
@@ -98,14 +98,14 @@ class Certificates extends Component {
       years,
       grades,
       trainingMembers,
-      onGetUsers
+      onGetUsers,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (certificates && !certificates.length) {
-     onGetUsers();
+      onGetUsers();
     }
     this.setState({
       certificates,
@@ -141,7 +141,7 @@ class Certificates extends Component {
         this.props.location.pathname
       );
     }
-/*     const {selectedUserType} = this.state
+    /*     const {selectedUserType} = this.state
     if (
       (selectedUserType &&
         selectedUserType !==
@@ -149,7 +149,6 @@ class Certificates extends Component {
     ) {
       this.initializeState();
     } */
-
   }
 
   updateShowAddButton = (menu, pathname) => {
@@ -203,7 +202,7 @@ class Certificates extends Component {
   };
 
   handleAlertClose = () => {
-    this.setState({ duplicateError: null, emptyError:null });
+    this.setState({ duplicateError: null, emptyError: null });
   };
 
   handleDeleteRow = () => {
@@ -275,19 +274,19 @@ class Certificates extends Component {
   handleSelectChange = (fieldName, selectedValue) => {
     if (fieldName === "trainerId") {
       this.setState({
-        selectedTrainer: selectedValue,
+        selectedMember: selectedValue,
       });
     } else if (fieldName == "userTypeId") {
-    console.log("selected value", selectedValue);
+      console.log("selected value", selectedValue);
 
-      const {onGetCertificates} = this.props
-      onGetCertificates({userTypeId: selectedValue})
+      const { onGetCertificates } = this.props;
+      onGetCertificates({ userTypeId: selectedValue });
       this.setState({
         selectedUserType: selectedValue,
       });
     } else if (fieldName == "trainerGradeId") {
       this.setState({
-        selectedTrainerGrade: selectedValue,
+        selectedMemberGrade: selectedValue,
       });
     } else if (fieldName == "certificateTypeId") {
       this.setState({
@@ -310,9 +309,9 @@ class Certificates extends Component {
     const {
       isEdit,
       selectedUserType,
-      selectedTrainer,
+      selectedMember,
       selectedCertificateType,
-      selectedTrainerGrade,
+      selectedMemberGrade,
       selectedSector,
       selectedYear,
       certificate,
@@ -320,16 +319,16 @@ class Certificates extends Component {
     } = this.state;
     const { onAddNewCertificate, onUpdateCertificate, certificates } =
       this.props;
-      console.log("values",values)
+    console.log("values", values);
 
     values["yearId"] = selectedYear;
-    values["trainerId"] = selectedTrainer;
+    values["trainerId"] = selectedMember;
     values["userTypeId"] = selectedUserType;
     values["certificateTypeId"] = selectedCertificateType;
-    values["trainerGradeId"] = selectedTrainerGrade;
+    values["trainerGradeId"] = selectedMemberGrade;
     values["sector"] = sectorsArray;
 
-    console.log("selectedUserType0",selectedUserType)
+    console.log("selectedUserType0", selectedUserType);
 
     if (values.academicCode === "") {
       this.setState({ academicCodeError: true });
@@ -340,10 +339,10 @@ class Certificates extends Component {
     if (
       values.academicCode &&
       selectedUserType !== null &&
-      selectedTrainer !== null &&
+      selectedMember !== null &&
       selectedYear !== null &&
       selectedCertificateType !== null &&
-      selectedTrainerGrade !== null &&
+      selectedMemberGrade !== null &&
       sectorsArray.length !== 0
     ) {
       let sectionInfo = {};
@@ -357,7 +356,7 @@ class Certificates extends Component {
       if (isEdit) {
         onUpdateCertificate(sectionInfo);
       } else {
-                onAddNewCertificate(sectionInfo);
+        onAddNewCertificate(sectionInfo);
       }
       this.setState({
         selectedAcademicCertificate: null,
@@ -365,16 +364,16 @@ class Certificates extends Component {
       });
       this.toggle();
     } else {
-      let emptyError ="";
-      console.log("selectedUserType",selectedUserType)
-      if (selectedUserType === undefined ) {
+      let emptyError = "";
+      console.log("selectedUserType", selectedUserType);
+      if (selectedUserType === undefined) {
         emptyError = "Fill the empty select";
       }
-      if (selectedTrainer === undefined) {
-        emptyError =  "Fill the empty select";
+      if (selectedMember === undefined) {
+        emptyError = "Fill the empty select";
       }
-      if (selectedTrainerGrade === undefined) {
-        emptyError = "Fill the empty select"; 
+      if (selectedMemberGrade === undefined) {
+        emptyError = "Fill the empty select";
       }
       if (selectedYear === undefined) {
         emptyError = "Fill the empty select";
@@ -383,9 +382,9 @@ class Certificates extends Component {
         emptyError = "Fill the empty select";
       }
       if (selectedCertificateType === undefined) {
-        emptyError =  "Fill the empty select"; 
+        emptyError = "Fill the empty select";
       }
-      this.setState({ emptyError :emptyError });
+      this.setState({ emptyError: emptyError });
     }
   };
 
@@ -396,9 +395,9 @@ class Certificates extends Component {
     this.setState({
       certificate: arg,
       selectedUserType: arg.userTypeId,
-      selectedTrainer: arg.trainerId,
+      selectedMember: arg.trainerId,
       selectedCertificateType: arg.certificateTypeId,
-      selectedTrainerGrade: arg.trainerGradeId,
+      selectedMemberGrade: arg.trainerGradeId,
       sectorsArray: arg.sector,
       selectedYear: arg.yearId,
       isEdit: true,
@@ -436,7 +435,7 @@ class Certificates extends Component {
     this.setState(prevState => ({
       sidebarOpen: !prevState.sidebarOpen,
     }));
-  }
+  };
 
   render() {
     const { SearchBar } = Search;
@@ -461,7 +460,7 @@ class Certificates extends Component {
       QRModal,
       qr,
       sidebarOpen,
-      selectedUserType
+      selectedUserType,
     } = this.state;
 
     const alertMessage =
@@ -477,7 +476,7 @@ class Certificates extends Component {
       showEditButton,
       showSearchButton,
     } = this.state;
-    console.log("userTypesOpt",userTypesOpt)
+    console.log("grades", grades);
 
     const defaultSorting = [
       {
@@ -490,7 +489,7 @@ class Certificates extends Component {
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "trainerName",
-        text: this.props.t("Trainer"),
+        text: this.props.t("Member"),
         sort: true,
         editable: false,
         filter: textFilter({
@@ -534,7 +533,7 @@ class Certificates extends Component {
 
       {
         dataField: "trainerGrade",
-        text: this.props.t("Trainer Grade"),
+        text: this.props.t("Member Grade"),
         sort: true,
         editable: false,
         filter: textFilter({
@@ -642,7 +641,7 @@ class Certificates extends Component {
               <Col>
                 <Card>
                   <CardBody className="card-style">
-                  {sidebarOpen && (
+                    {sidebarOpen && (
                       <Col lg="2">
                         <Card>
                           <CardTitle id="course_header">
@@ -656,8 +655,8 @@ class Certificates extends Component {
                                     {t("Member Type")}
                                   </Label>
                                 </Col>
-                                </Row>
-                                <Row>
+                              </Row>
+                              <Row>
                                 <Col lg="6">
                                   <Select
                                     className="select-style "
@@ -670,10 +669,9 @@ class Certificates extends Component {
                                         newValue.value
                                       )
                                     }
-                                    value={ userTypesOpt.find(
-                                            opt => opt.label === selectedUserType
-                                          )
-                                    }
+                                    value={userTypesOpt.find(
+                                      opt => opt.label === selectedUserType
+                                    )}
                                   />
                                 </Col>
                               </Row>
@@ -694,562 +692,557 @@ class Certificates extends Component {
 
                     <Col lg={sidebarOpen ? "" : "11"}>
                       <Card>
-                        <CardBody >
-                    <div>
-                      {duplicateError && (
-                        <Alert
-                          color="danger"
-                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                          role="alert"
-                        >
-                          {duplicateError}
-                          <button
-                            type="button"
-                            className="btn-close"
-                            aria-label="Close"
-                            onClick={this.handleAlertClose}
-                          ></button>
-                        </Alert>
-                      )}
-                      {deleted == 0 && showAlert && (
-                        <Alert
-                          color="danger"
-                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                          role="alert"
-                        >
-                          {alertMessage}
-                          <button
-                            type="button"
-                            className="btn-close"
-                            aria-label="Close"
-                            onClick={this.handleErrorClose}
-                          ></button>
-                        </Alert>
-                      )}
-                      {deleted == 1 && showAlert && (
-                        <Alert
-                          color="success"
-                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                          role="alert"
-                        >
-                          {alertMessage}
-                          <button
-                            type="button"
-                            className="btn-close"
-                            aria-label="Close"
-                            onClick={this.handleSuccessClose}
-                          ></button>
-                        </Alert>
-                      )}
-                    </div>
-                    <div className="table-responsive">
-                      <PaginationProvider
-                        pagination={paginationFactory(pageOptions)}
-                        keyField="Id"
-                        columns={columns}
-                        data={certificates}
-                      >
-                        {({ paginationProps, paginationTableProps }) => (
-                          <ToolkitProvider
-                            keyField="Id"
-                            data={certificates}
-                            columns={columns}
-                            search
-                          >
-                            {toolkitprops => (
-                              <React.Fragment>
-                                <Row>
-                                  <Col sm="4">
-                                    <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {showSearchButton && (
-                                        <div className="position-relative">
-                                          <SearchBar
-                                            {...toolkitprops.searchProps}
-                                          />
-                                        </div>
-                                      )}
-                                    </div>
-                                  </Col>
-                                  <Col sm="8">
-                                  {  selectedUserType && ( 
-                                    <div className="text-sm-end">
-                                      <Tooltip
-                                        title={this.props.t("Add")}
-                                        placement="top"
-                                      >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleAddRow}
-                                        >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </div>
-                                   )} 
-                                  </Col>
-                                </Row>
-
-                                <BootstrapTable
+                        <CardBody>
+                          <div>
+                            {duplicateError && (
+                              <Alert
+                                color="danger"
+                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                role="alert"
+                              >
+                                {duplicateError}
+                                <button
+                                  type="button"
+                                  className="btn-close"
+                                  aria-label="Close"
+                                  onClick={this.handleAlertClose}
+                                ></button>
+                              </Alert>
+                            )}
+                            {deleted == 0 && showAlert && (
+                              <Alert
+                                color="danger"
+                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                role="alert"
+                              >
+                                {alertMessage}
+                                <button
+                                  type="button"
+                                  className="btn-close"
+                                  aria-label="Close"
+                                  onClick={this.handleErrorClose}
+                                ></button>
+                              </Alert>
+                            )}
+                            {deleted == 1 && showAlert && (
+                              <Alert
+                                color="success"
+                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                role="alert"
+                              >
+                                {alertMessage}
+                                <button
+                                  type="button"
+                                  className="btn-close"
+                                  aria-label="Close"
+                                  onClick={this.handleSuccessClose}
+                                ></button>
+                              </Alert>
+                            )}
+                          </div>
+                          <div className="table-responsive">
+                            <PaginationProvider
+                              pagination={paginationFactory(pageOptions)}
+                              keyField="Id"
+                              columns={columns}
+                              data={certificates}
+                            >
+                              {({ paginationProps, paginationTableProps }) => (
+                                <ToolkitProvider
                                   keyField="Id"
-                                  {...toolkitprops.baseProps}
-                                  {...paginationTableProps}
                                   data={certificates}
                                   columns={columns}
-                                  cellEdit={cellEditFactory({
-                                    mode: "click",
-                                    blurToSave: true,
-                                    afterSaveCell: (
-                                      oldValue,
-                                      newValue,
-                                      row,
-                                      column
-                                    ) => {
-                                      this.handleCertificateDataChange(
-                                        row.Id,
-                                        column.dataField,
-                                        newValue
-                                      );
-                                    },
-                                  })}
-                                  noDataIndication={this.props.t(
-                                    "No Certificate Types found"
-                                  )}
-                                  defaultSorted={defaultSorting}
-                                  filter={filterFactory()}
-                                />
-                                <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                  <PaginationListStandalone
-                                    {...paginationProps}
-                                  />
-                                </Col>
-                                <Modal
-                                  isOpen={modal}
-                                  className={this.props.className}
+                                  search
                                 >
-                                  <ModalHeader toggle={this.toggle} tag="h4">
-                                    {!!isEdit
-                                      ? t("Edit Certificate")
-                                      : t("Add Certificate")}
-                                  </ModalHeader>
-
-                                  <ModalBody>
-                                    <Formik
-                                      enableReinitialize={true}
-                                      initialValues={{
-                                        ...(isEdit && { Id: certificate.Id }),
-                                        academicCode:
-                                          (certificate &&
-                                            certificate.academicCode) ||
-                                          "01",
-                                        userTypeId:
-                                          (certificate &&
-                                            certificate.userTypeId) ||
-                                          "",
-                                        yearId:
-                                          (certificate && certificate.yearId) ||
-                                          "",
-                                        trainerGradeId:
-                                          (certificate &&
-                                            certificate.trainerGradeId) ||
-                                          "",
-                                        trainerId:
-                                          (certificate &&
-                                            certificate.trainerId) ||
-                                          "",
-                                        sector:
-                                          (certificate && certificate.sector) ||
-                                          "",
-                                      }}
-                                      validationSchema={Yup.object().shape({
-                                        academicCode: Yup.string().required(
-                                          t("Academic Code is required")
-                                        ),
-                                        sector: Yup.string().required(
-                                          t("Faculty is required")
-                                        ),
-                                      })}
-                                    >
-                                      {({
-                                        errors,
-                                        status,
-                                        touched,
-                                        values,
-                                      }) => (
-                                        <Form>
-                                          <Row>
-                                          {emptyError && (
-                        <Alert
-                          color="danger"
-                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                          role="alert"
-                        >
-                          {emptyError}
-                          <button
-                            type="button"
-                            className="btn-close"
-                            aria-label="Close"
-                            onClick={this.handleAlertClose}
-                          ></button>
-                        </Alert>
-                      )}
-                                            <Col>
-                                              <Row>
-                                                <Col
-                                                  lg="3"
-                                                  className="col-padding"
+                                  {toolkitprops => (
+                                    <React.Fragment>
+                                      <Row>
+                                        <Col sm="4">
+                                          <div className="search-box ms-2 mb-2 d-inline-block">
+                                            {showSearchButton && (
+                                              <div className="position-relative">
+                                                <SearchBar
+                                                  {...toolkitprops.searchProps}
+                                                />
+                                              </div>
+                                            )}
+                                          </div>
+                                        </Col>
+                                        <Col sm="8">
+                                          {selectedUserType && (
+                                            <div className="text-sm-end">
+                                              <Tooltip
+                                                title={this.props.t("Add")}
+                                                placement="top"
+                                              >
+                                                <IconButton
+                                                  color="primary"
+                                                  onClick={this.handleAddRow}
                                                 >
-                                                  <Label>
-                                                    <strong>
-                                                      {t("Trainer")}
-                                                    </strong>
-                                                    <span
-                                                      className=""
-                                                      style={{ color: "red" }}
+                                                  <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                </IconButton>
+                                              </Tooltip>
+                                            </div>
+                                          )}
+                                        </Col>
+                                      </Row>
+
+                                      <BootstrapTable
+                                        keyField="Id"
+                                        {...toolkitprops.baseProps}
+                                        {...paginationTableProps}
+                                        data={certificates}
+                                        columns={columns}
+                                        cellEdit={cellEditFactory({
+                                          mode: "click",
+                                          blurToSave: true,
+                                          afterSaveCell: (
+                                            oldValue,
+                                            newValue,
+                                            row,
+                                            column
+                                          ) => {
+                                            this.handleCertificateDataChange(
+                                              row.Id,
+                                              column.dataField,
+                                              newValue
+                                            );
+                                          },
+                                        })}
+                                        noDataIndication={this.props.t(
+                                          "No Certificate Types found"
+                                        )}
+                                        defaultSorted={defaultSorting}
+                                        filter={filterFactory()}
+                                      />
+                                      <Col className="pagination pagination-rounded justify-content-end mb-2">
+                                        <PaginationListStandalone
+                                          {...paginationProps}
+                                        />
+                                      </Col>
+                                      <Modal
+                                        isOpen={modal}
+                                        className={this.props.className}
+                                      >
+                                        <ModalHeader
+                                          toggle={this.toggle}
+                                          tag="h4"
+                                        >
+                                          {!!isEdit
+                                            ? t("Edit Certificate")
+                                            : t("Add Certificate")}
+                                        </ModalHeader>
+
+                                        <ModalBody>
+                                          <Formik
+                                            enableReinitialize={true}
+                                            initialValues={{
+                                              ...(isEdit && {
+                                                Id: certificate.Id,
+                                              }),
+                                              academicCode:
+                                                (certificate &&
+                                                  certificate.academicCode) ||
+                                                "01",
+                                              userTypeId:
+                                                (certificate &&
+                                                  certificate.userTypeId) ||
+                                                "",
+                                              yearId:
+                                                (certificate &&
+                                                  certificate.yearId) ||
+                                                "",
+                                              trainerGradeId:
+                                                (certificate &&
+                                                  certificate.trainerGradeId) ||
+                                                "",
+                                              trainerId:
+                                                (certificate &&
+                                                  certificate.trainerId) ||
+                                                "",
+                                              sector:
+                                                (certificate &&
+                                                  certificate.sector) ||
+                                                "",
+                                            }}
+                                            validationSchema={Yup.object().shape(
+                                              {
+                                                academicCode:
+                                                  Yup.string().required(
+                                                    t(
+                                                      "Academic Code is required"
+                                                    )
+                                                  ),
+                                                sector: Yup.string().required(
+                                                  t("Faculty is required")
+                                                ),
+                                              }
+                                            )}
+                                          >
+                                            {({
+                                              errors,
+                                              status,
+                                              touched,
+                                              values,
+                                            }) => (
+                                              <Form>
+                                                <Row>
+                                                  {emptyError && (
+                                                    <Alert
+                                                      color="danger"
+                                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                      role="alert"
                                                     >
-                                                      *
-                                                    </span>
-                                                  </Label>
-                                                </Col>
-                                                <Col lg="6">
-                                                  <Select
-                                                    name="trainerId"
-                                                    key={`select_fromSemester`}
-                                                    options={trainingMembers}
-                                                    onChange={newValue => {
-                                                      this.handleSelectChange(
-                                                        "trainerId",
-                                                        newValue.value
-                                                      );
-                                                    }}
-                                                    defaultValue={trainingMembers.find(
-                                                      opt =>
-                                                        opt.value ===
-                                                        certificate.trainerId
-                                                    )}
-                                                  />
-                                                </Col>
-                                              </Row>
-
-                                              <Row>
-                                                <Col lg="6">
-                                                  <label
-                                                    htmlFor="exampleDataList"
-                                                    className="form-label"
-                                                  >
-                                                    <strong>
-                                                      {" "}
-                                                      {t("Certificate Type")}
-                                                    </strong>
-                                                    <span
-                                                      className=""
-                                                      style={{ color: "red" }}
-                                                    >
-                                                      *
-                                                    </span>
-                                                  </label>
-                                                </Col>
-
-                                              {/*   <Col lg="6">
-                                                  <label
-                                                    htmlFor="exampleDataList"
-                                                    className="form-label"
-                                                  >
-                                                    <strong>
-                                                      {t("Member Type")}
-                                                    </strong>
-                                                    <span
-                                                      className=""
-                                                      style={{ color: "red" }}
-                                                    >
-                                                      *
-                                                    </span>
-                                                  </label>
-                                                </Col> */}
-                                              </Row>
-
-                                              <Row className="mb-3">
-                                                <Col sm="6">
-                                                  {" "}
-                                                  <Select
-                                                    name="certificateTypeId"
-                                                    key={`select_fromSemester`}
-                                                    options={certificateTypes}
-                                                    onChange={newValue => {
-                                                      this.handleSelectChange(
-                                                        "certificateTypeId",
-                                                        newValue.value
-                                                      );
-                                                    }}
-                                                    defaultValue={certificateTypes.find(
-                                                      opt =>
-                                                        opt.value ===
-                                                        certificate.certificateTypeId
-                                                    )}
-                                                  />
-                                                </Col>
-
-                                      {/*           <Col sm="6">
-                                                  <Select
-                                                    name="userTypeId"
-                                                    key={`select_endSemester`}
-                                                    options={userTypesOpt}
-                                                    onChange={newValue => {
-                                                      this.handleSelectChange(
-                                                        "userTypeId",
-                                                        newValue.value
-                                                      );
-                                                    }}
-                                                    defaultValue={userTypesOpt.find(
-                                                      opt =>
-                                                        opt.value ===
-                                                        certificate.userTypeId
-                                                    )}
-                                                  />
-                                                   <ErrorMessage
-                                                    name="userTypeId"
-                                                    component="div"
-                                                    className="invalid-feedback"
-                                                  />
-                                                </Col> */}
-                                              </Row>
-
-                                              <Row>
-                                                <Col lg="6">
-                                                  <label
-                                                    htmlFor="exampleDataList"
-                                                    className="form-label"
-                                                  >
-                                                    <strong>
-                                                      {t("Academic Code")}
-                                                    </strong>
-                                                    <span
-                                                      className=""
-                                                      style={{ color: "red" }}
-                                                    >
-                                                      *
-                                                    </span>
-                                                  </label>
-                                                </Col>
-
-                                                <Col lg="6">
-                                                  <label
-                                                    htmlFor="exampleDataList"
-                                                    className="form-label"
-                                                  >
-                                                    <strong>
-                                                      {t("Trainer Grade")}
-                                                    </strong>
-                                                    <span
-                                                      className=""
-                                                      style={{ color: "red" }}
-                                                    >
-                                                      *
-                                                    </span>
-                                                  </label>
-                                                </Col>
-                                              </Row>
-
-                                              <Row className="mb-3">
-                                                <Col sm="6">
-                                                  {" "}
-                                                  <Field
-                                                    name="academicCode"
-                                                    type="text"
-                                                    className={
-                                                      "form-control" +
-                                                      ((errors.academicCode &&
-                                                        touched.academicCode) ||
-                                                      academicCodeError
-                                                        ? " is-invalid"
-                                                        : "")
-                                                    }
-                                                  />
-                                                  {academicCodeError && (
-                                                    <div className="invalid-feedback">
-                                                      {t(
-                                                        "Academic Code is required"
-                                                      )}
-                                                    </div>
+                                                      {emptyError}
+                                                      <button
+                                                        type="button"
+                                                        className="btn-close"
+                                                        aria-label="Close"
+                                                        onClick={
+                                                          this.handleAlertClose
+                                                        }
+                                                      ></button>
+                                                    </Alert>
                                                   )}
-                                                  <ErrorMessage
-                                                    name="academicCode"
-                                                    component="div"
-                                                    className="invalid-feedback"
-                                                  />
-                                                </Col>
+                                                  <Col>
+                                                    <Row className="mb-3">
+                                                      <Col
+                                                        lg="3"
+                                                        className="col-padding"
+                                                      >
+                                                        <Label>
+                                                          <strong>
+                                                            {t("Name")}
+                                                          </strong>
+                                                          <span
+                                                            className=""
+                                                            style={{
+                                                              color: "red",
+                                                            }}
+                                                          >
+                                                            *
+                                                          </span>
+                                                        </Label>
+                                                      </Col>
+                                                      <Col lg="6">
+                                                        <Select
+                                                          name="trainerId"
+                                                          key={`select_fromSemester`}
+                                                          options={
+                                                            trainingMembers
+                                                          }
+                                                          onChange={newValue => {
+                                                            this.handleSelectChange(
+                                                              "trainerId",
+                                                              newValue.value
+                                                            );
+                                                          }}
+                                                          defaultValue={trainingMembers.find(
+                                                            opt =>
+                                                              opt.value ===
+                                                              certificate.trainerId
+                                                          )}
+                                                        />
+                                                      </Col>
+                                                    </Row>
 
-                                                <Col sm="6">
-                                                  <Select
-                                                    name="trainerGradeId"
-                                                    key={`select_endSemester`}
-                                                    options={grades}
-                                                    onChange={newValue => {
-                                                      this.handleSelectChange(
-                                                        "trainerGradeId",
-                                                        newValue.value
-                                                      );
-                                                    }}
-                                                    defaultValue={grades.find(
-                                                      opt =>
-                                                        opt.value ===
-                                                        certificate.trainerGradeId
-                                                    )}
-                                                  />
-                                                </Col>
-                                              </Row>
+                                                    <Row className="mb-3">
+                                                      <Col
+                                                        lg="3"
+                                                        className="col-padding"
+                                                      >
+                                                        <Label>
+                                                          <strong>
+                                                            {t("Certificate Type")}
+                                                          </strong>
+                                                          <span
+                                                            className=""
+                                                            style={{
+                                                              color: "red",
+                                                            }}
+                                                          >
+                                                            *
+                                                          </span>
+                                                        </Label>
+                                                      </Col>
+                                                      <Col lg="6">
+                                                      <Select
+                                                          name="certificateTypeId"
+                                                          key={`select_fromSemester`}
+                                                          options={
+                                                            certificateTypes
+                                                          }
+                                                          onChange={newValue => {
+                                                            this.handleSelectChange(
+                                                              "certificateTypeId",
+                                                              newValue.value
+                                                            );
+                                                          }}
+                                                          defaultValue={certificateTypes.find(
+                                                            opt =>
+                                                              opt.value ===
+                                                              certificate.certificateTypeId
+                                                          )}
+                                                        />
+                                                      </Col>
+                                                    </Row>
 
-                                              <Row>
-                                                <Col lg="6">
-                                                  <label
-                                                    htmlFor="exampleDataList"
-                                                    className="form-label"
-                                                  >
-                                                    <strong>
-                                                      {t("Sector")}
-                                                    </strong>
-                                                    <span
-                                                      className=""
-                                                      style={{ color: "red" }}
-                                                    >
-                                                      *
-                                                    </span>
-                                                  </label>
-                                                </Col>
+                                               
 
-                                                <Col lg="6">
-                                                  <label
-                                                    htmlFor="exampleDataList"
-                                                    className="form-label"
-                                                  >
-                                                    <strong>{t("Year")}</strong>
-                                                    <span
-                                                      className=""
-                                                      style={{ color: "red" }}
-                                                    >
-                                                      *
-                                                    </span>
-                                                  </label>
-                                                </Col>
-                                              </Row>
 
-                                              <Row className="mb-3">
-                                                <Col sm="6">
-                                                  {" "}
-                                                  <Select
-                                                    name="sector"
-                                                    key={`select_fromSemester`}
-                                                    options={sectors}
-                                                    onChange={selectedOption =>
-                                                      this.handleMulti(
-                                                        "sector",
-                                                        selectedOption
-                                                      )
-                                                    }
-                                                    value={sectorsArray}
-                                                    isMulti={true}
-                                                  />
-                                                </Col>
+                                                    <Row>
+                                                      <Col lg="6">
+                                                        <label
+                                                          htmlFor="exampleDataList"
+                                                          className="form-label"
+                                                        >
+                                                          <strong>
+                                                            {t("Academic Code")}
+                                                          </strong>
+                                                          <span
+                                                            className=""
+                                                            style={{
+                                                              color: "red",
+                                                            }}
+                                                          >
+                                                            *
+                                                          </span>
+                                                        </label>
+                                                      </Col>
 
-                                                <Col sm="6">
-                                                  <Select
-                                                    name="yearId"
-                                                    key={`select_endSemester`}
-                                                    options={years}
-                                                    onChange={newValue => {
-                                                      this.handleSelectChange(
-                                                        "yearId",
-                                                        newValue.value
-                                                      );
-                                                    }}
-                                                    defaultValue={years.find(
-                                                      opt =>
-                                                        opt.value ===
-                                                        certificate.yearId
-                                                    )}
-                                                  />
-                                                </Col>
-                                              </Row>
-                                            </Col>
-                                          </Row>
+                                                      <Col lg="6">
+                                                        <label
+                                                          htmlFor="exampleDataList"
+                                                          className="form-label"
+                                                        >
+                                                          <strong>
+                                                            {t("Grade")}
+                                                          </strong>
+                                                          <span
+                                                            className=""
+                                                            style={{
+                                                              color: "red",
+                                                            }}
+                                                          >
+                                                            *
+                                                          </span>
+                                                        </label>
+                                                      </Col>
+                                                    </Row>
+
+                                                    <Row className="mb-3">
+                                                      <Col sm="6">
+                                                        {" "}
+                                                        <Field
+                                                          name="academicCode"
+                                                          type="text"
+                                                          className={
+                                                            "form-control" +
+                                                            ((errors.academicCode &&
+                                                              touched.academicCode) ||
+                                                            academicCodeError
+                                                              ? " is-invalid"
+                                                              : "")
+                                                          }
+                                                        />
+                                                        {academicCodeError && (
+                                                          <div className="invalid-feedback">
+                                                            {t(
+                                                              "Academic Code is required"
+                                                            )}
+                                                          </div>
+                                                        )}
+                                                        <ErrorMessage
+                                                          name="academicCode"
+                                                          component="div"
+                                                          className="invalid-feedback"
+                                                        />
+                                                      </Col>
+
+                                                      <Col sm="6">
+                                                        <Select
+                                                          name="trainerGradeId"
+                                                          key={`select_endSemester`}
+                                                          options={grades}
+                                                          onChange={newValue => {
+                                                            this.handleSelectChange(
+                                                              "trainerGradeId",
+                                                              newValue.value
+                                                            );
+                                                          }}
+                                                          defaultValue={grades.find(
+                                                            opt =>
+                                                              opt.value ===
+                                                              certificate.trainerGradeId
+                                                          )}
+                                                        />
+                                                      </Col>
+                                                    </Row>
+
+                                                    <Row>
+                                                      <Col lg="6">
+                                                        <label
+                                                          htmlFor="exampleDataList"
+                                                          className="form-label"
+                                                        >
+                                                          <strong>
+                                                            {t("Sector")}
+                                                          </strong>
+                                                          <span
+                                                            className=""
+                                                            style={{
+                                                              color: "red",
+                                                            }}
+                                                          >
+                                                            *
+                                                          </span>
+                                                        </label>
+                                                      </Col>
+
+                                                      <Col lg="6">
+                                                        <label
+                                                          htmlFor="exampleDataList"
+                                                          className="form-label"
+                                                        >
+                                                          <strong>
+                                                            {t("Year")}
+                                                          </strong>
+                                                          <span
+                                                            className=""
+                                                            style={{
+                                                              color: "red",
+                                                            }}
+                                                          >
+                                                            *
+                                                          </span>
+                                                        </label>
+                                                      </Col>
+                                                    </Row>
+
+                                                    <Row className="mb-3">
+                                                      <Col sm="6">
+                                                        {" "}
+                                                        <Select
+                                                          name="sector"
+                                                          key={`select_fromSemester`}
+                                                          options={sectors}
+                                                          onChange={selectedOption =>
+                                                            this.handleMulti(
+                                                              "sector",
+                                                              selectedOption
+                                                            )
+                                                          }
+                                                          value={sectorsArray}
+                                                          isMulti={true}
+                                                        />
+                                                      </Col>
+
+                                                      <Col sm="6">
+                                                        <Select
+                                                          name="yearId"
+                                                          key={`select_endSemester`}
+                                                          options={years}
+                                                          onChange={newValue => {
+                                                            this.handleSelectChange(
+                                                              "yearId",
+                                                              newValue.value
+                                                            );
+                                                          }}
+                                                          defaultValue={years.find(
+                                                            opt =>
+                                                              opt.value ===
+                                                              certificate.yearId
+                                                          )}
+                                                        />
+                                                      </Col>
+                                                    </Row>
+                                                  </Col>
+                                                </Row>
+                                                <Row>
+                                                  <Col>
+                                                    <div className="text-center">
+                                                      <Link
+                                                        to="#"
+                                                        className="btn btn-primary me-2"
+                                                        onClick={() => {
+                                                          this.handleSave(
+                                                            values
+                                                          );
+                                                        }}
+                                                      >
+                                                        {t("Save")}
+                                                      </Link>
+                                                    </div>
+                                                  </Col>
+                                                </Row>
+                                              </Form>
+                                            )}
+                                          </Formik>
+                                        </ModalBody>
+                                      </Modal>
+                                      <Modal isOpen={QRModal} centered={true}>
+                                        <ModalHeader
+                                          toggle={this.onCloseQRModal}
+                                          tag="h4"
+                                        >
+                                          <div className="text-center">
+                                            {this.props.t("QR Code")}
+                                          </div>
+                                        </ModalHeader>
+                                        <ModalBody className="py-3 px-5">
                                           <Row>
-                                            <Col>
+                                            <Col lg={12}>
                                               <div className="text-center">
-                                                <Link
-                                                  to="#"
-                                                  className="btn btn-primary me-2"
-                                                  onClick={() => {
-                                                    this.handleSave(values);
-                                                  }}
-                                                >
-                                                  {t("Save")}
-                                                </Link>
+                                                <h4 className="text-primary">
+                                                  {certificate.trainerName}
+                                                </h4>
+                                                <h6 className="text-primary">
+                                                  {certificate.certificateNum}
+                                                </h6>
+
+                                                {qr && (
+                                                  <img src={qr} alt="QR Code" />
+                                                )}
                                               </div>
                                             </Col>
                                           </Row>
-                                        </Form>
-                                      )}
-                                    </Formik>
-                                  </ModalBody>
-                                </Modal>
-                                <Modal isOpen={QRModal} centered={true}>
-                                  <ModalHeader
-                                    toggle={this.onCloseQRModal}
-                                    tag="h4"
-                                  >
-                                    <div className="text-center">
-                                      {this.props.t("QR Code")}
-                                    </div>
-                                  </ModalHeader>
-                                  <ModalBody className="py-3 px-5">
-                                    <Row>
-                                      <Col lg={12}>
-                                        <div className="text-center">
-                                          <h4 className="text-primary">
-                                            {certificate.trainerName}
-                                          </h4>
-                                          <h6 className="text-primary">
-                                            {certificate.certificateNum}
-                                          </h6>
-
-                                          {qr && <img src={qr} alt="QR Code" />}
-                                        </div>
-                                      </Col>
-                                    </Row>
-                                    <Row>
-                                      <Col>
-                                        <div className="text-center mt-3">
-                                          {qr && (
-                                            <Button
-                                              color="success"
-                                              size="lg"
-                                              className="me-2"
-                                              onClick={() => {
-                                                const link =
-                                                  document.createElement("a");
-                                                link.href = qr;
-                                                link.download = `${
-                                                  certificate.trainerName +
-                                                  certificate.certificateNum
-                                                }.png`;
-                                                link.click();
-                                              }}
-                                            >
-                                              {this.props.t("Download")}
-                                            </Button>
-                                          )}
-                                        </div>
-                                      </Col>
-                                    </Row>
-                                  </ModalBody>
-                                </Modal>
-                              </React.Fragment>
-                            )}
-                          </ToolkitProvider>
-                        )}
-                      </PaginationProvider>
-                    </div>
-                    </CardBody>
-                    </Card>
+                                          <Row>
+                                            <Col>
+                                              <div className="text-center mt-3">
+                                                {qr && (
+                                                  <Button
+                                                    color="success"
+                                                    size="lg"
+                                                    className="me-2"
+                                                    onClick={() => {
+                                                      const link =
+                                                        document.createElement(
+                                                          "a"
+                                                        );
+                                                      link.href = qr;
+                                                      link.download = `${
+                                                        certificate.trainerName +
+                                                        certificate.certificateNum
+                                                      }.png`;
+                                                      link.click();
+                                                    }}
+                                                  >
+                                                    {this.props.t("Download")}
+                                                  </Button>
+                                                )}
+                                              </div>
+                                            </Col>
+                                          </Row>
+                                        </ModalBody>
+                                      </Modal>
+                                    </React.Fragment>
+                                  )}
+                                </ToolkitProvider>
+                              )}
+                            </PaginationProvider>
+                          </div>
+                        </CardBody>
+                      </Card>
                     </Col>
                   </CardBody>
                 </Card>
