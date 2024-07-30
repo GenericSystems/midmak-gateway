@@ -514,6 +514,8 @@ export const deleteSector = data => post(url.DELETE_SECTOR, data);
 // get PreReqTypes
 export const getUserTypes = data => post(url.GET_USER_TYPES, data);
 
+export const getUserTypesOpt = data => post(url.GET_USER_TYPES_OPT, data);
+
 //get PreReqTypes profile
 export const getUserTypeDeletedValue = () =>
   get(url.GET_USER_TYPE_DELETED_VALUE);

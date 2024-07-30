@@ -1,6 +1,8 @@
 import {
     GET_USER_TYPES_SUCCESS,
     GET_USER_TYPES_FAIL,
+    GET_USER_TYPES_OPT_SUCCESS,
+    GET_USER_TYPES_OPT_FAIL,
     ADD_USER_TYPE_SUCCESS,
     ADD_USER_TYPE_FAIL,
     UPDATE_USER_TYPE_SUCCESS,
@@ -13,6 +15,7 @@ import {
   
   const INIT_STATE = {
     userTypes: [],
+    userTypesOpt: [],
     deleted: {},
     error: {},
   }
@@ -26,6 +29,17 @@ import {
         }
   
       case GET_USER_TYPES_FAIL:
+        return {
+          ...state,
+          error: action.payload,
+        }
+        case GET_USER_TYPES_OPT_SUCCESS:
+        return {
+          ...state,
+          userTypesOpt: action.payload,
+        }
+  
+      case GET_USER_TYPES_OPT_FAIL:
         return {
           ...state,
           error: action.payload,

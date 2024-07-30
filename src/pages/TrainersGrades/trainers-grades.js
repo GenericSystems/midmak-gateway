@@ -19,6 +19,7 @@ import {
   deleteTrainerGrade,
   getTrainerGradeDeletedValue,
 } from "store/trainersGrades/actions";
+import{getUserTypesOpt} from "store/user-types/actions";
 
 import ToolkitProvider, {
   Search,
@@ -59,19 +60,19 @@ class TrainersGrades extends Component {
   componentDidMount() {
     const {
       trainersGrades,
-      onGetTrainersGrades,
+      onGetUsers,
       deleted,
       user_menu,
-      userTypes,
+      userTypesOpt,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (trainersGrades && !trainersGrades.length) {
-      onGetTrainersGrades();
+      onGetUsers();
     }
-    this.setState({ trainersGrades, deleted, userTypes });
+    this.setState({ trainersGrades, deleted, userTypesOpt });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -141,7 +142,9 @@ class TrainersGrades extends Component {
 
   handleAddRow = () => {
     const { trainersGrades, onAddNewTrainerGrade } = this.props;
+    const { selectedUser} = this.state;
     const newRow = {
+      userTypeId: selectedUser,
       arTitle: "---",
     };
 
@@ -217,12 +220,15 @@ class TrainersGrades extends Component {
   }
 
   handleSelectUser = (fieldName, selectedValue) => {
-
+    const {onGetTrainersGrades} = this.props
+    console.log("selectedValue",selectedValue)
+    this.setState({ selectedUser : selectedValue})
+    onGetTrainersGrades({userTypeId:selectedValue})
   };
 
   render() {
     const { SearchBar } = Search;
-    const { trainersGrades, deleted, t, userTypes } = this.props;
+    const { trainersGrades, deleted, t, userTypesOpt } = this.props;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const {
@@ -245,32 +251,7 @@ class TrainersGrades extends Component {
 
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
-      /* {
-        dataField: "userTypeId",
-        text: t("Type"),
-        sort: true,
-        editable: false,
-        formatter: (cellContent, row) => (
-          <Select
-          name="userTypeId"
-          key={`select_endSemester`}
-          options={userTypes}
-          onChange={newValue => {
-            this.handleSelectChangeUserType(
-              row.Id,
-              "userTypeId",
-              newValue.value
-            );
-          }}
-          defaultValue ={userTypes.find(
-            opt =>
-              opt.value ===
-            row.userTypeId
-          )}
-         //  isDisabled={!showEditButton}
-        />
-        )
-      }, */
+    
       {
         dataField: "arTitle",
         text: this.props.t("Trainers Grades(ar)"),
@@ -351,7 +332,7 @@ class TrainersGrades extends Component {
                                     className="select-style"
                                     name="userTypeId"
                                     key="courseType_select"
-                                    options={userTypes}
+                                    options={userTypesOpt}
                                     onChange={newValue =>
                                       this.handleSelectUser(
                                         "userTypeId",
@@ -361,7 +342,7 @@ class TrainersGrades extends Component {
                                     defaultValue={
                                       selectedUser == 0
                                         ? " "
-                                        : userTypes.find(
+                                        : userTypesOpt.find(
                                             opt => opt.label === selectedUser
                                           )
                                     }
@@ -534,12 +515,13 @@ class TrainersGrades extends Component {
 const mapStateToProps = ({ trainersGrades, userTypes, menu_items }) => ({
   trainersGrades: trainersGrades.trainersGrades,
   deleted: trainersGrades.deleted,
-  userTypes: userTypes.userTypes,
+  userTypesOpt: userTypes.userTypesOpt,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetTrainersGrades: () => dispatch(getTrainersGrades()),
+  onGetUsers: () => dispatch(getUserTypesOpt()),
+  onGetTrainersGrades: trainerGrade => dispatch(getTrainersGrades(trainerGrade)),
   onAddNewTrainerGrade: trainerGrade =>
     dispatch(addNewTrainerGrade(trainerGrade)),
   onUpdateTrainerGrade: trainerGrade =>

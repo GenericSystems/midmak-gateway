@@ -16,8 +16,9 @@ import {
     GET_MAJOR_TYPE_DELETED_VALUE_SUCCESS,
   } from "./actionTypes"
   
-  export const getTrainersGrades = () => ({
+  export const getTrainersGrades = trainersGrades => ({
     type: GET_MAJORS_TYPES,
+    payload:trainersGrades
   })
   
   export const getTrainersGradesSuccess = trainersGrades => ({

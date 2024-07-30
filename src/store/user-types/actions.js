@@ -2,6 +2,9 @@ import {
     GET_USER_TYPES,
     GET_USER_TYPES_FAIL,
     GET_USER_TYPES_SUCCESS,
+    GET_USER_TYPES_OPT,
+    GET_USER_TYPES_OPT_FAIL,
+    GET_USER_TYPES_OPT_SUCCESS,
     GET_USER_TYPE_DELETED_VALUE,
     GET_USER_TYPE_DELETED_VALUE_FAIL,
     GET_USER_TYPE_DELETED_VALUE_SUCCESS,
@@ -28,6 +31,21 @@ import {
   
   export const getUserTypesFail = error => ({
     type: GET_USER_TYPES_FAIL,
+    payload: error,
+  })
+  
+  export const getUserTypesOpt = () => ({
+    type: GET_USER_TYPES_OPT,
+
+  })
+  
+  export const getUserTypesOptSuccess = userTypes => ({
+    type: GET_USER_TYPES_OPT_SUCCESS,
+    payload: userTypes,
+  })
+  
+  export const getUserTypesOptFail = error => ({
+    type: GET_USER_TYPES_OPT_FAIL,
     payload: error,
   })
   

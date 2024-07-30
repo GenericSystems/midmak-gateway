@@ -220,6 +220,7 @@ export const GET_SECTOR_DELETED_VALUE = "/deleted";
 
 //USER_TYPES
 export const GET_USER_TYPES = "/user-Types";
+export const GET_USER_TYPES_OPT = "/user-Types";
 export const GET_USER_TYPE_DELETED_VALUE = "/user-Type";
 export const ADD_NEW_USER_TYPE = "/add/user-Type";
 export const UPDATE_USER_TYPE = "/update/user-Type";
