@@ -9,6 +9,9 @@ import {
   GET_CERTIFICATE_DELETED_VALUE,
 } from "./actionTypes";
 
+import { GET_USER_TYPES_OPT } from "../user-types/actionTypes";
+
+
 import {
   getCertificatesSuccess,
   getCertificatesFail,
@@ -22,7 +25,7 @@ import {
   getCertificateDeletedValueFail,
 } from "./actions";
 
-import { getUserTypesFail, getUserTypesSuccess } from "../user-types/actions";
+import { getUserTypesOptFail, getUserTypesOptSuccess } from "../user-types/actions";
 
 import { getSectorsFail, getSectorsSuccess } from "../sectors/actions";
 
@@ -51,7 +54,7 @@ import {
   addNewCertificate,
   updateCertificate,
   deleteCertificate,
-  getUserTypes,
+  getUserTypesOpt,
   getSectors,
   getGrades,
   getCertificateTypes,
@@ -60,9 +63,8 @@ import {
   getTrainingMembers
 } from "../../helpers/fakebackend_helper";
 
-function* fetchCertificates() {
-  
 
+function* fetchUsers() {
   //user types
   const get_userTypes_req = {
     source: "db",
@@ -73,14 +75,14 @@ function* fetchCertificates() {
   };
 
   try {
-    const response = yield call(getUserTypes, get_userTypes_req);
-    yield put(getUserTypesSuccess(response));
+    const response = yield call(getUserTypesOpt, get_userTypes_req);
+    yield put(getUserTypesOptSuccess(response));
   } catch (error) {
-    yield put(getUserTypesFail(error));
+    yield put(getUserTypesOptFail(error));
   }
 
-  //Sectors
-  const get_sectors_req = {
+   //Sectors
+   const get_sectors_req = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -156,16 +158,24 @@ function* fetchCertificates() {
   } catch (error) {
     yield put(getTrainingMembersFail(error));
   }
+}
+
+function* fetchCertificates(obj) {
+
+  console.log("in saga obj",obj)
+  const userTypeId = obj.payload.userTypeId;
+ 
 
   const get_Certificates_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_Certificates",
+    filter: `userTypeId = ${userTypeId}`,
+
   };
   try {
     const response = yield call(getCertificates, get_Certificates_req);
-    console.log("in saga response",response)
     /* response.map(resp => {
       resp["sector"] = JSON.parse(resp["sector"]);
     }); */
@@ -231,6 +241,7 @@ function* onGetCountryDeletedValue() {
 }
 
 function* CertificatesSaga() {
+  yield takeEvery(GET_USER_TYPES_OPT, fetchUsers);
   yield takeEvery(GET_CERTIFICATES, fetchCertificates);
   yield takeEvery(ADD_NEW_CERTIFICATE, onAddNewCertificate);
   yield takeEvery(UPDATE_CERTIFICATE, onUpdateCertificate);

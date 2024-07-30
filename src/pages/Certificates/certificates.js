@@ -5,6 +5,7 @@ import {
   Col,
   Card,
   CardBody,
+  CardTitle,
   Alert,
   Modal,
   Label,
@@ -32,6 +33,8 @@ import {
   deleteCertificate,
   getCertificateDeletedValue,
 } from "store/certificates/actions";
+import{getUserTypesOpt} from "store/user-types/actions";
+
 import * as Yup from "yup";
 import ToolkitProvider, {
   Search,
@@ -73,6 +76,9 @@ class Certificates extends Component {
       sectorsArray: [],
       QRModal: false,
       qr: "",
+      sidebarOpen: true,
+      selectedUserType:1
+
     };
   }
 
@@ -83,24 +89,25 @@ class Certificates extends Component {
       onGetCertificates,
       deleted,
       user_menu,
-      userTypes,
+      userTypesOpt,
       sectors,
       years,
       grades,
       trainingMembers,
+      onGetUsers
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (certificates && !certificates.length) {
-      onGetCertificates();
+     onGetUsers() && onGetCertificates({userTypeId : 1})
     }
     this.setState({
       certificates,
       certificateTypes,
       deleted,
-      userTypes,
+      userTypesOpt,
       sectors,
       grades,
       trainingMembers,
@@ -253,12 +260,15 @@ class Certificates extends Component {
   };
 
   handleSelectChange = (fieldName, selectedValue) => {
-    console.log("selected value", selectedValue);
     if (fieldName === "trainerId") {
       this.setState({
         selectedTrainer: selectedValue,
       });
     } else if (fieldName == "userTypeId") {
+    console.log("selected value", selectedValue);
+
+      const {onGetCertificates} = this.props
+      onGetCertificates({userTypeId: selectedValue})
       this.setState({
         selectedUserType: selectedValue,
       });
@@ -407,13 +417,19 @@ class Certificates extends Component {
     this.setState({ QRModal: false });
   };
 
+  toggleSidebar = () => {
+    this.setState(prevState => ({
+      sidebarOpen: !prevState.sidebarOpen,
+    }));
+  }
+
   render() {
     const { SearchBar } = Search;
     const {
       certificates,
       user_menu,
       deleted,
-      userTypes,
+      userTypesOpt,
       years,
       sectors,
       certificateTypes,
@@ -429,7 +445,10 @@ class Certificates extends Component {
       sectorsArray,
       QRModal,
       qr,
+      sidebarOpen,
+      selectedUserType
     } = this.state;
+
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
     const {
@@ -443,7 +462,7 @@ class Certificates extends Component {
       showEditButton,
       showSearchButton,
     } = this.state;
-    console.log("emptyError",emptyError)
+    console.log("userTypesOpt",userTypesOpt)
 
     const defaultSorting = [
       {
@@ -607,7 +626,58 @@ class Certificates extends Component {
             <Row>
               <Col>
                 <Card>
-                  <CardBody>
+                  <CardBody className="card-style">
+                  {sidebarOpen && (
+                      <Col lg="3">
+                        <Card>
+                          <CardTitle id="course_header">
+                            {t("Search for the user grades")}
+                          </CardTitle>
+                          <CardBody>
+                            <div className="mb-3">
+                              <Row>
+                                <Col lg="4">
+                                  <Label className="form-label">
+                                    {t("User Type")}
+                                  </Label>
+                                </Col>
+                                <Col lg="4">
+                                  <Select
+                                    className="select-style"
+                                    name="userTypeId"
+                                    key="courseType_select"
+                                    options={userTypesOpt}
+                                    onChange={newValue =>
+                                      this.handleSelectChange(
+                                        "userTypeId",
+                                        newValue.value
+                                      )
+                                    }
+                                    value={ userTypesOpt.find(
+                                            opt => opt.label === selectedUserType
+                                          )
+                                    }
+                                  />
+                                </Col>
+                              </Row>
+                            </div>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                    )}
+
+                    <Col lg="auto" className="p-0">
+                      <div className="collapse-course">
+                        <i
+                          onClick={this.toggleSidebar}
+                          className="bx bx-menu"
+                        ></i>
+                      </div>
+                    </Col>
+
+                    <Col lg={sidebarOpen ? "" : "11"}>
+                      <Card>
+                        <CardBody >
                     <div>
                       {duplicateError && (
                         <Alert
@@ -905,14 +975,14 @@ class Certificates extends Component {
                                                   <Select
                                                     name="userTypeId"
                                                     key={`select_endSemester`}
-                                                    options={userTypes}
+                                                    options={userTypesOpt}
                                                     onChange={newValue => {
                                                       this.handleSelectChange(
                                                         "userTypeId",
                                                         newValue.value
                                                       );
                                                     }}
-                                                    defaultValue={userTypes.find(
+                                                    defaultValue={userTypesOpt.find(
                                                       opt =>
                                                         opt.value ===
                                                         certificate.userTypeId
@@ -1161,6 +1231,9 @@ class Certificates extends Component {
                         )}
                       </PaginationProvider>
                     </div>
+                    </CardBody>
+                    </Card>
+                    </Col>
                   </CardBody>
                 </Card>
               </Col>
@@ -1184,7 +1257,7 @@ const mapStateToProps = ({
 }) => ({
   certificates: certificates.certificates,
   certificateTypes: certificateTypes.certificateTypes,
-  userTypes: userTypes.userTypes,
+  userTypesOpt: userTypes.userTypesOpt,
   sectors: sectors.sectors,
   trainingMembers: trainingMembers.trainingMembers,
   grades: grades.grades,
@@ -1194,7 +1267,8 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetCertificates: () => dispatch(getCertificates()),
+  onGetCertificates: certificate => dispatch(getCertificates(certificate)),
+  onGetUsers: () => dispatch(getUserTypesOpt()),
   onAddNewCertificate: certificate => dispatch(addNewCertificate(certificate)),
   onUpdateCertificate: certificate => dispatch(updateCertificate(certificate)),
   onDeleteCertificate: certificate => dispatch(deleteCertificate(certificate)),

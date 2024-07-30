@@ -47,7 +47,6 @@ function* fetchSidbarContents() {
           });
         });
     });
-    console.log("in saga response",response)
     yield put(getSidebarContentSuccess(response));
   } catch (error) {
     yield put(getSidebarContentFail(error));

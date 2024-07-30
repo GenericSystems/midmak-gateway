@@ -249,7 +249,6 @@ class GradesList extends Component {
 
     console.log("selectedUser",selectedUser)
 
-    console.log("grades in render", grades)
     const defaultSorting = [
       {
         dataField: "Id",

@@ -16,8 +16,9 @@ import {
   GET_CERTIFICATE_DELETED_VALUE_SUCCESS,
 } from "./actionTypes"
 
-export const getCertificates = () => ({
+export const getCertificates = certificates => ({
   type: GET_CERTIFICATES,
+  payload: certificates,
 })
 
 export const getCertificatesSuccess = certificates => ({

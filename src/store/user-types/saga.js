@@ -72,7 +72,6 @@ try {
 function* fetchUserTypeDeletedValue() {
   try {
     const response = yield call(getUserTypeDeletedValue);
-    console.log("in saga response",response)
     yield put(getUserTypeDeletedValueSuccess(response));
   } catch (error) {
     yield put(getUserTypeDeletedValueFail(error));
