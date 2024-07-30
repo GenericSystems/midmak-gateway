@@ -330,7 +330,7 @@ class GradesList extends Component {
                             <div className="mb-3">
                               <Row>
                                 <Col lg="4">
-                                  <Label className="form-label">
+                                  <Label className="form-label user-style">
                                     {t("User Type")}
                                   </Label>
                                 </Col>

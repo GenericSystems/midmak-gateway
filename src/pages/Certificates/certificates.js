@@ -82,6 +82,12 @@ class Certificates extends Component {
     };
   }
 
+ /*  initializeState() {
+    const {selectedUserType} = this.state
+    console.log("selectedUserType in initail state", selectedUserType)
+    this.setState({selectedUserType :selectedUserType})
+  } */
+
   componentDidMount() {
     const {
       certificates,
@@ -137,6 +143,15 @@ class Certificates extends Component {
         this.props.location.pathname
       );
     }
+/*     const {selectedUserType} = this.state
+    if (
+      (selectedUserType &&
+        selectedUserType !==
+          prevProps.selectedUserType) 
+    ) {
+      this.initializeState();
+    } */
+
   }
 
   updateShowAddButton = (menu, pathname) => {
@@ -316,6 +331,8 @@ class Certificates extends Component {
     values["trainerGradeId"] = selectedTrainerGrade;
     values["sector"] = sectorsArray;
 
+    console.log("selectedUserType0",selectedUserType)
+
     if (values.academicCode === "") {
       this.setState({ academicCodeError: true });
     } else {
@@ -342,7 +359,7 @@ class Certificates extends Component {
       if (isEdit) {
         onUpdateCertificate(sectionInfo);
       } else {
-        onAddNewCertificate(sectionInfo);
+                onAddNewCertificate(sectionInfo);
       }
       this.setState({
         selectedAcademicCertificate: null,
@@ -631,13 +648,13 @@ class Certificates extends Component {
                       <Col lg="3">
                         <Card>
                           <CardTitle id="course_header">
-                            {t("Search for the user grades")}
+                            {t("Search for the user certificates")}
                           </CardTitle>
                           <CardBody>
                             <div className="mb-3">
                               <Row>
                                 <Col lg="4">
-                                  <Label className="form-label">
+                                  <Label className="form-label user-style">
                                     {t("User Type")}
                                   </Label>
                                 </Col>
@@ -754,7 +771,7 @@ class Certificates extends Component {
                                     </div>
                                   </Col>
                                   <Col sm="8">
-                                    {/*  {showAddButton && ( */}
+                                  {  selectedUserType && ( 
                                     <div className="text-sm-end">
                                       <Tooltip
                                         title={this.props.t("Add")}
@@ -768,7 +785,7 @@ class Certificates extends Component {
                                         </IconButton>
                                       </Tooltip>
                                     </div>
-                                    {/* )} */}
+                                   )} 
                                   </Col>
                                 </Row>
 
@@ -932,7 +949,7 @@ class Certificates extends Component {
                                                   </label>
                                                 </Col>
 
-                                                <Col lg="6">
+                                              {/*   <Col lg="6">
                                                   <label
                                                     htmlFor="exampleDataList"
                                                     className="form-label"
@@ -947,7 +964,7 @@ class Certificates extends Component {
                                                       *
                                                     </span>
                                                   </label>
-                                                </Col>
+                                                </Col> */}
                                               </Row>
 
                                               <Row className="mb-3">
@@ -971,7 +988,7 @@ class Certificates extends Component {
                                                   />
                                                 </Col>
 
-                                                <Col sm="6">
+                                      {/*           <Col sm="6">
                                                   <Select
                                                     name="userTypeId"
                                                     key={`select_endSemester`}
@@ -993,7 +1010,7 @@ class Certificates extends Component {
                                                     component="div"
                                                     className="invalid-feedback"
                                                   />
-                                                </Col>
+                                                </Col> */}
                                               </Row>
 
                                               <Row>
