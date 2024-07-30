@@ -27,9 +27,9 @@ import { getUserTypesFail, getUserTypesSuccess } from "../user-types/actions";
 import { getSectorsFail, getSectorsSuccess } from "../sectors/actions";
 
 import {
-  getTrainersGradesFail,
-  getTrainersGradesSuccess,
-} from "../trainersGrades/actions";
+  getGradesFail,
+  getGradesSuccess,
+} from "../grades/actions";
 
 import {
   getCertificateTypesFail,
@@ -53,7 +53,7 @@ import {
   deleteCertificate,
   getUserTypes,
   getSectors,
-  getTrainersGrades,
+  getGrades,
   getCertificateTypes,
   getCertificateDeletedValue,
   getYears,
@@ -100,15 +100,15 @@ function* fetchCertificates() {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_TrainerGrade",
+    tablename: "Settings_Grades",
     fields: "Id,arTitle",
   };
   try {
-    const response = yield call(getTrainersGrades, get_TrainerGrades_req);
+    const response = yield call(getGrades, get_TrainerGrades_req);
 
-    yield put(getTrainersGradesSuccess(response));
+    yield put(getGradesSuccess(response));
   } catch (error) {
-    yield put(getTrainersGradesFail(error));
+    yield put(getGradesFail(error));
   }
 
   //certificate Type

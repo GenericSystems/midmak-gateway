@@ -1,76 +1,94 @@
 import {
-  GET_GRADES,
-  GET_GRADES_FAIL,
-  GET_GRADES_SUCCESS,
-  GET_COURSE_STATISTICS,
-  GET_COURSE_STATISTICS_FAIL,
-  GET_COURSE_STATISTICS_SUCCESS,
-  UPDATE_GRADE,
-  UPDATE_GRADE_SUCCESS,
-  UPDATE_GRADE_FAIL,
-  GET_COURSE_CONTENTS_GRADES,
-  GET_COURSE_CONTENTS_GRADES_SUCCESS,
-  GET_COURSE_CONTENTS_GRADES_FAIL,
-} from "./actionTypes";
-
-export const getGrades = course => ({
-  type: GET_GRADES,
-  payload: course,
-});
-
-export const getGradesSuccess = course => ({
-  type: GET_GRADES_SUCCESS,
-  payload: course,
-});
-
-export const getGradesFail = error => ({
-  type: GET_GRADES_FAIL,
-  payload: error,
-});
-
-export const getCourseStatistics = course => ({
-  type: GET_COURSE_STATISTICS,
-  payload: course,
-});
-
-export const getCourseStatisticsSuccess = course => ({
-  type: GET_COURSE_STATISTICS_SUCCESS,
-  payload: course,
-});
-
-export const getCourseStatisticsFail = error => ({
-  type: GET_COURSE_STATISTICS_FAIL,
-  payload: error,
-});
-
-export const updateGrade = grade => {
-  return {
-    type: UPDATE_GRADE,
-    payload: grade,
-  };
-};
-
-export const updateGradeSuccess = grade => ({
-  type: UPDATE_GRADE_SUCCESS,
-  payload: grade,
-});
-
-export const updateGradeFail = error => ({
-  type: UPDATE_GRADE_FAIL,
-  payload: error,
-});
-
-export const getCourseContentsGrades = courseContents_grades => ({
-  type: GET_COURSE_CONTENTS_GRADES,
-  payload: courseContents_grades,
-});
-
-export const getCourseContentsGradesSuccess = courseContents_grades => ({
-  type: GET_COURSE_CONTENTS_GRADES_SUCCESS,
-  payload: courseContents_grades,
-});
-
-export const getCourseContentsGradesFail = error => ({
-  type: GET_COURSE_CONTENTS_GRADES_FAIL,
-  payload: error,
-});
+    GET_GRADES,
+    GET_GRADES_FAIL,
+    GET_GRADES_SUCCESS,
+    ADD_NEW_GRADE,
+    ADD_GRADE_SUCCESS,
+    ADD_GRADE_FAIL,
+    UPDATE_GRADE,
+    UPDATE_GRADE_SUCCESS,
+    UPDATE_GRADE_FAIL,
+    DELETE_GRADE,
+    DELETE_GRADE_SUCCESS,
+    DELETE_GRADE_FAIL,
+    GET_GRADE_DELETED_VALUE,
+    GET_GRADE_DELETED_VALUE_FAIL,
+    GET_GRADE_DELETED_VALUE_SUCCESS,
+  } from "./actionTypes"
+  
+  export const getGrades = Grades => ({
+    type: GET_GRADES,
+    payload:Grades
+  })
+  
+  export const getGradesSuccess = Grades => ({
+    type: GET_GRADES_SUCCESS,
+    payload: Grades,
+  })
+  
+  export const getGradesFail = error => ({
+    type: GET_GRADES_FAIL,
+    payload: error,
+  })
+  
+  
+  export const addNewGrade = Grade => ({
+    type: ADD_NEW_GRADE,
+    payload: Grade,
+  })
+  
+  export const addGradeSuccess = Grade => ({
+    type: ADD_GRADE_SUCCESS,
+    payload: Grade,
+  })
+  
+  export const addGradeFail = error => ({
+    type: ADD_GRADE_FAIL,
+    payload: error,
+  })
+  
+  export const updateGrade = Grade =>{
+    return ({
+      type: UPDATE_GRADE,
+      payload: Grade,
+    })
+  } 
+  
+  export const updateGradeSuccess = Grade => ({
+    type: UPDATE_GRADE_SUCCESS,
+    payload: Grade,
+  })
+  
+  export const updateGradeFail = error => ({
+    type: UPDATE_GRADE_FAIL,
+    payload: error,
+  })
+  
+  export const deleteGrade = Grade => ({
+    type: DELETE_GRADE,
+    payload: Grade,
+  })
+  
+  export const deleteGradeSuccess = Grade => ({
+    type: DELETE_GRADE_SUCCESS,
+    payload: Grade,
+  })
+  
+  export const deleteGradeFail = error => ({
+    type: DELETE_GRADE_FAIL,
+    payload: error,
+  })
+  
+  export const getGradeDeletedValue = () => ({
+    type: GET_GRADE_DELETED_VALUE,
+  });
+  
+  export const getGradeDeletedValueSuccess = deleted => ({
+    type: GET_GRADE_DELETED_VALUE_SUCCESS,
+    payload: deleted,
+  });
+  
+  export const getGradeDeletedValueFail = error => ({
+    type: GET_GRADE_DELETED_VALUE_FAIL,
+    payload: error,
+  });

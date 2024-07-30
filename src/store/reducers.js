@@ -79,9 +79,6 @@ import userTypes from "./user-types/reducer"
 //certificates
 import certificates from "./certificates/reducer"
 
-//trainersGrades
-import trainersGrades from "./trainersGrades/reducer"
-
 //certificateTypes
 import certificateTypes from "./certificateTypes/reducer"
 
@@ -240,10 +237,6 @@ import academicLoads from "./academicloads/reducer"
 // grades
 import grades from "./grades/reducer"
 
-// checked_grades
-import checked_grades from "./checkGrades/reducer"
-
-
 //Distributing courses methods
 
 import distributingCoursesMethods from "./distributing-courses-methods/reducer"
@@ -290,7 +283,6 @@ const rootReducer = combineReducers({
   contacts,
   nationalities,
   certificateTypes,
-  trainersGrades,
   studentManagements,
   nationalities,
   relatives,
@@ -351,7 +343,6 @@ const rootReducer = combineReducers({
   exceptionalPeriods,
   academicLoads,
   grades,
-  checked_grades,
   distributingCoursesMethods,
   letterGrades,
   transportLines,

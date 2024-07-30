@@ -30,7 +30,6 @@ import { calenderDefaultCategories, events } from "./calender";
 import { file } from "./file";
 import { users, userProfile } from "./contacts";
 import { certificates} from "./certificates";
-import { trainersGrades} from "./trainersGrades";
 import { certificateTypes } from "./certificateTypes";
 import { studentManagements } from "./studentManagements";
 import { generateSIDs} from "./generateSIDs";
@@ -130,7 +129,6 @@ export {
   prereqs,
   studyPlans,
   certificates,
-  trainersGrades,
   certificateTypes,
   studentManagements,
   countries,

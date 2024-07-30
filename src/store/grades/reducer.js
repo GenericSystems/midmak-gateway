@@ -1,75 +1,98 @@
 import {
-  GET_GRADES_SUCCESS,
-  GET_GRADES_FAIL,
-  GET_COURSE_STATISTICS_FAIL,
-  GET_COURSE_STATISTICS_SUCCESS,
-  UPDATE_GRADE_SUCCESS,
-  UPDATE_GRADE_FAIL,
-  GET_COURSE_CONTENTS_GRADES_SUCCESS,
-  GET_COURSE_CONTENTS_GRADES_FAIL,
-} from "./actionTypes";
-
-const INIT_STATE = {
-  grades: [],
-  courseContents_grades: [],
-  courseStatistics: [],
-  error: {},
-};
-
-const grades = (state = INIT_STATE, action) => {
-  switch (action.type) {
-    case GET_GRADES_SUCCESS:
-      return {
-        ...state,
-        grades: action.payload,
-      };
-    case GET_GRADES_FAIL:
-      return {
-        ...state,
-        error: action.payload,
-      };
-
-    case GET_COURSE_STATISTICS_SUCCESS:
-      return {
-        ...state,
-        courseStatistics: action.payload,
-      };
-    case GET_COURSE_STATISTICS_FAIL:
-      return {
-        ...state,
-          error: action.payload,
-        };
-
-    case UPDATE_GRADE_SUCCESS:
-      return {
-        ...state,
-        grades: state.grades.map(grade =>
-          grade.Id.toString() === action.payload.Id.toString()
-            ? { grade, ...action.payload }
-            : grade
-        ),
-      };
-
-    case UPDATE_GRADE_FAIL:
-      return {
-        ...state,
-        error: action.payload,
-      };
-
-    case GET_COURSE_CONTENTS_GRADES_SUCCESS:
-      return {
-        ...state,
-        courseContents_grades: action.payload,
-      };
-    case GET_COURSE_CONTENTS_GRADES_FAIL:
-      return {
-        ...state,
-        error: action.payload,
-      };
-
-    default:
-      return state;
+    GET_GRADES_SUCCESS,
+    GET_GRADES_FAIL,
+    ADD_GRADE_SUCCESS,
+    ADD_GRADE_FAIL,
+    UPDATE_GRADE_SUCCESS,
+    UPDATE_GRADE_FAIL,
+    DELETE_GRADE_SUCCESS,
+    DELETE_GRADE_FAIL,
+    GET_GRADE_DELETED_VALUE_SUCCESS,
+    GET_GRADE_DELETED_VALUE_FAIL,
+  } from "./actionTypes"
+  
+  const INIT_STATE = {
+    grades: [],
+    error: {},
+    deleted: {}
   }
-};
-
-export default grades;
+  
+  const grades = (state = INIT_STATE, action) => {
+    switch (action.type) {
+      case GET_GRADES_SUCCESS:
+        return {
+          ...state,
+          grades: action.payload,
+          deleted: {}
+        }
+  
+      case GET_GRADES_FAIL:
+        return {
+          ...state,
+          error: action.payload,
+        }
+  
+      case ADD_GRADE_SUCCESS:
+        return {
+          ...state,
+          grades: [...state.grades, action.payload],
+        }
+  
+      case ADD_GRADE_FAIL:
+        return {
+          ...state,
+          error: action.payload,
+        }
+  
+        case UPDATE_GRADE_SUCCESS:
+          return {
+            ...state,
+            grades: state.grades.map(grade =>
+              grade.Id.toString() === action.payload.Id.toString()
+                ? { grade, ...action.payload }
+                : grade
+            ),
+          }
+    
+        case UPDATE_GRADE_FAIL:
+          return {
+            ...state,
+            error: action.payload,
+          }
+    
+        case DELETE_GRADE_SUCCESS:
+          return {
+            ...state,
+            grades: state.grades.filter(
+              grade => grade.Id !== action.payload.Id
+            ),
+            deleted: action.payload.deleted,
+          }
+    
+        case DELETE_GRADE_FAIL:
+          return {
+            ...state,
+            error: action.payload,
+          }
+  
+          case GET_GRADE_DELETED_VALUE_SUCCESS:
+            return {
+                ...state,
+                deleted: action.payload.deleted,
+            }
+  
+          
+      case GET_GRADE_DELETED_VALUE_FAIL:
+        return {
+            ...state,
+            error: action.payload,
+        }
+      
+  
+      default:
+        return state
+    }
+  }
+  
+  export default grades
+  

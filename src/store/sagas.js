@@ -30,7 +30,6 @@ import StudyPlansSaga from "./study-plans/saga";
 import nationalitiesSaga from "./nationality/saga";
 import relativesSaga from "./relatives/saga";
 import CertificatesSaga from "./certificates/saga";
-import TrainersGradesSaga from "./trainersGrades/saga";
 import CertificatelevelSaga from "./certificateTypes/saga";
 import StudentManagementSaga from "./studentManagements/saga";
 import universityStudentsSaga from "./university-students/saga";
@@ -87,7 +86,6 @@ import stdWarningTestSaga from "./stdWarningTest/saga";
 import exceptionalPeriodsSaga from "./exceptionalPeriods/saga";
 import academicLoadSaga from "./academicloads/saga";
 import gradesSaga from "./grades/saga";
-import checkedGradesSaga from "./checkGrades/saga";
 import DistributingCoursesMethodsSaga from "./distributing-courses-methods/saga";
 import letterGradesSaga from "./letter-grade/saga";
 import transportLinesSaga from "./transportLines/saga";
@@ -179,12 +177,10 @@ export default function* rootSaga() {
     fork(stdWarningTestSaga),
     fork(exceptionalPeriodsSaga),
     fork(gradesSaga),
-    fork(checkedGradesSaga),
     fork(academicLoadSaga),
     fork(DistributingCoursesMethodsSaga),
     fork(letterGradesSaga),
     fork(transportLinesSaga),
-    fork(TrainersGradesSaga),
     fork(StudentsHistorySaga),
     fork(StudentsRequestsSaga),
   ]);

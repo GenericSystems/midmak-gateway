@@ -579,20 +579,20 @@ export const deleteCertificate = data => post(url.DELETE_CERTIFICATE, data);
 export const getCertificateDeletedValue = () =>
   get(url.GET_CERTIFICATE_DELETED_VALUE);
 
-// get TrainerGrades
-export const getTrainersGrades = data => post(url.GET_MAJORS_TYPES, data);
+// get Grades
+export const getGrades = data => post(url.GET_GRADES, data);
 
 // add certificate
-export const addNewTrainerGrade = data => post(url.ADD_NEW_MAJOR_TYPE, data);
+export const addNewGrade = data => post(url.ADD_NEW_GRADE, data);
 
 //update certificate
-export const updateTrainerGrade = data => post(url.UPDATE_MAJOR_TYPE, data);
+export const updateGrade = data => post(url.UPDATE_GRADE, data);
 
-// delete TrainerGrade
-export const deleteTrainerGrade = data => post(url.DELETE_MAJOR_TYPE, data);
+// delete Grade
+export const deleteGrade = data => post(url.DELETE_GRADE, data);
 
-export const getTrainerGradeDeletedValue = () =>
-  get(url.GET_MAJOR_TYPE_DELETED_VALUE);
+export const getGradeDeletedValue = () =>
+  get(url.GET_GRADE_DELETED_VALUE);
 
 // get CertificateLEVEL
 export const getCertificateTypes = data =>
@@ -1769,12 +1769,6 @@ export const deleteAcademicLoad = data => post(url.DELETE_ACADEMIC_LOAD, data);
 export const getAcademicLoadDeletedValue = () =>
   get(url.GET_ACADEMIC_LOAD_DELETED_VALUE);
 
-// get Grades
-export const getGrades = data => post(url.GET_GRADES, data);
-
-export const getCourseStatistics = data =>
-  post(url.GET_COURSE_STATISTICS, data);
-
 //update garde
 export const updateCheckedGrade = data => post(url.UPDATE_GRADE, data);
 
@@ -1931,15 +1925,7 @@ export const deleteLevelingDecisionDetail = data =>
   post(url.DELETE_LEVELING_DECISION_DETAIL, data);
 //copyFaculty
 export const copyFaculty = data => post(url.COPY_FACULTY, data);
-// get Grades
-export const getCourseContentsGrades = data =>
-  post(url.GET_COURSE_CONTENTS_GRADES, data);
 
-// get checkedGrades
-export const getCheckedGrades = data => post(url.GET_CHECKED_GRADES, data);
-
-//update checkedGrade
-export const updateGrade = data => post(url.UPDATE_CHECKED_GRADE, data);
 
 export const topSellingData = month =>
   get(`${url.TOP_SELLING_DATA}/${month}`, { params: { month } });

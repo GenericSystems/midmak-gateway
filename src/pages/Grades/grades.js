@@ -13,12 +13,12 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import Select from "react-select";
 import {
-  getTrainersGrades,
-  addNewTrainerGrade,
-  updateTrainerGrade,
-  deleteTrainerGrade,
-  getTrainerGradeDeletedValue,
-} from "store/trainersGrades/actions";
+  getGrades,
+  addNewGrade,
+  updateGrade,
+  deleteGrade,
+  getGradeDeletedValue,
+} from "store/grades/actions";
 import{getUserTypesOpt} from "store/user-types/actions";
 
 import ToolkitProvider, {
@@ -37,12 +37,12 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
-class TrainersGrades extends Component {
+class GradesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      trainersGrades: [],
-      trainerGrade: "",
+      grades: [],
+      grade: "",
       selectedCertLevel: null,
       deleteModal: false,
       duplicateError: null,
@@ -57,22 +57,26 @@ class TrainersGrades extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const {
-      trainersGrades,
+      grades,
       onGetUsers,
       deleted,
       user_menu,
       userTypesOpt,
+      onGetGrades
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (trainersGrades && !trainersGrades.length) {
-      onGetUsers();
+    if (grades && !grades.length || grades == undefined ) {
+      console.log("in did mount",grades)
+      onGetUsers() && onGetGrades({ userTypeId: 1 });
     }
-    this.setState({ trainersGrades, deleted, userTypesOpt });
+    this.setState({ grades, deleted, userTypesOpt });
+    console.log("in did mount 2222",grades)
+
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -141,7 +145,7 @@ class TrainersGrades extends Component {
   };
 
   handleAddRow = () => {
-    const { trainersGrades, onAddNewTrainerGrade } = this.props;
+    const { grades, onAddNewGrade } = this.props;
     const { selectedUser} = this.state;
     const newRow = {
       userTypeId: selectedUser,
@@ -149,8 +153,8 @@ class TrainersGrades extends Component {
     };
 
     // Check if the same value already exists in the table
-    const emptyRowsExist = trainersGrades.some(
-      trainerGrade => trainerGrade.arTitle.trim() === "---"
+    const emptyRowsExist = grades.some(
+      grade => grade.arTitle.trim() === "---"
     );
 
     if (emptyRowsExist) {
@@ -158,7 +162,7 @@ class TrainersGrades extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewTrainerGrade(newRow);
+      onAddNewGrade(newRow);
     }
   };
 
@@ -167,11 +171,11 @@ class TrainersGrades extends Component {
   };
 
   handleDeleteRow = () => {
-    const { onDeleteTrainerGrade } = this.props;
+    const { onDeleteGrade } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteTrainerGrade(selectedRowId);
+      onDeleteGrade(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -180,37 +184,37 @@ class TrainersGrades extends Component {
       });
     }
   };
-  handleTrainerGradeDataChange = (rowId, fieldName, fieldValue) => {
-    const { trainersGrades, onUpdateTrainerGrade } = this.props;
-    const isDuplicate = trainersGrades.some(
-      trainerGrade =>
-        trainerGrade.Id !== rowId &&
-        trainerGrade.arTitle.trim() === fieldValue.trim()
+  handleGradeDataChange = (rowId, fieldName, fieldValue) => {
+    const { grades, onUpdateGrade } = this.props;
+    const isDuplicate = grades.some(
+      grade =>
+        grade.Id !== rowId &&
+        grade.arTitle.trim() === fieldValue.trim()
     );
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateTrainerGrade(onUpdate);
+      onUpdateGrade(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
       console.log("on update", onUpdate);
-      onUpdateTrainerGrade(onUpdate);
+      onUpdateGrade(onUpdate);
     }
   };
 
   handleSuccessClose = () => {
-    const { onGetTrainerGradeDeletedValue } = this.props;
+    const { onGetGradeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetTrainerGradeDeletedValue();
+    onGetGradeDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetTrainerGradeDeletedValue } = this.props;
+    const { onGetGradeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetTrainerGradeDeletedValue();
+    onGetGradeDeletedValue();
   };
 
   toggleSidebar = () => {
@@ -220,15 +224,15 @@ class TrainersGrades extends Component {
   }
 
   handleSelectUser = (fieldName, selectedValue) => {
-    const {onGetTrainersGrades} = this.props
+    const {onGetGrades} = this.props
     console.log("selectedValue",selectedValue)
     this.setState({ selectedUser : selectedValue})
-    onGetTrainersGrades({userTypeId:selectedValue})
+    onGetGrades({userTypeId:selectedValue})
   };
 
   render() {
     const { SearchBar } = Search;
-    const { trainersGrades, deleted, t, userTypesOpt } = this.props;
+    const { grades, deleted, t, userTypesOpt } = this.props;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const {
@@ -242,6 +246,8 @@ class TrainersGrades extends Component {
       sidebarOpen,
       selectedUser,
     } = this.state;
+
+    console.log("grades in render", grades)
     const defaultSorting = [
       {
         dataField: "Id",
@@ -254,13 +260,13 @@ class TrainersGrades extends Component {
     
       {
         dataField: "arTitle",
-        text: this.props.t("Trainers Grades(ar)"),
+        text: this.props.t("Grades(ar)"),
         sort: true,
         // editable: showEditButton,
       },
       {
         dataField: "enTitle",
-        text: "Trainerts Grades",
+        text: "Grades",
         sort: true,
         // editable: showEditButton,
       },
@@ -277,13 +283,13 @@ class TrainersGrades extends Component {
         //  hidden: !showDeleteButton,
         isDummyField: true,
         editable: false,
-        formatter: (cellContent, trainerGrade) => (
+        formatter: (cellContent, grade) => (
           <Tooltip title={this.props.t("Delete")} placement="top">
             <Link className="text-danger" to="#">
               <i
                 className="mdi mdi-delete font-size-18"
                 id="deletetooltip"
-                onClick={() => this.onClickDelete(trainerGrade)}
+                onClick={() => this.onClickDelete(grade)}
               ></i>
             </Link>
           </Tooltip>
@@ -292,7 +298,7 @@ class TrainersGrades extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: trainersGrades.length,
+      totalSize: grades? grades.length: 0,
       custom: true,
     };
 
@@ -307,7 +313,7 @@ class TrainersGrades extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Trainers Grades")} />
+            <Breadcrumbs breadcrumbItem={this.props.t("Grades")} />
 
             <Row>
               <Col>
@@ -419,12 +425,12 @@ class TrainersGrades extends Component {
                               pagination={paginationFactory(pageOptions)}
                               keyField="Id"
                               columns={columns}
-                              data={trainersGrades}
+                              data={grades? grades: []}
                             >
                               {({ paginationProps, paginationTableProps }) => (
                                 <ToolkitProvider
                                   keyField="Id"
-                                  data={trainersGrades}
+                                  data={grades? grades: []}
                                   columns={columns}
                                   search
                                 >
@@ -464,7 +470,7 @@ class TrainersGrades extends Component {
                                         keyField="Id"
                                         {...toolkitprops.baseProps}
                                         {...paginationTableProps}
-                                        data={trainersGrades}
+                                        data={grades? grades: []}
                                         columns={columns}
                                         cellEdit={cellEditFactory({
                                           mode: "click",
@@ -475,7 +481,7 @@ class TrainersGrades extends Component {
                                             row,
                                             column
                                           ) => {
-                                            this.handleTrainerGradeDataChange(
+                                            this.handleGradeDataChange(
                                               row.Id,
                                               column.dataField,
                                               newValue
@@ -483,7 +489,7 @@ class TrainersGrades extends Component {
                                           },
                                         })}
                                         noDataIndication={this.props.t(
-                                          "No TrainerGradeType Types found"
+                                          "No GradeType Types found"
                                         )}
                                         defaultSorted={defaultSorting}
                                       />
@@ -512,26 +518,26 @@ class TrainersGrades extends Component {
   }
 }
 
-const mapStateToProps = ({ trainersGrades, userTypes, menu_items }) => ({
-  trainersGrades: trainersGrades.trainersGrades,
-  deleted: trainersGrades.deleted,
+const mapStateToProps = ({ grades, userTypes, menu_items }) => ({
+  grades: grades.grades,
+  deleted: grades.deleted,
   userTypesOpt: userTypes.userTypesOpt,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
   onGetUsers: () => dispatch(getUserTypesOpt()),
-  onGetTrainersGrades: trainerGrade => dispatch(getTrainersGrades(trainerGrade)),
-  onAddNewTrainerGrade: trainerGrade =>
-    dispatch(addNewTrainerGrade(trainerGrade)),
-  onUpdateTrainerGrade: trainerGrade =>
-    dispatch(updateTrainerGrade(trainerGrade)),
-  onDeleteTrainerGrade: trainerGrade =>
-    dispatch(deleteTrainerGrade(trainerGrade)),
-  onGetTrainerGradeDeletedValue: () => dispatch(getTrainerGradeDeletedValue()),
+  onGetGrades: grade => dispatch(getGrades(grade)),
+  onAddNewGrade: grade =>
+    dispatch(addNewGrade(grade)),
+  onUpdateGrade: grade =>
+    dispatch(updateGrade(grade)),
+  onDeleteGrade: grade =>
+    dispatch(deleteGrade(grade)),
+  onGetGradeDeletedValue: () => dispatch(getGradeDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(withTranslation()(TrainersGrades)));
+)(withRouter(withTranslation()(GradesList)));

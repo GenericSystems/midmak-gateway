@@ -1,2 +1,2 @@
-const trainersGrades=[]
-export { trainersGrades}
+const grades=[]
+export { grades}

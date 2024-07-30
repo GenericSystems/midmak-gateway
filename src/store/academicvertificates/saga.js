@@ -41,9 +41,9 @@ import {
 } from "../mob-app-faculty-accs/actions";
 
 import {
-  getTrainersGradesSuccess,
-  getTrainersGradesFail,
-} from "../trainersGrades/actions";
+  getGradesSuccess,
+  getGradesFail,
+} from "../grades/actions";
 
 // Include Both Helper File with needed methods
 import {
@@ -53,7 +53,7 @@ import {
   deleteAcademicCertificate,
   getFaculties,
   getYearSemesters,
-  getTrainersGrades,
+  getGrades,
   getDepartments,
   getAcademicCertificateDeletedValue,
   getFilteredDepartments
@@ -113,15 +113,15 @@ function* fetchAcademicCertificates() {
       source: "db",
       procedure: "Generic_getOptions",
       apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "settings_trainersGrades",
+      tablename: "settings_Grades",
       fields: "Id,arTitle"
     };
     try {
-      const response = yield call(getTrainersGrades, get_majors_types);
+      const response = yield call(getGrades, get_majors_types);
       
-      yield put(getTrainersGradesSuccess(response));
+      yield put(getGradesSuccess(response));
     } catch (error) {
-      yield put(getTrainersGradesFail(error));
+      yield put(getGradesFail(error));
     }
 
   //get faculty

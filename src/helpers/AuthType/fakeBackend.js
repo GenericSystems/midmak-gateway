@@ -54,12 +54,10 @@ import {
   novEarningData,
   octEarningData,
   certificates,
-  trainersGrades,
   certificateTypes,
   studentManagements,
   countries,
   grades,
-  checked_grades,
   governorates,
   structures,
   currencies,
@@ -3443,7 +3441,7 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onGet(url.GET_MAJOR_TYPE_DELETED_VALUE).reply(() => {
+  mock.onGet(url.GET_GRADE_DELETED_VALUE).reply(() => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (deleted) {

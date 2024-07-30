@@ -258,11 +258,11 @@ export const DELETE_CERTIFICATE = "/delete/certificate";
 export const GET_CERTIFICATE_DELETED_VALUE = "/deleted";
 
 //CERTIFICATES_TYPES
-export const GET_MAJORS_TYPES = "/trainersGrades";
-export const ADD_NEW_MAJOR_TYPE = "/add/trainerGrade";
-export const UPDATE_MAJOR_TYPE = "/update/trainerGrade";
-export const DELETE_MAJOR_TYPE = "/delete/trainerGrade";
-export const GET_MAJOR_TYPE_DELETED_VALUE = "/deleted";
+export const GET_GRADES = "/grades";
+export const ADD_NEW_GRADE = "/add/trainerGrade";
+export const UPDATE_GRADE = "/update/trainerGrade";
+export const DELETE_GRADE = "/delete/trainerGrade";
+export const GET_GRADE_DELETED_VALUE = "/deleted";
 
 //CERTIFICATE_TYPES
 export const GET_CERTIFICATESLEVELS = "/certificateTypes";
@@ -960,15 +960,3 @@ export const DELETE_STD_TRANSPORT_LINE = "/delete/stdTransportLine";
 export const GET_STD_TRANSPORT_LINE_DELETED_VALUE = "/deleted";
 
 export const GET_UNIV_STD_DATA_LIST = "/univStds";
-
-
-
-//GRADES
-export const GET_GRADES = "/grades";
-export const GET_COURSE_STATISTICS = "/courseStatistics";
-export const UPDATE_GRADE = "/update/grade";
-export const GET_COURSE_CONTENTS_GRADES = "/courseContents_grades";
-
-//checkedGrades
-export const GET_CHECKED_GRADES = "/checkedGrades";
-export const UPDATE_CHECKED_GRADE = "/update/checkedGrade";

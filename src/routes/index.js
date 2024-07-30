@@ -147,8 +147,8 @@ import UserTypesList from "../pages/UserTypes/user-types";
 //Certifcates
 import Certificates from "../pages/Certificates/certificates";
 
-//TrainersGrades
-import TrainersGrades from "../pages/TrainersGrades/trainers-grades";
+//Grades
+import GradesList from "../pages/Grades/grades";
 
 //cERTIFICATELEVELS
 import CertificateTypesList from "../pages/CertificatesTypes/certificates-types";
@@ -217,8 +217,8 @@ const authProtectedRoutes = [
   // Certificates
   { path: "/certificates", component: Certificates },
 
-  // TrainersGrades
-  { path: "/trainers-grades", component: TrainersGrades },
+  // Grades
+  { path: "/grades", component: GradesList },
 
   { path: "/certificates-types", component: CertificateTypesList },
 

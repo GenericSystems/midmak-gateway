@@ -78,8 +78,8 @@ export * from "./user-types/actions";
 //certificate
 export * from "./certificates/actions";
 
-//trainersGrades
-export * from "./trainersGrades/actions";
+//grades
+export * from "./grades/actions";
 
 //certificateTypes
 export * from "./certificateTypes/actions";

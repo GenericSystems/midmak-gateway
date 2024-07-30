@@ -86,7 +86,7 @@ class Certificates extends Component {
       userTypes,
       sectors,
       years,
-      trainersGrades,
+      grades,
       trainingMembers,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -102,7 +102,7 @@ class Certificates extends Component {
       deleted,
       userTypes,
       sectors,
-      trainersGrades,
+      grades,
       trainingMembers,
       years,
     });
@@ -417,7 +417,7 @@ class Certificates extends Component {
       years,
       sectors,
       certificateTypes,
-      trainersGrades,
+      grades,
       trainingMembers,
       t,
     } = this.props;
@@ -995,14 +995,14 @@ class Certificates extends Component {
                                                   <Select
                                                     name="trainerGradeId"
                                                     key={`select_endSemester`}
-                                                    options={trainersGrades}
+                                                    options={grades}
                                                     onChange={newValue => {
                                                       this.handleSelectChange(
                                                         "trainerGradeId",
                                                         newValue.value
                                                       );
                                                     }}
-                                                    defaultValue={trainersGrades.find(
+                                                    defaultValue={grades.find(
                                                       opt =>
                                                         opt.value ===
                                                         certificate.trainerGradeId
@@ -1179,7 +1179,7 @@ const mapStateToProps = ({
   userTypes,
   certificateTypes,
   sectors,
-  trainersGrades,
+  grades,
   trainingMembers,
 }) => ({
   certificates: certificates.certificates,
@@ -1187,7 +1187,7 @@ const mapStateToProps = ({
   userTypes: userTypes.userTypes,
   sectors: sectors.sectors,
   trainingMembers: trainingMembers.trainingMembers,
-  trainersGrades: trainersGrades.trainersGrades,
+  grades: grades.grades,
   years: years.years,
   deleted: certificates.deleted,
   user_menu: menu_items.user_menu || [],
