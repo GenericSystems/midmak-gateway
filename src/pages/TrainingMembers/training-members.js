@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
+import filterFactory, { textFilter, customFilter } from "react-bootstrap-table2-filter";
 
 import {
   getTrainingMembers,
@@ -229,30 +230,47 @@ class TrainingMembersList extends Component {
         text: t("Name"),
         sort: true,
         // editable: showEditButton,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "phone",
         text: t("Phone"),
         sort: true,
         // editable: showEditButton,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "IdNum",
         text: t("Id Number"),
         sort: true,
         // editable: showEditButton,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "email",
         text: t("Email"),
         sort: true,
         // editable: showEditButton,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          //  hidden: !showSearchButton,
+        }),
       },
       {
         dataField: "userTypeId",
         text: t("Member Type"),
         sort: true,
         editable: false,
+
         formatter: (cellContent, row) => (
           <Select
           name="userTypeId"
@@ -272,7 +290,28 @@ class TrainingMembersList extends Component {
           )}
          //  isDisabled={!showEditButton}
         />
-        )
+        ),
+        filter: customFilter(),
+        filterRenderer: (onFilter, column) => (
+          <div>
+          {/*   {showSearchButton && ( */}
+              <Select
+                onChange={selectedOption => {
+                  if (selectedOption && selectedOption.value === "") {
+                    onFilter("", column);
+                  } else {
+                    onFilter(selectedOption.value, column);
+                  }
+                }}
+                options={[
+                  { label: this.props.t("Select..."), value: "" },
+                  ...userTypes,
+                ]}
+                defaultValue={""}
+              />
+            {/* )} */}
+          </div>
+        ),
       },
       {
         dataField: "delete",
@@ -435,6 +474,7 @@ class TrainingMembersList extends Component {
                                   })}
                                   noDataIndication={t("No trainingMembers found")}
                                   defaultSorted={defaultSorting}
+                                  filter={filterFactory()}
                                 />
                                 <Col className="pagination pagination-rounded justify-content-end mb-2">
                                   <PaginationListStandalone
