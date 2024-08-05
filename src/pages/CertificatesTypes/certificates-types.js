@@ -74,9 +74,10 @@ class CertificateTypesList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (certificateTypes && !certificateTypes.length) {
-      onGetCertificateTypes();
-    }
+   // if (certificateTypes && !certificateTypes.length) {
+ //     onGetCertificateTypes();
+  //  }
+  onGetCertificateTypes();
     this.setState({ certificateTypes, deleted });
   }
 

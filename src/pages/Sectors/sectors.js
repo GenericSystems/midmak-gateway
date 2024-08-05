@@ -75,9 +75,10 @@ class SectorsList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (sectors && !sectors.length) {
-      onGetSectors();
-    }
+    // if (sectors && !sectors.length) {
+    //   onGetSectors();
+    // }
+    onGetSectors();
     this.setState({ sectors });
     this.setState({ deleted });
   }

@@ -44,6 +44,7 @@ function* fetchSectors() {
 
   try {
     const response = yield call(getSectors, get_sectors_req);
+    console.log("dddddddddddddddddd",response)
     yield put(getSectorsSuccess(response));
   } catch (error) {
     yield put(getSectorsFail(error));
