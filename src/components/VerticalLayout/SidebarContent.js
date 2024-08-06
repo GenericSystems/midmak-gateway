@@ -158,10 +158,10 @@ class SidebarContent extends Component {
         <SimpleBar className="h-100" ref={this.refDiv}>
           <div id="sidebar-menu">
             <ul className="metismenu list-unstyled" id="side-menu">
-              <li className="menu-title">{this.props.t("Menu")}</li>
+         
 
               <div className="mt-4">
-                <div className="ml-4">
+                <div className="d-flex justify-content-center " style={{ marginLeft: '1rem' }}>
                   <input
                     type="search"
                     className="form-control_search rounded-pill w-75"
@@ -192,7 +192,7 @@ class SidebarContent extends Component {
                 )}
               </div>
 
-              <li className="menu-title">{this.props.t("Apps")}</li>
+              <li className="menu-title">{this.props.t("Menu")}</li>
 
               {user_menu.map(element => {
                 element.flag = 1;

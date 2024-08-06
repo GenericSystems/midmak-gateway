@@ -524,7 +524,7 @@
   text-align:center ;
   > thead {
   vertical-align: bottom;
-  background-color: lightcyan;  
+  // background-color: lightcyan;  
 }}
 
 .form-check-input1 {
@@ -961,7 +961,7 @@ width: 63vw !important;
 }
 
 .table td{
-  font-size: small;
+  font-size: 16px;
   font-family:  var(--bs-body-font-family);
 }
 

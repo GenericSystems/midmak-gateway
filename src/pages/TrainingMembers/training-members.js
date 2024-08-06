@@ -475,6 +475,13 @@ class TrainingMembersList extends Component {
                                   noDataIndication={t("No trainingMembers found")}
                                   defaultSorted={defaultSorting}
                                   filter={filterFactory()}
+                                  rowStyle={(row) => {
+                                    if (row.userTypeId === 1) {
+                                      return { color: "#282828",backgroundColor:"rgba(17, 76, 144,.4)", fontWeight: 500  }; // Blue background with white text for userTypeId 1
+                                    } else {
+                                      return {color: "#282828", fontSize:"24px",backgroundColor:"rgba(197, 170, 90,.4)"}; // Gold background with black text for others
+                                    }
+                                  }}
                                 />
                                 <Col className="pagination pagination-rounded justify-content-end mb-2">
                                   <PaginationListStandalone
