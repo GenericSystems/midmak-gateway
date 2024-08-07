@@ -1,37 +1,35 @@
+// Importing necessary modules and components for the component
 import React, { Component } from "react";
-import Select from "react-select";
-import BootstrapTable from "react-bootstrap-table-next";
-import cellEditFactory from "react-bootstrap-table2-editor";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { IconButton } from "@mui/material";
-import Breadcrumbs from "../../components/Common/Breadcrumb";
-import { withTranslation } from "react-i18next";
-import { connect } from "react-redux";
-import Tooltip from "@mui/material/Tooltip";
+import Select from "react-select"; // Dropdown selection component
+import BootstrapTable from "react-bootstrap-table-next"; // Bootstrap table component
+import { IconButton } from "@mui/material"; // Material UI icon button component
+import Breadcrumbs from "../../components/Common/Breadcrumb"; // Breadcrumb navigation component
+import { withTranslation } from "react-i18next"; // i18n translation HOC
+import { connect } from "react-redux"; // Redux connect function to bind state and dispatch to props
+import Tooltip from "@mui/material/Tooltip"; // Tooltip component from Material UI
 import ToolkitProvider, {
   Search,
-} from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
+} from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit"; // Toolkit for advanced Bootstrap Table features
 import filterFactory, {
   textFilter,
   customFilter,
-} from "react-bootstrap-table2-filter";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+} from "react-bootstrap-table2-filter"; // Filtering features for Bootstrap Table
+import { Formik, Field, Form, ErrorMessage } from "formik"; // Formik for form handling and validation
 import {
   Row,
   Col,
   Card,
   CardBody,
-  CardTitle,
   Alert,
   Modal,
   Label,
   Button,
   ModalHeader,
   ModalBody,
-} from "reactstrap";
-import * as Yup from "yup";
+} from "reactstrap"; // Reactstrap components for layout and styling
+import * as Yup from "yup"; // Yup for form validation schema
 
+// Importing action creators for managing training members
 import {
   getTrainingMembers,
   addNewTrainingMember,
@@ -42,31 +40,35 @@ import {
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
-} from "react-bootstrap-table2-paginator";
-import { withRouter, Link } from "react-router-dom";
-import DeleteModal from "components/Common/DeleteModal";
+} from "react-bootstrap-table2-paginator"; // Pagination factory for table
+import { withRouter, Link } from "react-router-dom"; // React Router components
+import DeleteModal from "components/Common/DeleteModal"; // Custom delete modal component
 import {
   checkIsAddForPage,
   checkIsDeleteForPage,
   checkIsEditForPage,
   checkIsSearchForPage,
-} from "../../utils/menuUtils";
+} from "../../utils/menuUtils"; // Utility functions for checking page permissions
+
 class TrainingMembersList extends Component {
   constructor(props) {
     super(props);
+    // Initial state for the component
     this.state = {
-      deleteModal: false,
-      duplicateError: null,
-      selectedRowId: null,
-      showAlert: null,
-      showAddButton: false,
-      showDeleteButton: false,
-      showEditButton: false,
-      showSearchButton: false,
-      modal: false,
-      isEdit: false,
+      deleteModal: false, // Controls visibility of the delete confirmation modal
+      duplicateError: null, // Stores any duplicate entry error messages
+      selectedRowId: null, // ID of the row selected for editing or deleting
+      showAlert: null, // Controls visibility of the alert messages
+      showAddButton: false, // Controls visibility of the "Add" button based on user permissions
+      showDeleteButton: false, // Controls visibility of the "Delete" button based on user permissions
+      showEditButton: false, // Controls visibility of the "Edit" button based on user permissions
+      showSearchButton: false, // Controls visibility of the search feature based on user permissions
+      modal: false, // Controls visibility of the add/edit modal
+      isEdit: false, // Tracks whether the modal is in "edit" mode
     };
   }
+
+  // Lifecycle method called when the component mounts
   componentDidMount() {
     const {
       trainingMembers,
@@ -75,17 +77,23 @@ class TrainingMembersList extends Component {
       user_menu,
       userTypes,
     } = this.props;
+
+    // Update visibility of buttons based on user permissions and page
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
+
+    // If no training members are loaded, fetch them from the store
     if (trainingMembers && !trainingMembers.length) {
       onGetTrainingMembers();
       this.setState({ trainingMembers, deleted, userTypes });
     }
   }
 
+  // Lifecycle method called when the component updates
   componentDidUpdate(prevProps, prevState, snapshot) {
+    // If user menu or page changes, update button visibility
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -108,82 +116,86 @@ class TrainingMembersList extends Component {
       );
     }
   }
+
+  // Toggles the visibility of the modal for adding/editing a training member
   toggle = () => {
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
   };
 
+  // Updates the visibility of the "Add" button based on user permissions
   updateShowAddButton = (menu, pathname) => {
     const showAddButton = checkIsAddForPage(menu, pathname);
     this.setState({ showAddButton });
   };
 
+  // Updates the visibility of the "Delete" button based on user permissions
   updateShowDeleteButton = (menu, pathname) => {
     const showDeleteButton = checkIsDeleteForPage(menu, pathname);
     this.setState({ showDeleteButton });
   };
 
+  // Updates the visibility of the "Edit" button based on user permissions
   updateShowEditButton = (menu, pathname) => {
     const showEditButton = checkIsEditForPage(menu, pathname);
     this.setState({ showEditButton });
   };
 
+  // Updates the visibility of the search feature based on user permissions
   updateShowSearchButton = (menu, pathname) => {
     const showSearchButton = checkIsSearchForPage(menu, pathname);
     this.setState({ showSearchButton });
   };
 
-  onPaginationPageChange = page => {
-    if (
-      this.node &&
-      this.node.current &&
-      this.node.current.props &&
-      this.node.current.props.pagination &&
-      this.node.current.props.pagination.options
-    ) {
-      this.node.current.props.pagination.options.onPageChange(page);
-    }
-  };
+  // Opens the delete confirmation modal
   toggleDeleteModal = () => {
     this.setState(prevState => ({
       deleteModal: !prevState.deleteModal,
     }));
   };
+
+  // Handles the click event for deleting a row, opens the delete modal
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
-  
+  // Handles form submission for adding or editing a training member
   handleFormSubmit = (values) => {
     const { isEdit, selectedRowId } = this.state;
     const { onAddNewTrainingMember, onUpdateTrainingMember } = this.props;
-  
-    if (isEdit) {
 
+    if (isEdit) {
+      // If editing, update the existing member with the new values
       onUpdateTrainingMember({ Id: selectedRowId, ...values });
     } else {
-      // Add new member
+      // If adding a new member, submit the form values to the store
       onAddNewTrainingMember(values);
     }
-  
+
+    // Close the modal after submission and reset the selectedRowId
     this.setState({ modal: false, selectedRowId: null });
   };
-  
+
+  // Opens the modal for adding a new training member
   handleAddRow = () => {
     this.setState({
       isEdit: false,
       modal: true,
     });
   };
+
+  // Handles the deletion of a training member
   handleDeleteRow = () => {
     const { onDeleteTrainingMember } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      console.log("DELETE >> ",selectedRowId)
-      onDeleteTrainingMember({Id:selectedRowId.Id});
+      console.log("DELETE >> ", selectedRowId);
+      // Dispatch the delete action to the store
+      onDeleteTrainingMember({ Id: selectedRowId.Id });
 
+      // Reset the state after deletion
       this.setState({
         selectedRowId: null,
         deleteModal: false,
@@ -192,9 +204,11 @@ class TrainingMembersList extends Component {
     }
   };
 
+  // Handles changes to the training member data during editing
   handletrainingMemberDataChange = (rowId, fieldName, fieldValue) => {
     const { onUpdateTrainingMember, trainingMembers } = this.props;
 
+    // Check if the new value is a duplicate
     const isDuplicate = trainingMembers.some(
       trainingMember =>
         trainingMember.Id !== rowId &&
@@ -203,45 +217,53 @@ class TrainingMembersList extends Component {
     );
 
     if (isDuplicate) {
+      // If duplicate, show an error message
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
       onUpdateTrainingMember(onUpdate);
     } else {
+      // Otherwise, update the training member with the new value
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
       onUpdateTrainingMember(onUpdate);
     }
   };
+
+  // Closes the alert messages
   handleAlertClose = () => {
     this.setState({ duplicateError: null, emptyError: null });
   };
 
+  // Closes the success alert message after deletion
   handleSuccessClose = () => {
     const { onGetTrainingMemberDeletedValue } = this.props;
     this.setState({ showAlert: null });
     onGetTrainingMemberDeletedValue();
   };
 
+  // Closes the error alert message after deletion fails
   handleErrorClose = () => {
     const { onGetTrainingMemberDeletedValue } = this.props;
     this.setState({ showAlert: null });
     onGetTrainingMemberDeletedValue();
   };
 
+  // Handles changes to the user type of a training member during editing
   handleSelectChangeUserType = (rowId, fieldName, fieldValue) => {
     const { onUpdateTrainingMember } = this.props;
     let onUpdate = { Id: rowId, [fieldName]: fieldValue };
     onUpdateTrainingMember(onUpdate);
   };
+
+  // Handles the click event for editing a training member, opens the modal with the selected member's data
   handleMemberClick = (member) => {
     this.setState({
       selectedMember: member,
-      selectedRowId : member.Id,
+      selectedRowId: member.Id,
       isEdit: true,
       modal: true,
     });
-  
   };
 
   render() {
@@ -250,13 +272,8 @@ class TrainingMembersList extends Component {
       duplicateError,
       deleteModal,
       showAlert,
-      showAddButton,
-      showDeleteButton,
-      showEditButton,
-      showSearchButton,
       isEdit,
       modal,
-      emptyError,
     } = this.state;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
@@ -431,7 +448,6 @@ class TrainingMembersList extends Component {
         filter: customFilter(),
         filterRenderer: (onFilter, column) => (
           <div>
-            {/*   {showSearchButton && ( */}
             <Select
               onChange={selectedOption => {
                 if (selectedOption && selectedOption.value === "") {
@@ -446,7 +462,6 @@ class TrainingMembersList extends Component {
               ]}
               defaultValue={""}
             />
-            {/* )} */}
           </div>
         ),
       },
@@ -602,22 +617,6 @@ class TrainingMembersList extends Component {
                                   {...paginationTableProps}
                                   data={trainingMembers}
                                   columns={columns}
-                                  cellEdit={cellEditFactory({
-                                    mode: "click",
-                                    blurToSave: true,
-                                    afterSaveCell: (
-                                      oldValue,
-                                      newValue,
-                                      row,
-                                      column
-                                    ) => {
-                                      this.handletrainingMemberDataChange(
-                                        row.Id,
-                                        column.dataField,
-                                        newValue
-                                      );
-                                    },
-                                  })}
                                   noDataIndication={t(
                                     "No trainingMembers found"
                                   )}
@@ -629,14 +628,14 @@ class TrainingMembersList extends Component {
                                         color: "#282828",
                                         backgroundColor: "rgba(17, 76, 144,.1)",
                                         fontWeight: 500,
-                                      }; // Blue background with white text for userTypeId 1
+                                      }; 
                                     } else {
                                       return {
                                         color: "#282828",
                                         fontSize: "24px",
                                         backgroundColor:
                                           "rgba(197, 170, 90,.1)",
-                                      }; // Gold background with black text for others
+                                      }; 
                                     }
                                   }}
                                 />
