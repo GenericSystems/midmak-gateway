@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Row, Col, Card, Alert, CardBody } from "reactstrap";
 import Select from "react-select";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
@@ -13,7 +12,25 @@ import Tooltip from "@mui/material/Tooltip";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
-import filterFactory, { textFilter, customFilter } from "react-bootstrap-table2-filter";
+import filterFactory, {
+  textFilter,
+  customFilter,
+} from "react-bootstrap-table2-filter";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import {
+  Row,
+  Col,
+  Card,
+  CardBody,
+  CardTitle,
+  Alert,
+  Modal,
+  Label,
+  Button,
+  ModalHeader,
+  ModalBody,
+} from "reactstrap";
+import * as Yup from "yup";
 
 import {
   getTrainingMembers,
@@ -46,10 +63,18 @@ class TrainingMembersList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      modal: false,
+      isEdit: false,
     };
   }
   componentDidMount() {
-    const { trainingMembers, onGetTrainingMembers, deleted, user_menu, userTypes } = this.props;
+    const {
+      trainingMembers,
+      onGetTrainingMembers,
+      deleted,
+      user_menu,
+      userTypes,
+    } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
@@ -83,6 +108,11 @@ class TrainingMembersList extends Component {
       );
     }
   }
+  toggle = () => {
+    this.setState(prevState => ({
+      modal: !prevState.modal,
+    }));
+  };
 
   updateShowAddButton = (menu, pathname) => {
     const showAddButton = checkIsAddForPage(menu, pathname);
@@ -124,32 +154,35 @@ class TrainingMembersList extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
-  handleAddRow = () => {
-    const { onAddNewTrainingMember, trainingMembers } = this.props;
+  
+  handleFormSubmit = (values) => {
+    const { isEdit, selectedRowId } = this.state;
+    const { onAddNewTrainingMember, onUpdateTrainingMember } = this.props;
+  
+    if (isEdit) {
 
-    const newRow = {
-      name: "-----",
-    };
-
-    const emptyRowsExist = trainingMembers.some(
-      trainingMember => trainingMember.name.trim() === "-----"
-    );
-
-    if (emptyRowsExist) {
-      const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateError: errorMessage });
+      onUpdateTrainingMember({ Id: selectedRowId, ...values });
     } else {
-      this.setState({ duplicateError: null });
-      onAddNewTrainingMember(newRow);
+      // Add new member
+      onAddNewTrainingMember(values);
     }
+  
+    this.setState({ modal: false, selectedRowId: null });
   };
-
+  
+  handleAddRow = () => {
+    this.setState({
+      isEdit: false,
+      modal: true,
+    });
+  };
   handleDeleteRow = () => {
     const { onDeleteTrainingMember } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteTrainingMember(selectedRowId);
+      console.log("DELETE >> ",selectedRowId)
+      onDeleteTrainingMember({Id:selectedRowId.Id});
 
       this.setState({
         selectedRowId: null,
@@ -181,7 +214,7 @@ class TrainingMembersList extends Component {
     }
   };
   handleAlertClose = () => {
-    this.setState({ duplicateError: null });
+    this.setState({ duplicateError: null, emptyError: null });
   };
 
   handleSuccessClose = () => {
@@ -196,14 +229,23 @@ class TrainingMembersList extends Component {
     onGetTrainingMemberDeletedValue();
   };
 
-  handleSelectChangeUserType = (rowId, fieldName, fieldValue) =>{
-    const {onUpdateTrainingMember} =this.props;
-    let onUpdate= {Id: rowId, [fieldName]: fieldValue}
-    onUpdateTrainingMember(onUpdate)
-  }
+  handleSelectChangeUserType = (rowId, fieldName, fieldValue) => {
+    const { onUpdateTrainingMember } = this.props;
+    let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+    onUpdateTrainingMember(onUpdate);
+  };
+  handleMemberClick = (member) => {
+    this.setState({
+      selectedMember: member,
+      selectedRowId : member.Id,
+      isEdit: true,
+      modal: true,
+    });
+  
+  };
 
   render() {
-    const { trainingMembers, t, deleted ,userTypes} = this.props;
+    const { trainingMembers, t, deleted, userTypes } = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -212,10 +254,13 @@ class TrainingMembersList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      isEdit,
+      modal,
+      emptyError,
     } = this.state;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
-      console.log("userTypes",userTypes)
+    console.log("userTypes", userTypes);
     const { SearchBar } = Search;
     const defaultSorting = [
       {
@@ -229,89 +274,137 @@ class TrainingMembersList extends Component {
         dataField: "name",
         text: t("Name"),
         sort: true,
-        // editable: showEditButton,
+        editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
         }),
         headerStyle: (column, colIndex) => {
-          return { 
-            display: 'flex', 
-            flexDirection: 'column', 
-            justifyContent: 'center', 
-            alignItems: 'center' 
+          return {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
           };
         },
         headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <span className="mx-3">{t("Name")}</span> {sortElement}
             </div>
-            <div style={{ marginTop: '5px', width: '100%' }}>
+            <div style={{ marginTop: "5px", width: "100%" }}>
               {filterElement}
             </div>
           </div>
-        )
+        ),
       },
       {
         dataField: "phone",
         text: t("Phone"),
         sort: true,
-        // editable: showEditButton,
+        editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
         }),
         headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <span className="mx-3">{t("Phone")}</span> {sortElement}
             </div>
-            <div style={{ marginTop: '5px', width: '100%' }}>
+            <div style={{ marginTop: "5px", width: "100%" }}>
               {filterElement}
             </div>
           </div>
-        )
+        ),
       },
       {
         dataField: "IdNum",
         text: t("Id Number"),
         sort: true,
-        // editable: showEditButton,
+        editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
         }),
         headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <span className="mx-3">{t("Id Num")}</span> {sortElement}
             </div>
-            <div style={{ marginTop: '5px', width: '100%' }}>
+            <div style={{ marginTop: "5px", width: "100%" }}>
               {filterElement}
             </div>
           </div>
-        )
+        ),
       },
       {
         dataField: "email",
         text: t("Email"),
         sort: true,
-        // editable: showEditButton,
+        editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
         }),
         headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <span className="mx-3">{t("Email")}</span> {sortElement}
             </div>
-            <div style={{ marginTop: '5px', width: '100%' }}>
+            <div style={{ marginTop: "5px", width: "100%" }}>
               {filterElement}
             </div>
           </div>
-        )
+        ),
       },
       {
         dataField: "userTypeId",
@@ -321,55 +414,41 @@ class TrainingMembersList extends Component {
 
         formatter: (cellContent, row) => (
           <Select
-          name="userTypeId"
-          key={`select_endSemester`}
-          options={userTypes}
-          onChange={newValue => {
-            this.handleSelectChangeUserType(
-              row.Id,
-              "userTypeId",
-              newValue.value
-            );
-          }}
-          defaultValue ={userTypes.find(
-            opt =>
-              opt.value ===
-            row.userTypeId
-          )}
-         //  isDisabled={!showEditButton}
-        />
+            name="userTypeId"
+            key={`select_endSemester`}
+            options={userTypes}
+            onChange={newValue => {
+              this.handleSelectChangeUserType(
+                row.Id,
+                "userTypeId",
+                newValue.value
+              );
+            }}
+            defaultValue={userTypes.find(opt => opt.value === row.userTypeId)}
+            //  isDisabled={!showEditButton}
+          />
         ),
         filter: customFilter(),
         filterRenderer: (onFilter, column) => (
           <div>
-          {/*   {showSearchButton && ( */}
-              <Select
-                onChange={selectedOption => {
-                  if (selectedOption && selectedOption.value === "") {
-                    onFilter("", column);
-                  } else {
-                    onFilter(selectedOption.value, column);
-                  }
-                }}
-                options={[
-                  { label: this.props.t("Select..."), value: "" },
-                  ...userTypes,
-                ]}
-                defaultValue={""}
-              />
+            {/*   {showSearchButton && ( */}
+            <Select
+              onChange={selectedOption => {
+                if (selectedOption && selectedOption.value === "") {
+                  onFilter("", column);
+                } else {
+                  onFilter(selectedOption.value, column);
+                }
+              }}
+              options={[
+                { label: this.props.t("Select..."), value: "" },
+                ...userTypes,
+              ]}
+              defaultValue={""}
+            />
             {/* )} */}
           </div>
         ),
-        // headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
-        //   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        //     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        //       <span className="mx-3">{t("Member Type")}</span>{sortElement}{/* Adjust marginLeft as needed */}
-        //     </div>
-        //     <div style={{ marginTop: '5px', width: '100%' }}>
-        //       {filterElement}
-        //     </div>
-        //   </div>
-        // )
       },
       {
         dataField: "delete",
@@ -378,15 +457,26 @@ class TrainingMembersList extends Component {
         editable: false,
         //  hidden: !showDeleteButton,
         formatter: (cellContent, trainingMember) => (
-          <Tooltip title={this.props.t("Delete")} placement="top">
-            <Link className="text-danger" to="#">
-              <i
-                className="mdi mdi-delete font-size-18"
-                id="deletetooltip"
-                onClick={() => this.onClickDelete(trainingMember)}
-              ></i>
-            </Link>
-          </Tooltip>
+          <div className="d-flex gap-3">
+            <Tooltip title={this.props.t("Edit")} placement="top">
+              <Link className="text-secondary" to="#">
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  onClick={() => this.handleMemberClick(trainingMember)}
+                ></i>
+              </Link>
+            </Tooltip>
+            <Tooltip title={this.props.t("Delete")} placement="top">
+              <Link className="text-danger" to="#">
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  id="deletetooltip"
+                  onClick={() => this.onClickDelete(trainingMember)}
+                ></i>
+              </Link>
+            </Tooltip>
+          </div>
         ),
       },
     ];
@@ -485,7 +575,6 @@ class TrainingMembersList extends Component {
                                         <SearchBar
                                           {...toolkitprops.searchProps}
                                           placeholder={t("Search...")}
-
                                         />
                                       </div>
                                     </div>
@@ -507,7 +596,6 @@ class TrainingMembersList extends Component {
                                     </div>
                                   </Col>
                                 </Row>
-
                                 <BootstrapTable
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
@@ -530,14 +618,25 @@ class TrainingMembersList extends Component {
                                       );
                                     },
                                   })}
-                                  noDataIndication={t("No trainingMembers found")}
+                                  noDataIndication={t(
+                                    "No trainingMembers found"
+                                  )}
                                   defaultSorted={defaultSorting}
                                   filter={filterFactory()}
-                                  rowStyle={(row) => {
+                                  rowStyle={row => {
                                     if (row.userTypeId === 1) {
-                                      return { color: "#282828",backgroundColor:"rgba(17, 76, 144,.1)", fontWeight: 500  }; // Blue background with white text for userTypeId 1
+                                      return {
+                                        color: "#282828",
+                                        backgroundColor: "rgba(17, 76, 144,.1)",
+                                        fontWeight: 500,
+                                      }; // Blue background with white text for userTypeId 1
                                     } else {
-                                      return {color: "#282828", fontSize:"24px",backgroundColor:"rgba(197, 170, 90,.1)"}; // Gold background with black text for others
+                                      return {
+                                        color: "#282828",
+                                        fontSize: "24px",
+                                        backgroundColor:
+                                          "rgba(197, 170, 90,.1)",
+                                      }; // Gold background with black text for others
                                     }
                                   }}
                                 />
@@ -546,6 +645,174 @@ class TrainingMembersList extends Component {
                                     {...paginationProps}
                                   />
                                 </Col>
+                                <Modal
+                                  isOpen={modal}
+                                  className={this.props.className}
+                                >
+                                  <ModalHeader toggle={this.toggle} tag="h4">
+                                    {isEdit
+                                      ? t("Edit Member")
+                                      : t("Add Member")}
+                                  </ModalHeader>
+
+                                  <ModalBody>
+                                    <Formik
+                                      initialValues={{
+                                        name: isEdit
+                                          ? this.state.selectedMember.name
+                                          : "",
+                                        phone: isEdit
+                                          ? this.state.selectedMember.phone
+                                          : "",
+                                        IdNum: isEdit
+                                          ? this.state.selectedMember.IdNum
+                                          : "",
+                                        email: isEdit
+                                          ? this.state.selectedMember.email
+                                          : "",
+                                        userTypeId: isEdit
+                                          ? this.state.selectedMember.userTypeId
+                                          : "",
+                                      }}
+                                      validationSchema={Yup.object().shape({
+                                        name: Yup.string().required(
+                                          t("Name is required")
+                                        ),
+                                        phone: Yup.string().required(
+                                          t("Phone is required")
+                                        ),
+                                        IdNum: Yup.string().required(
+                                          t("ID Number is required")
+                                        ),
+                                        email: Yup.string()
+                                          .email(t("Invalid email"))
+                                          .required(t("Email is required")),
+                                        userTypeId: Yup.string().required(
+                                          t("Member Type is required")
+                                        ),
+                                      })}
+                                      onSubmit={this.handleFormSubmit}
+                                    >
+                                      {({ errors, touched }) => (
+                                        <Form>
+                                          <Row>
+                                            <Col md="6">
+                                              <Label>{t("Name")}</Label>
+                                              <Field
+                                                name="name"
+                                                type="text"
+                                                className={`form-control ${
+                                                  errors.name && touched.name
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }`}
+                                              />
+                                              <ErrorMessage
+                                                name="name"
+                                                component="div"
+                                                className="invalid-feedback"
+                                              />
+                                            </Col>
+                                            <Col md="6">
+                                              <Label>{t("Phone")}</Label>
+                                              <Field
+                                                name="phone"
+                                                type="text"
+                                                className={`form-control ${
+                                                  errors.phone && touched.phone
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }`}
+                                              />
+                                              <ErrorMessage
+                                                name="phone"
+                                                component="div"
+                                                className="invalid-feedback"
+                                              />
+                                            </Col>
+                                          </Row>
+                                          <Row>
+                                            <Col md="6">
+                                              <Label>{t("ID Number")}</Label>
+                                              <Field
+                                                name="IdNum"
+                                                type="text"
+                                                className={`form-control ${
+                                                  errors.IdNum && touched.IdNum
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }`}
+                                              />
+                                              <ErrorMessage
+                                                name="IdNum"
+                                                component="div"
+                                                className="invalid-feedback"
+                                              />
+                                            </Col>
+                                            <Col md="6">
+                                              <Label>{t("Email")}</Label>
+                                              <Field
+                                                name="email"
+                                                type="email"
+                                                className={`form-control ${
+                                                  errors.email && touched.email
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }`}
+                                              />
+                                              <ErrorMessage
+                                                name="email"
+                                                component="div"
+                                                className="invalid-feedback"
+                                              />
+                                            </Col>
+                                          </Row>
+                                          <Row>
+                                            <Col md="6">
+                                              <Label>{t("Member Type")}</Label>
+                                              <Field
+                                                as="select"
+                                                name="userTypeId"
+                                                className={`form-control ${
+                                                  errors.userTypeId &&
+                                                  touched.userTypeId
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }`}
+                                              >
+                                                <option value="">
+                                                  {t("Select...")}
+                                                </option>
+                                                {userTypes.map(type => (
+                                                  <option
+                                                    key={type.value}
+                                                    value={type.value}
+                                                  >
+                                                    {type.label}
+                                                  </option>
+                                                ))}
+                                              </Field>
+                                              <ErrorMessage
+                                                name="userTypeId"
+                                                component="div"
+                                                className="invalid-feedback"
+                                              />
+                                            </Col>
+                                          </Row>
+                                          <div className="text-end mt-4">
+                                            <Button
+                                              type="submit"
+                                              color="primary"
+                                            >
+                                              {t("Save")}
+                                            </Button>
+                                          </div>
+                                        </Form>
+                                      )}
+                                    </Formik>
+                                  </ModalBody>
+                                </Modal>
+                                ;
                               </React.Fragment>
                             )}
                           </ToolkitProvider>
@@ -572,10 +839,14 @@ const mapStateToProps = ({ trainingMembers, menu_items, userTypes }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onGetTrainingMembers: () => dispatch(getTrainingMembers()),
-  onAddNewTrainingMember: trainingMember => dispatch(addNewTrainingMember(trainingMember)),
-  onUpdateTrainingMember: trainingMember => dispatch(updateTrainingMember(trainingMember)),
-  onDeleteTrainingMember: trainingMember => dispatch(deleteTrainingMember(trainingMember)),
-  onGetTrainingMemberDeletedValue: () => dispatch(getTrainingMemberDeletedValue()),
+  onAddNewTrainingMember: trainingMember =>
+    dispatch(addNewTrainingMember(trainingMember)),
+  onUpdateTrainingMember: trainingMember =>
+    dispatch(updateTrainingMember(trainingMember)),
+  onDeleteTrainingMember: trainingMember =>
+    dispatch(deleteTrainingMember(trainingMember)),
+  onGetTrainingMemberDeletedValue: () =>
+    dispatch(getTrainingMemberDeletedValue()),
 });
 
 export default connect(

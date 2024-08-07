@@ -57,6 +57,7 @@ const trainingMembers = (state = INIT_STATE, action) => {
       };
 
     case UPDATE_TRAINING_MEMBER_SUCCESS:
+      console.log("REDUCER ",state.trainingMembers)
       return {
         ...state,
         trainingMembers: state.trainingMembers.map(trainer =>
