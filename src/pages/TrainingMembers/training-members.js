@@ -234,6 +234,24 @@ class TrainingMembersList extends Component {
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
         }),
+        headerStyle: (column, colIndex) => {
+          return { 
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'center', 
+            alignItems: 'center' 
+          };
+        },
+        headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="mx-3">{t("Name")}</span> {sortElement}
+            </div>
+            <div style={{ marginTop: '5px', width: '100%' }}>
+              {filterElement}
+            </div>
+          </div>
+        )
       },
       {
         dataField: "phone",
@@ -244,6 +262,16 @@ class TrainingMembersList extends Component {
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
         }),
+        headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="mx-3">{t("Phone")}</span> {sortElement}
+            </div>
+            <div style={{ marginTop: '5px', width: '100%' }}>
+              {filterElement}
+            </div>
+          </div>
+        )
       },
       {
         dataField: "IdNum",
@@ -254,6 +282,16 @@ class TrainingMembersList extends Component {
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
         }),
+        headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="mx-3">{t("Id Num")}</span> {sortElement}
+            </div>
+            <div style={{ marginTop: '5px', width: '100%' }}>
+              {filterElement}
+            </div>
+          </div>
+        )
       },
       {
         dataField: "email",
@@ -264,6 +302,16 @@ class TrainingMembersList extends Component {
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
         }),
+        headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="mx-3">{t("Email")}</span> {sortElement}
+            </div>
+            <div style={{ marginTop: '5px', width: '100%' }}>
+              {filterElement}
+            </div>
+          </div>
+        )
       },
       {
         dataField: "userTypeId",
@@ -312,6 +360,16 @@ class TrainingMembersList extends Component {
             {/* )} */}
           </div>
         ),
+        // headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
+        //   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        //     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        //       <span className="mx-3">{t("Member Type")}</span>{sortElement}{/* Adjust marginLeft as needed */}
+        //     </div>
+        //     <div style={{ marginTop: '5px', width: '100%' }}>
+        //       {filterElement}
+        //     </div>
+        //   </div>
+        // )
       },
       {
         dataField: "delete",
