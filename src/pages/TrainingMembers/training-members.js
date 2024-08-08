@@ -161,7 +161,7 @@ class TrainingMembersList extends Component {
   };
 
   // Handles form submission for adding or editing a training member
-  handleFormSubmit = (values) => {
+  handleFormSubmit = values => {
     const { isEdit, selectedRowId } = this.state;
     const { onAddNewTrainingMember, onUpdateTrainingMember } = this.props;
 
@@ -257,7 +257,7 @@ class TrainingMembersList extends Component {
   };
 
   // Handles the click event for editing a training member, opens the modal with the selected member's data
-  handleMemberClick = (member) => {
+  handleMemberClick = member => {
     this.setState({
       selectedMember: member,
       selectedRowId: member.Id,
@@ -268,13 +268,8 @@ class TrainingMembersList extends Component {
 
   render() {
     const { trainingMembers, t, deleted, userTypes } = this.props;
-    const {
-      duplicateError,
-      deleteModal,
-      showAlert,
-      isEdit,
-      modal,
-    } = this.state;
+    const { duplicateError, deleteModal, showAlert, isEdit, modal } =
+      this.state;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     console.log("userTypes", userTypes);
@@ -428,23 +423,14 @@ class TrainingMembersList extends Component {
         text: t("Member Type"),
         sort: true,
         editable: false,
-
-        formatter: (cellContent, row) => (
-          <Select
-            name="userTypeId"
-            key={`select_endSemester`}
-            options={userTypes}
-            onChange={newValue => {
-              this.handleSelectChangeUserType(
-                row.Id,
-                "userTypeId",
-                newValue.value
-              );
-            }}
-            defaultValue={userTypes.find(opt => opt.value === row.userTypeId)}
-            //  isDisabled={!showEditButton}
-          />
-        ),
+      
+        formatter: (cellContent, row) => {
+          const selectedUserType = userTypes.find(
+            opt => opt.value === row.userTypeId
+          );
+          return selectedUserType ? selectedUserType.label : "";
+        },
+      
         filter: customFilter(),
         filterRenderer: (onFilter, column) => (
           <div>
@@ -464,7 +450,32 @@ class TrainingMembersList extends Component {
             />
           </div>
         ),
+      
+        headerFormatter: (column, colIndex, { sortElement, filterElement }) => (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div
+            className="mb-1"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <span className="mx-3">{t("Member Type")}</span> {sortElement}
+            </div>
+            <div style={{ width: "90%" }} className="mb-2 ">
+              <span className="text-dark">{filterElement}</span>
+            </div>
+          </div>
+        ),
       },
+
       {
         dataField: "delete",
         text: "",
@@ -628,14 +639,14 @@ class TrainingMembersList extends Component {
                                         color: "#282828",
                                         backgroundColor: "rgba(17, 76, 144,.1)",
                                         fontWeight: 500,
-                                      }; 
+                                      };
                                     } else {
                                       return {
                                         color: "#282828",
                                         fontSize: "24px",
                                         backgroundColor:
                                           "rgba(197, 170, 90,.1)",
-                                      }; 
+                                      };
                                     }
                                   }}
                                 />
@@ -769,27 +780,26 @@ class TrainingMembersList extends Component {
                                           <Row>
                                             <Col md="6">
                                               <Label>{t("Member Type")}</Label>
-                                              <Field
-                                                as="select"
-                                                name="userTypeId"
-                                                className={`form-control ${
-                                                  errors.userTypeId &&
-                                                  touched.userTypeId
-                                                    ? "is-invalid"
-                                                    : ""
-                                                }`}
-                                              >
-                                                <option value="">
-                                                  {t("Select...")}
-                                                </option>
-                                                {userTypes.map(type => (
-                                                  <option
-                                                    key={type.value}
-                                                    value={type.value}
-                                                  >
-                                                    {type.label}
-                                                  </option>
-                                                ))}
+                                              <Field name="userTypeId">
+                                                {({ field, form }) => (
+                                                  <Select
+                                                    name="userTypeId"
+                                                    key={`select_userType`}
+                                                    options={userTypes}
+                                                    defaultValue={userTypes.find(
+                                                      opt =>
+                                                        opt.value ===
+                                                        form.values.userTypeId
+                                                    )}
+                                                    onChange={option =>{
+                                                      console.log(form.values,"FORM")
+                                                      form.setFieldValue(
+                                                        "userTypeId",
+                                                        option.value
+                                                      )}
+                                                    }
+                                                  />
+                                                )}
                                               </Field>
                                               <ErrorMessage
                                                 name="userTypeId"
