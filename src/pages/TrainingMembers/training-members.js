@@ -435,6 +435,7 @@ class TrainingMembersList extends Component {
         filterRenderer: (onFilter, column) => (
           <div>
             <Select
+            
               onChange={selectedOption => {
                 if (selectedOption && selectedOption.value === "") {
                   onFilter("", column);
@@ -447,6 +448,23 @@ class TrainingMembersList extends Component {
                 ...userTypes,
               ]}
               defaultValue={""}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  backgroundColor: '#ebf5ff', // Change to your desired background color
+                  borderColor: '#ced4da',     // Optional: Change border color
+                  boxShadow: 'none',          // Optional: Remove box shadow
+                }),
+                menu: (provided) => ({
+                  ...provided,
+                  backgroundColor: '#ebf5ff', // Optional: Change menu background color
+                }),
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.isFocused ? '#ffffff' : '#ebf5ff', // Change on focus
+                  color: '#333', // Optional: Change font color
+                }),
+              }}
             />
           </div>
         ),
@@ -470,7 +488,7 @@ class TrainingMembersList extends Component {
               <span className="mx-3">{t("Member Type")}</span> {sortElement}
             </div>
             <div style={{ width: "90%" }} className="mb-2 ">
-              <span className="text-dark">{filterElement}</span>
+              <span className="text-secondary fw-normal">{filterElement}</span>
             </div>
           </div>
         ),
