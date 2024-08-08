@@ -656,7 +656,6 @@ class TrainingMembersList extends Component {
                                       return {
                                         color: "#282828",
                                         backgroundColor: "rgba(17, 76, 144,.1)",
-                                        fontWeight: 500,
                                       };
                                     } else {
                                       return {
