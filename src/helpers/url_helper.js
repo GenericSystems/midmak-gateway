@@ -971,3 +971,24 @@ export const GET_CONTRACT_TYPE_DELETED_VALUE = "/deleted";
 export const ADD_NEW_CONTRACT_TYPE = "/add/contractType";
 export const UPDATE_CONTRACT_TYPE = "/update/contractType";
 export const DELETE_CONTRACT_TYPE = "/delete/contractType";
+
+//EMPLOYMENT_CASES
+export const GET_EMPLOYMENT_CASES = "/employmentCases";
+export const GET_EMPLOYMENT_CASE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_EMPLOYMENT_CASE = "/add/employmentCase";
+export const UPDATE_EMPLOYMENT_CASE = "/update/employmentCase";
+export const DELETE_EMPLOYMENT_CASE = "/delete/employmentCase";
+
+//WORK_CLASSIFICATIONS
+export const GET_WORK_CLASSIFICATIONS = "/workClassifications";
+export const GET_WORK_CLASSIFICATION_DELETED_VALUE = "/deleted";
+export const ADD_NEW_WORK_CLASSIFICATION = "/add/workClassification";
+export const UPDATE_WORK_CLASSIFICATION = "/update/workClassification";
+export const DELETE_WORK_CLASSIFICATION = "/delete/workClassification";
+
+//EMPLOYEES
+export const GET_EMPLOYEES = "/employees";
+export const GET_EMPLOYEE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_EMPLOYEE = "/add/employee";
+export const UPDATE_EMPLOYEE = "/update/employee";
+export const DELETE_EMPLOYEE = "/delete/employee";

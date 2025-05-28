@@ -150,7 +150,17 @@ import Certificates from "../pages/Certificates/certificates";
 //Grades
 import GradesList from "../pages/Grades/grades";
 
-import ContractsTypesList from "../pages/contractsTypes/contractsTypes";
+//ContractsTypes
+import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
+
+//Employment cases
+import EmploymentCasesList from "../pages/HR/employmentCases/employmentCases";
+
+//Work Classifications
+import WorkClassificationsList from "../pages/HR/workClassifications/workClassifications";
+
+//Employees
+import EmployeesList from "../pages/HR/employees/employees";
 
 //cERTIFICATELEVELS
 import CertificateTypesList from "../pages/CertificatesTypes/certificates-types";
@@ -222,6 +232,18 @@ const authProtectedRoutes = [
   // contractsTypes
 
   { path: "/contractsTypes", component: ContractsTypesList },
+
+  // employmentCases
+
+  { path: "/employmentCases", component: EmploymentCasesList },
+
+  // workClassifications
+
+  { path: "/workClassifications", component: WorkClassificationsList },
+
+  // employees
+
+  { path: "/employees", component: EmployeesList },
 
   // Grades
   { path: "/grades", component: GradesList },

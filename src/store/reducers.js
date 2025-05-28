@@ -234,7 +234,16 @@ import academicLoads from "./academicloads/reducer";
 import grades from "./grades/reducer";
 
 // contractsTypes
-import contractsTypes from "./contractsTypes/reducer";
+import contractsTypes from "./HR/contractsTypes/reducer";
+
+// employmentCases
+import employmentCases from "./HR/employmentCases/reducer";
+
+// workClassifications
+import workClassifications from "./HR/workClassifications/reducer";
+
+// employees
+import employees from "./HR/employees/reducer";
 
 //Distributing courses methods
 
@@ -347,6 +356,9 @@ const rootReducer = combineReducers({
   studentsHistory,
   studentsRequests,
   contractsTypes,
+  employmentCases,
+  workClassifications,
+  employees,
 });
 
 export default rootReducer;

@@ -1960,6 +1960,64 @@ export const updateContractType = data => post(url.UPDATE_CONTRACT_TYPE, data);
 //delete contractType
 export const deleteContractType = data => post(url.DELETE_CONTRACT_TYPE, data);
 
+//EMPLOYMENT_CASE
+export const getEmploymentCases = data => post(url.GET_EMPLOYMENT_CASES, data);
+
+// add EmploymentCase
+
+export const addNewEmploymentCase = data =>
+  post(url.ADD_NEW_EMPLOYMENT_CASE, data);
+
+//EMPLOYMENT_CASE
+export const getEmploymentCaseDeletedValue = () =>
+  get(url.GET_EMPLOYMENT_CASE_DELETED_VALUE);
+
+//update EmploymentCase
+export const updateEmploymentCase = data =>
+  post(url.UPDATE_EMPLOYMENT_CASE, data);
+
+//delete EmploymentCase
+export const deleteEmploymentCase = data =>
+  post(url.DELETE_EMPLOYMENT_CASE, data);
+
+//WORK_CLASSIFICATION
+export const getWorkClassifications = data =>
+  post(url.GET_WORK_CLASSIFICATIONS, data);
+
+// add WorkClassification
+
+export const addNewWorkClassification = data =>
+  post(url.ADD_NEW_WORK_CLASSIFICATION, data);
+
+//WORK_CLASSIFICATION
+export const getWorkClassificationDeletedValue = () =>
+  get(url.GET_WORK_CLASSIFICATION_DELETED_VALUE);
+
+//update WorkClassification
+export const updateWorkClassification = data =>
+  post(url.UPDATE_WORK_CLASSIFICATION, data);
+
+//delete WorkClassification
+export const deleteWorkClassification = data =>
+  post(url.DELETE_WORK_CLASSIFICATION, data);
+
+//EMPLOYEE
+export const getEmployees = data => post(url.GET_EMPLOYEES, data);
+
+// add Employee
+
+export const addNewEmployee = data => post(url.ADD_NEW_EMPLOYEE, data);
+
+//EMPLOYEE
+export const getEmployeeDeletedValue = () =>
+  get(url.GET_EMPLOYEE_DELETED_VALUE);
+
+//update Employee
+export const updateEmployee = data => post(url.UPDATE_EMPLOYEE, data);
+
+//delete Employee
+export const deleteEmployee = data => post(url.DELETE_EMPLOYEE, data);
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

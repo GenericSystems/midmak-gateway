@@ -35,7 +35,7 @@ import {
   updateContractType,
   deleteContractType,
   getContractTypeDeletedValue,
-} from "store/contractsTypes/actions";
+} from "store/HR/contractsTypes/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -47,7 +47,7 @@ import {
   checkIsDeleteForPage,
   checkIsEditForPage,
   checkIsSearchForPage,
-} from "../../utils/menuUtils";
+} from "../../../utils/menuUtils";
 class ContractsTypesList extends Component {
   constructor(props) {
     super(props);
@@ -79,7 +79,8 @@ class ContractsTypesList extends Component {
     // }
     onGetContractsTypes();
 
-    this.setState({ contractsTypes, deleted });
+    this.setState({ contractsTypes });
+    this.setState({ deleted });
     console.log("rsssssssssssssss", contractsTypes);
   }
 
@@ -186,11 +187,13 @@ class ContractsTypesList extends Component {
   };
 
   handleContractTypeDataChange = (rowId, fieldName, fieldValue) => {
-    const { onUpdateContractType, contractsTypes } = this.props;
+    const { contractsTypes, onUpdateContractType } = this.props;
 
     const isDuplicate = contractsTypes.some(contractType => {
-      contractType.Id !== rowId &&
-        contractType.arTitle.trim() === fieldValue.trim();
+      return (
+        contractType.Id !== rowId &&
+        contractType.arTitle.trim() === fieldValue.trim()
+      );
     });
 
     if (isDuplicate) {
@@ -264,14 +267,6 @@ class ContractsTypesList extends Component {
         sort: true,
         //  editable: showEditButton,
       },
-
-      {
-        dataField: "code",
-        text: this.props.t("Code"),
-        sort: true,
-        //  editable: showEditButton,
-      },
-
       {
         dataField: "delete",
         text: "",
@@ -296,7 +291,6 @@ class ContractsTypesList extends Component {
       totalSize: contractsTypes.length,
       custom: true,
     };
-
     return (
       <React.Fragment>
         <DeleteModal

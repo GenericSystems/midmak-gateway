@@ -29,7 +29,7 @@ import {
   addNewContractType,
   updateContractType,
   deleteContractType,
-} from "../../helpers/fakebackend_helper";
+} from "../../../helpers/fakebackend_helper";
 
 function* fetchContractsTypes() {
   const get_contractType_req = {

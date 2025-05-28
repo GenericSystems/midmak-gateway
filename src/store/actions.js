@@ -81,7 +81,16 @@ export * from "./certificates/actions";
 export * from "./grades/actions";
 
 //contractsTypes
-export * from "./contractsTypes/actions";
+export * from "./HR/contractsTypes/actions";
+
+//employmentCases
+export * from "./HR/employmentCases/actions";
+
+//workClassifications
+export * from "./HR/workClassifications/actions";
+
+//employees
+export * from "./HR/employees/actions";
 
 //certificateTypes
 export * from "./certificateTypes/actions";
