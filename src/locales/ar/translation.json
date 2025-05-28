@@ -39,7 +39,7 @@
   "by Themesbrand": "بواسطة Themesbrand",
   "Inbox": "صندوق الوارد",
   "Read Email": "قراءة البريد الإلكتروني",
-  "Privileges Management" : "الصلاحيات",
+  "Privileges Management": "الصلاحيات",
   "Yes, delete it!": "نعم قم بحذفها",
   "Cancel": "الغاء",
   "Sector": "القطاع",
@@ -47,16 +47,16 @@
   "View": "عرض",
   "All": "الكل",
   "Add": "اضافة",
-  "Saturday":"السبت",
-  "Sunday":"الأحد",
-  "Monday":"الاثنين",
-  "Tuesday":"الثلاثاء",
-  "Wedenesday":"الأربعاء",
-  "Thursday":"الخميس",
-  "Friday":"الجمعة",
-  "Grades(ar)" : "درجات(عربي)",
-  "Grades" : "درجات",
-  "Sector(ar)":"القطاع(عربي)",
+  "Saturday": "السبت",
+  "Sunday": "الأحد",
+  "Monday": "الاثنين",
+  "Tuesday": "الثلاثاء",
+  "Wedenesday": "الأربعاء",
+  "Thursday": "الخميس",
+  "Friday": "الجمعة",
+  "Grades(ar)": "درجات(عربي)",
+  "Grades": "درجات",
+  "Sector(ar)": "القطاع(عربي)",
   "Sectors": "القطاعات",
   "Certificate Type": "نوع الشهادة",
   "Certificate Number": "رقم الشهادة",
@@ -65,52 +65,34 @@
   "User Type(ar)": "المسمى التدريبي(عربي)",
   "Training Members": "أعضاء التدريب",
   "Member Grade": "درجة العضو",
-  "Name":"الاسم",
-  "Phone":"الهاتف",
-  "Id Number":"رقم الهوية",
-  "Create New":" إنشاء جديد",
+  "Name": "الاسم",
+  "Phone": "الهاتف",
+  "Id Number": "رقم الهوية",
+  "Create New": " إنشاء جديد",
   "Certificates": "الشهادات",
   "Academic Code": "الرمز الأكاديمي",
-  "User Type":"المسمى التدريبي",
-  "Year":"السنة",
-  "Grade":"الدرجة",
-  "Code":"الرمز",
-  "Deleted Successfully":"تم الحذف بنجاح",
-  "Fill in the empty row":"املا الفراغ",
-  "Can't Delete":"لا يمكنك الحذف",
+  "User Type": "المسمى التدريبي",
+  "Year": "السنة",
+  "Grade": "الدرجة",
+  "Code": "الرمز",
+  "Deleted Successfully": "تم الحذف بنجاح",
+  "Fill in the empty row": "املا الفراغ",
+  "Can't Delete": "لا يمكنك الحذف",
   "Are you sure?": "هل أنت متأكد؟",
   "You won't be able to revert this": "لن تتمكن من التراجع عن هذا",
-  "Sectors List":"قائمة القطاعات",
-  "CertificateTypes List":"قائمة انواع الشهادات",
-  "Add Certificate":"اضافة شهادة",
-  "Edit Certificate":"تعديل الشهادة",
-  "Search...":"بحث...",
-  "Edit":"تعديل",
-  "Delete":"حذف",
-  "Save":"حفظ",
-  "Fill the empty select":"اختر الخانة الفارغة",
-  "Select Member Type":"اختر نوع العضو",
-  "Member Type" : "نوع العضو",
-  "Member" : "العضو"
-
+  "Sectors List": "قائمة القطاعات",
+  "CertificateTypes List": "قائمة انواع الشهادات",
+  "Add Certificate": "اضافة شهادة",
+  "Edit Certificate": "تعديل الشهادة",
+  "Search...": "بحث...",
+  "Edit": "تعديل",
+  "Delete": "حذف",
+  "Save": "حفظ",
+  "Fill the empty select": "اختر الخانة الفارغة",
+  "Select Member Type": "اختر نوع العضو",
+  "Member Type": "نوع العضو",
+  "Member": "العضو",
+  "Contracts Types": "انواع العقود",
+  "Contract Type(ar)": "نوع العقد(عربي)",
+  "ContractsTypes": "انواع العقود"
 }
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-

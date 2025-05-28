@@ -1,149 +1,146 @@
-import { combineReducers } from "redux"
+import { combineReducers } from "redux";
 
 // Front
-import Layout from "./layout/reducer"
+import Layout from "./layout/reducer";
 
 // Authentication
-import Login from "./auth/login/reducer"
-import Account from "./auth/register/reducer"
-import ForgetPassword from "./auth/forgetpwd/reducer"
-import Profile from "./auth/profile/reducer"
+import Login from "./auth/login/reducer";
+import Account from "./auth/register/reducer";
+import ForgetPassword from "./auth/forgetpwd/reducer";
+import Profile from "./auth/profile/reducer";
 
 //E-commerce
-import ecommerce from "./e-commerce/reducer"
+import ecommerce from "./e-commerce/reducer";
 
 //Calendar
-import calendar from "./calendar/reducer"
+import calendar from "./calendar/reducer";
 
 //chat
-import chat from "./chat/reducer"
+import chat from "./chat/reducer";
 
 //crypto
-import crypto from "./crypto/reducer"
+import crypto from "./crypto/reducer";
 
 //invoices
-import invoices from "./invoices/reducer"
+import invoices from "./invoices/reducer";
 
 //students
-import students from "./students/reducer"
+import students from "./students/reducer";
 
 //universityStudents
 import universityStudents from "./university-students/reducer";
 
 //admissionConditions
-import admissionConditions from "./admissionConditions/reducer"
+import admissionConditions from "./admissionConditions/reducer";
 
 //projects
-import projects from "./projects/reducer"
+import projects from "./projects/reducer";
 
 //tasks
-import tasks from "./tasks/reducer"
+import tasks from "./tasks/reducer";
 
 //contacts
-import contacts from "./contacts/reducer"
+import contacts from "./contacts/reducer";
 
 // data-items
-import dataitems from "./data-items/reducer"
+import dataitems from "./data-items/reducer";
 
 //lecturePeriods
-import lecturePeriods from "./lecture-periods/reducer"
+import lecturePeriods from "./lecture-periods/reducer";
 
 //currSemMans
-import currSemMans from "./current-sem-man/reducer"
-
+import currSemMans from "./current-sem-man/reducer";
 
 //coursesregistrations
-import coursesRegistration from "./courses-registration/reducer"
-  //generateSIDs
-  import generateSIDs from "./generate-SIDs/reducer"
-
+import coursesRegistration from "./courses-registration/reducer";
+//generateSIDs
+import generateSIDs from "./generate-SIDs/reducer";
 
 //generalManagements
-import generalManagements from "./general-management/reducer"
+import generalManagements from "./general-management/reducer";
 
 //mobAppFacultyAccs
-import mobAppFacultyAccs from "./mob-app-faculty-accs/reducer"
+import mobAppFacultyAccs from "./mob-app-faculty-accs/reducer";
 
 //studyplans
-import studyPlans from "./study-plans/reducer"
+import studyPlans from "./study-plans/reducer";
 
 //StudentsStatistics
-import studentsStatistics from "./students-statistics/reducer"
+import studentsStatistics from "./students-statistics/reducer";
 
 //sectors
-import sectors from "./sectors/reducer"
+import sectors from "./sectors/reducer";
 
 //preReqTypes
-import userTypes from "./user-types/reducer"
+import userTypes from "./user-types/reducer";
 
 //certificates
-import certificates from "./certificates/reducer"
+import certificates from "./certificates/reducer";
 
 //certificateTypes
-import certificateTypes from "./certificateTypes/reducer"
+import certificateTypes from "./certificateTypes/reducer";
 
 //studentManagements
-import studentManagements from "./studentManagements/reducer"
+import studentManagements from "./studentManagements/reducer";
 
 //Academic Certificate
-import academiccertificates from "./academicvertificates/reducer"
-
+import academiccertificates from "./academicvertificates/reducer";
 
 //Courses
-import courses from "./courses/reducer"
+import courses from "./courses/reducer";
 //contries
-import countries from "./country/reducer"
+import countries from "./country/reducer";
 
 //governorate
-import governorates from "./governorate/reducer"
+import governorates from "./governorate/reducer";
 
 //structure
-import structures from "./universitystructures/reducer"
+import structures from "./universitystructures/reducer";
 
 //currencies
-import currencies from "./currencies/reducer"
+import currencies from "./currencies/reducer";
 
 //requests
-import requests from "./requests/reducer"
+import requests from "./requests/reducer";
 
 //files
-import file from "./files/reducer"
+import file from "./files/reducer";
 
 //fines
-import fines from "./fines/reducer"
+import fines from "./fines/reducer";
 
 //finesDefinition
-import finesDefinition from "./finesDefinition/reducer"
+import finesDefinition from "./finesDefinition/reducer";
 
 //periods
-import periods from "./periods/reducer"
+import periods from "./periods/reducer";
 
 //requestsFees
-import requestsFees from "./requestsFees/reducer"
+import requestsFees from "./requestsFees/reducer";
 
 //feesDefinition
-import feesDefinition from "./feesDefinition/reducer"
+import feesDefinition from "./feesDefinition/reducer";
 
 //services
-import services from "./services/reducer"
+import services from "./services/reducer";
 
 //document
-import documents from "./documents-types/reducer"
+import documents from "./documents-types/reducer";
 
 //document
-import uniDocuments from "./university-documents/reducer"
+import uniDocuments from "./university-documents/reducer";
 
 //reg-req-document
-import regReqDocuments from "./reg-req-documents/reducer"
+import regReqDocuments from "./reg-req-documents/reducer";
 
 //universityrequirements
-import universityrequirements from "./universityrequirements/reducer"
+import universityrequirements from "./universityrequirements/reducer";
 
 //nationalities
-import nationalities from "./nationality/reducer"
+import nationalities from "./nationality/reducer";
 
 //relatives
-import relatives from "./relatives/reducer"
+import relatives from "./relatives/reducer";
 
 //mails
 import mails from "./mails/reducer";
@@ -154,7 +151,7 @@ import estimates from "./estimates/reducer";
 //cities
 import cities from "./cities/reducer";
 
-//Dashboard 
+//Dashboard
 import Dashboard from "./dashboard/reducer";
 
 //Dasboard saas
@@ -181,7 +178,6 @@ import schedules from "./schedules/reducer";
 //SchedulingLectures
 import schedulingLectures from "./scheduling-lectures/reducer";
 
-
 //Years
 import years from "./years/reducer";
 
@@ -205,7 +201,7 @@ import genders from "./genders/reducer";
 import studentsDecrees from "./student-decrees/reducer";
 //decisions
 import decisions from "./decisions/reducer";
-import universityInfo from "./universitydef/reducer"
+import universityInfo from "./universitydef/reducer";
 //grants
 import grants from "./grants/reducer";
 //userMngs
@@ -213,10 +209,10 @@ import userMngs from "./user-mngs/reducer";
 
 //roles
 import roles from "./roles/reducer";
-import universityOrgStructures from "./universityOrgStructure/reducer"
+import universityOrgStructures from "./universityOrgStructure/reducer";
 
-//sidbarcontent 
-import menu_items from "./sidebarcontent/reducer"
+//sidbarcontent
+import menu_items from "./sidebarcontent/reducer";
 
 //trainer
 import trainingMembers from "./trainingMembers/reducer";
@@ -232,30 +228,31 @@ import exceptionalPeriods from "./exceptionalPeriods/reducer";
 
 //Academic load
 
-import academicLoads from "./academicloads/reducer"
+import academicLoads from "./academicloads/reducer";
 
 // grades
-import grades from "./grades/reducer"
+import grades from "./grades/reducer";
+
+// contractsTypes
+import contractsTypes from "./contractsTypes/reducer";
 
 //Distributing courses methods
 
-import distributingCoursesMethods from "./distributing-courses-methods/reducer"
+import distributingCoursesMethods from "./distributing-courses-methods/reducer";
 
-import letterGrades from "./letter-grade/reducer"
+import letterGrades from "./letter-grade/reducer";
 
 // transport lines
-import transportLines from "./transportLines/reducer"
+import transportLines from "./transportLines/reducer";
 
 // levelingDecisions
-import levelingDecisions from "./leveling-decisions/reducer"
+import levelingDecisions from "./leveling-decisions/reducer";
 
 //studentsHistory
-import studentsHistory from "./students-history/reducer"
+import studentsHistory from "./students-history/reducer";
 
 //studentsRequests
-import studentsRequests from "./students-requests/reducer"
-
-
+import studentsRequests from "./students-requests/reducer";
 
 const rootReducer = combineReducers({
   // public
@@ -348,7 +345,8 @@ const rootReducer = combineReducers({
   transportLines,
   levelingDecisions,
   studentsHistory,
-  studentsRequests
-})
+  studentsRequests,
+  contractsTypes,
+});
 
-export default rootReducer
+export default rootReducer;

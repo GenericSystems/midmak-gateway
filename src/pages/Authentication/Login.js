@@ -32,12 +32,10 @@ class Login extends Component {
       duplicateError: null,
       showPassword: false,
     };
-
   }
 
   componentDidMount() {
     this.props.apiError("");
-
   }
 
   signIn = (res, type) => {
@@ -59,6 +57,7 @@ class Login extends Component {
       };
       socialLogin(postData, this.props.history, type);
     }
+    console.log("11111111111111", socialLogin);
   };
 
   //handleGoogleLoginResponse
@@ -67,34 +66,29 @@ class Login extends Component {
   };
 
   //handleTwitterLoginResponse
-  twitterResponse = () => { };
+  twitterResponse = () => {};
 
   //handleFacebookLoginResponse
   facebookResponse = response => {
     this.signIn(response, "facebook");
   };
   handleAlertClose = () => {
-    const { duplicateError } = this.state
+    const { duplicateError } = this.state;
 
-    this.setState({ duplicateError: false })
+    this.setState({ duplicateError: false });
 
     this.props.apiError("");
   };
 
   handleDuplicateError = () => {
-    const { duplicateError } = this.state
+    const { duplicateError } = this.state;
 
-
-    this.setState({ duplicateError: true })
-
-  }
+    this.setState({ duplicateError: true });
+  };
 
   render() {
-    const { duplicateError } = this.state
-    const { t } = this.props
-
-
-
+    const { duplicateError } = this.state;
+    const { t } = this.props;
 
     return (
       <React.Fragment>
@@ -110,69 +104,71 @@ class Login extends Component {
                 <Card className="overflow-hidden">
                   <div className="bg-primary bg-soft">
                     <Row>
-
                       <Col className="col-5 align-self-end">
                         <img src={profile} alt="" className="img-fluid" />
                       </Col>
                     </Row>
                   </div>
                   <CardBody className="pt-0">
-
                     <div className="p-2">
-                      {this.props.error && this.props.error[0].statusLogin == 1 && duplicateError && (
-                        <Alert
-                          color="danger"
-                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                          role="alert"
-                        >
-                          {t("Email or Password Invalid")}
-                          <button
-                            type="button"
-                            className="btn-close"
-                            aria-label="Close"
-                            onClick={this.handleAlertClose}
-                          ></button>
-                        </Alert>
-                      )}
-                      {this.props.error && this.props.error[0].statusLogin == 0 && duplicateError && (
-                        <Alert
-                          color="success"
-                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                          role="alert"
-                        >
-                          {t("Successful Login")}
-                          <button
-                            type="button"
-                            className="btn-close"
-                            aria-label="Close"
-                            onClick={this.handleAlertClose}
-                          ></button>
-                        </Alert>
-                      )}
-                      {this.props.error && this.props.error[0].statusLogin == 2 && duplicateError && (
-                        <Alert
-                        color="danger"
-                        className="d-flex flex-column justify-content-center align-items-center alert-dismissible fade show"
-                        role="alert"
-                      >
-                        {t("There is a Problem in Your Account")}
-                        <br />
-                        {t("Please Contact the Administrator")}
-                        <button
-                          type="button"
-                          className="btn-close mt-2"
-                          aria-label="Close"
-                          onClick={this.handleAlertClose}
-                        ></button>
-                      </Alert>
-                      )}
+                      {this.props.error &&
+                        this.props.error[0].statusLogin == 1 &&
+                        duplicateError && (
+                          <Alert
+                            color="danger"
+                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                            role="alert"
+                          >
+                            {t("Email or Password Invalid")}
+                            <button
+                              type="button"
+                              className="btn-close"
+                              aria-label="Close"
+                              onClick={this.handleAlertClose}
+                            ></button>
+                          </Alert>
+                        )}
+                      {this.props.error &&
+                        this.props.error[0].statusLogin == 0 &&
+                        duplicateError && (
+                          <Alert
+                            color="success"
+                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                            role="alert"
+                          >
+                            {t("Successful Login")}
+                            <button
+                              type="button"
+                              className="btn-close"
+                              aria-label="Close"
+                              onClick={this.handleAlertClose}
+                            ></button>
+                          </Alert>
+                        )}
+                      {this.props.error &&
+                        this.props.error[0].statusLogin == 2 &&
+                        duplicateError && (
+                          <Alert
+                            color="danger"
+                            className="d-flex flex-column justify-content-center align-items-center alert-dismissible fade show"
+                            role="alert"
+                          >
+                            {t("There is a Problem in Your Account")}
+                            <br />
+                            {t("Please Contact the Administrator")}
+                            <button
+                              type="button"
+                              className="btn-close mt-2"
+                              aria-label="Close"
+                              onClick={this.handleAlertClose}
+                            ></button>
+                          </Alert>
+                        )}
                       <Formik
                         enableReinitialize={true}
                         initialValues={{
-                          email:
-                            (this.state && this.state.email) ,
-                          password:
-                            (this.state && this.state.password),
+                          email: this.state && this.state.email,
+                          password: this.state && this.state.password,
                         }}
                         validationSchema={Yup.object().shape({
                           email: Yup.string().required(
@@ -187,7 +183,6 @@ class Login extends Component {
                         }}
                       >
                         {({ errors, status, touched }) => (
-
                           <Form className="form-horizontal">
                             <div className="mb-3">
                               <Label for="email" className="form-label">
@@ -216,7 +211,11 @@ class Login extends Component {
                               <div className="input-group auth-pass-inputgroup">
                                 <Field
                                   name="password"
-                                  type={this.state.showPassword ? "text" : "password"}
+                                  type={
+                                    this.state.showPassword
+                                      ? "text"
+                                      : "password"
+                                  }
                                   autoComplete="true"
                                   className={
                                     "form-control" +
@@ -229,7 +228,11 @@ class Login extends Component {
                                   className="btn btn-light "
                                   type="button"
                                   id="password-addon"
-                                  onClick={() => this.setState((prevState) => ({ showPassword: !prevState.showPassword }))}
+                                  onClick={() =>
+                                    this.setState(prevState => ({
+                                      showPassword: !prevState.showPassword,
+                                    }))
+                                  }
                                 >
                                   <i className="mdi mdi-eye-outline"></i>
                                 </button>
@@ -255,18 +258,18 @@ class Login extends Component {
                               </label>
                             </div> */}
 
-                            <div className="d-flex justify-content-center  " style={{ marginTop: '1.5rem' }}>
+                            <div
+                              className="d-flex justify-content-center  "
+                              style={{ marginTop: "1.5rem" }}
+                            >
                               <button
                                 onClick={this.handleDuplicateError}
                                 className="btn btn-primary btn-block px-4"
                                 type="submit"
-
                               >
                                 {this.props.t("Log In")}
                               </button>
                             </div>
-
-
 
                             {/* <div className="mt-4 text-center">
                               <Link
@@ -316,5 +319,7 @@ const mapStateToProps = state => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, { loginUser, apiError, socialLogin })(withTranslation()(Login))
+  connect(mapStateToProps, { loginUser, apiError, socialLogin })(
+    withTranslation()(Login)
+  )
 );

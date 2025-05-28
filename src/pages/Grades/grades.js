@@ -19,7 +19,7 @@ import {
   deleteGrade,
   getGradeDeletedValue,
 } from "store/grades/actions";
-import{getUserTypesOpt} from "store/user-types/actions";
+import { getUserTypesOpt } from "store/user-types/actions";
 
 import ToolkitProvider, {
   Search,
@@ -58,25 +58,18 @@ class GradesList extends Component {
   }
 
   componentDidMount = () => {
-    const {
-      grades,
-      onGetUsers,
-      deleted,
-      user_menu,
-      userTypesOpt,
-    } = this.props;
+    const { grades, onGetUsers, deleted, user_menu, userTypesOpt } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (grades && !grades.length || grades == undefined ) {
-      console.log("in did mount",grades)
+    if ((grades && !grades.length) || grades == undefined) {
+      console.log("in did mount", grades);
       onGetUsers();
     }
     this.setState({ grades, deleted, userTypesOpt });
-    console.log("in did mount 2222",grades)
-
-  }
+    console.log("in did mount 2222", grades);
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -145,16 +138,14 @@ class GradesList extends Component {
 
   handleAddRow = () => {
     const { grades, onAddNewGrade } = this.props;
-    const { selectedUser} = this.state;
+    const { selectedUser } = this.state;
     const newRow = {
       userTypeId: selectedUser,
       arTitle: "---",
     };
 
     // Check if the same value already exists in the table
-    const emptyRowsExist = grades.some(
-      grade => grade.arTitle.trim() === "---"
-    );
+    const emptyRowsExist = grades.some(grade => grade.arTitle.trim() === "---");
 
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
@@ -186,9 +177,7 @@ class GradesList extends Component {
   handleGradeDataChange = (rowId, fieldName, fieldValue) => {
     const { grades, onUpdateGrade } = this.props;
     const isDuplicate = grades.some(
-      grade =>
-        grade.Id !== rowId &&
-        grade.arTitle.trim() === fieldValue.trim()
+      grade => grade.Id !== rowId && grade.arTitle.trim() === fieldValue.trim()
     );
 
     if (isDuplicate) {
@@ -220,13 +209,13 @@ class GradesList extends Component {
     this.setState(prevState => ({
       sidebarOpen: !prevState.sidebarOpen,
     }));
-  }
+  };
 
   handleSelectUser = (fieldName, selectedValue) => {
-    const {onGetGrades} = this.props
-    console.log("selectedValue",selectedValue)
-    this.setState({ selectedUser : selectedValue})
-    onGetGrades({userTypeId:selectedValue})
+    const { onGetGrades } = this.props;
+    console.log("selectedValue", selectedValue);
+    this.setState({ selectedUser: selectedValue });
+    onGetGrades({ userTypeId: selectedValue });
   };
 
   render() {
@@ -246,7 +235,7 @@ class GradesList extends Component {
       selectedUser,
     } = this.state;
 
-    console.log("selectedUser",selectedUser)
+    console.log("selectedUser", selectedUser);
 
     const defaultSorting = [
       {
@@ -257,7 +246,7 @@ class GradesList extends Component {
 
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
-    
+
       {
         dataField: "arTitle",
         text: this.props.t("Grades(ar)"),
@@ -298,7 +287,7 @@ class GradesList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: grades? grades.length: 0,
+      totalSize: grades ? grades.length : 0,
       custom: true,
     };
 
@@ -323,7 +312,7 @@ class GradesList extends Component {
                       <Col lg="2">
                         <Card>
                           <CardTitle id="course_header">
-                          {t("Select Member Type")}
+                            {t("Select Member Type")}
                           </CardTitle>
                           <CardBody>
                             <div className="mb-3">
@@ -333,8 +322,8 @@ class GradesList extends Component {
                                     {t("Member Type")}
                                   </Label>
                                 </Col>
-                                </Row>
-                                <Row>
+                              </Row>
+                              <Row>
                                 <Col lg="6">
                                   <Select
                                     className="select-style"
@@ -347,10 +336,9 @@ class GradesList extends Component {
                                         newValue.value
                                       )
                                     }
-                                    value={ userTypesOpt.find(
-                                            opt => opt.label === selectedUser
-                                          )
-                                    }
+                                    value={userTypesOpt.find(
+                                      opt => opt.label === selectedUser
+                                    )}
                                   />
                                 </Col>
                               </Row>
@@ -371,7 +359,7 @@ class GradesList extends Component {
 
                     <Col lg={sidebarOpen ? "" : "11"}>
                       <Card>
-                        <CardBody >
+                        <CardBody>
                           <div>
                             {duplicateError && (
                               <Alert
@@ -424,12 +412,12 @@ class GradesList extends Component {
                               pagination={paginationFactory(pageOptions)}
                               keyField="Id"
                               columns={columns}
-                              data={grades? grades: []}
+                              data={grades ? grades : []}
                             >
                               {({ paginationProps, paginationTableProps }) => (
                                 <ToolkitProvider
                                   keyField="Id"
-                                  data={grades? grades: []}
+                                  data={grades ? grades : []}
                                   columns={columns}
                                   search
                                 >
@@ -448,21 +436,21 @@ class GradesList extends Component {
                                           </div>
                                         </Col>
                                         <Col sm="8">
-                                                {selectedUser && (
-                                          <div className="text-sm-end">
-                                            <Tooltip
-                                              title={this.props.t("Add")}
-                                              placement="top"
-                                            >
-                                              <IconButton
-                                                color="primary"
-                                                onClick={this.handleAddRow}
+                                          {selectedUser && (
+                                            <div className="text-sm-end">
+                                              <Tooltip
+                                                title={this.props.t("Add")}
+                                                placement="top"
                                               >
-                                                <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                              </IconButton>
-                                            </Tooltip>
-                                          </div>
-                                                )}
+                                                <IconButton
+                                                  color="primary"
+                                                  onClick={this.handleAddRow}
+                                                >
+                                                  <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                </IconButton>
+                                              </Tooltip>
+                                            </div>
+                                          )}
                                         </Col>
                                       </Row>
 
@@ -470,7 +458,7 @@ class GradesList extends Component {
                                         keyField="Id"
                                         {...toolkitprops.baseProps}
                                         {...paginationTableProps}
-                                        data={grades? grades: []}
+                                        data={grades ? grades : []}
                                         columns={columns}
                                         cellEdit={cellEditFactory({
                                           mode: "click",
@@ -528,12 +516,9 @@ const mapStateToProps = ({ grades, userTypes, menu_items }) => ({
 const mapDispatchToProps = dispatch => ({
   onGetUsers: () => dispatch(getUserTypesOpt()),
   onGetGrades: grade => dispatch(getGrades(grade)),
-  onAddNewGrade: grade =>
-    dispatch(addNewGrade(grade)),
-  onUpdateGrade: grade =>
-    dispatch(updateGrade(grade)),
-  onDeleteGrade: grade =>
-    dispatch(deleteGrade(grade)),
+  onAddNewGrade: grade => dispatch(addNewGrade(grade)),
+  onUpdateGrade: grade => dispatch(updateGrade(grade)),
+  onDeleteGrade: grade => dispatch(deleteGrade(grade)),
   onGetGradeDeletedValue: () => dispatch(getGradeDeletedValue()),
 });
 

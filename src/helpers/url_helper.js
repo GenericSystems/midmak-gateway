@@ -287,7 +287,6 @@ export const DELETE_STUDENT_REQUEST = "/delete/studentsRequests";
 export const GET_LAST_REQUEST_NUM = "/studentsRequests";
 export const GET_REQUEST_DETAILS = "/studentsRequests";
 
-
 //PREV_UNI_COURSE
 export const GET_PREV_UNI_COURSES = "/prevUnivCourses";
 export const ADD_NEW_PREV_UNI_COURSE = "/add/prevUnivCourses";
@@ -318,7 +317,7 @@ export const DELETE_COUNTRY = "/delete/country";
 // CITY
 export const GET_CITIES = "/city";
 export const ADD_NEW_CITY = "/add/city";
-export const IMPORT_CITIES = "/import/cities"
+export const IMPORT_CITIES = "/import/cities";
 export const UPDATE_CITY = "/update/city";
 export const DELETE_CITY = "/delete/city";
 export const GET_CITY_DELETED_VALUE = "/deleted";
@@ -642,12 +641,16 @@ export const UPDATE_TIMELINE = "/update/TimeLine";
 export const DELETE_TIMELINE = "/delete/TimeLine";
 export const GET_REQUEST_PERIOD_ALLOWANCE = "/requestsPeriodAllowance";
 export const GET_REQUEST_PERIOD_ALLOWANCE_TIME = "/requestsPeriodAllowanceTime";
-export const UPDATE_REQUEST_PERIOD_ALLOWANCE_TIME = "/update/requestsPeriodAllowanceTime";
-export const GENERALIZE_REQUEST_PERIOD_ALLOWANCE_TIME = "/generalize/requestsPeriodAllowanceTime";
+export const UPDATE_REQUEST_PERIOD_ALLOWANCE_TIME =
+  "/update/requestsPeriodAllowanceTime";
+export const GENERALIZE_REQUEST_PERIOD_ALLOWANCE_TIME =
+  "/generalize/requestsPeriodAllowanceTime";
 export const GET_REQUEST_PERIOD_PERMISSION = "/requestsPeriodPermission";
 export const ADD_REQUEST_PERIOD_PERMISSION = "/add/requestsPeriodPermission";
-export const UPDATE_REQUEST_PERIOD_PERMISSION = "/update/requestsPeriodPermission";
-export const DELETE_REQUEST_PERIOD_PERMISSION = "/delete/requestsPeriodPermission";
+export const UPDATE_REQUEST_PERIOD_PERMISSION =
+  "/update/requestsPeriodPermission";
+export const DELETE_REQUEST_PERIOD_PERMISSION =
+  "/delete/requestsPeriodPermission";
 
 //WeekDays
 export const GET_WEEKDAYS = "/WeekDays";
@@ -696,7 +699,7 @@ export const DELETE_ADMISSIONREQUIREMENT = "/delete/admissionrequirement";
 export const GET_GOVERNORATES = "/governorates";
 export const GET_GOVERNORATES_PROFILE = "/governorate";
 export const ADD_NEW_GOVERNORATE = "/add/governorate";
-export const IMPORT_GOVERNORATES  = "/import/governorates";
+export const IMPORT_GOVERNORATES = "/import/governorates";
 export const UPDATE_GOVERNORATE = "/update/governorate";
 export const DELETE_GOVERNORATE = "/delete/governorate";
 export const GET_GOVERNORATE_DELETED_VALUE = "/deleted";
@@ -705,7 +708,7 @@ export const GET_GOVERNORATE_DELETED_VALUE = "/deleted";
 export const GET_NATIONALITIES = "/nationalities";
 export const GET_NATIONALITY_DELETED_VALUE = "/nationality";
 export const ADD_NEW_NATIONALITY = "/add/nationality";
-export const IMPORT_NATIONALITIES = "/import/nationalities"
+export const IMPORT_NATIONALITIES = "/import/nationalities";
 export const UPDATE_NATIONALITY = "/update/nationality";
 export const DELETE_NATIONALITY = "/delete/nationality";
 
@@ -713,7 +716,7 @@ export const DELETE_NATIONALITY = "/delete/nationality";
 export const GET_RELATIVES = "/relatives";
 export const GET_RELATIVE_DELETED_VALUE = "/relative";
 export const ADD_NEW_RELATIVE = "/add/relative";
-export const IMPORT_RELATIVES = "/import/relatives"
+export const IMPORT_RELATIVES = "/import/relatives";
 export const UPDATE_RELATIVE = "/update/relative";
 export const DELETE_RELATIVE = "/delete/relative";
 
@@ -787,7 +790,7 @@ export const GENERALIZE_STUDY_PLANS = "/generalizeStudyPlans";
 
 export const GET_SIDEBAR_CONTENTS = "/sidbarcontents";
 
-export const GET_USER_SIDEBAR_CONTENTS = "/userMenu"
+export const GET_USER_SIDEBAR_CONTENTS = "/userMenu";
 
 export const GET_ROLE_SIDEBAR = "/roleSidebar";
 
@@ -924,8 +927,7 @@ export const GET_LETTER_GRADE_DELETED_VALUE = "/deleted";
 
 export const GET_LETTER_GRADE_DETAILS_DELETED_VALUE = "/deleted";
 
-
-// Transport Lines 
+// Transport Lines
 
 export const GET_TRANSPORT_LINES = "/transportLines";
 
@@ -947,7 +949,6 @@ export const UPDATE_TRANSPORT_LINE_DETAIL = "/update/transportLinedetail";
 
 export const DELETE_TRANSPORT_LINE_DETAIL = "/delete/transportLinedetail";
 
-
 export const GET_TRANSPORT_LINE_DETAILS_DELETED_VALUE = "/deleted";
 
 //  Transport Lines std
@@ -963,3 +964,10 @@ export const DELETE_STD_TRANSPORT_LINE = "/delete/stdTransportLine";
 export const GET_STD_TRANSPORT_LINE_DELETED_VALUE = "/deleted";
 
 export const GET_UNIV_STD_DATA_LIST = "/univStds";
+
+//CONTRACTS_TYPES
+export const GET_CONTRACTS_TYPES = "/contractsTypes";
+export const GET_CONTRACT_TYPE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_CONTRACT_TYPE = "/add/contractType";
+export const UPDATE_CONTRACT_TYPE = "/update/contractType";
+export const DELETE_CONTRACT_TYPE = "/delete/contractType";

@@ -47,7 +47,6 @@ function* fetchUsers() {
     tablename: "Settings_UserType",
     fields: "Id,arTitle",
   };
-
   try {
     const response = yield call(getUserTypesOpt, get_userTypes_req);
     yield put(getUserTypesOptSuccess(response));
@@ -58,14 +57,13 @@ function* fetchUsers() {
 
 function* fetchGrades(obj) {
   const userTypeId = obj.payload.userTypeId;
-  console.log("get grades obj ",obj)
+  console.log("get grades obj ", obj);
   const get_Grades_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_Grades",
     filter: `userTypeId = ${userTypeId}`,
-
   };
   try {
     const response = yield call(getGrades, get_Grades_req);

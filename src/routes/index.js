@@ -150,6 +150,8 @@ import Certificates from "../pages/Certificates/certificates";
 //Grades
 import GradesList from "../pages/Grades/grades";
 
+import ContractsTypesList from "../pages/contractsTypes/contractsTypes";
+
 //cERTIFICATELEVELS
 import CertificateTypesList from "../pages/CertificatesTypes/certificates-types";
 
@@ -216,6 +218,10 @@ const authProtectedRoutes = [
 
   // Certificates
   { path: "/certificates", component: Certificates },
+
+  // contractsTypes
+
+  { path: "/contractsTypes", component: ContractsTypesList },
 
   // Grades
   { path: "/grades", component: GradesList },
@@ -304,7 +310,6 @@ const authProtectedRoutes = [
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
   { path: "/", exact: true, component: () => <Redirect to="/dashboard" /> },
-
 ];
 
 const publicRoutes = [

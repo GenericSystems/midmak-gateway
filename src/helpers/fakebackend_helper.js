@@ -98,8 +98,7 @@ const postJwtForgetPwd = data => post(url.POST_FAKE_JWT_PASSWORD_FORGET, data);
 // postSocialLogin
 export const postSocialLogin = data => post(url.SOCIAL_LOGIN, data);
 
-export const getUserId = () =>
-  get(url.GET_USER_ID);
+export const getUserId = () => get(url.GET_USER_ID);
 
 // get Products
 export const getProducts = () => get(url.GET_PRODUCTS);
@@ -593,8 +592,7 @@ export const updateGrade = data => post(url.UPDATE_GRADE, data);
 // delete Grade
 export const deleteGrade = data => post(url.DELETE_GRADE, data);
 
-export const getGradeDeletedValue = () =>
-  get(url.GET_GRADE_DELETED_VALUE);
+export const getGradeDeletedValue = () => get(url.GET_GRADE_DELETED_VALUE);
 
 // get CertificateLEVEL
 export const getCertificateTypes = data =>
@@ -653,17 +651,13 @@ export const deleteStudentRequest = data =>
   post(url.DELETE_STUDENT_REQUEST, data);
 
 // get lastReqNum
-export const getLastReqNum = data =>
-  post(url.GET_LAST_REQUEST_NUM, data);
+export const getLastReqNum = data => post(url.GET_LAST_REQUEST_NUM, data);
 
 // get RequestDetails
-export const getRequestDetails = data =>
-  post(url.GET_REQUEST_DETAILS, data);
+export const getRequestDetails = data => post(url.GET_REQUEST_DETAILS, data);
 
 // TransferCourse
-export const getTransferCourses = data =>
-  post(url.GET_TRANSFER_COURSES, data);
-
+export const getTransferCourses = data => post(url.GET_TRANSFER_COURSES, data);
 
 // TransferCourse
 export const addNewTransferCourse = data =>
@@ -681,8 +675,7 @@ export const deleteTransferCourse = data =>
   post(url.DELETE_TRANSFER_COURSE, data);
 
 // PrevUnivCourse
-export const getPrevUnivCourses = data =>
-  post(url.GET_PREV_UNI_COURSES, data);
+export const getPrevUnivCourses = data => post(url.GET_PREV_UNI_COURSES, data);
 
 // PrevUnivCourse
 export const addNewPrevUnivCourse = data =>
@@ -696,10 +689,8 @@ export const updatePrevUnivCourse = data =>
 export const deletePrevUnivCourse = data =>
   post(url.DELETE_PREV_UNI_COURSE, data);
 
-
 // get studentHistory
-export const getStudentsHistory = data =>
-  post(url.GET_STUDENTS_HISTORY, data);
+export const getStudentsHistory = data => post(url.GET_STUDENTS_HISTORY, data);
 
 // add studentHistory
 export const addNewStudentHistory = data =>
@@ -749,8 +740,8 @@ export const updateRelative = data => post(url.UPDATE_RELATIVE, data);
 // delete user
 export const deleteRelative = data => post(url.DELETE_RELATIVE, data);
 
-export const getRelativeDeletedValue = () => get(url.GET_RELATIVE_DELETED_VALUE);
-
+export const getRelativeDeletedValue = () =>
+  get(url.GET_RELATIVE_DELETED_VALUE);
 
 //CONTACTS
 export const getUserProfile = () => get(url.GET_USER_PROFILE);
@@ -766,7 +757,6 @@ export const addNewCountry = data => post(url.ADD_NEW_COUNTRY, data);
 
 //update country
 export const updateCountry = data => post(url.UPDATE_COUNTRY, data);
-
 
 // import country
 export const importCountries = data => post(url.IMPORT_COUNTRIES, data);
@@ -1481,24 +1471,31 @@ export const getScheduleTimingDescs = data =>
 // get TimeLine
 export const getTimeLines = data => post(url.GET_TIMELINES, data);
 
-export const getRequestsPeriodAllowance = data => post(url.GET_REQUEST_PERIOD_ALLOWANCE, data);
+export const getRequestsPeriodAllowance = data =>
+  post(url.GET_REQUEST_PERIOD_ALLOWANCE, data);
 
 //get RequestsPeriodAllowanceTime
-export const getRequestsPeriodAllowanceTime = data => post(url.GET_REQUEST_PERIOD_ALLOWANCE_TIME, data);
+export const getRequestsPeriodAllowanceTime = data =>
+  post(url.GET_REQUEST_PERIOD_ALLOWANCE_TIME, data);
 
-export const updateRequestsPeriodAllowanceTime = data => post(url.UPDATE_REQUEST_PERIOD_ALLOWANCE_TIME, data);
+export const updateRequestsPeriodAllowanceTime = data =>
+  post(url.UPDATE_REQUEST_PERIOD_ALLOWANCE_TIME, data);
 
-export const generalizeRequestsPeriodAllowanceTime = data => post(url.GENERALIZE_REQUEST_PERIOD_ALLOWANCE_TIME, data);
+export const generalizeRequestsPeriodAllowanceTime = data =>
+  post(url.GENERALIZE_REQUEST_PERIOD_ALLOWANCE_TIME, data);
 
-// get RequestsPeriodPermission 
-export const getRequestsPeriodPermission = data => post(url.GET_REQUEST_PERIOD_PERMISSION, data);
+// get RequestsPeriodPermission
+export const getRequestsPeriodPermission = data =>
+  post(url.GET_REQUEST_PERIOD_PERMISSION, data);
 
-export const addRequestsPeriodPermission = data => post(url.ADD_REQUEST_PERIOD_PERMISSION, data);
+export const addRequestsPeriodPermission = data =>
+  post(url.ADD_REQUEST_PERIOD_PERMISSION, data);
 
-export const updateRequestsPeriodPermission = data => post(url.UPDATE_REQUEST_PERIOD_PERMISSION, data);
+export const updateRequestsPeriodPermission = data =>
+  post(url.UPDATE_REQUEST_PERIOD_PERMISSION, data);
 
-export const deleteRequestsPeriodPermission = data => post(url.DELETE_REQUEST_PERIOD_PERMISSION, data);
-
+export const deleteRequestsPeriodPermission = data =>
+  post(url.DELETE_REQUEST_PERIOD_PERMISSION, data);
 
 //get TimeLine profile
 export const getTimeLineDeletedValue = () =>
@@ -1691,7 +1688,8 @@ export const updatePassword = data => post(url.UPDATE_PASSWORD, data);
 //GET SidbarContent
 export const getSidebarContent = data => post(url.GET_SIDEBAR_CONTENTS, data);
 
-export const getUserSidebarContent = data => post(url.GET_USER_SIDEBAR_CONTENTS, data);
+export const getUserSidebarContent = data =>
+  post(url.GET_USER_SIDEBAR_CONTENTS, data);
 
 export const getRoleSidebar = data => post(url.GET_ROLE_SIDEBAR, data);
 
@@ -1702,13 +1700,17 @@ export const getTrainingMembers = data => post(url.GET_TRAINING_MEMBERS, data);
 
 export const getFilteredMembers = data => post(url.GET_FILTERED_MEMBERS, data);
 
-export const addNewTrainingMember = data => post(url.ADD_NEW_TRAINING_MEMBER, data);
+export const addNewTrainingMember = data =>
+  post(url.ADD_NEW_TRAINING_MEMBER, data);
 
-export const updateTrainingMember = data => post(url.UPDATE_TRAINING_MEMBER, data);
+export const updateTrainingMember = data =>
+  post(url.UPDATE_TRAINING_MEMBER, data);
 
-export const deleteTrainingMember = data => post(url.DELETE_TRAINING_MEMBER, data);
+export const deleteTrainingMember = data =>
+  post(url.DELETE_TRAINING_MEMBER, data);
 
-export const getTrainingMemberDeletedValue = () => get(url.GET_TRAINING_MEMBER_DELETED_VALUE);
+export const getTrainingMemberDeletedValue = () =>
+  get(url.GET_TRAINING_MEMBER_DELETED_VALUE);
 
 //GET WarningRules
 export const getWarningRules = data => post(url.GET_WARNING_RULES, data);
@@ -1853,11 +1855,14 @@ export const getLetterGradeDetailsDeletedValue = () =>
 
 export const getTransportLines = data => post(url.GET_TRANSPORT_LINES, data);
 
-export const addNewTransportLine = data => post(url.ADD_NEW_TRANSPORT_LINE, data);
+export const addNewTransportLine = data =>
+  post(url.ADD_NEW_TRANSPORT_LINE, data);
 
-export const updateTransportLine = data => post(url.UPDATE_TRANSPORT_LINE, data);
+export const updateTransportLine = data =>
+  post(url.UPDATE_TRANSPORT_LINE, data);
 
-export const deleteTransportLine = data => post(url.DELETE_TRANSPORT_LINE, data);
+export const deleteTransportLine = data =>
+  post(url.DELETE_TRANSPORT_LINE, data);
 
 export const getTransportLineDeletedValue = () =>
   get(url.GET_TRANSPORT_LINE_DELETED_VALUE);
@@ -1879,20 +1884,23 @@ export const deleteTransportLineDetail = data =>
 export const getTransportLineDetailsDeletedValue = () =>
   get(url.GET_TRANSPORT_LINE_DETAILS_DELETED_VALUE);
 
-export const getStdsTransportLine = data => post(url.GET_STDS_TRANSPORT_LINE, data);
+export const getStdsTransportLine = data =>
+  post(url.GET_STDS_TRANSPORT_LINE, data);
 
-export const addNewStdTransportLine = data => post(url.ADD_NEW_STD_TRANSPORT_LINE, data);
+export const addNewStdTransportLine = data =>
+  post(url.ADD_NEW_STD_TRANSPORT_LINE, data);
 
-export const updateStdTransportLine = data => post(url.UPDATE_STD_TRANSPORT_LINE, data);
+export const updateStdTransportLine = data =>
+  post(url.UPDATE_STD_TRANSPORT_LINE, data);
 
-export const deleteStdTransportLine = data => post(url.DELETE_STD_TRANSPORT_LINE, data);
+export const deleteStdTransportLine = data =>
+  post(url.DELETE_STD_TRANSPORT_LINE, data);
 
 export const getStdTransportLineDeletedValue = () =>
   get(url.GET_TRANSPORT_LINE_DELETED_VALUE);
 
 export const getUnivStdDataList = data =>
   post(url.GET_UNIV_STD_DATA_LIST, data);
-
 
 // levelingDecision
 
@@ -1930,12 +1938,27 @@ export const deleteLevelingDecisionDetail = data =>
 //copyFaculty
 export const copyFaculty = data => post(url.COPY_FACULTY, data);
 
-
 export const topSellingData = month =>
   get(`${url.TOP_SELLING_DATA}/${month}`, { params: { month } });
 
 export const getEarningChartsData = month =>
   get(`${url.GET_EARNING_DATA}/${month}`, { params: { month } });
+
+//CONTRACT_TYPE
+export const getContractsTypes = data => post(url.GET_CONTRACTS_TYPES, data);
+
+// add contractTypes
+export const addNewContractType = data => post(url.ADD_NEW_CONTRACT_TYPE, data);
+
+//CONTRACT_TYPE
+export const getContractTypeDeletedValue = () =>
+  get(url.GET_CONTRACT_TYPE_DELETED_VALUE);
+
+//update contractType
+export const updateContractType = data => post(url.UPDATE_CONTRACT_TYPE, data);
+
+//delete contractType
+export const deleteContractType = data => post(url.DELETE_CONTRACT_TYPE, data);
 
 export {
   getLoggedInUser,

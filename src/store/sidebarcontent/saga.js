@@ -66,7 +66,6 @@ function* fetchUserSidbarContents(payload) {
       getUserSidebarContent,
       GET_SIDEBAR_CONTENTS_req
     );
-
     response.map(resp => {
       resp["children"] = JSON.parse(resp["children"]);
 
@@ -84,7 +83,7 @@ function* fetchUserSidbarContents(payload) {
 
       return resp;
     });
-    
+
     yield put(getUserSidebarContentSuccess(response));
   } catch (error) {
     yield put(getUserSidebarContentFail(error));
