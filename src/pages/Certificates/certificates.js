@@ -953,7 +953,9 @@ class Certificates extends Component {
                                                       >
                                                         <Label>
                                                           <strong>
-                                                            {t("Certificate Type")}
+                                                            {t(
+                                                              "Certificate Type"
+                                                            )}
                                                           </strong>
                                                           <span
                                                             className=""
@@ -966,7 +968,7 @@ class Certificates extends Component {
                                                         </Label>
                                                       </Col>
                                                       <Col lg="6">
-                                                      <Select
+                                                        <Select
                                                           name="certificateTypeId"
                                                           key={`select_fromSemester`}
                                                           options={
@@ -986,9 +988,6 @@ class Certificates extends Component {
                                                         />
                                                       </Col>
                                                     </Row>
-
-                                               
-
 
                                                     <Row>
                                                       <Col lg="6">
@@ -1063,7 +1062,9 @@ class Certificates extends Component {
                                                         <Select
                                                           name="trainerGradeId"
                                                           key={`select_endSemester`}
-                                                          options={filteredGrades}
+                                                          options={
+                                                            filteredGrades
+                                                          }
                                                           onChange={newValue => {
                                                             this.handleSelectChange(
                                                               "trainerGradeId",

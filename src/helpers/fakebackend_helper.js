@@ -2018,6 +2018,52 @@ export const updateEmployee = data => post(url.UPDATE_EMPLOYEE, data);
 //delete Employee
 export const deleteEmployee = data => post(url.DELETE_EMPLOYEE, data);
 
+export const getNationalitiesOpt = data =>
+  post(url.GET_NATIONALITIES_OPT, data);
+
+export const getGendersch = data => post(url.GET_GENDERSCH, data);
+
+export const getAdministrativeSupervisorsOpt = data =>
+  post(url.GET_ADMINISTRATIVE_SUPERVISORS_OPT, data);
+
+export const getPhysicalWorkLocationsOpt = data =>
+  post(url.GET_PHYSIACL_WORK_LOCATIONS_OPT, data);
+
+export const getJobRanksOpt = data => post(url.GET_JOB_RANKS_OPT, data);
+
+export const getJobTitlesOpt = data => post(url.GET_JOB_TITLES_OPT, data);
+
+export const getAcademicYearsOpt = data =>
+  post(url.GET_ACADEMIC_YEARS_OPT, data);
+
+export const getCountriesOpt = data => post(url.GET_COUNTRIES_OPT, data);
+
+export const getCitiesOpt = data => post(url.GET_CITIES_OPT, data);
+
+export const getStatesOpt = data => post(url.GET_STATES_OPT, data);
+
+export const getCorporateNodesOpt = data =>
+  post(url.GET_CORPORATE_NODES_OPT, data);
+
+export const getCostCentersOpt = data => post(url.GET_COST_CENTERS_OPT, data);
+
+//CONTRACT
+export const getContracts = data => post(url.GET_CONTRACTS, data);
+
+// add Contract
+
+export const addNewContract = data => post(url.ADD_NEW_CONTRACT, data);
+
+//CONTRACT
+export const getContractDeletedValue = () =>
+  get(url.GET_CONTRACT_DELETED_VALUE);
+
+//update Contract
+export const updateContract = data => post(url.UPDATE_CONTRACT, data);
+
+//update Contract
+export const deleteContract = data => post(url.DELETE_CONTRACT, data);
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

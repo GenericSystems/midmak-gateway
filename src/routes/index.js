@@ -153,6 +153,9 @@ import GradesList from "../pages/Grades/grades";
 //ContractsTypes
 import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 
+//Contracts
+import ContractsList from "../pages/HR/Contracts/contracts";
+
 //Employment cases
 import EmploymentCasesList from "../pages/HR/employmentCases/employmentCases";
 
@@ -232,6 +235,10 @@ const authProtectedRoutes = [
   // contractsTypes
 
   { path: "/contractsTypes", component: ContractsTypesList },
+
+  // contracts
+
+  { path: "/contracts", component: ContractsList },
 
   // employmentCases
 

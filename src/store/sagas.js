@@ -94,6 +94,7 @@ import DistributingCoursesMethodsSaga from "./distributing-courses-methods/saga"
 import letterGradesSaga from "./letter-grade/saga";
 import transportLinesSaga from "./transportLines/saga";
 import StudentsRequestsSaga from "./students-requests/saga";
+import ContractsSaga from "./HR/contracts/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -191,5 +192,6 @@ export default function* rootSaga() {
     fork(transportLinesSaga),
     fork(StudentsHistorySaga),
     fork(StudentsRequestsSaga),
+    fork(ContractsSaga),
   ]);
 }

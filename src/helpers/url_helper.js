@@ -992,3 +992,22 @@ export const GET_EMPLOYEE_DELETED_VALUE = "/deleted";
 export const ADD_NEW_EMPLOYEE = "/add/employee";
 export const UPDATE_EMPLOYEE = "/update/employee";
 export const DELETE_EMPLOYEE = "/delete/employee";
+export const GET_NATIONALITIES_OPT = "/nationalities";
+export const GET_GENDERSCH = "/genders";
+//CONTRACTS
+export const GET_CONTRACTS = "/contracts";
+export const GET_CONTRACT_DELETED_VALUE = "/deleted";
+export const ADD_NEW_CONTRACT = "/add/contract";
+export const UPDATE_CONTRACT = "/update/contract";
+export const DELETE_CONTRACT = "/deleted/contract";
+
+export const GET_ADMINISTRATIVE_SUPERVISORS_OPT = "/administrativeSupervisors";
+export const GET_PHYSIACL_WORK_LOCATIONS_OPT = "/physicalWorkLocationsOpt";
+export const GET_JOB_RANKS_OPT = "/jobRanks";
+export const GET_JOB_TITLES_OPT = "/jobTitles";
+export const GET_CORPORATE_NODES_OPT = "/corporateNodes";
+export const GET_COST_CENTERS_OPT = "/costCenters";
+export const GET_ACADEMIC_YEARS_OPT = "/academicYears";
+export const GET_COUNTRIES_OPT = "/countries";
+export const GET_CITIES_OPT = "/cities";
+export const GET_STATES_OPT = "/states";

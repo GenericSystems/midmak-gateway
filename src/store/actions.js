@@ -247,3 +247,7 @@ export * from "./transportLines/actions";
 
 // students-requests
 export * from "./students-requests/actions";
+
+//Contract
+
+export * from "./HR/contracts/actions";

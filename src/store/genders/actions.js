@@ -83,4 +83,3 @@ export const getGenderDeletedValueFail = error => ({
   type: GET_GENDER_DELETED_VALUE_FAIL,
   payload: error,
 });
-
