@@ -94,7 +94,7 @@ import {
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchNationalities() {
-  const get_nationalities_req = {
+  const get_nationality_req = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -102,7 +102,7 @@ function* fetchNationalities() {
     fields: "Id,arTitle",
   };
   try {
-    const response = yield call(getNationalitiesOpt, get_nationalities_req);
+    const response = yield call(getNationalitiesOpt, get_nationality_req);
     yield put(getNationalitiesOptSuccess(response));
   } catch (error) {
     yield put(getNationalitiesOptFail(error));
@@ -112,7 +112,7 @@ function* fetchNationalities() {
 function* fetchCountries() {
   const get_Countries_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_Country",
     fields: "Id,arTitle",
@@ -263,7 +263,7 @@ function* fetchJobTitles() {
 }
 
 function* fetchGenders() {
-  const get_genders_req = {
+  const get_gender_req = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -271,7 +271,7 @@ function* fetchGenders() {
     fields: "Id,arTitle",
   };
   try {
-    const response = yield call(getGendersch, get_genders_req);
+    const response = yield call(getGendersch, get_gender_req);
     yield put(getGenderschSuccess(response));
   } catch (error) {
     yield put(getGenderschFail(error));

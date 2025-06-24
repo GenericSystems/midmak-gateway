@@ -45,6 +45,10 @@ import {
   getPhysicalWorkLocationsOptFail,
   getAcademicYearsOptSuccess,
   getAcademicYearsOptFail,
+  getNationalitiesOptSuccess,
+  getNationalitiesOptFail,
+  getGenderschSuccess,
+  getGenderschFail,
 } from "../employees/actions";
 
 import {
@@ -68,6 +72,8 @@ import {
   getWorkClassifications,
   getAcademicYearsOpt,
   getEmploymentCases,
+  getNationalitiesOpt,
+  getGendersch,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchContracts() {
@@ -75,10 +81,11 @@ function* fetchContracts() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Contract",
+    tablename: "_Common_Contract",
   };
   try {
     const response = yield call(getContracts, get_contract_req);
+    console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", response);
     yield put(getContractsSuccess(response));
   } catch (error) {
     yield put(getContractsFail(error));
@@ -107,7 +114,7 @@ function* fetchContracts() {
 
   try {
     const response = yield call(getContractsTypes, get_contractType_req);
-    console.log("555555555555", response);
+    console.log("999999999999999999999999999", response);
     yield put(getContractsTypesSuccess(response));
   } catch (error) {
     yield put(getContractsTypesFail(error));
@@ -190,6 +197,34 @@ function* fetchContracts() {
   } catch (error) {
     yield put(getJobTitlesOptFail(error));
   }
+
+  const get_gender_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Gender",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getGendersch, get_gender_req);
+    yield put(getGenderschSuccess(response));
+  } catch (error) {
+    yield put(getGenderschFail(error));
+  }
+
+  const get_nationality_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Nationality",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getNationalitiesOpt, get_nationality_req);
+    yield put(getNationalitiesOptSuccess(response));
+  } catch (error) {
+    yield put(getNationalitiesOptFail(error));
+  }
 }
 
 function* getContractProfile() {
@@ -208,6 +243,7 @@ function* onAddNewContract({ payload }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_Contract";
+  payload["queryname"] = "_Common_Contract";
 
   try {
     const response = yield call(addNewContract, payload);
@@ -222,7 +258,7 @@ function* onDeleteContract({ payload, contract }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_Contract";
+  payload["tablename"] = "_Common_Contract";
 
   try {
     const response = yield call(deleteContract, payload);
@@ -238,8 +274,10 @@ function* onUpdateContract({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_Contract";
+  payload["queryname"] = "_Common_Contract";
   try {
     const respupdate = yield call(updateContract, payload);
+    console.log("UpdateContract", respupdate);
     yield put(updateContractSuccess(respupdate[0]));
   } catch (error) {
     yield put(updateContractFail(error));

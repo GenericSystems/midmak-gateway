@@ -21,6 +21,7 @@ import {
   Label,
   Alert,
   Input,
+  InputGroup,
 } from "reactstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
@@ -138,7 +139,7 @@ class EmployeesList extends Component {
       values: "",
     };
     this.toggle = this.toggle.bind(this);
-    this.handleGenderChange = this.handleGenderChange.bind(this);
+    this.toggle2 = this.toggle2.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
@@ -303,6 +304,9 @@ class EmployeesList extends Component {
       employee: arg,
       selectedGender: arg.genderId,
       selectedNationality: arg.nationalityId,
+      selectedStateId: arg.stateId,
+      selectedCountryId: arg.countryId,
+      selectedCityId: arg.cityId,
       isEdit: true,
     });
     this.toggle();
@@ -359,6 +363,11 @@ class EmployeesList extends Component {
     const { onAddNewEmployee, onUpdateEmployee } = this.props;
     console.log("values", values);
 
+    values["genderId"] = selectedGender;
+    values["nationalityId"] = selectedNationality;
+    values["countryId"] = selectedCountryId;
+    values["cityId"] = selectedCityId;
+    values["stateId"] = selectedStateId;
     if (
       values.firstName === "" ||
       values.lastName === "" ||
@@ -424,7 +433,7 @@ class EmployeesList extends Component {
       }
 
       if (selectedNationality) {
-        employeeinfo["nationalityId"] = parseInt(selectedNationality);
+        employeeinfo["nationalityId"] = selectedNationality;
       }
 
       if (selectedBirthDate != "") {
@@ -455,22 +464,9 @@ class EmployeesList extends Component {
       if (selectedResidenceGrantedDate) {
         employeeinfo["residenceGrantedDate"] = selectedResidenceGrantedDate;
       }
-      if (selectedCityId) {
-        employeeinfo["cityId"] = selectedCityId;
-      }
-      if (selectedCountryId) {
-        employeeinfo["countryId"] = selectedCountryId;
-      }
-      if (selectedStateId) {
-        employeeinfo["stateId"] = selectedStateId;
-      }
-
       const saveEmployeeMessage = "Saved successfully ";
       this.setState({
         successMessage: saveEmployeeMessage,
-      });
-      this.setState({
-        successMessage2: saveContractMessage,
       });
     }
     this.toggle();
@@ -636,9 +632,44 @@ class EmployeesList extends Component {
         nationalityId: name.label,
       });
     }
+    if (fieldName === "countryId") {
+      const selected = this.state.countriesOpt.find(
+        country => country.arTitle === selectedValue
+      );
+
+      this.setState({
+        selectedCountryId: selected ? selected.Id : null,
+      });
+      return;
+    }
+    if (fieldName === "cityId") {
+      const selected = this.state.citiesOpt.find(
+        city => city.arTitle === selectedValue
+      );
+
+      this.setState({
+        selectedCityId: selected ? selected.Id : null,
+      });
+      return;
+    }
+
+    if (fieldName === "stateId") {
+      const selected = this.state.statesOpt.find(
+        state => state.arTitle === selectedValue
+      );
+
+      this.setState({
+        selectedStateId: selected ? selected.Id : null,
+      });
+      return;
+    }
+    if (fieldName === "genderId") {
+      this.setState({ selectedGender: selectedValue });
+    }
   };
 
   handleSelect = (fieldName, selectedValue) => {
+    let updatedField = {};
     // if (fieldName == "administrativeSupervisor") {
     //   this.setState({
     //     selectedAdministrativeSupervisor: selectedValue,
@@ -679,40 +710,6 @@ class EmployeesList extends Component {
       });
       return;
     }
-
-    if (fieldName === "countryId") {
-      const selected = this.state.countriesOpt.find(
-        country => country.arTitle === selectedValue
-      );
-
-      this.setState({
-        selectedCountryId: selected ? selected.Id : null,
-      });
-      return;
-    }
-
-    if (fieldName === "cityId") {
-      const selected = this.state.citiesOpt.find(
-        city => city.arTitle === selectedValue
-      );
-
-      this.setState({
-        selectedCityId: selected ? selected.Id : null,
-      });
-      return;
-    }
-
-    if (fieldName === "stateId") {
-      const selected = this.state.statesOpt.find(
-        state => state.arTitle === selectedValue
-      );
-
-      this.setState({
-        selectedStateId: selected ? selected.Id : null,
-      });
-      return;
-    }
-
     if (fieldName === "academicYearId") {
       const selected = this.state.academicYearsOpt.find(
         academicYear =>
@@ -736,11 +733,6 @@ class EmployeesList extends Component {
     //     selectedAcademicYearId: selectedValue,
     //   });
     // }
-  };
-  handleGenderChange = (fieldName, selectedValue) => {
-    if (fieldName === "genderId") {
-      this.setState({ selectedGender: selectedValue });
-    }
   };
 
   handleAlertClose = () => {
@@ -798,8 +790,6 @@ class EmployeesList extends Component {
       countriesOpt,
       statesOpt,
     } = this.props;
-    console.log("jobTitleId", jobTitlesOpt);
-    console.log("academicYearsOpt", academicYearsOpt);
     const {
       duplicateError,
       deleteModal,
@@ -846,6 +836,7 @@ class EmployeesList extends Component {
       showEditButton,
       showSearchButton,
     } = this.state;
+    console.log("employeeeeeeeeeeeeeeeee", employees);
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -861,7 +852,7 @@ class EmployeesList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "firstName",
+        dataField: "fullName",
         text: this.props.t("Full Name"),
         sort: true,
         editable: false,
@@ -1083,8 +1074,8 @@ class EmployeesList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  // data={employees}
-                                  // columns={columns}
+                                  data={employees}
+                                  columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
                                     blurToSave: true,
@@ -1252,12 +1243,8 @@ class EmployeesList extends Component {
                                           (employee &&
                                             employee.whatsAppNumber) ||
                                           "",
-                                        otherNumber:
-                                          (employee && employee.otherNumber) ||
-                                          "",
-                                        emailAddress:
-                                          (employee && employee.emailAddress) ||
-                                          "",
+                                        email:
+                                          (employee && employee.email) || "",
                                       }}
                                       validationSchema={Yup.object().shape({
                                         firstName: Yup.string()
@@ -1301,6 +1288,33 @@ class EmployeesList extends Component {
                                           Yup.string().matches(/^[a-zA-Z]+$/),
                                         motherNameE:
                                           Yup.string().matches(/^[a-zA-Z]+$/),
+                                        emailAddress: Yup.string().email(
+                                          "Must be a valid Email"
+                                        ),
+                                        phoneNumber: Yup.string()
+                                          .notRequired()
+                                          .test(
+                                            "is-numeric-or-empty",
+                                            "Phone number must contain digits only",
+                                            value =>
+                                              !value || /^\d+$/.test(value)
+                                          ),
+                                        mobileNumber: Yup.string()
+                                          .notRequired()
+                                          .test(
+                                            "is-numeric-or-empty",
+                                            "Mobile number must contain digits only",
+                                            value =>
+                                              !value || /^\d+$/.test(value)
+                                          ),
+                                        whatsAppNumber: Yup.string()
+                                          .notRequired()
+                                          .test(
+                                            "is-numeric-or-empty",
+                                            " WhatsApp number must contain digits only",
+                                            value =>
+                                              !value || /^\d+$/.test(value)
+                                          ),
                                       })}
                                     >
                                       {({
@@ -1897,7 +1911,7 @@ class EmployeesList extends Component {
                                                                                 gender.value
                                                                               }
                                                                               onChange={event => {
-                                                                                this.handleGenderChange(
+                                                                                this.handleSelectChange(
                                                                                   "genderId",
                                                                                   event
                                                                                     .target
@@ -2416,8 +2430,11 @@ class EmployeesList extends Component {
                                                                       id="countryId"
                                                                       placeholder="Type to search..."
                                                                       autoComplete="off"
+                                                                      value={
+                                                                        values.countryId
+                                                                      }
                                                                       onChange={e =>
-                                                                        this.handleSelect(
+                                                                        this.handleSelectChange(
                                                                           e
                                                                             .target
                                                                             .name,
@@ -2432,10 +2449,60 @@ class EmployeesList extends Component {
                                                                         countryOpt => (
                                                                           <option
                                                                             key={
-                                                                              countryOpt.Id
+                                                                              countryOpt.key
                                                                             }
                                                                             value={
-                                                                              countryOpt.arTitle
+                                                                              countryOpt.value
+                                                                            }
+                                                                          />
+                                                                        )
+                                                                      )}
+                                                                    </datalist>
+                                                                  </Col>
+                                                                </Row>
+                                                              </div>
+                                                            </Col>
+                                                            <Col lg="4">
+                                                              <div className="mb-3">
+                                                                <Row>
+                                                                  <Col className="col-4">
+                                                                    <Label for="stateId">
+                                                                      {this.props.t(
+                                                                        "State"
+                                                                      )}
+                                                                    </Label>
+                                                                  </Col>
+                                                                  <Col className="col-8">
+                                                                    <input
+                                                                      name="stateId"
+                                                                      className={`form-control ${this.state.inputClass}`}
+                                                                      list="statesId"
+                                                                      id="stateId"
+                                                                      placeholder="Type to search..."
+                                                                      autoComplete="off"
+                                                                      value={
+                                                                        values.stateId
+                                                                      }
+                                                                      onChange={e =>
+                                                                        this.handleSelectChange(
+                                                                          e
+                                                                            .target
+                                                                            .name,
+                                                                          e
+                                                                            .target
+                                                                            .value
+                                                                        )
+                                                                      }
+                                                                    />
+                                                                    <datalist id="statesId">
+                                                                      {statesOpt.map(
+                                                                        stateOpt => (
+                                                                          <option
+                                                                            key={
+                                                                              stateOpt.Id
+                                                                            }
+                                                                            value={
+                                                                              stateOpt.arTitle
                                                                             }
                                                                           />
                                                                         )
@@ -2464,7 +2531,7 @@ class EmployeesList extends Component {
                                                                       placeholder="Type to search..."
                                                                       autoComplete="off"
                                                                       onChange={e =>
-                                                                        this.handleSelect(
+                                                                        this.handleSelectChange(
                                                                           e
                                                                             .target
                                                                             .name,
@@ -2492,120 +2559,23 @@ class EmployeesList extends Component {
                                                                 </Row>
                                                               </div>
                                                             </Col>
-                                                            <Col lg="4">
-                                                              <div className="mb-3">
-                                                                <Row>
-                                                                  <Col className="col-4">
-                                                                    <Label for="stateId">
-                                                                      {this.props.t(
-                                                                        "State"
-                                                                      )}
-                                                                    </Label>
-                                                                  </Col>
-                                                                  <Col className="col-8">
-                                                                    <input
-                                                                      name="stateId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="statesId"
-                                                                      id="stateId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      onChange={e =>
-                                                                        this.handleSelect(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value
-                                                                        )
-                                                                      }
-                                                                    />
-                                                                    <datalist id="statesId">
-                                                                      {statesOpt.map(
-                                                                        stateOpt => (
-                                                                          <option
-                                                                            key={
-                                                                              stateOpt.Id
-                                                                            }
-                                                                            value={
-                                                                              stateOpt.arTitle
-                                                                            }
-                                                                          />
-                                                                        )
-                                                                      )}
-                                                                    </datalist>
-                                                                  </Col>
-                                                                </Row>
-                                                              </div>
-                                                            </Col>
                                                           </Row>
                                                           <Row>
                                                             <Col lg="6">
                                                               <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
-                                                                    <Label for="birthDate">
+                                                                    <Label for="permanentAddress">
                                                                       {this.props.t(
-                                                                        "Date of Birth"
-                                                                      )}
-                                                                    </Label>
-                                                                    <span className="text-danger">
-                                                                      *
-                                                                    </span>
-                                                                  </Col>
-                                                                  <Col className="col-6">
-                                                                    <Field
-                                                                      name="birthDate"
-                                                                      className={`form-control ${
-                                                                        birthDateError
-                                                                          ? "is-invalid"
-                                                                          : ""
-                                                                      }`}
-                                                                      type="date"
-                                                                      value={
-                                                                        values.birthDate
-                                                                          ? new Date(
-                                                                              values.birthDate
-                                                                            )
-                                                                              .toISOString()
-                                                                              .split(
-                                                                                "T"
-                                                                              )[0]
-                                                                          : ""
-                                                                      }
-                                                                      onChange={
-                                                                        handleChange
-                                                                      }
-                                                                      onBlur={
-                                                                        handleBlur
-                                                                      }
-                                                                      id="birthDate-date-input"
-                                                                    />
-                                                                    {birthDateError && (
-                                                                      <div className="invalid-feedback">
-                                                                        {this.props.t(
-                                                                          "Birth Date is required"
-                                                                        )}
-                                                                      </div>
-                                                                    )}
-                                                                  </Col>
-                                                                </Row>
-                                                              </div>
-                                                              <div className="mb-2">
-                                                                <Row>
-                                                                  <Col className="col-6">
-                                                                    <Label for="age">
-                                                                      {this.props.t(
-                                                                        "Age"
+                                                                        "Permanent Address (Full Details)"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-6">
                                                                     <Field
                                                                       type="text"
-                                                                      name="age"
-                                                                      id="age"
+                                                                      name="permanentAddress"
+                                                                      id="permanentAddress"
                                                                       className={
                                                                         "form-control"
                                                                       }
@@ -2616,103 +2586,53 @@ class EmployeesList extends Component {
                                                               <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
-                                                                    <Label className="form-label">
+                                                                    <Label for="phoneNumber">
                                                                       {this.props.t(
-                                                                        "Gender"
+                                                                        "Phone Number"
                                                                       )}
                                                                     </Label>
-                                                                    <span className="text-danger">
-                                                                      *
-                                                                    </span>
                                                                   </Col>
-                                                                  <Col className="col-6 mb-3">
-                                                                    <div className="radio-buttons-gender-container mt-3">
-                                                                      {genders.map(
-                                                                        gender => (
-                                                                          <div
-                                                                            className="radio-button-gender"
-                                                                            key={
-                                                                              gender.value
-                                                                            }
-                                                                          >
-                                                                            <Input
-                                                                              type="radio"
-                                                                              name="genderId"
-                                                                              value={
-                                                                                gender.value
-                                                                              }
-                                                                              id={
-                                                                                gender.value
-                                                                              }
-                                                                              onChange={event => {
-                                                                                this.handleGenderChange(
-                                                                                  "genderId",
-                                                                                  event
-                                                                                    .target
-                                                                                    .value
-                                                                                );
-                                                                              }}
-                                                                              defaultChecked={
-                                                                                gender.value ===
-                                                                                selectedGender
-                                                                              }
-                                                                            />
-                                                                            <label>
-                                                                              {this.props.t(
-                                                                                gender.label
-                                                                              )}
-                                                                            </label>
-                                                                          </div>
-                                                                        )
-                                                                      )}
-                                                                    </div>
+                                                                  <Col className="col-6">
+                                                                    <Field
+                                                                      type="text"
+                                                                      name="phoneNumber"
+                                                                      id="phoneNumber"
+                                                                      className={
+                                                                        "form-control"
+                                                                      }
+                                                                    />
+                                                                    <ErrorMessage
+                                                                      name="phoneNumber"
+                                                                      component="div"
+                                                                      className="text-danger"
+                                                                    />
                                                                   </Col>
                                                                 </Row>
                                                               </div>
-                                                              <div className="mb-2">
+                                                              <div className="mb-3">
                                                                 <Row>
                                                                   <Col className="col-6">
-                                                                    <Label className="form-label">
+                                                                    <Label for="email">
                                                                       {this.props.t(
-                                                                        "Nationality"
+                                                                        "Email Address"
                                                                       )}
                                                                     </Label>
-                                                                    <span className="text-danger">
-                                                                      *
-                                                                    </span>
                                                                   </Col>
                                                                   <Col className="col-6">
-                                                                    <Select
-                                                                      className={`form-control ${
-                                                                        nationalityError
-                                                                          ? "is-invalid"
-                                                                          : ""
-                                                                      }`}
-                                                                      name="nationalityId"
-                                                                      key="nationality_select"
-                                                                      options={
-                                                                        nationalitiesOpt
-                                                                      }
-                                                                      onChange={newValue =>
-                                                                        this.handleSelectChange(
-                                                                          "nationalityId",
-                                                                          newValue.value
-                                                                        )
-                                                                      }
-                                                                      value={nationalitiesOpt.find(
-                                                                        opt =>
-                                                                          opt.label ===
-                                                                          selectedNationality
-                                                                      )}
-                                                                    />
+                                                                    <InputGroup>
+                                                                      <Field
+                                                                        type="text"
+                                                                        name="email"
+                                                                        id="email"
+                                                                        className={
+                                                                          "form-control"
+                                                                        }
+                                                                      />
+                                                                      <div className="input-group-text">
+                                                                        @
+                                                                      </div>
+                                                                    </InputGroup>
                                                                   </Col>
-                                                                  {nationalityError && (
-                                                                    <div className="invalid-feedback">
-                                                                      {this.props.t(
-                                                                        "Nationality is required"
-                                                                      )}
-                                                                    </div>
-                                                                  )}
                                                                 </Row>
                                                               </div>
                                                             </Col>
@@ -2723,89 +2643,17 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Row>
                                                                         <Col className="col-6">
-                                                                          <Label for="passGrantdate">
+                                                                          <Label for="temporaryAddress">
                                                                             {this.props.t(
-                                                                              "Grant Date"
-                                                                            )}
-                                                                          </Label>
-                                                                        </Col>
-                                                                        <Col className="col-6">
-                                                                          <Field
-                                                                            type="date"
-                                                                            name="passportGrantDate"
-                                                                            className={`form-control`}
-                                                                            value={
-                                                                              values.passportGrantDate
-                                                                                ? new Date(
-                                                                                    values.passportGrantDate
-                                                                                  )
-                                                                                    .toISOString()
-                                                                                    .split(
-                                                                                      "T"
-                                                                                    )[0]
-                                                                                : ""
-                                                                            }
-                                                                            onChange={
-                                                                              handleChange
-                                                                            }
-                                                                            onBlur={
-                                                                              handleBlur
-                                                                            }
-                                                                            id="passportGrantDate-date-input"
-                                                                          />
-                                                                        </Col>
-                                                                      </Row>
-                                                                    </div>
-                                                                    <div className="mb-2">
-                                                                      <Row>
-                                                                        <Col className="col-6">
-                                                                          <Label for="passExpDate">
-                                                                            {this.props.t(
-                                                                              "Expiration Date"
-                                                                            )}
-                                                                          </Label>
-                                                                        </Col>
-                                                                        <Col className="col-6">
-                                                                          <Field
-                                                                            type="date"
-                                                                            name="passportExpirationDate"
-                                                                            className={`form-control`}
-                                                                            value={
-                                                                              values.passportExpirationDate
-                                                                                ? new Date(
-                                                                                    values.passportExpirationDate
-                                                                                  )
-                                                                                    .toISOString()
-                                                                                    .split(
-                                                                                      "T"
-                                                                                    )[0]
-                                                                                : ""
-                                                                            }
-                                                                            onChange={
-                                                                              handleChange
-                                                                            }
-                                                                            onBlur={
-                                                                              handleBlur
-                                                                            }
-                                                                            id="passportExpirationDate-date-input"
-                                                                          />
-                                                                        </Col>
-                                                                      </Row>
-                                                                    </div>
-                                                                    <div className="mb-2">
-                                                                      <Row>
-                                                                        <Col className="col-6">
-                                                                          <Label for="residence">
-                                                                            {this.props.t(
-                                                                              "Residence Number"
+                                                                              "Temporary Address (if applicable)"
                                                                             )}
                                                                           </Label>
                                                                         </Col>
                                                                         <Col className="col-6">
                                                                           <Field
                                                                             type="text"
-                                                                            name="residenceNum"
-                                                                            id="residence"
+                                                                            name="temporaryAddress"
+                                                                            id="temporaryAddress"
                                                                             className={
                                                                               "form-control"
                                                                             }
@@ -2816,35 +2664,25 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Row>
                                                                         <Col className="col-6">
-                                                                          <Label for="resGrantDate">
+                                                                          <Label for="mobileNumber">
                                                                             {this.props.t(
-                                                                              "Residence Granted Date"
+                                                                              "Mobile Phone Number"
                                                                             )}
                                                                           </Label>
                                                                         </Col>
                                                                         <Col className="col-6">
                                                                           <Field
-                                                                            type="date"
-                                                                            name="residenceGrantedDate"
-                                                                            className={`form-control`}
-                                                                            value={
-                                                                              values.residenceGrantedDate
-                                                                                ? new Date(
-                                                                                    values.residenceGrantedDate
-                                                                                  )
-                                                                                    .toISOString()
-                                                                                    .split(
-                                                                                      "T"
-                                                                                    )[0]
-                                                                                : ""
+                                                                            type="text"
+                                                                            name="mobileNumber"
+                                                                            id="mobileNumber"
+                                                                            className={
+                                                                              "form-control"
                                                                             }
-                                                                            onChange={
-                                                                              handleChange
-                                                                            }
-                                                                            onBlur={
-                                                                              handleBlur
-                                                                            }
-                                                                            id="residenceGrantedDate-date-input"
+                                                                          />
+                                                                          <ErrorMessage
+                                                                            name="mobileNumber"
+                                                                            component="div"
+                                                                            className="text-danger"
                                                                           />
                                                                         </Col>
                                                                       </Row>
@@ -2852,35 +2690,25 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Row>
                                                                         <Col className="col-6">
-                                                                          <Label for="resExpirationDate">
+                                                                          <Label for="whatsAppNumber">
                                                                             {this.props.t(
-                                                                              "Residence Expiration Date"
+                                                                              "WhatsApp Number"
                                                                             )}
                                                                           </Label>
                                                                         </Col>
                                                                         <Col className="col-6">
                                                                           <Field
-                                                                            type="date"
-                                                                            name="resExpirationDate"
-                                                                            className={`form-control`}
-                                                                            value={
-                                                                              values.resExpirationDate
-                                                                                ? new Date(
-                                                                                    values.resExpirationDate
-                                                                                  )
-                                                                                    .toISOString()
-                                                                                    .split(
-                                                                                      "T"
-                                                                                    )[0]
-                                                                                : ""
+                                                                            type="text"
+                                                                            name="whatsAppNumber"
+                                                                            id="whatsAppNumber"
+                                                                            className={
+                                                                              "form-control"
                                                                             }
-                                                                            onChange={
-                                                                              handleChange
-                                                                            }
-                                                                            onBlur={
-                                                                              handleBlur
-                                                                            }
-                                                                            id="residenceExpirationDate-date-input"
+                                                                          />
+                                                                          <ErrorMessage
+                                                                            name="whatsAppNumber"
+                                                                            component="div"
+                                                                            className="text-danger"
                                                                           />
                                                                         </Col>
                                                                       </Row>
@@ -3263,7 +3091,7 @@ class EmployeesList extends Component {
                                                               <div className="mb-3">
                                                                 <Row>
                                                                   <Col className="col-4">
-                                                                    <Label for="Id">
+                                                                    <Label for="jobTitleId">
                                                                       {this.props.t(
                                                                         "Job Title"
                                                                       )}

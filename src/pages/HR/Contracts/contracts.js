@@ -68,6 +68,8 @@ class ContractsList extends Component {
       employees: [],
       contracts: [],
       contract: "",
+      employee: "",
+      selectConId: null,
       showAlert: null,
       showAddButton: false,
       showDeleteButton: false,
@@ -79,7 +81,10 @@ class ContractsList extends Component {
       duplicateError: null,
       selectedRowId: null,
       modal: false,
+      modal2: false,
       isEdit: false,
+      isOpen: false,
+      isAdd: false,
       selectedWorkClassification: "",
       selectedJobTitle: "",
       selectedCostCenter: "",
@@ -94,8 +99,10 @@ class ContractsList extends Component {
       errorMessage: null,
       successMessage: null,
       values: "",
+      modalContractValue: [],
     };
     this.toggle = this.toggle.bind(this);
+    this.toggle2 = this.toggle2.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
 
@@ -103,6 +110,8 @@ class ContractsList extends Component {
     const {
       contracts,
       onGetContracts,
+      genders,
+      nationalitiesOpt,
       contractsTypes,
       employmentCases,
       deleted,
@@ -135,6 +144,8 @@ class ContractsList extends Component {
       contractsTypes,
       employmentCases,
       academicYearsOpt,
+      nationalitiesOpt,
+      genders,
     });
 
     console.log("rsssssssssssssss", contracts);
@@ -207,6 +218,12 @@ class ContractsList extends Component {
     }));
   };
 
+  toggle2 = () => {
+    this.setState(prevState => ({
+      modal2: !prevState.modal2,
+    }));
+  };
+
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
@@ -215,6 +232,8 @@ class ContractsList extends Component {
     this.setState({
       contract: "",
       isEdit: false,
+      isOpen: false,
+      isAdd: true,
     });
     this.toggle();
   };
@@ -260,6 +279,9 @@ class ContractsList extends Component {
       selectedWorkClassification,
       selectedAcademicYearId,
       contract,
+      isEdit,
+      isAdd,
+      selectEmpId,
       selectedHasMinistryApprove,
       selectedGovernmentWorker,
     } = this.state;
@@ -267,6 +289,7 @@ class ContractsList extends Component {
 
     //values["administrativeSupervisor"] = selectedAdministrativeSupervisor;
     // values["physicalWorkLocation"] = selectedPhysicalWorkLocations;
+    // values["employeeId"] = selectEmpId;
     values["jobRankId"] = selectedJobRank;
     values["jobTitleId"] = selectedJobTitle;
     // values["corporateNodeId"] = selectedCorporateNode;
@@ -308,9 +331,10 @@ class ContractsList extends Component {
         contractInfo[key] = values[key];
       });
       if (isEdit) {
-        // onUpdateContract(contractInfo);
+        console.log("9999999", contractInfo);
+        onUpdateContract(contractInfo);
       } else {
-        // onAddNewContract(contractInfo);
+        onAddNewContract(contractInfo);
       }
       this.setState({
         errorMessages: {},
@@ -333,9 +357,6 @@ class ContractsList extends Component {
       if (selectedContractType === undefined) {
         emptyError = "Fill the empty select";
       }
-      if (selectedEmploymentCase === undefined) {
-        emptyError = "Fill the empty select";
-      }
       if (selectedAcademicYearId === undefined) {
         emptyError = "Fill the empty select";
       }
@@ -348,9 +369,6 @@ class ContractsList extends Component {
       // if (selectedCorporateNode === undefined) {
       //   emptyError = "Fill the empty select";
       // }
-      if (selectedWorkClassification === undefined) {
-        emptyError = "Fill the empty select";
-      }
       this.setState({ emptyError: emptyError });
     }
   };
@@ -425,12 +443,6 @@ class ContractsList extends Component {
     this.setState({ duplicateError: null });
   };
 
-  handleSelectFaculty(rowId, fieldName, newValue) {
-    const { onUpdateContract } = this.props;
-    const onUpdate = { Id: rowId, [fieldName]: newValue };
-    onUpdateContract(onUpdate);
-  }
-
   handleSuccessClose = () => {
     const { onGetContractDeletedValue } = this.props;
     this.setState({ showAlert: null });
@@ -447,26 +459,44 @@ class ContractsList extends Component {
     console.log("arg", arg);
 
     this.setState({
-      contrcat: arg,
+      contract: arg,
       selectedJobRank: arg.jobRankId,
       selectedJobTitle: arg.jobTitleId,
-      selectedCertificateType: arg.certificateTypeId,
-      // selectedMemberGrade: arg.trainerGradeId,
-      // sectorsArray: arg.sector,
-      // selectedYear: arg.yearId,
+      selectedCorporateNode: arg.corporateNodeId,
+      selectedContractType: arg.contractTypeId,
+      selectedEmploymentCase: arg.employmentCaseId,
+      selectedHasMinistryApprove: arg.hasMinistryApprove,
+      selectedGovernmentWorker: arg.governmentWorker,
+      selectedWorkClassification: arg.workClassificationId,
+      selectedAcademicYearId: arg.academicYearId,
       isEdit: true,
+      isOpen: false,
     });
     this.toggle();
   };
 
+  handleEmployeeDataClick = contract => {
+    console.log("arg", contract);
+
+    this.setState({
+      isOpen: true,
+      selectConId: contract.Id,
+      modalContractValue: contract,
+    });
+    this.toggle2();
+  };
+
   render() {
     const contract = this.state.contract;
+    const employee = this.state.employee;
     const {
       contracts,
       t,
       deleted,
       contractsTypes,
       employmentCases,
+      genders,
+      nationalitiesOpt,
       administrativeSupervisorsOpt,
       workClassifications,
       physicalWorkLocationsOpt,
@@ -480,7 +510,10 @@ class ContractsList extends Component {
       duplicateError,
       deleteModal,
       modal,
+      modal2,
       isEdit,
+      isOpen,
+      isAdd,
       emptyError,
       showAlert,
       contractTypeError,
@@ -496,6 +529,7 @@ class ContractsList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      modalContractValue,
     } = this.state;
     const { SearchBar } = Search;
     const alertMessage =
@@ -515,55 +549,55 @@ class ContractsList extends Component {
         dataField: "jobNumber",
         text: this.props.t("Job Number"),
         sort: true,
-        //  editable: showEditButton,
+        editable: false,
       },
       {
         dataField: "ncsDate",
         text: this.props.t("NCS Date"),
         sort: true,
-        //  editable: showEditButton,
+        editable: false,
       },
       {
-        dataField: "fullName",
+        dataField: "employeeName",
         text: this.props.t("Full Name"),
         sort: true,
-        //  editable: showEditButton,
+        editable: false,
       },
       {
         dataField: "position",
         text: this.props.t("Position"),
         sort: true,
-        //  editable: showEditButton,
+        editable: false,
       },
       {
-        dataField: "jobTitleId",
+        dataField: "jobTitle",
         text: this.props.t("Job Title"),
         sort: true,
-        //  editable: showEditButton,
+        editable: false,
       },
       {
-        dataField: "corporateNodeId",
+        dataField: "corporateNode",
         text: this.props.t("Corporate Node"),
         sort: true,
-        //  editable: showEditButton,
+        editable: false,
       },
       {
-        dataField: "contractTypeId",
+        dataField: "contractName",
         text: this.props.t("Contract Type "),
         sort: true,
-        //  editable: showEditButton,
+        editable: false,
       },
       {
-        dataField: "workClassificationId",
+        dataField: "workClassification",
         text: this.props.t("Work Classification"),
         sort: true,
-        //  editable: showEditButton,
+        editable: false,
       },
       {
         dataField: "status",
         text: this.props.t("Status"),
         sort: true,
-        //  editable: showEditButton,
+        editable: false,
       },
       {
         dataField: "menu",
@@ -573,6 +607,18 @@ class ContractsList extends Component {
         //  hidden: !showDeleteButton,
         formatter: (cellContent, contract) => (
           <div className="d-flex gap-3">
+            <Tooltip
+              title={this.props.t("View Employee Information")}
+              placement="top"
+            >
+              <Link className="text-sm-end" to="#">
+                <i
+                  className="fas fa-male font-size-18"
+                  id="viewtooltip"
+                  onClick={() => this.handleEmployeeDataClick(contract)}
+                ></i>
+              </Link>
+            </Tooltip>
             <Tooltip title={this.props.t("Edit")} placement="top">
               <Link className="text-sm-end" to="#">
                 <i
@@ -724,11 +770,7 @@ class ContractsList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handleContractDataChange(
-                                        row.Id,
-                                        column.dataField,
-                                        newValue
-                                      );
+                                      row.Id, column.dataField, newValue;
                                     },
                                   })}
                                   noDataIndication={this.props.t(
@@ -1809,6 +1851,384 @@ class ContractsList extends Component {
                                     </Formik>
                                   </ModalBody>
                                 </Modal>
+                                <Modal
+                                  isOpen={modal2}
+                                  toggle={this.toggle2}
+                                  className={"modal-fullscreen"}
+                                >
+                                  <ModalHeader toggle={this.toggle2} tag="h4">
+                                    {!!isOpen ? t("View Employee Data") : ""}
+                                  </ModalHeader>
+                                  <ModalBody>
+                                    <Card id="employee-card">
+                                      <CardTitle id="course_header">
+                                        {t("Employee Data")}
+                                      </CardTitle>
+                                      <CardBody className="cardBody">
+                                        {emptyError && (
+                                          <Alert
+                                            color="danger"
+                                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                            role="alert"
+                                          >
+                                            {emptyError}
+                                            <button
+                                              type="button"
+                                              className="btn-close"
+                                              aria-label="Close"
+                                              onClick={this.handleAlertClose}
+                                            ></button>
+                                          </Alert>
+                                        )}
+                                        <Row>
+                                          <Col lg="5">
+                                            <div className="bordered">
+                                              <Col lg="12">
+                                                <Card>
+                                                  <CardTitle id="card_header">
+                                                    {t("Personl Information")}
+                                                  </CardTitle>
+                                                  <CardBody className="card_Body1">
+                                                    <Row>
+                                                      <Col lg="12">
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Name"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              modalContractValue.employeeName
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Mother Name"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              modalContractValue.motherName
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Birth Date"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {modalContractValue?.birthDate &&
+                                                              new Date(
+                                                                modalContractValue.birthDate
+                                                              ).toLocaleDateString()}
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "ID Number"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              modalContractValue.idNumber
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Gender"
+                                                            )}{" "}
+                                                            :
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              (
+                                                                genders.find(
+                                                                  opt =>
+                                                                    opt.value ===
+                                                                    modalContractValue.genderId
+                                                                ) || ""
+                                                              ).label
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Nationality"
+                                                            )}{" "}
+                                                            :
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              (
+                                                                nationalitiesOpt.find(
+                                                                  opt =>
+                                                                    opt.value ===
+                                                                    modalContractValue.nationalityId
+                                                                ) || ""
+                                                              ).label
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                      </Col>
+                                                    </Row>
+                                                  </CardBody>
+                                                </Card>
+                                              </Col>
+                                            </div>
+                                          </Col>
+                                          <Col lg="5">
+                                            <div className="bordered">
+                                              <Col lg="12">
+                                                <Card>
+                                                  <CardTitle id="card_header">
+                                                    {t("Job Information")}
+                                                  </CardTitle>
+                                                  <CardBody className="card_Body1">
+                                                    <Row>
+                                                      <Col lg="12">
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Job Number"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              modalContractValue.jobNumber
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Contract Number"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              modalContractValue.contractNumber
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Signature Date"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {modalContractValue?.signatureDate &&
+                                                              new Date(
+                                                                modalContractValue.signatureDate
+                                                              ).toLocaleDateString()}
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "End Date"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {modalContractValue?.endDate &&
+                                                              new Date(
+                                                                modalContractValue.endDate
+                                                              ).toLocaleDateString()}
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "ID Number"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              modalContractValue.idNumber
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Job Title"
+                                                            )}{" "}
+                                                            :
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {/* {modalContractValue.jobTitleId
+                                                              ? jobTitlesOpt.find(
+                                                                  jobTitleOpt =>
+                                                                    jobTitleOpt.key ===
+                                                                      modalContractValue.jobTitleId ||
+                                                                    ""
+                                                                ).arTitle
+                                                              : ""} */}
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Position"
+                                                            )}{" "}
+                                                            :
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              modalContractValue.position
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Corporate Node"
+                                                            )}{" "}
+                                                            :
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {/* {modalContractValue.corporateNodeId
+                                                              ? corporateNodesOpt.find(
+                                                                  corporateNodeOpt =>
+                                                                    corporateNodeOpt.key ===
+                                                                      modalContractValue.corporateNodeId ||
+                                                                    ""
+                                                                ).arTitle
+                                                              : ""} */}
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Work Classification"
+                                                            )}{" "}
+                                                            :
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              (
+                                                                workClassifications.find(
+                                                                  opt =>
+                                                                    opt.value ===
+                                                                    modalContractValue.workClassificationId
+                                                                ) || ""
+                                                              ).label
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Label className="right-label">
+                                                            {this.props.t(
+                                                              "Status"
+                                                            )}{" "}
+                                                            :
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              modalContractValue.status
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                      </Col>
+                                                    </Row>
+                                                  </CardBody>
+                                                </Card>
+                                              </Col>
+                                            </div>
+                                          </Col>
+                                          <Col lg="2">
+                                            <div className="bordered">
+                                              <Col lg="12">
+                                                <Card>
+                                                  <CardTitle id="card_header">
+                                                    {t("Personal Photo")}
+                                                  </CardTitle>
+                                                  <CardBody className="cardBody">
+                                                    <Row></Row>
+                                                  </CardBody>
+                                                </Card>
+                                              </Col>
+                                            </div>
+                                          </Col>
+                                        </Row>
+                                        <Row>
+                                          <Col lg="12">
+                                            <div className="bordered">
+                                              <Col lg="12">
+                                                <Card>
+                                                  <CardTitle id="card_header">
+                                                    {t("View Employee Contact")}
+                                                  </CardTitle>
+                                                  <CardBody className="cardBody">
+                                                    <Row>
+                                                      <div className="mb-2">
+                                                        <Label className="right-label">
+                                                          {this.props.t(
+                                                            "Phone Number"
+                                                          )}{" "}
+                                                          :
+                                                        </Label>
+                                                        <Label className="left-label">
+                                                          {
+                                                            modalContractValue.phoneNumber
+                                                          }
+                                                        </Label>
+                                                      </div>
+                                                      <div className="mb-2">
+                                                        <Label className="right-label">
+                                                          {this.props.t(
+                                                            "Mobile Phone Number"
+                                                          )}{" "}
+                                                          :
+                                                        </Label>
+                                                        <Label className="left-label">
+                                                          {
+                                                            modalContractValue.mobileNumber
+                                                          }
+                                                        </Label>
+                                                      </div>
+                                                      <div className="mb-2">
+                                                        <Label className="right-label">
+                                                          {this.props.t(
+                                                            "Email Address"
+                                                          )}{" "}
+                                                          :
+                                                        </Label>
+                                                        <Label className="left-label">
+                                                          {
+                                                            modalContractValue.email
+                                                          }
+                                                        </Label>
+                                                      </div>
+                                                    </Row>
+                                                  </CardBody>
+                                                </Card>
+                                              </Col>
+                                            </div>
+                                          </Col>
+                                        </Row>
+                                      </CardBody>
+                                    </Card>
+                                  </ModalBody>
+                                </Modal>
                               </React.Fragment>
                             )}
                           </ToolkitProvider>
@@ -1841,11 +2261,12 @@ const mapStateToProps = ({
   jobTitlesOpt: employees.jobTitlesOpt || [],
   // corporateNodesOpt: employees.corporateNodesOpt || [],
   genders: employees.genders,
+  nationalitiesOpt: employees.nationalitiesOpt,
   academicYearsOpt: employees.academicYearsOpt,
   contractsTypes: contractsTypes.contractsTypes,
   employmentCases: employmentCases.employmentCases,
   contracts: contracts.contracts,
-  jobTitle: employees.jobTitle,
+  genders: employees.genders,
   deleted: contracts.deleted,
   user_menu: menu_items.user_menu || [],
 });

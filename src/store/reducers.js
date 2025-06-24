@@ -236,6 +236,15 @@ import grades from "./grades/reducer";
 // contractsTypes
 import contractsTypes from "./HR/contractsTypes/reducer";
 
+// warningsTypes
+import warningsTypes from "./HR/warningsTypes/reducer";
+
+// rewardsTypes
+import rewardsTypes from "./HR/rewardsTypes/reducer";
+
+// decisionsTypes
+import decisionsTypes from "./HR/decisionsTypes/reducer";
+
 // employmentCases
 import employmentCases from "./HR/employmentCases/reducer";
 
@@ -363,6 +372,9 @@ const rootReducer = combineReducers({
   workClassifications,
   employees,
   contracts,
+  warningsTypes,
+  rewardsTypes,
+  decisionsTypes,
 });
 
 export default rootReducer;

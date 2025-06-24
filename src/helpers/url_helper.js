@@ -1011,3 +1011,24 @@ export const GET_ACADEMIC_YEARS_OPT = "/academicYears";
 export const GET_COUNTRIES_OPT = "/countries";
 export const GET_CITIES_OPT = "/cities";
 export const GET_STATES_OPT = "/states";
+
+//WARNINGS_TYPES
+export const GET_WARNINGS_TYPES = "/warningsTypes";
+export const GET_WARNING_TYPE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_WARNING_TYPE = "/add/warningType";
+export const UPDATE_WARNING_TYPE = "/update/warningType";
+export const DELETE_WARNING_TYPE = "/delete/warningType";
+
+//REWARDS_TYPES
+export const GET_REWARDS_TYPES = "/rewardsTypes";
+export const GET_REWARD_TYPE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_REWARD_TYPE = "/add/rewardType";
+export const UPDATE_REWARD_TYPE = "/update/rewardType";
+export const DELETE_REWARD_TYPE = "/delete/rewardType";
+
+//DECISIONS_TYPES
+export const GET_DECISIONS_TYPES = "/decisionsTypes";
+export const GET_DECISION_TYPE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DECISION_TYPE = "/add/decisionType";
+export const UPDATE_DECISION_TYPE = "/update/decisionType";
+export const DELETE_DECISION_TYPE = "/delete/decisionType";

@@ -2064,6 +2064,54 @@ export const updateContract = data => post(url.UPDATE_CONTRACT, data);
 //update Contract
 export const deleteContract = data => post(url.DELETE_CONTRACT, data);
 
+//WARNING_TYPE
+export const getWarningsTypes = data => post(url.GET_WARNINGS_TYPES, data);
+
+// add warningTypes
+export const addNewWarningType = data => post(url.ADD_NEW_WARNING_TYPE, data);
+
+//WARNING_TYPE
+export const getWarningTypeDeletedValue = () =>
+  get(url.GET_WARNING_TYPE_DELETED_VALUE);
+
+//update warningType
+export const updateWarningType = data => post(url.UPDATE_WARNING_TYPE, data);
+
+//delete warningType
+export const deleteWarningType = data => post(url.DELETE_WARNING_TYPE, data);
+
+//REWARD_TYPE
+export const getRewardsTypes = data => post(url.GET_REWARDS_TYPES, data);
+
+// add rewardType
+export const addNewRewardType = data => post(url.ADD_NEW_REWARD_TYPE, data);
+
+//REWARD_TYPE
+export const getRewardTypeDeletedValue = () =>
+  get(url.GET_REWARD_TYPE_DELETED_VALUE);
+
+//update RewardType
+export const updateRewardType = data => post(url.UPDATE_REWARD_TYPE, data);
+
+//delete RewardType
+export const deleteRewardType = data => post(url.DELETE_REWARD_TYPE, data);
+
+//DECISION_TYPE
+export const getDecisionsTypes = data => post(url.GET_DECISIONS_TYPES, data);
+
+// add decisionsTypes
+export const addNewDecisionType = data => post(url.ADD_NEW_DECISION_TYPE, data);
+
+//Decision_TYPE
+export const getDecisionTypeDeletedValue = () =>
+  get(url.GET_DECISION_TYPE_DELETED_VALUE);
+
+//update DecisionType
+export const updateDecisionType = data => post(url.UPDATE_DECISION_TYPE, data);
+
+//delete DecisionType
+export const deleteDecisionType = data => post(url.DELETE_DECISION_TYPE, data);
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

@@ -95,6 +95,9 @@ import letterGradesSaga from "./letter-grade/saga";
 import transportLinesSaga from "./transportLines/saga";
 import StudentsRequestsSaga from "./students-requests/saga";
 import ContractsSaga from "./HR/contracts/saga";
+import WarningsTypesSaga from "./HR/warningsTypes/saga";
+import RewardsTypesSaga from "./HR/rewardsTypes/saga";
+import DecisionsTypesSaga from "./HR/decisionsTypes/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -193,5 +196,8 @@ export default function* rootSaga() {
     fork(StudentsHistorySaga),
     fork(StudentsRequestsSaga),
     fork(ContractsSaga),
+    fork(WarningsTypesSaga),
+    fork(RewardsTypesSaga),
+    fork(DecisionsTypesSaga),
   ]);
 }
