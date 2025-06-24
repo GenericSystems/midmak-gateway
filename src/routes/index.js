@@ -185,6 +185,8 @@ import WeekDays from "pages/WeekDays/weekDays";
 //Years
 import YearsList from "pages/Years/years";
 
+import NewTrainee from "pages/Addmission/New Trainers/new-Trainee";
+
 //Blog
 import BlogList from "../pages/Blog/BlogList/index";
 import BlogGrid from "../pages/Blog/BlogGrid/index";
@@ -285,6 +287,9 @@ const authProtectedRoutes = [
 
   //Trainers
   { path: "/training-members", component: TrainingMembersList },
+
+   // New Trainee
+   {path: "/newTrainee", component: NewTrainee},
 
   //Blog
   { path: "/blog-list", component: BlogList },

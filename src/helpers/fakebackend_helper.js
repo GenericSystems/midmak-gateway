@@ -2112,6 +2112,15 @@ export const updateDecisionType = data => post(url.UPDATE_DECISION_TYPE, data);
 //delete DecisionType
 export const deleteDecisionType = data => post(url.DELETE_DECISION_TYPE, data);
 
+//Trainee
+export const getTrainees = data => post(url.GET_TRAINEES, data);
+export const getTraineeDeletedValue = () => get(url.GET_TRAINEE_DELETED_VALUE);
+export const addNewTrainee = data => post(url.ADD_NEW_TRAINEE, data);
+export const updateTrainee = data => post(url.UPDATE_TRAINEE, data);
+export const deleteTrainee = data => post(url.DELETE_TRAINEE, data);
+export const getTraineeRegCertificate = data =>
+  post(url.GET_REGISTER_CERTIFICATES, data);
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

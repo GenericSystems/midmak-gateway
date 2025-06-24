@@ -260,3 +260,6 @@ export * from "./students-requests/actions";
 //Contract
 
 export * from "./HR/contracts/actions";
+
+//Trainees
+export * from "./new-Trainee/actions";

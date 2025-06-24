@@ -1032,3 +1032,10 @@ export const GET_DECISION_TYPE_DELETED_VALUE = "/deleted";
 export const ADD_NEW_DECISION_TYPE = "/add/decisionType";
 export const UPDATE_DECISION_TYPE = "/update/decisionType";
 export const DELETE_DECISION_TYPE = "/delete/decisionType";
+//Trainee
+export const GET_TRAINEES = "/trainees";
+export const GET_TRAINEE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TRAINEE = "/add/trainee";
+export const UPDATE_TRAINEE = "/update/trainee";
+export const DELETE_TRAINEE = "/delete/trainee";
+export const GET_REGISTER_CERTIFICATES = "/registerCertificates";
