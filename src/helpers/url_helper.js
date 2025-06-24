@@ -1011,3 +1011,11 @@ export const GET_ACADEMIC_YEARS_OPT = "/academicYears";
 export const GET_COUNTRIES_OPT = "/countries";
 export const GET_CITIES_OPT = "/cities";
 export const GET_STATES_OPT = "/states";
+
+//Trainee
+export const GET_TRAINEES = "/trainees";
+export const GET_TRAINEE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TRAINEE = "/add/trainee";
+export const UPDATE_TRAINEE = "/update/trainee";
+export const DELETE_TRAINEE = "/delete/trainee";
+export const GET_REGISTER_CERTIFICATES = "/registerCertificates";

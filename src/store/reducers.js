@@ -266,6 +266,9 @@ import studentsRequests from "./students-requests/reducer";
 //contract
 import contracts from "./HR/contracts/reducer";
 
+//Trainees
+import trainees from "./new-Trainee/reducer";
+
 const rootReducer = combineReducers({
   // public
   genders,
@@ -363,6 +366,7 @@ const rootReducer = combineReducers({
   workClassifications,
   employees,
   contracts,
+  trainees,
 });
 
 export default rootReducer;
