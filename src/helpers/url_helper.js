@@ -1039,3 +1039,11 @@ export const ADD_NEW_TRAINEE = "/add/trainee";
 export const UPDATE_TRAINEE = "/update/trainee";
 export const DELETE_TRAINEE = "/delete/trainee";
 export const GET_REGISTER_CERTIFICATES = "/registerCertificates";
+
+
+//Training Formats
+export const GET_TRAINING_FORMATS = "/trainingFormats";
+export const GET_TRAINING_FORMAT_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TRAINING_FORMAT = "/add/trainingFormat";
+export const UPDATE_TRAINING_FORMAT = "/update/trainingFormat";
+export const DELETE_TRAINING_FORMAT = "/delete/trainingFormat";

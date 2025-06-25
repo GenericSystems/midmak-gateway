@@ -102,6 +102,8 @@ import DecisionsTypesSaga from "./HR/decisionsTypes/saga";
 
 import traineesSaga from "./new-Trainee/saga";
 
+import trainingFormatsSaga from "./trainingFormat/saga";
+
 export default function* rootSaga() {
   yield all([
     //public
@@ -205,5 +207,6 @@ export default function* rootSaga() {
     fork(DecisionsTypesSaga),
 
     fork(traineesSaga),
+    fork(trainingFormatsSaga),
   ]);
 }

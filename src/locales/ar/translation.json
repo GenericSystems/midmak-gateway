@@ -199,5 +199,8 @@
   "No RewardsTypes found": "لا توجد أنواع مكافآت",
   "No DecisionsTypes found": "لا يوجد أنواع قرارت",
   "View Employee Contact": "عرض دليل العناوين",
-  "No Employees found": "لا يوجد موظفون"
+  "No Employees found": "لا يوجد موظفون",
+  "Training Formats": "نظام التدريب",
+  "Training Format(ar)": "نظام التدريب(عربي)",
+  "No Training Formats found": "لا يوجد نظام تدريب"
 }

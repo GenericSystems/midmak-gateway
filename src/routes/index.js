@@ -192,6 +192,7 @@ import BlogList from "../pages/Blog/BlogList/index";
 import BlogGrid from "../pages/Blog/BlogGrid/index";
 import BlogDetails from "../pages/Blog/BlogDetails";
 
+import TrainingFormatsList from "pages/trainingFormat/trainingFormat";
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -290,6 +291,9 @@ const authProtectedRoutes = [
 
    // New Trainee
    {path: "/newTrainee", component: NewTrainee},
+
+   //trainingFormat
+   {path:"/trainingFormat" , component:TrainingFormatsList},
 
   //Blog
   { path: "/blog-list", component: BlogList },

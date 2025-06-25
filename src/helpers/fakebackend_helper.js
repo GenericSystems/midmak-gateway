@@ -2121,6 +2121,17 @@ export const deleteTrainee = data => post(url.DELETE_TRAINEE, data);
 export const getTraineeRegCertificate = data =>
   post(url.GET_REGISTER_CERTIFICATES, data);
 
+//trainingFormat
+export const getTrainingFormats = data => post(url.GET_TRAINING_FORMATS, data);
+export const getTrainingFormatDeletedValue = () =>
+  get(url.GET_TRAINING_FORMAT_DELETED_VALUE);
+export const addNewTrainingFormat = data =>
+  post(url.ADD_NEW_TRAINING_FORMAT, data);
+export const updateTrainingFormat = data =>
+  post(url.UPDATE_TRAINING_FORMAT, data);
+export const deleteTrainingFormat = data =>
+  post(url.DELETE_TRAINING_FORMAT, data);
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

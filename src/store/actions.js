@@ -263,3 +263,6 @@ export * from "./HR/contracts/actions";
 
 //Trainees
 export * from "./new-Trainee/actions";
+
+//TrainingFormats
+export * from "./trainingFormat/actions"
