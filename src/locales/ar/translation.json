@@ -202,5 +202,8 @@
   "No Employees found": "لا يوجد موظفون",
   "Training Formats": "نظام التدريب",
   "Training Format(ar)": "نظام التدريب(عربي)",
-  "No Training Formats found": "لا يوجد نظام تدريب"
+  "No Training Formats found": "لا يوجد نظام تدريب",
+  "Course Types": "أنواع الدورات",
+  "Course Type (ar)": "نوع الدورة(عربي)",
+  "No Course Types found": "لا يوجد أنواع دورات"
 }
