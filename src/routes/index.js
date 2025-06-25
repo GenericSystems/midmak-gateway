@@ -163,7 +163,7 @@ import RewardsTypesList from "../pages/HR/rewardsTypes/rewardsTypes";
 import DecisionsTypesList from "../pages/HR/decisionsTypes/decisionsTypes";
 
 //Contracts
-import ContractsList from "../pages/HR/contracts/contracts";
+import ContractsList from "../pages/HR/Contracts/contracts";
 
 //Employment cases
 import EmploymentCasesList from "../pages/HR/employmentCases/employmentCases";
