@@ -3,14 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
-import {
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Row,
-  Alert,
-} from "reactstrap";
+import { Card, CardBody, Col, Container, Row, Alert } from "reactstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
 import { IconButton } from "@mui/material";
@@ -28,7 +21,7 @@ import {
   updateCourseType,
   deleteCourseType,
   getCourseTypeDeletedValue,
-} from "store/coursetypes/actions"
+} from "store/coursetypes/actions";
 
 import paginationFactory, {
   PaginationProvider,
@@ -58,28 +51,57 @@ class CourseTypesList extends Component {
   }
 
   componentDidMount() {
-    const { onGetCourseTypes, user_menu, location } = this.props;
-
+    const { courseTypes, onGetCourseTypes, user_menu, location } = this.props;
+    this.updateShowAddButton(user_menu, this.props.location.pathname);
+    this.updateShowDeleteButton(user_menu, this.props.location.pathname);
+    this.updateShowEditButton(user_menu, this.props.location.pathname);
+    this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetCourseTypes();
-    this.updatePermissions(user_menu, location.pathname);
+    this.setState({ courseTypes });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
     ) {
-      this.updatePermissions(this.props.user_menu, this.props.location.pathname);
+      this.updateShowAddButton(
+        this.props.user_menu,
+        this.props.location.pathname
+      );
+      this.updateShowDeleteButton(
+        this.props.user_menu,
+        this.props.location.pathname
+      );
+      this.updateShowEditButton(
+        this.props.user_menu,
+        this.props.location.pathname
+      );
+      this.updateShowSearchButton(
+        this.props.user_menu,
+        this.props.location.pathname
+      );
     }
   }
 
-  updatePermissions = (menu, pathname) => {
-    this.setState({
-      showAddButton: checkIsAddForPage(menu, pathname),
-      showDeleteButton: checkIsDeleteForPage(menu, pathname),
-      showEditButton: checkIsEditForPage(menu, pathname),
-      showSearchButton: checkIsSearchForPage(menu, pathname),
-    });
+  updateShowAddButton = (menu, pathname) => {
+    const showAddButton = checkIsAddForPage(menu, pathname);
+    this.setState({ showAddButton });
+  };
+
+  updateShowDeleteButton = (menu, pathname) => {
+    const showDeleteButton = checkIsDeleteForPage(menu, pathname);
+    this.setState({ showDeleteButton });
+  };
+
+  updateShowEditButton = (menu, pathname) => {
+    const showEditButton = checkIsEditForPage(menu, pathname);
+    this.setState({ showEditButton });
+  };
+
+  updateShowSearchButton = (menu, pathname) => {
+    const showSearchButton = checkIsSearchForPage(menu, pathname);
+    this.setState({ showSearchButton });
   };
 
   toggleDeleteModal = () => {
@@ -94,9 +116,7 @@ class CourseTypesList extends Component {
     const { courseTypes, onAddNewCourseType } = this.props;
     const newRow = { arTitle: "-----" };
 
-    const exists = courseTypes.some(
-      item => item.arTitle.trim() === "-----"
-    );
+    const exists = courseTypes.some(item => item.arTitle.trim() === "-----");
 
     if (exists) {
       this.setState({ duplicateError: this.props.t("Fill in the empty row") });
@@ -273,10 +293,16 @@ class CourseTypesList extends Component {
                                 {...toolkitprops.baseProps}
                                 {...paginationTableProps}
                                 columns={columns}
+                                data={courseTypes}
                                 cellEdit={cellEditFactory({
                                   mode: "click",
                                   blurToSave: true,
-                                  afterSaveCell: (oldValue, newValue, row, column) => {
+                                  afterSaveCell: (
+                                    oldValue,
+                                    newValue,
+                                    row,
+                                    column
+                                  ) => {
                                     this.handleCourseTypeChange(
                                       row.Id,
                                       column.dataField,
@@ -285,10 +311,14 @@ class CourseTypesList extends Component {
                                   },
                                 })}
                                 noDataIndication={t("No Course Types found")}
-                                defaultSorted={[{ dataField: "Id", order: "desc" }]}
+                                defaultSorted={[
+                                  { dataField: "Id", order: "desc" },
+                                ]}
                               />
                               <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                <PaginationListStandalone {...paginationProps} />
+                                <PaginationListStandalone
+                                  {...paginationProps}
+                                />
                               </Col>
                             </React.Fragment>
                           )}

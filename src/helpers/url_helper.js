@@ -1047,3 +1047,11 @@ export const GET_TRAINING_FORMAT_DELETED_VALUE = "/deleted";
 export const ADD_NEW_TRAINING_FORMAT = "/add/trainingFormat";
 export const UPDATE_TRAINING_FORMAT = "/update/trainingFormat";
 export const DELETE_TRAINING_FORMAT = "/delete/trainingFormat";
+
+
+//coursesCatalogs
+export const GET_COURSES_CATALOGS = "/coursesCatalogs";
+export const GET_COURSES_CATALOG_DELETED_VALUE = "/deleted";
+export const ADD_NEW_COURSES_CATALOGS = "/add/coursesCatalog";
+export const UPDATE_COURSES_CATALOGS = "/update/coursesCatalog";
+export const DELETE_COURSES_CATALOGS = "/delete/coursesCatalog";

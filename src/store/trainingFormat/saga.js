@@ -37,7 +37,7 @@ function* fetchTrainingFormats() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_trainingFormats",
+    tablename: "Settings_TrainingFormats",
   };
   try {
     const response = yield call(getTrainingFormats, get_settings_req);
@@ -61,7 +61,7 @@ function* onAddNewTrainingFormat({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_trainingFormats";
+  payload["tablename"] = "Settings_TrainingFormats";
 
   try {
     const response = yield call(addNewTrainingFormat, payload);
@@ -75,7 +75,7 @@ function* onUpdateTrainingFormat({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_trainingFormats";
+  payload["tablename"] = "Settings_TrainingFormats";
 
   try {
     const response = yield call(updateTrainingFormat, payload);
@@ -89,7 +89,7 @@ function* onDeleteTrainingFormat({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_trainingFormats";
+  payload["tablename"] = "Settings_TrainingFormats";
 
   try {
     const response = yield call(deleteTrainingFormat, payload);

@@ -196,6 +196,7 @@ import TrainingFormatsList from "pages/trainingFormat/trainingFormat";
 
 //CourseTypes
 import CourseTypesList from "pages/courseTypes/courseTypes";
+import CourseCatalogeList from "pages/CourseCataloge/CourseCataloge";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -301,6 +302,9 @@ const authProtectedRoutes = [
 
   //CourseTypes
   {path: "/courseTypes", component: CourseTypesList},
+
+  //CoursesCatalogs
+  {path:"/courseCatalog" , component:CourseCatalogeList},
 
   //Blog
   { path: "/blog-list", component: BlogList },

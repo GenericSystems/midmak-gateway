@@ -3,14 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
-import {
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Row,
-  Alert,
-} from "reactstrap";
+import { Card, CardBody, Col, Container, Row, Alert } from "reactstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
 import { IconButton } from "@mui/material";
@@ -59,27 +52,55 @@ class TrainingFormatsList extends Component {
 
   componentDidMount() {
     const { onGetTrainingFormats, user_menu, location } = this.props;
-
+    this.updateShowAddButton(user_menu, this.props.location.pathname);
+    this.updateShowDeleteButton(user_menu, this.props.location.pathname);
+    this.updateShowEditButton(user_menu, this.props.location.pathname);
+    this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetTrainingFormats();
-    this.updatePermissions(user_menu, location.pathname);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
     ) {
-      this.updatePermissions(this.props.user_menu, this.props.location.pathname);
+      this.updateShowAddButton(
+        this.props.user_menu,
+        this.props.location.pathname
+      );
+      this.updateShowDeleteButton(
+        this.props.user_menu,
+        this.props.location.pathname
+      );
+      this.updateShowEditButton(
+        this.props.user_menu,
+        this.props.location.pathname
+      );
+      this.updateShowSearchButton(
+        this.props.user_menu,
+        this.props.location.pathname
+      );
     }
   }
 
-  updatePermissions = (menu, pathname) => {
-    this.setState({
-      showAddButton: checkIsAddForPage(menu, pathname),
-      showDeleteButton: checkIsDeleteForPage(menu, pathname),
-      showEditButton: checkIsEditForPage(menu, pathname),
-      showSearchButton: checkIsSearchForPage(menu, pathname),
-    });
+  updateShowAddButton = (menu, pathname) => {
+    const showAddButton = checkIsAddForPage(menu, pathname);
+    this.setState({ showAddButton });
+  };
+
+  updateShowDeleteButton = (menu, pathname) => {
+    const showDeleteButton = checkIsDeleteForPage(menu, pathname);
+    this.setState({ showDeleteButton });
+  };
+
+  updateShowEditButton = (menu, pathname) => {
+    const showEditButton = checkIsEditForPage(menu, pathname);
+    this.setState({ showEditButton });
+  };
+
+  updateShowSearchButton = (menu, pathname) => {
+    const showSearchButton = checkIsSearchForPage(menu, pathname);
+    this.setState({ showSearchButton });
   };
 
   toggleDeleteModal = () => {
@@ -273,10 +294,16 @@ class TrainingFormatsList extends Component {
                                 {...toolkitprops.baseProps}
                                 {...paginationTableProps}
                                 columns={columns}
+                                data={trainingFormats}
                                 cellEdit={cellEditFactory({
                                   mode: "click",
                                   blurToSave: true,
-                                  afterSaveCell: (oldValue, newValue, row, column) => {
+                                  afterSaveCell: (
+                                    oldValue,
+                                    newValue,
+                                    row,
+                                    column
+                                  ) => {
                                     this.handleTrainingFormatChange(
                                       row.Id,
                                       column.dataField,
@@ -284,11 +311,17 @@ class TrainingFormatsList extends Component {
                                     );
                                   },
                                 })}
-                                noDataIndication={t("No Training Formats found")}
-                                defaultSorted={[{ dataField: "Id", order: "desc" }]}
+                                noDataIndication={t(
+                                  "No Training Formats found"
+                                )}
+                                defaultSorted={[
+                                  { dataField: "Id", order: "desc" },
+                                ]}
                               />
                               <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                <PaginationListStandalone {...paginationProps} />
+                                <PaginationListStandalone
+                                  {...paginationProps}
+                                />
                               </Col>
                             </React.Fragment>
                           )}
@@ -317,7 +350,8 @@ const mapDispatchToProps = dispatch => ({
   onAddNewTrainingFormat: data => dispatch(addNewTrainingFormat(data)),
   onUpdateTrainingFormat: data => dispatch(updateTrainingFormat(data)),
   onDeleteTrainingFormat: data => dispatch(deleteTrainingFormat(data)),
-  onGetTrainingFormatDeletedValue: () => dispatch(getTrainingFormatDeletedValue()),
+  onGetTrainingFormatDeletedValue: () =>
+    dispatch(getTrainingFormatDeletedValue()),
 });
 
 export default connect(

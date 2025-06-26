@@ -36,7 +36,7 @@ function* fetchCourseTypes() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_courseTypes",
+    tablename: "Settings_CourseTypes",
   };
   try {
     const response = yield call(getCourseTypes, get_settings_req);
@@ -60,7 +60,7 @@ function* onAddNewCourseType({ payload, courseType }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_courseTypes";
+  payload["tablename"] = "Settings_CourseTypes";
   try {
     const response = yield call(addNewCourseType, payload);
     yield put(addCourseTypeSuccess(response[0]));
@@ -73,7 +73,7 @@ function* onUpdateCourseType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_courseTypes";
+  payload["tablename"] = "Settings_CourseTypes";
   try {
     const respupdate = yield call(updateCourseType, payload);
     yield put(updateCourseTypeSuccess(respupdate[0]));
@@ -86,7 +86,7 @@ function* onDeleteCourseType({ payload, courseType }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_courseTypes";
+  payload["tablename"] = "Settings_CourseTypes";
   try {
     const respdelete = yield call(deleteCourseType, payload);
     yield put(deleteCourseTypeSuccess(respdelete[0]));

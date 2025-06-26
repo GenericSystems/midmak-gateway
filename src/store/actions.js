@@ -266,3 +266,7 @@ export * from "./new-Trainee/actions";
 
 //TrainingFormats
 export * from "./trainingFormat/actions"
+
+//CoursesCatalog
+
+export * from "./CourseCataloge/actions"
