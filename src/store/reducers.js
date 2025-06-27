@@ -278,6 +278,12 @@ import contracts from "./HR/contracts/reducer";
 //Trainees
 import trainees from "./new-Trainee/reducer";
 
+//TrainingFormats
+import trainingFormats from "./trainingFormat/reducer";
+
+//coursesCatalogs
+import coursesCatalogs from "./CourseCataloge/reducer";
+
 const rootReducer = combineReducers({
   // public
   genders,
@@ -379,6 +385,8 @@ const rootReducer = combineReducers({
   rewardsTypes,
   decisionsTypes,
   trainees,
+  trainingFormats,
+  coursesCatalogs,
 });
 
 export default rootReducer;
