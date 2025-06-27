@@ -833,6 +833,9 @@ export const getDecisionDeletedValue = () =>
 export const getDecisionCategories = data =>
   post(url.GET_DECISION_CATEGORIES, data);
 
+// get Decision Makers
+export const getDecisionMakers = data => post(url.GET_DECISION_MAKERS, data);
+
 // get DecisionsRulesCanceledReasons
 export const getDecisionsRulesCanceledReasons = data =>
   post(url.GET_DECISIONS_RULES_CANCELED_REASONS, data);
@@ -2000,6 +2003,9 @@ export const updateWorkClassification = data =>
 //delete WorkClassification
 export const deleteWorkClassification = data =>
   post(url.DELETE_WORK_CLASSIFICATION, data);
+
+//EMPLOYEESNAMES
+export const getEmployeesNames = data => post(url.GET_EMPLOYEES_NAMES, data);
 
 //EMPLOYEE
 export const getEmployees = data => post(url.GET_EMPLOYEES, data);

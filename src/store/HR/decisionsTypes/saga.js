@@ -36,7 +36,7 @@ function* fetchDecisionsTypes() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_ContractType",
+    tablename: "Settings_DecisionType",
   };
   try {
     const response = yield call(getDecisionsTypes, get_decisionType_req);
@@ -61,7 +61,7 @@ function* onAddNewDecisionType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_ContractType";
+  payload["tablename"] = "Settings_DecisionType";
 
   try {
     const response = yield call(addNewDecisionType, payload);
@@ -75,7 +75,7 @@ function* onUpdateDecisionType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_ContractType";
+  payload["tablename"] = "Settings_DecisionType";
 
   try {
     const response = yield call(updateDecisionType, payload);
@@ -89,7 +89,7 @@ function* onDeleteDecisionType({ payload, decisionType }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_ContractType";
+  payload["tablename"] = "Settings_DecisionType";
 
   try {
     const response = yield call(deleteDecisionType, payload);

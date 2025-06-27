@@ -33,7 +33,7 @@ import {
   getDecisionsTypes,
   addNewDecisionType,
   updateDecisionType,
-  deleteDecisionTddype,
+  deleteDecisionType,
   getDecisionTypeDeletedValue,
 } from "store/HR/decisionsTypes/actions";
 import paginationFactory, {

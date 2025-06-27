@@ -49,6 +49,8 @@ import {
   getNationalitiesOptFail,
   getGenderschSuccess,
   getGenderschFail,
+  getEmployeesNamesSuccess,
+  getEmployeesNamesFail,
 } from "../employees/actions";
 
 import {
@@ -74,6 +76,7 @@ import {
   getEmploymentCases,
   getNationalitiesOpt,
   getGendersch,
+  getEmployeesNames,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchContracts() {
@@ -224,6 +227,21 @@ function* fetchContracts() {
     yield put(getNationalitiesOptSuccess(response));
   } catch (error) {
     yield put(getNationalitiesOptFail(error));
+  }
+
+  const get_employeeName_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_EmployeeOption",
+    fields: "Id,fullName",
+  };
+  try {
+    const response = yield call(getEmployeesNames, get_employeeName_req);
+    console.log("employeeName", response);
+    yield put(getEmployeesNamesSuccess(response));
+  } catch (error) {
+    yield put(getEmployeesNamesFail(error));
   }
 }
 

@@ -37,10 +37,13 @@ import {
   GET_CITIES_OPT_FAIL,
   GET_STATES_OPT_SUCCESS,
   GET_STATES_OPT_FAIL,
+  GET_EMPLOYEES_NAMES_SUCCESS,
+  GET_EMPLOYEES_NAMES_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   employees: [],
+  employeesNames: [],
   nationalitiesOpt: [],
   // administrativeSupervisorsOpt: [],
   physicalWorkLocationsOpt: [],
@@ -89,6 +92,17 @@ const employees = (state = INIT_STATE, action) => {
         genders: action.payload,
       };
     case GET_GENDERSCH_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_EMPLOYEES_NAMES_SUCCESS:
+      return {
+        ...state,
+        employeesNames: action.payload,
+      };
+    case GET_EMPLOYEES_NAMES_FAIL:
       return {
         ...state,
         error: action.payload,

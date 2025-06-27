@@ -73,7 +73,7 @@ import studentsStatisticsSaga from "./students-statistics/saga";
 import passwordsSaga from "./reset-password/saga";
 import gendersSaga from "./genders/saga";
 import studentsDecreesSaga from "./student-decrees/saga";
-import decisionsSaga from "./decisions/saga";
+import DecisionsSaga from "./decisions/saga";
 import grantsSaga from "./grants/saga";
 import rolesSaga from "./roles/saga";
 import userMngsSaga from "./user-mngs/saga";
@@ -177,7 +177,7 @@ export default function* rootSaga() {
     fork(studentsStatisticsSaga),
     fork(gendersSaga),
     fork(studentsDecreesSaga),
-    fork(decisionsSaga),
+    fork(DecisionsSaga),
     fork(rolesSaga),
     fork(userMngsSaga),
     fork(universityInfoSaga),
@@ -203,7 +203,6 @@ export default function* rootSaga() {
     fork(WarningsTypesSaga),
     fork(RewardsTypesSaga),
     fork(DecisionsTypesSaga),
-
     fork(traineesSaga),
   ]);
 }

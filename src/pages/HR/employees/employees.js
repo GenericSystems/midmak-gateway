@@ -1374,7 +1374,7 @@ class EmployeesList extends Component {
                                                                       *
                                                                     </span>
                                                                   </Col>
-                                                                  <Col className="col-6>">
+                                                                  <Col className="col-6">
                                                                     <Field
                                                                       type="text"
                                                                       name="firstName"

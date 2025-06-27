@@ -91,8 +91,10 @@ class ContractsList extends Component {
       selectedJobRank: "",
       selectedHasMinistryApprove: "",
       selectedGovernmentWorker: "",
+      selectedFullName: "",
       signatureDateError: false,
       hireDateError: false,
+      fullNameError: false,
       contractTypeError: false,
       academicYearsIdError: false,
       jobTitleError: false,
@@ -121,8 +123,10 @@ class ContractsList extends Component {
       jobRanksOpt,
       workClassifications,
       academicYearsOpt,
+      employeesNames,
       jobTitlesOpt,
       user_menu,
+      employees,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -144,9 +148,12 @@ class ContractsList extends Component {
       contractsTypes,
       employmentCases,
       academicYearsOpt,
+      employeesNames,
       nationalitiesOpt,
       genders,
     });
+    const fullNamesOpt = this.state;
+    this.setState({ fullNamesOpt: employees });
 
     console.log("rsssssssssssssss", contracts);
   }
@@ -284,23 +291,36 @@ class ContractsList extends Component {
       selectEmpId,
       selectedHasMinistryApprove,
       selectedGovernmentWorker,
+      selectedFullName,
+      fullNamesOpt,
     } = this.state;
     const { onAddNewContract, onUpdateContract } = this.props;
 
     //values["administrativeSupervisor"] = selectedAdministrativeSupervisor;
     // values["physicalWorkLocation"] = selectedPhysicalWorkLocations;
     // values["employeeId"] = selectEmpId;
+
     values["jobRankId"] = selectedJobRank;
     values["jobTitleId"] = selectedJobTitle;
     // values["corporateNodeId"] = selectedCorporateNode;
     values["contractTypeId"] = selectedContractType;
+    values["fullNameId"] = selectedFullName;
     values["employmentCaseId"] = selectedEmploymentCase;
     values["hasMinistryApprove"] = selectedHasMinistryApprove;
     values["governmentWorker"] = selectedGovernmentWorker;
     values["workClassificationId"] = selectedWorkClassification;
     values["academicYearId"] = selectedAcademicYearId;
     console.log("valuesssssssssssssssssssss", values);
+
     let contractInfo = {};
+    // if (values.fullNameId) {
+    //   const nameObject = fullNamesOpt.find(
+    //     fullName => fullName.value === values.fullNameId
+    //   );
+    //   console.log("nameObject", nameObject);
+    //   values["fullNameId"] = nameObject.key;
+    // }
+    // console.log("valuesssssssssssssssssssss", values);
     if (
       values.jobNumber &&
       values.biometricCode &&
@@ -319,9 +339,10 @@ class ContractsList extends Component {
       selectedJobTitle !== null &&
       // selectedCorporateNode !== null &&
       selectedContractType !== null &&
-      selectedEmploymentCase !== null
+      selectedEmploymentCase !== null &&
+      selectedFullName !== null
     ) {
-      console.log("selectEmpId", selectEmpId);
+      console.log("selectedFullName", selectedFullName);
       Object.keys(values).forEach(function (key) {
         if (
           values[key] != undefined &&
@@ -332,9 +353,9 @@ class ContractsList extends Component {
       });
       if (isEdit) {
         console.log("9999999", contractInfo);
-        onUpdateContract(contractInfo);
+        // onUpdateContract(contractInfo);
       } else {
-        onAddNewContract(contractInfo);
+        // onAddNewContract(contractInfo);
       }
       this.setState({
         errorMessages: {},
@@ -364,6 +385,9 @@ class ContractsList extends Component {
         emptyError = "Fill the empty select";
       }
       if (selectedSignatureDate === undefined) {
+        emptyError = "Fill the empty select";
+      }
+      if (selectedFullName === undefined) {
         emptyError = "Fill the empty select";
       }
       // if (selectedCorporateNode === undefined) {
@@ -414,6 +438,18 @@ class ContractsList extends Component {
       });
       return;
     }
+
+    if (fieldName === "fullNameId") {
+      const selected = this.state.employeesNames.find(
+        employeeName => employeeName.value === selectedValue
+      );
+
+      this.setState({
+        selectedFullName: selected ? selected.key : null,
+      });
+      return;
+    }
+
     if (fieldName === "academicYearId") {
       const selected = this.state.academicYearsOpt.find(
         academicYear =>
@@ -485,6 +521,9 @@ class ContractsList extends Component {
     });
     this.toggle2();
   };
+  testselected = val => {
+    console.log(val, "vvvvvvvvvvvvvvvvvv");
+  };
 
   render() {
     const contract = this.state.contract;
@@ -497,6 +536,7 @@ class ContractsList extends Component {
       employmentCases,
       genders,
       nationalitiesOpt,
+      employeesNames,
       administrativeSupervisorsOpt,
       workClassifications,
       physicalWorkLocationsOpt,
@@ -505,6 +545,7 @@ class ContractsList extends Component {
       corporateNodesOpt,
       costCentersOpt,
       academicYearsOpt,
+      employees,
     } = this.props;
     const {
       duplicateError,
@@ -522,7 +563,11 @@ class ContractsList extends Component {
       signatureDateError,
       selectedHasMinistryApprove,
       selectedGovernmentWorker,
+      selectedFullName,
+      selectedJobTitle,
+      selectedAcademicYearId,
       hireDateError,
+      fullNameError,
       ncsDateError,
       corporateNodeError,
       showAddButton,
@@ -530,6 +575,7 @@ class ContractsList extends Component {
       showEditButton,
       showSearchButton,
       modalContractValue,
+      fullNamesOpt,
     } = this.state;
     const { SearchBar } = Search;
     const alertMessage =
@@ -801,6 +847,9 @@ class ContractsList extends Component {
                                           contract && {
                                             Id: contract.Id,
                                           }),
+                                        fullNameId:
+                                          (contract && contract.fullNameId) ||
+                                          selectedFullName,
                                         jobNumber:
                                           (contract && contract.jobNumber) ||
                                           "",
@@ -818,7 +867,7 @@ class ContractsList extends Component {
                                           "",
                                         jobTitleId:
                                           (contract && contract.jobTitleId) ||
-                                          "",
+                                          selectedJobTitle,
                                         // corporateNodeId:
                                         //   (contract &&
                                         //     contract.corporateNodeId) ||
@@ -855,7 +904,7 @@ class ContractsList extends Component {
                                         academicYearId:
                                           (contract &&
                                             contract.academicYearId) ||
-                                          "",
+                                          selectedAcademicYearId,
                                         governmentWorker:
                                           (contract &&
                                             contract.governmentWorker) ||
@@ -928,6 +977,66 @@ class ContractsList extends Component {
                                                   ></button>
                                                 </Alert>
                                               )}
+                                              <Row>
+                                                <Col lg="12">
+                                                  <div className="mb-3">
+                                                    <Row>
+                                                      <Col className="col-4">
+                                                        <Label for="fullName-Id">
+                                                          {this.props.t(
+                                                            "Full Name"
+                                                          )}
+                                                        </Label>
+                                                        <span className="text-danger">
+                                                          *
+                                                        </span>
+                                                      </Col>
+                                                      <Col className="col-8">
+                                                        <input
+                                                          className={`form-control ${this.state.inputClass}`}
+                                                          list="fullNames"
+                                                          name="fullNameId"
+                                                          id="fullName-Id"
+                                                          placeholder="Type to search..."
+                                                          autoComplete="off"
+                                                          onChange={e =>
+                                                            this.handleSelect(
+                                                              e.target.name,
+                                                              e.target.value
+                                                            )
+                                                          }
+                                                        />
+                                                        <datalist id="fullNames">
+                                                          {employeesNames.map(
+                                                            employeeName => (
+                                                              <option
+                                                                key={
+                                                                  employeeName.key
+                                                                }
+                                                                value={
+                                                                  employeeName.value
+                                                                }
+                                                              />
+                                                            )
+                                                          )}
+                                                        </datalist>
+                                                        {fullNameError && (
+                                                          <div className="invalid-feedback">
+                                                            {this.props.t(
+                                                              "Full Name is required"
+                                                            )}
+                                                          </div>
+                                                        )}
+                                                        <ErrorMessage
+                                                          name="fullName-Id"
+                                                          component="div"
+                                                          className="invalid-feedback"
+                                                        />
+                                                      </Col>
+                                                    </Row>
+                                                  </div>
+                                                </Col>
+                                              </Row>
                                               <Row>
                                                 <Col lg="12">
                                                   <div className="bordered">
@@ -2267,6 +2376,8 @@ const mapStateToProps = ({
   employmentCases: employmentCases.employmentCases,
   contracts: contracts.contracts,
   genders: employees.genders,
+  employeesNames: employees.employeesNames,
+  employees: employees.employees,
   deleted: contracts.deleted,
   user_menu: menu_items.user_menu || [],
 });

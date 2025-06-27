@@ -247,7 +247,7 @@ class RewardsTypesList extends Component {
       },
     ];
     const columns = [
-      { dataField: "Id", text: this.props.t("ID"), hidden: false },
+      { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "arTitle",
         text: this.props.t("Reward Type(ar)"),

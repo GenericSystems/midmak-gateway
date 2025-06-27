@@ -407,7 +407,7 @@ class ContractsTypesList extends Component {
                                   data={contractsTypes}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
-                                    mode: "click",
+                                    mode: "dbclick",
                                     blurToSave: true,
                                     afterSaveCell: (
                                       oldValue,

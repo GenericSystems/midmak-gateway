@@ -351,6 +351,9 @@ export const DELETE_DECISION = "/delete/decision";
 export const GET_DECISION_DELETED_VALUE = "/deleted";
 export const GET_DECISION_CATEGORIES = "/decisionCategories";
 
+// DECISION MAKERS
+export const GET_DECISION_MAKERS = "/decisionMakers";
+
 // DECISIONS_RULES_REASON
 export const GET_DECISIONS_RULES_REASONS = "/decisionsRulesReasons";
 export const ADD_NEW_DECISIONS_RULES_REASON = "/add/decisionsRulesReason";
@@ -985,6 +988,9 @@ export const GET_WORK_CLASSIFICATION_DELETED_VALUE = "/deleted";
 export const ADD_NEW_WORK_CLASSIFICATION = "/add/workClassification";
 export const UPDATE_WORK_CLASSIFICATION = "/update/workClassification";
 export const DELETE_WORK_CLASSIFICATION = "/delete/workClassification";
+
+//EMPLOYEESNAMES
+export const GET_EMPLOYEES_NAMES = "/employeesNames";
 
 //EMPLOYEES
 export const GET_EMPLOYEES = "/employees";

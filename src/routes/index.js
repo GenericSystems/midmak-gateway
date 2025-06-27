@@ -162,8 +162,11 @@ import RewardsTypesList from "../pages/HR/rewardsTypes/rewardsTypes";
 //DecisionsTypes
 import DecisionsTypesList from "../pages/HR/decisionsTypes/decisionsTypes";
 
+//Decisions
+import DecisionsList from "../pages/HR/decisions/decisions";
+
 //Contracts
-import ContractsList from "../pages/HR/Contracts/contracts";
+import ContractsList from "../pages/HR/contracts/contracts";
 
 //Employment cases
 import EmploymentCasesList from "../pages/HR/employmentCases/employmentCases";
@@ -262,6 +265,10 @@ const authProtectedRoutes = [
 
   { path: "/decisionsTypes", component: DecisionsTypesList },
 
+  // decisions
+
+  { path: "/decisions", component: DecisionsList },
+
   // employmentCases
 
   { path: "/employmentCases", component: EmploymentCasesList },
@@ -288,8 +295,8 @@ const authProtectedRoutes = [
   //Trainers
   { path: "/training-members", component: TrainingMembersList },
 
-   // New Trainee
-   {path: "/newTrainee", component: NewTrainee},
+  // New Trainee
+  { path: "/newTrainee", component: NewTrainee },
 
   //Blog
   { path: "/blog-list", component: BlogList },

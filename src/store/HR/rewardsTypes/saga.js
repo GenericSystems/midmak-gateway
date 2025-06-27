@@ -36,7 +36,7 @@ function* fetchRewardsTypes() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_ContractType",
+    tablename: "Settings_RrewardType",
   };
   try {
     const response = yield call(getRewardsTypes, get_RewardType_req);
@@ -61,7 +61,7 @@ function* onAddNewRewardType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_ContractType";
+  payload["tablename"] = "Settings_RrewardType";
 
   try {
     const response = yield call(addNewRewardType, payload);
@@ -75,7 +75,7 @@ function* onUpdateRewardType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_ContractType";
+  payload["tablename"] = "Settings_RrewardType";
 
   try {
     const response = yield call(updateRewardType, payload);
@@ -89,7 +89,7 @@ function* onDeleteRewardType({ payload, rewardType }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_ContractType";
+  payload["tablename"] = "Settings_RrewardType";
 
   try {
     const response = yield call(deleteRewardType, payload);

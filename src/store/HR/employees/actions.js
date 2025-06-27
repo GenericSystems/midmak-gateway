@@ -51,6 +51,9 @@ import {
   GET_STATES_OPT,
   GET_STATES_OPT_SUCCESS,
   GET_STATES_OPT_FAIL,
+  GET_EMPLOYEES_NAMES,
+  GET_EMPLOYEES_NAMES_SUCCESS,
+  GET_EMPLOYEES_NAMES_FAIL,
 } from "./actionTypes";
 
 export const getGendersch = () => ({
@@ -64,6 +67,20 @@ export const getGenderschSuccess = genders => ({
 
 export const getGenderschFail = error => ({
   type: GET_GENDERSCH_FAIL,
+  payload: error,
+});
+
+export const getEmployeesNames = () => ({
+  type: GET_EMPLOYEES_NAMES,
+});
+
+export const getEmployeesNamesSuccess = genders => ({
+  type: GET_EMPLOYEES_NAMES_SUCCESS,
+  payload: genders,
+});
+
+export const getEmployeesNamesFail = error => ({
+  type: GET_EMPLOYEES_NAMES_FAIL,
   payload: error,
 });
 

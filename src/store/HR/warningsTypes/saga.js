@@ -36,7 +36,7 @@ function* fetchWarningsTypes() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_ContractType",
+    tablename: "Settings_WarningType",
   };
   try {
     const response = yield call(getWarningsTypes, get_WarningType_req);
@@ -61,7 +61,7 @@ function* onAddNewWarningType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_ContractType";
+  payload["tablename"] = "Settings_WarningType";
 
   try {
     const response = yield call(addNewWarningType, payload);
@@ -75,7 +75,7 @@ function* onUpdateWarningType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_ContractType";
+  payload["tablename"] = "Settings_WarningType";
 
   try {
     const response = yield call(updateWarningType, payload);
@@ -89,7 +89,7 @@ function* onDeleteWarningType({ payload, warningType }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_ContractType";
+  payload["tablename"] = "Settings_WarningType";
 
   try {
     const response = yield call(deleteWarningType, payload);
