@@ -21,6 +21,7 @@ import {
   Label,
   Alert,
   Input,
+  Spinner,
 } from "reactstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
@@ -34,6 +35,7 @@ import ToolkitProvider, {
 
 import Breadcrumbs from "components/Common/Breadcrumb";
 import DeleteModal from "components/Common/DeleteModal";
+import Accordion from "react-bootstrap/Accordion";
 
 import {
   getCoursesCatalogs,
@@ -41,6 +43,12 @@ import {
   updateCoursesCatalog,
   deleteCoursesCatalog,
   getCoursesCatalogDeletedValue,
+  getCoursesCatalogsDatalist,
+  getCourseCatalogePrerequisites,
+  addNewCourseCatalogePrerequisite,
+  updateCourseCatalogePrerequisite,
+  deleteCourseCatalogePrerequisite,
+  getCourseCatalogePrerequisitesDeletedValue,
 } from "store/CourseCataloge/actions";
 
 import paginationFactory, {
@@ -81,10 +89,6 @@ class CourseCatalogeList extends Component {
       isEdit: false,
       isOpen: false,
       isAdd: false,
-      selectedWorkClassification: "",
-      selectedJobTitle: "",
-      selectedCostCenter: "",
-      selectedJobRank: "",
       errorMessage: null,
       successMessage: null,
       values: "",
@@ -94,7 +98,6 @@ class CourseCatalogeList extends Component {
 
       selectedTrainingSector: "",
       selectedTrainingProgram: "",
-      selectedTrainingModule: "",
       selectedTrainingType: "",
       selectedTrainingFormat: "",
       arCoursenameError: false,
@@ -102,23 +105,48 @@ class CourseCatalogeList extends Component {
       trainingProgramError: false,
       courseCodeError: false,
       courseTypeError: false,
+      traningSectorError: false,
+      filtredPreReqCourses: [],
+      selectedCoursId: 0,
+      isShowPreReq: false,
     };
     this.toggle = this.toggle.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentDidMount() {
-    const { coursesCatalogs, deleted, user_menu  , onGetCoursesCatalogs} = this.props;
+    const {
+      sectors,
+      trainingFormats,
+      certificateTypes,
+      courseTypes,
+      coursesCatalogs,
+      deleted,
+      user_menu,
+      onGetCoursesCatalogs,
+      isLoading,
+      prereqs,
+      preReqCourses,
+      onGetPreReqCoursesDatalist,
+    } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
 
-   // onGetCoursesCatalogs();
+    onGetCoursesCatalogs();
+    onGetPreReqCoursesDatalist();
 
     this.setState({
       coursesCatalogs,
+      sectors,
+      trainingFormats,
+      certificateTypes,
+      courseTypes,
+      isLoading,
       deleted,
+      prereqs,
+      preReqCourses,
     });
   }
 
@@ -222,73 +250,57 @@ class CourseCatalogeList extends Component {
   };
 
   handleAddRowPrerequisite = () => {
-    const { prerequisiteCoursesArray, lastUsedId } = this.state;
+    const {
+      onAddNewCourseCatalogePrerequisite,
+      lastAddedId,
+      coursesCatalogsPrReq,
+    } = this.props;
 
-    const emptyRowsExist = prerequisiteCoursesArray.some(
-      prereq => prereq.prerequisiteCourseName.trim() === ""
+    const { isAdd, selectedCoursId } = this.state;
+
+    const emptyRowExists = coursesCatalogsPrReq.some(
+      prereq => !prereq.prerequiseCourseId
     );
+    console.log("emptyRowExists", emptyRowExists);
 
-    if (emptyRowsExist) {
-      const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateErrorPrerequisite: errorMessage });
-    } else {
-      const newPrerequisite = {
-        Id: lastUsedId,
-        prerequisiteCourseName: "",
-        registerCondition: null,
-      };
-
+    if (emptyRowExists) {
       this.setState({
-        prerequisiteCoursesArray: [
-          ...prerequisiteCoursesArray,
-          newPrerequisite,
-        ],
-        lastUsedId: lastUsedId + 1,
-        duplicateErrorPrerequisite: null,
+        duplicateErrorPrerequisite: this.props.t("Fill in the empty row"),
       });
+      return;
     }
+
+    const newPrerequisite = {
+      courseId: isAdd ? lastAddedId : selectedCoursId,
+    };
+
+    onAddNewCourseCatalogePrerequisite(newPrerequisite);
+
+    this.setState({ duplicateErrorPrerequisite: null });
   };
 
   handlePrerequisiteChange = (id, fieldName, value) => {
-    this.setState(prevState => {
-      const updateprerequisiteCourses = prevState.relativesArray.map(prereq => {
-        if (prereq.Id === id) {
-          return {
-            ...prereq,
-            [fieldName]: newValue,
-          };
-        }
-        return prereq;
-      });
+    const updatedItem = {
+      Id: id,
+      [fieldName]: value,
+    };
 
-      return {
-        prerequisiteCoursesArray: updateprerequisiteCourses,
-      };
-    });
+    this.props.onUpdateCourseCatalogePrerequisite(updatedItem);
   };
 
-  handleSelectChangeDetails = (rowId, fieldName, selectedValue) => {
-    this.setState(prevState => {
-      const updateprerequisiteCourses = prevState.prerequisiteCoursesArray.map(
-        prereq => {
-          if (relative.Id === rowId) {
-            return {
-              ...prereq,
-              [fieldName]: selectedValue,
-            };
-          }
-          return relative;
-        }
-      );
+  handleSelectChangeDetails = (id, fieldName, value) => {
+    const updatedItem = {
+      Id: id,
+      [fieldName]: value,
+    };
 
-      return {
-        relativesArray: updateprerequisiteCourses,
-      };
-    });
+    this.props.onUpdateCourseCatalogePrerequisite(updatedItem);
   };
 
   handleSubmit = values => {
+    const { onAddNewCoursesCatalog, onUpdateCoursesCatalog } = this.props;
     console.log("values", values);
+
     const {
       selectedTrainingSector,
       selectedTrainingProgram,
@@ -297,33 +309,50 @@ class CourseCatalogeList extends Component {
       isEdit,
       isAdd,
       prerequisiteCoursesArray,
-      arCoursenameError,
-      enCoursenameError,
-      emptyError,
     } = this.state;
 
+    let arCoursenameError = false;
+    let enCoursenameError = false;
+    let courseCodeError = false;
+    let traningSectorError = false;
+    let trainingProgramError = false;
+    let courseTypeError = false;
     let isSelectError = false;
 
-    // Trim and sanitize inputs
-    values["courseNameAr"] = values["courseNameAr"]?.trim() || "";
-    values["courseNameEn"] = values["courseNameEn"]?.trim() || "";
-    values["trainingSector"] = selectedTrainingSector;
-    values["trainingProgram"] = selectedTrainingProgram;
-    values["courseCode"] = values["courseCode"]?.trim() || "";
-    values["courseType"] = selectedTrainingType;
+    values["arTitle"] = values["arTitle"] || "";
+    values["enTitle"] = values["enTitle"] || "";
+    values["sectorId"] = selectedTrainingSector;
+    values["programId"] = selectedTrainingProgram;
+    values["Code"] = values["Code"] || "";
+    values["courseTypeId"] = selectedTrainingType;
     values["totalTrainingHours"] = values["totalTrainingHours"] || "";
-    values["trainingModule"] = values["trainingModule"]?.trim() || "";
-    values["trainingFormat"] = selectedTrainingFormat;
+    values["trainingModule"] = values["trainingModule"] || "";
+    values["trainingFormatId"] = selectedTrainingFormat;
     values["descriptionAr"] = values["descriptionAr"] || "";
     values["descriptionEn"] = values["descriptionEn"] || "";
 
-    // Basic validations for required fields
-    if (values.courseNameAr === "") {
-      this.setState({ arCoursenameError: true });
+    if (values.arTitle === "") {
+      arCoursenameError = true;
     }
 
-    if (values.courseNameEn === "") {
-      this.setState({ enCoursenameError: true });
+    if (values.enTitle === "") {
+      enCoursenameError = true;
+    }
+
+    if (!selectedTrainingSector) {
+      traningSectorError = true;
+    }
+
+    if (values.Code === "") {
+      courseCodeError = true;
+    }
+
+    if (!selectedTrainingProgram) {
+      trainingProgramError = true;
+    }
+
+    if (!selectedTrainingType) {
+      courseTypeError = true;
     }
 
     if (
@@ -335,65 +364,86 @@ class CourseCatalogeList extends Component {
       isSelectError = true;
     }
 
-    if (arCoursenameError || enCoursenameError || isSelectError) {
-      this.setState({ emptyError: "Please fill all required fields" });
-      return false;
+    if (
+      arCoursenameError ||
+      enCoursenameError ||
+      traningSectorError ||
+      courseCodeError ||
+      trainingProgramError ||
+      courseTypeError ||
+      isSelectError
+    ) {
+      this.setState({
+        arCoursenameError,
+        enCoursenameError,
+        traningSectorError,
+        courseCodeError,
+        trainingProgramError,
+        courseTypeError,
+        emptyError: "Please fill all required fields",
+      });
+      return;
     }
 
     let courseCatalogInfo = {};
 
-    courseCatalogInfo["prerequisiteCourses"] = prerequisiteCoursesArray;
+    // courseCatalogInfo["prerequisiteCourses"] = prerequisiteCoursesArray;
 
     Object.keys(values).forEach(key => {
       if (values[key] !== undefined && values[key] !== "") {
         courseCatalogInfo[key] = values[key];
       }
     });
-
     if (isEdit) {
-      console.log("Updating contract:", courseCatalogInfo);
-      // onUpdateCoursesCatalog(courseCatalogInfo);
+      console.log("Updating courseCatalogInfo:", courseCatalogInfo);
+      onUpdateCoursesCatalog(courseCatalogInfo);
+      this.toggle();
     } else if (isAdd) {
       console.log("Adding new contract:", courseCatalogInfo);
-      // onAddNewCoursesCatalog(courseCatalogInfo);
+      onAddNewCoursesCatalog(courseCatalogInfo);
+      this.setState({ isShowPreReq: true });
     }
 
-    this.setState({ errorMessages: {} });
     this.setState({
+      errorMessages: {},
       arCoursenameError: false,
       enCoursenameError: false,
       emptyError: "",
     });
 
-    this.toggle();
+    //this.toggle();
   };
 
-  handleSelect = (fieldName, selectedValue) => {
-    if (fieldName == "trainingSector") {
+  handleSelect = (fieldName, selectedValue, values) => {
+    if (fieldName == "sectorId") {
       this.setState({
         selectedTrainingSector: selectedValue,
+        courseCataloge: values,
       });
     }
-    if (fieldName == "trainingProgram") {
+    if (fieldName == "programId") {
       this.setState({
         selectedTrainingProgram: selectedValue,
+        courseCataloge: values,
       });
     }
 
-    if (fieldName == "courseType") {
+    if (fieldName == "courseTypeId") {
       this.setState({
         selectedTrainingType: selectedValue,
+        courseCataloge: values,
       });
     }
-    if (fieldName == "trainingFormat") {
+    if (fieldName == "trainingFormatId") {
       this.setState({
         selectedTrainingFormat: selectedValue,
+        courseCataloge: values,
       });
     }
   };
 
   handleAlertClose = () => {
-    this.setState({ duplicateError: null });
+    this.setState({ emptyError: null });
   };
 
   handleSuccessClose = () => {
@@ -409,30 +459,69 @@ class CourseCatalogeList extends Component {
   };
 
   handleEditCourse = arg => {
-    console.log("arg", arg);
+    const { preReqCourses, onGetCourseCatalogePrerequisites } = this.props;
+
+    const filteredPreReqCourses = preReqCourses.filter(
+      course => course.key != arg.Id
+    );
+
+    this.setState({
+      courseCataloge: arg,
+      isEdit: true,
+      filtredPreReqCourses: filteredPreReqCourses,
+      selectedCoursId: arg.Id,
+      selectedTrainingFormat: arg.trainingFormatId,
+      selectedTrainingSector: arg.sectorId,
+      selectedTrainingProgram: arg.programId,
+      selectedTrainingType: arg.courseTypeId,
+    });
+    onGetCourseCatalogePrerequisites(arg.Id);
 
     this.toggle();
   };
 
-  deletePrerequisite = prerequisite => {
-    this.setState(prevState => {
-      const updatedPrerequisites = prevState.prerequisiteCoursesArray.filter(
-        item => item.Id !== prerequisite.Id
-      );
-
-      return {
-        prerequisiteCoursesArray: updatedPrerequisites,
-      };
-    });
+  deletePrerequisite = row => {
+    this.props.onDeleteCourseCatalogePrerequisite({ Id: row.Id });
   };
 
   handleAlertClosePrerequisite = () => {
     this.setState({ duplicateErrorPrerequisite: null });
   };
 
+  onClickDelete = rowId => {
+    this.setState({ selectedRowId: rowId, deleteModal: true });
+  };
+
+  handleDeleteRow = () => {
+    const { onDeleteCoursesCatalog } = this.props;
+    const { selectedRowId } = this.state;
+
+    if (selectedRowId !== null) {
+      onDeleteCoursesCatalog(selectedRowId);
+
+      this.setState({
+        selectedRowId: null,
+        deleteModal: false,
+        showAlert: true,
+      });
+    }
+  };
+
   render() {
     const courseCataloge = this.state.courseCataloge;
-    const { coursesCatalogs, t, deleted } = this.props;
+    const {
+      coursesCatalogs,
+      t,
+      deleted,
+      sectors,
+      certificateTypes,
+      courseTypes,
+      trainingFormats,
+      isLoading,
+      prereqs,
+      preReqCourses,
+      coursesCatalogsPrReq,
+    } = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -451,6 +540,16 @@ class CourseCatalogeList extends Component {
       duplicateErrorPrerequisite,
       arCoursenameError,
       enCoursenameError,
+      selectedTrainingSector,
+      selectedTrainingFormat,
+      selectedTrainingProgram,
+      selectedTrainingType,
+      traningSectorError,
+      courseCodeError,
+      courseTypeError,
+      trainingProgramError,
+      filtredPreReqCourses,
+      isShowPreReq,
     } = this.state;
     const { SearchBar } = Search;
     const alertMessage =
@@ -465,31 +564,20 @@ class CourseCatalogeList extends Component {
       },
     ];
 
-    const trainingSectorOptions = [
-      { value: "it", label: "Information Technology" },
-      { value: "finance", label: "Finance" },
-      { value: "hr", label: "Human Resources" },
-    ];
-    const trainingProgramOptions = [
-      { value: "program1", label: "Program 1" },
-      { value: "program2", label: "Program 2" },
-    ];
-    const courseTypeOptions = [
-      { value: "online", label: "Online" },
-      { value: "in-person", label: "In-Person" },
-    ];
-    const trainingFormatOptions = [
-      { value: "workshop", label: "Workshop" },
-      { value: "seminar", label: "Seminar" },
-    ];
-    const registerConditions = [
-      { value: "mandatory", label: t("Mandatory") },
-      { value: "optional", label: t("Optional") },
-      { value: "recommended", label: t("Recommended") },
-    ];
+    const trainingSectorOptions = sectors;
+
+    const trainingProgramOptions = certificateTypes;
+    const courseTypeOptions = courseTypes;
+    const trainingFormatOptions = trainingFormats;
+
+    const prereqCoursesOptions = isEdit ? filtredPreReqCourses : preReqCourses;
+
+    console.log("prereqCoursesOptions", prereqCoursesOptions);
+
+    const registerConditions = prereqs;
 
     const columns = [
-      { dataField: "id", text: this.props.t("ID"), hidden: true },
+      { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "arTitle",
         text: this.props.t("Course Name (ar)"),
@@ -503,43 +591,71 @@ class CourseCatalogeList extends Component {
         editable: false,
       },
       {
-        dataField: "courseCode",
+        dataField: "Code",
         text: this.props.t("Course Code"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "sector",
-        text: this.props.t("Training Sector"),
+        dataField: "sectorId",
+        text: this.props.t("Sector"),
         sort: true,
         editable: false,
+        formatter: (cell, row) => {
+          const option = trainingSectorOptions.find(
+            opt => opt.value === row.sectorId
+          );
+          return option ? option.label : "";
+        },
       },
+
       {
-        dataField: "program",
+        dataField: "programId",
         text: this.props.t("Training Program"),
         sort: true,
         editable: false,
+        formatter: (cell, row) => {
+          const option = trainingProgramOptions.find(
+            opt => opt.value === row.programId
+          );
+          return option ? option.label : "";
+        },
       },
+
       {
-        dataField: "modules",
+        dataField: "trainingModule",
         text: this.props.t("Training Modules"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "courseType",
+        dataField: "courseTypeId",
         text: this.props.t("Course Type"),
         sort: true,
         editable: false,
+        formatter: (cell, row) => {
+          const option = courseTypeOptions.find(
+            opt => opt.value === row.courseTypeId
+          );
+          return option ? option.label : "";
+        },
       },
+
       {
-        dataField: "trainingFormat",
+        dataField: "trainingFormatId",
         text: this.props.t("Training Format"),
         sort: true,
         editable: false,
+        formatter: (cell, row) => {
+          const option = trainingFormatOptions.find(
+            opt => opt.value === row.trainingFormatId
+          );
+          return option ? option.label : "";
+        },
       },
+
       {
-        dataField: "totalHours",
+        dataField: "totalTrainingHours",
         text: this.props.t("Total Training Hours"),
         sort: true,
         editable: false,
@@ -563,7 +679,7 @@ class CourseCatalogeList extends Component {
               <Link className="text-danger" to="#">
                 <i
                   className="mdi mdi-delete font-size-18"
-                  onClick={() => this.handleDeleteCourse(courseCataloge)}
+                  onClick={() => this.onClickDelete(courseCataloge)}
                 ></i>
               </Link>
             </Tooltip>
@@ -576,13 +692,45 @@ class CourseCatalogeList extends Component {
       { dataField: "Id", text: t("ID"), hidden: true },
 
       {
-        dataField: "prerequisiteCourseName",
+        dataField: "prerequiseCourseId",
         text: t("Prerequisite Course Name"),
         sort: true,
+        editable: false,
+        formatter: (cell, row) => (
+          <div>
+            <input
+              list={`prereq-courses-${row.Id}`}
+              value={
+                prereqCoursesOptions.find(c => c.key === row.prerequiseCourseId)
+                  ?.value || ""
+              }
+              onChange={e => {
+                const selectedValue = e.target.value;
+                const matchedCourse = prereqCoursesOptions.find(
+                  c => c.value === selectedValue
+                );
+                const courseId = matchedCourse?.key || "";
+                this.handleSelectChangeDetails(
+                  row.Id,
+                  "prerequiseCourseId",
+                  courseId
+                );
+              }}
+              className="form-control"
+            />
+            <datalist id={`prereq-courses-${row.Id}`}>
+              {prereqCoursesOptions.map(course => (
+                <option key={course.key} value={course.value}>
+                  {course.value}
+                </option>
+              ))}
+            </datalist>
+          </div>
+        ),
       },
 
       {
-        dataField: "registerCondition",
+        dataField: "prerequiseConditiontId",
         text: t("Register Condition"),
         formatter: (cell, row) => (
           <Select
@@ -591,12 +739,12 @@ class CourseCatalogeList extends Component {
             onChange={newValue => {
               this.handleSelectChangeDetails(
                 row.Id,
-                "registerCondition",
+                "prerequiseConditiontId",
                 newValue.value
               );
             }}
             value={registerConditions.find(
-              opt => opt.value == row.registerCondition
+              opt => opt.value == row.prerequiseConditiontId
             )}
           />
         ),
@@ -688,673 +836,729 @@ class CourseCatalogeList extends Component {
                         </Alert>
                       )}
                     </div>
-                    <div className="table-responsive">
-                      <PaginationProvider
-                        pagination={paginationFactory(pageOptions)}
-                        keyField="Id"
-                        columns={columns}
-                        data={coursesCatalogs}
-                      >
-                        {({ paginationProps, paginationTableProps }) => (
-                          <ToolkitProvider
-                            keyField="Id"
-                            data={coursesCatalogs}
-                            columns={columns}
-                            search
-                          >
-                            {toolkitprops => (
-                              <React.Fragment>
-                                <Row>
-                                  <Col sm="4">
-                                    <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {/*   {showSearchButton && ( */}
-                                      <div className="position-relative">
-                                        <SearchBar
-                                          {...toolkitprops.searchProps}
-                                          placeholder={t("Search...")}
-                                        />
+                    {isLoading ? (
+                      <div className="d-flex justify-content-center align-items-center m-13">
+                        <Spinner color="info" className="my-4" />
+                      </div>
+                    ) : (
+                      <div className="table-responsive">
+                        <PaginationProvider
+                          pagination={paginationFactory(pageOptions)}
+                          keyField="Id"
+                          columns={columns}
+                          data={coursesCatalogs}
+                        >
+                          {({ paginationProps, paginationTableProps }) => (
+                            <ToolkitProvider
+                              keyField="Id"
+                              data={coursesCatalogs}
+                              columns={columns}
+                              search
+                            >
+                              {toolkitprops => (
+                                <React.Fragment>
+                                  <Row>
+                                    <Col sm="4">
+                                      <div className="search-box ms-2 mb-2 d-inline-block">
+                                        {/*   {showSearchButton && ( */}
+                                        <div className="position-relative">
+                                          <SearchBar
+                                            {...toolkitprops.searchProps}
+                                            placeholder={t("Search...")}
+                                          />
+                                        </div>
                                       </div>
-                                    </div>
-                                  </Col>
-                                  {/*    {showAddButton && ( */}
-                                  <Col sm="8">
-                                    <div className="text-sm-end">
-                                      <Tooltip
-                                        title={this.props.t("Add")}
-                                        placement="top"
-                                      >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleAddRow}
+                                    </Col>
+                                    {/*    {showAddButton && ( */}
+                                    <Col sm="8">
+                                      <div className="text-sm-end">
+                                        <Tooltip
+                                          title={this.props.t("Add")}
+                                          placement="top"
                                         >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </div>
-                                  </Col>
-                                </Row>
+                                          <IconButton
+                                            color="primary"
+                                            onClick={this.handleAddRow}
+                                          >
+                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </div>
+                                    </Col>
+                                  </Row>
 
-                                <BootstrapTable
-                                  keyField="Id"
-                                  {...toolkitprops.baseProps}
-                                  {...paginationTableProps}
-                                  data={coursesCatalogs}
-                                  columns={columns}
-                                  cellEdit={cellEditFactory({
-                                    mode: "click",
-                                    blurToSave: true,
-                                    afterSaveCell: (
-                                      oldValue,
-                                      newValue,
-                                      row,
-                                      column
-                                    ) => {
-                                      row.Id, column.dataField, newValue;
-                                    },
-                                  })}
-                                  noDataIndication={this.props.t(
-                                    "No Course Cataloge Found"
-                                  )}
-                                  defaultSorted={defaultSorting}
-                                />
-                                <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                  <PaginationListStandalone
-                                    {...paginationProps}
+                                  <BootstrapTable
+                                    keyField="Id"
+                                    {...toolkitprops.baseProps}
+                                    {...paginationTableProps}
+                                    data={coursesCatalogs}
+                                    columns={columns}
+                                    cellEdit={cellEditFactory({
+                                      mode: "click",
+                                      blurToSave: true,
+                                      afterSaveCell: (
+                                        oldValue,
+                                        newValue,
+                                        row,
+                                        column
+                                      ) => {
+                                        row.Id, column.dataField, newValue;
+                                      },
+                                    })}
+                                    noDataIndication={this.props.t(
+                                      "No Course Cataloge Found"
+                                    )}
+                                    defaultSorted={defaultSorting}
                                   />
-                                </Col>
-                                <Modal
-                                  isOpen={modal}
-                                  toggle={this.toggle}
-                                  className={"modal-fullscreen"}
-                                >
-                                  <ModalHeader toggle={this.toggle} tag="h4">
-                                    {!!isEdit
-                                      ? t("Edit Contract Data")
-                                      : t("Add Contract Data")}
-                                  </ModalHeader>
-                                  <ModalBody>
-                                    <Formik
-                                      enableReinitialize={true}
-                                      initialValues={{
-                                        ...(isEdit &&
-                                          courseCataloge && {
-                                            Id: courseCataloge.Id,
-                                          }),
+                                  <Col className="pagination pagination-rounded justify-content-end mb-2">
+                                    <PaginationListStandalone
+                                      {...paginationProps}
+                                    />
+                                  </Col>
+                                  <Modal
+                                    isOpen={modal}
+                                    toggle={this.toggle}
+                                    className={"modal-fullscreen"}
+                                  >
+                                    <ModalHeader toggle={this.toggle} tag="h4">
+                                      {!!isEdit
+                                        ? t("Edit Course Catalog Data")
+                                        : t("Add Course Catalog Data")}
+                                    </ModalHeader>
+                                    <ModalBody>
+                                      <Formik
+                                        enableReinitialize={true}
+                                        initialValues={{
+                                          ...(isEdit &&
+                                            courseCataloge && {
+                                              Id: courseCataloge.Id,
+                                            }),
 
-                                        courseNameAr:
-                                          courseCataloge?.courseNameAr || "",
-                                        courseNameEn:
-                                          courseCataloge?.courseNameEn || "",
-                                        trainingSector:
-                                          courseCataloge?.trainingSector || "",
-                                        trainingProgram:
-                                          courseCataloge?.trainingProgram || "",
-                                        courseCode:
-                                          courseCataloge?.courseCode || "",
-                                        courseType:
-                                          courseCataloge?.courseType || "",
-                                        totalTrainingHours:
-                                          courseCataloge?.totalTrainingHours ||
-                                          "",
-                                        trainingModule:
-                                          courseCataloge?.trainingModule || "",
-                                        trainingFormat:
-                                          courseCataloge?.trainingFormat || "",
-                                        descriptionAr:
-                                          courseCataloge?.descriptionAr || "",
-                                        descriptionEn:
-                                          courseCataloge?.descriptionEn || "",
-                                      }}
-                                      validationSchema={Yup.object().shape({
-                                        courseNameAr: Yup.string().required(
-                                          t("Course Name (ar) is required")
-                                        ),
-                                        courseNameEn: Yup.string().required(
-                                          t("Course Name (en) is required")
-                                        ),
-                                        trainingSector: Yup.string().required(
-                                          t("Training Sector is required")
-                                        ),
-                                        trainingProgram: Yup.string().required(
-                                          t("Training Program is required")
-                                        ),
-                                        courseCode: Yup.string().required(
-                                          t("Course Code is required")
-                                        ),
-                                        courseType: Yup.string().required(
-                                          t("Course Type is required")
-                                        ),
-                                        totalTrainingHours: Yup.number()
-                                          .typeError(
-                                            t(
-                                              "Total Training Hours must be a number"
-                                            )
-                                          )
-                                          .required(
-                                            t(
-                                              "Total Training Hours is required"
-                                            )
+                                          arTitle:
+                                            courseCataloge?.arTitle || "",
+                                          enTitle:
+                                            courseCataloge?.enTitle || "",
+                                          sectorId:
+                                            courseCataloge?.sectorId ||
+                                            selectedTrainingSector,
+                                          programId:
+                                            courseCataloge?.programId ||
+                                            selectedTrainingProgram,
+                                          Code: courseCataloge?.Code || "",
+                                          courseTypeId:
+                                            courseCataloge?.courseTypeId ||
+                                            selectedTrainingType,
+                                          totalTrainingHours:
+                                            courseCataloge?.totalTrainingHours ||
+                                            "",
+                                          trainingModule:
+                                            courseCataloge?.trainingModule ||
+                                            "",
+                                          trainingFormatId:
+                                            courseCataloge?.trainingFormatId ||
+                                            selectedTrainingFormat,
+                                          descriptionAr:
+                                            courseCataloge?.descriptionAr || "",
+                                          descriptionEn:
+                                            courseCataloge?.descriptionEn || "",
+                                          //file: null,
+                                        }}
+                                        validationSchema={Yup.object().shape({
+                                          arTitle: Yup.string().required(
+                                            t("Course Name (ar) is required")
                                           ),
-                                        trainingModule: Yup.string().required(
-                                          t("Training Module is required")
-                                        ),
-                                        trainingFormat: Yup.string().required(
-                                          t("Training Format is required")
-                                        ),
-                                      })}
-                                    >
-                                      {({
-                                        errors,
-                                        status,
-                                        touched,
-                                        values,
-                                        handleChange,
-                                        handleBlur,
-                                        setFieldValue,
-                                      }) => (
-                                        <Form>
-                                          <Card id="employee-card">
-                                            <CardTitle id="course_header">
-                                              {t("Course Basic Information")}
-                                            </CardTitle>
-                                            <CardBody className="cardBody">
-                                              {emptyError && (
-                                                <Alert
-                                                  color="danger"
-                                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                  role="alert"
-                                                >
-                                                  {emptyError}
-                                                  <button
-                                                    type="button"
-                                                    className="btn-close"
-                                                    aria-label="Close"
-                                                    onClick={
-                                                      this.handleAlertClose
-                                                    }
-                                                  ></button>
-                                                </Alert>
-                                              )}
-                                              <Row>
-                                                <Col lg="12">
-                                                  <div className="bordered">
-                                                    <Col lg="12">
-                                                      <Card>
-                                                        <CardTitle id="card_header">
-                                                          {t(
-                                                            "Basic Information"
-                                                          )}
-                                                        </CardTitle>
-                                                        <CardBody className="cardBody">
-                                                          <Row>
+                                          enTitle: Yup.string().required(
+                                            t("Course Name (en) is required")
+                                          ),
+                                          sectorId: Yup.string().required(
+                                            t("Training Sector is required")
+                                          ),
+                                          programId: Yup.string().required(
+                                            t("Training Program is required")
+                                          ),
+                                          Code: Yup.string().required(
+                                            t("Course Code is required")
+                                          ),
+                                          courseTypeId: Yup.string().required(
+                                            t("Course Type is required")
+                                          ),
+                                          totalTrainingHours: Yup.number()
+                                            .typeError(
+                                              t(
+                                                "Total Training Hours must be a number"
+                                              )
+                                            )
+                                            .required(
+                                              t(
+                                                "Total Training Hours is required"
+                                              )
+                                            ),
+                                          trainingModule: Yup.string().required(
+                                            t("Training Module is required")
+                                          ),
+                                          trainingFormatId:
+                                            Yup.string().required(
+                                              t("Training Format is required")
+                                            ),
+                                        })}
+                                      >
+                                        {({
+                                          errors,
+                                          status,
+                                          touched,
+                                          values,
+                                          handleChange,
+                                          handleBlur,
+                                          setFieldValue,
+                                        }) => (
+                                          <Form>
+                                            <Card id="employee-card mt-8">
+                                              <CardBody className="cardBody">
+                                                {emptyError && (
+                                                  <Alert
+                                                    color="danger"
+                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                    role="alert"
+                                                  >
+                                                    {emptyError}
+                                                    <button
+                                                      type="button"
+                                                      className="btn-close"
+                                                      aria-label="Close"
+                                                      onClick={
+                                                        this.handleAlertClose
+                                                      }
+                                                    ></button>
+                                                  </Alert>
+                                                )}
+                                                <Row>
+                                                  <Col lg="12">
+                                                    <div className="bordered">
+                                                      <Col lg="12">
+                                                        <Card>
+                                                          <CardTitle id="card_header">
+                                                            {t(
+                                                              "Basic Information"
+                                                            )}
+                                                          </CardTitle>
+                                                          <CardBody className="cardBody">
                                                             <Row>
-                                                              <Col lg="6">
-                                                                {/* Course Name (AR) */}
-                                                                <div className="mb-3">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="courseNameAr">
-                                                                        {this.props.t(
-                                                                          "Course Name (ar)"
-                                                                        )}
+                                                              <Row>
+                                                                <Col lg="6">
+                                                                  {/* Course Name (AR) */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="arTitle">
+                                                                          {this.props.t(
+                                                                            "Course Name (ar)"
+                                                                          )}
+                                                                          <span className="text-danger">
+                                                                            *
+                                                                          </span>
+                                                                        </Label>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Field
+                                                                          type="text"
+                                                                          name="arTitle"
+                                                                          id="arTitle"
+                                                                          className={
+                                                                            "form-control" +
+                                                                            ((errors.arTitle &&
+                                                                              touched.arTitle) ||
+                                                                            arCoursenameError
+                                                                              ? " is-invalid"
+                                                                              : "")
+                                                                          }
+                                                                        />
+                                                                        <ErrorMessage
+                                                                          name="arTitle"
+                                                                          component="div"
+                                                                          className="invalid-feedback"
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
+
+                                                                  {/* Course Name (EN) */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="enTitle">
+                                                                          {this.props.t(
+                                                                            "Course Name (en)"
+                                                                          )}
+                                                                        </Label>
                                                                         <span className="text-danger">
                                                                           *
                                                                         </span>
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Field
-                                                                        type="text"
-                                                                        name="courseNameAr"
-                                                                        id="courseNameAr"
-                                                                        className={
-                                                                          "form-control" +
-                                                                          ((errors.courseNameAr &&
-                                                                            touched.courseNameAr) ||
-                                                                          arCoursenameError
-                                                                            ? " is-invalid"
-                                                                            : "")
-                                                                        }
-                                                                      />
-                                                                      <ErrorMessage
-                                                                        name="courseNameAr"
-                                                                        component="div"
-                                                                        className="invalid-feedback"
-                                                                      />
-                                                                    </Col>
-                                                                  </Row>
-                                                                </div>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Field
+                                                                          type="text"
+                                                                          name="enTitle"
+                                                                          id="enTitle"
+                                                                          className={
+                                                                            "form-control" +
+                                                                            ((errors.enTitle &&
+                                                                              touched.enTitle) ||
+                                                                            enCoursenameError
+                                                                              ? " is-invalid"
+                                                                              : "")
+                                                                          }
+                                                                        />
+                                                                        <ErrorMessage
+                                                                          name="enTitle"
+                                                                          component="div"
+                                                                          className="invalid-feedback"
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
 
-                                                                {/* Course Name (EN) */}
-                                                                <div className="mb-3">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="courseNameEn">
-                                                                        {this.props.t(
-                                                                          "Course Name (en)"
-                                                                        )}
-                                                                      </Label>
-                                                                      <span className="text-danger">
-                                                                        *
-                                                                      </span>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Field
-                                                                        type="text"
-                                                                        name="courseNameEn"
-                                                                        id="courseNameEn"
-                                                                        className={
-                                                                          "form-control" +
-                                                                          ((errors.courseNameEn &&
-                                                                            touched.courseNameEn) ||
-                                                                          enCoursenameError
-                                                                            ? " is-invalid"
-                                                                            : "")
-                                                                        }
-                                                                      />
-                                                                      <ErrorMessage
-                                                                        name="courseNameEn"
-                                                                        component="div"
-                                                                        className="invalid-feedback"
-                                                                      />
-                                                                    </Col>
-                                                                  </Row>
-                                                                </div>
+                                                                  {/* Training Sector - SELECT */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="sectorId">
+                                                                          {this.props.t(
+                                                                            "Training Sector"
+                                                                          )}
+                                                                        </Label>
+                                                                        <span className="text-danger">
+                                                                          *
+                                                                        </span>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Select
+                                                                          name="sectorId"
+                                                                          options={
+                                                                            trainingSectorOptions
+                                                                          }
+                                                                          className={
+                                                                            "form-control" +
+                                                                            (errors.sectorId &&
+                                                                            touched.sectorId
+                                                                              ? " is-invalid"
+                                                                              : "")
+                                                                          }
+                                                                          onChange={newValue =>
+                                                                            this.handleSelect(
+                                                                              "sectorId",
+                                                                              newValue.value,
+                                                                              values
+                                                                            )
+                                                                          }
+                                                                          defaultValue={trainingSectorOptions.find(
+                                                                            opt =>
+                                                                              opt.value ===
+                                                                              courseCataloge?.sectorId
+                                                                          )}
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
 
-                                                                {/* Training Sector - SELECT */}
-                                                                <div className="mb-3">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="trainingSector">
-                                                                        {this.props.t(
-                                                                          "Training Sector"
-                                                                        )}
-                                                                      </Label>
-                                                                      <span className="text-danger">
-                                                                        *
-                                                                      </span>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Select
-                                                                        name="trainingSector"
-                                                                        options={
-                                                                          trainingSectorOptions
-                                                                        }
-                                                                        className={
-                                                                          "form-control" +
-                                                                          (errors.trainingSector &&
-                                                                          touched.trainingSector
-                                                                            ? " is-invalid"
-                                                                            : "")
-                                                                        }
-                                                                        onChange={newValue =>
-                                                                          this.handleSelect(
-                                                                            "trainingSector",
-                                                                            newValue.value
-                                                                          )
-                                                                        }
-                                                                        defaultValue={trainingSectorOptions.find(
-                                                                          opt =>
-                                                                            opt.value ===
-                                                                            courseCataloge?.trainingSector
-                                                                        )}
-                                                                      />
-                                                                    </Col>
-                                                                  </Row>
-                                                                </div>
+                                                                  {/* Training Program - SELECT */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="programId">
+                                                                          {this.props.t(
+                                                                            "Training Program"
+                                                                          )}
+                                                                        </Label>
+                                                                        <span className="text-danger">
+                                                                          *
+                                                                        </span>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Select
+                                                                          name="programId"
+                                                                          options={
+                                                                            trainingProgramOptions
+                                                                          }
+                                                                          className="form-control"
+                                                                          onChange={newValue =>
+                                                                            this.handleSelect(
+                                                                              "programId",
+                                                                              newValue.value,
+                                                                              values
+                                                                            )
+                                                                          }
+                                                                          defaultValue={trainingProgramOptions.find(
+                                                                            opt =>
+                                                                              opt.value ===
+                                                                              courseCataloge?.programId
+                                                                          )}
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
 
-                                                                {/* Training Program - SELECT */}
-                                                                <div className="mb-3">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="trainingProgram">
-                                                                        {this.props.t(
-                                                                          "Training Program"
-                                                                        )}
-                                                                      </Label>
-                                                                      <span className="text-danger">
-                                                                        *
-                                                                      </span>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Select
-                                                                        name="trainingProgram"
-                                                                        options={
-                                                                          trainingProgramOptions
-                                                                        }
-                                                                        className="form-control"
-                                                                        onChange={newValue =>
-                                                                          this.handleSelect(
-                                                                            "trainingProgram",
-                                                                            newValue.value
-                                                                          )
-                                                                        }
-                                                                        defaultValue={trainingProgramOptions.find(
-                                                                          opt =>
-                                                                            opt.value ===
-                                                                            courseCataloge?.trainingProgram
-                                                                        )}
-                                                                      />
-                                                                    </Col>
-                                                                  </Row>
-                                                                </div>
+                                                                  {/* Course Code */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="Code">
+                                                                          {this.props.t(
+                                                                            "Course Code"
+                                                                          )}
+                                                                        </Label>
+                                                                        <span className="text-danger">
+                                                                          *
+                                                                        </span>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Field
+                                                                          type="text"
+                                                                          name="Code"
+                                                                          id="Code"
+                                                                          className="form-control"
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
+                                                                </Col>
 
-                                                                {/* Course Code */}
-                                                                <div className="mb-3">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="courseCode">
-                                                                        {this.props.t(
-                                                                          "Course Code"
-                                                                        )}
-                                                                      </Label>
-                                                                      <span className="text-danger">
-                                                                        *
-                                                                      </span>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Field
-                                                                        type="text"
-                                                                        name="courseCode"
-                                                                        id="courseCode"
-                                                                        className="form-control"
-                                                                      />
-                                                                    </Col>
-                                                                  </Row>
-                                                                </div>
-                                                              </Col>
+                                                                <Col lg="6">
+                                                                  {/* Course Type - SELECT */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="courseTypeId">
+                                                                          {this.props.t(
+                                                                            "Course Type"
+                                                                          )}
+                                                                        </Label>
+                                                                        <span className="text-danger">
+                                                                          *
+                                                                        </span>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Select
+                                                                          name="courseTypeId"
+                                                                          options={
+                                                                            courseTypeOptions
+                                                                          }
+                                                                          className="form-control"
+                                                                          onChange={newValue =>
+                                                                            this.handleSelect(
+                                                                              "courseTypeId",
+                                                                              newValue.value,
+                                                                              values
+                                                                            )
+                                                                          }
+                                                                          defaultValue={courseTypeOptions.find(
+                                                                            opt =>
+                                                                              opt.value ===
+                                                                              courseCataloge?.courseTypeId
+                                                                          )}
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
 
-                                                              <Col lg="6">
-                                                                {/* Course Type - SELECT */}
-                                                                <div className="mb-3">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="courseType">
-                                                                        {this.props.t(
-                                                                          "Course Type"
-                                                                        )}
-                                                                      </Label>
-                                                                      <span className="text-danger">
-                                                                        *
-                                                                      </span>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Select
-                                                                        name="courseType"
-                                                                        options={
-                                                                          courseTypeOptions
-                                                                        }
-                                                                        className="form-control"
-                                                                        onChange={newValue =>
-                                                                          this.handleSelect(
-                                                                            "courseType",
-                                                                            newValue.value
-                                                                          )
-                                                                        }
-                                                                        defaultValue={courseTypeOptions.find(
-                                                                          opt =>
-                                                                            opt.value ===
-                                                                            courseCataloge?.courseType
-                                                                        )}
-                                                                      />
-                                                                    </Col>
-                                                                  </Row>
-                                                                </div>
+                                                                  {/* Total Training Hours */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="totalTrainingHours">
+                                                                          {this.props.t(
+                                                                            "Total Training Hours"
+                                                                          )}
+                                                                        </Label>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Field
+                                                                          type="number"
+                                                                          name="totalTrainingHours"
+                                                                          id="totalTrainingHours"
+                                                                          className="form-control"
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
 
-                                                                {/* Total Training Hours */}
-                                                                <div className="mb-3">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="totalTrainingHours">
-                                                                        {this.props.t(
-                                                                          "Total Training Hours"
-                                                                        )}
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Field
-                                                                        type="number"
-                                                                        name="totalTrainingHours"
-                                                                        id="totalTrainingHours"
-                                                                        className="form-control"
-                                                                      />
-                                                                    </Col>
-                                                                  </Row>
-                                                                </div>
+                                                                  {/* Training Module */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="trainingModule">
+                                                                          {this.props.t(
+                                                                            "Training Module"
+                                                                          )}
+                                                                        </Label>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Field
+                                                                          type="text"
+                                                                          name="trainingModule"
+                                                                          id="trainingModule"
+                                                                          className="form-control"
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
 
-                                                                {/* Training Module */}
-                                                                <div className="mb-3">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="trainingModule">
-                                                                        {this.props.t(
-                                                                          "Training Module"
-                                                                        )}
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Field
-                                                                        type="text"
-                                                                        name="trainingModule"
-                                                                        id="trainingModule"
-                                                                        className="form-control"
-                                                                      />
-                                                                    </Col>
-                                                                  </Row>
-                                                                </div>
+                                                                  {/* Training Format - SELECT */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="trainingFormatId">
+                                                                          {this.props.t(
+                                                                            "Training Format"
+                                                                          )}
+                                                                        </Label>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Select
+                                                                          name="trainingFormatId"
+                                                                          options={
+                                                                            trainingFormatOptions
+                                                                          }
+                                                                          className="form-control"
+                                                                          onChange={newValue =>
+                                                                            this.handleSelect(
+                                                                              "trainingFormatId",
+                                                                              newValue.value,
+                                                                              values
+                                                                            )
+                                                                          }
+                                                                          defaultValue={trainingFormatOptions.find(
+                                                                            opt =>
+                                                                              opt.value ===
+                                                                              courseCataloge?.trainingFormatId
+                                                                          )}
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
+                                                                </Col>
+                                                              </Row>
+                                                              <Col lg="12 mt-6">
+                                                                <div>
+                                                                  <Col lg="12">
+                                                                    <Card>
+                                                                      <CardBody>
+                                                                        <Row>
+                                                                          <Col lg="12">
+                                                                            <div className="mb-3">
+                                                                              <Label for="descriptionar">
+                                                                                {this.props.t(
+                                                                                  "Description (ar)"
+                                                                                )}
+                                                                              </Label>
+                                                                              <Field
+                                                                                as="textarea"
+                                                                                name="descriptionAr"
+                                                                                id="descriptionar"
+                                                                                className="form-control"
+                                                                              />
+                                                                            </div>
+                                                                          </Col>
+                                                                          <Col lg="12">
+                                                                            <div className="mb-3">
+                                                                              <Label for="descriptionen">
+                                                                                {this.props.t(
+                                                                                  "Description (en)"
+                                                                                )}
+                                                                              </Label>
+                                                                              <Field
+                                                                                as="textarea"
+                                                                                name="descriptionEn"
+                                                                                id="descriptionen"
+                                                                                className="form-control"
+                                                                              />
+                                                                            </div>
+                                                                          </Col>
 
-                                                                {/* Training Format - SELECT */}
-                                                                <div className="mb-3">
+                                                                          <Col lg="12">
+                                                                            <div
+                                                                              className="upload-box"
+                                                                              onClick={() =>
+                                                                                document
+                                                                                  .getElementById(
+                                                                                    "fileInput"
+                                                                                  )
+                                                                                  .click()
+                                                                              }
+                                                                            >
+                                                                              <div className="upload-content text-center">
+                                                                                <div className="upload-icon-wrapper">
+                                                                                  <i className="bx bx-upload upload-icon"></i>
+                                                                                </div>
+                                                                                <p className="upload-text">
+                                                                                  {this.props.t(
+                                                                                    "Click or drag file to upload"
+                                                                                  )}
+                                                                                </p>
+                                                                              </div>
+
+                                                                              <input
+                                                                                id="fileInput"
+                                                                                name="file"
+                                                                                type="file"
+                                                                                className="d-none"
+                                                                                onChange={event => {
+                                                                                  this.props.setFieldValue(
+                                                                                    "file",
+                                                                                    event
+                                                                                      .currentTarget
+                                                                                      .files[0]
+                                                                                  );
+                                                                                }}
+                                                                              />
+                                                                            </div>
+                                                                          </Col>
+                                                                        </Row>
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </Col>
+                                                                </div>
+                                                                {(isEdit ||
+                                                                  isShowPreReq) && (
                                                                   <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="trainingFormat">
-                                                                        {this.props.t(
-                                                                          "Training Format"
-                                                                        )}
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Select
-                                                                        name="trainingFormat"
-                                                                        options={
-                                                                          trainingFormatOptions
-                                                                        }
-                                                                        className="form-control"
-                                                                        onChange={newValue =>
-                                                                          this.handleSelect(
-                                                                            "trainingFormat",
-                                                                            newValue.value
-                                                                          )
-                                                                        }
-                                                                        defaultValue={trainingFormatOptions.find(
-                                                                          opt =>
-                                                                            opt.value ===
-                                                                            courseCataloge?.trainingFormat
-                                                                        )}
-                                                                      />
+                                                                    <Col lg="12 mt-6">
+                                                                      <div>
+                                                                        <Col lg="12">
+                                                                          <Card>
+                                                                            <CardTitle id="card_header">
+                                                                              {t(
+                                                                                "Courses Prerequisites"
+                                                                              )}
+                                                                            </CardTitle>
+
+                                                                            <CardBody className="courseCatalogprereq">
+                                                                              <Row className="mt-10">
+                                                                                {duplicateErrorPrerequisite && (
+                                                                                  <Alert
+                                                                                    color="danger"
+                                                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                                    role="alert"
+                                                                                  >
+                                                                                    {
+                                                                                      duplicateErrorPrerequisite
+                                                                                    }
+                                                                                    <button
+                                                                                      type="button"
+                                                                                      className="btn-close"
+                                                                                      aria-label="Close"
+                                                                                      onClick={
+                                                                                        this
+                                                                                          .handleAlertClosePrerequisite
+                                                                                      }
+                                                                                    ></button>
+                                                                                  </Alert>
+                                                                                )}
+
+                                                                                <Row>
+                                                                                  <Col>
+                                                                                    <div className="text-sm-end">
+                                                                                      <Tooltip
+                                                                                        title={this.props.t(
+                                                                                          "Add"
+                                                                                        )}
+                                                                                        placement="top"
+                                                                                      >
+                                                                                        <IconButton
+                                                                                          color="primary"
+                                                                                          onClick={
+                                                                                            this
+                                                                                              .handleAddRowPrerequisite
+                                                                                          }
+                                                                                        >
+                                                                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                                                        </IconButton>
+                                                                                      </Tooltip>
+                                                                                    </div>
+                                                                                  </Col>
+                                                                                </Row>
+
+                                                                                <BootstrapTable
+                                                                                  keyField="Id"
+                                                                                  data={
+                                                                                    coursesCatalogsPrReq
+                                                                                  }
+                                                                                  columns={
+                                                                                    PrerequisiteColumns
+                                                                                  }
+                                                                                  cellEdit={cellEditFactory(
+                                                                                    {
+                                                                                      mode: "click",
+                                                                                      blurToSave: true,
+                                                                                      afterSaveCell:
+                                                                                        (
+                                                                                          oldValue,
+                                                                                          newValue,
+                                                                                          row,
+                                                                                          column
+                                                                                        ) => {
+                                                                                          this.handlePrerequisiteChange(
+                                                                                            row.Id,
+                                                                                            column.dataField,
+                                                                                            newValue
+                                                                                          );
+                                                                                        },
+                                                                                    }
+                                                                                  )}
+                                                                                  noDataIndication={this.props.t(
+                                                                                    "No Prerequisite Courses Found"
+                                                                                  )}
+                                                                                  defaultSorted={
+                                                                                    defaultSorting
+                                                                                  }
+                                                                                />
+                                                                              </Row>
+                                                                            </CardBody>
+                                                                          </Card>
+                                                                        </Col>
+                                                                      </div>
                                                                     </Col>
                                                                   </Row>
-                                                                </div>
+                                                                )}
+                                                                <Row>
+                                                                  <Col>
+                                                                    <div className="text-center">
+                                                                      <Link
+                                                                        to="#"
+                                                                        className="btn btn-primary me-2"
+                                                                        onClick={() => {
+                                                                          this.handleSubmit(
+                                                                            values
+                                                                          );
+                                                                        }}
+                                                                      >
+                                                                        {t(
+                                                                          "Save"
+                                                                        )}
+                                                                      </Link>
+                                                                    </div>
+                                                                  </Col>
+                                                                </Row>
                                                               </Col>
                                                             </Row>
-                                                          </Row>
-                                                        </CardBody>
-                                                      </Card>
-                                                    </Col>
-                                                  </div>
-                                                </Col>
-                                              </Row>
-                                              <Row>
-                                                <Col lg="12">
-                                                  <div className="bordered">
-                                                    <Col lg="12">
-                                                      <Card>
-                                                        <CardTitle id="card_header">
-                                                          {t(
-                                                            "Couese Prerequisites"
-                                                          )}
-                                                        </CardTitle>
-                                                        <CardBody>
-                                                          <Row>
-                                                            {duplicateErrorPrerequisite && (
-                                                              <Alert
-                                                                color="danger"
-                                                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                                role="alert"
-                                                              >
-                                                                {
-                                                                  duplicateErrorPrerequisite
-                                                                }
-                                                                <button
-                                                                  type="button"
-                                                                  className="btn-close"
-                                                                  aria-label="Close"
-                                                                  onClick={
-                                                                    this
-                                                                      .handleAlertClosePrerequisite
-                                                                  }
-                                                                ></button>
-                                                              </Alert>
-                                                            )}
-
-                                                            <Row>
-                                                              <Col>
-                                                                <div className="text-sm-end">
-                                                                  <Tooltip
-                                                                    title={this.props.t(
-                                                                      "Add"
-                                                                    )}
-                                                                    placement="top"
-                                                                  >
-                                                                    <IconButton
-                                                                      color="primary"
-                                                                      onClick={
-                                                                        this
-                                                                          .handleAddRowPrerequisite
-                                                                      }
-                                                                    >
-                                                                      <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                                                    </IconButton>
-                                                                  </Tooltip>
-                                                                </div>
-                                                              </Col>
-                                                            </Row>
-
-                                                            <BootstrapTable
-                                                              keyField="Id"
-                                                              data={
-                                                                this.state
-                                                                  .prerequisiteCoursesArray
-                                                              }
-                                                              columns={
-                                                                PrerequisiteColumns
-                                                              }
-                                                              cellEdit={cellEditFactory(
-                                                                {
-                                                                  mode: "click",
-                                                                  blurToSave: true,
-                                                                  afterSaveCell:
-                                                                    (
-                                                                      oldValue,
-                                                                      newValue,
-                                                                      row,
-                                                                      column
-                                                                    ) => {
-                                                                      this.handlePrerequisiteChange(
-                                                                        row.Id,
-                                                                        column.dataField,
-                                                                        newValue
-                                                                      );
-                                                                    },
-                                                                }
-                                                              )}
-                                                              noDataIndication={this.props.t(
-                                                                "No Prerequisite Courses Found"
-                                                              )}
-                                                              defaultSorted={
-                                                                defaultSorting
-                                                              }
-                                                            />
-                                                          </Row>
-                                                        </CardBody>
-                                                      </Card>
-                                                    </Col>
-                                                  </div>
-                                                </Col>
-                                              </Row>
-                                            </CardBody>
-                                          </Card>
-                                          <Col lg="12">
-                                            <div className="bordered">
-                                              <Col lg="12">
-                                                <Card>
-                                                  <CardTitle id="card_header">
-                                                    {t("Description")}
-                                                  </CardTitle>
-                                                  <CardBody>
-                                                    <Row>
-                                                      <Col lg="12">
-                                                        <div className="mb-3">
-                                                          <Label for="descriptionar">
-                                                            {this.props.t(
-                                                              "Description (ar)"
-                                                            )}
-                                                          </Label>
-                                                          <Field
-                                                            as="textarea"
-                                                            name="descriptionAr"
-                                                            id="descriptionar"
-                                                            className="form-control"
-                                                          />
-                                                        </div>
+                                                          </CardBody>
+                                                        </Card>
                                                       </Col>
-                                                      <Col lg="12">
-                                                        <div className="mb-3">
-                                                          <Label for="descriptionen">
-                                                            {this.props.t(
-                                                              "Description (en)"
-                                                            )}
-                                                          </Label>
-                                                          <Field
-                                                            as="textarea"
-                                                            name="descriptionEn"
-                                                            id="descriptionen"
-                                                            className="form-control"
-                                                          />
-                                                        </div>
-                                                      </Col>
-                                                    </Row>
-                                                  </CardBody>
-                                                </Card>
-                                              </Col>
-                                            </div>
-                                          </Col>
-                                          <Row>
-                                            <Col>
-                                              <div className="text-center">
-                                                <Link
-                                                  to="#"
-                                                  className="btn btn-primary me-2"
-                                                  onClick={() => {
-                                                    this.handleSubmit(values);
-                                                  }}
-                                                >
-                                                  {t("Save")}
-                                                </Link>
-                                              </div>
-                                            </Col>
-                                          </Row>
-                                        </Form>
-                                      )}
-                                    </Formik>
-                                  </ModalBody>
-                                </Modal>
-                              </React.Fragment>
-                            )}
-                          </ToolkitProvider>
-                        )}
-                      </PaginationProvider>
-                    </div>
+                                                    </div>
+                                                  </Col>
+                                                </Row>
+                                              </CardBody>
+                                            </Card>
+                                          </Form>
+                                        )}
+                                      </Formik>
+                                    </ModalBody>
+                                  </Modal>
+                                </React.Fragment>
+                              )}
+                            </ToolkitProvider>
+                          )}
+                        </PaginationProvider>
+                      </div>
+                    )}
                   </CardBody>
                 </Card>
               </Col>
@@ -1366,10 +1570,30 @@ class CourseCatalogeList extends Component {
   }
 }
 
-const mapStateToProps = ({ coursesCatalogs, menu_items }) => ({
+const mapStateToProps = ({
+  trainingFormats,
+  sectors,
+  coursesCatalogs,
+  menu_items,
+  certificateTypes,
+  courseTypes,
+  isLoading,
+  prereqs,
+  preReqCourses,
+  lastAddedId,
+}) => ({
   coursesCatalogs: coursesCatalogs.coursesCatalogs,
   deleted: coursesCatalogs.deleted,
   user_menu: menu_items.user_menu || [],
+  sectors: sectors.sectors,
+  certificateTypes: certificateTypes.certificateTypes,
+  trainingFormats: trainingFormats.trainingFormats,
+  courseTypes: courseTypes.courseTypes,
+  isLoading: coursesCatalogs.isLoading,
+  prereqs: prereqs.prereqs,
+  preReqCourses: coursesCatalogs.preReqCourses,
+  coursesCatalogsPrReq: coursesCatalogs.coursesCatalogsPrReq,
+  lastAddedId: coursesCatalogs.lastAddedId,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -1382,6 +1606,19 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteCoursesCatalog(courseCataloge)),
   onGetCoursesCatalogDeletedValue: () =>
     dispatch(getCoursesCatalogDeletedValue()),
+  onGetPreReqCoursesDatalist: () => dispatch(getCoursesCatalogsDatalist()),
+
+  //prereqqq
+  onGetCourseCatalogePrerequisites: prerequisite =>
+    dispatch(getCourseCatalogePrerequisites(prerequisite)),
+  onAddNewCourseCatalogePrerequisite: prerequisite =>
+    dispatch(addNewCourseCatalogePrerequisite(prerequisite)),
+  onUpdateCourseCatalogePrerequisite: prerequisite =>
+    dispatch(updateCourseCatalogePrerequisite(prerequisite)),
+  onDeleteCourseCatalogePrerequisite: prerequisite =>
+    dispatch(deleteCourseCatalogePrerequisite(prerequisite)),
+  onGetCourseCatalogePrerequisitesDeletedValue: () =>
+    dispatch(getCourseCatalogePrerequisitesDeletedValue()),
 });
 
 export default connect(
