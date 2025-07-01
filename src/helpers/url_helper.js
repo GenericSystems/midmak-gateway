@@ -174,6 +174,7 @@ export const DELETE_ALL_NON_ACTIVE_STD_CURR = "/deleteAll/nonActiveStdCurr";
 export const SAVE_ALL_NON_ACTIVE_STD_CURR = "/saveAll/nonActiveStdCurr";
 //COURSES_REGISTRATIONS
 export const GET_COURSES_REGISTRATIONS = "/coursesRegistration";
+export const GET_ALL_COURSES_REGISTRATION = "/allCoursesRegistration";
 export const GET_STUDENT_REGISTER_INFO = "/StudentRegisterInfo";
 export const ADD_NEW_COURSES_REGISTRATION = "/add/coursesRegistration";
 export const UPDATE_COURSES_REGISTRATION = "/update/coursesRegistration";
@@ -353,6 +354,9 @@ export const GET_DECISION_CATEGORIES = "/decisionCategories";
 
 // DECISION MAKERS
 export const GET_DECISION_MAKERS = "/decisionMakers";
+
+// DECISION STATUS
+export const GET_DECISION_STATUS = "/decisionStatus";
 
 // DECISIONS_RULES_REASON
 export const GET_DECISIONS_RULES_REASONS = "/decisionsRulesReasons";
@@ -1046,14 +1050,12 @@ export const UPDATE_TRAINEE = "/update/trainee";
 export const DELETE_TRAINEE = "/delete/trainee";
 export const GET_REGISTER_CERTIFICATES = "/registerCertificates";
 
-
 //Training Formats
 export const GET_TRAINING_FORMATS = "/trainingFormats";
 export const GET_TRAINING_FORMAT_DELETED_VALUE = "/deleted";
 export const ADD_NEW_TRAINING_FORMAT = "/add/trainingFormat";
 export const UPDATE_TRAINING_FORMAT = "/update/trainingFormat";
 export const DELETE_TRAINING_FORMAT = "/delete/trainingFormat";
-
 
 //coursesCatalogs
 export const GET_COURSES_CATALOGS = "/coursesCatalogs";

@@ -21,6 +21,7 @@ import {
   DELETE_DECISIONS_RULES_ROLES,
   GET_DECISIONS_RULES_ROLES_DELETED_VALUE,
   GET_DECISION_MAKERS,
+  GET_DECISION_STATUS,
 } from "./actionTypes";
 import {
   getDecisionsSuccess,
@@ -35,6 +36,8 @@ import {
   getDecisionDeletedValueFail,
   getDecisionMakersSuccess,
   getDecisionMakersFail,
+  getDecisionStatusSuccess,
+  getDecisionStatusFail,
   getDecisionCategoriesFail,
   getDecisionCategoriesSuccess,
   getDecisionsRulesReasonsSuccess,
@@ -107,6 +110,7 @@ import {
   getEmployeesNames,
   getCorporateNodesOpt,
   getDecisionsTypes,
+  getDecisionStatus,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchDecisions() {
@@ -134,10 +138,6 @@ function* fetchDecisions() {
   };
   try {
     const response = yield call(getDecisions, get_decisions_req);
-    // response.map(resp => {
-    //   resp["AcceptRoles"] = JSON.parse(resp["AcceptRoles"]);
-    //   resp["RefuseRoles"] = JSON.parse(resp["RefuseRoles"]);
-    // });
     yield put(getDecisionsSuccess(response));
   } catch (error) {
     yield put(getDecisionsFail(error));
@@ -204,7 +204,24 @@ function* fetchDecisionMakers() {
   }
 }
 
+function* fetchDecisionStatus() {
+  const get_decisionStatus_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_DecisionStatus",
+  };
+  try {
+    const response = yield call(getDecisionStatus, get_decisionStatus_req);
+    console.log("0000000000000000000000000000000", response);
+    yield put(getDecisionStatusSuccess(response));
+  } catch (error) {
+    yield put(getDecisionStatusFail(error));
+  }
+}
+
 function* onAddNewDecision({ payload, decision }) {
+  console.log("payloadpayloadpayloadpayloadpayload", payload);
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
@@ -224,8 +241,8 @@ function* onUpdateDecision({ payload }) {
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_Decision";
   try {
-    const respupdate = yield call(updateDecision, payload);
-    yield put(updateDecisionSuccess(respupdate[0]));
+    const response = yield call(updateDecision, payload);
+    yield put(updateDecisionSuccess(response[0]));
   } catch (error) {
     yield put(updateDecisionFail(error));
   }
@@ -464,6 +481,7 @@ function* DecisionsSaga() {
   yield takeEvery(DELETE_DECISION, onDeleteDecision);
   yield takeEvery(GET_DECISION_DELETED_VALUE, onGetDecisionDeletedValue);
   yield takeEvery(GET_DECISION_MAKERS, fetchDecisionMakers);
+  yield takeEvery(GET_DECISION_STATUS, fetchDecisionStatus);
 
   // yield takeEvery(
   //   GET_DECISIONS_RULES_CANCELED_REASONS,

@@ -149,6 +149,8 @@ import Certificates from "../pages/Certificates/certificates";
 
 //Grades
 import GradesList from "../pages/Grades/grades";
+//Grades
+import CoursesRegistrationList from "../pages/Addmission/coursesRegistration/coursesRegistration";
 
 //ContractsTypes
 import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
@@ -290,6 +292,9 @@ const authProtectedRoutes = [
   // Grades
   { path: "/grades", component: GradesList },
 
+  // Courses Registration
+  { path: "/coursesRegistration", component: CoursesRegistrationList },
+
   { path: "/certificates-types", component: CertificateTypesList },
 
   //Week Days
@@ -304,14 +309,14 @@ const authProtectedRoutes = [
   // New Trainee
   { path: "/newTrainee", component: NewTrainee },
 
-   //trainingFormat
-   {path:"/trainingFormat" , component:TrainingFormatsList},
+  //trainingFormat
+  { path: "/trainingFormat", component: TrainingFormatsList },
 
   //CourseTypes
-  {path: "/courseTypes", component: CourseTypesList},
+  { path: "/courseTypes", component: CourseTypesList },
 
   //CoursesCatalogs
-  {path:"/courseCatalog" , component:CourseCatalogeList},
+  { path: "/courseCatalog", component: CourseCatalogeList },
 
   //Blog
   { path: "/blog-list", component: BlogList },

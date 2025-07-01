@@ -2,18 +2,21 @@ import {
   GET_COURSES_REGISTRATIONS,
   GET_COURSES_REGISTRATIONS_FAIL,
   GET_COURSES_REGISTRATIONS_SUCCESS,
+  GET_ALL_COURSES_REGISTRATION,
+  GET_ALL_COURSES_REGISTRATION_FAIL,
+  GET_ALL_COURSES_REGISTRATION_SUCCESS,
+  ADD_NEW_COURSE_REGISTRATION,
+  ADD_COURSE_REGISTRATION_SUCCESS,
+  ADD_COURSE_REGISTRATION_FAIL,
+  UPDATE_COURSE_REGISTRATION,
+  UPDATE_COURSE_REGISTRATION_SUCCESS,
+  UPDATE_COURSE_REGISTRATION_FAIL,
+  DELETE_COURSE_REGISTRATION,
+  DELETE_COURSE_REGISTRATION_SUCCESS,
+  DELETE_COURSE_REGISTRATION_FAIL,
   GET_STUDENT_REGISTER_INFO,
   GET_STUDENT_REGISTER_INFO_FAIL,
   GET_STUDENT_REGISTER_INFO_SUCCESS,
-  ADD_NEW_COURSES_REGISTRATION,
-  ADD_COURSES_REGISTRATION_SUCCESS,
-  ADD_COURSES_REGISTRATION_FAIL,
-  UPDATE_COURSES_REGISTRATION,
-  UPDATE_COURSES_REGISTRATION_SUCCESS,
-  UPDATE_COURSES_REGISTRATION_FAIL,
-  DELETE_COURSES_REGISTRATION,
-  DELETE_COURSES_REGISTRATION_SUCCESS,
-  DELETE_COURSES_REGISTRATION_FAIL,
   GET_AVAILABLE_COURSES,
   GET_AVAILABLE_COURSES_FAIL,
   GET_AVAILABLE_COURSES_SUCCESS,
@@ -33,14 +36,14 @@ import {
   DELETE_NON_ACTIVE_STD_CURR_SUCCESS,
   DELETE_NON_ACTIVE_STD_CURR_FAIL,
   GET_ACHIEVED_COURSES,
-GET_ACHIEVED_COURSES_SUCCESS,
-GET_ACHIEVED_COURSES_FAIL,
-DELETE_ALL_NON_ACTIVE_STD_CURR,
-DELETE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-DELETE_ALL_NON_ACTIVE_STD_CURR_FAIL,
-SAVE_ALL_NON_ACTIVE_STD_CURR,
-SAVE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-SAVE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+  GET_ACHIEVED_COURSES_SUCCESS,
+  GET_ACHIEVED_COURSES_FAIL,
+  DELETE_ALL_NON_ACTIVE_STD_CURR,
+  DELETE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
+  DELETE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+  SAVE_ALL_NON_ACTIVE_STD_CURR,
+  SAVE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
+  SAVE_ALL_NON_ACTIVE_STD_CURR_FAIL,
 } from "./actionTypes";
 
 export const getCoursesRegistration = () => ({
@@ -57,202 +60,215 @@ export const getCoursesRegistrationFail = error => ({
   payload: error,
 });
 
-export const getStudentRegisterInfo = studentId => ({
-  type: GET_STUDENT_REGISTER_INFO,
-  payload: studentId,
+export const getAllCoursesRegistration = () => ({
+  type: GET_ALL_COURSES_REGISTRATION,
 });
 
-export const getStudentRegisterInfoSuccess =
-  studentRegisterInfos => ({
-    type: GET_STUDENT_REGISTER_INFO_SUCCESS,
-    payload: studentRegisterInfos,
-  });
-
-export const getStudentRegisterInfoFail = error => ({
-  type: GET_STUDENT_REGISTER_INFO_FAIL,
-  payload: error,
-});
-
-export const addNewCoursesRegistration = coursesRegistration => ({
-  type: ADD_NEW_COURSES_REGISTRATION,
+export const getAllCoursesRegistrationSuccess = coursesRegistration => ({
+  type: GET_ALL_COURSES_REGISTRATION_SUCCESS,
   payload: coursesRegistration,
 });
 
-export const addCoursesRegistrationSuccess = coursesRegistration => ({
-  type: ADD_COURSES_REGISTRATION_SUCCESS,
-  payload: coursesRegistration,
-});
-
-export const addCoursesRegistrationFail = error => ({
-  type: ADD_COURSES_REGISTRATION_FAIL,
+export const getAllCoursesRegistrationFail = error => ({
+  type: GET_ALL_COURSES_REGISTRATION_FAIL,
   payload: error,
 });
 
-export const updateCoursesRegistration = coursesRegistration => ({
-  type: UPDATE_COURSES_REGISTRATION,
-  payload: coursesRegistration,
+// export const getStudentRegisterInfo = studentId => ({
+//   type: GET_STUDENT_REGISTER_INFO,
+//   payload: studentId,
+// });
+
+// export const getStudentRegisterInfoSuccess = studentRegisterInfos => ({
+//   type: GET_STUDENT_REGISTER_INFO_SUCCESS,
+//   payload: studentRegisterInfos,
+// });
+
+// export const getStudentRegisterInfoFail = error => ({
+//   type: GET_STUDENT_REGISTER_INFO_FAIL,
+//   payload: error,
+// });
+
+export const addNewCourseRegistration = courseRegistration => ({
+  type: ADD_NEW_COURSE_REGISTRATION,
+  payload: courseRegistration,
 });
 
-export const updateCoursesRegistrationSuccess = coursesRegistration => ({
-  type: UPDATE_COURSES_REGISTRATION_SUCCESS,
-  payload: coursesRegistration,
+export const addCourseRegistrationSuccess = courseRegistration => ({
+  type: ADD_COURSE_REGISTRATION_SUCCESS,
+  payload: courseRegistration,
 });
 
-export const updateCoursesRegistrationFail = error => ({
-  type: UPDATE_COURSES_REGISTRATION_FAIL,
+export const addCourseRegistrationFail = error => ({
+  type: ADD_COURSE_REGISTRATION_FAIL,
   payload: error,
 });
 
-export const deleteCoursesRegistration = coursesRegistration => ({
-  type: DELETE_COURSES_REGISTRATION,
-  payload: coursesRegistration,
+export const updateCourseRegistration = courseRegistration => ({
+  type: UPDATE_COURSE_REGISTRATION,
+  payload: courseRegistration,
 });
 
-export const deleteCoursesRegistrationSuccess = coursesRegistration => ({
-  type: DELETE_COURSES_REGISTRATION_SUCCESS,
-  payload: coursesRegistration,
+export const updateCourseRegistrationSuccess = courseRegistration => ({
+  type: UPDATE_COURSE_REGISTRATION_SUCCESS,
+  payload: courseRegistration,
 });
 
-export const deleteCoursesRegistrationFail = error => ({
-  type: DELETE_COURSES_REGISTRATION_FAIL,
+export const updateCourseRegistrationFail = error => ({
+  type: UPDATE_COURSE_REGISTRATION_FAIL,
   payload: error,
 });
 
-export const getAvailableCourses = (userType, studentId) => ({
-  type: GET_AVAILABLE_COURSES,
-  payload: {
-    userType,
-    studentId,
-  },
+export const deleteCourseRegistration = courseRegistration => ({
+  type: DELETE_COURSE_REGISTRATION,
+  payload: courseRegistration,
 });
 
-export const getAvailableCourseSuccess = availableCourse => ({
-  type: GET_AVAILABLE_COURSES_SUCCESS,
-  payload: availableCourse,
+export const deleteCourseRegistrationSuccess = courseRegistration => ({
+  type: DELETE_COURSE_REGISTRATION_SUCCESS,
+  payload: courseRegistration,
 });
 
-export const getAvailableCourseFail = error => ({
-  type: GET_AVAILABLE_COURSES_FAIL,
-  payload: error,
-});
-export const addNewAvailableCourse = availableCourse => ({
-  type: ADD_NEW_AVAILABLE_COURSE,
-  payload: availableCourse,
-});
-
-export const addAvailableCourseSuccess = availableCourse => ({
-  type: ADD_AVAILABLE_COURSE_SUCCESS,
-  payload: availableCourse,
-});
-
-export const addAvailableCourseFail = error => ({
-  type: ADD_AVAILABLE_COURSE_FAIL,
-  payload: error,
-});
-export const getNonActiveStdCurr = (active, studentId) => ({
-  type: GET_NON_ACTIVE_STD_CURRS,
-  payload: {
-    active,
-    studentId,
-  },
-});
-
-export const getNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: GET_NON_ACTIVE_STD_CURRS_SUCCESS,
-  payload: nonActiveStdCurr,
-});
-
-export const getNonActiveStdCurrFail = error => ({
-  type: GET_NON_ACTIVE_STD_CURRS_FAIL,
+export const deleteCourseRegistrationFail = error => ({
+  type: DELETE_COURSE_REGISTRATION_FAIL,
   payload: error,
 });
 
-export const updateNonActiveStdCurr = (nonActiveStdCurr,active) => ({
-  type: UPDATE_NON_ACTIVE_STD_CURR,
-  payload: {nonActiveStdCurr,active},
-});
+// export const getAvailableCourses = (userType, studentId) => ({
+//   type: GET_AVAILABLE_COURSES,
+//   payload: {
+//     userType,
+//     studentId,
+//   },
+// });
 
-export const updateNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: UPDATE_NON_ACTIVE_STD_CURR_SUCCESS,
-  payload: nonActiveStdCurr,
-});
+// export const getAvailableCourseSuccess = availableCourse => ({
+//   type: GET_AVAILABLE_COURSES_SUCCESS,
+//   payload: availableCourse,
+// });
 
-export const updateNonActiveStdCurrFail = error => ({
-  type: UPDATE_NON_ACTIVE_STD_CURR_FAIL,
-  payload: error,
-});
+// export const getAvailableCourseFail = error => ({
+//   type: GET_AVAILABLE_COURSES_FAIL,
+//   payload: error,
+// });
+// export const addNewAvailableCourse = availableCourse => ({
+//   type: ADD_NEW_AVAILABLE_COURSE,
+//   payload: availableCourse,
+// });
 
-export const deleteNonActiveStdCurr = nonActiveStdCurr => ({
-  type: DELETE_NON_ACTIVE_STD_CURR,
-  payload: nonActiveStdCurr,
-});
+// export const addAvailableCourseSuccess = availableCourse => ({
+//   type: ADD_AVAILABLE_COURSE_SUCCESS,
+//   payload: availableCourse,
+// });
 
-export const deleteNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: DELETE_NON_ACTIVE_STD_CURR_SUCCESS,
-  payload: nonActiveStdCurr,
-});
+// export const addAvailableCourseFail = error => ({
+//   type: ADD_AVAILABLE_COURSE_FAIL,
+//   payload: error,
+// });
+// export const getNonActiveStdCurr = (active, studentId) => ({
+//   type: GET_NON_ACTIVE_STD_CURRS,
+//   payload: {
+//     active,
+//     studentId,
+//   },
+// });
 
-export const deleteNonActiveStdCurrFail = error => ({
-  type: DELETE_NON_ACTIVE_STD_CURR_FAIL,
-  payload: error,
-});
+// export const getNonActiveStdCurrSuccess = nonActiveStdCurr => ({
+//   type: GET_NON_ACTIVE_STD_CURRS_SUCCESS,
+//   payload: nonActiveStdCurr,
+// });
 
-export const getTempStdSchedules = (studentId) => ({
-  type: GET_TEMP_STD_SCHEDULES,
-  payload: { studentId },
-});
+// export const getNonActiveStdCurrFail = error => ({
+//   type: GET_NON_ACTIVE_STD_CURRS_FAIL,
+//   payload: error,
+// });
 
-export const getTempStdSchedulesSuccess = tempStdSchedules => ({
-  type: GET_TEMP_STD_SCHEDULES_SUCCESS,
-  payload: tempStdSchedules,
-});
+// export const updateNonActiveStdCurr = (nonActiveStdCurr, active) => ({
+//   type: UPDATE_NON_ACTIVE_STD_CURR,
+//   payload: { nonActiveStdCurr, active },
+// });
 
-export const getTempStdSchedulesFail = error => ({
-  type: GET_TEMP_STD_SCHEDULES_FAIL,
-  payload: error,
-});
+// export const updateNonActiveStdCurrSuccess = nonActiveStdCurr => ({
+//   type: UPDATE_NON_ACTIVE_STD_CURR_SUCCESS,
+//   payload: nonActiveStdCurr,
+// });
 
-export const deleteAllNonActiveStdCurr = nonActiveStdCurr => ({
-  type: DELETE_ALL_NON_ACTIVE_STD_CURR,
-  payload: nonActiveStdCurr,
-});
+// export const updateNonActiveStdCurrFail = error => ({
+//   type: UPDATE_NON_ACTIVE_STD_CURR_FAIL,
+//   payload: error,
+// });
 
-export const deleteAllNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: DELETE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-  payload: nonActiveStdCurr,
-});
+// export const deleteNonActiveStdCurr = nonActiveStdCurr => ({
+//   type: DELETE_NON_ACTIVE_STD_CURR,
+//   payload: nonActiveStdCurr,
+// });
 
-export const deleteAllNonActiveStdCurrFail = error => ({
-  type: DELETE_ALL_NON_ACTIVE_STD_CURR_FAIL,
-  payload: error,
-});
+// export const deleteNonActiveStdCurrSuccess = nonActiveStdCurr => ({
+//   type: DELETE_NON_ACTIVE_STD_CURR_SUCCESS,
+//   payload: nonActiveStdCurr,
+// });
 
-export const saveAllNonActiveStdCurr = nonActiveStdCurr => ({
-  type: SAVE_ALL_NON_ACTIVE_STD_CURR,
-  payload: nonActiveStdCurr,
-});
+// export const deleteNonActiveStdCurrFail = error => ({
+//   type: DELETE_NON_ACTIVE_STD_CURR_FAIL,
+//   payload: error,
+// });
 
-export const saveAllNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: SAVE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-  payload: nonActiveStdCurr,
-});
+// export const getTempStdSchedules = studentId => ({
+//   type: GET_TEMP_STD_SCHEDULES,
+//   payload: { studentId },
+// });
 
-export const saveAllNonActiveStdCurrFail = error => ({
-  type: SAVE_ALL_NON_ACTIVE_STD_CURR_FAIL,
-  payload: error,
-});
+// export const getTempStdSchedulesSuccess = tempStdSchedules => ({
+//   type: GET_TEMP_STD_SCHEDULES_SUCCESS,
+//   payload: tempStdSchedules,
+// });
 
-export const getAchievedCourses = (studentId) => ({
-  type: GET_ACHIEVED_COURSES,
-  payload: { studentId },
-});
+// export const getTempStdSchedulesFail = error => ({
+//   type: GET_TEMP_STD_SCHEDULES_FAIL,
+//   payload: error,
+// });
 
-export const getAchievedCoursesSuccess = achievedCourse => ({
-  type: GET_ACHIEVED_COURSES_SUCCESS,
-  payload: achievedCourse,
-});
+// export const deleteAllNonActiveStdCurr = nonActiveStdCurr => ({
+//   type: DELETE_ALL_NON_ACTIVE_STD_CURR,
+//   payload: nonActiveStdCurr,
+// });
 
-export const getAchievedCoursesFail = error => ({
-  type: GET_ACHIEVED_COURSES_FAIL,
-  payload: error,
-});
+// export const deleteAllNonActiveStdCurrSuccess = nonActiveStdCurr => ({
+//   type: DELETE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
+//   payload: nonActiveStdCurr,
+// });
+
+// export const deleteAllNonActiveStdCurrFail = error => ({
+//   type: DELETE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+//   payload: error,
+// });
+
+// export const saveAllNonActiveStdCurr = nonActiveStdCurr => ({
+//   type: SAVE_ALL_NON_ACTIVE_STD_CURR,
+//   payload: nonActiveStdCurr,
+// });
+
+// export const saveAllNonActiveStdCurrSuccess = nonActiveStdCurr => ({
+//   type: SAVE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
+//   payload: nonActiveStdCurr,
+// });
+
+// export const saveAllNonActiveStdCurrFail = error => ({
+//   type: SAVE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+//   payload: error,
+// });
+
+// export const getAchievedCourses = studentId => ({
+//   type: GET_ACHIEVED_COURSES,
+//   payload: { studentId },
+// });
+
+// export const getAchievedCoursesSuccess = achievedCourse => ({
+//   type: GET_ACHIEVED_COURSES_SUCCESS,
+//   payload: achievedCourse,
+// });
+
+// export const getAchievedCoursesFail = error => ({
+//   type: GET_ACHIEVED_COURSES_FAIL,
+//   payload: error,
+// });

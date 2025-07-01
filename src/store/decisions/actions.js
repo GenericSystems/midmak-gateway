@@ -14,10 +14,13 @@ import {
   GET_DECISION_DELETED_VALUE,
   GET_DECISION_DELETED_VALUE_FAIL,
   GET_DECISION_DELETED_VALUE_SUCCESS,
-  // GET_DECISION_CATEGORIES,
   GET_DECISION_MAKERS,
   GET_DECISION_MAKERS_SUCCESS,
   GET_DECISION_MAKERS_FAIL,
+  GET_DECISION_STATUS,
+  GET_DECISION_STATUS_SUCCESS,
+  GET_DECISION_STATUS_FAIL,
+  // GET_DECISION_CATEGORIES,
   //   GET_DECISION_CATEGORIES_FAIL,
   //   GET_DECISION_CATEGORIES_SUCCESS,
   //   GET_DECISIONS_RULES_REASONS,
@@ -146,6 +149,20 @@ export const getDecisionMakersSuccess = decisions => ({
 
 export const getDecisionMakersFail = error => ({
   type: GET_DECISION_MAKERS_FAIL,
+  payload: error,
+});
+
+export const getDecisionStatus = () => ({
+  type: GET_DECISION_STATUS,
+});
+
+export const getDecisionStatusSuccess = decisions => ({
+  type: GET_DECISION_STATUS_SUCCESS,
+  payload: decisions,
+});
+
+export const getDecisionStatusFail = error => ({
+  type: GET_DECISION_STATUS_FAIL,
   payload: error,
 });
 

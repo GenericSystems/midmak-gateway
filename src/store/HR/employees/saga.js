@@ -374,8 +374,8 @@ function* onUpdateEmployee({ payload }) {
   payload["tablename"] = "Common_Employee";
   payload["queryname"] = "_Common_Employee";
   try {
-    const respupdate = yield call(updateEmployee, payload);
-    yield put(updateEmployeeSuccess(respupdate[0]));
+    const response = yield call(updateEmployee, payload);
+    yield put(updateEmployeeSuccess(response[0]));
   } catch (error) {
     yield put(updateEmployeeFail(error));
   }

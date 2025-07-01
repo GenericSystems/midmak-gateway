@@ -42,6 +42,7 @@ import {
   deleteDecision,
   getDecisionDeletedValue,
   getDecisionMakers,
+  getDecisionStatus,
 } from "store/decisions/actions";
 import paginationFactory, {
   PaginationProvider,
@@ -66,9 +67,10 @@ class DecisionsList extends Component {
       decisionsTypes: [],
       selectedDecisionMaker: "",
       selectedApplyDecisionTo: "",
-      selectedFullName: "",
+      selectedEmployeeName: "",
       selectedDecisionType: "",
       selectedCorporateNode: "",
+      selectedDecisionStatus: "",
       decisionNumberError: null,
       decisionDateError: null,
       decisionReasonError: null,
@@ -90,15 +92,23 @@ class DecisionsList extends Component {
     this.addToggle = this.addToggle.bind(this);
     this.handleDataListChange = this.handleDataListChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
-    this.onClickDelete = this.onClickDelete.bind(this);
   }
-
+  formatDateToInput = isoDate => {
+    if (!isoDate) return "";
+    const date = new Date(isoDate);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
   componentDidMount() {
     const {
       decisions,
       decisionsTypes,
       onGetDecisions,
       onGetDecisionMakers,
+      onGetDecisionStatus,
+      decisionStatus,
       decisionMakers,
       employeesNames,
       corporateNodesOpt,
@@ -114,6 +124,7 @@ class DecisionsList extends Component {
     // }
     onGetDecisions();
     onGetDecisionMakers();
+    onGetDecisionStatus();
 
     this.setState({
       decisions,
@@ -121,6 +132,7 @@ class DecisionsList extends Component {
       employeesNames,
       corporateNodesOpt,
       decisionsTypes,
+      decisionStatus,
     });
     this.setState({ deleted });
     console.log("rsssssssssssssss", decisions);
@@ -199,6 +211,7 @@ class DecisionsList extends Component {
       deleteModal: !prevState.deleteModal,
     }));
   };
+
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
@@ -218,9 +231,10 @@ class DecisionsList extends Component {
       decision: arg,
       selectedDecisionMaker: arg.decisionMakerId,
       selectedApplyDecisionTo: arg.applyDecisionToId,
-      selectedCorporateNode: arg.CorporateId,
-      selectedFullName: arg.fullNameId,
+      selectedCorporateNode: arg.corporateId,
+      selectedEmployeeName: arg.employeesId,
       selectedDecisionType: arg.decisionTypeId,
+      selectedDecisionStatus: arg.decisionStatusId,
       isEdit: true,
     });
     this.toggle();
@@ -229,7 +243,7 @@ class DecisionsList extends Component {
   handleDeleteRow = () => {
     const { onDeleteDecision } = this.props;
     const { selectedRowId } = this.state;
-
+    console.log("selectedRowId", selectedRowId);
     if (selectedRowId !== null) {
       onDeleteDecision(selectedRowId);
 
@@ -239,6 +253,7 @@ class DecisionsList extends Component {
         showAlert: true,
       });
     }
+    this.toggle();
   };
 
   handleAlertClose = () => {
@@ -260,7 +275,7 @@ class DecisionsList extends Component {
   handleDataListChange = (fieldName, selectedValue) => {
     if (fieldName === "decisionMakerId") {
       const selected = this.state.decisionMakers.find(
-        decisionMaker => decisionMaker.value === selectedValue
+        decisionMaker => decisionMaker.value.trim() === selectedValue.trim()
       );
 
       this.setState({
@@ -269,13 +284,13 @@ class DecisionsList extends Component {
       return;
     }
 
-    if (fieldName === "fullNameId") {
+    if (fieldName === "employeesId") {
       const selected = this.state.employeesNames.find(
         employeeName => employeeName.value === selectedValue
       );
 
       this.setState({
-        selectedFullName: selected ? selected.key : null,
+        selectedEmployeeName: selected ? selected.key : null,
       });
       return;
     }
@@ -301,41 +316,37 @@ class DecisionsList extends Component {
   handleSave = values => {
     const {
       isEdit,
-      isAdd,
-      selectedFullName,
+      selectedEmployeeName,
       selectedDecisionMaker,
       selectedApplyDecisionTo,
       selectedCorporateNode,
       selectedDecisionType,
-      fullNamesOpt,
+      selectedDecisionStatus,
     } = this.state;
+    if (values.decisionDate) {
+      values.decisionDate = this.formatDateToInput(values.decisionDate);
+    }
+    console.log("valuesssssssssssssssssssss", values);
     const { onAddNewDecision, onUpdateDecision } = this.props;
-
     values["decisionMakerId"] = selectedDecisionMaker;
     values["applyDecisionToId"] = selectedApplyDecisionTo;
-    values["corporateId"] = selectedCorporateNode;
-    values["fullNameId"] = selectedFullName;
     values["decisionTypeId"] = selectedDecisionType;
-    console.log("valuesssssssssssssssssssss", values);
-
+    if (isEdit) {
+      values["decisionStatusId"] = selectedDecisionStatus;
+    } else {
+      values["decisionStatusId"] = 4;
+    }
     let decisionInfo = {};
-    // if (values.fullNameId) {
-    //   const nameObject = fullNamesOpt.find(
-    //     fullName => fullName.value === values.fullNameId
-    //   );
-    //   console.log("nameObject", nameObject);
-    //   values["fullNameId"] = nameObject.key;
-    // }
-    // console.log("valuesssssssssssssssssssss", values);
+
     if (
       values.decisionNumber &&
       values.decisionDate &&
       values.decisionReason &&
+      values.note &&
       selectedDecisionMaker !== null &&
       selectedApplyDecisionTo !== null &&
       selectedDecisionType !== null
     ) {
-      console.log("selectedFullName", selectedFullName);
       Object.keys(values).forEach(function (key) {
         if (
           values[key] != undefined &&
@@ -344,25 +355,50 @@ class DecisionsList extends Component {
           console.log("9999999", decisionInfo);
         decisionInfo[key] = values[key];
       });
+      if (selectedCorporateNode) {
+        decisionInfo.corporateId = selectedCorporateNode;
+        if (decisionInfo.hasOwnProperty("employeesId")) {
+          delete decisionInfo.employeesId;
+        }
+      } else if (selectedEmployeeName) {
+        decisionInfo.employeesId = selectedEmployeeName;
+        if (decisionInfo.hasOwnProperty("corporateId")) {
+          delete decisionInfo.corporateId;
+        }
+      } else {
+        if (decisionInfo.hasOwnProperty("corporateId")) {
+          delete decisionInfo.corporateId;
+        }
+        if (decisionInfo.hasOwnProperty("employeesId")) {
+          delete decisionInfo.employeesId;
+        }
+      }
+      if (
+        decisionInfo.decisionDate &&
+        decisionInfo.decisionDate.includes("T")
+      ) {
+        decisionInfo.decisionDate = decisionInfo.decisionDate.split("T")[0];
+      }
       if (isEdit) {
-        console.log("9999999", contractInfo);
-        // onUpdateDecision(contractInfo);
+        console.log("9999999", decisionInfo);
+        onUpdateDecision(decisionInfo);
         this.toggle();
       } else {
-        // onAddNewDecision(contractInfo);
+        onAddNewDecision(decisionInfo);
         this.addToggle();
       }
+
       this.setState({
         errorMessages: {},
       });
-    } else {
-      let emptyError = "";
-
-      if (selectedCorporateNode === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      this.setState({ emptyError: emptyError });
     }
+    // else {
+    //   let emptyError = "";
+    // if (selectedNcsDate === undefined) {
+    //         emptyError = "Fill the empty select";
+    //       }
+    //   this.setState({ emptyError: emptyError });
+    // }
   };
   handleSelect = (fieldName, selectedValue) => {
     if (fieldName == "decisionTypeId") {
@@ -380,6 +416,7 @@ class DecisionsList extends Component {
       corporateNodesOpt,
       decisionMakers,
       decisionsTypes,
+      decisionStatus,
       t,
       deleted,
     } = this.props;
@@ -389,10 +426,14 @@ class DecisionsList extends Component {
       deleteModal,
       selectedDecisionMaker,
       selectedApplyDecisionTo,
-      selectedFullName,
+      selectedEmployeeName,
       selectedCorporateNode,
       selectedDecisionType,
+      selectedDecisionStatus,
+      emptyError,
       showAlert,
+      modal,
+      addModal,
       showAddButton,
       showDeleteButton,
       showEditButton,
@@ -429,18 +470,18 @@ class DecisionsList extends Component {
         text: this.props.t("Decision Number"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "decisionDate",
         text: this.props.t("Decision Date"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -448,9 +489,9 @@ class DecisionsList extends Component {
         text: this.props.t("Decision Type"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -458,9 +499,9 @@ class DecisionsList extends Component {
         text: this.props.t("Decision Maker"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -468,9 +509,9 @@ class DecisionsList extends Component {
         text: this.props.t("Is Approve"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -478,59 +519,59 @@ class DecisionsList extends Component {
         text: this.props.t("Approval Date"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
-        dataField: "fullNameId",
+        dataField: "employeesId",
         text: this.props.t("All Employees"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "isExecute",
         text: this.props.t("Is Execute"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "executeDate",
         text: this.props.t("Execute Date"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
-        dataField: "decisionStatus",
+        dataField: "decisionStatusId",
         text: this.props.t("Decision Status"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
-        dataField: "delete",
+        dataField: "menu",
         text: "",
         isDummyField: true,
         editable: false,
         //  hidden: !showDeleteButton,
         formatter: (cellContent, decision) => (
-          <Tooltip title={this.props.t("Delete")} placement="top">
-            <Link className="text-danger" to="#">
+          <Tooltip title={this.props.t("Edit")} placement="top">
+            <Link className="text-sm-end" to="#">
               <i
-                className="mdi mdi-delete font-size-18"
-                id="deletetooltip"
-                onClick={() => this.onClickDelete(decision)}
+                className="mdi mdi-pencil font-size-18"
+                id="edittooltip"
+                onClick={() => this.handleDecisionClick(decision)}
               ></i>
             </Link>
           </Tooltip>
@@ -657,7 +698,7 @@ class DecisionsList extends Component {
                                   {...paginationTableProps}
                                   data={decisions}
                                   columns={columns}
-                                  // filter={filterFactory()}
+                                  filter={filterFactory()}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
                                     blurToSave: true,
@@ -667,22 +708,17 @@ class DecisionsList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handleEmployeeDataChange(
-                                        row.Id,
-                                        column.dataField,
-                                        newValue
-                                      );
+                                      row.Id, column.dataField, newValue;
                                     },
                                   })}
                                   noDataIndication={this.props.t(
                                     "No Decisions found"
                                   )}
                                   responsive
-                                  filter={filterFactory()}
                                   defaultSorted={defaultSorting}
                                 />
                                 <Modal
-                                  isOpen={this.state.addModal}
+                                  isOpen={addModal}
                                   toggle={this.addToggle}
                                   fullscreen
                                 >
@@ -692,55 +728,42 @@ class DecisionsList extends Component {
                                       : t("Add Decision")}
                                   </ModalHeader>
                                   <ModalBody>
-                                    <div>
-                                      {duplicateError && (
-                                        <Alert
-                                          color="danger"
-                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                          role="alert"
-                                        >
-                                          {duplicateError}
-                                          <button
-                                            type="button"
-                                            className="btn-close"
-                                            aria-label="Close"
-                                            onClick={this.handleAlertClose}
-                                          ></button>
-                                        </Alert>
-                                      )}
-                                    </div>
                                     <Row>
                                       <Col>
                                         <Formik
-                                          enableReinitialize
+                                          enableReinitialize={true}
                                           initialValues={{
                                             decisionNumber:
                                               (decision &&
                                                 decision.decisionNumber) ||
                                               "",
                                             decisionDate:
-                                              this.state.decision
-                                                ?.decisionDate || "",
+                                              (decision &&
+                                                decision.decisionDate) ||
+                                              "",
                                             decisionMakerId:
-                                              this.state.decision
-                                                ?.decisionMakerId ||
+                                              (decision &&
+                                                decision.decisionMakerId) ||
                                               selectedDecisionMaker,
                                             applyDecisionToId:
-                                              this.state.decision
-                                                ?.applyDecisionToId || "",
-                                            fullNameId:
-                                              this.state.decision?.fullNameId ||
-                                              selectedFullName,
+                                              (decision &&
+                                                decision.applyDecisionToId) ||
+                                              "",
+                                            employeesId:
+                                              (decision &&
+                                                decision.employeesId) ||
+                                              selectedEmployeeName,
                                             corporateId:
-                                              this.state.decision
-                                                ?.corporateId ||
+                                              (decision &&
+                                                decision.corporateId) ||
                                               selectedCorporateNode,
                                             decisionReason:
-                                              this.state.decision
-                                                ?.decisionReason || "",
+                                              (decision &&
+                                                decision.decisionReason) ||
+                                              "",
                                             decisionTypeId:
-                                              this.state.decision
-                                                ?.decisionTypeId ||
+                                              (decision &&
+                                                decision.decisionTypeId) ||
                                               selectedDecisionType,
                                           }}
                                           validationSchema={Yup.object().shape({
@@ -752,7 +775,7 @@ class DecisionsList extends Component {
                                             decisionDate: Yup.date().required(
                                               "Decision Date is required"
                                             ),
-                                            decisionMaker:
+                                            decisionMakerId:
                                               Yup.string().required(
                                                 "Decision Maker Is Required"
                                               ),
@@ -769,9 +792,6 @@ class DecisionsList extends Component {
                                                 "Decision Type Is Required"
                                               ),
                                           })}
-                                          onSubmit={values => {
-                                            this.handleSave(values);
-                                          }}
                                         >
                                           {({
                                             errors,
@@ -790,6 +810,24 @@ class DecisionsList extends Component {
                                                     {t("Decision Information")}
                                                   </CardTitle>
                                                   <CardBody className="cardBody">
+                                                    {emptyError && (
+                                                      <Alert
+                                                        color="danger"
+                                                        className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                        role="alert"
+                                                      >
+                                                        {emptyError}
+                                                        <button
+                                                          type="button"
+                                                          className="btn-close"
+                                                          aria-label="Close"
+                                                          onClick={
+                                                            this
+                                                              .handleAlertClose
+                                                          }
+                                                        ></button>
+                                                      </Alert>
+                                                    )}
                                                     <Row>
                                                       <Col lg="6">
                                                         <div className="mb-3">
@@ -899,9 +937,9 @@ class DecisionsList extends Component {
                                                             <div className="mb-3">
                                                               <Row>
                                                                 <Col className="col-4">
-                                                                  <Label for="fullName-Id">
+                                                                  <Label for="employee-Id">
                                                                     {this.props.t(
-                                                                      "Full Name"
+                                                                      "Employees"
                                                                     )}
                                                                   </Label>
                                                                   <span className="text-danger">
@@ -911,9 +949,9 @@ class DecisionsList extends Component {
                                                                 <Col className="col-8">
                                                                   <input
                                                                     className={`form-control ${this.state.inputClass}`}
-                                                                    list="fullNames"
-                                                                    name="fullNameId"
-                                                                    id="fullName-Id"
+                                                                    list="employeeNameDatalist"
+                                                                    name="employeesId"
+                                                                    id="employee-Id"
                                                                     placeholder="Type to search..."
                                                                     autoComplete="off"
                                                                     onChange={e =>
@@ -925,7 +963,7 @@ class DecisionsList extends Component {
                                                                       )
                                                                     }
                                                                   />
-                                                                  <datalist id="fullNames">
+                                                                  <datalist id="employeeNameDatalist">
                                                                     {employeesNames.map(
                                                                       employeeName => (
                                                                         <option
@@ -1053,6 +1091,9 @@ class DecisionsList extends Component {
                                                                 name="decisionDate"
                                                                 type="date"
                                                                 id="decisionDate"
+                                                                value={this.formatDateToInput(
+                                                                  values.decisionDate
+                                                                )}
                                                                 className={`form-control ${
                                                                   errors.decisionDate &&
                                                                   touched.decisionDate
@@ -1110,7 +1151,7 @@ class DecisionsList extends Component {
                                                                   name="applyDecisionToId"
                                                                   value={
                                                                     selectedApplyDecisionTo ==
-                                                                    "allEmployees"
+                                                                    1
                                                                       ? "active"
                                                                       : ""
                                                                   }
@@ -1138,7 +1179,7 @@ class DecisionsList extends Component {
                                                                   name="applyDecisionToId"
                                                                   value={
                                                                     selectedApplyDecisionTo ===
-                                                                    "department"
+                                                                    2
                                                                       ? "active"
                                                                       : ""
                                                                   }
@@ -1171,7 +1212,7 @@ class DecisionsList extends Component {
                                                                   }
                                                                   className={`btn btn-outline-primary w-sm ${
                                                                     selectedApplyDecisionTo ===
-                                                                    "employees"
+                                                                    3
                                                                       ? "active"
                                                                       : ""
                                                                   }`}
@@ -1245,6 +1286,28 @@ class DecisionsList extends Component {
                                                           </Col>
                                                         </Row>
                                                       </div>
+                                                      <div className="md-3">
+                                                        <Row>
+                                                          <Col className="col-4 text-center">
+                                                            <Label for="note">
+                                                              {this.props.t(
+                                                                "Decision Text"
+                                                              )}
+                                                            </Label>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Field
+                                                              type="textarea"
+                                                              name="note"
+                                                              as="textarea"
+                                                              id="note"
+                                                              className={
+                                                                "form-control"
+                                                              }
+                                                            />
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
                                                     </Col>
                                                   </CardBody>
                                                 </Card>
@@ -1272,8 +1335,8 @@ class DecisionsList extends Component {
                                   </ModalBody>
                                 </Modal>
                                 <Modal
-                                  isOpen={this.state.modal}
-                                  toggle={this.t7oggle}
+                                  isOpen={modal}
+                                  toggle={this.toggle}
                                   fullscreen
                                 >
                                   <ModalHeader toggle={this.toggle} tag="h3">
@@ -1282,60 +1345,51 @@ class DecisionsList extends Component {
                                       : t("Add Decision")}
                                   </ModalHeader>
                                   <ModalBody>
-                                    <div>
-                                      {duplicateError && (
-                                        <Alert
-                                          color="danger"
-                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                          role="alert"
-                                        >
-                                          {duplicateError}
-                                          <button
-                                            type="button"
-                                            className="btn-close"
-                                            aria-label="Close"
-                                            onClick={this.handleAlertClose}
-                                          ></button>
-                                        </Alert>
-                                      )}
-                                    </div>
                                     <Row>
                                       <Col>
                                         <Formik
                                           enableReinitialize
-                                          initialValues={
-                                            isEdit && {
-                                              Id: this.state.decision.Id,
-                                              decisionNumber:
-                                                this.state.decision
-                                                  .decisionNumber || "",
-                                              decisionDate:
-                                                this.state.decision
-                                                  .decisionDate || "",
-                                              decisionMakerId:
-                                                this.state.decision
-                                                  .decisionMakerId ||
-                                                selectedDecisionMaker,
-                                              applyDecisionToId:
-                                                this.state.decision
-                                                  .applyDecisionToId || "",
-                                              fullNameId:
-                                                this.state.decision
-                                                  .fullNameId ||
-                                                selectedFullName,
-                                              corporateId:
-                                                this.state.decision
-                                                  .corporateId ||
-                                                selectedCorporateNode,
-                                              decisionReason:
-                                                this.state.decision
-                                                  .decisionReason || "",
-                                              decisionTypeId:
-                                                this.state.decision
-                                                  ?.decisionTypeId ||
-                                                selectedDecisionType,
-                                            }
-                                          }
+                                          initialValues={{
+                                            ...(isEdit &&
+                                              decision && {
+                                                Id: decision.Id,
+                                              }),
+                                            decisionNumber:
+                                              (decision &&
+                                                decision.decisionNumber) ||
+                                              "",
+                                            decisionDate:
+                                              (decision &&
+                                                decision.decisionDate) ||
+                                              "",
+                                            decisionMakerId:
+                                              (decision &&
+                                                decision.decisionMakerId) ||
+                                              selectedDecisionMaker,
+                                            applyDecisionToId:
+                                              (decision &&
+                                                decision.applyDecisionToId) ||
+                                              "",
+                                            employeesId:
+                                              (decision &&
+                                                decision.employeesId) ||
+                                              selectedEmployeeName,
+                                            corporateId:
+                                              (decision &&
+                                                decision.corporateId) ||
+                                              selectedCorporateNode,
+                                            decisionReason:
+                                              (decision &&
+                                                decision.decisionReason) ||
+                                              "",
+                                            decisionTypeId:
+                                              (decision &&
+                                                decision.decisionTypeId) ||
+                                              selectedDecisionType,
+                                            decisionStatusId:
+                                              decision &&
+                                              decision.decisionStatusId,
+                                          }}
                                           validationSchema={Yup.object().shape({
                                             decisionNumber: Yup.number()
                                               .required(
@@ -1358,9 +1412,9 @@ class DecisionsList extends Component {
                                                 "Decision Reason Is Required"
                                               ),
                                             decisionTypeId:
-                                              this.state.decision
-                                                ?.decisionTypeId ||
-                                              selectedDecisionType,
+                                              Yup.string().required(
+                                                "Decision Type Is Required"
+                                              ),
                                           })}
                                           onSubmit={values => {
                                             this.handleSave(values);
@@ -1376,13 +1430,33 @@ class DecisionsList extends Component {
                                             handleBlur,
                                             handleChange,
                                           }) => (
-                                            <Form onSubmit={handleSubmit}>
+                                            <Form>
                                               <div className="bordered">
                                                 <Card>
                                                   <CardTitle id="card_header">
                                                     {t("Decision Information")}
                                                   </CardTitle>
                                                   <CardBody className="cardBody">
+                                                    <div>
+                                                      {duplicateError && (
+                                                        <Alert
+                                                          color="danger"
+                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                          role="alert"
+                                                        >
+                                                          {duplicateError}
+                                                          <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            aria-label="Close"
+                                                            onClick={
+                                                              this
+                                                                .handleAlertClose
+                                                            }
+                                                          ></button>
+                                                        </Alert>
+                                                      )}
+                                                    </div>
                                                     <Row>
                                                       <Col lg="6">
                                                         <div className="mb-3">
@@ -1449,9 +1523,6 @@ class DecisionsList extends Component {
                                                                 name="decisionMakerId"
                                                                 list="decisionMakerList"
                                                                 className={`form-control ${this.state.inputClass}`}
-                                                                value={
-                                                                  values.decisionMakerId
-                                                                }
                                                                 onChange={e => {
                                                                   this.handleDataListChange(
                                                                     e.target
@@ -1495,9 +1566,9 @@ class DecisionsList extends Component {
                                                             <div className="mb-3">
                                                               <Row>
                                                                 <Col className="col-4">
-                                                                  <Label for="fullName-Id">
+                                                                  <Label for="employee-Id">
                                                                     {this.props.t(
-                                                                      "Full Name"
+                                                                      "Employees"
                                                                     )}
                                                                   </Label>
                                                                   <span className="text-danger">
@@ -1507,9 +1578,9 @@ class DecisionsList extends Component {
                                                                 <Col className="col-8">
                                                                   <input
                                                                     className={`form-control ${this.state.inputClass}`}
-                                                                    list="fullNames"
-                                                                    name="fullNameId"
-                                                                    id="fullName-Id"
+                                                                    list="employeeNameDatalist"
+                                                                    name="employeesId"
+                                                                    id="employee-Id"
                                                                     placeholder="Type to search..."
                                                                     autoComplete="off"
                                                                     onChange={e =>
@@ -1521,7 +1592,7 @@ class DecisionsList extends Component {
                                                                       )
                                                                     }
                                                                   />
-                                                                  <datalist id="fullNames">
+                                                                  <datalist id="employeeNameDatalist">
                                                                     {employeesNames.map(
                                                                       employeeName => (
                                                                         <option
@@ -1815,12 +1886,14 @@ class DecisionsList extends Component {
                                                                 "Decision Type"
                                                               )}
                                                             </Label>
+                                                            <span className="text-danger">
+                                                              *
+                                                            </span>
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Select
                                                               name="decisionTypeId"
                                                               id="decisionType-Id"
-                                                              key={`select_decisionType`}
                                                               options={
                                                                 decisionsTypes
                                                               }
@@ -1832,7 +1905,7 @@ class DecisionsList extends Component {
                                                                   values
                                                                 );
                                                               }}
-                                                              defaultValue={decisionsTypes.find(
+                                                              Value={decisionsTypes.find(
                                                                 opt =>
                                                                   opt.value ===
                                                                   decision.decisionType
@@ -1841,10 +1914,111 @@ class DecisionsList extends Component {
                                                           </Col>
                                                         </Row>
                                                       </div>
+                                                      <div className="md-3">
+                                                        <Row>
+                                                          <Col className="col-4 text-center">
+                                                            <Label for="note">
+                                                              {this.props.t(
+                                                                "Decision Text"
+                                                              )}
+                                                            </Label>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Field
+                                                              type="textarea"
+                                                              name="note"
+                                                              as="textarea"
+                                                              id="note"
+                                                              className={
+                                                                "form-control"
+                                                              }
+                                                            />
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
                                                     </Col>
                                                   </CardBody>
                                                 </Card>
                                               </div>
+                                              <Row>
+                                                <Card>
+                                                  <CardBody>
+                                                    <Col lg="12">
+                                                      <div className="mb-3">
+                                                        <Row>
+                                                          <Col lg="4">
+                                                            <Label
+                                                              for="decisionStatus-Id"
+                                                              className="form-label d-flex"
+                                                            >
+                                                              {this.props.t(
+                                                                "Decision Status"
+                                                              )}
+                                                              <span className="text-danger">
+                                                                *
+                                                              </span>
+                                                            </Label>
+                                                          </Col>
+                                                          <Col lg="8">
+                                                            <div className="d-flex flex-wrap gap-3">
+                                                              <div
+                                                                className="btn-group button-or"
+                                                                role="group"
+                                                              >
+                                                                {decisionStatus.map(
+                                                                  (
+                                                                    status,
+                                                                    index
+                                                                  ) => (
+                                                                    <React.Fragment
+                                                                      key={
+                                                                        index
+                                                                      }
+                                                                    >
+                                                                      <input
+                                                                        type="radio"
+                                                                        className={`btn-check button-or ${
+                                                                          selectedDecisionStatus ===
+                                                                          status.Id
+                                                                            ? "active"
+                                                                            : ""
+                                                                        }`}
+                                                                        name="decisionStatusId"
+                                                                        id={`btnradio${index}`}
+                                                                        autoComplete="off"
+                                                                        defaultChecked={
+                                                                          selectedDecisionStatus ===
+                                                                          status.Id
+                                                                            ? "active"
+                                                                            : ""
+                                                                        }
+                                                                        onChange={() =>
+                                                                          setFieldValue(
+                                                                            "decisionStatusId",
+                                                                            status.Id
+                                                                          )
+                                                                        }
+                                                                      />
+                                                                      <Label
+                                                                        className="btn btn-outline-primary smallButton w-sm"
+                                                                        for={`btnradio${index}`}
+                                                                      >
+                                                                        {
+                                                                          status.arTitle
+                                                                        }
+                                                                      </Label>
+                                                                    </React.Fragment>
+                                                                  )
+                                                                )}
+                                                              </div>
+                                                            </div>
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                    </Col>
+                                                  </CardBody>
+                                                </Card>
+                                              </Row>
                                               <Row>
                                                 <Col>
                                                   <div className="text-center">
@@ -1856,6 +2030,21 @@ class DecisionsList extends Component {
                                                       }}
                                                     >
                                                       {t("Save")}
+                                                    </button>
+                                                  </div>
+                                                </Col>
+                                                <Col>
+                                                  <div className="text-center">
+                                                    <button
+                                                      type="button"
+                                                      className="btn btn-primary me-2"
+                                                      onClick={() => {
+                                                        this.onClickDelete(
+                                                          decision
+                                                        );
+                                                      }}
+                                                    >
+                                                      {t("Delete")}
                                                     </button>
                                                   </div>
                                                 </Col>
@@ -1899,6 +2088,7 @@ const mapStateToProps = ({
   corporateNodesOpt: employees.corporateNodesOpt || [],
   decisionMakers: decisions.decisionMakers,
   decisionsTypes: decisionsTypes.decisionsTypes,
+  decisionStatus: decisions.decisionStatus,
   employeesNames: employees.employeesNames,
   deleted: decisions.deleted,
   user_menu: menu_items.user_menu || [],
@@ -1911,6 +2101,7 @@ const mapDispatchToProps = dispatch => ({
   onDeleteDecision: decision => dispatch(deleteDecision(decision)),
   onGetDecisionDeletedValue: () => dispatch(getDecisionDeletedValue()),
   onGetDecisionMakers: () => dispatch(getDecisionMakers()),
+  onGetDecisionStatus: () => dispatch(getDecisionStatus()),
 });
 
 export default connect(

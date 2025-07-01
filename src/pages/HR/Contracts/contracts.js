@@ -353,9 +353,9 @@ class ContractsList extends Component {
       });
       if (isEdit) {
         console.log("9999999", contractInfo);
-        // onUpdateContract(contractInfo);
+        onUpdateContract(contractInfo);
       } else {
-        // onAddNewContract(contractInfo);
+        onAddNewContract(contractInfo);
       }
       this.setState({
         errorMessages: {},

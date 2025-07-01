@@ -11,6 +11,8 @@ import {
   GET_DECISION_DELETED_VALUE_FAIL,
   GET_DECISION_MAKERS_SUCCESS,
   GET_DECISION_MAKERS_FAIL,
+  GET_DECISION_STATUS_SUCCESS,
+  GET_DECISION_STATUS_FAIL,
   // GET_DECISION_CATEGORIES_FAIL,
   // GET_DECISIONS_RULES_REASONS_SUCCESS,
   // GET_DECISIONS_RULES_REASONS_FAIL,
@@ -48,6 +50,7 @@ const INIT_STATE = {
   decisions: [],
   decisionMakers: [],
   deleted: {},
+  decisionStatus: [],
   error: {},
   // decisionCategories: [],
   // decisionRulesReasons: [],
@@ -61,6 +64,7 @@ const decisions = (state = INIT_STATE, action) => {
       return {
         ...state,
         decisions: action.payload,
+        deleted: {},
       };
     case GET_DECISIONS_FAIL:
       return {
@@ -123,6 +127,17 @@ const decisions = (state = INIT_STATE, action) => {
         decisionMakers: action.payload,
       };
     case GET_DECISION_MAKERS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_DECISION_STATUS_SUCCESS:
+      return {
+        ...state,
+        decisionStatus: action.payload,
+      };
+    case GET_DECISION_STATUS_FAIL:
       return {
         ...state,
         error: action.payload,

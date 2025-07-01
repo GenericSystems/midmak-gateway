@@ -80,6 +80,9 @@ export * from "./certificates/actions";
 //grades
 export * from "./grades/actions";
 
+//coursesRegistration
+export * from "./courses-registration/actions";
+
 //contractsTypes
 export * from "./HR/contractsTypes/actions";
 
@@ -265,8 +268,8 @@ export * from "./HR/contracts/actions";
 export * from "./new-Trainee/actions";
 
 //TrainingFormats
-export * from "./trainingFormat/actions"
+export * from "./trainingFormat/actions";
 
 //CoursesCatalog
 
-export * from "./CourseCataloge/actions"
+export * from "./CourseCataloge/actions";

@@ -384,6 +384,11 @@ export const deleteNonActiveStdCurr = data =>
 // get CoursesRegistration
 export const getCoursesRegistration = data =>
   post(url.GET_COURSES_REGISTRATIONS, data);
+
+// get AllCoursesRegistration
+export const getAllCoursesRegistration = data =>
+  post(url.GET_ALL_COURSES_REGISTRATION, data);
+
 // get studentInfo
 export const getStudentRegisterInfo = data =>
   post(url.GET_STUDENT_REGISTER_INFO, data);
@@ -835,6 +840,9 @@ export const getDecisionCategories = data =>
 
 // get Decision Makers
 export const getDecisionMakers = data => post(url.GET_DECISION_MAKERS, data);
+
+// get Decision Status
+export const getDecisionStatus = data => post(url.GET_DECISION_STATUS, data);
 
 // get DecisionsRulesCanceledReasons
 export const getDecisionsRulesCanceledReasons = data =>
@@ -2138,14 +2146,16 @@ export const updateTrainingFormat = data =>
 export const deleteTrainingFormat = data =>
   post(url.DELETE_TRAINING_FORMAT, data);
 
-
 //coursesCatalogs
 export const getCoursesCatalogs = data => post(url.GET_COURSES_CATALOGS, data);
 export const getCoursesCatalogsDeletedValue = () =>
   get(url.GET_COURSES_CATALOG_DELETED_VALUE);
-export const addNewCoursesCatalog = data => post(url.ADD_NEW_COURSES_CATALOGS, data);
-export const updateCoursesCatalog = data => post(url.UPDATE_COURSES_CATALOGS, data);
-export const deleteCoursesCatalog = data => post(url.DELETE_COURSES_CATALOGS, data);
+export const addNewCoursesCatalog = data =>
+  post(url.ADD_NEW_COURSES_CATALOGS, data);
+export const updateCoursesCatalog = data =>
+  post(url.UPDATE_COURSES_CATALOGS, data);
+export const deleteCoursesCatalog = data =>
+  post(url.DELETE_COURSES_CATALOGS, data);
 
 export {
   getLoggedInUser,

@@ -357,7 +357,6 @@ class EmployeesList extends Component {
       selectedCardGrantDate,
       selectedCardExpirationDate,
       selectedGender,
-      employee,
       selectedNationality,
     } = this.state;
     const { onAddNewEmployee, onUpdateEmployee } = this.props;
