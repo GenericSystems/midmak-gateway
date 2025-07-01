@@ -2148,6 +2148,13 @@ export const deleteTrainingFormat = data =>
 
 //coursesCatalogs
 export const getCoursesCatalogs = data => post(url.GET_COURSES_CATALOGS, data);
+export const addNewCoursesCatalog = data =>
+  post(url.ADD_NEW_COURSES_CATALOGS, data);
+export const updateCoursesCatalog = data =>
+  post(url.UPDATE_COURSES_CATALOGS, data);
+export const deleteCoursesCatalog = data =>
+  post(url.DELETE_COURSES_CATALOGS, data);
+
 export const getCoursesCatalogsDeletedValue = () =>
   get(url.GET_COURSES_CATALOG_DELETED_VALUE);
 
@@ -2166,12 +2173,16 @@ export const getCourseCatalogePrerequisitesDeletedValue = () =>
 
 //academyOrgStructures
 
-export const getAcademyOrgStructure = data => post(url.GET_ACADEMY_ORG_STRUCTURES , data);
-export const addNewAcademyOrgStructure = data => post(url.ADD_NEW_ACADEMY_ORG_STRUCTURE , data);
-export const updateAcademyOrgStructure = data =>post(url.UPDATE_ACADEMY_ORG_STRUCTURE , data);
-export const deleteAcademyOrgStructure = data => post(url.DELETE_ACADEMY_ORG_STRUCTURE, data);
-export const getAcademyOrgStructureDeletedValue = () => get(url.GET_ACADEMY_ORG_STRUCTURE_DELETED_VALUE);
-
+export const getAcademyOrgStructure = data =>
+  post(url.GET_ACADEMY_ORG_STRUCTURES, data);
+export const addNewAcademyOrgStructure = data =>
+  post(url.ADD_NEW_ACADEMY_ORG_STRUCTURE, data);
+export const updateAcademyOrgStructure = data =>
+  post(url.UPDATE_ACADEMY_ORG_STRUCTURE, data);
+export const deleteAcademyOrgStructure = data =>
+  post(url.DELETE_ACADEMY_ORG_STRUCTURE, data);
+export const getAcademyOrgStructureDeletedValue = () =>
+  get(url.GET_ACADEMY_ORG_STRUCTURE_DELETED_VALUE);
 
 export {
   getLoggedInUser,

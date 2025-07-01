@@ -1069,3 +1069,9 @@ export const GET_COURSE_CATALOGE_PREREQUISITES_DELETED_VALUE = "/deleted";
 export const ADD_NEW_COURSE_CATALOGE_PREREQUISITES = "/add/prerequsit";
 export const UPDATE_COURSE_CATALOGE_PREREQUISITES = "/update/prerequsit";
 export const DELETE_COURSE_CATALOGE_PREREQUISITES = "/delete/prerequsit";
+
+export const GET_ACADEMY_ORG_STRUCTURES = "/academyOrgStructures";
+export const ADD_NEW_ACADEMY_ORG_STRUCTURE = "/add/academyOrgStructures";
+export const UPDATE_ACADEMY_ORG_STRUCTURE = "/update/academyOrgStructures";
+export const DELETE_ACADEMY_ORG_STRUCTURE = "/delete/academyOrgStructures";
+export const GET_ACADEMY_ORG_STRUCTURE_DELETED_VALUE = "/deleted";

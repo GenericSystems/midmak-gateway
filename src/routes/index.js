@@ -168,7 +168,7 @@ import DecisionsTypesList from "../pages/HR/decisionsTypes/decisionsTypes";
 import DecisionsList from "../pages/HR/decisions/decisions";
 
 //Contracts
-import ContractsList from "../pages/HR/Contracts/contracts";
+import ContractsList from "../pages/HR/contracts/contracts";
 
 //Employment cases
 import EmploymentCasesList from "../pages/HR/employmentCases/employmentCases";
@@ -204,7 +204,7 @@ import CourseTypesList from "pages/courseTypes/courseTypes";
 import CourseCatalogeList from "pages/CourseCataloge/CourseCataloge";
 
 //organizationalStructure
-import AcademyTree from "pages/Academy/academy-organize-structure"
+import AcademyTree from "pages/Academy/academy-organize-structure";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -321,7 +321,7 @@ const authProtectedRoutes = [
   //CoursesCatalogs
   { path: "/courseCatalog", component: CourseCatalogeList },
 
-  {path:"/organizationalStructure" ,component:AcademyTree},
+  { path: "/organizationalStructure", component: AcademyTree },
 
   //Blog
   { path: "/blog-list", component: BlogList },
