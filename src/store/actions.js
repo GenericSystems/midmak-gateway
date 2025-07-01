@@ -270,3 +270,7 @@ export * from "./trainingFormat/actions"
 //CoursesCatalog
 
 export * from "./CourseCataloge/actions"
+
+//academyOrgStructure
+
+export *  from "./academyOrgStructure/actions"

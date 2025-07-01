@@ -106,6 +106,8 @@ import trainingFormatsSaga from "./trainingFormat/saga";
 
 import coursesCatalogsSaga from "./CourseCataloge/saga";
 
+import academyOrgStructureSaga from "./academyOrgStructure/saga";
+
 export default function* rootSaga() {
   yield all([
     //public
@@ -210,5 +212,6 @@ export default function* rootSaga() {
     fork(traineesSaga),
     fork(trainingFormatsSaga),
     fork(coursesCatalogsSaga),
+    fork(academyOrgStructureSaga),
   ]);
 }
