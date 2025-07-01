@@ -2164,6 +2164,15 @@ export const deleteCourseCatalogePrerequisite = data =>
 export const getCourseCatalogePrerequisitesDeletedValue = () =>
   get(url.GET_COURSE_CATALOGE_PREREQUISITES_DELETED_VALUE);
 
+//academyOrgStructures
+
+export const getAcademyOrgStructure = data => post(url.GET_ACADEMY_ORG_STRUCTURES , data);
+export const addNewAcademyOrgStructure = data => post(url.ADD_NEW_ACADEMY_ORG_STRUCTURE , data);
+export const updateAcademyOrgStructure = data =>post(url.UPDATE_ACADEMY_ORG_STRUCTURE , data);
+export const deleteAcademyOrgStructure = data => post(url.DELETE_ACADEMY_ORG_STRUCTURE, data);
+export const getAcademyOrgStructureDeletedValue = () => get(url.GET_ACADEMY_ORG_STRUCTURE_DELETED_VALUE);
+
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

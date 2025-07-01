@@ -203,7 +203,8 @@ import TrainingFormatsList from "pages/trainingFormat/trainingFormat";
 import CourseTypesList from "pages/courseTypes/courseTypes";
 import CourseCatalogeList from "pages/CourseCataloge/CourseCataloge";
 
-//TimeLines
+//organizationalStructure
+import AcademyTree from "pages/Academy/academy-organize-structure"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -319,6 +320,8 @@ const authProtectedRoutes = [
 
   //CoursesCatalogs
   { path: "/courseCatalog", component: CourseCatalogeList },
+
+  {path:"/organizationalStructure" ,component:AcademyTree},
 
   //Blog
   { path: "/blog-list", component: BlogList },

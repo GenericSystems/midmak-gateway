@@ -271,5 +271,4 @@ export * from "./new-Trainee/actions";
 export * from "./trainingFormat/actions";
 
 //CoursesCatalog
-
 export * from "./CourseCataloge/actions";
