@@ -168,7 +168,7 @@ import DecisionsTypesList from "../pages/HR/decisionsTypes/decisionsTypes";
 import DecisionsList from "../pages/HR/decisions/decisions";
 
 //Contracts
-import ContractsList from "../pages/HR/contracts/contracts";
+import ContractsList from "../pages/HR/Contracts/contracts";
 
 //Employment cases
 import EmploymentCasesList from "../pages/HR/employmentCases/employmentCases";
@@ -202,6 +202,8 @@ import TrainingFormatsList from "pages/trainingFormat/trainingFormat";
 //CourseTypes
 import CourseTypesList from "pages/courseTypes/courseTypes";
 import CourseCatalogeList from "pages/CourseCataloge/CourseCataloge";
+
+//TimeLines
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },

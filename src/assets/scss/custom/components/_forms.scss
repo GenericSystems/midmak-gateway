@@ -32,8 +32,10 @@
     display: block;
   }
 }
+//#00c4ca
+
 .accordion-button {
-  background-color: #00c4ca;
+  background-color: #000000;
   color: white;
 }
 
@@ -1016,3 +1018,55 @@
 #employee-card {
   margin-top: 20px;
 }
+
+.courseCatalogprereq{
+  margin-top: -2rem;
+}
+.upload-box {
+  display: flex;
+  flex-direction: column;
+  border: 2px dashed #ced4da;
+  border-radius: 8px;
+  padding: 20px;
+  cursor: pointer;
+  background-color: #f8f9fa;
+  transition: 0.3s;
+}
+
+.upload-box:hover {
+  border-color: #0d6efd;
+  background-color: #e9f2ff;
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-icon-wrapper {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.upload-cloud-icon {
+  font-size: 60px;
+  color: #0d6efd;
+}
+
+.upload-arrow-icon {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  font-size: 24px;
+  color: #fff;
+}
+.upload-icon {
+  font-size: 60px; 
+  font-weight: lighter;
+  color: #0d6efd;  
+}
+

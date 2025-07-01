@@ -2150,12 +2150,19 @@ export const deleteTrainingFormat = data =>
 export const getCoursesCatalogs = data => post(url.GET_COURSES_CATALOGS, data);
 export const getCoursesCatalogsDeletedValue = () =>
   get(url.GET_COURSES_CATALOG_DELETED_VALUE);
-export const addNewCoursesCatalog = data =>
-  post(url.ADD_NEW_COURSES_CATALOGS, data);
-export const updateCoursesCatalog = data =>
-  post(url.UPDATE_COURSES_CATALOGS, data);
-export const deleteCoursesCatalog = data =>
-  post(url.DELETE_COURSES_CATALOGS, data);
+
+export const getCoursesCatalogDatalist = data =>
+  post(url.GET_COURSES_CATALOGS_DATALIST, data);
+export const getCourseCatalogePrerequisites = data =>
+  post(url.GET_COURSE_CATALOGE_PREREQUISITES, data);
+export const addNewCourseCatalogePrerequisite = data =>
+  post(url.ADD_NEW_COURSE_CATALOGE_PREREQUISITES, data);
+export const updateCourseCatalogePrerequisite = data =>
+  post(url.UPDATE_COURSE_CATALOGE_PREREQUISITES, data);
+export const deleteCourseCatalogePrerequisite = data =>
+  post(url.DELETE_COURSE_CATALOGE_PREREQUISITES, data);
+export const getCourseCatalogePrerequisitesDeletedValue = () =>
+  get(url.GET_COURSE_CATALOGE_PREREQUISITES_DELETED_VALUE);
 
 export {
   getLoggedInUser,
