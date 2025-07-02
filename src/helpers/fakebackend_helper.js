@@ -2184,6 +2184,8 @@ export const deleteAcademyOrgStructure = data =>
 export const getAcademyOrgStructureDeletedValue = () =>
   get(url.GET_ACADEMY_ORG_STRUCTURE_DELETED_VALUE);
 
+
+
 export {
   getLoggedInUser,
   isUserAuthenticated,
