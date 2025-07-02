@@ -305,6 +305,7 @@ class AcademyTree extends Component {
         editDirectorateDean,
         editDirectorateCode,
         directorateNumError,
+        
       } = this.state;
 
       const isDuplicateDirectorate = academyOrgStructures
