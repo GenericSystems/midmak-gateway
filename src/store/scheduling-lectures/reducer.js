@@ -1,16 +1,19 @@
+import { getCoursesOffering } from "./actions";
 import {
-  GET_ALL_SCHEDULING_LECTURES_SUCCESS,
-  GET_ALL_SCHEDULING_LECTURES_FAIL,
-  GET_SCHEDULING_LECTURES_SUCCESS,
-  GET_SCHEDULING_LECTURES_FAIL,
-  ADD_SCHEDULING_LECTURE_SUCCESS,
-  ADD_SCHEDULING_LECTURE_FAIL,
-  UPDATE_SCHEDULING_LECTURE_SUCCESS,
-  UPDATE_SCHEDULING_LECTURE_FAIL,
-  DELETE_SCHEDULING_LECTURE_SUCCESS,
-  DELETE_SCHEDULING_LECTURE_FAIL,
-  GET_SCHEDULING_LECTURE_PROFILE_SUCCESS,
-  GET_SCHEDULING_LECTURE_PROFILE_FAIL,
+  GET_ALL_COURSES_OFFERING_SUCCESS,
+  GET_ALL_COURSES_OFFERING_FAIL,
+  GET_METHODS_OF_OFFERING_COURSES_SUCCESS,
+  GET_METHODS_OF_OFFERING_COURSES_FAIL,
+  GET_COURSES_OFFERING_SUCCESS,
+  GET_COURSES_OFFERING_FAIL,
+  ADD_COURSE_OFFERING_SUCCESS,
+  ADD_COURSE_OFFERING_FAIL,
+  UPDATE_COURSE_OFFERING_SUCCESS,
+  UPDATE_COURSE_OFFERING_FAIL,
+  DELETE_COURSE_OFFERING_SUCCESS,
+  DELETE_COURSE_OFFERING_FAIL,
+  GET_COURSE_OFFERING_PROFILE_SUCCESS,
+  GET_COURSE_OFFERING_PROFILE_FAIL,
   GET_INSTRUCTORS_SUCCESS,
   GET_INSTRUCTORS_FAIL,
   GET_SECTION_LAB_PROFILE_FAIL,
@@ -35,29 +38,31 @@ import {
   GET_SCHEDULE_TIMING_DESCS_SUCCESS,
   GET_FILTERED_SECTIONS_SUCCESS,
   GET_FILTERED_SECTIONS_FAIL,
-GET_SCHEDULE_MSG_VALUE_SUCCESS,
-GET_SCHEDULE_MSG_VALUE_FAIL,
-GET_SECTOR_TIMINGS_SUCCESS,
-GET_SECTOR_TIMINGS_FAIL
+  GET_SCHEDULE_MSG_VALUE_SUCCESS,
+  GET_SCHEDULE_MSG_VALUE_FAIL,
+  GET_SECTOR_TIMINGS_SUCCESS,
+  GET_SECTOR_TIMINGS_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   schedulingLectures: [],
+  methodsOffering: [],
   instructors: [],
-  sectionLabs: [],
+  classes: [],
   weekDays: [],
   lecturePeriods: [],
-  sectionLabsProfile: {},
+  classesProfile: {},
   offeringLectures: [],
+  coursesOffering: [],
   departments: [],
   scheduleTimings: [],
   scheduleTimingDescs: [],
   scheduleTimingsProfile: {},
-  schedulingLectureProfile: {},
-  filteredSections:[],
+  courseOfferingProfile: {},
+  filteredSections: [],
   error: {},
-  returnMessage:{},
-  hallTimings:[]
+  returnMessage: {},
+  hallTimings: [],
 };
 
 const schedulingLectures = (state = INIT_STATE, action) => {
@@ -73,79 +78,92 @@ const schedulingLectures = (state = INIT_STATE, action) => {
         ...state,
         error: action.payload,
       };
-    case GET_SCHEDULING_LECTURES_SUCCESS:
+
+    case GET_METHODS_OF_OFFERING_COURSES_SUCCESS:
+      return {
+        ...state,
+        methodsOffering: action.payload,
+      };
+
+    case GET_METHODS_OF_OFFERING_COURSES_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_COURSES_OFFERING_SUCCESS:
       return {
         ...state,
         offeringLectures: action.payload,
-        schedulingLectures: action.payload,
+        coursesOffering: action.payload,
       };
-    case GET_SCHEDULING_LECTURES_FAIL:
+    case GET_COURSES_OFFERING_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case GET_ALL_SCHEDULING_LECTURES_SUCCESS:
+    case GET_ALL_COURSES_OFFERING_SUCCESS:
       return {
         ...state,
-        schedulingLectures: action.payload,
+        coursesOffering: action.payload,
       };
-    case GET_ALL_SCHEDULING_LECTURES_FAIL:
+    case GET_ALL_COURSES_OFFERING_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case ADD_SCHEDULING_LECTURE_SUCCESS:
+    case ADD_COURSE_OFFERING_SUCCESS:
       return {
         ...state,
-        schedulingLectures: [...state.schedulingLectures, action.payload],
+        coursesOffering: [...state.coursesOffering, action.payload],
       };
 
-    case ADD_SCHEDULING_LECTURE_FAIL:
+    case ADD_COURSE_OFFERING_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case GET_SCHEDULING_LECTURE_PROFILE_SUCCESS:
+    case GET_COURSE_OFFERING_PROFILE_SUCCESS:
       return {
         ...state,
-        schedulingLectureProfile: action.payload,
+        courseOfferingProfile: action.payload,
       };
 
-    case UPDATE_SCHEDULING_LECTURE_SUCCESS:
+    case UPDATE_COURSE_OFFERING_SUCCESS:
       return {
         ...state,
-        schedulingLectures: state.schedulingLectures.map(schedulingLecture =>
-          schedulingLecture.Id.toString() === action.payload.Id.toString()
-            ? { schedulingLecture, ...action.payload }
-            : schedulingLecture
+        coursesOffering: state.coursesOffering.map(courseOffering =>
+          courseOffering.Id.toString() === action.payload.Id.toString()
+            ? { courseOffering, ...action.payload }
+            : courseOffering
         ),
       };
 
-    case UPDATE_SCHEDULING_LECTURE_FAIL:
+    case UPDATE_COURSE_OFFERING_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case DELETE_SCHEDULING_LECTURE_SUCCESS:
+    case DELETE_COURSE_OFFERING_SUCCESS:
       return {
         ...state,
-        schedulingLectures: state.schedulingLectures.filter(
-          schedulingLecture =>
-            schedulingLecture.Id.toString() !== action.payload.Id.toString()
+        coursesOffering: state.coursesOffering.filter(
+          courseOffering =>
+            courseOffering.Id.toString() !== action.payload.Id.toString()
         ),
       };
 
-    case DELETE_SCHEDULING_LECTURE_FAIL:
+    case DELETE_COURSE_OFFERING_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case GET_SCHEDULING_LECTURE_PROFILE_FAIL:
+    case GET_COURSE_OFFERING_PROFILE_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -153,7 +171,7 @@ const schedulingLectures = (state = INIT_STATE, action) => {
     case GET_SECTION_LABS_SUCCESS:
       return {
         ...state,
-        sectionLabs: action.payload,
+        classes: action.payload,
       };
     case GET_SECTION_LABS_FAIL:
       return {
@@ -164,7 +182,7 @@ const schedulingLectures = (state = INIT_STATE, action) => {
     case ADD_SECTION_LAB_SUCCESS:
       return {
         ...state,
-        sectionLabs: [...state.sectionLabs, action.payload],
+        classes: [...state.classes, action.payload],
       };
 
     case ADD_SECTION_LAB_FAIL:
@@ -176,18 +194,16 @@ const schedulingLectures = (state = INIT_STATE, action) => {
     case GET_SECTION_LAB_PROFILE_SUCCESS:
       return {
         ...state,
-        sectionLabProfile: action.payload,
+        classeProfile: action.payload,
       };
 
     case UPDATE_SECTION_LAB_SUCCESS:
       return {
         ...state,
-        sectionLabs: state.sectionLabs.map(sectionLab =>
-          (sectionLab.Id === action.payload.Id
-            && sectionLab.type === action.payload.type
-          )
-            ? { sectionLab, ...action.payload }
-            : sectionLab
+        classes: state.classes.map(classe =>
+          classe.Id === action.payload.Id && classe.type === action.payload.type
+            ? { classe, ...action.payload }
+            : classe
         ),
       };
 
@@ -200,9 +216,8 @@ const schedulingLectures = (state = INIT_STATE, action) => {
     case DELETE_SECTION_LAB_SUCCESS:
       return {
         ...state,
-        sectionLabs: state.sectionLabs.filter(
-          sectionLab =>
-            sectionLab.Id.toString() !== action.payload.Id.toString()
+        classes: state.classes.filter(
+          classe => classe.Id.toString() !== action.payload.Id.toString()
         ),
       };
 
@@ -232,7 +247,7 @@ const schedulingLectures = (state = INIT_STATE, action) => {
       return {
         ...state,
         scheduleTimings: [...state.scheduleTimings, action.payload],
-        returnMessage:action.payload
+        returnMessage: action.payload,
       };
 
     case ADD_SCHEDULE_TIMING_FAIL:
@@ -290,27 +305,27 @@ const schedulingLectures = (state = INIT_STATE, action) => {
         error: action.payload,
       };
 
-      case GET_SCHEDULE_MSG_VALUE_SUCCESS:
-        return {
-          ...state,
-          returnMessage: action.payload
-        };
-      case GET_SCHEDULE_MSG_VALUE_FAIL:
-        return {
-          ...state,
-          error: action.payload,
-        };
-      
-  case GET_SECTOR_TIMINGS_SUCCESS:
-    return {
-      ...state,
-      hallTimings: action.payload,
-    };
-  case GET_SECTOR_TIMINGS_FAIL:
-    return {
-      ...state,
-      error: action.payload,
-    };
+    case GET_SCHEDULE_MSG_VALUE_SUCCESS:
+      return {
+        ...state,
+        returnMessage: action.payload,
+      };
+    case GET_SCHEDULE_MSG_VALUE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_SECTOR_TIMINGS_SUCCESS:
+      return {
+        ...state,
+        hallTimings: action.payload,
+      };
+    case GET_SECTOR_TIMINGS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
     default:
       return state;
   }

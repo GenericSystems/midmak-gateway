@@ -268,7 +268,6 @@ const fakeBackend = () => {
     });
   });
 
-
   mock.onGet(url.GET_USER_ID).reply(() => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -1310,7 +1309,6 @@ const fakeBackend = () => {
     });
   });
 
-
   mock.onPut(url.UPDATE_STUDY_PLAN).reply(studyPlan => {
     console.log("in mock onPut reply updating ...", studyPlan);
     return new Promise((resolve, reject) => {
@@ -1983,67 +1981,67 @@ const fakeBackend = () => {
     });
   });
 
-  // SchedulingLectures
-  mock.onGet(url.GET_SCHEDULING_LECTURES).reply(() => {
-    console.log("Calling mock get SchedulingLecture");
+  // coursesOffering
+  mock.onGet(url.GET_COURSES_OFFERING).reply(() => {
+    console.log("Calling mock get courseOffering");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (schedulingLectures) {
+        if (coursesOffering) {
           // Passing fake JSON data as response
-          resolve([200, schedulingLectures]);
+          resolve([200, coursesOffering]);
         } else {
-          reject([400, "Cannot get SchedulingLecture"]);
+          reject([400, "Cannot get courseOffering"]);
         }
       });
     });
   });
 
-  mock.onGet(url.GET_ALL_SCHEDULING_LECTURES).reply(() => {
-    console.log("Calling mock get SchedulingLecture");
+  mock.onGet(url.GET_ALL_COURSES_OFFERING).reply(() => {
+    console.log("Calling mock get courseOffering");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (schedulingLectures) {
+        if (coursesOffering) {
           // Passing fake JSON data as response
-          resolve([200, schedulingLectures]);
+          resolve([200, coursesOffering]);
         } else {
-          reject([400, "Cannot get SchedulingLecture"]);
+          reject([400, "Cannot get courseOffering"]);
         }
       });
     });
   });
 
-  mock.onPut(url.UPDATE_SCHEDULING_LECTURE).reply(schedulingLecture => {
-    console.log("in mock onPut reply updating ...", schedulingLecture);
+  mock.onPut(url.UPDATE_COURSE_OFFERING).reply(courseOffering => {
+    console.log("in mock onPut reply updating ...", courseOffering);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("updated schedulingLecture");
-        if (schedulingLecture && schedulingLecture.data) {
+        console.log("updated courseOffering");
+        if (courseOffering && courseOffering.data) {
           // Passing fake JSON data as response
-          resolve([200, schedulingLecture.data]);
+          resolve([200, courseOffering.data]);
         } else {
-          reject([400, "Cannot update schedulingLecture"]);
+          reject([400, "Cannot update courseOffering"]);
         }
       });
     });
   });
-  mock.onDelete(url.DELETE_SCHEDULING_LECTURE).reply(config => {
+  mock.onDelete(url.DELETE_COURSE_OFFERING).reply(config => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("deleted schedulingLecture");
+        console.log("deleted courseOffering");
         if (config && config.headers) {
           // Passing fake JSON data as response
-          resolve([200, config.headers.schedulingLecture]);
+          resolve([200, config.headers.courseOffering]);
         } else {
-          reject([400, "Cannot delete schedulingLecture"]);
+          reject([400, "Cannot delete courseOffering"]);
         }
       });
     });
   });
 
-  mock.onPost(url.ADD_NEW_SCHEDULING_LECTURE).reply(order => {
+  mock.onPost(url.ADD_NEW_COURSE_OFFERING).reply(order => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("added schedulingLecture");
+        console.log("added courseOffering");
         if (order && order.data) {
           // Passing fake JSON data as response
           resolve([200, order.data]);
@@ -2054,16 +2052,16 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onPost(url.ADD_NEW_SCHEDULING_LECTURE).reply(schedulingLecture => {
-    console.log("MOCK: add new schedulingLecture ...:", schedulingLecture);
+  mock.onPost(url.ADD_NEW_COURSE_OFFERING).reply(courseOffering => {
+    console.log("MOCK: add new courseOffering ...:", courseOffering);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (schedulingLecture && schedulingLecture.data) {
+        if (courseOffering && courseOffering.data) {
           // Passing fake JSON data as response
-          schedulingLecture.push(schedulingLecture.data);
-          resolve([200, schedulingLecture.data]);
+          courseOffering.push(courseOffering.data);
+          resolve([200, courseOffering.data]);
         } else {
-          reject([400, "Cannot add schedulingLecture"]);
+          reject([400, "Cannot add courseOffering"]);
         }
       });
     });
@@ -3454,7 +3452,6 @@ const fakeBackend = () => {
     });
   });
 
-
   mock.onGet(url.GET_REQUEST_DELETED_VALUE).reply(() => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -3571,7 +3568,6 @@ const fakeBackend = () => {
       });
     });
   });
-
 
   mock.onGet(url.GET_USERS).reply(() => {
     return new Promise((resolve, reject) => {

@@ -1,22 +1,25 @@
 import {
-  GET_SCHEDULING_LECTURE_PROFILE,
-  GET_SCHEDULING_LECTURE_PROFILE_FAIL,
-  GET_SCHEDULING_LECTURE_PROFILE_SUCCESS,
-  GET_ALL_SCHEDULING_LECTURES,
-  GET_ALL_SCHEDULING_LECTURES_FAIL,
-  GET_ALL_SCHEDULING_LECTURES_SUCCESS,
-  GET_SCHEDULING_LECTURES,
-  GET_SCHEDULING_LECTURES_FAIL,
-  GET_SCHEDULING_LECTURES_SUCCESS,
-  ADD_NEW_SCHEDULING_LECTURE,
-  ADD_SCHEDULING_LECTURE_SUCCESS,
-  ADD_SCHEDULING_LECTURE_FAIL,
-  UPDATE_SCHEDULING_LECTURE,
-  UPDATE_SCHEDULING_LECTURE_SUCCESS,
-  UPDATE_SCHEDULING_LECTURE_FAIL,
-  DELETE_SCHEDULING_LECTURE,
-  DELETE_SCHEDULING_LECTURE_SUCCESS,
-  DELETE_SCHEDULING_LECTURE_FAIL,
+  GET_COURSE_OFFERING_PROFILE,
+  GET_COURSE_OFFERING_PROFILE_FAIL,
+  GET_COURSE_OFFERING_PROFILE_SUCCESS,
+  GET_METHODS_OF_OFFERING_COURSES,
+  GET_METHODS_OF_OFFERING_COURSES_FAIL,
+  GET_METHODS_OF_OFFERING_COURSES_SUCCESS,
+  GET_ALL_COURSES_OFFERING,
+  GET_ALL_COURSES_OFFERING_FAIL,
+  GET_ALL_COURSES_OFFERING_SUCCESS,
+  GET_COURSES_OFFERING,
+  GET_COURSES_OFFERING_FAIL,
+  GET_COURSES_OFFERING_SUCCESS,
+  ADD_NEW_COURSE_OFFERING,
+  ADD_COURSE_OFFERING_SUCCESS,
+  ADD_COURSE_OFFERING_FAIL,
+  UPDATE_COURSE_OFFERING,
+  UPDATE_COURSE_OFFERING_SUCCESS,
+  UPDATE_COURSE_OFFERING_FAIL,
+  DELETE_COURSE_OFFERING,
+  DELETE_COURSE_OFFERING_SUCCESS,
+  DELETE_COURSE_OFFERING_FAIL,
   GET_INSTRUCTORS,
   GET_INSTRUCTORS_FAIL,
   GET_INSTRUCTORS_SUCCESS,
@@ -55,101 +58,115 @@ import {
   GET_FILTERED_SECTIONS_FAIL,
   GET_DEFAULT_SETTINGS,
   GET_SCHEDULE_MSG_VALUE,
-GET_SCHEDULE_MSG_VALUE_SUCCESS,
-GET_SCHEDULE_MSG_VALUE_FAIL,
-GET_SECTOR_TIMINGS,
-GET_SECTOR_TIMINGS_SUCCESS,
-GET_SECTOR_TIMINGS_FAIL
+  GET_SCHEDULE_MSG_VALUE_SUCCESS,
+  GET_SCHEDULE_MSG_VALUE_FAIL,
+  GET_SECTOR_TIMINGS,
+  GET_SECTOR_TIMINGS_SUCCESS,
+  GET_SECTOR_TIMINGS_FAIL,
 } from "./actionTypes";
 
-export const getSchedulingLectures = yearSemesterId => ({
-  type: GET_SCHEDULING_LECTURES,
-  payload: yearSemesterId
+export const getCoursesOffering = coursesOffering => ({
+  type: GET_COURSES_OFFERING,
+  payload: coursesOffering,
 });
 
-export const getSchedulingLecturesSuccess = offeringLectures => ({
-  type: GET_SCHEDULING_LECTURES_SUCCESS,
-  payload: offeringLectures,
+export const getCoursesOfferingSuccess = coursesOffering => ({
+  type: GET_COURSES_OFFERING_SUCCESS,
+  payload: coursesOffering,
 });
 
-export const getSchedulingLecturesFail = error => ({
-  type: GET_SCHEDULING_LECTURES_FAIL,
+export const getCoursesOfferingFail = error => ({
+  type: GET_COURSES_OFFERING_FAIL,
   payload: error,
 });
 
-export const getAllSchedulingLectures = yearSemesterId => ({
-  type: GET_ALL_SCHEDULING_LECTURES,
-  payload: yearSemesterId
+export const getMethodsOfOfferingCourses = () => ({
+  type: GET_METHODS_OF_OFFERING_COURSES,
 });
 
-export const getAllSchedulingLecturesSuccess = schedulingLectures => ({
-  type: GET_ALL_SCHEDULING_LECTURES_SUCCESS,
-  payload: schedulingLectures,
+export const getMethodsOfOfferingCoursesSuccess = methodsOffering => ({
+  type: GET_METHODS_OF_OFFERING_COURSES_SUCCESS,
+  payload: methodsOffering,
 });
 
-export const getAllSchedulingLecturesFail = error => ({
-  type: GET_ALL_SCHEDULING_LECTURES_FAIL,
+export const getMethodsOfOfferingCoursesFail = error => ({
+  type: GET_METHODS_OF_OFFERING_COURSES_FAIL,
   payload: error,
 });
 
-export const getSchedulingLectureProfile = () => ({
-  type: GET_SCHEDULING_LECTURE_PROFILE,
+export const getAllCoursesOffering = coursesOffering => ({
+  type: GET_ALL_COURSES_OFFERING,
+  payload: coursesOffering,
 });
 
-export const getSchedulingLectureProfileSuccess = schedulingLectureProfile => ({
-  type: GET_SCHEDULING_LECTURE_PROFILE_SUCCESS,
-  payload: schedulingLectureProfile,
+export const getAllCoursesOfferingSuccess = coursesOffering => ({
+  type: GET_ALL_COURSES_OFFERING_SUCCESS,
+  payload: coursesOffering,
 });
 
-export const getSchedulingLectureProfileFail = error => ({
-  type: GET_SCHEDULING_LECTURE_PROFILE_FAIL,
+export const getAllCoursesOfferingFail = error => ({
+  type: GET_ALL_COURSES_OFFERING_FAIL,
   payload: error,
 });
 
-export const addNewSchedulingLecture = schedulingLecture => ({
-  type: ADD_NEW_SCHEDULING_LECTURE,
-  payload: schedulingLecture,
+export const getCourseOfferingProfile = () => ({
+  type: GET_COURSE_OFFERING_PROFILE,
 });
 
-export const addSchedulingLectureSuccess = schedulingLecture => ({
-  type: ADD_SCHEDULING_LECTURE_SUCCESS,
-  payload: schedulingLecture,
+export const getCourseOfferingProfileSuccess = courseOfferingProfile => ({
+  type: GET_COURSE_OFFERING_PROFILE_SUCCESS,
+  payload: courseOfferingProfile,
 });
 
-export const addSchedulingLectureFail = error => ({
-  type: ADD_SCHEDULING_LECTURE_FAIL,
+export const getCourseOfferingProfileFail = error => ({
+  type: GET_COURSE_OFFERING_PROFILE_FAIL,
   payload: error,
 });
 
-export const updateSchedulingLecture = schedulingLecture => {
+export const addNewCourseOffering = courseOffering => ({
+  type: ADD_NEW_COURSE_OFFERING,
+  payload: courseOffering,
+});
+
+export const addCourseOfferingSuccess = courseOffering => ({
+  type: ADD_COURSE_OFFERING_SUCCESS,
+  payload: courseOffering,
+});
+
+export const addCourseOfferingFail = error => ({
+  type: ADD_COURSE_OFFERING_FAIL,
+  payload: error,
+});
+
+export const updateCourseOffering = courseOffering => {
   return {
-    type: UPDATE_SCHEDULING_LECTURE,
-    payload: schedulingLecture,
+    type: UPDATE_COURSE_OFFERING,
+    payload: courseOffering,
   };
 };
 
-export const updateSchedulingLectureSuccess = schedulingLecture => ({
-  type: UPDATE_SCHEDULING_LECTURE_SUCCESS,
-  payload: schedulingLecture,
+export const updateCourseOfferingSuccess = courseOffering => ({
+  type: UPDATE_COURSE_OFFERING_SUCCESS,
+  payload: courseOffering,
 });
 
-export const updateSchedulingLectureFail = error => ({
-  type: UPDATE_SCHEDULING_LECTURE_FAIL,
+export const updateCourseOfferingFail = error => ({
+  type: UPDATE_COURSE_OFFERING_FAIL,
   payload: error,
 });
 
-export const deleteSchedulingLecture = schedulingLecture => ({
-  type: DELETE_SCHEDULING_LECTURE,
-  payload: schedulingLecture,
+export const deleteCourseOffering = courseOffering => ({
+  type: DELETE_COURSE_OFFERING,
+  payload: courseOffering,
 });
 
-export const deleteSchedulingLectureSuccess = schedulingLecture => ({
-  type: DELETE_SCHEDULING_LECTURE_SUCCESS,
-  payload: schedulingLecture,
+export const deleteCourseOfferingSuccess = courseOffering => ({
+  type: DELETE_COURSE_OFFERING_SUCCESS,
+  payload: courseOffering,
 });
 
-export const deleteSchedulingLectureFail = error => ({
-  type: DELETE_SCHEDULING_LECTURE_FAIL,
+export const deleteCourseOfferingFail = error => ({
+  type: DELETE_COURSE_OFFERING_FAIL,
   payload: error,
 });
 
@@ -333,7 +350,6 @@ export const getFilteredSectionsFail = error => ({
 export const fetchDefaultSettings = () => ({
   type: GET_DEFAULT_SETTINGS,
 });
-
 
 export const getScheduleMsgValue = () => ({
   type: GET_SCHEDULE_MSG_VALUE,

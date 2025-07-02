@@ -385,10 +385,6 @@ export const deleteNonActiveStdCurr = data =>
 export const getCoursesRegistration = data =>
   post(url.GET_COURSES_REGISTRATIONS, data);
 
-// get AllCoursesRegistration
-export const getAllCoursesRegistration = data =>
-  post(url.GET_ALL_COURSES_REGISTRATION, data);
-
 // get studentInfo
 export const getStudentRegisterInfo = data =>
   post(url.GET_STUDENT_REGISTER_INFO, data);
@@ -1415,29 +1411,32 @@ export const updateSchedule = data => post(url.UPDATE_SCHEDULE, data);
 //delete Schedule
 export const deleteSchedule = data => post(url.DELETE_SCHEDULE, data);
 
-// get SchedulingLecture
-export const getSchedulingLectures = data =>
-  post(url.GET_SCHEDULING_LECTURES, data);
+// get CoursesOffering
+export const getCoursesOffering = data => post(url.GET_COURSES_OFFERING, data);
 
-// get ALlSchedulingLecture
-export const getAllSchedulingLectures = data =>
-  post(url.GET_ALL_SCHEDULING_LECTURES, data);
+// get MethodsOfOfferingCourses
+export const getMethodsOfOfferingCourses = data =>
+  post(url.GET_METHODS_OF_OFFERING_COURSES, data);
 
-//get SchedulingLecture profile
-export const getSchedulingLectureProfile = () =>
-  get(url.GET_SCHEDULING_LECTURES_PROFILE);
+// get ALlCoursesOffering
+export const getAllCoursesOffering = data =>
+  post(url.GET_ALL_COURSES_OFFERING, data);
 
-// add SchedulingLecture
-export const addNewSchedulingLecture = data =>
-  post(url.ADD_NEW_SCHEDULING_LECTURE, data);
+//get CoursesOffering profile
+export const getCourseOfferingProfile = () =>
+  get(url.GET_COURSE_OFFERING_PROFILE);
 
-//update SchedulingLecture
-export const updateSchedulingLecture = data =>
-  post(url.UPDATE_SCHEDULING_LECTURE, data);
+// add CoursesOffering
+export const addNewCourseOffering = data =>
+  post(url.ADD_NEW_COURSE_OFFERING, data);
 
-//delete SchedulingLecture
-export const deleteSchedulingLecture = data =>
-  post(url.DELETE_SCHEDULING_LECTURE, data);
+//update CoursesOffering
+export const updateCourseOffering = data =>
+  post(url.UPDATE_COURSE_OFFERING, data);
+
+//delete CoursesOffering
+export const deleteCourseOffering = data =>
+  post(url.DELETE_COURSE_OFFERING, data);
 
 export const getFilteredSections = data =>
   post(url.GET_FILTERED_SECTIONS, data);

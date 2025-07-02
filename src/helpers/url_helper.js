@@ -174,7 +174,6 @@ export const DELETE_ALL_NON_ACTIVE_STD_CURR = "/deleteAll/nonActiveStdCurr";
 export const SAVE_ALL_NON_ACTIVE_STD_CURR = "/saveAll/nonActiveStdCurr";
 //COURSES_REGISTRATIONS
 export const GET_COURSES_REGISTRATIONS = "/coursesRegistration";
-export const GET_ALL_COURSES_REGISTRATION = "/allCoursesRegistration";
 export const GET_STUDENT_REGISTER_INFO = "/StudentRegisterInfo";
 export const ADD_NEW_COURSES_REGISTRATION = "/add/coursesRegistration";
 export const UPDATE_COURSES_REGISTRATION = "/update/coursesRegistration";
@@ -612,13 +611,14 @@ export const ADD_NEW_SCHEDULE = "/add/Schedule";
 export const UPDATE_SCHEDULE = "/update/Schedule";
 export const DELETE_SCHEDULE = "/delete/Schedule";
 
-//SchedulingLectures
-export const GET_SCHEDULING_LECTURES = "/SchedulingLectures";
-export const GET_ALL_SCHEDULING_LECTURES = "/SchedulingLectures";
-export const GET_SCHEDULING_LECTURES_PROFILE = "/SchedulingLecture";
-export const ADD_NEW_SCHEDULING_LECTURE = "/add/SchedulingLecture";
-export const UPDATE_SCHEDULING_LECTURE = "/update/SchedulingLecture";
-export const DELETE_SCHEDULING_LECTURE = "/delete/SchedulingLecture";
+//CoursesOffering
+export const GET_COURSES_OFFERING = "/coursesOffering";
+export const GET_METHODS_OF_OFFERING_COURSES = "/methodsOffering";
+export const GET_ALL_COURSES_OFFERING = "/coursesOffering";
+export const GET_COURSE_OFFERING_PROFILE = "/coursesOffering";
+export const ADD_NEW_COURSE_OFFERING = "/add/courseOffering";
+export const UPDATE_COURSE_OFFERING = "/update/courseOffering";
+export const DELETE_COURSE_OFFERING = "/delete/courseOffering";
 
 //SectionLabs
 export const GET_SECTION_LABS = "/SectionLabs";

@@ -149,8 +149,9 @@ import Certificates from "../pages/Certificates/certificates";
 
 //Grades
 import GradesList from "../pages/Grades/grades";
-//Grades
-import CoursesRegistrationList from "../pages/Addmission/coursesRegistration/coursesRegistration";
+
+//schedulingLectures
+import SchedulingLecturesList from "../pages/Addmission/schedulingLectures/schedulingLectures";
 
 //ContractsTypes
 import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
@@ -295,8 +296,8 @@ const authProtectedRoutes = [
   // Grades
   { path: "/grades", component: GradesList },
 
-  // Courses Registration
-  { path: "/coursesRegistration", component: CoursesRegistrationList },
+  // scheduling Lectures
+  { path: "/schedulingLectures", component: SchedulingLecturesList },
 
   { path: "/certificates-types", component: CertificateTypesList },
 
