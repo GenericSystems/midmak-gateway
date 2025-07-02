@@ -255,26 +255,26 @@ class AcademyTree extends Component {
         this.setState({ directorateNumError: false, saveError: false });
         this.setState({ directorateCodeError: false, saveError: false });
 
-        const isDuplicateFaculty = academyOrgStructures.some(
+        const isDuplicateDirectorate = academyOrgStructures.some(
           directorate =>
             directorate.Id &&
-            directorate.arTitle &&
-            directorate.arTitle.trim() === newDirectorateArName.trim()
+            directorate.directorateArName	 &&
+            directorate.directorateArName	.trim() === newDirectorateArName.trim()
         );
 
-        const isDuplicateFacultyNumber = academyOrgStructures.some(
+        const isDuplicateDirectorateNumber = academyOrgStructures.some(
           directorate =>
             directorate.Id &&
             directorate.directorateNum &&
             directorate.directorateNum === parseInt(newDirectorateNum, 10)
         );
 
-        if (isDuplicateFaculty) {
+        if (isDuplicateDirectorate) {
           const duplicateErrorMessage = this.props.t(
             "Directorate Name already exists"
           );
           this.setState({ errorMessage: duplicateErrorMessage });
-        } else if (isDuplicateFacultyNumber) {
+        } else if (isDuplicateDirectorateNumber) {
           const duplicateNumberErrorMessage = this.props.t(
             "Directorate Number already exists"
           );
@@ -307,7 +307,7 @@ class AcademyTree extends Component {
         directorateNumError,
       } = this.state;
 
-      const isDuplicateFaculty = academyOrgStructures
+      const isDuplicateDirectorate = academyOrgStructures
         .filter(directorate => directorate.Id !== directorateId)
         .some(
           directorate =>
@@ -316,31 +316,31 @@ class AcademyTree extends Component {
             directorate.arTitle.trim() === editDirectorateArName.trim()
         );
 
-      const isDuplicateFacultyNumber = academyOrgStructures.some(
+      const isDuplicateDirectorateNumber = academyOrgStructures.some(
         directorate =>
           directorate.Id !== directorateId &&
           directorate.directorateNum &&
           directorate.directorateNum === parseInt(editDirectorateNum, 10) &&
           academyOrgStructures.some(
-            otherFaculty =>
-              otherFaculty.directorateNum ===
+            otherDirectorate =>
+              otherDirectorate.directorateNum ===
                 parseInt(editDirectorateNum, 10) &&
-              otherFaculty.Id !== directorateId
+              otherDirectorate.Id !== directorateId
           )
       );
 
-      if (isDuplicateFaculty) {
+      if (isDuplicateDirectorate) {
         const duplicateErrorMessage = this.props.t(
           "Directorate Name already exists"
         );
         this.setState({ errorMessage: duplicateErrorMessage });
-      } else if (isDuplicateFacultyNumber) {
+      } else if (isDuplicateDirectorateNumber) {
         const duplicateNumberErrorMessage = this.props.t(
           "Directorate Number already exists"
         );
         this.setState({ errorMessage: duplicateNumberErrorMessage });
       }
-      if (!isDuplicateFaculty && !isDuplicateFacultyNumber) {
+      if (!isDuplicateDirectorate && !isDuplicateDirectorateNumber) {
         if (editDirectorateArName.trim() === "") {
           this.setState({ directorateNameError: true, saveError: true });
         }
