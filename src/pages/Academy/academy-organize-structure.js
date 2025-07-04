@@ -858,7 +858,7 @@ class AcademyTree extends Component {
       });
     } else {
       const deleteErrorMessage = this.props.t(
-        "Can't delete this Directorate! Delete it's departments first"
+        "Can't delete this Department! Delete it's organisms first"
       );
       this.setState({
         errorMessage: deleteErrorMessage,
@@ -976,7 +976,7 @@ class AcademyTree extends Component {
 
     const alertMessage =
       deleted == 0
-        ? this.props.t("Can't Delete ")
+        ? this.props.t("Can't Delete")
         : this.props.t("Deleted Successfully");
 
     // Meta title
@@ -1445,7 +1445,7 @@ class AcademyTree extends Component {
                         />
                         {directorateCodeError && (
                           <div className="invalid-feedback">
-                            {t("Directorate Number is required")}
+                            {t("Directorate Code is required")}
                           </div>
                         )}
                       </Col>
@@ -1761,6 +1761,11 @@ class AcademyTree extends Component {
                           }}
                           disabled={!showEditButton}
                         />
+                        {directorateCodeError && (
+                          <div className="invalid-feedback">
+                            {t("Directorate Code is required")}
+                          </div>
+                        )}
                       </Col>
                     </Row>
                     <Row className="mt-4">

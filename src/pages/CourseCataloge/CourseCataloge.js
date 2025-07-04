@@ -1263,7 +1263,7 @@ class CourseCatalogeList extends Component {
                                                                       <Col className="col-4">
                                                                         <Label for="trainingModule">
                                                                           {this.props.t(
-                                                                            "Training Module"
+                                                                            "Training Modules"
                                                                           )}
                                                                         </Label>
                                                                       </Col>
