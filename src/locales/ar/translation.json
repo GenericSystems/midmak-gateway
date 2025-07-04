@@ -263,6 +263,8 @@
   "Department updated successfully":"تم تعديل القسم بنجاح",
   "Can't delete this Department! Delete it's organisms first":"لا يمكنك حذف القسم يجب حذف الدائرة اولا",
   "Can't delete this Directorate! Delete it's departments first":"لا يمكنك حذف المديرية يجب حذف القسم اولا",
-  "WeekDay(ar)":"يوم الأسبوع"
+  "WeekDay(ar)":"يوم الأسبوع",
+  "Academy Organizational Structure":"النظام الهيكلي للأكادمية",
+  "Academy":"الأكاديمية"
 
 }
