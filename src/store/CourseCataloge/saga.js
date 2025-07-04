@@ -166,7 +166,7 @@ function* fetchCoursesCatalogs() {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_getData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_CoursesCatalog";
+  payload["tablename"] = "_Common_CoursesCatalog";
   try {
     const response = yield call(getCoursesCatalogs, payload);
     yield put(getCoursesCatalogsSuccess(response));
@@ -181,6 +181,7 @@ function* onAddNewCoursesCatalog({ payload }) {
     payload["procedure"] = "SisApp_addData";
     payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
     payload["tablename"] = "Common_CoursesCatalog";
+    payload["queryname"] = "_Common_CoursesCatalog";
 
     const response = yield call(addNewCoursesCatalog, payload);
     yield put(addCoursesCatalogSuccess(response[0]));
@@ -195,6 +196,7 @@ function* onUpdateCoursesCatalog({ payload }) {
     payload["procedure"] = "SisApp_updateData";
     payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
     payload["tablename"] = "Common_CoursesCatalog";
+    payload["queryname"] = "_Common_CoursesCatalog";
 
     const response = yield call(updateCoursesCatalog, payload);
     yield put(updateCoursesCatalogSuccess(response[0]));
@@ -209,6 +211,7 @@ function* onDeleteCoursesCatalog({ payload }) {
     payload["procedure"] = "SisApp_removeData";
     payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
     payload["tablename"] = "Common_CoursesCatalog";
+    payload["queryname"] = "_Common_CoursesCatalog";
 
     const response = yield call(deleteCoursesCatalog, payload);
     yield put(deleteCoursesCatalogSuccess(response[0]));
