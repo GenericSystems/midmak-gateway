@@ -2183,6 +2183,15 @@ export const deleteAcademyOrgStructure = data =>
 export const getAcademyOrgStructureDeletedValue = () =>
   get(url.GET_ACADEMY_ORG_STRUCTURE_DELETED_VALUE);
 
+//gradeTypes
+
+export const getGradeTypes = data => post(url.GET_GRADE_TYPES, data);
+export const getGradeTypeDeletedValue = () =>
+  get(url.GET_GRADE_TYPE_DELETED_VALUE);
+export const addNewGradeType = data => post(url.ADD_NEW_GRADE_TYPE, data);
+export const updateGradeType = data => post(url.UPDATE_GRADE_TYPE, data);
+export const deleteGradeType = data => post(url.DELETE_GRADE_TYPE, data);
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

@@ -1075,3 +1075,10 @@ export const ADD_NEW_ACADEMY_ORG_STRUCTURE = "/add/academyOrgStructures";
 export const UPDATE_ACADEMY_ORG_STRUCTURE = "/update/academyOrgStructures";
 export const DELETE_ACADEMY_ORG_STRUCTURE = "/delete/academyOrgStructures";
 export const GET_ACADEMY_ORG_STRUCTURE_DELETED_VALUE = "/deleted";
+
+
+export const GET_GRADE_TYPES  = "/gradeTypes";
+export const GET_GRADE_TYPE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_GRADE_TYPE  = "/add/gradeType"
+export const UPDATE_GRADE_TYPE = "/update/gradeType";
+export const DELETE_GRADE_TYPE = "/delet/gradeType";

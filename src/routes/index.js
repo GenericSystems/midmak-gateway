@@ -207,6 +207,16 @@ import CourseCatalogeList from "pages/CourseCataloge/CourseCataloge";
 //organizationalStructure
 import AcademyTree from "pages/Academy/academy-organize-structure";
 
+//LecturePeriod
+import LecturePeriodsList from "pages/lecture-periods/lecture-periods";
+
+//DistributingCoursesMethods
+
+import DistributingCoursesMethods from "pages/GradeSettings/Distributing-courses-methods";
+
+//gradeTypes
+import GradeTypesList from "pages/GradeSettings/Grade-types";
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -323,6 +333,16 @@ const authProtectedRoutes = [
   { path: "/courseCatalog", component: CourseCatalogeList },
 
   { path: "/organizationalStructure", component: AcademyTree },
+
+  //lecturePeriods
+  { path: "/lecturePeriods", component: LecturePeriodsList },
+
+  {
+    path: "/Distributing-courses-methods",
+    component: DistributingCoursesMethods,
+  },
+
+  { path: "/gradeTypes", component: GradeTypesList },
 
   //Blog
   { path: "/blog-list", component: BlogList },

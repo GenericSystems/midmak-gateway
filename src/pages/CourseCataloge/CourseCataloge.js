@@ -109,13 +109,16 @@ class CourseCatalogeList extends Component {
       filtredPreReqCourses: [],
       selectedCoursId: 0,
       isShowPreReq: false,
+      languageState: "",
     };
     this.toggle = this.toggle.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      i18n,
       sectors,
       trainingFormats,
       certificateTypes,
@@ -134,7 +137,7 @@ class CourseCatalogeList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
 
-    onGetCoursesCatalogs();
+    onGetCoursesCatalogs(lang);
     onGetPreReqCoursesDatalist();
 
     this.setState({
@@ -147,8 +150,36 @@ class CourseCatalogeList extends Component {
       deleted,
       prereqs,
       preReqCourses,
+      languageState: lang,
     });
+
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const {
+      i18n,
+      sectors,
+      trainingFormats,
+      certificateTypes,
+      courseTypes,
+      coursesCatalogs,
+      deleted,
+      user_menu,
+      onGetCoursesCatalogs,
+      isLoading,
+      prereqs,
+      preReqCourses,
+      onGetPreReqCoursesDatalist,
+    } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    if (lang != lng) {
+      onGetCoursesCatalogs(lng);
+      onGetPreReqCoursesDatalist();
+      this.setState({ languageState: lng });
+    }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -550,6 +581,7 @@ class CourseCatalogeList extends Component {
       trainingProgramError,
       filtredPreReqCourses,
       isShowPreReq,
+      languageState,
     } = this.state;
     const { SearchBar } = Search;
     const alertMessage =
@@ -572,24 +604,22 @@ class CourseCatalogeList extends Component {
 
     const prereqCoursesOptions = isEdit ? filtredPreReqCourses : preReqCourses;
 
-    console.log("prereqCoursesOptions", prereqCoursesOptions);
+    //console.log("prereqCoursesOptions", prereqCoursesOptions);
 
     const registerConditions = prereqs;
 
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "arTitle",
-        text: this.props.t("Course Name (ar)"),
+        dataField: languageState === "ar" ? "arTitle" : "enTitle",
+        text:
+          languageState === "ar"
+            ? this.props.t("Course Name (ar)")
+            : this.props.t("Course Name (en)"),
         sort: true,
         editable: false,
       },
-      {
-        dataField: "enTitle",
-        text: this.props.t("Course Name (en)"),
-        sort: true,
-        editable: false,
-      },
+
       {
         dataField: "Code",
         text: this.props.t("Course Code"),
@@ -760,7 +790,7 @@ class CourseCatalogeList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Course Cataloge")} />
+            <Breadcrumbs breadcrumbItem={this.props.t("Course Catalog")} />
             <Row>
               <Col>
                 <Card>
@@ -1573,7 +1603,7 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetCoursesCatalogs: () => dispatch(getCoursesCatalogs()),
+  onGetCoursesCatalogs: lng => dispatch(getCoursesCatalogs(lng)),
   onAddNewCoursesCatalog: courseCataloge =>
     dispatch(addNewCoursesCatalog(courseCataloge)),
   onUpdateCoursesCatalog: courseCataloge =>

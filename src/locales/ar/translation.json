@@ -263,5 +263,28 @@
   "Can't delete this Directorate! Delete it's departments first": "لا يمكنك حذف المديرية يجب حذف القسم اولا",
   "WeekDay(ar)": "يوم الأسبوع",
   "Academy Organizational Structure": "النظام الهيكلي للأكادمية",
-  "Academy": "الأكاديمية"
+  "Academy": "الأكاديمية",
+  "Start Time": "وقت البداية",
+  "End Time" :"وقت النهاية",
+  "Duration":"الفاصل الزمني",
+  "LecturePeriods List":"قائمة فصول الدورات",
+  "LecturePeriods":"فترات الدورات",
+  "Course Catalog": "فهرس الدورات",
+  "Courses":"الدورات",
+  "Distributing Courses Methods List":"قائمة طرق توزيع الدورات",
+  "Distributing Method(ar)": "طريقة التوزيع (ع)",
+  "Distributing Courses Methods": "طرق توزيع الدورات",
+  "Distribution types(Ar)" : "طريقة التوزيع (ع)",
+  "Candidating Percentage": "النسبة المطلوبة للامتحان",
+  "exam Precentage": "معدل الامتحان",
+  "quarterly Total" : "علامة السعي الفصلي",
+  "final Total grade": "علامة الامتحان النهائي",
+  "Exam name (Ar)": "اسم الامتحان (ع)",
+  "Amount": "الدرجة",
+  "Distributing Method": "طرق التوزيع",
+  "Add Distributing Method" : "اضافة طريقة توزيع",
+  "Edit Distributing Method": "تعديل طريقة التوزيع",
+  "Create Distributing Method" : "اضافة طريقة التوزيع"
+
+
 }

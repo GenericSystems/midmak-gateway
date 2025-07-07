@@ -77,12 +77,11 @@ import {
 } from "../semesters/actions";
 
 function* fetchDistributingCoursesMethods() {
-  
   const get_CourseContents = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_CourseContents",
+    tablename: "Settings_CourseContents",
     fields: "Id,arTitle,defaultValue",
   };
   try {
@@ -93,7 +92,7 @@ function* fetchDistributingCoursesMethods() {
     yield put(getCourseContentsFail(error));
   }
 
-  const get_Coursesdatalist = {
+  /* const get_Coursesdatalist = {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -106,8 +105,8 @@ function* fetchDistributingCoursesMethods() {
     yield put(getCoursesSuccess(response));
   } catch (error) {
     yield put(getCoursesFail(error));
-  }
-
+  } */
+  /* 
   const get_current_semester = {
     source: "db",
     procedure: "SisApp_getData",
@@ -123,16 +122,14 @@ function* fetchDistributingCoursesMethods() {
   } catch (error) {
     yield put(getCurrentSemesterFail(error));
   }
-
-
- 
+ */
 
   const get_settings_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_DistributingMethods",
-    filter:`yearSemesterId = ${cursem[0].cuYearSemesterId}`,
+    // filter: `yearSemesterId = ${cursem[0].cuYearSemesterId}`,
   };
   try {
     const response = yield call(
@@ -162,12 +159,16 @@ function* onAddNewDistributingCoursesMethod({
   }
 }
 
+///updateDistributingCoursesMethod 
+
 function* onUpdateDistributingCoursesMethod({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_DistributingMethods";
   try {
+    const respupdate = yield call(updateDistributingCoursesMethod, payload);
+
     yield put(updateDistributingCoursesMethodSuccess(respupdate[0]));
   } catch (error) {
     yield put(updateDistributingCoursesMethodFail(error));
@@ -307,7 +308,6 @@ function* onDeleteDistributingCourse({ payload, distributingCourse }) {
   }
 }
 
-
 function* onCopyDistributingMethods() {
   const copydistmeth = {
     source: "db",
@@ -327,10 +327,7 @@ function* DistributingCoursesMethodsSaga() {
     GET_DISTRIBUTING_COURSES_METHODS,
     fetchDistributingCoursesMethods
   );
-  yield takeEvery(
-    COPY_DISTRIBUTING_METHODS,
-    onCopyDistributingMethods
-  );
+  yield takeEvery(COPY_DISTRIBUTING_METHODS, onCopyDistributingMethods);
   yield takeEvery(
     ADD_NEW_DISTRIBUTING_COURSES_METHOD,
     onAddNewDistributingCoursesMethod
