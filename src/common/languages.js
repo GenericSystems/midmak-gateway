@@ -6,7 +6,7 @@ import russia from "../assets/images/flags/russia.jpg";
 import arFlag from "../assets/images/flags/ar.jpeg";
 
 const languages = {
-  sp: {
+ /*  sp: {
     label: "Spanish",
     flag: spain,
   },
@@ -21,7 +21,7 @@ const languages = {
   it: {
     label: "Italian",
     flag: italy,
-  },
+  }, */
   en: {
     label: "English",
     flag: usFlag,

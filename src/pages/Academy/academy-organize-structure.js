@@ -86,6 +86,26 @@ class AcademyTree extends Component {
       showAddButton: false,
       showDeleteButton: false,
       showEditButton: false,
+      departmentId: "",
+
+      NewOrganismArName: "",
+      NewOrganismEnName: "",
+      NewOrganismNum: "",
+      NewOrganismPresident: "",
+
+      editOrganismArName: "",
+      editOrganismEnName: "",
+      editOrganismNum: "",
+      editOrganismPresident: "",
+
+      OrganisArnameError: false,
+      OrganisEnnameError: false,
+      OrganisNumError: false,
+      organismId: "",
+      depaorganismId: "",
+      selectedDepartment: null,
+      selectedOrganismId: null,
+      deleteOrganismModal: false,
     };
     this.handleEditDirectorate = this.handleEditDirectorate.bind(this);
     this.handleDirectorateDataChange =
@@ -258,8 +278,8 @@ class AcademyTree extends Component {
         const isDuplicateDirectorate = academyOrgStructures.some(
           directorate =>
             directorate.Id &&
-            directorate.directorateArName	 &&
-            directorate.directorateArName	.trim() === newDirectorateArName.trim()
+            directorate.directorateArName &&
+            directorate.directorateArName.trim() === newDirectorateArName.trim()
         );
 
         const isDuplicateDirectorateNumber = academyOrgStructures.some(
@@ -419,6 +439,190 @@ class AcademyTree extends Component {
     this.setState({ newDepartmentEnName: "" });
     this.setState({ newDepartmentNum: "" });
     this.setState({ newDepartmentPresident: "" });
+  };
+
+  handelAddOrganismForm = departmentId => {
+    this.setState({ openForm: "organism" });
+    this.setState({ depaorganismId: departmentId });
+    this.setState({ NewOrganismArName: "" });
+    this.setState({ NewOrganismEnName: "" });
+    this.setState({ NewOrganismNum: "" });
+    this.setState({ NewOrganismPresident: "" });
+  };
+
+  handelEditOrganism = (organism, departmentId) => {
+    this.setState({ openForm: "editOrganism" });
+    this.setState({ organismId: organism.Id });
+    this.setState({ depaorganismId: departmentId });
+    this.setState({ editOrganismArName: organism.organismArName });
+    this.setState({ editOrganismEnName: organism.organismEnName || "" });
+    this.setState({ editOrganismNum: organism.organismNum });
+    this.setState({
+      editOrganismPresident: organism.organismPresident || "",
+    });
+  };
+
+  handleOrganismDataChange = (fieldName, value) => {
+    const { openForm } = this.state;
+    console.log("value", value);
+
+    if (openForm === "organism") {
+      if (fieldName === "organismArName") {
+        this.setState({ NewOrganismArName: value });
+        this.setState({ OrganisArnameError: value.trim() === "" });
+      }
+
+      if (fieldName === "organismEnName") {
+        this.setState({ NewOrganismEnName: value });
+        this.setState({ OrganisEnnameError: value.trim() === "" });
+      }
+
+      if (fieldName === "organismNum") {
+        this.setState({ NewOrganismNum: value });
+        this.setState({ OrganisNumError: value.trim() === "" });
+      }
+
+      if (fieldName === "organismPresident") {
+        this.setState({ NewOrganismPresident: value });
+      }
+    } else if (openForm === "editOrganism") {
+      if (fieldName === "organismArName") {
+        this.setState({ editOrganismArName: value });
+      }
+
+      if (fieldName === "organismEnName") {
+        this.setState({ editOrganismEnName: value });
+      }
+
+      if (fieldName === "organismNum") {
+        this.setState({ editOrganismNum: parseInt(value, 10) });
+      }
+
+      if (fieldName === "organismPresident") {
+        this.setState({ editOrganismPresident: value });
+      }
+    }
+  };
+
+  handleSaveOrganism = () => {
+    const { openForm, organismId, depaorganismId } = this.state;
+    const {
+      academyOrgStructures,
+      onAddAcademyOrgStructure,
+      onUpdateAcademyOrgStructure,
+      t,
+    } = this.props;
+
+    if (openForm === "organism") {
+      const {
+        NewOrganismArName,
+        NewOrganismEnName,
+        NewOrganismNum,
+        NewOrganismPresident,
+      } = this.state;
+
+      // Validation
+      if (NewOrganismArName.trim() === "" || NewOrganismNum.trim() === "") {
+        this.setState({
+          OrganisArnameError: NewOrganismArName.trim() === "",
+          OrganisNumError: NewOrganismNum.trim() === "",
+          saveError: true,
+        });
+        return;
+      }
+
+      const selectedDepartment = academyOrgStructures
+        .flatMap(directorate => directorate.departments)
+        .find(department => department.Id === depaorganismId);
+
+      if (!selectedDepartment) {
+        console.log(`Department with ID ${depaorganismId} not found.`);
+        return;
+      }
+
+      const isDuplicateOrganism = selectedDepartment.organisms?.some(
+        organism => organism.organismArName === NewOrganismArName
+      );
+
+      const isDuplicateOrganismNum = selectedDepartment.organisms?.some(
+        organism => organism.organismNum?.toString() === NewOrganismNum.trim()
+      );
+
+      if (isDuplicateOrganism) {
+        const duplicateErrorMessage = t("Organism Name already exists");
+        this.setState({ errorMessage: duplicateErrorMessage });
+      } else if (isDuplicateOrganismNum) {
+        const duplicateNumberErrorMessage = t("Organism Number already exists");
+        this.setState({ errorMessage: duplicateNumberErrorMessage });
+      } else {
+        const payload = {
+          arTitle: NewOrganismArName,
+          enTitle: NewOrganismEnName,
+          organismNum: parseInt(NewOrganismNum, 10),
+          organismPresident: NewOrganismPresident,
+          departmentId: depaorganismId,
+          tablename: "Common_Organism",
+        };
+
+        const successSavedMessage = t("Organism saved successfully");
+        this.setState({
+          successMessage: successSavedMessage,
+          saveError: false,
+        });
+
+        onAddAcademyOrgStructure(payload);
+      }
+    } else if (openForm === "editOrganism") {
+      const {
+        editOrganismArName,
+        editOrganismEnName,
+        editOrganismNum,
+        editOrganismPresident,
+      } = this.state;
+
+      const selectedDepartment = academyOrgStructures
+        .flatMap(directorate => directorate.departments)
+        .find(department => department.Id === depaorganismId);
+
+      const isDuplicateOrganism = selectedDepartment?.organisms?.some(
+        organism =>
+          organism.Id !== organismId &&
+          (organism.organismArName === editOrganismArName ||
+            organism.organismNum === parseInt(editOrganismNum, 10))
+      );
+
+      console.log(editOrganismArName, "hhhh");
+
+      if (isDuplicateOrganism) {
+        const duplicateErrorMessage = t("Organism already exists");
+        this.setState({ errorMessage: duplicateErrorMessage });
+      } else {
+        if (editOrganismArName.trim() === "") {
+          this.setState({ OrganisArnameError: true, saveError: true });
+          return;
+        }
+
+        const payload = {
+          Id: organismId,
+          arTitle: editOrganismArName,
+          enTitle: editOrganismEnName,
+          organismNum: parseInt(editOrganismNum, 10),
+          organismPresident: editOrganismPresident,
+          departmentId: depaorganismId,
+          tablename: "Common_Organism",
+        };
+
+        const successUpdatedMessage = t("Organism updated successfully");
+        this.setState({
+          OrganisArnameError: false,
+          OrganisNumError: false,
+          saveError: false,
+          successMessage: successUpdatedMessage,
+        });
+
+        onUpdateAcademyOrgStructure(payload);
+      }
+    }
   };
 
   handleDepartmentDataChange = (fieldName, value) => {
@@ -631,24 +835,55 @@ class AcademyTree extends Component {
     }));
   };
 
-  onClickDeleteDepartment = depId => {
-    this.setState({ selectedDepId: depId, deleteDepartmentModal: true });
+  onClickDeleteDepartment = (depId, department) => {
+    this.setState({
+      selectedDepId: depId,
+      deleteDepartmentModal: true,
+      selectedDepartment: department,
+    });
   };
 
   handleDeleteDepartment = () => {
-    const { selectedDepId } = this.state;
-    if (selectedDepId !== null) {
+    const { selectedDepId, selectedDepartment } = this.state;
+
+    if (selectedDepartment.organisms.Id == null) {
       let payload = { Id: selectedDepId };
       payload["tablename"] = "Common_Department";
       const { onDeleteAcademyOrgStructure } = this.props;
       onDeleteAcademyOrgStructure(payload);
-
       this.setState({
         selectedDepId: null,
         deleteDepartmentModal: false,
         showAlert: true,
       });
+    } else {
+      const deleteErrorMessage = this.props.t(
+        "Can't delete this Department! Delete it's organisms first"
+      );
+      this.setState({
+        errorMessage: deleteErrorMessage,
+        deleteDepartmentModal: false,
+      });
     }
+  };
+
+  onClickDeleteOrganism = orgId => {
+    this.setState({ selectedOrganismId: orgId, deleteOrganismModal: true });
+  };
+  handelDeleteOraganism = () => {
+    const { selectedOrganismId, deleteOrganismModal } = this.state;
+    const { onDeleteAcademyOrgStructure } = this.props;
+
+    let payload = {
+      Id: selectedOrganismId,
+      tablename: "Common_Organism",
+    };
+    onDeleteAcademyOrgStructure(payload);
+    this.setState({
+      selectedOrganismId: null,
+      deleteOrganismModal: false,
+      showAlert: true,
+    });
   };
 
   handleErrorClose = () => {
@@ -712,6 +947,19 @@ class AcademyTree extends Component {
       showAddButton,
       showDeleteButton,
       showEditButton,
+      depaorganismId,
+      NewOrganismArName,
+      NewOrganismEnName,
+      NewOrganismNum,
+      NewOrganismPresident,
+      OrganisArnameError,
+      OrganisNumError,
+      OrganisEnnameError,
+      editOrganismArName,
+      editOrganismEnName,
+      editOrganismNum,
+      editOrganismPresident,
+      deleteOrganismModal,
     } = this.state;
 
     console.log(
@@ -728,7 +976,7 @@ class AcademyTree extends Component {
 
     const alertMessage =
       deleted == 0
-        ? this.props.t("Can't Delete ")
+        ? this.props.t("Can't Delete")
         : this.props.t("Deleted Successfully");
 
     // Meta title
@@ -745,6 +993,11 @@ class AcademyTree extends Component {
           show={deleteDepartmentModal}
           onDeleteClick={this.handleDeleteDepartment}
           onCloseClick={() => this.setState({ deleteDepartmentModal: false })}
+        />
+        <DeleteModal
+          show={deleteOrganismModal}
+          onDeleteClick={this.handelDeleteOraganism}
+          onCloseClick={() => this.setState({ deleteOrganismModal: false })}
         />
         <Row>
           <Breadcrumbs
@@ -854,16 +1107,19 @@ class AcademyTree extends Component {
                                       <AddIcon className="zeButton" />
                                     </IconButton>
                                   )}
-                                  <IconButton
-                                    className="edit-directorate-button"
-                                    onClick={() =>
-                                      this.handleEditDirectorate(
-                                        academyOrgStructure
-                                      )
-                                    }
-                                  >
-                                    <EditIcon className="zeButton" />
-                                  </IconButton>
+                                  {showEditButton && (
+                                    <IconButton
+                                      className="edit-directorate-button"
+                                      onClick={() =>
+                                        this.handleEditDirectorate(
+                                          academyOrgStructure
+                                        )
+                                      }
+                                    >
+                                      <EditIcon className="zeButton" />
+                                    </IconButton>
+                                  )}
+
                                   {showDeleteButton && (
                                     <div className="directorate-item-actions">
                                       <IconButton
@@ -895,7 +1151,19 @@ class AcademyTree extends Component {
                                             {department.departmentArName}
                                           </span>
                                           <div className="directorate-item-actions">
-                                            {showDeleteButton && (
+                                            {showAddButton && (
+                                              <IconButton
+                                                className="add-directorate-button"
+                                                onClick={() =>
+                                                  this.handelAddOrganismForm(
+                                                    department.Id
+                                                  )
+                                                }
+                                              >
+                                                <AddIcon className="zeButton" />
+                                              </IconButton>
+                                            )}
+                                            {showEditButton && (
                                               <IconButton
                                                 className="delete-department-button"
                                                 onClick={() =>
@@ -914,7 +1182,8 @@ class AcademyTree extends Component {
                                                   className="delete-department-button"
                                                   onClick={() =>
                                                     this.onClickDeleteDepartment(
-                                                      department.Id
+                                                      department.Id,
+                                                      department
                                                     )
                                                   }
                                                 >
@@ -925,7 +1194,50 @@ class AcademyTree extends Component {
                                           </div>
                                         </div>
                                       }
-                                    />
+                                    >
+                                      {department.organisms &&
+                                        department.organisms.length > 0 &&
+                                        department.organisms.map(organism => (
+                                          <TreeItem
+                                            key={organism.Id}
+                                            nodeId={`organism-${organism.Id}`}
+                                            label={
+                                              <div className="organism-item">
+                                                <span>
+                                                  {organism.organismArName}
+                                                </span>
+                                                <div className="directorate-item-actions">
+                                                  {showEditButton && (
+                                                    <IconButton
+                                                      className="edit-organism-button"
+                                                      onClick={() =>
+                                                        this.handelEditOrganism(
+                                                          organism,
+                                                          department.Id
+                                                        )
+                                                      }
+                                                    >
+                                                      <EditIcon className="zeButton" />
+                                                    </IconButton>
+                                                  )}
+                                                  {showDeleteButton && (
+                                                    <IconButton
+                                                      className="delete-organism-button"
+                                                      onClick={() =>
+                                                        this.onClickDeleteOrganism(
+                                                          organism.Id
+                                                        )
+                                                      }
+                                                    >
+                                                      <DeleteIcon className="zeButton" />
+                                                    </IconButton>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            }
+                                          />
+                                        ))}
+                                    </TreeItem>
                                   )
                                 )
                               : null}
@@ -1084,7 +1396,7 @@ class AcademyTree extends Component {
                       </Col>
                       <Col md="4">
                         <input
-                          type="text"
+                          type="number"
                           id="directorateNum"
                           name="directorateNum"
                           className={`form-control ${
@@ -1133,7 +1445,7 @@ class AcademyTree extends Component {
                         />
                         {directorateCodeError && (
                           <div className="invalid-feedback">
-                            {t("Directorate Number is required")}
+                            {t("Directorate Code is required")}
                           </div>
                         )}
                       </Col>
@@ -1262,7 +1574,7 @@ class AcademyTree extends Component {
                       </Col>
                       <Col md="4">
                         <input
-                          type="text"
+                          type="number"
                           id="departmentNumber"
                           name="departmentNum"
                           className={`form-control ${
@@ -1402,7 +1714,7 @@ class AcademyTree extends Component {
                       </Col>
                       <Col md="4">
                         <input
-                          type="text"
+                          type="number"
                           id="directorateNum"
                           name="directorateNum"
                           className={`form-control ${
@@ -1449,6 +1761,11 @@ class AcademyTree extends Component {
                           }}
                           disabled={!showEditButton}
                         />
+                        {directorateCodeError && (
+                          <div className="invalid-feedback">
+                            {t("Directorate Code is required")}
+                          </div>
+                        )}
                       </Col>
                     </Row>
                     <Row className="mt-4">
@@ -1612,6 +1929,304 @@ class AcademyTree extends Component {
                         onClick={this.handleSaveDepartment}
                       >
                         {t("Save Department")}
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {openForm === "organism" && depaorganismId && (
+                  <div>
+                    <Row>
+                      <Typography variant="div">
+                        <h5 className="header pt-2 mb-2" id="title">
+                          {this.props.t("Add New Organism")}{" "}
+                          {
+                            academyOrgStructures
+                              .flatMap(directorate => directorate.departments)
+                              .find(dept => dept.Id === depaorganismId)?.arTitle
+                          }
+                        </h5>
+                      </Typography>
+                    </Row>
+
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismNameAr"
+                          className="col-form-label"
+                        >
+                          {t("Organism Name(ar)")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col lg="4">
+                        <input
+                          type="text"
+                          id="organismNameAr"
+                          name="organismArName"
+                          autoComplete="off"
+                          className={`form-control ${
+                            OrganisArnameError ? "is-invalid" : ""
+                          }`}
+                          placeholder={t("Organism Name(ar)")}
+                          value={NewOrganismArName}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismArName",
+                              e.target.value
+                            )
+                          }
+                        />
+                        {OrganisArnameError && (
+                          <div className="invalid-feedback">
+                            {t("Organism Name is required")}
+                          </div>
+                        )}
+                      </Col>
+
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismNameEn"
+                          className="col-form-label"
+                        >
+                          {t("Organism Name")}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="organismNameEn"
+                          name="organismEnName"
+                          className="form-control mb-2"
+                          placeholder={t("Organism Name")}
+                          value={NewOrganismEnName}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismEnName",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </Col>
+                    </Row>
+
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismNumber"
+                          className="col-form-label"
+                        >
+                          {t("Organism Number")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="number"
+                          id="organismNumber"
+                          name="organismNum"
+                          className={`form-control ${
+                            OrganisNumError ? "is-invalid" : ""
+                          }`}
+                          placeholder={t("Organism Number")}
+                          value={NewOrganismNum}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismNum",
+                              e.target.value
+                            )
+                          }
+                        />
+                        {OrganisNumError && (
+                          <div className="invalid-feedback">
+                            {t("Organism Number is required")}
+                          </div>
+                        )}
+                      </Col>
+
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismPresident"
+                          className="col-form-label"
+                        >
+                          {t("Organism President")}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="organismPresident"
+                          name="organismPresident"
+                          className="form-control mb-2"
+                          placeholder={t("Organism President")}
+                          value={NewOrganismPresident}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismPresident",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </Col>
+                    </Row>
+
+                    <div className="d-flex justify-content-end mt-4">
+                      <button
+                        type="button"
+                        className="btn btn-primary save-directorate-button"
+                        onClick={this.handleSaveOrganism}
+                      >
+                        {t("Save Organism")}
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {openForm === "editOrganism" && (
+                  <div>
+                    <Row>
+                      <Typography variant="div">
+                        <h5 className="header pt-2 mb-2" id="title">
+                          {t("Edit Organism")}{" "}
+                          {
+                            academyOrgStructures
+                              .flatMap(directorate => directorate.departments)
+                              .find(dept => dept.Id === depaorganismId)?.arTitle
+                          }{" "}
+                          - {editOrganismArName}
+                        </h5>
+                      </Typography>
+                    </Row>
+
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismNameAr"
+                          className="col-form-label"
+                        >
+                          {t("Organism Name(ar)")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="organismNameAr"
+                          name="organismArName"
+                          className={`form-control mb-2 ${
+                            OrganisArnameError ? "is-invalid" : ""
+                          }`}
+                          placeholder={t("Organism Name(ar)")}
+                          value={editOrganismArName}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismArName",
+                              e.target.value
+                            )
+                          }
+                          disabled={!showEditButton}
+                        />
+                        {OrganisArnameError && (
+                          <div className="invalid-feedback">
+                            {t("Organism Name is required")}
+                          </div>
+                        )}
+                      </Col>
+
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismNameEn"
+                          className="col-form-label"
+                        >
+                          {t("Organism Name")}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="organismNameEn"
+                          name="organismEnName"
+                          className="form-control mb-2"
+                          placeholder={t("Organism Name")}
+                          value={editOrganismEnName}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismEnName",
+                              e.target.value
+                            )
+                          }
+                          disabled={!showEditButton}
+                        />
+                      </Col>
+                    </Row>
+
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismNumber"
+                          className="col-form-label"
+                        >
+                          {t("Organism Number")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="number"
+                          id="organismNumber"
+                          name="organismNum"
+                          className={`form-control mb-2 ${
+                            OrganisNumError ? "is-invalid" : ""
+                          }`}
+                          placeholder={t("Organism Number")}
+                          value={editOrganismNum}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismNum",
+                              e.target.value
+                            )
+                          }
+                          disabled={!showEditButton}
+                        />
+                        {OrganisNumError && (
+                          <div className="invalid-feedback">
+                            {t("Organism Number is required")}
+                          </div>
+                        )}
+                      </Col>
+
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismPresident"
+                          className="col-form-label"
+                        >
+                          {t("Organism President")}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="organismPresident"
+                          name="organismPresident"
+                          className="form-control mb-2"
+                          placeholder={t("Organism President")}
+                          value={editOrganismPresident}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismPresident",
+                              e.target.value
+                            )
+                          }
+                          disabled={!showEditButton}
+                        />
+                      </Col>
+                    </Row>
+
+                    <div className="d-flex justify-content-end mt-4">
+                      <button
+                        type="button"
+                        className="btn btn-primary save-directorate-button"
+                        onClick={this.handleSaveOrganism}
+                      >
+                        {t("Save Organism")}
                       </button>
                     </div>
                   </div>

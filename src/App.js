@@ -1,4 +1,4 @@
-import React, { Component , lazy, Suspense } from "react";
+import React, { Component, lazy, Suspense } from "react";
 
 import PropTypes from "prop-types";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
@@ -46,10 +46,59 @@ fakeBackend();
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      //code change !!!!!!
+      time: null,
+    };
     this.getLayout = this.getLayout.bind(this);
   }
 
+  handleLogout = () => {
+    if (window.location.pathname === "/login") {
+      return;
+    }
+
+    localStorage.removeItem("authUser");
+    window.location.pathname = "/login";
+  };
+
+  resetTimer = () => {
+    if (window.location.pathname === "/login") {
+      return;
+    }
+
+    if (this.timer) clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.handleLogout();
+    }, 120000);
+  };
+
+  // add funtion
+  componentDidMount() {
+    const events = [
+      "load",
+      "mousemove",
+      "mousedown",
+      "click",
+      "scroll",
+      "keypress",
+    ];
+    events.forEach(event => window.addEventListener(event, this.resetTimer));
+    this.resetTimer();
+  }
+  //add another
+  componentWillUnmount() {
+    const events = [
+      "load",
+      "mousemove",
+      "mousedown",
+      "click",
+      "scroll",
+      "keypress",
+    ];
+    events.forEach(event => window.removeEventListener(event, this.resetTimer));
+    if (this.timer) clearTimeout(this.timer);
+  }
   /**
    * Returns the layout
    */
@@ -73,30 +122,30 @@ class App extends Component {
     return (
       <React.Fragment>
         <Suspense fallback={null}>
-        <Router>
-          <Switch>
-            {publicRoutes.map((route, idx) => (
-              <AppRoute
-                path={route.path}
-                layout={NonAuthLayout}
-                component={route.component}
-                key={idx}
-                isAuthProtected={false}
-              />
-            ))}
+          <Router>
+            <Switch>
+              {publicRoutes.map((route, idx) => (
+                <AppRoute
+                  path={route.path}
+                  layout={NonAuthLayout}
+                  component={route.component}
+                  key={idx}
+                  isAuthProtected={false}
+                />
+              ))}
 
-            {authProtectedRoutes.map((route, idx) => (
-              <AppRoute
-                path={route.path}
-                layout={Layout}
-                component={route.component}
-                key={idx}
-                isAuthProtected={true}
-                exact
-              />
-            ))}
-          </Switch>
-        </Router>
+              {authProtectedRoutes.map((route, idx) => (
+                <AppRoute
+                  path={route.path}
+                  layout={Layout}
+                  component={route.component}
+                  key={idx}
+                  isAuthProtected={true}
+                  exact
+                />
+              ))}
+            </Switch>
+          </Router>
         </Suspense>
       </React.Fragment>
     );

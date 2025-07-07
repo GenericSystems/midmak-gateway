@@ -597,29 +597,17 @@ class CourseCatalogeList extends Component {
         editable: false,
       },
       {
-        dataField: "sectorId",
+        dataField: "sectorName",
         text: this.props.t("Sector"),
         sort: true,
         editable: false,
-        formatter: (cell, row) => {
-          const option = trainingSectorOptions.find(
-            opt => opt.value === row.sectorId
-          );
-          return option ? option.label : "";
-        },
       },
 
       {
-        dataField: "programId",
+        dataField: "program",
         text: this.props.t("Training Program"),
         sort: true,
         editable: false,
-        formatter: (cell, row) => {
-          const option = trainingProgramOptions.find(
-            opt => opt.value === row.programId
-          );
-          return option ? option.label : "";
-        },
       },
 
       {
@@ -629,29 +617,17 @@ class CourseCatalogeList extends Component {
         editable: false,
       },
       {
-        dataField: "courseTypeId",
+        dataField: "courseType",
         text: this.props.t("Course Type"),
         sort: true,
         editable: false,
-        formatter: (cell, row) => {
-          const option = courseTypeOptions.find(
-            opt => opt.value === row.courseTypeId
-          );
-          return option ? option.label : "";
-        },
       },
 
       {
-        dataField: "trainingFormatId",
+        dataField: "trainingFormat",
         text: this.props.t("Training Format"),
         sort: true,
         editable: false,
-        formatter: (cell, row) => {
-          const option = trainingFormatOptions.find(
-            opt => opt.value === row.trainingFormatId
-          );
-          return option ? option.label : "";
-        },
       },
 
       {
@@ -1287,7 +1263,7 @@ class CourseCatalogeList extends Component {
                                                                       <Col className="col-4">
                                                                         <Label for="trainingModule">
                                                                           {this.props.t(
-                                                                            "Training Module"
+                                                                            "Training Modules"
                                                                           )}
                                                                         </Label>
                                                                       </Col>
