@@ -275,3 +275,8 @@ export * from "./trainingFormat/actions";
 
 //CoursesCatalog
 export * from "./CourseCataloge/actions";
+
+
+//GradeTypes
+
+export * from "./grade-types/actions"

@@ -290,6 +290,9 @@ import coursesCatalogs from "./CourseCataloge/reducer";
 //academyOrgStructure
 import academyOrgStructures from "./academyOrgStructure/reducer";
 
+//GradeTypes
+import gradeTypes from "./grade-types/reducer";
+
 const rootReducer = combineReducers({
   // public
   genders,
@@ -395,6 +398,7 @@ const rootReducer = combineReducers({
   trainingFormats,
   coursesCatalogs,
   academyOrgStructures,
+  gradeTypes,
 });
 
 export default rootReducer;

@@ -81,14 +81,20 @@ import {
   getCertificateTypesFail,
 } from "store/certificateTypes/actions";
 
-function* fetchCoursesCatalogs() {
+function* fetchCoursesCatalogs(selectedpayload) {
+  let lang = selectedpayload.payload;
+
+  console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", lang);
+
+  const titleField = lang === "en" ? "enTitle" : "arTitle";
+
   // sectors
   const get_sectors_req = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_Sector",
-    fields: "Id,arTitle",
+    fields: `Id,${titleField}`,
   };
 
   try {
@@ -105,7 +111,7 @@ function* fetchCoursesCatalogs() {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_TrainingFormats",
-    fields: "Id,arTitle",
+    fields: `Id,${titleField}`,
   };
   try {
     const response = yield call(getTrainingFormats, get_traningFormat_req);
@@ -121,7 +127,7 @@ function* fetchCoursesCatalogs() {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_CourseTypes",
-    fields: "Id,arTitle",
+    fields: `Id,${titleField}`,
   };
   try {
     const response = yield call(getCourseTypes, get_courseType_req);
@@ -137,7 +143,7 @@ function* fetchCoursesCatalogs() {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_CertificateType",
-    fields: "Id,arTitle",
+    fields: `Id,${titleField}`,
   };
   try {
     const response = yield call(getCertificateTypes, get_certificateType_req);
@@ -153,7 +159,7 @@ function* fetchCoursesCatalogs() {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_PrerequisitesConditions",
-    fields: "Id,arTitle",
+    fields: `Id,${titleField}`,
   };
   try {
     const response = yield call(getPrereqs, get_prereqs_req);
@@ -229,12 +235,15 @@ function* onGetCoursesCatalogDeletedValue() {
   }
 }
 function* fetchCoursesCatalogsDatalist() {
+  let lang = localStorage.getItem("I18N_LANGUAGE");
+
+  const titleField = lang === "en" ? "enTitle" : "arTitle";
   const requestPayload = {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_CoursesCatalog",
-    fields: "Id,arTitle",
+    fields: `Id,${titleField}`,
   };
 
   try {

@@ -34,8 +34,9 @@ import {
   GET_COURSE_CATALOGE_PREREQUISITES_DELETED_VALUE_FAIL,
 } from "./actionTypes";
 
-export const getCoursesCatalogs = () => ({
+export const getCoursesCatalogs = (catalogs) => ({
   type: GET_COURSES_CATALOGS,
+  payload:catalogs
 });
 
 export const getCoursesCatalogsSuccess = catalogs => ({
