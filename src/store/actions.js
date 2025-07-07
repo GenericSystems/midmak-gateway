@@ -80,6 +80,9 @@ export * from "./certificates/actions";
 //grades
 export * from "./grades/actions";
 
+//halls
+export * from "./halls/actions";
+
 //coursesRegistration
 export * from "./courses-registration/actions";
 

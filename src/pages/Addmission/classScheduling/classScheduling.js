@@ -1239,14 +1239,20 @@ class ClassSchedulingList extends Component {
         sort: true,
       },
       {
-        dataField: "SectionLabNumber",
+        dataField: "sectionLabNumber",
         text: t("Section Lab Number"),
         editable: false,
         sort: true,
       },
       {
-        dataField: "Capacity",
+        dataField: "capacity",
         text: t("Capacity"),
+        editable: false,
+        sort: true,
+      },
+      {
+        dataField: "NumOfRegStud",
+        text: t("Number Of Registered Students"),
         editable: false,
         sort: true,
       },

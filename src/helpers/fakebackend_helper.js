@@ -481,6 +481,28 @@ export const addNewSector = data => post(url.ADD_NEW_SECTOR, data);
 
 export const getSectorDeletedValue = () => get(url.GET_SECTOR_DELETED_VALUE);
 
+// get AcademyBuildingStructures
+export const getAcademyBuildingStructures = data =>
+  post(url.GET_ACADEMY_BUILDING_STRUCTURES, data);
+
+//get AcademyBuildingStructures profile
+//export const getAcademyBuildingStructureProfile = () => get(url.GET_AcademyBuildingStructure_PROFILE);
+
+// add AcademyBuildingStructure
+export const addNewAcademyBuildingStructure = data =>
+  post(url.ADD_NEW_ACADEMY_BUILDING_STRUCTURE, data);
+
+export const getAcademyBuildingStructureDeletedValue = () =>
+  get(url.GET_ACADEMY_BUILDING_STRUCTURE_DELETED_VALUE);
+
+//update AcademyBuildingStructure
+export const updateAcademyBuildingStructure = data =>
+  post(url.UPDATE_ACADEMY_BUILDING_STRUCTURE, data);
+
+//delete AcademyBuildingStructure
+export const deleteAcademyBuildingStructure = data =>
+  post(url.DELETE_ACADEMY_BUILDING_STRUCTURE, data);
+
 // GET UNIVERSITYINFO
 export const getUniversityInfo = data => post(url.GET_UNIVERSITYINFO, data);
 

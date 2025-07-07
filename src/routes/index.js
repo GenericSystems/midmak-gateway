@@ -150,6 +150,9 @@ import Certificates from "../pages/Certificates/certificates";
 //Grades
 import GradesList from "../pages/Grades/grades";
 
+//halls
+import HallsList from "../pages/halls/halls";
+
 //classScheduling
 import classSchedulingList from "../pages/Addmission/classScheduling/classScheduling";
 
@@ -295,6 +298,9 @@ const authProtectedRoutes = [
 
   // Grades
   { path: "/grades", component: GradesList },
+
+  //halls
+  { path: "/halls", component: HallsList },
 
   // classScheduling
   { path: "/classScheduling", component: classSchedulingList },

@@ -233,6 +233,9 @@ import academicLoads from "./academicloads/reducer";
 // grades
 import grades from "./grades/reducer";
 
+//academyBuildingStructures
+import academyBuildingStructures from "./halls/reducer";
+
 // contractsTypes
 import contractsTypes from "./HR/contractsTypes/reducer";
 
@@ -384,6 +387,7 @@ const rootReducer = combineReducers({
   workClassifications,
   employees,
   contracts,
+  academyBuildingStructures,
   warningsTypes,
   rewardsTypes,
   decisionsTypes,

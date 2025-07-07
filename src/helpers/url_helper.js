@@ -218,6 +218,18 @@ export const UPDATE_SECTOR = "/update/sector";
 export const DELETE_SECTOR = "/delete/sector";
 export const GET_SECTOR_DELETED_VALUE = "/deleted";
 
+//AcademyBuildingStructure
+export const GET_ACADEMY_BUILDING_STRUCTURES = "/academyBuildingStructures";
+export const GET_ACADEMY_BUILDING_STRUCTURE_PROFILE =
+  "/academyBuildingStructure";
+export const ADD_NEW_ACADEMY_BUILDING_STRUCTURE =
+  "/add/academyBuildingStructure";
+export const UPDATE_ACADEMY_BUILDING_STRUCTURE =
+  "/update/academyBuildingStructure";
+export const DELETE_ACADEMY_BUILDING_STRUCTURE =
+  "/delete/academyBuildingStructure";
+export const GET_ACADEMY_BUILDING_STRUCTURE_DELETED_VALUE = "/deleted";
+
 //USER_TYPES
 export const GET_USER_TYPES = "/user-Types";
 export const GET_USER_TYPES_OPT = "/user-Types";
