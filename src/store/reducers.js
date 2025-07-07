@@ -175,8 +175,8 @@ import departments from "./departments/reducer";
 //Schedules
 import schedules from "./schedules/reducer";
 
-//SchedulingLectures
-import schedulingLectures from "./scheduling-lectures/reducer";
+//classScheduling
+import classScheduling from "./classScheduling/reducer";
 
 //Years
 import years from "./years/reducer";
@@ -353,7 +353,7 @@ const rootReducer = combineReducers({
   levels,
   departments,
   schedules,
-  schedulingLectures,
+  classScheduling,
   grantSponsors,
   years,
   universityStudents,

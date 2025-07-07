@@ -183,14 +183,14 @@ export const getInstructorsFail = error => ({
   payload: error,
 });
 
-export const getSectionLabs = sectionLabCourse => ({
+export const getSectionLabs = SectionLabs => ({
   type: GET_SECTION_LABS,
-  payload: sectionLabCourse,
+  payload: SectionLabs,
 });
 
-export const getSectionLabsSuccess = sectionLabs => ({
+export const getSectionLabsSuccess = SectionLabs => ({
   type: GET_SECTION_LABS_SUCCESS,
-  payload: sectionLabs,
+  payload: SectionLabs,
 });
 
 export const getSectionLabsFail = error => ({
@@ -198,14 +198,14 @@ export const getSectionLabsFail = error => ({
   payload: error,
 });
 
-export const getSectionLabProfile = sectionLabId => ({
+export const getSectionLabProfile = SectionLabId => ({
   type: GET_SECTION_LAB_PROFILE,
-  sectionLabId,
+  SectionLabId,
 });
 
-export const getSectionLabProfileSuccess = sectionLabProfiles => ({
+export const getSectionLabProfileSuccess = SectionLabProfiles => ({
   type: GET_SECTION_LAB_PROFILE_SUCCESS,
-  payload: sectionLabProfiles,
+  payload: SectionLabProfiles,
 });
 
 export const getSectionLabProfileFail = error => ({
@@ -213,14 +213,14 @@ export const getSectionLabProfileFail = error => ({
   payload: error,
 });
 
-export const addNewSectionLab = sectionLab => ({
+export const addNewSectionLab = SectionLabId => ({
   type: ADD_NEW_SECTION_LAB,
-  payload: sectionLab,
+  payload: SectionLabId,
 });
 
-export const addSectionLabSuccess = sectionLab => ({
+export const addSectionLabSuccess = SectionLab => ({
   type: ADD_SECTION_LAB_SUCCESS,
-  payload: sectionLab,
+  payload: SectionLab,
 });
 
 export const addSectionLabFail = error => ({
@@ -228,14 +228,14 @@ export const addSectionLabFail = error => ({
   payload: error,
 });
 
-export const updateSectionLab = sectionLab => ({
+export const updateSectionLab = SectionLab => ({
   type: UPDATE_SECTION_LAB,
-  payload: sectionLab,
+  payload: SectionLab,
 });
 
-export const updateSectionLabSuccess = sectionLab => ({
+export const updateSectionLabSuccess = SectionLab => ({
   type: UPDATE_SECTION_LAB_SUCCESS,
-  payload: sectionLab,
+  payload: SectionLab,
 });
 
 export const updateSectionLabFail = error => ({
@@ -243,14 +243,14 @@ export const updateSectionLabFail = error => ({
   payload: error,
 });
 
-export const deleteSectionLab = sectionLab => ({
+export const deleteSectionLab = SectionLab => ({
   type: DELETE_SECTION_LAB,
-  payload: sectionLab,
+  payload: SectionLab,
 });
 
-export const deleteSectionLabSuccess = sectionLab => ({
+export const deleteSectionLabSuccess = SectionLab => ({
   type: DELETE_SECTION_LAB_SUCCESS,
-  payload: sectionLab,
+  payload: SectionLab,
 });
 
 export const deleteSectionLabFail = error => ({

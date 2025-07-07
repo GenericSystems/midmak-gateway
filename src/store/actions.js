@@ -175,8 +175,8 @@ export * from "./departments/actions";
 //Schedule
 export * from "./schedules/actions";
 
-//SchedulingLecture
-export * from "./scheduling-lectures/actions";
+//classScheduling
+export * from "./classScheduling/actions";
 
 //GrantSponsors
 export * from "./grantSponsors/actions";

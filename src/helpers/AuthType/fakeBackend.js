@@ -2071,9 +2071,9 @@ const fakeBackend = () => {
     console.log("Calling mock get SectionLab");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (sectionLabs) {
+        if (SectionLabs) {
           // Passing fake JSON data as response
-          resolve([200, sectionLabs]);
+          resolve([200, SectionLabs]);
         } else {
           reject([400, "Cannot get SectionLab"]);
         }

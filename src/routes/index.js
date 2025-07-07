@@ -150,8 +150,8 @@ import Certificates from "../pages/Certificates/certificates";
 //Grades
 import GradesList from "../pages/Grades/grades";
 
-//schedulingLectures
-import SchedulingLecturesList from "../pages/Addmission/schedulingLectures/schedulingLectures";
+//classScheduling
+import classSchedulingList from "../pages/Addmission/classScheduling/classScheduling";
 
 //ContractsTypes
 import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
@@ -296,8 +296,8 @@ const authProtectedRoutes = [
   // Grades
   { path: "/grades", component: GradesList },
 
-  // scheduling Lectures
-  { path: "/schedulingLectures", component: SchedulingLecturesList },
+  // classScheduling
+  { path: "/classScheduling", component: classSchedulingList },
 
   { path: "/certificates-types", component: CertificateTypesList },
 

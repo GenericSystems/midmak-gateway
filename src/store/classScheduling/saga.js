@@ -155,7 +155,7 @@ function* fetchDefaultSettings() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_weekDays",
+    tablename: "Settings_WeekDays",
     filter: "active=1",
   };
   try {
@@ -201,7 +201,7 @@ function* fetchMethodsOffering() {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Gender",
+    tablename: "Settings_MethodOffering",
     fields: "Id,arTitle",
   };
   try {
@@ -239,13 +239,12 @@ function* fetchFilteredAcademicCertificates(obj) {
 
 function* fetchCoursesOffering(obj) {
   let yearSemesterId = obj.payload;
-  //get faculty
 
   const get_CoursesOffering_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_CoursesCatalog",
+    tablename: "_Common_CourseOffering",
   };
   try {
     const response = yield call(getCoursesOffering, get_CoursesOffering_req);
@@ -301,11 +300,13 @@ function* fetchCourseOfferingProfile() {
 }
 
 function* onAddNewCourseOffering({ payload, courseOffering }) {
+  console.log("payload", payload);
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_courseOffering_setup";
+  payload["tablename"] = "Common_CourseOffering";
+  payload["queryname"] = "_Common_CourseOffering";
 
   try {
     const response = yield call(addNewCourseOffering, payload);
@@ -319,7 +320,8 @@ function* onUpdateCourseOffering({ payload }) {
   payload.newRow["source"] = "db";
   payload.newRow["procedure"] = "setOfferedCourse";
   payload.newRow["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload.newRow["tablename"] = "Common_courseOffering_setup";
+  payload.newRow["tablename"] = "Common_CourseOffering";
+  payload.newRow["queryname"] = "_Common_CourseOffering";
 
   try {
     const respupdate = yield call(updateCourseOffering, payload.newRow);
@@ -327,12 +329,10 @@ function* onUpdateCourseOffering({ payload }) {
     if (payload.showAll == true) {
       yield fetcsectorCoursesOffering({
         type: GET_ALL_COURSES_OFFERING,
-        payload: payload.semester,
       });
     } else {
       yield fetchCoursesOffering({
         type: GET_COURSES_OFFERING,
-        payload: payload.semester,
       });
     }
   } catch (error) {
@@ -344,7 +344,7 @@ function* onDeleteCourseOffering({ payload, courseOffering }) {
   payload.delId["source"] = "db";
   payload.delId["procedure"] = "SisApp_removeData";
   payload.delId["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload.delId["tablename"] = "Common_courseOffering_setup";
+  payload.delId["tablename"] = "Common_CourseOffering";
 
   try {
     const respdelete = yield call(deleteCourseOffering, payload.delId);
@@ -365,37 +365,37 @@ function* onDeleteCourseOffering({ payload, courseOffering }) {
   }
 }
 function* fetchSectionLabs(obj) {
-  let sectionLabCourse = obj.payload;
-  console.log("obj", obj.payload);
-  const facultyId =
-    sectionLabCourse.facultyId === null ? 0 : sectionLabCourse.facultyId;
+  // let sectionLabCourse = obj.payload;
+  // console.log("obj", obj.payload);
+  // const facultyId =
+  //   sectionLabCourse.facultyId === null ? 0 : sectionLabCourse.facultyId;
 
-  const get_sectors_req = {
-    source: "db",
-    procedure: "Generic_Optiondatalist",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_sectors",
-    fields: "Id,hallName",
-    filter: `facultyId = ${facultyId}`,
-  };
+  // const get_sectors_req = {
+  //   source: "db",
+  //   procedure: "Generic_Optiondatalist",
+  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+  //   tablename: "settings_sectors",
+  //   fields: "Id,hallName",
+  //   filter: `facultyId = ${facultyId}`,
+  // };
 
-  try {
-    const response = yield call(getSectors, get_sectors_req);
-    yield put(getSectorsSuccess(response));
-  } catch (error) {
-    yield put(getSectorsFail(error));
-  }
+  // try {
+  //   const response = yield call(getSectors, get_sectors_req);
+  //   yield put(getSectorsSuccess(response));
+  // } catch (error) {
+  //   yield put(getSectorsFail(error));
+  // }
   const get_sectionLabs_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_SectionsLabs",
-    filter: `CourseId = ${sectionLabCourse.courseId} and CourseCode=''''${sectionLabCourse.courseCode}''''`,
+    tablename: "_Common_CourseOffering",
+    // filter: `CourseId = ${sectionLabCourse.courseId} and CourseCode=''''${sectionLabCourse.courseCode}''''`,
   };
 
   try {
     const response = yield call(getSectionLabs, get_sectionLabs_req);
-
+    console.log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", response);
     yield put(getSectionLabsSuccess(response));
   } catch (error) {
     yield put(getSectionLabsFail(error));
@@ -411,7 +411,7 @@ function* fetchSectionLabProfile() {
   }
 }
 
-function* onAddNewSectionLab({ payload, sectionLab }) {
+function* onAddNewSectionLab({ payload, SectionLab }) {
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
@@ -441,7 +441,7 @@ function* onUpdateSectionLab({ payload }) {
   }
 }
 
-function* onDeleteSectionLab({ payload, sectionLab }) {
+function* onDeleteSectionLab({ payload, SectionLab }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
@@ -461,7 +461,7 @@ function* fetchScheduleTimings(obj) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_TeachingSchedule",
-    filter: `sectionLabId = ${scheduleTimingSL.Id} and type=''''${scheduleTimingSL.type}''''`,
+    filter: `SectionLabId = ${scheduleTimingSL.Id} and type=''''${scheduleTimingSL.type}''''`,
   };
   try {
     const response = yield call(getScheduleTimings, get_schedule_timings);
@@ -512,7 +512,7 @@ function* fetchScheduleTimingDescs(obj) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_scheduleTimingsDescription",
-    filter: `sectionLabId = ${scheduleTimingD.Id} and type=''''${scheduleTimingD.type}''''`,
+    filter: `SectionLabId = ${scheduleTimingD.Id} and type=''''${scheduleTimingD.type}''''`,
   };
   try {
     const response = yield call(
@@ -577,7 +577,7 @@ function* schedulingLecturesSaga() {
   yield takeEvery(ADD_NEW_SECTION_LAB, onAddNewSectionLab);
   yield takeEvery(UPDATE_SECTION_LAB, onUpdateSectionLab);
   yield takeEvery(DELETE_SECTION_LAB, onDeleteSectionLab);
-  yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
+  // yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
   yield takeEvery(GET_SCHEDULE_TIMING_PROFILE, fetchScheduleTimingProfile);
   yield takeEvery(ADD_NEW_SCHEDULE_TIMING, onAddNewScheduleTiming);
   yield takeEvery(DELETE_SCHEDULE_TIMING, onDeleteScheduleTiming);

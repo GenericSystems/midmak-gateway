@@ -1,4 +1,3 @@
-import { getCoursesOffering } from "./actions";
 import {
   GET_ALL_COURSES_OFFERING_SUCCESS,
   GET_ALL_COURSES_OFFERING_FAIL,
@@ -45,13 +44,13 @@ import {
 } from "./actionTypes";
 
 const INIT_STATE = {
-  schedulingLectures: [],
+  classScheduling: [],
   methodsOffering: [],
   instructors: [],
-  classes: [],
+  sectionLabs: [],
   weekDays: [],
   lecturePeriods: [],
-  classesProfile: {},
+  classProfile: {},
   offeringLectures: [],
   coursesOffering: [],
   departments: [],
@@ -65,7 +64,7 @@ const INIT_STATE = {
   hallTimings: [],
 };
 
-const schedulingLectures = (state = INIT_STATE, action) => {
+const classScheduling = (state = INIT_STATE, action) => {
   switch (action.type) {
     case GET_INSTRUCTORS_SUCCESS:
       return {
@@ -171,7 +170,7 @@ const schedulingLectures = (state = INIT_STATE, action) => {
     case GET_SECTION_LABS_SUCCESS:
       return {
         ...state,
-        classes: action.payload,
+        sectionLabs: action.payload,
       };
     case GET_SECTION_LABS_FAIL:
       return {
@@ -182,7 +181,7 @@ const schedulingLectures = (state = INIT_STATE, action) => {
     case ADD_SECTION_LAB_SUCCESS:
       return {
         ...state,
-        classes: [...state.classes, action.payload],
+        sectionLabs: [...state.sectionLabs, action.payload],
       };
 
     case ADD_SECTION_LAB_FAIL:
@@ -194,16 +193,17 @@ const schedulingLectures = (state = INIT_STATE, action) => {
     case GET_SECTION_LAB_PROFILE_SUCCESS:
       return {
         ...state,
-        classeProfile: action.payload,
+        sectionLabProfile: action.payload,
       };
 
     case UPDATE_SECTION_LAB_SUCCESS:
       return {
         ...state,
-        classes: state.classes.map(classe =>
-          classe.Id === action.payload.Id && classe.type === action.payload.type
-            ? { classe, ...action.payload }
-            : classe
+        sectionLabs: state.sectionLabs.map(sectionLab =>
+          sectionLab.Id === action.payload.Id &&
+          sectionLab.type === action.payload.type
+            ? { sectionLab, ...action.payload }
+            : sectionLab
         ),
       };
 
@@ -216,8 +216,9 @@ const schedulingLectures = (state = INIT_STATE, action) => {
     case DELETE_SECTION_LAB_SUCCESS:
       return {
         ...state,
-        classes: state.classes.filter(
-          classe => classe.Id.toString() !== action.payload.Id.toString()
+        sectionLabs: state.sectionLabs.filter(
+          sectionLab =>
+            sectionLab.Id.toString() !== action.payload.Id.toString()
         ),
       };
 
@@ -331,4 +332,4 @@ const schedulingLectures = (state = INIT_STATE, action) => {
   }
 };
 
-export default schedulingLectures;
+export default classScheduling;

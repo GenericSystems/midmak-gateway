@@ -61,7 +61,7 @@ import courseTypesSaga from "./coursetypes/saga";
 import levelsSaga from "./levels/saga";
 import departmentsSaga from "./departments/saga";
 import schedulesSaga from "./schedules/saga";
-import schedulingLecturesSaga from "./scheduling-lectures/saga";
+import classSchedulingSaga from "./classScheduling/saga";
 import grantSponsorsSaga from "./grantSponsors/saga";
 import yearsSaga from "./years/saga";
 import semestersSaga from "./semesters/saga";
@@ -169,7 +169,7 @@ export default function* rootSaga() {
     fork(levelsSaga),
     fork(departmentsSaga),
     fork(schedulesSaga),
-    fork(schedulingLecturesSaga),
+    fork(classSchedulingSaga),
     fork(grantSponsorsSaga),
     fork(grantsSaga),
     fork(yearsSaga),

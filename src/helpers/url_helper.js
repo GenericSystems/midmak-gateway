@@ -621,12 +621,12 @@ export const UPDATE_COURSE_OFFERING = "/update/courseOffering";
 export const DELETE_COURSE_OFFERING = "/delete/courseOffering";
 
 //SectionLabs
-export const GET_SECTION_LABS = "/SectionLabs";
-export const GET_SECTION_LABS_PROFILE = "/SectionLab";
-export const ADD_NEW_SECTION_LAB = "/add/SectionLab";
-export const UPDATE_SECTION_LAB = "/update/SectionLab";
-export const DELETE_SECTION_LAB = "/delete/SectionLab";
-export const GET_FILTERED_SECTIONS = "/SectionLab";
+export const GET_SECTION_LABS = "/sectionLabs";
+export const GET_SECTION_LAB_PROFILE = "/sectionLab";
+export const ADD_NEW_SECTION_LAB = "/add/sectionLab";
+export const UPDATE_SECTION_LAB = "/update/sectionLab";
+export const DELETE_SECTION_LAB = "/delete/sectionLab";
+export const GET_FILTERED_SECTIONS = "/sectionLab";
 
 //ScheduleTiming
 export const GET_SCHEDULE_TIMINGS = "/ScheduleTimings";

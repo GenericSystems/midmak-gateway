@@ -1441,19 +1441,19 @@ export const deleteCourseOffering = data =>
 export const getFilteredSections = data =>
   post(url.GET_FILTERED_SECTIONS, data);
 
-// get SectionLab
+// get SectionLabs
 export const getSectionLabs = data => post(url.GET_SECTION_LABS, data);
 
-//get SectionLab profile
-export const getSectionLabProfile = () => get(url.GET_SECTION_LABS_PROFILE);
+//get SectionLabs profile
+export const getSectionLabProfile = () => get(url.GET_SECTION_LAB_PROFILE);
 
-// add SectionLab
+// add SectionLabs
 export const addNewSectionLab = data => post(url.ADD_NEW_SECTION_LAB, data);
 
-//update SectionLab
+//update SectionLabs
 export const updateSectionLab = data => post(url.UPDATE_SECTION_LAB, data);
 
-//delete SectionLab
+//delete SectionLabs
 export const deleteSectionLab = data => post(url.DELETE_SECTION_LAB, data);
 
 // get ScheduleTiming
@@ -2182,8 +2182,6 @@ export const deleteAcademyOrgStructure = data =>
   post(url.DELETE_ACADEMY_ORG_STRUCTURE, data);
 export const getAcademyOrgStructureDeletedValue = () =>
   get(url.GET_ACADEMY_ORG_STRUCTURE_DELETED_VALUE);
-
-
 
 export {
   getLoggedInUser,
