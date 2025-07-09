@@ -288,11 +288,7 @@ class ClassSchedulingList extends Component {
     });
   };
 
-  handleCheckboxAddOfferedCourseOrDelete = (row, isChecked, fieldName) => {
-    const updatedData = this.state.courseOffering.map(item =>
-      item.Id === row.Id ? { ...item, isOffered: isChecked ? 1 : 0 } : item
-    );
-    this.setState({ courseOffering: updatedData });
+  handleCheckboxAddOfferedCourseOrDelete = (row, currentStatus, fieldName) => {
     const { onAddNewCourseOffering } = this.props;
     const { selectedYear } = this.state;
     const newStatus = currentStatus ? 1 : 0;
@@ -318,16 +314,61 @@ class ClassSchedulingList extends Component {
   };
 
   handleChangeCheckbox = (row, currentStatus, fieldName) => {
-    const { onUpdateCourseOffering } = this.props;
-    const newStatus = currentStatus ? 1 : 0;
-    // console.log('newStatus', newStatus)
-    let rIsOffered = row.isOffered == null ? 0 : row.isOffered;
+    const {
+      onUpdateSchedulingLecture,
+      onAddNewSchedulingLecture,
+      onDeleteSchedulingLecture,
+      currentSemester,
+      onGetSchedulingLectures,
+      onGetAllSchedulingLectures,
+    } = this.props;
+    const { showAll, selectedSchedule } = this.state;
 
-    let ob = {
+    const newRow = {
       Id: row.Id,
-      isOffered: fieldName === "isOffered" ? newStatus : rIsOffered,
+      courseId: row.courseId,
+      courseCode: row.courseCode,
+      isCompletedStudy:
+        fieldName === "isCompletedStudy"
+          ? currentStatus
+            ? 1
+            : 0
+          : row.isCompletedStudy,
+      isOnlyExam:
+        fieldName === "isOnlyExam" ? (currentStatus ? 1 : 0) : row.isOnlyExam,
+      isWaitingList:
+        fieldName === "isWaitingList"
+          ? currentStatus
+            ? 1
+            : 0
+          : row.isWaitingList,
+      yearSemesterId: selectedSchedule["value"],
+      queryname: "_courseOffering",
+      fieldName: fieldName,
+      fieldValue: currentStatus ? 1 : 0,
     };
-    onUpdateCourseOffering(ob);
+
+    if (
+      !newRow.isCompletedStudy &&
+      !newRow.isOnlyExam &&
+      !newRow.isWaitingList
+    ) {
+      //onAddNewSchedulingLecture(newRow);
+      onDeleteSchedulingLecture({ Id: row.Id });
+    } else {
+      if (row.Id) {
+        onUpdateSchedulingLecture(newRow);
+      } else {
+        onDeleteSchedulingLecture({ Id: row.Id });
+      }
+    }
+    if (showAll == false) {
+      onGetSchedulingLectures(selectedSchedule["value"]);
+      this.setState({ ifUpdateSchedule: 0 });
+    } else {
+      onGetAllSchedulingLectures(selectedSchedule["value"]);
+      this.setState({ ifUpdateSchedule: 1 });
+    }
   };
 
   handleSelectChange = (fieldName, selectedValue) => {
@@ -1046,8 +1087,21 @@ class ClassSchedulingList extends Component {
     } = this.state;
     const selectRow = {
       mode: "checkbox",
+      clickToSelect: false,
+      selected: coursesOffering
+        .filter(row => Number(row.isOffered) === 1)
+        .map(row => row.Id),
+      selectionRenderer: ({ checked }) => (
+        <input
+          type="checkbox"
+          checked={checked}
+          disabled={true}
+          className="form-check-input custom-check"
+          readOnly
+          onChange={() => {}}
+        />
+      ),
     };
-
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -1612,7 +1666,7 @@ class ClassSchedulingList extends Component {
                                                                 </span>
                                                               </Col>
                                                               <Col md={7}>
-                                                                <div className="d-flex gap-4 mt-2 flex-wrap">
+                                                                <div className="d-flex gap-1 mt-2 ">
                                                                   {methodsOffering.map(
                                                                     methodOffering => (
                                                                       <div
