@@ -175,6 +175,7 @@ function* fetchCoursesOffering(obj) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_CourseOffering",
+    filter: `isOffered = 1`,
   };
   try {
     const response = yield call(getCoursesOffering, get_CoursesOffering_req);
@@ -206,8 +207,8 @@ function* fetcsectorCoursesOffering(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_courseOfferingAll",
-    filter: `yearSemesterId = ${yearSemesterId} or yearSemesterId is null`,
+    tablename: "_Common_CourseOffering",
+    
   };
   try {
     const response = yield call(

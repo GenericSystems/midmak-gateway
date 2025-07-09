@@ -162,10 +162,7 @@ class ClassSchedulingList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    onGetCoursesOffering();
-    onGetAllCoursesOffering();
-    onGetMethodsOfOfferingCourses();
-    onGetSectionLabs();
+       onGetCoursesOffering();
 
     this.setState({
       coursesOffering,
@@ -279,10 +276,13 @@ class ClassSchedulingList extends Component {
 
   handleViewAll = isChecked => {
     const { onGetAllCoursesOffering, onGetCoursesOffering } = this.props;
+    console.log("sssssssssssss", isChecked)
     this.setState({ showAll: isChecked }, () => {
       if (isChecked) {
+         
         onGetAllCoursesOffering();
       } else {
+            console.log("noooooooooooo", isChecked)
         onGetCoursesOffering();
       }
     });
