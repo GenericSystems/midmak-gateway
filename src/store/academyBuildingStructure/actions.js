@@ -2,6 +2,12 @@ import {
   GET_ACADEMY_BUILDING_STRUCTURES,
   GET_ACADEMY_BUILDING_STRUCTURES_SUCCESS,
   GET_ACADEMY_BUILDING_STRUCTURES_FAIL,
+  GET_HALLS,
+  GET_HALLS_SUCCESS,
+  GET_HALLS_FAIL,
+  GET_HALL_TYPES,
+  GET_HALL_TYPES_SUCCESS,
+  GET_HALL_TYPES_FAIL,
   ADD_NEW_ACADEMY_BUILDING_STRUCTURE,
   ADD_ACADEMY_BUILDING_STRUCTURE_SUCCESS,
   ADD_ACADEMY_BUILDING_STRUCTURE_FAIL,
@@ -28,6 +34,34 @@ export const getAcademyBuildingStructuresSuccess =
 
 export const getAcademyBuildingStructuresFail = error => ({
   type: GET_ACADEMY_BUILDING_STRUCTURES_FAIL,
+  payload: error,
+});
+
+export const getHalls = () => ({
+  type: GET_HALLS,
+});
+
+export const getHallsSuccess = halls => ({
+  type: GET_HALLS_SUCCESS,
+  payload: halls,
+});
+
+export const getHallsFail = error => ({
+  type: GET_HALLS_FAIL,
+  payload: error,
+});
+
+export const getHallTypes = () => ({
+  type: GET_HALL_TYPES,
+});
+
+export const getHallTypesSuccess = halls => ({
+  type: GET_HALL_TYPES_SUCCESS,
+  payload: halls,
+});
+
+export const getHallTypesFail = error => ({
+  type: GET_HALL_TYPES_FAIL,
   payload: error,
 });
 

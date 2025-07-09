@@ -3,6 +3,7 @@ import { call, put, takeEvery } from "redux-saga/effects";
 // Crypto Redux States
 import {
   GET_ACADEMY_BUILDING_STRUCTURES,
+  GET_HALL_TYPES,
   GET_ACADEMY_BUILDING_STRUCTURE_DELETED_VALUE,
   ADD_NEW_ACADEMY_BUILDING_STRUCTURE,
   DELETE_ACADEMY_BUILDING_STRUCTURE,
@@ -12,6 +13,8 @@ import {
 import {
   getAcademyBuildingStructuresSuccess,
   getAcademyBuildingStructuresFail,
+  getHallTypesSuccess,
+  getHallTypesFail,
   getAcademyBuildingStructureDeletedValueSuccess,
   getAcademyBuildingStructureDeletedValueFail,
   addAcademyBuildingStructureFail,
@@ -25,6 +28,7 @@ import {
 //Include Both Helper File with needed methods
 import {
   getAcademyBuildingStructures,
+  getHallTypes,
   getAcademyBuildingStructureDeletedValue,
   addNewAcademyBuildingStructure,
   updateAcademyBuildingStructure,
@@ -36,7 +40,7 @@ function* fetchAcademyBuildingStructure() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_AcadmeyOrgStructure",
+    tablename: "_AcadmeyBuildingStructure",
   };
 
   try {
@@ -48,6 +52,30 @@ function* fetchAcademyBuildingStructure() {
     yield put(getAcademyBuildingStructuresSuccess(response));
   } catch (error) {
     yield put(getAcademyBuildingStructuresFail(error));
+  }
+}
+
+function* fetchHallTypes() {
+  const get_hallTypes_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Gender",
+    fields: "Id,arTitle",
+  };
+
+  try {
+    const response = yield call(getHallTypes, get_hallTypes_req);
+    console.log(
+      "ddddddddddddddddddddddddddddddaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      response
+    );
+    /* response.map(resp => {
+      resp["departments"] = JSON.parse(resp["departments"]);
+    }); */
+    yield put(getHallTypesSuccess(response));
+  } catch (error) {
+    yield put(getHallTypesFail(error));
   }
 }
 
@@ -112,6 +140,7 @@ function* academyBuildingStructureSaga() {
     GET_ACADEMY_BUILDING_STRUCTURES,
     fetchAcademyBuildingStructure
   );
+  yield takeEvery(GET_HALL_TYPES, fetchHallTypes);
   yield takeEvery(
     ADD_NEW_ACADEMY_BUILDING_STRUCTURE,
     onAddAcademyBuildingStructure

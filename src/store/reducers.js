@@ -234,7 +234,7 @@ import academicLoads from "./academicloads/reducer";
 import grades from "./grades/reducer";
 
 //academyBuildingStructures
-import academyBuildingStructures from "./halls/reducer";
+import academyBuildingStructures from "./academyBuildingStructure/reducer";
 
 // contractsTypes
 import contractsTypes from "./HR/contractsTypes/reducer";

@@ -86,7 +86,7 @@ import stdWarningTestSaga from "./stdWarningTest/saga";
 import exceptionalPeriodsSaga from "./exceptionalPeriods/saga";
 import academicLoadSaga from "./academicloads/saga";
 import gradesSaga from "./grades/saga";
-import hallsSaga from "./halls/saga";
+import academyBuildingStructureSaga from "./academyBuildingStructure/saga";
 import contractsTypesSaga from "./HR/contractsTypes/saga";
 import employmentCasesSaga from "./HR/employmentCases/saga";
 import workClassificationsSaga from "./HR/workClassifications/saga";
@@ -208,7 +208,7 @@ export default function* rootSaga() {
     fork(StudentsHistorySaga),
     fork(StudentsRequestsSaga),
     fork(ContractsSaga),
-    fork(hallsSaga),
+    fork(academyBuildingStructureSaga),
     fork(WarningsTypesSaga),
     fork(RewardsTypesSaga),
     fork(DecisionsTypesSaga),

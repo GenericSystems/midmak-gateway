@@ -1,6 +1,10 @@
 import {
   GET_ACADEMY_BUILDING_STRUCTURES_SUCCESS,
   GET_ACADEMY_BUILDING_STRUCTURES_FAIL,
+  GET_HALLS_SUCCESS,
+  GET_HALLS_FAIL,
+  GET_HALL_TYPES_SUCCESS,
+  GET_HALL_TYPES_FAIL,
   ADD_ACADEMY_BUILDING_STRUCTURE_SUCCESS,
   ADD_ACADEMY_BUILDING_STRUCTURE_FAIL,
   UPDATE_ACADEMY_BUILDING_STRUCTURE_SUCCESS,
@@ -13,6 +17,8 @@ import {
 
 const INIT_STATE = {
   academyBuildingStructures: [],
+  halls: [],
+  hallTypes: [],
   deleted: {},
   error: {},
 };
@@ -26,6 +32,28 @@ const academyBuildingStructures = (state = INIT_STATE, action) => {
       };
 
     case GET_ACADEMY_BUILDING_STRUCTURES_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case GET_HALLS_SUCCESS:
+      return {
+        ...state,
+        halls: action.payload,
+      };
+
+    case GET_HALLS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case GET_HALL_TYPES_SUCCESS:
+      return {
+        ...state,
+        hallTypes: action.payload,
+      };
+
+    case GET_HALL_TYPES_FAIL:
       return {
         ...state,
         error: action.payload,

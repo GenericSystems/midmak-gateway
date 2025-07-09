@@ -22,6 +22,7 @@ import {
   GET_SCHEDULE_MSG_VALUE,
   GET_SECTOR_TIMINGS,
   GET_METHODS_OF_OFFERING_COURSES,
+  GET_HALLS,
 } from "./actionTypes";
 
 import { GET_FILTERED_DEPARTMENTS } from "../departments/actionTypes";
@@ -68,9 +69,9 @@ import {
   getMethodsOfOfferingCoursesFail,
 } from "./actions";
 import {
-  getDepartmentsSuccess,
-  getDepartmentsFail,
-} from "../departments/actions";
+  getHallsSuccess,
+  getHallsFail,
+} from "../academyBuildingStructure/actions";
 
 import {
   getAcademicCertificatesSuccess,
@@ -118,83 +119,12 @@ import {
   getSectorTimings,
   getMethodsOfOfferingCourses,
   getYears,
+  getHalls,
 } from "../../helpers/fakebackend_helper";
 import {
   getFacultiesSuccess,
   getFacultiesFail,
 } from "../mob-app-faculty-accs/actions";
-function* fetchDefaultSettings() {
-  const get_faculty_opt = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Faculty",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getFaculties, get_faculty_opt);
-    yield put(getFacultiesSuccess(response));
-  } catch (error) {
-    yield put(getFacultiesFail(error));
-  }
-  // lecture periods
-  const get_lecturePeriods_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_lecturePeriods",
-  };
-  try {
-    const response = yield call(getLecturePeriods, get_lecturePeriods_req);
-    yield put(getLecturePeriodsSuccess(response));
-  } catch (error) {
-    yield put(getLecturePeriodsFail(error));
-  }
-  //get weekdays
-  const get_weekDays_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_WeekDays",
-    filter: "active=1",
-  };
-  try {
-    const response = yield call(getWeekDays, get_weekDays_req);
-    yield put(getWeekDaysSuccess(response));
-  } catch (error) {
-    yield put(getWeekDaysFail(error));
-  }
-
-  //get department
-  const get_department_opt = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Department",
-    fields: "Id,arTitle,facultyId",
-  };
-  try {
-    const response = yield call(getDepartments, get_department_opt);
-    yield put(getDepartmentsSuccess(response));
-  } catch (error) {
-    yield put(getDepartmentsFail(error));
-  }
-
-  //get instructor
-  const get_instructor_opt = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Instructor",
-    fields: "Id,fullName",
-  };
-  try {
-    const response = yield call(getInstructors, get_instructor_opt);
-    yield put(getInstructorsSuccess(response));
-  } catch (error) {
-    yield put(getInstructorsFail(error));
-  }
-}
 
 function* fetchMethodsOffering() {
   const get_methodsOffering_req = {
@@ -400,6 +330,51 @@ function* fetchSectionLabs(obj) {
   } catch (error) {
     yield put(getSectionLabsFail(error));
   }
+
+  // lecture periods
+  const get_lecturePeriods_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_LecturePeriods",
+  };
+  try {
+    const response = yield call(getLecturePeriods, get_lecturePeriods_req);
+    yield put(getLecturePeriodsSuccess(response));
+  } catch (error) {
+    yield put(getLecturePeriodsFail(error));
+  }
+  //get weekdays
+  const get_weekDays_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_WeekDays",
+    filter: "active=1",
+  };
+  try {
+    const response = yield call(getWeekDays, get_weekDays_req);
+    console.log("weeeeeeeeeeeeeeeeeeeeeeeeeeeeekday", response);
+    yield put(getWeekDaysSuccess(response));
+  } catch (error) {
+    yield put(getWeekDaysFail(error));
+  }
+
+  //get halls
+  const get_halls_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_WeekDays",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getHalls, get_halls_req);
+    console.log("hallllllllllllllls", response);
+    yield put(getHallsSuccess(response));
+  } catch (error) {
+    yield put(getHallsFail(error));
+  }
 }
 
 function* fetchSectionLabProfile() {
@@ -456,6 +431,21 @@ function* onDeleteSectionLab({ payload, SectionLab }) {
 }
 function* fetchScheduleTimings(obj) {
   let scheduleTimingSL = obj.payload;
+
+  //get instructor
+  const get_instructor_opt = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Instructor",
+    fields: "Id,fullName",
+  };
+  try {
+    const response = yield call(getInstructors, get_instructor_opt);
+    yield put(getInstructorsSuccess(response));
+  } catch (error) {
+    yield put(getInstructorsFail(error));
+  }
   const get_schedule_timings = {
     source: "db",
     procedure: "SisApp_getData",
@@ -563,7 +553,7 @@ function* onGetScheduleMsgValue() {
   }
 }
 
-function* schedulingLecturesSaga() {
+function* classSchedulingSaga() {
   yield takeEvery(GET_ALL_COURSES_OFFERING, fetcsectorCoursesOffering);
 
   yield takeEvery(GET_COURSES_OFFERING, fetchCoursesOffering);
@@ -577,7 +567,7 @@ function* schedulingLecturesSaga() {
   yield takeEvery(ADD_NEW_SECTION_LAB, onAddNewSectionLab);
   yield takeEvery(UPDATE_SECTION_LAB, onUpdateSectionLab);
   yield takeEvery(DELETE_SECTION_LAB, onDeleteSectionLab);
-  // yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
+  yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
   yield takeEvery(GET_SCHEDULE_TIMING_PROFILE, fetchScheduleTimingProfile);
   yield takeEvery(ADD_NEW_SCHEDULE_TIMING, onAddNewScheduleTiming);
   yield takeEvery(DELETE_SCHEDULE_TIMING, onDeleteScheduleTiming);
@@ -586,9 +576,8 @@ function* schedulingLecturesSaga() {
     GET_FILTERED_ACADEMIC_CERTIFICATES,
     fetchFilteredAcademicCertificates
   );
-  yield takeEvery(GET_DEFAULT_SETTINGS, fetchDefaultSettings);
   yield takeEvery(GET_SCHEDULE_MSG_VALUE, onGetScheduleMsgValue);
   yield takeEvery(GET_SECTOR_TIMINGS, fetchSectorTimings);
 }
 
-export default schedulingLecturesSaga;
+export default classSchedulingSaga;

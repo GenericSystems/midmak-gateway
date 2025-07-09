@@ -80,8 +80,8 @@ export * from "./certificates/actions";
 //grades
 export * from "./grades/actions";
 
-//halls
-export * from "./halls/actions";
+//academyBuildingStructure
+export * from "./academyBuildingStructure/actions";
 
 //coursesRegistration
 export * from "./courses-registration/actions";
@@ -276,7 +276,6 @@ export * from "./trainingFormat/actions";
 //CoursesCatalog
 export * from "./CourseCataloge/actions";
 
-
 //GradeTypes
 
-export * from "./grade-types/actions"
+export * from "./grade-types/actions";

@@ -481,6 +481,12 @@ export const addNewSector = data => post(url.ADD_NEW_SECTOR, data);
 
 export const getSectorDeletedValue = () => get(url.GET_SECTOR_DELETED_VALUE);
 
+// get halls
+export const getHalls = data => post(url.GET_HALLS, data);
+
+// get hallsTypes
+export const getHallTypes = data => post(url.GET_HALLS_TYPES, data);
+
 // get AcademyBuildingStructures
 export const getAcademyBuildingStructures = data =>
   post(url.GET_ACADEMY_BUILDING_STRUCTURES, data);

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import "./TimeTable.scss";
+import classnames from "classnames";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
@@ -78,6 +80,7 @@ class ClassSchedulingList extends Component {
       sectionLabs: [],
       sectionLabData: [],
       years: [],
+      halls: [],
       methodsOffering: [],
       courseOffering: "",
       activeTab1: "5",
@@ -595,28 +598,20 @@ class ClassSchedulingList extends Component {
       ob["sectionLabId"] = selectedRowSectionLab.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
-      ob["yearSemesterId"] = selectedSchedule.value;
-      if (
-        selectedRowSectionLab.Instructorid !== null &&
-        selectedRowSectionLab.Instructorid !== 0
-      ) {
-        ob["Instructorid"] = selectedRowSectionLab.Instructorid;
-      }
-
-      if (
-        selectedRowSectionLab.hallId !== null &&
-        selectedRowSectionLab.hallId !== 0
-      ) {
-        ob["hallId"] = selectedRowSectionLab.hallId;
-      }
 
       onAddNewScheduleTiming(ob);
       this.handleScheduleTiming(this.state.selectedRowSectionLab);
     }
   };
+
   handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
-    const { onAddNewScheduleTiming, onDeleteScheduleTiming, scheduleTimings } =
-      this.props;
+    const {
+      onAddNewScheduleTiming,
+      onDeleteScheduleTiming,
+      scheduleTimings,
+      onGetScheduleTimingDescs,
+      onGetScheduleTimings,
+    } = this.props;
     const { selectedRowSectionLab, selectedSchedule } = this.state;
     this.setState({
       isDragging: true,
@@ -682,6 +677,7 @@ class ClassSchedulingList extends Component {
     this.setState({ selectedYear: value });
     onGetCoursesOffering(value["value"]);
   };
+
   onChangeHall(oldValue, newValue) {
     const { halls, hallTimings } = this.props;
     this.setState({ defaultHallName: newValue });
@@ -776,6 +772,7 @@ class ClassSchedulingList extends Component {
   };
 
   handleSubmit = values => {
+    console.log("values", values);
     let flag = 0;
     const {
       selectedRowData,
@@ -975,7 +972,7 @@ class ClassSchedulingList extends Component {
             }
           }
           if (!isDuplicateEdit) {
-            onUpdateSectionLab(sectionInfo);
+            // onUpdateSectionLab(sectionInfo);
             this.toggleNestedModal();
           } else {
             const errorMessage = this.props.t(
@@ -984,7 +981,7 @@ class ClassSchedulingList extends Component {
             this.setState({ duplicateError: errorMessage });
           }
         } else {
-          onAddNewSectionLab(sectionInfo);
+          // onAddNewSectionLab(sectionInfo);
           this.toggleNestedModal();
         }
       }
@@ -1047,11 +1044,6 @@ class ClassSchedulingList extends Component {
       selectedStartDate,
       selectedYear,
     } = this.state;
-    console.log(
-      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      coursesOffering
-    );
-
     const selectRow = {
       mode: "checkbox",
     };
@@ -1367,941 +1359,992 @@ class ClassSchedulingList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={this.props.t("Class Scheduling")} />
-            <div className="checkout-tabs"></div>
-            <Row>
-              <Card>
-                <CardTitle className="h4"></CardTitle>
-                <Row>
-                  <Col md="2">
-                    <Nav pills className="flex-column">
-                      <NavItem>
-                        <NavLink
-                          id="horizontal-home-link"
-                          style={{ cursor: "pointer" }}
-                          className={`nav-link ${
-                            this.state.activeTab1 === "5" ? "active" : ""
-                          }`}
-                          onClick={() => {
-                            this.toggle1("5");
-                          }}
-                        >
-                          {this.props.t("Course Offering")}
-                        </NavLink>
-                      </NavItem>
-                      <NavItem>
-                        <NavLink
-                          id="horizontal-home-link"
-                          style={{ cursor: "pointer" }}
-                          className={`nav-link ${
-                            this.state.activeTab1 === "6" ? "active" : ""
-                          }`}
-                          onClick={() => {
-                            this.toggle1("6");
-                          }}
-                        >
-                          {this.props.t("Section&Labs")}
-                        </NavLink>
-                      </NavItem>
-                    </Nav>
-                  </Col>
-                  <Col md="10">
-                    <TabContent
-                      activeTab={this.state.activeTab1}
-                      className="p-3 text-muted"
-                      id="verticalTabContent"
-                    >
-                      <TabPane tabId="5">
-                        <PaginationProvider
-                          pagination={paginationFactory(pageOptions)}
-                          keyField="Id"
-                          columns={columns}
-                          data={coursesOffering}
-                        >
-                          {({ paginationProps, paginationTableProps }) => (
-                            <ToolkitProvider
-                              keyField="Id"
-                              data={coursesOffering}
-                              columns={columns}
-                              search
+            <div className="checkout-tabs">
+              <Row>
+                <Card>
+                  <CardBody>
+                    <CardTitle className="h4"></CardTitle>
+                    <Row>
+                      <Col md="2">
+                        <Nav pills className="flex-column" id="margTop">
+                          <NavItem>
+                            <NavLink
+                              id="horizontal-home-link"
+                              style={{ cursor: "pointer" }}
+                              className={classnames({
+                                active: this.state.activeTab1 === "5",
+                              })}
+                              onClick={() => {
+                                this.toggle1("5");
+                              }}
                             >
-                              {toolkitprops => (
-                                <React.Fragment>
-                                  <Row className="mb-2">
-                                    <Col lg="4">
-                                      <div className="search-box ms-2 mb-2 d-inline-block">
-                                        <div className="position-relative">
-                                          <SearchBar
-                                            {...toolkitprops.searchProps}
-                                            placeholder={t("Search...")}
-                                          />
-                                          <i className="bx bx-search-alt search-icon" />
-                                        </div>
-                                      </div>
-                                    </Col>
-                                    <Col lg="3">
-                                      <Select
-                                        className="select-style-year"
-                                        name="yearId"
-                                        key={`yearId`}
-                                        options={years}
-                                        onChange={newValue => {
-                                          this.handleSelectYear(
-                                            "yearId",
-                                            newValue
-                                          );
-                                        }}
-                                        value={selectedYear}
-                                      />
-                                      <br />
-                                    </Col>
-                                    <Col sm="4"></Col>
-                                    <Col sm="1">
-                                      <Tooltip
-                                        title={t("View All")}
-                                        placement="top"
-                                      >
-                                        <div className="square-switch square-switch-view">
-                                          <input
-                                            type="checkbox"
-                                            id="square-switch1"
-                                            switch="none"
-                                            onChange={event => {
-                                              this.handleViewAll(
-                                                event.target.checked
+                              {this.props.t("Course Offering")}
+                            </NavLink>
+                          </NavItem>
+                          <NavItem>
+                            <NavLink
+                              id="horizontal-home-link"
+                              style={{ cursor: "pointer" }}
+                              className={classnames({
+                                active: this.state.activeTab1 === "6",
+                              })}
+                              onClick={() => {
+                                this.toggle1("6");
+                              }}
+                            >
+                              {this.props.t("Section&Labs")}
+                            </NavLink>
+                          </NavItem>
+                        </Nav>
+                      </Col>
+                      <Col md="10">
+                        <TabContent
+                          activeTab={this.state.activeTab1}
+                          className="p-3 text-muted"
+                          id="verticalTabContent"
+                        >
+                          <TabPane tabId="5">
+                            <PaginationProvider
+                              pagination={paginationFactory(pageOptions)}
+                              keyField="Id"
+                              columns={columns}
+                              data={coursesOffering}
+                            >
+                              {({ paginationProps, paginationTableProps }) => (
+                                <ToolkitProvider
+                                  keyField="Id"
+                                  data={coursesOffering}
+                                  columns={columns}
+                                  search
+                                >
+                                  {toolkitprops => (
+                                    <React.Fragment>
+                                      <Row className="mb-2">
+                                        <Col lg="4">
+                                          <div className="search-box ms-2 mb-2 d-inline-block">
+                                            <div className="position-relative">
+                                              <SearchBar
+                                                {...toolkitprops.searchProps}
+                                                placeholder={t("Search...")}
+                                              />
+                                              <i className="bx bx-search-alt search-icon" />
+                                            </div>
+                                          </div>
+                                        </Col>
+                                        <Col lg="3">
+                                          <Select
+                                            className="select-style-year"
+                                            name="yearId"
+                                            key={`yearId`}
+                                            options={years}
+                                            onChange={newValue => {
+                                              this.handleSelectYear(
+                                                "yearId",
+                                                newValue
                                               );
                                             }}
+                                            value={selectedYear}
                                           />
-                                          <label
-                                            htmlFor="square-switch1"
-                                            data-on-label="View"
-                                            data-off-label="Off"
-                                          />
-                                        </div>
-                                      </Tooltip>
-                                    </Col>
-                                  </Row>
-                                  <Row>
-                                    <BootstrapTable
-                                      {...toolkitprops.baseProps}
-                                      {...paginationTableProps}
-                                      keyField="Id"
-                                      data={coursesOffering}
-                                      selectRow={selectRow}
-                                      defaultSorted={defaultSorting}
-                                      sectionLabs={
-                                        "table align-middle table-nowrap table-hover"
-                                      }
-                                      columns={columns.map(col => {
-                                        if (col.dataField === "select") {
-                                          return {
-                                            ...col,
-                                            formatExtraData: {
-                                              ...col.formatExtraData,
-                                              pageRows:
-                                                paginationTableProps.data || [],
-                                            },
-                                          };
-                                        }
-                                        return col;
-                                      })}
-                                      cellEdit={cellEditFactory({
-                                        mode: "click",
-                                        blurToSave: true,
-                                      })}
-                                      noDataIndication={t(
-                                        "No Courses Offering"
-                                      )}
-                                    />
-                                  </Row>
-                                  <Row className="align-items-md-center mt-30">
-                                    <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                      <PaginationListStandalone
-                                        {...paginationProps}
-                                      />
-                                      <Modal
-                                        isOpen={isModalOpen}
-                                        toggle={this.toggle}
-                                        size="4"
-                                      >
-                                        <ModalHeader
-                                          toggle={this.toggle}
-                                          tag="h4"
-                                        >
-                                          {!!isOpen ? t("") : ""}
-                                        </ModalHeader>
-                                        <ModalBody>
-                                          <Formik
-                                            enableReinitialize={true}
-                                            initialValues={{
-                                              ...(isOpen &&
-                                                courseOffering && {
-                                                  Id: courseOffering.Id,
-                                                }),
-                                              methodOfferingId:
-                                                (courseOffering &&
-                                                  courseOffering.methodOfferingId) ||
-                                                selectedMethodOffering,
-                                              startDate:
-                                                (courseOffering &&
-                                                  courseOffering.startDate) ||
-                                                selectedStartDate,
-                                              endDate:
-                                                (courseOffering &&
-                                                  courseOffering.endDate) ||
-                                                selectedEndDate,
-                                            }}
-                                            validationSchema={Yup.object().shape(
-                                              {
-                                                methodOfferingId:
-                                                  Yup.string().required(
-                                                    "Please Enter Your Methods Offering"
-                                                  ),
-                                                endDate: Yup.string().required(
-                                                  t(
-                                                    "Please Enter Your End Offering Date"
-                                                  )
-                                                ),
-                                                startDate:
-                                                  Yup.string().required(
-                                                    t(
-                                                      "Please Enter Your Offering Date"
-                                                    )
-                                                  ),
-                                              }
-                                            )}
+                                          <br />
+                                        </Col>
+                                        <Col sm="4"></Col>
+                                        <Col sm="1">
+                                          <Tooltip
+                                            title={t("View All")}
+                                            placement="top"
                                           >
-                                            {({
-                                              errors,
-                                              status,
-                                              touched,
-                                              values,
-                                              handleChange,
-                                              handleBlur,
-                                              setFieldValue,
-                                            }) => (
-                                              <Form>
-                                                <Card id="employee-card">
-                                                  <CardTitle id="course_header">
-                                                    {t("Offering Courses")}
-                                                  </CardTitle>
-                                                  <CardBody className="cardBody">
-                                                    {emptyError && (
-                                                      <Alert
-                                                        color="danger"
-                                                        className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                        role="alert"
-                                                      >
-                                                        {emptyError}
-                                                        <button
-                                                          type="button"
-                                                          className="btn-close"
-                                                          aria-label="Close"
-                                                          onClick={
-                                                            this
-                                                              .handleAlertClose
-                                                          }
-                                                        ></button>
-                                                      </Alert>
-                                                    )}
-                                                    <Row>
-                                                      <Col lg="12">
-                                                        <Row className="mb-3">
-                                                          <Col md={5}>
-                                                            <Label className="form-label">
-                                                              {this.props.t(
-                                                                "Method Offering"
-                                                              )}
-                                                            </Label>
-                                                            <span className="text-danger">
-                                                              *
-                                                            </span>
-                                                          </Col>
-                                                          <Col md={7}>
-                                                            <div className="d-flex gap-4 mt-2 flex-wrap">
-                                                              {methodsOffering.map(
-                                                                methodOffering => (
-                                                                  <div
-                                                                    className="form-check form-check-inline"
-                                                                    key={
-                                                                      methodOffering.value
+                                            <div className="square-switch square-switch-view">
+                                              <input
+                                                type="checkbox"
+                                                id="square-switch1"
+                                                switch="none"
+                                                onChange={event => {
+                                                  this.handleViewAll(
+                                                    event.target.checked
+                                                  );
+                                                }}
+                                              />
+                                              <label
+                                                htmlFor="square-switch1"
+                                                data-on-label="View"
+                                                data-off-label="Off"
+                                              />
+                                            </div>
+                                          </Tooltip>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <BootstrapTable
+                                          {...toolkitprops.baseProps}
+                                          {...paginationTableProps}
+                                          keyField="Id"
+                                          data={coursesOffering}
+                                          selectRow={selectRow}
+                                          defaultSorted={defaultSorting}
+                                          sectionLabs={
+                                            "table align-middle table-nowrap table-hover"
+                                          }
+                                          columns={columns.map(col => {
+                                            if (col.dataField === "select") {
+                                              return {
+                                                ...col,
+                                                formatExtraData: {
+                                                  ...col.formatExtraData,
+                                                  pageRows:
+                                                    paginationTableProps.data ||
+                                                    [],
+                                                },
+                                              };
+                                            }
+                                            return col;
+                                          })}
+                                          cellEdit={cellEditFactory({
+                                            mode: "click",
+                                            blurToSave: true,
+                                          })}
+                                          noDataIndication={t(
+                                            "No Courses Offering"
+                                          )}
+                                        />
+                                      </Row>
+                                      <Row className="align-items-md-center mt-30">
+                                        <Col className="pagination pagination-rounded justify-content-end mb-2">
+                                          <PaginationListStandalone
+                                            {...paginationProps}
+                                          />
+                                          <Modal
+                                            isOpen={isModalOpen}
+                                            toggle={this.toggle}
+                                            size="4"
+                                          >
+                                            <ModalHeader
+                                              toggle={this.toggle}
+                                              tag="h4"
+                                            >
+                                              {!!isOpen ? t("") : ""}
+                                            </ModalHeader>
+                                            <ModalBody>
+                                              <Formik
+                                                enableReinitialize={true}
+                                                initialValues={{
+                                                  ...(isOpen &&
+                                                    courseOffering && {
+                                                      Id: courseOffering.Id,
+                                                    }),
+                                                  methodOfferingId:
+                                                    (courseOffering &&
+                                                      courseOffering.methodOfferingId) ||
+                                                    selectedMethodOffering,
+                                                  startDate:
+                                                    (courseOffering &&
+                                                      courseOffering.startDate) ||
+                                                    selectedStartDate,
+                                                  endDate:
+                                                    (courseOffering &&
+                                                      courseOffering.endDate) ||
+                                                    selectedEndDate,
+                                                }}
+                                                validationSchema={Yup.object().shape(
+                                                  {
+                                                    methodOfferingId:
+                                                      Yup.string().required(
+                                                        "Please Enter Your Methods Offering"
+                                                      ),
+                                                    endDate:
+                                                      Yup.string().required(
+                                                        t(
+                                                          "Please Enter Your End Offering Date"
+                                                        )
+                                                      ),
+                                                    startDate:
+                                                      Yup.string().required(
+                                                        t(
+                                                          "Please Enter Your Offering Date"
+                                                        )
+                                                      ),
+                                                  }
+                                                )}
+                                              >
+                                                {({
+                                                  errors,
+                                                  status,
+                                                  touched,
+                                                  values,
+                                                  handleChange,
+                                                  handleBlur,
+                                                  setFieldValue,
+                                                }) => (
+                                                  <Form>
+                                                    <Card id="employee-card">
+                                                      <CardTitle id="course_header">
+                                                        {t("Offering Courses")}
+                                                      </CardTitle>
+                                                      <CardBody className="cardBody">
+                                                        {emptyError && (
+                                                          <Alert
+                                                            color="danger"
+                                                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                            role="alert"
+                                                          >
+                                                            {emptyError}
+                                                            <button
+                                                              type="button"
+                                                              className="btn-close"
+                                                              aria-label="Close"
+                                                              onClick={
+                                                                this
+                                                                  .handleAlertClose
+                                                              }
+                                                            ></button>
+                                                          </Alert>
+                                                        )}
+                                                        <Row>
+                                                          <Col lg="12">
+                                                            <Row className="mb-3">
+                                                              <Col md={5}>
+                                                                <Label className="form-label">
+                                                                  {this.props.t(
+                                                                    "Method Offering"
+                                                                  )}
+                                                                </Label>
+                                                                <span className="text-danger">
+                                                                  *
+                                                                </span>
+                                                              </Col>
+                                                              <Col md={7}>
+                                                                <div className="d-flex gap-4 mt-2 flex-wrap">
+                                                                  {methodsOffering.map(
+                                                                    methodOffering => (
+                                                                      <div
+                                                                        className="form-check form-check-inline"
+                                                                        key={
+                                                                          methodOffering.value
+                                                                        }
+                                                                      >
+                                                                        <Input
+                                                                          type="radio"
+                                                                          name="methodOfferingId"
+                                                                          value={
+                                                                            methodOffering.value
+                                                                          }
+                                                                          id={
+                                                                            methodOffering.value
+                                                                          }
+                                                                          onChange={event => {
+                                                                            this.handleSelectChange(
+                                                                              "methodOfferingId",
+                                                                              event
+                                                                                .target
+                                                                                .value
+                                                                            );
+                                                                          }}
+                                                                          defaultChecked={
+                                                                            methodOffering.value ===
+                                                                            selectedMethodOffering
+                                                                          }
+                                                                        />
+                                                                        <Label
+                                                                          className="form-check-label"
+                                                                          for={
+                                                                            methodOffering.value
+                                                                          }
+                                                                        >
+                                                                          {this.props.t(
+                                                                            methodOffering.label
+                                                                          )}
+                                                                        </Label>
+                                                                      </div>
+                                                                    )
+                                                                  )}
+                                                                </div>
+                                                              </Col>
+                                                            </Row>
+
+                                                            <div className="mb-3">
+                                                              <Row>
+                                                                <Col className="col-4">
+                                                                  <Label for="startDate">
+                                                                    {this.props.t(
+                                                                      "Start Date"
+                                                                    )}
+                                                                  </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
+                                                                </Col>
+                                                                <Col className="col-8">
+                                                                  <Field
+                                                                    name="startDate"
+                                                                    className={`form-control ${
+                                                                      startDateError
+                                                                        ? "is-invalid"
+                                                                        : ""
+                                                                    }`}
+                                                                    type="date"
+                                                                    value={
+                                                                      values.startDate
+                                                                        ? new Date(
+                                                                            values.startDate
+                                                                          )
+                                                                            .toISOString()
+                                                                            .split(
+                                                                              "T"
+                                                                            )[0]
+                                                                        : ""
                                                                     }
-                                                                  >
-                                                                    <Input
-                                                                      type="radio"
-                                                                      name="methodOfferingId"
-                                                                      value={
-                                                                        methodOffering.value
-                                                                      }
-                                                                      id={
-                                                                        methodOffering.value
-                                                                      }
-                                                                      onChange={event => {
-                                                                        this.handleSelectChange(
-                                                                          "methodOfferingId",
-                                                                          event
-                                                                            .target
-                                                                            .value
-                                                                        );
-                                                                      }}
-                                                                      defaultChecked={
-                                                                        methodOffering.value ===
-                                                                        selectedMethodOffering
-                                                                      }
-                                                                    />
-                                                                    <Label
-                                                                      className="form-check-label"
-                                                                      for={
-                                                                        methodOffering.value
-                                                                      }
-                                                                    >
+                                                                    onChange={
+                                                                      handleChange
+                                                                    }
+                                                                    onBlur={
+                                                                      handleBlur
+                                                                    }
+                                                                    id="startDate-date-input"
+                                                                  />
+                                                                  {startDateError && (
+                                                                    <div className="invalid-feedback">
                                                                       {this.props.t(
-                                                                        methodOffering.label
+                                                                        "Offering Date is required"
                                                                       )}
-                                                                    </Label>
-                                                                  </div>
-                                                                )
-                                                              )}
+                                                                    </div>
+                                                                  )}
+                                                                </Col>
+                                                              </Row>
+                                                            </div>
+                                                            <div className="mb-3">
+                                                              <Row>
+                                                                <Col className="col-4">
+                                                                  <Label for="endDate">
+                                                                    {this.props.t(
+                                                                      "End Date"
+                                                                    )}
+                                                                  </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
+                                                                </Col>
+                                                                <Col className="col-8">
+                                                                  <Field
+                                                                    name="endDate"
+                                                                    className={`form-control ${
+                                                                      endDateError
+                                                                        ? "is-invalid"
+                                                                        : ""
+                                                                    }`}
+                                                                    type="date"
+                                                                    value={
+                                                                      values.endDate
+                                                                        ? new Date(
+                                                                            values.endDate
+                                                                          )
+                                                                            .toISOString()
+                                                                            .split(
+                                                                              "T"
+                                                                            )[0]
+                                                                        : ""
+                                                                    }
+                                                                    onChange={
+                                                                      handleChange
+                                                                    }
+                                                                    onBlur={
+                                                                      handleBlur
+                                                                    }
+                                                                    id="endDate-date-input"
+                                                                  />
+                                                                  {endDateError && (
+                                                                    <div className="invalid-feedback">
+                                                                      {this.props.t(
+                                                                        "Offering Date is required"
+                                                                      )}
+                                                                    </div>
+                                                                  )}
+                                                                </Col>
+                                                              </Row>
                                                             </div>
                                                           </Col>
                                                         </Row>
-
-                                                        <div className="mb-3">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label for="startDate">
-                                                                {this.props.t(
-                                                                  "Start Date"
-                                                                )}
-                                                              </Label>
-                                                              <span className="text-danger">
-                                                                *
-                                                              </span>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Field
-                                                                name="startDate"
-                                                                className={`form-control ${
-                                                                  startDateError
-                                                                    ? "is-invalid"
-                                                                    : ""
-                                                                }`}
-                                                                type="date"
-                                                                value={
-                                                                  values.startDate
-                                                                    ? new Date(
-                                                                        values.startDate
-                                                                      )
-                                                                        .toISOString()
-                                                                        .split(
-                                                                          "T"
-                                                                        )[0]
-                                                                    : ""
-                                                                }
-                                                                onChange={
-                                                                  handleChange
-                                                                }
-                                                                onBlur={
-                                                                  handleBlur
-                                                                }
-                                                                id="startDate-date-input"
-                                                              />
-                                                              {startDateError && (
-                                                                <div className="invalid-feedback">
-                                                                  {this.props.t(
-                                                                    "Offering Date is required"
-                                                                  )}
-                                                                </div>
-                                                              )}
-                                                            </Col>
-                                                          </Row>
-                                                        </div>
-                                                        <div className="mb-3">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label for="endDate">
-                                                                {this.props.t(
-                                                                  "End Date"
-                                                                )}
-                                                              </Label>
-                                                              <span className="text-danger">
-                                                                *
-                                                              </span>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Field
-                                                                name="endDate"
-                                                                className={`form-control ${
-                                                                  endDateError
-                                                                    ? "is-invalid"
-                                                                    : ""
-                                                                }`}
-                                                                type="date"
-                                                                value={
-                                                                  values.endDate
-                                                                    ? new Date(
-                                                                        values.endDate
-                                                                      )
-                                                                        .toISOString()
-                                                                        .split(
-                                                                          "T"
-                                                                        )[0]
-                                                                    : ""
-                                                                }
-                                                                onChange={
-                                                                  handleChange
-                                                                }
-                                                                onBlur={
-                                                                  handleBlur
-                                                                }
-                                                                id="endDate-date-input"
-                                                              />
-                                                              {endDateError && (
-                                                                <div className="invalid-feedback">
-                                                                  {this.props.t(
-                                                                    "Offering Date is required"
-                                                                  )}
-                                                                </div>
-                                                              )}
-                                                            </Col>
-                                                          </Row>
-                                                        </div>
-                                                      </Col>
-                                                    </Row>
-                                                    <Row>
-                                                      <Col>
-                                                        <div className="text-center">
-                                                          <Link
-                                                            to="#"
-                                                            className="btn btn-primary me-2"
-                                                            onClick={() => {
-                                                              this.handleSave(
-                                                                values
-                                                              );
-                                                            }}
-                                                          >
-                                                            {t("Save")}
-                                                          </Link>
-                                                        </div>
-                                                      </Col>
-                                                    </Row>
-                                                  </CardBody>
-                                                </Card>
-                                              </Form>
-                                            )}
-                                          </Formik>
-                                        </ModalBody>
-                                      </Modal>
-                                    </Col>
-                                  </Row>
-                                </React.Fragment>
-                              )}
-                            </ToolkitProvider>
-                          )}
-                        </PaginationProvider>
-                      </TabPane>
-                      <TabPane tabId="6">
-                        <Modal isOpen={modal} toggle={this.toggle2} fullscreen>
-                          <ModalHeader
-                            toggle={this.toggle2}
-                            tag="h4"
-                            className="horizontalTitles"
-                          ></ModalHeader>
-                          <ModalBody>
-                            {selectedRowData && (
-                              <div className="TitleStyle">
-                                {selectedRowData.courseName}{" "}
-                                {selectedRowData.courseCode}
-                              </div>
-                            )}
-                            <Row>
-                              <Col
-                                sm="4"
-                                className="branches-categories-responsive"
-                              >
-                                <div className="bordered">
-                                  <Card className="mb-0">
-                                    <CardBody className="pb-0">
-                                      <Col>
-                                        <Row className="mb-2">
-                                          <Col>
-                                            <h5
-                                              className="header pt-2 me-2"
-                                              id="title"
-                                            >
-                                              {" "}
-                                              {this.props.t("Sections & Labs")}
-                                            </h5>
-                                          </Col>
-                                          <Col sm="6">
-                                            <div className="text-sm-end">
-                                              <IconButton
-                                                className="ms-2"
-                                                onClick={this.toggleNestedModal}
-                                              >
-                                                {" "}
-                                                <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                              </IconButton>
-                                            </div>
-                                          </Col>
-                                        </Row>
-                                      </Col>
-
-                                      <BootstrapTable
-                                        keyField="Id"
-                                        data={sectionLabs}
-                                        columns={sectionLabColumns}
-                                        cellEdit={cellEditFactory({
-                                          mode: "click",
-                                          blurToSave: true,
-                                        })}
-                                        noDataIndication={t("No Scheduling")}
-                                        rowStyle={(row, rowIndex) => {
-                                          const type = row.type;
-                                          const isSelected =
-                                            row.Id === this.state.selectedRow;
-
-                                          let backgroundColor = "";
-                                          if (type === "Section") {
-                                            backgroundColor =
-                                              "rgb(192 220 245)";
-                                          } else if (type === "Lab") {
-                                            backgroundColor =
-                                              "rgb(152 152 235 / 30%)";
-                                          }
-
-                                          if (isSelected) {
-                                            backgroundColor = "#f9cf87";
-                                          }
-
-                                          return {
-                                            backgroundColor: backgroundColor,
-                                          };
-                                        }}
-                                      />
-                                    </CardBody>
-                                  </Card>
-                                  <Card>
-                                    <CardBody className="pt-0">
-                                      <Row className="mb-2">
-                                        <Col
-                                          sm="6"
-                                          className="schedule-timing-responsive"
-                                        >
-                                          <h5
-                                            className="header pt-2 me-2"
-                                            id="title"
-                                          >
-                                            {this.props.t("Schedule Timing")}
-                                          </h5>
-                                        </Col>
-                                        <Col sm="6">
-                                          <div className="text-sm-end">
-                                            <IconButton
-                                              className="ms-2"
-                                              onClick={this.toggle3}
-                                            >
-                                              {" "}
-                                              <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                            </IconButton>
-                                          </div>
+                                                        <Row>
+                                                          <Col>
+                                                            <div className="text-center">
+                                                              <Link
+                                                                to="#"
+                                                                className="btn btn-primary me-2"
+                                                                onClick={() => {
+                                                                  this.handleSave(
+                                                                    values
+                                                                  );
+                                                                }}
+                                                              >
+                                                                {t("Save")}
+                                                              </Link>
+                                                            </div>
+                                                          </Col>
+                                                        </Row>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </Form>
+                                                )}
+                                              </Formik>
+                                            </ModalBody>
+                                          </Modal>
                                         </Col>
                                       </Row>
-                                      <BootstrapTable
-                                        keyField="Id"
-                                        data={scheduleTimingDescs}
-                                        columns={ScheduleTimingDescsCol}
-                                        cellEdit={cellEditFactory({
-                                          mode: "click",
-                                          blurToSave: true,
-                                        })}
-                                        noDataIndication={t(
-                                          "No Scheduling Lectures"
-                                        )}
-                                        rowStyle={(row, rowIndex) => {
-                                          const type = row.type;
-                                          if (type === "Section") {
-                                            return {
-                                              backgroundColor:
-                                                "rgb(189 199 124 / 23%)",
-                                            };
-                                          } else if (type === "Lab") {
-                                            return {
-                                              backgroundColor:
-                                                "rgb(189 199 124 / 23%)",
-                                            };
-                                          }
-                                        }}
-                                      />
-                                    </CardBody>
-                                  </Card>
-                                </div>
-                              </Col>
-                              <Col>
-                                <div className="bordered pb-0">
-                                  <Card>
-                                    <CardBody className="pb-0">
-                                      <Col>
-                                        {" "}
-                                        <h5 className="header pt-2" id="title">
-                                          {selectedRowSectionLab
-                                            ? `${this.props.t(
-                                                "Schedule Timing"
-                                              )} - ${
-                                                selectedRowSectionLab.type
-                                              } - ${
-                                                selectedRowSectionLab.SectionLabNumber
-                                              }`
-                                            : this.props.t("Schedule Timing")}
-                                        </h5>
-                                      </Col>
+                                    </React.Fragment>
+                                  )}
+                                </ToolkitProvider>
+                              )}
+                            </PaginationProvider>
+                          </TabPane>
+                          <TabPane tabId="6">
+                            <Modal
+                              isOpen={modal}
+                              toggle={this.toggle2}
+                              fullscreen
+                            >
+                              <ModalHeader
+                                toggle={this.toggle2}
+                                tag="h4"
+                                className="horizontalTitles"
+                              ></ModalHeader>
+                              <ModalBody>
+                                {selectedRowData && (
+                                  <div className="TitleStyle">
+                                    {selectedRowData.courseName}{" "}
+                                    {selectedRowData.courseCode}
+                                  </div>
+                                )}
+                                <Row>
+                                  <Col
+                                    sm="4"
+                                    className="branches-categories-responsive"
+                                  >
+                                    <div className="bordered">
+                                      <Card className="mb-0">
+                                        <CardBody className="pb-0">
+                                          <Col>
+                                            <Row className="mb-2">
+                                              <Col>
+                                                <h5
+                                                  className="header pt-2 me-2"
+                                                  id="title"
+                                                >
+                                                  {" "}
+                                                  {this.props.t(
+                                                    "Sections & Labs"
+                                                  )}
+                                                </h5>
+                                              </Col>
+                                              <Col sm="6">
+                                                <div className="text-sm-end">
+                                                  <IconButton
+                                                    className="ms-2"
+                                                    onClick={
+                                                      this.toggleNestedModal
+                                                    }
+                                                  >
+                                                    {" "}
+                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                  </IconButton>
+                                                </div>
+                                              </Col>
+                                            </Row>
+                                          </Col>
 
-                                      <div className="timetable-container">
-                                        <table
-                                          className="timetable"
-                                          onMouseUp={this.handleMouseUp}
-                                        >
-                                          <thead>
-                                            <tr>
-                                              <th>{t("Lecture Periods")}</th>
-                                              {weekDaysColumns.map(
-                                                (header, index) => (
-                                                  <th key={index}>{header}</th>
-                                                )
-                                              )}
-                                            </tr>
-                                          </thead>
-                                          {/* <tbody>
-                                            {lecturePeriods.map(
-                                              (lecture, rowIndex) => (
-                                                <tr key={lecture.Id}>
-                                                  <td className="lecture-cell">
-                                                    {lecture.duration}
-                                                  </td>
-                                                  {weekDays.map(
-                                                    (weekday, cellIndex) => {
-                                                      const scheduledTiming =
-                                                        scheduleTimings.find(
-                                                          timing =>
-                                                            timing.dayId ===
-                                                              weekday.Id &&
-                                                            timing.lecturePeriodId ===
-                                                              lecture.Id
-                                                        );
+                                          <BootstrapTable
+                                            keyField="Id"
+                                            data={sectionLabs}
+                                            columns={sectionLabColumns}
+                                            cellEdit={cellEditFactory({
+                                              mode: "click",
+                                              blurToSave: true,
+                                            })}
+                                            noDataIndication={t(
+                                              "No Scheduling"
+                                            )}
+                                            rowStyle={(row, rowIndex) => {
+                                              const type = row.type;
+                                              const isSelected =
+                                                row.Id ===
+                                                this.state.selectedRow;
 
-                                                      const cellValue =
-                                                        scheduledTiming
-                                                          ? "selected"
-                                                          : "";
+                                              let backgroundColor = "";
+                                              if (type === "Section") {
+                                                backgroundColor =
+                                                  "rgb(192 220 245)";
+                                              } else if (type === "Lab") {
+                                                backgroundColor =
+                                                  "rgb(152 152 235 / 30%)";
+                                              }
 
-                                                      return scheduledTiming &&
-                                                        scheduledTiming.msg ? (
-                                                        <Tooltip
-                                                          title={
-                                                            scheduledTiming.msg ===
-                                                            1
-                                                              ? t(
-                                                                  "Busy Hall & Instructor"
-                                                                )
-                                                              : scheduledTiming.msg ===
-                                                                2
-                                                              ? t("Busy Hall")
-                                                              : scheduledTiming.msg ===
-                                                                3
-                                                              ? t(
-                                                                  "Busy Instructor"
-                                                                )
-                                                              : null
-                                                          }
-                                                          placement="top-end"
-                                                          key={cellIndex}
-                                                        >
-                                                          <td
-                                                            key={cellIndex}
-                                                            className={`timetable-cell ${cellValue}`}
-                                                            onMouseDown={() => {
-                                                              this.handleMouseDown(
-                                                                cellIndex +
-                                                                  rowIndex *
-                                                                    weekDays.length,
-                                                                lecture.Id,
-                                                                weekday.Id
-                                                              );
-                                                            }}
-                                                            onMouseEnter={() => {
-                                                              if (
-                                                                this.state
-                                                                  .isDragging
-                                                              ) {
-                                                                this.handleMouseEnter(
+                                              if (isSelected) {
+                                                backgroundColor = "#f9cf87";
+                                              }
+
+                                              return {
+                                                backgroundColor:
+                                                  backgroundColor,
+                                              };
+                                            }}
+                                          />
+                                        </CardBody>
+                                      </Card>
+                                      <Card>
+                                        <CardBody className="pt-0">
+                                          <Row className="mb-2">
+                                            <Col
+                                              sm="6"
+                                              className="schedule-timing-responsive"
+                                            >
+                                              <h5
+                                                className="header pt-2 me-2"
+                                                id="title"
+                                              >
+                                                {this.props.t(
+                                                  "Schedule Timing"
+                                                )}
+                                              </h5>
+                                            </Col>
+                                            <Col sm="6">
+                                              <div className="text-sm-end">
+                                                <IconButton
+                                                  className="ms-2"
+                                                  onClick={this.toggle3}
+                                                >
+                                                  {" "}
+                                                  <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                </IconButton>
+                                              </div>
+                                            </Col>
+                                          </Row>
+                                          <BootstrapTable
+                                            keyField="Id"
+                                            data={scheduleTimingDescs}
+                                            columns={ScheduleTimingDescsCol}
+                                            cellEdit={cellEditFactory({
+                                              mode: "click",
+                                              blurToSave: true,
+                                            })}
+                                            noDataIndication={t(
+                                              "No Scheduling Timing "
+                                            )}
+                                            rowStyle={(row, rowIndex) => {
+                                              const type = row.type;
+                                              if (type === "Section") {
+                                                return {
+                                                  backgroundColor:
+                                                    "rgb(189 199 124 / 23%)",
+                                                };
+                                              } else if (type === "Lab") {
+                                                return {
+                                                  backgroundColor:
+                                                    "rgb(189 199 124 / 23%)",
+                                                };
+                                              }
+                                            }}
+                                          />
+                                        </CardBody>
+                                      </Card>
+                                    </div>
+                                  </Col>
+                                  <Col>
+                                    <div className="bordered pb-0">
+                                      <Card>
+                                        <CardBody className="pb-0">
+                                          <Col>
+                                            {" "}
+                                            <h5
+                                              className="header pt-2"
+                                              id="title"
+                                            >
+                                              {selectedRowSectionLab
+                                                ? `${this.props.t(
+                                                    "Schedule Timing"
+                                                  )} - ${
+                                                    selectedRowSectionLab.type
+                                                  } - ${
+                                                    selectedRowSectionLab.SectionLabNumber
+                                                  }`
+                                                : this.props.t(
+                                                    "Schedule Timing"
+                                                  )}
+                                            </h5>
+                                          </Col>
+
+                                          <div className="timetable-container">
+                                            <table
+                                              className="timetable"
+                                              onMouseUp={this.handleMouseUp}
+                                            >
+                                              <thead>
+                                                <tr>
+                                                  <th>
+                                                    {t("Lecture Periods")}
+                                                  </th>
+                                                  {weekDaysColumns.map(
+                                                    (header, index) => (
+                                                      <th key={index}>
+                                                        {header}
+                                                      </th>
+                                                    )
+                                                  )}
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                {lecturePeriods.map(
+                                                  (lecture, rowIndex) => (
+                                                    <tr key={lecture.Id}>
+                                                      <td className="lecture-cell">
+                                                        {lecture.duration}
+                                                      </td>
+                                                      {weekDays.map(
+                                                        (
+                                                          weekday,
+                                                          cellIndex
+                                                        ) => {
+                                                          const scheduledTiming =
+                                                            scheduleTimings.find(
+                                                              timing =>
+                                                                timing.dayId ===
+                                                                  weekday.Id &&
+                                                                timing.lecturePeriodId ===
+                                                                  lecture.Id
+                                                            );
+
+                                                          const cellValue =
+                                                            scheduledTiming
+                                                              ? "selected"
+                                                              : "";
+
+                                                          return scheduledTiming &&
+                                                            scheduledTiming.msg ? (
+                                                            <Tooltip
+                                                              title={
+                                                                scheduledTiming.msg ===
+                                                                1
+                                                                  ? t(
+                                                                      "Busy Hall & Instructor"
+                                                                    )
+                                                                  : scheduledTiming.msg ===
+                                                                    2
+                                                                  ? t(
+                                                                      "Busy Hall"
+                                                                    )
+                                                                  : scheduledTiming.msg ===
+                                                                    3
+                                                                  ? t(
+                                                                      "Busy Instructor"
+                                                                    )
+                                                                  : null
+                                                              }
+                                                              placement="top-end"
+                                                              key={cellIndex}
+                                                            >
+                                                              <td
+                                                                key={cellIndex}
+                                                                className={`timetable-cell ${cellValue}`}
+                                                                onMouseDown={() => {
+                                                                  this.handleMouseDown(
+                                                                    cellIndex +
+                                                                      rowIndex *
+                                                                        weekDays.length,
+                                                                    lecture.Id,
+                                                                    weekday.Id
+                                                                  );
+                                                                }}
+                                                                onMouseEnter={() => {
+                                                                  if (
+                                                                    this.state
+                                                                      .isDragging
+                                                                  ) {
+                                                                    this.handleMouseEnter(
+                                                                      cellIndex +
+                                                                        rowIndex *
+                                                                          weekDays.length,
+                                                                      lecture.Id,
+                                                                      weekday.Id
+                                                                    );
+                                                                  }
+                                                                }}
+                                                                style={{
+                                                                  backgroundColor:
+                                                                    scheduledTiming
+                                                                      ? scheduledTiming.msg ===
+                                                                        1
+                                                                        ? "orange"
+                                                                        : scheduledTiming.msg ===
+                                                                          2
+                                                                        ? "#48b3fb"
+                                                                        : scheduledTiming.msg ===
+                                                                          3
+                                                                        ? "#f9544e"
+                                                                        : "lightgreen"
+                                                                      : "",
+                                                                }}
+                                                              ></td>
+                                                            </Tooltip>
+                                                          ) : (
+                                                            <td
+                                                              key={cellIndex}
+                                                              className={`timetable-cell ${cellValue}`}
+                                                              onMouseDown={() => {
+                                                                this.handleMouseDown(
                                                                   cellIndex +
                                                                     rowIndex *
                                                                       weekDays.length,
                                                                   lecture.Id,
                                                                   weekday.Id
                                                                 );
-                                                              }
-                                                            }}
-                                                            style={{
-                                                              backgroundColor:
-                                                                scheduledTiming
-                                                                  ? scheduledTiming.msg ===
-                                                                    1
-                                                                    ? "orange"
-                                                                    : scheduledTiming.msg ===
-                                                                      2
-                                                                    ? "#48b3fb"
-                                                                    : scheduledTiming.msg ===
-                                                                      3
-                                                                    ? "#f9544e"
-                                                                    : "lightgreen"
-                                                                  : "",
-                                                            }}
-                                                          ></td>
-                                                        </Tooltip>
-                                                      ) : (
-                                                        <td
-                                                          key={cellIndex}
-                                                          className={`timetable-cell ${cellValue}`}
-                                                          onMouseDown={() => {
-                                                            this.handleMouseDown(
-                                                              cellIndex +
-                                                                rowIndex *
-                                                                  weekDays.length,
-                                                              lecture.Id,
-                                                              weekday.Id
-                                                            );
-                                                          }}
-                                                          onMouseEnter={() => {
-                                                            if (
-                                                              this.state
-                                                                .isDragging
-                                                            ) {
-                                                              this.handleMouseEnter(
-                                                                cellIndex +
-                                                                  rowIndex *
-                                                                    weekDays.length,
-                                                                lecture.Id,
-                                                                weekday.Id
-                                                              );
-                                                            }
-                                                          }}
-                                                          style={{
-                                                            backgroundColor:
-                                                              scheduledTiming
-                                                                ? scheduledTiming.msg ===
-                                                                  1
-                                                                  ? "orange"
-                                                                  : scheduledTiming.msg ===
-                                                                    2
-                                                                  ? "#48b3fb"
-                                                                  : scheduledTiming.msg ===
-                                                                    3
-                                                                  ? "#f9544e"
-                                                                  : "lightgreen"
-                                                                : "",
-                                                          }}
-                                                        ></td>
-                                                      );
-                                                    }
-                                                  )}
-                                                </tr>
-                                              )
-                                            )}
-                                          </tbody> */}
-                                        </table>
-                                      </div>
-                                      <div className="row mt-5">
-                                        <div className="col-2">
-                                          <div
-                                            className="color-block"
-                                            style={{
-                                              backgroundColor: "#f9544e",
-                                            }}
-                                          ></div>
-                                          <p className="description">
-                                            {t("Busy Instructor")}
-                                          </p>
-                                        </div>
-                                        <div className="col-2">
-                                          <div
-                                            className="color-block"
-                                            style={{
-                                              backgroundColor: "#48b3fb",
-                                            }}
-                                          ></div>
-                                          <p className="description">
-                                            {t("Busy Hall")}
-                                          </p>
-                                        </div>
-                                        <div className="col-2">
-                                          <div
-                                            className="color-block"
-                                            style={{
-                                              backgroundColor: "lightgreen",
-                                            }}
-                                          ></div>
-                                          <p className="description">
-                                            {t("Selected Time")}
-                                          </p>
-                                        </div>
-                                        <div className="col-2">
-                                          <div
-                                            className="color-block"
-                                            style={{
-                                              backgroundColor: "white",
-                                            }}
-                                          ></div>
-                                          <p className="description">
-                                            {t("Available Time")}
-                                          </p>
-                                        </div>
-                                        <div className="col-3">
-                                          <div
-                                            className="color-block"
-                                            style={{
-                                              backgroundColor: "orange",
-                                            }}
-                                          ></div>
-                                          <p className="description">
-                                            {t("Busy Hall & Instructor")}
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </CardBody>
-                                  </Card>
-                                </div>
-                              </Col>
-                            </Row>
-                            <Modal
-                              isOpen={modal3}
-                              toggle={this.toggle3}
-                              size="4"
-                            >
-                              <ModalHeader
-                                toggle={this.toggle3}
-                                tag="h4"
-                                className="horizontalTitles"
-                              >
-                                {isAdd ? t("Schedule Timing") : ""}
-                              </ModalHeader>
-                              <ModalBody>
-                                <Formik
-                                  initialValues={{
-                                    Instructorid:
-                                      (sectionLabData &&
-                                        sectionLabData.instructorName) ||
-                                      "",
-                                    hallId:
-                                      (sectionLabData &&
-                                        sectionLabData.hallName) ||
-                                      "",
-
-                                    startDate:
-                                      (sectionLabData &&
-                                        sectionLabData.startDate) ||
-                                      "",
-                                    endDate:
-                                      (sectionLabData &&
-                                        sectionLabData.endDate) ||
-                                      "",
-                                  }}
-                                  enableReinitialize={true}
-                                  validate={values => {
-                                    const errors = {};
-
-                                    if (
-                                      values.Instructorid &&
-                                      !instructors.some(
-                                        instructor =>
-                                          instructor.fullName ===
-                                          values.Instructorid
-                                      )
-                                    ) {
-                                      errors.Instructorid =
-                                        "Please select a valid instructor.";
-                                    }
-
-                                    if (
-                                      values.hallId &&
-                                      !halls.some(
-                                        hall => hall.value === values.hallId
-                                      )
-                                    ) {
-                                      errors.hallId =
-                                        "Please select a valid hall.";
-                                    }
-                                    return errors;
-                                  }}
+                                                              }}
+                                                              onMouseEnter={() => {
+                                                                if (
+                                                                  this.state
+                                                                    .isDragging
+                                                                ) {
+                                                                  this.handleMouseEnter(
+                                                                    cellIndex +
+                                                                      rowIndex *
+                                                                        weekDays.length,
+                                                                    lecture.Id,
+                                                                    weekday.Id
+                                                                  );
+                                                                }
+                                                              }}
+                                                              style={{
+                                                                backgroundColor:
+                                                                  scheduledTiming
+                                                                    ? scheduledTiming.msg ===
+                                                                      1
+                                                                      ? "orange"
+                                                                      : scheduledTiming.msg ===
+                                                                        2
+                                                                      ? "#48b3fb"
+                                                                      : scheduledTiming.msg ===
+                                                                        3
+                                                                      ? "#f9544e"
+                                                                      : "lightgreen"
+                                                                    : "",
+                                                              }}
+                                                            ></td>
+                                                          );
+                                                        }
+                                                      )}
+                                                    </tr>
+                                                  )
+                                                )}
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                          <div className="row mt-5">
+                                            <div className="col-2">
+                                              <div
+                                                className="color-block"
+                                                style={{
+                                                  backgroundColor: "#f9544e",
+                                                }}
+                                              ></div>
+                                              <p className="description">
+                                                {t("Busy Instructor")}
+                                              </p>
+                                            </div>
+                                            <div className="col-2">
+                                              <div
+                                                className="color-block"
+                                                style={{
+                                                  backgroundColor: "#48b3fb",
+                                                }}
+                                              ></div>
+                                              <p className="description">
+                                                {t("Busy Hall")}
+                                              </p>
+                                            </div>
+                                            <div className="col-2">
+                                              <div
+                                                className="color-block"
+                                                style={{
+                                                  backgroundColor: "lightgreen",
+                                                }}
+                                              ></div>
+                                              <p className="description">
+                                                {t("Selected Time")}
+                                              </p>
+                                            </div>
+                                            <div className="col-2">
+                                              <div
+                                                className="color-block"
+                                                style={{
+                                                  backgroundColor: "white",
+                                                }}
+                                              ></div>
+                                              <p className="description">
+                                                {t("Available Time")}
+                                              </p>
+                                            </div>
+                                            <div className="col-3">
+                                              <div
+                                                className="color-block"
+                                                style={{
+                                                  backgroundColor: "orange",
+                                                }}
+                                              ></div>
+                                              <p className="description">
+                                                {t("Busy Hall & Instructor")}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </CardBody>
+                                      </Card>
+                                    </div>
+                                  </Col>
+                                </Row>
+                                <Modal
+                                  isOpen={modal3}
+                                  toggle={this.toggle3}
+                                  size="4"
                                 >
-                                  <Row>
-                                    <Col md="6">
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="validationCustom03">
-                                          {t("Room")}
-                                        </Label>
-                                        <Field
-                                          name="hallId"
-                                          type="text"
-                                          placeholder="Search..."
-                                          // className={
-                                          //   "form-control" +
-                                          //   (errors.hallId && touched.hallId
-                                          //     ? " is-invalid"
-                                          //     : "")
-                                          // }
-                                          list="hallIdList"
-                                          autoComplete="Off"
-                                          value={this.state.defaultHallName}
-                                          // onChange={e => {
-                                          //   handleChange(e);
-                                          //   const newValue = e.target.value;
-                                          //   const defaultValue =
-                                          //     (sectionLabData &&
-                                          //       sectionLabData.hallName) ||
-                                          //     "";
+                                  <ModalHeader
+                                    toggle={this.toggle3}
+                                    tag="h4"
+                                    className="horizontalTitles"
+                                  >
+                                    {isAdd ? t("Schedule Timing") : ""}
+                                  </ModalHeader>
+                                  <ModalBody>
+                                    <Formik
+                                      initialValues={{
+                                        Instructorid:
+                                          (sectionLabData &&
+                                            sectionLabData.instructorName) ||
+                                          "",
+                                        hallId:
+                                          (sectionLabData &&
+                                            sectionLabData.hallName) ||
+                                          "",
 
-                                          //   this.onChangeHall(
-                                          //     defaultValue,
-                                          //     newValue
-                                          //   );
-                                          // }}
-                                        />
-                                        {/* <datalist id="hallIdList">
-                                          {" "}
-                                          {halls.map(hall => (
-                                            <option
-                                              key={hall.key}
-                                              value={hall.value}
-                                            />
-                                          ))}
-                                        </datalist> */}
-                                        <ErrorMessage
-                                          name="hallId"
-                                          component="div"
-                                          className="invalid-feedback"
-                                        />
-                                      </FormGroup>
-                                    </Col>
-                                    <Col md="6">
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="validationCustom02">
-                                          {t("Instructor")}
-                                        </Label>
-                                        <Field
-                                          name="Instructorid"
-                                          placeholder="Search..."
-                                          type="text"
-                                          // className={
-                                          //   "form-control" +
-                                          //   (errors.Instructorid &&
-                                          //   touched.Instructorid
-                                          //     ? " is-invalid"
-                                          //     : "")
-                                          // }
-                                          autoComplete="Off"
-                                          list="instructorList"
-                                        />
-                                        {/* <datalist id="instructorList">
+                                        startDate:
+                                          (sectionLabData &&
+                                            sectionLabData.startDate) ||
+                                          "",
+                                        endDate:
+                                          (sectionLabData &&
+                                            sectionLabData.endDate) ||
+                                          "",
+                                      }}
+                                      enableReinitialize={true}
+                                      validate={values => {
+                                        const errors = {};
+
+                                        if (
+                                          values.Instructorid &&
+                                          !instructors.some(
+                                            instructor =>
+                                              instructor.fullName ===
+                                              values.Instructorid
+                                          )
+                                        ) {
+                                          errors.Instructorid =
+                                            "Please select a valid instructor.";
+                                        }
+
+                                        if (
+                                          values.hallId &&
+                                          !halls.some(
+                                            hall => hall.value === values.hallId
+                                          )
+                                        ) {
+                                          errors.hallId =
+                                            "Please select a valid hall.";
+                                        }
+                                        return errors;
+                                      }}
+                                    >
+                                      {({
+                                        errors,
+                                        status,
+                                        touched,
+                                        values,
+                                        handleChange,
+                                        handleBlur,
+                                        setFieldValue,
+                                      }) => (
+                                        <Form>
+                                          <Col md="12">
+                                            <Row>
+                                              <Col className="col-4">
+                                                <Label for="room">
+                                                  {t("Room")}
+                                                </Label>
+                                              </Col>
+                                              <Col className="col-6">
+                                                <Field
+                                                  name="hallId"
+                                                  id="room"
+                                                  type="text"
+                                                  placeholder="Search..."
+                                                  className={
+                                                    "form-control" +
+                                                    (errors.hallId &&
+                                                    touched.hallId
+                                                      ? " is-invalid"
+                                                      : "")
+                                                  }
+                                                  list="hallIdList"
+                                                  autoComplete="Off"
+                                                  value={
+                                                    this.state.defaultHallName
+                                                  }
+                                                  onChange={e => {
+                                                    handleChange(e);
+                                                    const newValue =
+                                                      e.target.value;
+                                                    const defaultValue =
+                                                      (sectionLabData &&
+                                                        sectionLabData.hallName) ||
+                                                      "";
+
+                                                    this.onChangeHall(
+                                                      defaultValue,
+                                                      newValue
+                                                    );
+                                                  }}
+                                                />
+                                                <datalist id="hallIdList">
+                                                  {" "}
+                                                  {halls.map(hall => (
+                                                    <option
+                                                      key={hall.key}
+                                                      value={hall.value}
+                                                    />
+                                                  ))}
+                                                </datalist>
+                                                <ErrorMessage
+                                                  name="hallId"
+                                                  component="div"
+                                                  className="invalid-feedback"
+                                                />
+                                              </Col>
+                                            </Row>
+                                            <Row>
+                                              <Col className="col-4">
+                                                <Label for="instructor">
+                                                  {t("Instructor")}
+                                                </Label>
+                                              </Col>
+                                              <Col className="col-8">
+                                                <Field
+                                                  name="Instructorid"
+                                                  id="instructor"
+                                                  placeholder="Search..."
+                                                  type="text"
+                                                  // className={
+                                                  //   "form-control" +
+                                                  //   (errors.Instructorid &&
+                                                  //   touched.Instructorid
+                                                  //     ? " is-invalid"
+                                                  //     : "")
+                                                  // }
+                                                  autoComplete="Off"
+                                                  list="instructorList"
+                                                />
+                                                {/* <datalist id="instructorList">
                                           {instructors.map(instructor => (
                                             <option
                                               key={instructor.Id}
@@ -2309,295 +2352,265 @@ class ClassSchedulingList extends Component {
                                             />
                                           ))}
                                         </datalist> */}
-                                        <ErrorMessage
-                                          name="Instructorid"
-                                          component="div"
-                                          className="invalid-feedback"
-                                        />
-                                      </FormGroup>
-                                    </Col>
-                                  </Row>
-                                  {/* <Row>
-                                    <div className="mb-3">
-                                      <Row>
-                                        <Col className="col-4">
-                                          <Label for="startDate">
-                                            {this.props.t("Start Date")}
-                                          </Label>
-                                          <span className="text-danger">*</span>
-                                        </Col>
-                                        <Col className="col-8">
-                                          <Field
-                                            name="startDate"
-                                            className={`form-control ${
-                                              startDateError ? "is-invalid" : ""
-                                            }`}
-                                            type="date"
-                                            // value={
-                                            //   values.startDate
-                                            //     ? new Date(values.startDate)
-                                            //         .toISOString()
-                                            //         .split("T")[0]
-                                            //     : ""
-                                            // }
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            id="startDate-date-input"
-                                          />
-                                        </Col>
-                                      </Row>
-                                    </div>
-                                    <div className="mb-3">
-                                      <Row>
-                                        <Col className="col-4">
-                                          <Label for="endDate">
-                                            {this.props.t("End Date")}
-                                          </Label>
-                                          <span className="text-danger">*</span>
-                                        </Col>
-                                        <Col className="col-8">
-                                          <Field
-                                            name="endDate"
-                                            className={`form-control ${
-                                              endDateError ? "is-invalid" : ""
-                                            }`}
-                                            type="date"
-                                            // value={
-                                            //   values.endDate
-                                            //     ? new Date(values.endDate)
-                                            //         .toISOString()
-                                            //         .split("T")[0]
-                                            //     : ""
-                                            // }
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            id="endDate-date-input"
-                                          />
-                                        </Col>
-                                      </Row>
-                                    </div>
-                                  </Row> */}
-                                </Formik>
-                              </ModalBody>
-                            </Modal>
-                            <Modal
-                              isOpen={isNestedModalOpen}
-                              toggle={this.toggleNestedModal}
-                            >
-                              <ModalHeader toggle={this.toggleNestedModal}>
-                                {isEdit
-                                  ? t(
-                                      `Edit ${
-                                        selectedOption === "Section"
-                                          ? "Section"
-                                          : "Lab"
-                                      }`
-                                    )
-                                  : selectedOption === "Section"
-                                  ? t("Add Section")
-                                  : selectedOption === "Lab"
-                                  ? t("Add Lab")
-                                  : t("Add Form")}
-                              </ModalHeader>
-                              <ModalBody>
-                                <div>
-                                  <div>
-                                    <Label>
-                                      <Input
-                                        type="radio"
-                                        id="Section"
-                                        name="radioOption"
-                                        value="Section"
-                                        checked={selectedOption === "Section"}
-                                        onChange={this.handleChangeOption}
-                                        disabled={
-                                          isEdit && isSectionRadioDisabled
-                                        }
-                                      />
-                                      {"  "} {t("Section")}
-                                    </Label>
+                                                <ErrorMessage
+                                                  name="Instructorid"
+                                                  component="div"
+                                                  className="invalid-feedback"
+                                                />
+                                              </Col>
+                                            </Row>
+                                          </Col>
 
-                                    <Label>
-                                      <Input
-                                        type="radio"
-                                        id="Lab"
-                                        name="radioOption"
-                                        value="Lab"
-                                        checked={selectedOption === "Lab"}
-                                        onChange={this.handleChangeOption}
-                                        disabled={isEdit && isLabRadioDisabled}
-                                      />
-                                      {"  "} {t("Lab")}
-                                    </Label>
-                                  </div>
-
-                                  <div>
-                                    {selectedOption === "Section" && (
-                                      <Formik
-                                        enableReinitialize={true}
-                                        validate={values => {
-                                          const errors = {};
-
-                                          if (
-                                            values.Instructorid &&
-                                            !instructors.some(
-                                              instructor =>
-                                                instructor.fullName ===
-                                                values.Instructorid
-                                            )
-                                          ) {
-                                            errors.Instructorid =
-                                              "Please select a valid instructor.";
-                                          }
-
-                                          if (
-                                            values.hallId &&
-                                            !halls.some(
-                                              hall =>
-                                                hall.value === values.hallId
-                                            )
-                                          ) {
-                                            errors.hallId =
-                                              "Please select a valid hall.";
-                                          }
-                                          if (
-                                            values.facultyId &&
-                                            !faculties.some(
-                                              faculty =>
-                                                faculty.label ===
-                                                values.facultyId
-                                            )
-                                          ) {
-                                            errors.facultyId =
-                                              "Please select a valid faculty.";
-                                          }
-
-                                          return errors;
-                                        }}
-                                        initialValues={{
-                                          SectionNumber:
-                                            (sectionLabData &&
-                                              sectionLabData.SectionLabNumber) ||
-                                            "",
-                                          Instructorid:
-                                            (sectionLabData &&
-                                              sectionLabData.instructorName) ||
-                                            "",
-                                          hallId:
-                                            (sectionLabData &&
-                                              sectionLabData.hallName) ||
-                                            "",
-
-                                          Capacity:
-                                            (sectionLabData &&
-                                              sectionLabData.Capacity) ||
-                                            "",
-                                          facultyId:
-                                            (sectionLabData &&
-                                              sectionLabData.facultyName) ||
-                                            "",
-                                          majorId:
-                                            (sectionLabData &&
-                                              sectionLabData.majorName) ||
-                                            "",
-                                        }}
-                                        validationSchema={Yup.object().shape({
-                                          SectionNumber: Yup.string().required(
-                                            "Please Enter Your Section Number"
-                                          ),
-                                        })}
-                                        onSubmit={values => {}}
-                                      >
-                                        {({
-                                          errors,
-                                          status,
-                                          touched,
-                                          values,
-                                          handleChange,
-                                        }) => (
-                                          <>
-                                            <div>
-                                              {duplicateError && (
-                                                <Alert
-                                                  color="danger"
-                                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                  role="alert"
-                                                >
-                                                  {duplicateError}
-                                                  <button
-                                                    type="button"
-                                                    className="btn-close"
-                                                    aria-label="Close"
-                                                    onClick={
-                                                      this.handleAlertClose
+                                          <Row>
+                                            <div className="mb-3">
+                                              <Row>
+                                                <Col className="col-4">
+                                                  <Label for="startDate">
+                                                    {this.props.t("Start Date")}
+                                                  </Label>
+                                                  <span className="text-danger">
+                                                    *
+                                                  </span>
+                                                </Col>
+                                                <Col className="col-8">
+                                                  <Field
+                                                    name="startDate"
+                                                    className={`form-control ${
+                                                      startDateError
+                                                        ? "is-invalid"
+                                                        : ""
+                                                    }`}
+                                                    type="date"
+                                                    value={
+                                                      values.startDate
+                                                        ? new Date(
+                                                            values.startDate
+                                                          )
+                                                            .toISOString()
+                                                            .split("T")[0]
+                                                        : ""
                                                     }
-                                                  ></button>
-                                                </Alert>
-                                              )}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    id="startDate-date-input"
+                                                  />
+                                                </Col>
+                                              </Row>
                                             </div>
-                                            <Form className="needs-validation">
-                                              <div className="bordered">
-                                                <h5
-                                                  className="header pt-2"
-                                                  id="title"
-                                                >
-                                                  {this.props.t(
-                                                    "Basic Information"
-                                                  )}
-                                                </h5>
-                                                <Row>
-                                                  <Col md="6">
-                                                    <FormGroup className="mb-3">
-                                                      <Label htmlFor="validationCustom01">
-                                                        {t("Section Number")}
-                                                      </Label>
-                                                      <span className="text-danger">
-                                                        *
-                                                      </span>
-                                                      <Field
-                                                        name="SectionNumber"
-                                                        placeholder="Section Number"
-                                                        type="number"
-                                                        className={
-                                                          "form-control" +
-                                                          (errors.SectionNumber &&
-                                                          touched.SectionNumber
-                                                            ? " is-invalid"
-                                                            : "")
-                                                        }
-                                                        autoComplete="Off"
-                                                      />
-                                                      <ErrorMessage
-                                                        name="SectionNumber"
-                                                        component="div"
-                                                        className="invalid-feedback"
-                                                      />
-                                                    </FormGroup>
-                                                  </Col>
-                                                  <Col md="6">
-                                                    <FormGroup className="mb-3">
-                                                      <Label htmlFor="validationCustom05">
-                                                        {t("Section Capacity")}
-                                                      </Label>
-                                                      <Field
-                                                        name="Capacity"
-                                                        placeholder="Section Capacity"
-                                                        type="number"
-                                                        className={
-                                                          "form-control" +
-                                                          (errors.Capacity &&
-                                                          touched.Capacity
-                                                            ? " is-invalid"
-                                                            : "")
-                                                        }
-                                                        autoComplete="Off"
-                                                      />
-                                                    </FormGroup>
-                                                  </Col>
-                                                </Row>
+                                            <div className="mb-3">
+                                              <Row>
+                                                <Col className="col-4">
+                                                  <Label for="endDate">
+                                                    {this.props.t("End Date")}
+                                                  </Label>
+                                                  <span className="text-danger">
+                                                    *
+                                                  </span>
+                                                </Col>
+                                                <Col className="col-8">
+                                                  <Field
+                                                    name="endDate"
+                                                    className={`form-control ${
+                                                      endDateError
+                                                        ? "is-invalid"
+                                                        : ""
+                                                    }`}
+                                                    type="date"
+                                                    value={
+                                                      values.endDate
+                                                        ? new Date(
+                                                            values.endDate
+                                                          )
+                                                            .toISOString()
+                                                            .split("T")[0]
+                                                        : ""
+                                                    }
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    id="endDate-date-input"
+                                                  />
+                                                </Col>
+                                              </Row>
+                                            </div>
+                                          </Row>
+                                        </Form>
+                                      )}
+                                    </Formik>
+                                  </ModalBody>
+                                </Modal>
+                                <Modal
+                                  isOpen={isNestedModalOpen}
+                                  toggle={this.toggleNestedModal}
+                                >
+                                  <ModalHeader toggle={this.toggleNestedModal}>
+                                    {isEdit
+                                      ? t(
+                                          `Edit ${
+                                            selectedOption === "Section"
+                                              ? "Section"
+                                              : "Lab"
+                                          }`
+                                        )
+                                      : selectedOption === "Section"
+                                      ? t("Add Section")
+                                      : selectedOption === "Lab"
+                                      ? t("Add Lab")
+                                      : t("Add Form")}
+                                  </ModalHeader>
+                                  <ModalBody>
+                                    <div>
+                                      <div>
+                                        <Label>
+                                          <Input
+                                            type="radio"
+                                            id="Section"
+                                            name="radioOption"
+                                            value="Section"
+                                            checked={
+                                              selectedOption === "Section"
+                                            }
+                                            onChange={this.handleChangeOption}
+                                            disabled={
+                                              isEdit && isSectionRadioDisabled
+                                            }
+                                          />
+                                          {"  "} {t("Section")}
+                                        </Label>
 
-                                                <Row>
-                                                  {/* <Col md="6">
+                                        <Label>
+                                          <Input
+                                            type="radio"
+                                            id="Lab"
+                                            name="radioOption"
+                                            value="Lab"
+                                            checked={selectedOption === "Lab"}
+                                            onChange={this.handleChangeOption}
+                                            disabled={
+                                              isEdit && isLabRadioDisabled
+                                            }
+                                          />
+                                          {"  "} {t("Lab")}
+                                        </Label>
+                                      </div>
+
+                                      <div>
+                                        {selectedOption === "Section" && (
+                                          <Formik
+                                            enableReinitialize={true}
+                                            initialValues={{
+                                              SectionNumber:
+                                                (sectionLabData &&
+                                                  sectionLabData.SectionLabNumber) ||
+                                                "",
+                                              Capacity:
+                                                (sectionLabData &&
+                                                  sectionLabData.Capacity) ||
+                                                "",
+                                            }}
+                                            validationSchema={Yup.object().shape(
+                                              {
+                                                SectionNumber:
+                                                  Yup.string().required(
+                                                    "Please Enter Your Section Number"
+                                                  ),
+                                              }
+                                            )}
+                                            onSubmit={values => {}}
+                                          >
+                                            {({
+                                              errors,
+                                              status,
+                                              touched,
+                                              values,
+                                              handleChange,
+                                            }) => (
+                                              <>
+                                                <div>
+                                                  {duplicateError && (
+                                                    <Alert
+                                                      color="danger"
+                                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                      role="alert"
+                                                    >
+                                                      {duplicateError}
+                                                      <button
+                                                        type="button"
+                                                        className="btn-close"
+                                                        aria-label="Close"
+                                                        onClick={
+                                                          this.handleAlertClose
+                                                        }
+                                                      ></button>
+                                                    </Alert>
+                                                  )}
+                                                </div>
+                                                <Form className="needs-validation">
+                                                  <div className="bordered">
+                                                    <h5
+                                                      className="header pt-2"
+                                                      id="title"
+                                                    >
+                                                      {this.props.t(
+                                                        "Basic Information"
+                                                      )}
+                                                    </h5>
+                                                    <Row>
+                                                      <Col md="6">
+                                                        <FormGroup className="mb-3">
+                                                          <Label htmlFor="validationCustom01">
+                                                            {t(
+                                                              "Section Number"
+                                                            )}
+                                                          </Label>
+                                                          <span className="text-danger">
+                                                            *
+                                                          </span>
+                                                          <Field
+                                                            name="SectionNumber"
+                                                            placeholder="Section Number"
+                                                            type="number"
+                                                            className={
+                                                              "form-control" +
+                                                              (errors.SectionNumber &&
+                                                              touched.SectionNumber
+                                                                ? " is-invalid"
+                                                                : "")
+                                                            }
+                                                            autoComplete="Off"
+                                                          />
+                                                          <ErrorMessage
+                                                            name="SectionNumber"
+                                                            component="div"
+                                                            className="invalid-feedback"
+                                                          />
+                                                        </FormGroup>
+                                                      </Col>
+                                                      <Col md="6">
+                                                        <FormGroup className="mb-3">
+                                                          <Label htmlFor="validationCustom05">
+                                                            {t(
+                                                              "Section Capacity"
+                                                            )}
+                                                          </Label>
+                                                          <Field
+                                                            name="Capacity"
+                                                            placeholder="Section Capacity"
+                                                            type="number"
+                                                            className={
+                                                              "form-control" +
+                                                              (errors.Capacity &&
+                                                              touched.Capacity
+                                                                ? " is-invalid"
+                                                                : "")
+                                                            }
+                                                            autoComplete="Off"
+                                                          />
+                                                        </FormGroup>
+                                                      </Col>
+                                                    </Row>
+
+                                                    <Row>
+                                                      {/* <Col md="6">
                                                     <FormGroup className="mb-3">
                                                       <Label htmlFor="validationCustom03">
                                                         {t("Room")}
@@ -2650,7 +2663,7 @@ class ClassSchedulingList extends Component {
                                                       />
                                                     </FormGroup>
                                                   </Col> */}
-                                                  {/* <Col md="6">
+                                                      {/* <Col md="6">
                                                     <FormGroup className="mb-3">
                                                       <Label htmlFor="validationCustom02">
                                                         {t("Instructor")}
@@ -2690,19 +2703,19 @@ class ClassSchedulingList extends Component {
                                                       />
                                                     </FormGroup>
                                                   </Col> */}
-                                                </Row>
-                                              </div>
-                                              <div className="bordered">
-                                                <h5
-                                                  className="header pt-2"
-                                                  id="title"
-                                                >
-                                                  {this.props.t(
-                                                    "Specific Students"
-                                                  )}
-                                                </h5>
-                                                <Row>
-                                                  {/* <Col md="12">
+                                                    </Row>
+                                                  </div>
+                                                  <div className="bordered">
+                                                    <h5
+                                                      className="header pt-2"
+                                                      id="title"
+                                                    >
+                                                      {this.props.t(
+                                                        "Specific Students"
+                                                      )}
+                                                    </h5>
+                                                    <Row>
+                                                      {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -2770,10 +2783,10 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup>
                                                   </Col> */}
-                                                </Row>
+                                                    </Row>
 
-                                                <Row>
-                                                  {/* <Col md="12">
+                                                    <Row>
+                                                      {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -2815,203 +2828,184 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup>
                                                   </Col> */}
-                                                </Row>
-                                              </div>
-                                              <Row className="justify-content-center">
-                                                <Col
-                                                  lg="3"
-                                                  className="d-flex justify-content-center"
-                                                >
-                                                  <Link
-                                                    to="#"
-                                                    className="btn btn-primary me-2"
-                                                    onClick={() => {
-                                                      this.handleSubmit(values);
-                                                    }}
-                                                  >
-                                                    {t("Save")}
-                                                  </Link>
-                                                </Col>
-                                              </Row>
-                                            </Form>
-                                          </>
-                                        )}
-                                      </Formik>
-                                    )}
-
-                                    {selectedOption === "Lab" && (
-                                      <Formik
-                                        enableReinitialize={true}
-                                        validate={values => {
-                                          const errors = {};
-
-                                          if (
-                                            values.Instructorid &&
-                                            !instructors.some(
-                                              instructor =>
-                                                instructor.fullName ===
-                                                values.Instructorid
-                                            )
-                                          ) {
-                                            errors.Instructorid =
-                                              "Please select a valid instructor.";
-                                          }
-
-                                          if (
-                                            values.hallId &&
-                                            !halls.some(
-                                              hall =>
-                                                hall.value === values.hallId
-                                            )
-                                          ) {
-                                            errors.hallId =
-                                              "Please select a valid hallId.";
-                                          }
-                                          if (
-                                            values.facultyId &&
-                                            !faculties.some(
-                                              faculty =>
-                                                faculty.label ===
-                                                values.facultyId
-                                            )
-                                          ) {
-                                            errors.facultyId =
-                                              "Please select a valid faculty.";
-                                          }
-
-                                          return errors;
-                                        }}
-                                        initialValues={{
-                                          LabNumber:
-                                            (sectionLabData &&
-                                              sectionLabData.SectionLabNumber) ||
-                                            "",
-                                          Instructorid:
-                                            (sectionLabData &&
-                                              sectionLabData.instructorName) ||
-                                            "",
-                                          hallId:
-                                            (sectionLabData &&
-                                              sectionLabData.hallName) ||
-                                            "",
-
-                                          Capacity:
-                                            (sectionLabData &&
-                                              sectionLabData.Capacity) ||
-                                            "",
-                                          facultyId:
-                                            (sectionLabData &&
-                                              sectionLabData.facultyName) ||
-                                            "",
-                                          majorId:
-                                            (sectionLabData &&
-                                              sectionLabData.majorName) ||
-                                            "",
-                                        }}
-                                        validationSchema={Yup.object().shape({
-                                          SectionNumber: Yup.string().required(
-                                            "Please Enter Your Section Number"
-                                          ),
-                                        })}
-                                        onSubmit={values => {}}
-                                      >
-                                        {({
-                                          errors,
-                                          status,
-                                          touched,
-                                          values,
-                                          handleChange,
-                                        }) => (
-                                          <>
-                                            {duplicateError && (
-                                              <Alert
-                                                color="danger"
-                                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                role="alert"
-                                              >
-                                                {duplicateError}
-                                                <button
-                                                  type="button"
-                                                  className="btn-close"
-                                                  aria-label="Close"
-                                                  onClick={
-                                                    this.handleAlertClose
-                                                  }
-                                                ></button>
-                                              </Alert>
+                                                    </Row>
+                                                  </div>
+                                                  <Row className="justify-content-center">
+                                                    <Col
+                                                      lg="3"
+                                                      className="d-flex justify-content-center"
+                                                    >
+                                                      <Link
+                                                        to="#"
+                                                        className="btn btn-primary me-2"
+                                                        onClick={() => {
+                                                          this.handleSubmit(
+                                                            values
+                                                          );
+                                                        }}
+                                                      >
+                                                        {t("Save")}
+                                                      </Link>
+                                                    </Col>
+                                                  </Row>
+                                                </Form>
+                                              </>
                                             )}
-                                            <Form className="needs-validation">
-                                              <div className="bordered">
-                                                <h5
-                                                  className="header pt-2"
-                                                  id="title"
-                                                >
-                                                  {this.props.t(
-                                                    "Basic Information"
-                                                  )}
-                                                </h5>
-                                                <Row>
-                                                  <Col md="6">
-                                                    <FormGroup className="mb-3">
-                                                      <Label htmlFor="validationCustom01">
-                                                        {t("Lab Number")}
-                                                      </Label>
-                                                      <span className="text-danger">
-                                                        *
-                                                      </span>
-                                                      <Field
-                                                        name="LabNumber"
-                                                        placeholder="Lab Number"
-                                                        type="number"
-                                                        className={
-                                                          "form-control" +
-                                                          (errors.LabNumber &&
-                                                          touched.LabNumber
-                                                            ? " is-invalid"
-                                                            : "")
-                                                        }
-                                                        autoComplete="Off"
-                                                      />
-                                                      <ErrorMessage
-                                                        name="LabNumber"
-                                                        component="div"
-                                                        className="invalid-feedback"
-                                                      />
-                                                    </FormGroup>
-                                                  </Col>
-                                                  <Col md="6">
-                                                    <FormGroup className="mb-3">
-                                                      <Label htmlFor="validationCustom05">
-                                                        {t("Lab Capacity")}
-                                                      </Label>
-                                                      <Field
-                                                        name="Capacity"
-                                                        placeholder="Lab Capacity"
-                                                        type="number"
-                                                        className={
-                                                          "form-control" +
-                                                          (errors.Capacity &&
-                                                          touched.Capacity
-                                                            ? " is-invalid"
-                                                            : "")
-                                                        }
-                                                        autoComplete="Off"
-                                                      />
-                                                    </FormGroup>
-                                                  </Col>
-                                                </Row>
-                                              </div>
-                                              <div className="bordered">
-                                                <h5
-                                                  className="header pt-2"
-                                                  id="title"
-                                                >
-                                                  {this.props.t(
-                                                    "Specific Students"
-                                                  )}
-                                                </h5>
-                                                <Row>
-                                                  {/* <Col md="12">
+                                          </Formik>
+                                        )}
+
+                                        {selectedOption === "Lab" && (
+                                          <Formik
+                                            enableReinitialize={true}
+                                            validate={values => {
+                                              const errors = {};
+
+                                              if (
+                                                values.Instructorid &&
+                                                !instructors.some(
+                                                  instructor =>
+                                                    instructor.fullName ===
+                                                    values.Instructorid
+                                                )
+                                              ) {
+                                                errors.Instructorid =
+                                                  "Please select a valid instructor.";
+                                              }
+
+                                              if (
+                                                values.hallId &&
+                                                !halls.some(
+                                                  hall =>
+                                                    hall.value === values.hallId
+                                                )
+                                              ) {
+                                                errors.hallId =
+                                                  "Please select a valid hallId.";
+                                              }
+                                              return errors;
+                                            }}
+                                            initialValues={{
+                                              LabNumber:
+                                                (sectionLabData &&
+                                                  sectionLabData.SectionLabNumber) ||
+                                                "",
+
+                                              Capacity:
+                                                (sectionLabData &&
+                                                  sectionLabData.Capacity) ||
+                                                "",
+                                              majorId:
+                                                (sectionLabData &&
+                                                  sectionLabData.majorName) ||
+                                                "",
+                                            }}
+                                            validationSchema={Yup.object().shape(
+                                              {
+                                                SectionNumber:
+                                                  Yup.string().required(
+                                                    "Please Enter Your Section Number"
+                                                  ),
+                                              }
+                                            )}
+                                            onSubmit={values => {}}
+                                          >
+                                            {({
+                                              errors,
+                                              status,
+                                              touched,
+                                              values,
+                                              handleChange,
+                                            }) => (
+                                              <>
+                                                {duplicateError && (
+                                                  <Alert
+                                                    color="danger"
+                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                    role="alert"
+                                                  >
+                                                    {duplicateError}
+                                                    <button
+                                                      type="button"
+                                                      className="btn-close"
+                                                      aria-label="Close"
+                                                      onClick={
+                                                        this.handleAlertClose
+                                                      }
+                                                    ></button>
+                                                  </Alert>
+                                                )}
+                                                <Form className="needs-validation">
+                                                  <div className="bordered">
+                                                    <h5
+                                                      className="header pt-2"
+                                                      id="title"
+                                                    >
+                                                      {this.props.t(
+                                                        "Basic Information"
+                                                      )}
+                                                    </h5>
+                                                    <Row>
+                                                      <Col md="6">
+                                                        <FormGroup className="mb-3">
+                                                          <Label htmlFor="validationCustom01">
+                                                            {t("Lab Number")}
+                                                          </Label>
+                                                          <span className="text-danger">
+                                                            *
+                                                          </span>
+                                                          <Field
+                                                            name="LabNumber"
+                                                            placeholder="Lab Number"
+                                                            type="number"
+                                                            className={
+                                                              "form-control" +
+                                                              (errors.LabNumber &&
+                                                              touched.LabNumber
+                                                                ? " is-invalid"
+                                                                : "")
+                                                            }
+                                                            autoComplete="Off"
+                                                          />
+                                                          <ErrorMessage
+                                                            name="LabNumber"
+                                                            component="div"
+                                                            className="invalid-feedback"
+                                                          />
+                                                        </FormGroup>
+                                                      </Col>
+                                                      <Col md="6">
+                                                        <FormGroup className="mb-3">
+                                                          <Label htmlFor="validationCustom05">
+                                                            {t("Lab Capacity")}
+                                                          </Label>
+                                                          <Field
+                                                            name="Capacity"
+                                                            placeholder="Lab Capacity"
+                                                            type="number"
+                                                            className={
+                                                              "form-control" +
+                                                              (errors.Capacity &&
+                                                              touched.Capacity
+                                                                ? " is-invalid"
+                                                                : "")
+                                                            }
+                                                            autoComplete="Off"
+                                                          />
+                                                        </FormGroup>
+                                                      </Col>
+                                                    </Row>
+                                                  </div>
+                                                  <div className="bordered">
+                                                    <h5
+                                                      className="header pt-2"
+                                                      id="title"
+                                                    >
+                                                      {this.props.t(
+                                                        "Specific Students"
+                                                      )}
+                                                    </h5>
+                                                    <Row>
+                                                      {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3063,10 +3057,10 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup>
                                                   </Col> */}
-                                                </Row>
+                                                    </Row>
 
-                                                <Row>
-                                                  {/* <Col md="12">
+                                                    <Row>
+                                                      {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3110,110 +3104,115 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup> 
                                                   </Col>*/}
-                                                </Row>
-                                              </div>
-                                              <Row className="justify-content-center">
-                                                <Col
-                                                  lg="3"
-                                                  className="d-flex justify-content-center"
-                                                >
-                                                  <Link
-                                                    className="btn btn-primary me-2"
-                                                    to="#"
-                                                    onClick={() => {
-                                                      this.handleSubmit(values);
-                                                    }}
-                                                  >
-                                                    {t("Save")}
-                                                  </Link>
-                                                </Col>
-                                              </Row>
-                                            </Form>
-                                          </>
+                                                    </Row>
+                                                  </div>
+                                                  <Row className="justify-content-center">
+                                                    <Col
+                                                      lg="3"
+                                                      className="d-flex justify-content-center"
+                                                    >
+                                                      <Link
+                                                        className="btn btn-primary me-2"
+                                                        to="#"
+                                                        onClick={() => {
+                                                          this.handleSubmit(
+                                                            values
+                                                          );
+                                                        }}
+                                                      >
+                                                        {t("Save")}
+                                                      </Link>
+                                                    </Col>
+                                                  </Row>
+                                                </Form>
+                                              </>
+                                            )}
+                                          </Formik>
                                         )}
-                                      </Formik>
-                                    )}
-                                  </div>
-                                </div>
+                                      </div>
+                                    </div>
+                                  </ModalBody>
+                                </Modal>
                               </ModalBody>
                             </Modal>
-                          </ModalBody>
-                        </Modal>
-                        <DeleteModal
-                          show={deleteModal}
-                          onDeleteClick={this.handleDeleteSectionLab}
-                          onCloseClick={() =>
-                            this.setState({
-                              deleteModal: false,
-                            })
-                          }
-                        />
-                        <PaginationProvider
-                          pagination={paginationFactory(pageOptions2)}
-                          keyField="id"
-                          columns={columns2}
-                          data={sectionLabs}
-                        >
-                          {({ paginationProps, paginationTableProps }) => (
-                            <ToolkitProvider
+                            <DeleteModal
+                              show={deleteModal}
+                              onDeleteClick={this.handleDeleteSectionLab}
+                              onCloseClick={() =>
+                                this.setState({
+                                  deleteModal: false,
+                                })
+                              }
+                            />
+                            <PaginationProvider
+                              pagination={paginationFactory(pageOptions2)}
                               keyField="id"
                               columns={columns2}
                               data={sectionLabs}
-                              search
                             >
-                              {toolkitprops => (
-                                <React.Fragment>
-                                  <Row className="mb-2">
-                                    <Col sm="3">
-                                      <div className="search-box ms-2 mb-2 d-inline-block">
-                                        <div className="position-relative">
-                                          <SearchBar
-                                            {...toolkitprops.searchProps}
+                              {({ paginationProps, paginationTableProps }) => (
+                                <ToolkitProvider
+                                  keyField="id"
+                                  columns={columns2}
+                                  data={sectionLabs}
+                                  search
+                                >
+                                  {toolkitprops => (
+                                    <React.Fragment>
+                                      <Row className="mb-2">
+                                        <Col sm="3">
+                                          <div className="search-box ms-2 mb-2 d-inline-block">
+                                            <div className="position-relative">
+                                              <SearchBar
+                                                {...toolkitprops.searchProps}
+                                              />
+                                              <i className="bx bx-search-alt search-icon" />
+                                            </div>
+                                          </div>
+                                        </Col>
+                                        <Col>
+                                          <label className="cu-Semes form-label mt-1">
+                                            {selectedYear &&
+                                              selectedYear["label"]}{" "}
+                                          </label>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <BootstrapTable
+                                          {...toolkitprops.baseProps}
+                                          {...paginationTableProps}
+                                          keyField="Id"
+                                          data={sectionLabs}
+                                          columns={columns2}
+                                          cellEdit={cellEditFactory({
+                                            mode: "click",
+                                            blurToSave: true,
+                                          })}
+                                          noDataIndication={t(
+                                            "No Scheduling Lectures"
+                                          )}
+                                        />
+                                      </Row>
+                                      <Row className="align-items-md-center mt-30">
+                                        <Col className="pagination pagination-rounded justify-content-end mb-2">
+                                          <PaginationListStandalone
+                                            {...paginationProps}
                                           />
-                                          <i className="bx bx-search-alt search-icon" />
-                                        </div>
-                                      </div>
-                                    </Col>
-                                    <Col>
-                                      <label className="cu-Semes form-label mt-1">
-                                        {selectedYear && selectedYear["label"]}{" "}
-                                      </label>
-                                    </Col>
-                                  </Row>
-                                  <Row>
-                                    <BootstrapTable
-                                      {...toolkitprops.baseProps}
-                                      {...paginationTableProps}
-                                      keyField="Id"
-                                      data={sectionLabs}
-                                      columns={columns2}
-                                      cellEdit={cellEditFactory({
-                                        mode: "click",
-                                        blurToSave: true,
-                                      })}
-                                      noDataIndication={t(
-                                        "No Scheduling Lectures"
-                                      )}
-                                    />
-                                  </Row>
-                                  <Row className="align-items-md-center mt-30">
-                                    <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                      <PaginationListStandalone
-                                        {...paginationProps}
-                                      />
-                                    </Col>
-                                  </Row>
-                                </React.Fragment>
+                                        </Col>
+                                      </Row>
+                                    </React.Fragment>
+                                  )}
+                                </ToolkitProvider>
                               )}
-                            </ToolkitProvider>
-                          )}
-                        </PaginationProvider>
-                      </TabPane>
-                    </TabContent>
-                  </Col>
-                </Row>
-              </Card>
-            </Row>
+                            </PaginationProvider>
+                          </TabPane>
+                        </TabContent>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Row>
+            </div>
           </div>
         </div>
       </React.Fragment>
@@ -3224,23 +3223,18 @@ class ClassSchedulingList extends Component {
 const mapStateToProps = ({
   classScheduling,
   years,
-  halls,
-  mobAppFacultyAccs,
-  departments,
   weekDays,
   lecturePeriods,
   academiccertificates,
-  generalManagements,
+  academyBuildingStructures,
   menu_items,
 }) => ({
   coursesOffering: classScheduling.coursesOffering,
-  // halls: halls.halls,
   instructors: classScheduling.instructors,
   sectionLabs: classScheduling.sectionLabs,
   years: years.years,
+  halls: academyBuildingStructures.halls,
   scheduleTimings: classScheduling.scheduleTimings,
-  faculties: mobAppFacultyAccs.faculties,
-  departments: departments.departments,
   weekDays: weekDays.weekDays,
   lecturePeriods: lecturePeriods.lecturePeriods,
   scheduleTimingDescs: classScheduling.scheduleTimingDescs,

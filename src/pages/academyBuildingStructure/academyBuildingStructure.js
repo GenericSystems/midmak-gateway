@@ -31,7 +31,8 @@ import {
   updateAcademyBuildingStructure,
   deleteAcademyBuildingStructure,
   getAcademyBuildingStructureDeletedValue,
-} from "store/halls/actions";
+  getHallTypes,
+} from "store/academyBuildingStructure/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -42,7 +43,7 @@ import {
   checkIsDeleteForPage,
   checkIsEditForPage,
 } from "../../utils/menuUtils";
-class HallsList extends Component {
+class AcademyBuildingStructuresList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,15 +53,17 @@ class HallsList extends Component {
       editingAcademyName: false,
       newBuildingArName: "",
       newBuildingEnName: "",
+      newBuildingNum: "",
       editBuildingArName: "",
       editBuildingEnName: "",
+      editBuildingNum: "",
       newFloorArName: "",
       newFloorEnName: "",
       newFloorNum: "",
       flrBuildingId: "",
       editFloorArName: "",
       editFloorEnName: "",
-      editFloorOrder: "",
+      editFloorNum: "",
       addingFloor: false,
       academyDefaultName: "Your Academy",
       expandedNodes: ["1"],
@@ -74,7 +77,6 @@ class HallsList extends Component {
       buildingNumError: false,
       buildingCodeError: false,
       floorNameError: false,
-      floorNumError: false,
       deletebBuildingModal: false,
       deleteFloorModal: false,
       selectedFloorId: null,
@@ -89,7 +91,7 @@ class HallsList extends Component {
       NewHallArName: "",
       NewHallEnName: "",
       NewHallCode: "",
-      NewHallOrder: "",
+      NewHallNum: "",
       NewhallTypeId: "",
       NewMaxNumOfPer: "",
       NewCurrentNumOfPer: "",
@@ -98,7 +100,7 @@ class HallsList extends Component {
       editHallArName: "",
       editHallEnName: "",
       editHallCode: "",
-      editHallOrder: "",
+      editHallNum: "",
       editMaxNumOfPer: "",
       editCurrentNumOfPer: "",
       edithallTypeId: "",
@@ -121,6 +123,8 @@ class HallsList extends Component {
     const {
       academyBuildingStructures,
       onGetAcademyBuildingStructures,
+      onGetHallTypes,
+      hallTypes,
       deleted,
       user_menu,
     } = this.props;
@@ -129,15 +133,18 @@ class HallsList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
 
     onGetAcademyBuildingStructures();
+    onGetHallTypes();
 
-    this.setState({ academyBuildingStructures });
+    this.setState({ academyBuildingStructures, hallTypes });
     this.setState({ deleted });
+    this.setState({
+      showAddButton: true,
+      showDeleteButton: true,
+      showEditButton: true,
+    });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { onAddNewHall, academyBuildingStructures } = this.props;
-  }
-  onPaginationPageChange = page => {
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -155,7 +162,7 @@ class HallsList extends Component {
         this.props.location.pathname
       );
     }
-  };
+  }
 
   updateShowDeleteButton = (menu, pathname) => {
     const showDeleteButton = checkIsDeleteForPage(menu, pathname);
@@ -182,8 +189,7 @@ class HallsList extends Component {
   };
   handleBuildingDataChange = (fieldName, value) => {
     const { openForm } = this.state;
-    console.log("value", value);
-    if (openForm == "building") {
+    if (openForm == "Building") {
       if (fieldName == "arTitle") {
         this.setState({ newBuildingArName: value });
         if (value.trim() === "") {
@@ -196,6 +202,9 @@ class HallsList extends Component {
       if (fieldName == "enTitle") {
         this.setState({ newBuildingEnName: value });
       }
+      if (fieldName == "buildingNum") {
+        this.setState({ newBuildingNum: value });
+      }
     } else if (openForm == "editBuilding") {
       if (fieldName == "arTitle") {
         this.setState({ editBuildingArName: value });
@@ -204,14 +213,16 @@ class HallsList extends Component {
       if (fieldName == "enTitle") {
         this.setState({ editBuildingEnName: value });
       }
+      if (fieldName == "buildingNum") {
+        this.setState({ editBuildingNum: value });
+      }
     }
   };
 
   handleFloorDataChange = (fieldName, value) => {
     const { openForm } = this.state;
-    console.log("value", value);
 
-    if (openForm == "floor") {
+    if (openForm == "Floor") {
       if (fieldName == "floorArName") {
         this.setState({ newFloorArName: value });
         if (value.trim() === "") {
@@ -224,6 +235,9 @@ class HallsList extends Component {
       if (fieldName == "floorEnName") {
         this.setState({ newFloorEnName: value });
       }
+      if (fieldName == "floorNum") {
+        this.setState({ newFloorNum: value });
+      }
     } else if (openForm == "editFloor") {
       if (fieldName == "floorArName") {
         this.setState({ editFloorArName: value });
@@ -232,6 +246,72 @@ class HallsList extends Component {
       if (fieldName == "floorEnName") {
         this.setState({ editFloorEnName: value });
       }
+      if (fieldName == "floorNum") {
+        this.setState({ editFloorNum: value });
+      }
+    }
+  };
+
+  handleHallDataChange = (fieldName, value) => {
+    const { openForm } = this.state;
+
+    if (openForm === "Hall") {
+      if (fieldName === "hallArName") {
+        this.setState({ NewHallArName: value });
+        this.setState({ hallArnameError: value.trim() === "" });
+      }
+
+      if (fieldName === "hallEnName") {
+        this.setState({ NewHallEnName: value });
+      }
+
+      if (fieldName === "hallCode") {
+        this.setState({ NewHallCode: value });
+      }
+
+      if (fieldName === "hallNum") {
+        this.setState({ NewHallNum: value });
+      }
+
+      if (fieldName === "hallTypeId") {
+        this.setState({ NewHallTypeId: value });
+      }
+      if (fieldName === "maxNumOfPer") {
+        this.setState({ NewMaxNumOfPer: value });
+      }
+      if (fieldName === "currentNumOfPer") {
+        this.setState({ NewCurrentNumOfPer: value });
+      }
+    } else if (openForm === "editHall") {
+      if (fieldName === "hallArName") {
+        this.setState({ editHallArName: value });
+      }
+
+      if (fieldName === "hallEnName") {
+        this.setState({ editHallEnName: value });
+      }
+
+      if (fieldName === "hallNum") {
+        this.setState({ editHallNum: parseInt(value, 10) });
+      }
+
+      if (fieldName === "hallTypeId") {
+        this.setState({ editHallTypeId: value });
+      }
+      if (fieldName === "maxNumOfPer") {
+        this.setState({ editMaxNumOfPer: value });
+      }
+      if (fieldName === "currentNumOfPer") {
+        this.setState({ editCurrentNumOfPer: value });
+      }
+    }
+  };
+
+  handleSelectHallType = (fieldName, selectedValue) => {
+    if (fieldName == "hallTypeId") {
+      this.setState({
+        selectedHallId: selectedValue,
+      });
     }
   };
 
@@ -239,9 +319,10 @@ class HallsList extends Component {
     const { openForm, buildingId } = this.state;
     const { academyBuildingStructures } = this.props;
 
-    if (openForm == "building") {
-      const { onAddAcademyBuildingStructure } = this.props;
-      const { newBuildingArName, newBuildingEnName } = this.state;
+    if (openForm == "Building") {
+      const { onAddNewAcademyBuildingStructure } = this.props;
+      const { newBuildingArName, newBuildingNum, newBuildingEnName } =
+        this.state;
 
       if (newBuildingArName.trim() === "") {
         this.setState({ buildingNameError: true, saveError: true });
@@ -269,14 +350,16 @@ class HallsList extends Component {
           const payload = {
             arTitle: newBuildingArName,
             enTitle: newBuildingEnName,
+            num: newBuildingNum,
           };
-          (payload["tablename"] = "Common_Directorate"),
-            onAddAcademyBuildingStructure(payload);
+          (payload["tablename"] = "Common_Building"),
+            onAddNewAcademyBuildingStructure(payload);
         }
       }
     } else if (openForm == "editBuilding") {
       const { onUpdateAcademyBuildingStructure } = this.props;
-      const { editBuildingArName, editBuildingEnName } = this.state;
+      const { editBuildingArName, editBuildingNum, editBuildingEnName } =
+        this.state;
 
       const isDuplicateBuilding = academyBuildingStructures
         .filter(building => building.Id !== buildingId)
@@ -312,8 +395,9 @@ class HallsList extends Component {
             Id: buildingId,
             arTitle: editBuildingArName,
             enTitle: editBuildingEnName,
+            num: editBuildingNum,
           };
-          (payload["tablename"] = "Common_Directorate"),
+          (payload["tablename"] = "Common_Building"),
             onUpdateAcademyBuildingStructure(payload);
         }
       }
@@ -323,10 +407,9 @@ class HallsList extends Component {
   handleSaveFloor = () => {
     const { openForm, floorId, flrBuildingId } = this.state;
     const { academyBuildingStructures } = this.props;
-    console.log(" dep form ");
-    if (openForm == "floor") {
-      const { onAddAcademyBuildingStructure } = this.props;
-      const { newFloorArName, newFloorEnName } = this.state;
+    if (openForm == "Floor") {
+      const { onAddNewAcademyBuildingStructure } = this.props;
+      const { newFloorArName, newFloorNum, newFloorEnName } = this.state;
 
       if (newFloorArName.trim() === "") {
         this.setState({ floorNameError: true, saveError: true });
@@ -348,7 +431,6 @@ class HallsList extends Component {
           building => building.Id === flrBuildingId
         );
 
-        console.log("selectedBuilding", selectedBuilding);
         if (!selectedBuilding) {
           console.log(`Building with buildingId ${flrBuildingId} not found.`);
           return;
@@ -359,21 +441,22 @@ class HallsList extends Component {
             "Floor Name already exists"
           );
           this.setState({ errorMessage: duplicateErrorMessage });
+          return;
         }
         const payload = {
           arTitle: newFloorArName,
           enTitle: newFloorEnName,
+          num: newFloorNum,
           buildingId: flrBuildingId,
         };
-        (payload["tablename"] = "Common_Department"),
-          //console.log(payload, "ppppppppppppppp");
-          onAddAcademyBuildingStructure(payload);
+        (payload["tablename"] = "Common_Floor"),
+          onAddNewAcademyBuildingStructure(payload);
       }
     } else if (openForm == "editFloor") {
       console.log("open edit dep form ");
 
       const { onUpdateAcademyBuildingStructure } = this.props;
-      const { editFloorArName, editFloorEnName } = this.state;
+      const { editFloorArName, editFloorEnName, editFloorNum } = this.state;
 
       const isDuplicateFloor = academyBuildingStructures.some(
         building =>
@@ -390,8 +473,6 @@ class HallsList extends Component {
       console.log(" dep isDuplicateFloor ", isDuplicateFloor);
 
       if (isDuplicateFloor) {
-        console.log(" dep duplicate");
-
         const duplicateErrorMessage = this.props.t("Floor already exists");
         this.setState({ errorMessage: duplicateErrorMessage });
       } else {
@@ -399,9 +480,8 @@ class HallsList extends Component {
 
         if (editFloorArName.trim() === "") {
           this.setState({ floorNameError: true, saveError: true });
-          console.log(" editFloorArName = empty");
         } else if (
-          editFloorArName.trim() !== "" ||
+          editFloorArName.trim() !== "" &&
           editFloorEnName.trim() !== ""
         ) {
           const successUpdatedMessage = this.props.t(
@@ -417,9 +497,10 @@ class HallsList extends Component {
             Id: floorId,
             arTitle: editFloorArName,
             enTitle: editFloorEnName,
+            num: editFloorNum,
             buildingId: flrBuildingId,
           };
-          (payload["tablename"] = "Common_Department"),
+          (payload["tablename"] = "Common_Floor"),
             onUpdateAcademyBuildingStructure(payload);
         }
       }
@@ -427,21 +508,22 @@ class HallsList extends Component {
   };
 
   handleSaveHall = () => {
+    console.log("Saving...");
     const { openForm, hallId, floorHallId } = this.state;
     const {
       academyBuildingStructures,
-      onAddAcademyBuildingStructure,
+      onAddNewAcademyBuildingStructure,
       onUpdateAcademyBuildingStructure,
       t,
     } = this.props;
 
-    if (openForm === "hall") {
+    if (openForm === "Hall") {
       const {
         NewHallArName,
         NewHallEnName,
         NewHallCode,
-        NewHallOrder,
-        NewhallTypeId,
+        NewHallNum,
+        NewHallTypeId,
         NewMaxNumOfPer,
         NewCurrentNumOfPer,
       } = this.state;
@@ -459,7 +541,7 @@ class HallsList extends Component {
         .flatMap(building => building.floors)
         .find(floor => floor.Id === floorHallId);
 
-      if (!selectedHall) {
+      if (!selectedFloor) {
         console.log(`Floor with ID ${floorHallId} not found.`);
         return;
       }
@@ -475,30 +557,29 @@ class HallsList extends Component {
         const payload = {
           arTitle: NewHallArName,
           enTitle: NewHallEnName,
-          hallOrder: parseInt(NewHallOrder, 10),
+          hallNum: parseInt(NewHallNum, 10),
           hallCode: NewHallCode,
-          hallTypeId: selectedHallType,
-          maxNumOfPer: NewMaxNumOfPer,
-          currentNumOfPer: NewCurrentNumOfPer,
+          hallTypeId: NewHallTypeId?.value,
+          maxNumOfPer: parseInt(NewMaxNumOfPer, 10),
+          currentNumOfPer: parseInt(NewCurrentNumOfPer),
           floorId: floorHallId,
-          tablename: "Common_Organism",
+          tablename: "Common_Hall",
         };
 
+        onAddNewAcademyBuildingStructure(payload);
         const successSavedMessage = t("Hall saved successfully");
         this.setState({
           successMessage: successSavedMessage,
           saveError: false,
         });
-
-        onAddAcademyBuildingStructure(payload);
       }
     } else if (openForm === "editHall") {
       const {
         editHallArName,
         editHallEnName,
         editHallCode,
-        editHallOrder,
-        edithallTypeId,
+        editHallNum,
+        editHallTypeId,
         editMaxNumOfPer,
         editCurrentNumOfPer,
       } = this.state;
@@ -508,10 +589,8 @@ class HallsList extends Component {
         .find(floor => floor.Id === floorHallId);
 
       const isDuplicateHall = selectedFloor?.halls?.some(
-        hall => hall.Id !== organismId && hall.hallArName === editOrganismArName
+        hall => hall.Id !== hallId && hall.hallArName === editHallArName
       );
-
-      console.log(editHallArName, "hhhh");
 
       if (isDuplicateHall) {
         const duplicateErrorMessage = t("Hall already exists");
@@ -526,23 +605,21 @@ class HallsList extends Component {
           Id: hallId,
           arTitle: editHallArName,
           enTitle: editHallEnName,
-          hallOrder: parseInt(editHallOrder, 10),
+          hallNum: parseInt(editHallNum, 10),
           hallCode: editHallCode,
-          hallTypeId: edithallTypeId,
+          hallTypeId: editHallTypeId?.value,
           maxNumOfPer: editMaxNumOfPer,
           currentNumOfPer: editCurrentNumOfPer,
           floorId: floorHallId,
-          tablename: "Common_Organism",
+          tablename: "Common_Hall",
         };
-
+        onUpdateAcademyBuildingStructure(payload);
         const successUpdatedMessage = t("Hall updated successfully");
         this.setState({
           hallArnameError: false,
           saveError: false,
           successMessage: successUpdatedMessage,
         });
-
-        onUpdateAcademyBuildingStructure(payload);
       }
     }
   };
@@ -551,35 +628,33 @@ class HallsList extends Component {
     this.setState({ duplicateError: null });
   };
 
-  handleSelectFaculty(rowId, fieldName, selectedValue) {
-    const { onUpdateHall } = this.props;
-    let onUpdate = { Id: rowId, [fieldName]: selectedValue };
-    onUpdateHall(onUpdate);
-  }
-
-  handleSuccessClose = () => {
-    const { onGetHallDeletedValue } = this.props;
-    this.setState({ showAlert: null });
-    onGetHallDeletedValue();
+  handleErrorClose = () => {
+    this.setState({ errorMessage: null });
   };
 
-  handleErrorClose = () => {
-    const { onGetHallDeletedValue } = this.props;
+  handleSuccessClose = () => {
+    this.setState({ successMessage: null });
+  };
+
+  handleSuccessDeletedClose = () => {
+    const { onGetAcademyBuildingStructureDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetHallDeletedValue();
+    onGetAcademyBuildingStructureDeletedValue();
   };
 
   handleAddBuildingForm = () => {
     this.setState({ openForm: "Building" });
     this.setState({ newBuildingArName: "" });
     this.setState({ newBuildingEnName: "" });
+    this.setState({ newBuildingNum: "" });
   };
 
-  handleAddFloorForm = floor => {
-    this.setState({ openForm: "floor" });
-    this.setState({ buildFloorId: floor });
+  handleAddFloorForm = Building => {
+    this.setState({ openForm: "Floor" });
+    this.setState({ flrBuildingId: Building });
     this.setState({ newFloorArName: "" });
     this.setState({ newFloorEnName: "" });
+    this.setState({ newFloorNum: "" });
   };
 
   handleEditFloor = (floor, buildingId) => {
@@ -589,6 +664,7 @@ class HallsList extends Component {
     this.setState({ editFloorArName: floor.floorArName });
     this.setState({
       editFloorEnName: floor.floorEnName || "",
+      editFloorNum: floor.floorNum || "",
     });
   };
 
@@ -598,6 +674,7 @@ class HallsList extends Component {
     this.setState({ editBuildingArName: building.buildingArName });
     this.setState({
       editbuildingEnName: building.buildingEnName || "",
+      editBuildingNum: building.buildingNum || "",
     });
   };
 
@@ -609,6 +686,24 @@ class HallsList extends Component {
     this.setState({ selectedBuilding: building });
   };
 
+  handleDeleteBuilding = () => {
+    const { selectedBuilding } = this.state;
+    const { onDeleteAcademyBuildingStructure } = this.props;
+    let payload = { Id: selectedBuilding.Id };
+    payload["tablename"] = "Common_Building";
+    this.setState({ deleteBuildingModal: null });
+
+    if (selectedBuilding.floors[0].Id == null) {
+      this.setState({ errorMessage: null, showAlert: true });
+      onDeleteAcademyBuildingStructure(payload);
+    } else {
+      const deleteErrorMessage = this.props.t(
+        "Can't delete this Building! Delete it's floors first"
+      );
+      this.setState({ errorMessage: deleteErrorMessage });
+    }
+  };
+
   onClickDeleteFloor = (floorId, floor) => {
     this.setState({
       selectedFloorId: floorId,
@@ -617,45 +712,94 @@ class HallsList extends Component {
     });
   };
 
-  handelAddHallForm = buildingId => {
-    this.setState({ openForm: "hall" });
-    this.setState({ buildHallId: buildingId });
+  handleDeleteFloor = () => {
+    const { selectedFloorId, selectedFloor } = this.state;
+
+    if (selectedFloor.halls.Id == null) {
+      let payload = { Id: selectedFloorId };
+      payload["tablename"] = "Common_Floor";
+      const { onDeleteAcademyBuildingStructure } = this.props;
+      onDeleteAcademyBuildingStructure(payload);
+      this.setState({
+        selectedFloorId: null,
+        deleteFloorModal: false,
+        showAlert: true,
+      });
+    } else {
+      const deleteErrorMessage = this.props.t(
+        "Can't delete this Department! Delete it's organisms first"
+      );
+      this.setState({
+        errorMessage: deleteErrorMessage,
+        deleteDepartmentModal: false,
+      });
+    }
+  };
+
+  onClickDeleteHall = buildingId => {
+    this.setState({ selectedHallId: buildingId, deleteHallModal: true });
+  };
+  handelDeleteHall = () => {
+    const { selectedHallId, deleteHallModal } = this.state;
+    const { onDeleteAcademyBuildingStructure } = this.props;
+
+    let payload = {
+      Id: selectedHallId,
+      tablename: "Common_Hall",
+    };
+    onDeleteAcademyBuildingStructure(payload);
+    this.setState({
+      selectedHallId: null,
+      deleteHallModal: false,
+      showAlert: true,
+    });
+  };
+
+  handelAddHallForm = floorId => {
+    this.setState({ openForm: "Hall" });
+    this.setState({ floorHallId: floorId });
     this.setState({ NewHallArName: "" });
     this.setState({ NewHallEnName: "" });
     this.setState({ NewHallCode: "" });
-    this.setState({ NewHallOrder: "" });
-    this.setState({ NewhallTypeId: selectedHallType });
+    this.setState({ NewHallNum: "" });
+    this.setState({ NewHallTypeId: "" });
     this.setState({ NewMaxNumOfPer: "" });
     this.setState({ NewCurrentNumOfPer: "" });
   };
 
-  handelEditHall = (hall, buildingId) => {
+  handelEditHall = (hall, floorId) => {
     this.setState({ openForm: "editHall" });
     this.setState({ hallId: hall.Id });
-    this.setState({ buildHallId: buildingId });
+    this.setState({ floorHallId: floorId });
     this.setState({ editHallArName: hall.hallArName });
     this.setState({ editHallEnName: hall.hallEnName || "" });
     this.setState({ editHallCode: hall.hallCode || "" });
-    this.setState({ editHallOrder: hall.hallOrder || "" });
+    this.setState({ editHallNum: hall.hallNum || "" });
     this.setState({ edithallTypeId: selectedHallType });
     this.setState({ editMaxNumOfPer: hall.maxNumOfPer });
     this.setState({ editCurrentNumOfPer: hall.currentNumOfPer });
   };
 
   render() {
-    const { academyBuildingStructures, t, deleted } = this.props;
+    const { hallTypes, academyBuildingStructures, t, deleted } = this.props;
     const {
       newBuildingArName,
       newBuildingEnName,
+      selectedHallType,
+      newBuildingNum,
       editBuildingArName,
       editBuildingEnName,
+      editBuildingNum,
       newFloorArName,
       newFloorEnName,
+      newfloorNum,
       flrBuildingId,
       editFloorArName,
+      editfloorNum,
       editFloorEnName,
       selectedBuildingId,
       academyDefaultName,
+      selectedFloorId,
       expandedNodes,
       editingAcademyName,
       openForm,
@@ -675,15 +819,15 @@ class HallsList extends Component {
       NewHallArName,
       NewHallEnName,
       NewHallCode,
-      NewHallOrder,
-      NewhallTypeId,
+      NewHallNum,
+      NewHallTypeId,
       NewCurrentNumOfPer,
       NewMaxNumOfPer,
       hallArnameError,
       editHallArName,
       editHallEnName,
       editHallCode,
-      editHallOrder,
+      editHallNum,
       editMaxNumOfPer,
       editCurrentNumOfPer,
       edithallTypeId,
@@ -712,14 +856,14 @@ class HallsList extends Component {
         <Row>
           <Breadcrumbs
             title={this.props.t("Academy Building Structures")}
-            breadcrumbItem={this.props.t("Halls List")}
+            breadcrumbItem={this.props.t("Academy Building Structures List")}
           />
 
           <Col lg="4">
             <Container fluid>
               <Card>
                 <TreeView
-                  key={"univeristy-tree"}
+                  key={"academy-tree"}
                   aria-label="multi-select"
                   defaultCollapseIcon={<ExpandMoreIcon />}
                   defaultExpandIcon={<ChevronRightIcon />}
@@ -931,8 +1075,8 @@ class HallsList extends Component {
                                                     <IconButton
                                                       className="delete-organism-button"
                                                       onClick={() =>
-                                                        this.onClickDeleteOrganism(
-                                                          organism.Id
+                                                        this.onClickDeleteHall(
+                                                          hall.Id
                                                         )
                                                       }
                                                     >
@@ -1022,7 +1166,7 @@ class HallsList extends Component {
                     </Alert>
                   )}
                 </div>
-                {openForm == "building" && (
+                {openForm == "Building" && (
                   <div>
                     <Row>
                       <Typography variant="div">
@@ -1091,6 +1235,30 @@ class HallsList extends Component {
                         />
                       </Col>
                     </Row>
+                    <Row>
+                      <Col lg="2">
+                        <label htmlFor="buildingNum" className="col-form-label">
+                          {"Building Number"}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="buildingNum"
+                          name="buildingNum"
+                          autoComplete="off"
+                          className="form-control mb-2"
+                          placeholder={t("Building Number")}
+                          value={newBuildingNum}
+                          onChange={e => {
+                            this.handleBuildingDataChange(
+                              "buildingNum",
+                              e.target.value
+                            );
+                          }}
+                        />
+                      </Col>
+                    </Row>
                     <div className="d-flex justify-content-end mt-4">
                       <button
                         type="button"
@@ -1102,7 +1270,7 @@ class HallsList extends Component {
                     </div>
                   </div>
                 )}
-                {openForm === "floor" && flrBuildingId && (
+                {openForm === "Floor" && flrBuildingId && (
                   <div>
                     <Row>
                       <Typography variant="div">
@@ -1167,6 +1335,30 @@ class HallsList extends Component {
                           onChange={e => {
                             this.handleFloorDataChange(
                               "floorEnName",
+                              e.target.value
+                            );
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col lg="2">
+                        <label htmlFor="floorNum" className="col-form-label">
+                          {"Floor Number"}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="floorNum"
+                          name="floorNum"
+                          autoComplete="off"
+                          className="form-control mb-2"
+                          placeholder={t("Floor Number")}
+                          value={newfloorNum}
+                          onChange={e => {
+                            this.handleFloorDataChange(
+                              "floorNum",
                               e.target.value
                             );
                           }}
@@ -1255,6 +1447,31 @@ class HallsList extends Component {
                         />
                       </Col>
                     </Row>
+                    <Row>
+                      <Col lg="2">
+                        <label htmlFor="buildingNum" className="col-form-label">
+                          {"Building Number"}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="buildingNum"
+                          name="buildingNum"
+                          autoComplete="off"
+                          className="form-control mb-2"
+                          placeholder={t("Building Number")}
+                          value={editBuildingNum}
+                          onChange={e => {
+                            this.handleBuildingDataChange(
+                              "buildingNum",
+                              e.target.value
+                            );
+                          }}
+                          disabled={!showEditButton}
+                        />
+                      </Col>
+                    </Row>
                     <div className="d-flex justify-content-end mt-4">
                       <button
                         type="button"
@@ -1328,6 +1545,30 @@ class HallsList extends Component {
                         />
                       </Col>
                     </Row>
+                    <Row>
+                      <Col lg="2">
+                        <label htmlFor="floorNum" className="col-form-label">
+                          {"Floor Number"}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="floorNum"
+                          name="floorNum"
+                          autoComplete="off"
+                          className="form-control mb-2"
+                          placeholder={t("Floor Number")}
+                          value={editfloorNum}
+                          onChange={e => {
+                            this.handleFloorDataChange(
+                              "floorNum",
+                              e.target.value
+                            );
+                          }}
+                        />
+                      </Col>
+                    </Row>
                     <div className="d-flex justify-content-end mt-4">
                       <button
                         type="button"
@@ -1339,7 +1580,7 @@ class HallsList extends Component {
                     </div>
                   </div>
                 )}
-                {openForm === "hall" && floorHallId && (
+                {openForm === "Hall" && floorHallId && (
                   <div>
                     <Row>
                       <Typography variant="div">
@@ -1409,23 +1650,39 @@ class HallsList extends Component {
                         />
                       </Col>
                     </Row>
+                    <Row>
+                      <Col lg="2">
+                        <label htmlFor="hallTypeId" className="col-form-label">
+                          {t("Hall Type")}:
+                        </label>
+                      </Col>
+                      <Col lg="4">
+                        <Select
+                          className="select-style-year"
+                          name="hallTypeId"
+                          key={`hallTypeId`}
+                          options={hallTypes}
+                          onChange={newValue => {
+                            this.handleHallDataChange("hallTypeId", newValue);
+                          }}
+                          value={selectedHallType}
+                        />
+                      </Col>
+                    </Row>
 
                     <Row className="mt-4">
                       <Col lg="2">
                         <label htmlFor="hallCode" className="col-form-label">
-                          {t("Hall Number")}:
+                          {t("Hall Code")}:
                         </label>
-                        <span className="text-danger">*</span>
                       </Col>
                       <Col md="4">
                         <input
-                          type="number"
+                          type="text"
                           id="hallCode"
                           name="hallCode"
-                          className={`form-control mb-2 ${
-                            hallCodeError ? "is-invalid" : ""
-                          }`}
-                          placeholder={t("Hall Number")}
+                          className={`form-control`}
+                          placeholder={t("Hall Code")}
                           value={NewHallCode}
                           onChange={e =>
                             this.handleHallDataChange(
@@ -1438,23 +1695,20 @@ class HallsList extends Component {
                       </Col>
 
                       <Col lg="2">
-                        <label htmlFor="hallOrder" className="col-form-label">
-                          {t("Hall Order")}:
+                        <label htmlFor="hallNum" className="col-form-label">
+                          {t("Hall Number")}:
                         </label>
                       </Col>
                       <Col md="4">
                         <input
-                          type="text"
-                          id="hallOrder"
-                          name="hallOrder"
+                          type="number"
+                          id="hallNum"
+                          name="hallNum"
                           className="form-control mb-2"
-                          placeholder={t("Hall Order")}
-                          value={NewHallOrder}
+                          placeholder={t("Hall Number")}
+                          value={NewHallNum}
                           onChange={e =>
-                            this.handleHallDataChange(
-                              "hallOrder",
-                              e.target.value
-                            )
+                            this.handleHallDataChange("hallNum", e.target.value)
                           }
                           disabled={!showEditButton}
                         />
@@ -1519,14 +1773,14 @@ class HallsList extends Component {
                     </div>
                   </div>
                 )}
-                {openForm === "editOrganism" && (
+                {openForm === "editHall" && (
                   <div>
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
                           {t("Edit Hall")}{" "}
                           {
-                            academyOrgStructures
+                            academyBuildingStructures
                               .flatMap(directorate => directorate.departments)
                               .find(floor => floor.Id === floorHallId)?.arTitle
                           }{" "}
@@ -1594,19 +1848,16 @@ class HallsList extends Component {
                     <Row className="mt-4">
                       <Col lg="2">
                         <label htmlFor="hallCode" className="col-form-label">
-                          {t("Hall Number")}:
+                          {t("Hall Code")}:
                         </label>
-                        <span className="text-danger">*</span>
                       </Col>
                       <Col md="4">
                         <input
-                          type="number"
+                          type="text"
                           id="hallCode"
                           name="hallCode"
-                          className={`form-control mb-2 ${
-                            hallCodeError ? "is-invalid" : ""
-                          }`}
-                          placeholder={t("Hall Number")}
+                          className={`form-control`}
+                          placeholder={t("Hall Code")}
                           value={editHallCode}
                           onChange={e =>
                             this.handleHallDataChange(
@@ -1619,23 +1870,20 @@ class HallsList extends Component {
                       </Col>
 
                       <Col lg="2">
-                        <label htmlFor="hallOrder" className="col-form-label">
-                          {t("Hall Order")}:
+                        <label htmlFor="hallNum" className="col-form-label">
+                          {t("Hall Number")}:
                         </label>
                       </Col>
                       <Col md="4">
                         <input
-                          type="text"
-                          id="hallOrder"
-                          name="hallOrder"
+                          type="number"
+                          id="hallNum"
+                          name="hallNum"
                           className="form-control mb-2"
-                          placeholder={t("Hall Order")}
-                          value={editHallOrder}
+                          placeholder={t("Hall Number")}
+                          value={editHallNum}
                           onChange={e =>
-                            this.handleHallDataChange(
-                              "hallOrder",
-                              e.target.value
-                            )
+                            this.handleHallDataChange("hallNum", e.target.value)
                           }
                           disabled={!showEditButton}
                         />
@@ -1711,20 +1959,22 @@ class HallsList extends Component {
 
 const mapStateToProps = ({ academyBuildingStructures, menu_items }) => ({
   academyBuildingStructures:
-    academyBuildingStructures.academyBuildingStructures || [],
-  deleted: academyBuildingStructures.deleted || false,
+    academyBuildingStructures.academyBuildingStructures,
+  hallTypes: academyBuildingStructures.hallTypes,
+  deleted: academyBuildingStructures.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
   onGetAcademyBuildingStructures: () =>
     dispatch(getAcademyBuildingStructures()),
+  onGetHallTypes: () => dispatch(getHallTypes()),
   onAddNewAcademyBuildingStructure: academyBuildingStructure =>
-    dispatch(addNewAcademyBuildingStructure(AcademyBuildingStructure)),
+    dispatch(addNewAcademyBuildingStructure(academyBuildingStructure)),
   onUpdateAcademyBuildingStructure: academyBuildingStructure =>
-    dispatch(updateAcademyBuildingStructure(AcademyBuildingStructure)),
+    dispatch(updateAcademyBuildingStructure(academyBuildingStructure)),
   onDeleteAcademyBuildingStructure: academyBuildingStructure =>
-    dispatch(deleteAcademyBuildingStructure(AcademyBuildingStructure)),
+    dispatch(deleteAcademyBuildingStructure(academyBuildingStructure)),
   onGetAcademyBuildingStructureDeletedValue: () =>
     dispatch(getAcademyBuildingStructureDeletedValue()),
 });
@@ -1732,4 +1982,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(HallsList));
+)(withTranslation()(AcademyBuildingStructuresList));

@@ -220,6 +220,8 @@ export const GET_SECTOR_DELETED_VALUE = "/deleted";
 
 //AcademyBuildingStructure
 export const GET_ACADEMY_BUILDING_STRUCTURES = "/academyBuildingStructures";
+export const GET_HALLS = "/halls";
+export const GET_HALLS_TYPES = "/hallTypes";
 export const GET_ACADEMY_BUILDING_STRUCTURE_PROFILE =
   "/academyBuildingStructure";
 export const ADD_NEW_ACADEMY_BUILDING_STRUCTURE =
@@ -1088,9 +1090,8 @@ export const UPDATE_ACADEMY_ORG_STRUCTURE = "/update/academyOrgStructures";
 export const DELETE_ACADEMY_ORG_STRUCTURE = "/delete/academyOrgStructures";
 export const GET_ACADEMY_ORG_STRUCTURE_DELETED_VALUE = "/deleted";
 
-
-export const GET_GRADE_TYPES  = "/gradeTypes";
+export const GET_GRADE_TYPES = "/gradeTypes";
 export const GET_GRADE_TYPE_DELETED_VALUE = "/deleted";
-export const ADD_NEW_GRADE_TYPE  = "/add/gradeType"
+export const ADD_NEW_GRADE_TYPE = "/add/gradeType";
 export const UPDATE_GRADE_TYPE = "/update/gradeType";
 export const DELETE_GRADE_TYPE = "/delet/gradeType";
