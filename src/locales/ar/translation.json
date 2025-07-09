@@ -284,7 +284,25 @@
   "Distributing Method": "طرق التوزيع",
   "Add Distributing Method" : "اضافة طريقة توزيع",
   "Edit Distributing Method": "تعديل طريقة التوزيع",
-  "Create Distributing Method" : "اضافة طريقة التوزيع"
+  "Create Distributing Method" : "اضافة طريقة التوزيع",
+  "Distribution type":"طريقة التوزيع",
+  "Yes, copy it!":"نعم قم بالنسخ",
+  "Human Resources": "الموارد بشرية",
+  "Admission": "القبول والتسجيل",
+  "Exams": "الامتحانات",
+  "Courses Registration": "تسجيل الدورات",
+  "New trainee":"متدرب جديد",
+  "Trainees":"المتدربون",
+  "Acadmy System":"النظام الأكاديمي",
+  "Calender": "تقويم",
+  "Week Days": "أيام الأسبوع",
+  "Lecture Periods": "فترات المحاضرات",
+  "WeekDays List":"قائمة الأسابيع",
+  "Acadmy Definition":"تعريف الاكادمية",
+  "Organizational Structure":"النظام الهيكلي للاكادمية",
+  "TimeLine":"الجدول الزمني",
+  "Exam Scheduling":"مواعيد الامتحانات",
+  "Exam Reports":"تقارير الامتحانات"
 
 
 }

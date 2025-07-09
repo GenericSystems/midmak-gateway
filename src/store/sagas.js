@@ -111,6 +111,8 @@ import academyOrgStructureSaga from "./academyOrgStructure/saga";
 
 import gradeTypesSaga from "./grade-types/saga";
 
+import courseDistributionsSaga from "./courses-distribution/saga";
+
 export default function* rootSaga() {
   yield all([
     //public
@@ -217,5 +219,6 @@ export default function* rootSaga() {
     fork(coursesCatalogsSaga),
     fork(academyOrgStructureSaga),
     fork(gradeTypesSaga),
+    fork(courseDistributionsSaga),
   ]);
 }

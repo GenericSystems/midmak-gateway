@@ -884,7 +884,7 @@ class DistributingCoursesMethods extends Component {
                               <Row className="mb-2">
                                 <Col sm="4"></Col>
                                 <Col sm="8">
-                                  <div className="text-sm-end">
+                                  <div className="text-sm-end d-none">
                                     <Tooltip
                                       title={this.props.t("Copy")}
                                       placement="top"

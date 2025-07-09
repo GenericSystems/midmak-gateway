@@ -220,6 +220,10 @@ import DistributingCoursesMethods from "pages/GradeSettings/Distributing-courses
 //gradeTypes
 import GradeTypesList from "pages/GradeSettings/Grade-types";
 
+//CourseDistributionsList
+
+import CourseDistributionsList from "pages/GradeSettings/courseDistributions";
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -352,6 +356,8 @@ const authProtectedRoutes = [
   },
 
   { path: "/gradeTypes", component: GradeTypesList },
+
+  { path: "/course-distributions", component: CourseDistributionsList },
 
   //Blog
   { path: "/blog-list", component: BlogList },

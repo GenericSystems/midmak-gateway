@@ -279,3 +279,6 @@ export * from "./CourseCataloge/actions";
 //GradeTypes
 
 export * from "./grade-types/actions";
+
+//GradeMethod
+export * from "./courses-distribution/actions";

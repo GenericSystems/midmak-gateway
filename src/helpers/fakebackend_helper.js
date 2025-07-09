@@ -2220,6 +2220,15 @@ export const addNewGradeType = data => post(url.ADD_NEW_GRADE_TYPE, data);
 export const updateGradeType = data => post(url.UPDATE_GRADE_TYPE, data);
 export const deleteGradeType = data => post(url.DELETE_GRADE_TYPE, data);
 
+
+export const getCourseDistributions = data => post(url.GET_COURSE_DISTRIBUTIONS, data);
+export const getCourseDistributionDeletedValue = () => get(url.GET_COURSE_DISTRIBUTION_DELETED_VALUE);
+export const addNewCourseDistribution = data => post(url.ADD_NEW_COURSE_DISTRIBUTION, data);
+export const updateCourseDistribution = data => post(url.UPDATE_COURSE_DISTRIBUTION, data);
+export const deleteCourseDistribution = data => post(url.DELETE_COURSE_DISTRIBUTION, data);
+
+
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

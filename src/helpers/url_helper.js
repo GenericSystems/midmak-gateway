@@ -1095,3 +1095,10 @@ export const GET_GRADE_TYPE_DELETED_VALUE = "/deleted";
 export const ADD_NEW_GRADE_TYPE = "/add/gradeType";
 export const UPDATE_GRADE_TYPE = "/update/gradeType";
 export const DELETE_GRADE_TYPE = "/delet/gradeType";
+
+
+export const GET_COURSE_DISTRIBUTIONS = "/courseDistributions";
+export const GET_COURSE_DISTRIBUTION_DELETED_VALUE = "/courseDistributions/deleted";
+export const ADD_NEW_COURSE_DISTRIBUTION = "/add/courseDistribution";
+export const UPDATE_COURSE_DISTRIBUTION = "/update/courseDistribution";
+export const DELETE_COURSE_DISTRIBUTION = "/delete/courseDistribution";
