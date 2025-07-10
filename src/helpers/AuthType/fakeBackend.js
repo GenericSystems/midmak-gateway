@@ -9,7 +9,7 @@ import {
   comments,
   contacts,
   lecturePeriods,
-  coursesRegistration,
+  registration,
   generateSIDs,
   mobAppFacultyAccs,
   admissionConditions,
@@ -922,44 +922,44 @@ const fakeBackend = () => {
     });
   });
 
-  // CoursesRegistration
-  mock.onGet(url.GET_COURSES_REGISTRATIONS).reply(() => {
-    console.log("Calling mock get coursesRegistration");
+  // registration
+  mock.onGet(url.GET_REGISTRATIONS).reply(() => {
+    console.log("Calling mock get registration");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (coursesRegistration) {
+        if (registration) {
           // Passing fake JSON data as response
-          resolve([200, coursesRegistration]);
+          resolve([200, registration]);
         } else {
-          reject([400, "Cannot get coursesRegistration"]);
+          reject([400, "Cannot get registration"]);
         }
       });
     });
   });
 
-  mock.onPut(url.UPDATE_COURSES_REGISTRATION).reply(coursesRegistration => {
-    console.log("in mock onPut reply updating ...", coursesRegistration);
+  mock.onPut(url.UPDATE_REGISTRATION).reply(registration => {
+    console.log("in mock onPut reply updating ...", registration);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("updated coursesRegistration");
-        if (coursesRegistration && coursesRegistration.data) {
+        console.log("updated registration");
+        if (registration && registration.data) {
           // Passing fake JSON data as response
-          resolve([200, coursesRegistration.data]);
+          resolve([200, registration.data]);
         } else {
-          reject([400, "Cannot update coursesRegistration"]);
+          reject([400, "Cannot update registration"]);
         }
       });
     });
   });
-  mock.onDelete(url.DELETE_COURSES_REGISTRATION).reply(config => {
+  mock.onDelete(url.DELETE_REGISTRATION).reply(config => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("deleted coursesRegistration");
+        console.log("deleted registration");
         if (config && config.headers) {
           // Passing fake JSON data as response
-          resolve([200, config.headers.coursesRegistration]);
+          resolve([200, config.headers.registration]);
         } else {
-          reject([400, "Cannot delete coursesRegistration"]);
+          reject([400, "Cannot delete registration"]);
         }
       });
     });

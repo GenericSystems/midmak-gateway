@@ -25,44 +25,51 @@ import {
   shops,
 } from "./ecommerce";
 import { chats, contacts, groups, messages } from "./chat";
-import { inboxmails, starredmails, importantmails, draftmails, sentmails, trashmails } from "./mails";
+import {
+  inboxmails,
+  starredmails,
+  importantmails,
+  draftmails,
+  sentmails,
+  trashmails,
+} from "./mails";
 import { calenderDefaultCategories, events } from "./calender";
 import { file } from "./file";
 import { users, userProfile } from "./contacts";
-import { certificates} from "./certificates";
+import { certificates } from "./certificates";
 import { certificateTypes } from "./certificateTypes";
 import { studentManagements } from "./studentManagements";
-import { generateSIDs} from "./generateSIDs";
-import { lecturePeriods} from "./lecturePeriods";
-import { currentSemMans} from "./currentSemMans";
-import { levelingDecisions} from "./levelingDecisions";
-import { coursesRegistration } from "./coursesRegistration";
+import { generateSIDs } from "./generateSIDs";
+import { lecturePeriods } from "./lecturePeriods";
+import { currentSemMans } from "./currentSemMans";
+import { levelingDecisions } from "./levelingDecisions";
+import { registration } from "./registration";
 import { mobAppFacultyAccs } from "./mobAppFacultyAccs";
 import { generalManagements } from "./generalManagements";
 
-import { prereqs} from "./prereqs";
-import { studyPlans} from "./studyPlans";
-import { studentsStatistics} from "./studentsStatistics";
-import { preReqTypes} from "./preReqTypes";
+import { prereqs } from "./prereqs";
+import { studyPlans } from "./studyPlans";
+import { studentsStatistics } from "./studentsStatistics";
+import { preReqTypes } from "./preReqTypes";
 import { nationalities, nationalityProfile } from "./nationality";
-import { yearData, monthData, weekData } from './dashboard';
+import { yearData, monthData, weekData } from "./dashboard";
 import { governorates } from "./governorate";
-import {universityrequirements} from "./universityrequirement";
+import { universityrequirements } from "./universityrequirement";
 import { AcademicCertificate } from "./academiccertificate";
 import { Course } from "./courses";
 import { estimates } from "./estimates";
-import {admissionRequirements} from "./admissionrequirements";
-import {coursecontents} from "./coursecontents";
-import {courseTypes} from "./coursetypes";
+import { admissionRequirements } from "./admissionrequirements";
+import { coursecontents } from "./coursecontents";
+import { courseTypes } from "./coursetypes";
 import { levels } from "./levels";
 import { departments } from "./departments";
 import { schedulingLectures } from "./schedulingLectures";
 import { schedules } from "./schedules";
 import { grantSponsors } from "./grantSponsors";
-import {years} from "./years";
+import { years } from "./years";
 import { weekDays } from "./weekDays";
-import {timeLines} from "./timeLines";
-import {passwords} from "./passwords";
+import { timeLines } from "./timeLines";
+import { passwords } from "./passwords";
 import {
   janTopSellingData,
   decTopSellingData,
@@ -72,7 +79,7 @@ import {
   decEarningData,
   novEarningData,
   octEarningData,
-  chatData
+  chatData,
 } from "./dashboard-saas";
 
 export {
@@ -122,7 +129,7 @@ export {
   lecturePeriods,
   currentSemMans,
   levelingDecisions,
-  coursesRegistration,
+  registration,
   generateSIDs,
   generalManagements,
   mobAppFacultyAccs,
@@ -158,4 +165,4 @@ export {
   weekDays,
   timeLines,
   passwords,
-}
+};

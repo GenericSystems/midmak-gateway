@@ -1,4 +1,0 @@
-const coursesRegistration =[
-    
-]
-export { coursesRegistration }

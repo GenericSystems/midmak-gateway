@@ -22,7 +22,6 @@ import {
   GET_SCHEDULE_MSG_VALUE,
   GET_SECTOR_TIMINGS,
   GET_METHODS_OF_OFFERING_COURSES,
-  GET_HALLS,
 } from "./actionTypes";
 
 import { GET_FILTERED_DEPARTMENTS } from "../departments/actionTypes";
@@ -212,7 +211,6 @@ function* onAddNewCourseOffering({ payload, courseOffering }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_CourseOffering";
-  payload["queryname"] = "_Common_CourseOffering";
 
   try {
     const response = yield call(addNewCourseOffering, payload);
@@ -227,7 +225,6 @@ function* onUpdateCourseOffering({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_CourseOffering";
-  payload["queryname"] = "_Common_CourseOffering";
   try {
     const response = yield call(updateCourseOffering, payload);
     yield put(updateCourseOfferingSuccess(response[0]));
@@ -340,7 +337,7 @@ function* fetchSectionLabs(obj) {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_WeekDays",
+    tablename: "_AcadmeyBuildingStructure",
     fields: "Id,arTitle",
   };
   try {

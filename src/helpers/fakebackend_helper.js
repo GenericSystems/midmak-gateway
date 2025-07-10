@@ -381,17 +381,15 @@ export const saveAllNonActiveStdCurr = data =>
 export const deleteNonActiveStdCurr = data =>
   post(url.DELETE_NON_ACTIVE_STD_CURR, data);
 
-// get CoursesRegistration
-export const getCoursesRegistration = data =>
-  post(url.GET_COURSES_REGISTRATIONS, data);
+// get Registration
+export const getRegistrations = data => post(url.GET_REGISTRATIONS, data);
 
 // get studentInfo
 export const getStudentRegisterInfo = data =>
   post(url.GET_STUDENT_REGISTER_INFO, data);
 
-// add CoursesRegistration
-export const addNewCoursesRegistration = data =>
-  post(url.ADD_NEW_COURSES_REGISTRATION, data);
+// add Registration
+export const addNewRegistration = data => post(url.ADD_NEW_REGISTRATION, data);
 
 // get AvailableCourse
 export const getAvailableCourses = data =>
@@ -408,13 +406,11 @@ export const getTempStdSchedules = data =>
 // get AchievedCourses
 export const getAchievedCourses = data => post(url.GET_ACHIEVED_COURSES, data);
 
-//update CoursesRegistration
-export const updateCoursesRegistration = data =>
-  post(url.UPDATE_COURSES_REGISTRATION, data);
+//update Registration
+export const updateRegistration = data => post(url.UPDATE_REGISTRATION, data);
 
-//delete CoursesRegistration
-export const deleteCoursesRegistration = data =>
-  post(url.DELETE_COURSES_REGISTRATION, data);
+//delete Registration
+export const deleteRegistration = data => post(url.DELETE_REGISTRATION, data);
 // get generateSIDs
 export const getGenerateSIDs = data => post(url.GET_GENERATE_SIDS, data);
 
@@ -2220,14 +2216,16 @@ export const addNewGradeType = data => post(url.ADD_NEW_GRADE_TYPE, data);
 export const updateGradeType = data => post(url.UPDATE_GRADE_TYPE, data);
 export const deleteGradeType = data => post(url.DELETE_GRADE_TYPE, data);
 
-
-export const getCourseDistributions = data => post(url.GET_COURSE_DISTRIBUTIONS, data);
-export const getCourseDistributionDeletedValue = () => get(url.GET_COURSE_DISTRIBUTION_DELETED_VALUE);
-export const addNewCourseDistribution = data => post(url.ADD_NEW_COURSE_DISTRIBUTION, data);
-export const updateCourseDistribution = data => post(url.UPDATE_COURSE_DISTRIBUTION, data);
-export const deleteCourseDistribution = data => post(url.DELETE_COURSE_DISTRIBUTION, data);
-
-
+export const getCourseDistributions = data =>
+  post(url.GET_COURSE_DISTRIBUTIONS, data);
+export const getCourseDistributionDeletedValue = () =>
+  get(url.GET_COURSE_DISTRIBUTION_DELETED_VALUE);
+export const addNewCourseDistribution = data =>
+  post(url.ADD_NEW_COURSE_DISTRIBUTION, data);
+export const updateCourseDistribution = data =>
+  post(url.UPDATE_COURSE_DISTRIBUTION, data);
+export const deleteCourseDistribution = data =>
+  post(url.DELETE_COURSE_DISTRIBUTION, data);
 
 export {
   getLoggedInUser,

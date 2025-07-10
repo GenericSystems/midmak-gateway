@@ -51,8 +51,8 @@ import lecturePeriods from "./lecture-periods/reducer";
 //currSemMans
 import currSemMans from "./current-sem-man/reducer";
 
-//coursesregistrations
-import coursesRegistration from "./courses-registration/reducer";
+//registrations
+import registrations from "./Registration/reducer";
 //generateSIDs
 import generateSIDs from "./generate-SIDs/reducer";
 
@@ -349,7 +349,7 @@ const rootReducer = combineReducers({
   userTypes,
   lecturePeriods,
   currSemMans,
-  coursesRegistration,
+  registrations,
   generateSIDs,
   generalManagements,
   mobAppFacultyAccs,

@@ -1,12 +1,12 @@
 import {
-  GET_COURSES_REGISTRATIONS_SUCCESS,
-  GET_COURSES_REGISTRATIONS_FAIL,
-  ADD_COURSE_REGISTRATION_SUCCESS,
-  ADD_COURSE_REGISTRATION_FAIL,
-  UPDATE_COURSE_REGISTRATION_SUCCESS,
-  UPDATE_COURSE_REGISTRATION_FAIL,
-  DELETE_COURSE_REGISTRATION_SUCCESS,
-  DELETE_COURSE_REGISTRATION_FAIL,
+  GET_REGISTRATIONS_SUCCESS,
+  GET_REGISTRATIONS_FAIL,
+  ADD_REGISTRATION_SUCCESS,
+  ADD_REGISTRATION_FAIL,
+  UPDATE_REGISTRATION_SUCCESS,
+  UPDATE_REGISTRATION_FAIL,
+  DELETE_REGISTRATION_SUCCESS,
+  DELETE_REGISTRATION_FAIL,
   GET_STUDENT_REGISTER_INFO_SUCCESS,
   GET_STUDENT_REGISTER_INFO_FAIL,
   GET_AVAILABLE_COURSES_FAIL,
@@ -30,7 +30,7 @@ import {
 } from "./actionTypes";
 
 const INIT_STATE = {
-  coursesRegistration: [],
+  registrations: [],
   availableCourses: [],
   nonActiveStdCurrs: [],
   tempStdSchedules: [],
@@ -39,27 +39,27 @@ const INIT_STATE = {
   studentRegisterInfo: [],
 };
 
-const coursesRegistration = (state = INIT_STATE, action) => {
+const registrations = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_COURSES_REGISTRATIONS_SUCCESS:
+    case GET_REGISTRATIONS_SUCCESS:
       return {
         ...state,
-        coursesRegistration: action.payload,
+        registrations: action.payload,
       };
 
-    case GET_COURSES_REGISTRATIONS_FAIL:
+    case GET_REGISTRATIONS_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case ADD_COURSE_REGISTRATION_SUCCESS:
+    case ADD_REGISTRATION_SUCCESS:
       return {
         ...state,
-        coursesRegistration: [...state.coursesRegistration, action.payload],
+        registrations: [...state.registrations, action.payload],
       };
 
-    case ADD_COURSE_REGISTRATION_FAIL:
+    case ADD_REGISTRATION_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -113,32 +113,32 @@ const coursesRegistration = (state = INIT_STATE, action) => {
         studentRegisterInfo: action.payload,
       };
 
-    case UPDATE_COURSE_REGISTRATION_SUCCESS:
+    case UPDATE_REGISTRATION_SUCCESS:
       return {
         ...state,
-        coursesRegistration: state.coursesRegistration.map(courseRegistration =>
-          courseRegistration.Id.toString() === action.payload.Id.toString()
-            ? { courseRegistration, ...action.payload }
-            : courseRegistration
+        registrations: state.registrations.map(registration =>
+          registration.Id.toString() === action.payload.Id.toString()
+            ? { registration, ...action.payload }
+            : registration
         ),
       };
 
-    case UPDATE_COURSE_REGISTRATION_FAIL:
+    case UPDATE_REGISTRATION_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case DELETE_COURSE_REGISTRATION_SUCCESS:
+    case DELETE_REGISTRATION_SUCCESS:
       return {
         ...state,
-        coursesRegistration: state.coursesRegistration.filter(
-          courseRegistration =>
-            courseRegistration.Id.toString() !== action.payload.Id.toString()
+        registrations: state.registrations.filter(
+          registration =>
+            registration.Id.toString() !== action.payload.Id.toString()
         ),
       };
 
-    case DELETE_COURSE_REGISTRATION_FAIL:
+    case DELETE_REGISTRATION_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -262,4 +262,4 @@ const coursesRegistration = (state = INIT_STATE, action) => {
   }
 };
 
-export default coursesRegistration;
+export default registrations;

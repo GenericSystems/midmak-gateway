@@ -2,11 +2,11 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 // Crypto Redux States
 import {
-  GET_COURSES_REGISTRATIONS,
+  GET_REGISTRATIONS,
   GET_STUDENT_REGISTER_INFO,
-  ADD_NEW_COURSE_REGISTRATION,
-  DELETE_COURSE_REGISTRATION,
-  UPDATE_COURSE_REGISTRATION,
+  ADD_NEW_REGISTRATION,
+  DELETE_REGISTRATION,
+  UPDATE_REGISTRATION,
   GET_ALL_COURSES_REGISTRATION,
   GET_AVAILABLE_COURSES,
   ADD_NEW_AVAILABLE_COURSE,
@@ -20,22 +20,20 @@ import {
 } from "./actionTypes";
 
 import {
-  getCoursesRegistrationSuccess,
-  getCoursesRegistrationFail,
+  getRegistrationsSuccess,
+  getRegistrationsFail,
   getStudentRegisterInfoSuccess,
   getStudentRegisterInfoFail,
-  addCourseRegistrationFail,
-  addCourseRegistrationSuccess,
-  updateCourseRegistrationSuccess,
-  updateCourseRegistrationFail,
-  deleteCourseRegistrationSuccess,
-  deleteCourseRegistrationFail,
-  getAllCoursesRegistrationSuccess,
-  getAllCoursesRegistrationFail,
+  addRegistrationFail,
+  addRegistrationSuccess,
+  updateRegistrationSuccess,
+  updateRegistrationFail,
+  deleteRegistrationSuccess,
+  deleteRegistrationFail,
+  getAllRegistrationSuccess,
+  getAllRegistrationFail,
   getAvailableCourseSuccess,
   getAvailableCourseFail,
-  addAvailableCourseFail,
-  addAvailableCourseSuccess,
   getNonActiveStdCurrSuccess,
   getNonActiveStdCurrFail,
   updateNonActiveStdCurrSuccess,
@@ -58,11 +56,11 @@ import {
 import { getWeekDaysSuccess, getWeekDaysFail } from "../weekdays/actions";
 
 import {
-  getCoursesRegistration,
-  getAllCoursesRegistration,
-  addNewCoursesRegistration,
-  updateCoursesRegistration,
-  deleteCoursesRegistration,
+  getRegistrations,
+  getAllRegistrations,
+  addNewRegistration,
+  updateRegistration,
+  deleteRegistration,
   getWeekDays,
   getLecturePeriods,
   getAvailableCourses,
@@ -131,50 +129,48 @@ function* fetchAchievedCourses(obj) {
   }
 }
 
-function* fetchCoursesRegistration() {
-  const get_coursesRegistration_req = {
+function* fetchRegistrations() {
+  const get_Registration_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_coursesRegistration",
+    tablename: "_Common_Employee",
   };
   try {
-    const response = yield call(
-      getCoursesRegistration,
-      get_coursesRegistration_req
-    );
-    yield put(getCoursesRegistrationSuccess(response));
+    const response = yield call(getRegistrations, get_Registration_req);
+    console.log("responnnnnnnnnnnnnnnnnnse", response);
+    yield put(getRegistrationsSuccess(response));
   } catch (error) {
-    yield put(getCoursesRegistrationFail(error));
+    yield put(getRegistrationsFail(error));
   }
 
-  //lecture periods
-  const get_lecturePeriods_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_lecturePeriods",
-  };
-  try {
-    const response = yield call(getLecturePeriods, get_lecturePeriods_req);
-    yield put(getLecturePeriodsSuccess(response));
-  } catch (error) {
-    yield put(getLecturePeriodsFail(error));
-  }
-  //get weekdays
-  const get_weekDays_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_weekDays",
-    filter: "active=1",
-  };
-  try {
-    const response = yield call(getWeekDays, get_weekDays_req);
-    yield put(getWeekDaysSuccess(response));
-  } catch (error) {
-    yield put(getWeekDaysFail(error));
-  }
+  // //lecture periods
+  // const get_lecturePeriods_req = {
+  //   source: "db",
+  //   procedure: "SisApp_getData",
+  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+  //   tablename: "settings_lecturePeriods",
+  // };
+  // try {
+  //   const response = yield call(getLecturePeriods, get_lecturePeriods_req);
+  //   yield put(getLecturePeriodsSuccess(response));
+  // } catch (error) {
+  //   yield put(getLecturePeriodsFail(error));
+  // }
+  // //get weekdays
+  // const get_weekDays_req = {
+  //   source: "db",
+  //   procedure: "SisApp_getData",
+  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+  //   tablename: "settings_weekDays",
+  //   filter: "active=1",
+  // };
+  // try {
+  //   const response = yield call(getWeekDays, get_weekDays_req);
+  //   yield put(getWeekDaysSuccess(response));
+  // } catch (error) {
+  //   yield put(getWeekDaysFail(error));
+  // }
 }
 
 function* fetchStudentRegisterInfo(obj) {
@@ -193,7 +189,7 @@ function* fetchStudentRegisterInfo(obj) {
   }
 }
 
-function* onAddNewCoursesRegistration({ payload, coursesRegistration }) {
+function* onAddNewRegistration({ payload, registration }) {
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "get_GenericPeriod";
@@ -201,10 +197,10 @@ function* onAddNewCoursesRegistration({ payload, coursesRegistration }) {
   payload["tablename"] = "settings_coursesRegistration";
 
   try {
-    const response = yield call(addNewCourseRegistration, payload);
-    yield put(addCourseRegistrationSuccess(response[0]));
+    const response = yield call(addNewRegistration, payload);
+    yield put(addRegistrationSuccess(response[0]));
   } catch (error) {
-    yield put(addCourseRegistrationFail(error));
+    yield put(addRegistrationFail(error));
   }
 }
 
@@ -229,17 +225,17 @@ function* onAddNewAvailableCourse({ payload }) {
   }
 }
 
-function* onUpdateCoursesRegistration({ payload }) {
+function* onUpdateRegistration({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "settings_coursesRegistration";
 
   try {
-    const respupdate = yield call(updateCourseRegistration, payload);
-    yield put(updateCourseRegistrationSuccess(respupdate[0]));
+    const respupdate = yield call(updateRegistration, payload);
+    yield put(updateRegistrationSuccess(respupdate[0]));
   } catch (error) {
-    yield put(updateCourseRegistrationFail(error));
+    yield put(updateRegistrationFail(error));
   }
 }
 function* onUpdateNonActiveStdCurr({ payload }) {
@@ -272,20 +268,20 @@ function* onUpdateNonActiveStdCurr({ payload }) {
   });
 }
 
-function* onDeleteCoursesRegistration({ payload, coursesRegistration }) {
+function* onDeleteRegistration({ payload, registration }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "settings_coursesRegistration";
 
   try {
-    const respdelete = yield call(deleteCourseRegistration, payload);
-    yield put(deleteCourseRegistrationSuccess(respdelete[0]));
+    const respdelete = yield call(deleteRegistration, payload);
+    yield put(deleteRegistrationSuccess(respdelete[0]));
   } catch (error) {
-    yield put(deleteCourseRegistrationFail(error));
+    yield put(deleteRegistrationFail(error));
   }
 }
-function* onDeleteNonActiveStdCurr({ payload, coursesRegistration }) {
+function* onDeleteNonActiveStdCurr({ payload, registrations }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
@@ -382,15 +378,15 @@ function* onSaveAllNonActiveStdCurr({ payload }) {
     payload: { active: 1, studentId: payload.studentId },
   });
 }
-function* coursesRegistrationSaga() {
+function* RegistrationSaga() {
   yield takeEvery(GET_NON_ACTIVE_STD_CURRS, fetchNonActiveStdCurr);
   yield takeEvery(UPDATE_NON_ACTIVE_STD_CURR, onUpdateNonActiveStdCurr);
   yield takeEvery(DELETE_NON_ACTIVE_STD_CURR, onDeleteNonActiveStdCurr);
-  yield takeEvery(GET_COURSES_REGISTRATIONS, fetchCoursesRegistration);
+  yield takeEvery(GET_REGISTRATIONS, fetchRegistrations);
   yield takeEvery(GET_STUDENT_REGISTER_INFO, fetchStudentRegisterInfo);
-  yield takeEvery(ADD_NEW_COURSE_REGISTRATION, onAddNewCoursesRegistration);
-  yield takeEvery(UPDATE_COURSE_REGISTRATION, onUpdateCoursesRegistration);
-  yield takeEvery(DELETE_COURSE_REGISTRATION, onDeleteCoursesRegistration);
+  yield takeEvery(ADD_NEW_REGISTRATION, onAddNewRegistration);
+  yield takeEvery(UPDATE_REGISTRATION, onUpdateRegistration);
+  yield takeEvery(DELETE_REGISTRATION, onDeleteRegistration);
   yield takeEvery(ADD_NEW_AVAILABLE_COURSE, onAddNewAvailableCourse);
   yield takeEvery(GET_AVAILABLE_COURSES, fetchAvailableCourses);
   yield takeEvery(GET_TEMP_STD_SCHEDULES, fetchTempStdSchedules);
@@ -399,4 +395,4 @@ function* coursesRegistrationSaga() {
   yield takeEvery(SAVE_ALL_NON_ACTIVE_STD_CURR, onSaveAllNonActiveStdCurr);
 }
 
-export default coursesRegistrationSaga;
+export default RegistrationSaga;

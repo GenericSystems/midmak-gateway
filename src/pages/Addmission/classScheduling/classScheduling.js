@@ -793,7 +793,6 @@ class ClassSchedulingList extends Component {
     const {
       selectedMethodOffering,
       selectedYear,
-      selectedRowData,
       selectedOption,
       selectedCourseId,
       selectedEndDate,
@@ -1244,7 +1243,7 @@ class ClassSchedulingList extends Component {
       { dataField: "Id", text: t("ID"), hidden: true },
       {
         dataField: "arTitle",
-        text: this.props.t("Course Name"),
+        text: this.props.t("Course Name (ar)"),
         editable: false,
         sort: true,
       },

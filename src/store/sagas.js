@@ -21,7 +21,7 @@ import levelingDecisionsSaga from "./leveling-decisions/saga";
 import StudentsHistorySaga from "./students-history/saga";
 import LecturePeriodsSaga from "./lecture-periods/saga";
 import currSemMansSaga from "./current-sem-man/saga";
-import coursesRegistrationSaga from "./courses-registration/saga";
+import RegistrationSaga from "./Registration/saga";
 import GenerateSIDsSaga from "./generate-SIDs/saga";
 import GeneralManagementsSaga from "./general-management/saga";
 import MobAppFacultyAccsSaga from "./mob-app-faculty-accs/saga";
@@ -137,7 +137,7 @@ export default function* rootSaga() {
     fork(userTypesSaga),
     fork(LecturePeriodsSaga),
     fork(levelingDecisionsSaga),
-    fork(coursesRegistrationSaga),
+    fork(RegistrationSaga),
     fork(GenerateSIDsSaga),
     fork(GeneralManagementsSaga),
     fork(MobAppFacultyAccsSaga),

@@ -172,12 +172,12 @@ export const DELETE_NON_ACTIVE_STD_CURR = "/delete/nonActiveStdCurr";
 
 export const DELETE_ALL_NON_ACTIVE_STD_CURR = "/deleteAll/nonActiveStdCurr";
 export const SAVE_ALL_NON_ACTIVE_STD_CURR = "/saveAll/nonActiveStdCurr";
-//COURSES_REGISTRATIONS
-export const GET_COURSES_REGISTRATIONS = "/coursesRegistration";
+//REGISTRATIONS
+export const GET_REGISTRATIONS = "/registration";
 export const GET_STUDENT_REGISTER_INFO = "/StudentRegisterInfo";
-export const ADD_NEW_COURSES_REGISTRATION = "/add/coursesRegistration";
-export const UPDATE_COURSES_REGISTRATION = "/update/coursesRegistration";
-export const DELETE_COURSES_REGISTRATION = "/delete/coursesRegistration";
+export const ADD_NEW_REGISTRATION = "/add/registration";
+export const UPDATE_REGISTRATION = "/update/registration";
+export const DELETE_REGISTRATION = "/delete/registration";
 
 //TEMP_STD_SCHEDULES
 export const GET_TEMP_STD_SCHEDULES = "/tempStdSchedules";
@@ -1096,9 +1096,9 @@ export const ADD_NEW_GRADE_TYPE = "/add/gradeType";
 export const UPDATE_GRADE_TYPE = "/update/gradeType";
 export const DELETE_GRADE_TYPE = "/delet/gradeType";
 
-
 export const GET_COURSE_DISTRIBUTIONS = "/courseDistributions";
-export const GET_COURSE_DISTRIBUTION_DELETED_VALUE = "/courseDistributions/deleted";
+export const GET_COURSE_DISTRIBUTION_DELETED_VALUE =
+  "/courseDistributions/deleted";
 export const ADD_NEW_COURSE_DISTRIBUTION = "/add/courseDistribution";
 export const UPDATE_COURSE_DISTRIBUTION = "/update/courseDistribution";
 export const DELETE_COURSE_DISTRIBUTION = "/delete/courseDistribution";

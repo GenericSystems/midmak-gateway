@@ -51,7 +51,7 @@
   "Sunday": "الأحد",
   "Monday": "الاثنين",
   "Tuesday": "الثلاثاء",
-  "Wedenesday": "الأربعاء",
+  "Wednesday": "الأربعاء",
   "Thursday": "الخميس",
   "Friday": "الجمعة",
   "Grades(ar)": "درجات(عربي)",
@@ -191,6 +191,9 @@
   "Reward Type(ar)": "أنواع المكافآت(عربي)",
   "Decision Type(ar)": "أنواع القرارات(عربي)",
   "Decisions Types": "أنواع القرارات",
+  "Decisions ": "القرارات",
+  "Hr Settings": "اعدادات الموارد البشرية",
+  "Contracts ": "العقود",
   "Contracts": "العقود",
   "Position": "المنصب",
   "Personl Information": "المعلومات الشخصية",
@@ -321,5 +324,9 @@
   "current Number Of Persons": "عدد الأشخاص الحالي",
   "Save Hall": "حفظ القاعة",
   "Save Building": "حفظ المبنى",
-  "Save Floor": "حفظ الطابق"
+  "Save Floor": "حفظ الطابق",
+  "Number of Hours": "عدد الساعات",
+  "Number of Sections": "عدد الشعب",
+  "Number of Labs": "عدد الفئات",
+  "Section&Labs": "الشعب والفئات"
 }

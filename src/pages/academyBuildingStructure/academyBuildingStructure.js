@@ -901,7 +901,7 @@ class AcademyBuildingStructuresList extends Component {
                         <Form className="university-name-form">
                           <Input
                             type="text"
-                            value={academyInfo.universityName}
+                            value={academyInfo.academyName}
                             onChange={e =>
                               this.setState({
                                 academyDefaultName: e.target.value,
@@ -1035,8 +1035,7 @@ class AcademyBuildingStructuresList extends Component {
                                                   className="delete-department-button"
                                                   onClick={() =>
                                                     this.onClickDeleteFloor(
-                                                      floor.Id,
-                                                      floor
+                                                      floor.Id
                                                     )
                                                   }
                                                 >

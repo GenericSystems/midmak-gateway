@@ -1,25 +1,25 @@
 import {
-  GET_COURSES_REGISTRATIONS,
-  GET_COURSES_REGISTRATIONS_FAIL,
-  GET_COURSES_REGISTRATIONS_SUCCESS,
-  ADD_NEW_COURSE_REGISTRATION,
-  ADD_COURSE_REGISTRATION_SUCCESS,
-  ADD_COURSE_REGISTRATION_FAIL,
-  UPDATE_COURSE_REGISTRATION,
-  UPDATE_COURSE_REGISTRATION_SUCCESS,
-  UPDATE_COURSE_REGISTRATION_FAIL,
-  DELETE_COURSE_REGISTRATION,
-  DELETE_COURSE_REGISTRATION_SUCCESS,
-  DELETE_COURSE_REGISTRATION_FAIL,
+  GET_REGISTRATIONS,
+  GET_REGISTRATIONS_SUCCESS,
+  GET_REGISTRATIONS_FAIL,
+  ADD_NEW_REGISTRATION,
+  ADD_REGISTRATION_SUCCESS,
+  ADD_REGISTRATION_FAIL,
+  UPDATE_REGISTRATION,
+  UPDATE_REGISTRATION_SUCCESS,
+  UPDATE_REGISTRATION_FAIL,
+  DELETE_REGISTRATION,
+  DELETE_REGISTRATION_SUCCESS,
+  DELETE_REGISTRATION_FAIL,
   GET_STUDENT_REGISTER_INFO,
-  GET_STUDENT_REGISTER_INFO_FAIL,
   GET_STUDENT_REGISTER_INFO_SUCCESS,
+  GET_STUDENT_REGISTER_INFO_FAIL,
   GET_AVAILABLE_COURSES,
   GET_AVAILABLE_COURSES_FAIL,
   GET_AVAILABLE_COURSES_SUCCESS,
-  ADD_AVAILABLE_COURSE_FAIL,
-  ADD_AVAILABLE_COURSE_SUCCESS,
   ADD_NEW_AVAILABLE_COURSE,
+  ADD_AVAILABLE_COURSE_SUCCESS,
+  ADD_AVAILABLE_COURSE_FAIL,
   GET_NON_ACTIVE_STD_CURRS,
   GET_NON_ACTIVE_STD_CURRS_SUCCESS,
   GET_NON_ACTIVE_STD_CURRS_FAIL,
@@ -27,33 +27,32 @@ import {
   UPDATE_NON_ACTIVE_STD_CURR_SUCCESS,
   UPDATE_NON_ACTIVE_STD_CURR_FAIL,
   DELETE_NON_ACTIVE_STD_CURR,
+  DELETE_NON_ACTIVE_STD_CURR_SUCCESS,
+  DELETE_NON_ACTIVE_STD_CURR_FAIL,
   GET_TEMP_STD_SCHEDULES,
   GET_TEMP_STD_SCHEDULES_SUCCESS,
   GET_TEMP_STD_SCHEDULES_FAIL,
-  DELETE_NON_ACTIVE_STD_CURR_SUCCESS,
-  DELETE_NON_ACTIVE_STD_CURR_FAIL,
-  GET_ACHIEVED_COURSES,
-  GET_ACHIEVED_COURSES_SUCCESS,
-  GET_ACHIEVED_COURSES_FAIL,
-  DELETE_ALL_NON_ACTIVE_STD_CURR,
   DELETE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
   DELETE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+  GET_ACHIEVED_COURSES,
+  GET_ACHIEVED_COURSES_FAIL,
+  GET_ACHIEVED_COURSES_SUCCESS,
   SAVE_ALL_NON_ACTIVE_STD_CURR,
   SAVE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
   SAVE_ALL_NON_ACTIVE_STD_CURR_FAIL,
 } from "./actionTypes";
 
-export const getCoursesRegistration = () => ({
-  type: GET_COURSES_REGISTRATIONS,
+export const getRegistrations = () => ({
+  type: GET_REGISTRATIONS,
 });
 
-export const getCoursesRegistrationSuccess = coursesRegistration => ({
-  type: GET_COURSES_REGISTRATIONS_SUCCESS,
-  payload: coursesRegistration,
+export const getRegistrationsSuccess = registrations => ({
+  type: GET_REGISTRATIONS_SUCCESS,
+  payload: registrations,
 });
 
-export const getCoursesRegistrationFail = error => ({
-  type: GET_COURSES_REGISTRATIONS_FAIL,
+export const getRegistrationsFail = error => ({
+  type: GET_REGISTRATIONS_FAIL,
   payload: error,
 });
 
@@ -72,48 +71,48 @@ export const getStudentRegisterInfoFail = error => ({
   payload: error,
 });
 
-export const addNewCourseRegistration = courseRegistration => ({
-  type: ADD_NEW_COURSE_REGISTRATION,
-  payload: courseRegistration,
+export const addNewRegistration = registration => ({
+  type: ADD_NEW_REGISTRATION,
+  payload: registration,
 });
 
-export const addCourseRegistrationSuccess = courseRegistration => ({
-  type: ADD_COURSE_REGISTRATION_SUCCESS,
-  payload: courseRegistration,
+export const addRegistrationSuccess = registration => ({
+  type: ADD_REGISTRATION_SUCCESS,
+  payload: registration,
 });
 
-export const addCourseRegistrationFail = error => ({
-  type: ADD_COURSE_REGISTRATION_FAIL,
+export const addRegistrationFail = error => ({
+  type: ADD_REGISTRATION_FAIL,
   payload: error,
 });
 
-export const updateCourseRegistration = courseRegistration => ({
-  type: UPDATE_COURSE_REGISTRATION,
-  payload: courseRegistration,
+export const updateRegistration = registration => ({
+  type: UPDATE_REGISTRATION,
+  payload: registration,
 });
 
-export const updateCourseRegistrationSuccess = courseRegistration => ({
-  type: UPDATE_COURSE_REGISTRATION_SUCCESS,
-  payload: courseRegistration,
+export const updateRegistrationSuccess = registration => ({
+  type: UPDATE_REGISTRATION_SUCCESS,
+  payload: registration,
 });
 
-export const updateCourseRegistrationFail = error => ({
-  type: UPDATE_COURSE_REGISTRATION_FAIL,
+export const updateRegistrationFail = error => ({
+  type: UPDATE_REGISTRATION_FAIL,
   payload: error,
 });
 
-export const deleteCourseRegistration = courseRegistration => ({
-  type: DELETE_COURSE_REGISTRATION,
-  payload: courseRegistration,
+export const deleteRegistration = registration => ({
+  type: DELETE_REGISTRATION,
+  payload: registration,
 });
 
-export const deleteCourseRegistrationSuccess = courseRegistration => ({
-  type: DELETE_COURSE_REGISTRATION_SUCCESS,
-  payload: courseRegistration,
+export const deleteRegistrationSuccess = registration => ({
+  type: DELETE_REGISTRATION_SUCCESS,
+  payload: registration,
 });
 
-export const deleteCourseRegistrationFail = error => ({
-  type: DELETE_COURSE_REGISTRATION_FAIL,
+export const deleteRegistrationFail = error => ({
+  type: DELETE_REGISTRATION_FAIL,
   payload: error,
 });
 
