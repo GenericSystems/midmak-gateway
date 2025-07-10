@@ -1102,3 +1102,19 @@ export const GET_COURSE_DISTRIBUTION_DELETED_VALUE =
 export const ADD_NEW_COURSE_DISTRIBUTION = "/add/courseDistribution";
 export const UPDATE_COURSE_DISTRIBUTION = "/update/courseDistribution";
 export const DELETE_COURSE_DISTRIBUTION = "/delete/courseDistribution";
+
+//enter grades
+export const GET_ENTERED_GRADES = "/enterGrades";
+export const GET_COURSE_STATISTICS = "/courseStatistics";
+export const UPDATE_ENTERED_GRADE = "/update/enterGrade";
+export const GET_COURSE_CONTENTS_ENTERED_GRADES =
+  "/courseContentsEnteredGrades";
+
+//certificate grades
+
+export const GET_CERTIFICATE_GRADES = "/certificateGrades";
+export const GET_FILTERED_CERTIFICATE_GRADES = "/filteredCertificateGrades";
+export const ADD_NEW_CERTIFICATE_GRADE = "/add/certificateGrade";
+export const UPDATE_CERTIFICATE_GRADE = "/update/certificateGrade";
+export const DELETE_CERTIFICATE_GRADE = "/delete/certificateGrade";
+export const GET_CERTIFICATE_GRADE_DELETED_VALUE = "/certificateGrade/deleted";

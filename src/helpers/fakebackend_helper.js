@@ -2227,6 +2227,23 @@ export const updateCourseDistribution = data =>
 export const deleteCourseDistribution = data =>
   post(url.DELETE_COURSE_DISTRIBUTION, data);
 
+//enter grades
+export const getEnteredGrades = data =>post(url.GET_ENTERED_GRADES , data);
+export const getCourseStatistics = data =>post(url.GET_COURSE_STATISTICS , data);
+export const updateEnteredGrade = data =>post(url.UPDATE_ENTERED_GRADE , data);
+export const getCourseContentsEnteredGrades = data =>post(url.GET_COURSE_CONTENTS_ENTERED_GRADES , data);
+
+
+//certeficate grades
+
+export const getCertificateGrades = data => post(url.GET_CERTIFICATE_GRADES , data);
+export const getFilteredCertificateGrades = data =>post(url.GET_FILTERED_CERTIFICATE_GRADES , data);
+export const addNewCertificateGrade = data =>post(url.ADD_NEW_CERTIFICATE_GRADE,data);
+export const updateCertificateGrade = data =>post(url.UPDATE_CERTIFICATE_GRADE , data);
+export const deleteCertificateGrade = data =>post(url.DELETE_CERTIFICATE_GRADE , data);
+export  const getCertificateGradeDeletedValue = () =>get(url.GET_CERTIFICATE_GRADE_DELETED_VALUE);
+
+
 export {
   getLoggedInUser,
   isUserAuthenticated,

@@ -106,6 +106,10 @@ class AcademyTree extends Component {
       selectedDepartment: null,
       selectedOrganismId: null,
       deleteOrganismModal: false,
+
+      isShowDirectorateInfo: false,
+      isShowDepartmentInfo: false,
+      isShowOrganismInfo: false,
     };
     this.handleEditDirectorate = this.handleEditDirectorate.bind(this);
     this.handleDirectorateDataChange =
@@ -174,6 +178,10 @@ class AcademyTree extends Component {
     this.setState({ newDirectorateNum: "" });
     this.setState({ newDirectorateDean: "" });
     this.setState({ newDirectorateCode: "" });
+
+    this.setState({ isShowDirectorateInfo: false });
+    this.setState({ isShowDepartmentInfo: false });
+    this.setState({ isShowOrganismInfo: false });
   };
 
   handleDirectorateDataChange = (fieldName, value) => {
@@ -246,6 +254,10 @@ class AcademyTree extends Component {
     this.setState({ editDirectorateNum: directorate.directorateNum });
     this.setState({ editDirectorateDean: directorate.directorateDean || "" });
     this.setState({ editDirectorateCode: directorate.directorateCode || "" });
+
+    this.setState({ isShowDirectorateInfo: false });
+    this.setState({ isShowDepartmentInfo: false });
+    this.setState({ isShowOrganismInfo: false });
   };
 
   handleSaveDirectorate = () => {
@@ -439,6 +451,10 @@ class AcademyTree extends Component {
     this.setState({ newDepartmentEnName: "" });
     this.setState({ newDepartmentNum: "" });
     this.setState({ newDepartmentPresident: "" });
+
+    this.setState({ isShowDirectorateInfo: false });
+    this.setState({ isShowDepartmentInfo: false });
+    this.setState({ isShowOrganismInfo: false });
   };
 
   handelAddOrganismForm = departmentId => {
@@ -448,6 +464,10 @@ class AcademyTree extends Component {
     this.setState({ NewOrganismEnName: "" });
     this.setState({ NewOrganismNum: "" });
     this.setState({ NewOrganismPresident: "" });
+
+    this.setState({ isShowDirectorateInfo: false });
+    this.setState({ isShowDepartmentInfo: false });
+    this.setState({ isShowOrganismInfo: false });
   };
 
   handelEditOrganism = (organism, departmentId) => {
@@ -460,6 +480,10 @@ class AcademyTree extends Component {
     this.setState({
       editOrganismPresident: organism.organismPresident || "",
     });
+
+    this.setState({ isShowDirectorateInfo: false });
+    this.setState({ isShowDepartmentInfo: false });
+    this.setState({ isShowOrganismInfo: false });
   };
 
   handleOrganismDataChange = (fieldName, value) => {
@@ -684,6 +708,10 @@ class AcademyTree extends Component {
     this.setState({
       editDepartmentPresident: department.departmentPresident || "",
     });
+
+    this.setState({ isShowDirectorateInfo: false });
+    this.setState({ isShowDepartmentInfo: false });
+    this.setState({ isShowOrganismInfo: false });
   };
 
   handleSaveDepartment = () => {
@@ -906,6 +934,64 @@ class AcademyTree extends Component {
     onGetAcademyOrgStructureDeletedValue();
   };
 
+  showDirectorateInfo = directorate => {
+    const { openForm } = this.state;
+
+    if (openForm != null || openForm != "") {
+      this.setState({ openForm: "" });
+    }
+
+    this.setState({ isShowDirectorateInfo: true });
+    this.setState({ isShowDepartmentInfo: false });
+    this.setState({ isShowOrganismInfo: false });
+
+    this.setState({ directorateId: directorate.Id });
+    this.setState({ editDirectorateArName: directorate.directorateArName });
+    this.setState({
+      editDirectorateEnName: directorate.directorateEnName || "",
+    });
+    this.setState({ editDirectorateNum: directorate.directorateNum });
+    this.setState({ editDirectorateDean: directorate.directorateDean || "" });
+    this.setState({ editDirectorateCode: directorate.directorateCode || "" });
+  };
+
+  showDepartmentInfo = department => {
+    const { openForm } = this.state;
+
+    if (openForm != null || openForm != "") {
+      this.setState({ openForm: "" });
+    }
+    this.setState({ isShowDepartmentInfo: true });
+    this.setState({ isShowDirectorateInfo: false });
+    this.setState({ isShowOrganismInfo: false });
+
+    this.setState({ departmentId: department.Id });
+    this.setState({ editDepartmentArName: department.departmentArName });
+    this.setState({ editDepartmentEnName: department.departmentEnName || "" });
+    this.setState({ editDepartmentNum: department.departmentNum });
+    this.setState({
+      editDepartmentPresident: department.departmentPresident || "",
+    });
+  };
+
+  showOrganismInfo = organism => {
+    const { openForm } = this.state;
+
+    if (openForm != null || openForm != "") {
+      this.setState({ openForm: "" });
+    }
+    this.setState({ isShowOrganismInfo: true });
+    this.setState({ isShowDepartmentInfo: false });
+    this.setState({ isShowDirectorateInfo: false });
+    this.setState({ organismId: organism.Id });
+    this.setState({ editOrganismArName: organism.organismArName });
+    this.setState({ editOrganismEnName: organism.organismEnName || "" });
+    this.setState({ editOrganismNum: organism.organismNum });
+    this.setState({
+      editOrganismPresident: organism.organismPresident || "",
+    });
+  };
+
   render() {
     const {
       newDirectorateArName,
@@ -960,6 +1046,9 @@ class AcademyTree extends Component {
       editOrganismNum,
       editOrganismPresident,
       deleteOrganismModal,
+      isShowDirectorateInfo,
+      isShowDepartmentInfo,
+      isShowOrganismInfo,
     } = this.state;
 
     console.log(
@@ -1090,7 +1179,12 @@ class AcademyTree extends Component {
                             key={academyOrgStructure.Id}
                             nodeId={`academyOrgStructure-${academyOrgStructure.Id}`}
                             label={
-                              <div className="directorate-item">
+                              <div
+                                className="directorate-item"
+                                onClick={() =>
+                                  this.showDirectorateInfo(academyOrgStructure)
+                                }
+                              >
                                 <span>
                                   {t(academyOrgStructure.directorateArName)}
                                 </span>
@@ -1098,11 +1192,12 @@ class AcademyTree extends Component {
                                   {showAddButton && (
                                     <IconButton
                                       className="add-directorate-button"
-                                      onClick={() =>
+                                      onClick={e => {
+                                        e.stopPropagation();
                                         this.handleAddDepartmentForm(
                                           academyOrgStructure.Id
-                                        )
-                                      }
+                                        );
+                                      }}
                                     >
                                       <AddIcon className="zeButton" />
                                     </IconButton>
@@ -1110,11 +1205,12 @@ class AcademyTree extends Component {
                                   {showEditButton && (
                                     <IconButton
                                       className="edit-directorate-button"
-                                      onClick={() =>
+                                      onClick={e => {
+                                        e.stopPropagation();
                                         this.handleEditDirectorate(
                                           academyOrgStructure
-                                        )
-                                      }
+                                        );
+                                      }}
                                     >
                                       <EditIcon className="zeButton" />
                                     </IconButton>
@@ -1124,11 +1220,12 @@ class AcademyTree extends Component {
                                     <div className="directorate-item-actions">
                                       <IconButton
                                         className="delete-directorate-button"
-                                        onClick={() =>
+                                        onClick={e => {
+                                          e.stopPropagation();
                                           this.onClickDeleteDirectorate(
                                             academyOrgStructure
-                                          )
-                                        }
+                                          );
+                                        }}
                                       >
                                         <DeleteIcon className="zeButton" />
                                       </IconButton>
@@ -1146,7 +1243,12 @@ class AcademyTree extends Component {
                                       key={department.Id}
                                       nodeId={`department-${department.Id}`}
                                       label={
-                                        <div className="department-item">
+                                        <div
+                                          className="department-item"
+                                          onClick={() =>
+                                            this.showDepartmentInfo(department)
+                                          }
+                                        >
                                           <span>
                                             {department.departmentArName}
                                           </span>
@@ -1154,11 +1256,12 @@ class AcademyTree extends Component {
                                             {showAddButton && (
                                               <IconButton
                                                 className="add-directorate-button"
-                                                onClick={() =>
+                                                onClick={e => {
+                                                  e.stopPropagation();
                                                   this.handelAddOrganismForm(
                                                     department.Id
-                                                  )
-                                                }
+                                                  );
+                                                }}
                                               >
                                                 <AddIcon className="zeButton" />
                                               </IconButton>
@@ -1166,12 +1269,13 @@ class AcademyTree extends Component {
                                             {showEditButton && (
                                               <IconButton
                                                 className="delete-department-button"
-                                                onClick={() =>
+                                                onClick={e => {
+                                                  e.stopPropagation();
                                                   this.handleEditDepartment(
                                                     department,
                                                     academyOrgStructure.Id
-                                                  )
-                                                }
+                                                  );
+                                                }}
                                               >
                                                 <EditIcon className="zeButton" />
                                               </IconButton>
@@ -1180,12 +1284,13 @@ class AcademyTree extends Component {
                                               <div className="department-item-actions">
                                                 <IconButton
                                                   className="delete-department-button"
-                                                  onClick={() =>
+                                                  onClick={e => {
+                                                    e.stopPropagation();
                                                     this.onClickDeleteDepartment(
                                                       department.Id,
                                                       department
-                                                    )
-                                                  }
+                                                    );
+                                                  }}
                                                 >
                                                   <DeleteIcon className="zeButton" />
                                                 </IconButton>
@@ -1202,7 +1307,14 @@ class AcademyTree extends Component {
                                             key={organism.Id}
                                             nodeId={`organism-${organism.Id}`}
                                             label={
-                                              <div className="organism-item">
+                                              <div
+                                                className="organism-item"
+                                                onClick={() =>
+                                                  this.showOrganismInfo(
+                                                    organism
+                                                  )
+                                                }
+                                              >
                                                 <span>
                                                   {organism.organismArName}
                                                 </span>
@@ -1210,12 +1322,13 @@ class AcademyTree extends Component {
                                                   {showEditButton && (
                                                     <IconButton
                                                       className="edit-organism-button"
-                                                      onClick={() =>
+                                                      onClick={e => {
+                                                        e.stopPropagation();
                                                         this.handelEditOrganism(
                                                           organism,
                                                           department.Id
-                                                        )
-                                                      }
+                                                        );
+                                                      }}
                                                     >
                                                       <EditIcon className="zeButton" />
                                                     </IconButton>
@@ -1223,11 +1336,12 @@ class AcademyTree extends Component {
                                                   {showDeleteButton && (
                                                     <IconButton
                                                       className="delete-organism-button"
-                                                      onClick={() =>
+                                                      onClick={e => {
+                                                        e.stopPropagation();
                                                         this.onClickDeleteOrganism(
                                                           organism.Id
-                                                        )
-                                                      }
+                                                        );
+                                                      }}
                                                     >
                                                       <DeleteIcon className="zeButton" />
                                                     </IconButton>
@@ -1636,7 +1750,7 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Directorate")}
+                          {t("Edit Directorate")} - {editDirectorateArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -1811,8 +1925,8 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Department")} {DirectorateBeingEdited} -{" "}
-                          {departmentBeingEdited}
+                          {t("Edit Department")}
+                          {editDirectorateArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2085,13 +2199,7 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Organism")}{" "}
-                          {
-                            academyOrgStructures
-                              .flatMap(directorate => directorate.departments)
-                              .find(dept => dept.Id === depaorganismId)?.arTitle
-                          }{" "}
-                          - {editOrganismArName}
+                          {t("Edit Organism")} - {editOrganismArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2229,6 +2337,427 @@ class AcademyTree extends Component {
                         {t("Save Organism")}
                       </button>
                     </div>
+                  </div>
+                )}
+
+                {isShowDirectorateInfo && (
+                  <div>
+                    <Row>
+                      <Typography variant="div">
+                        <h5 className="header pt-2 mb-2" id="title">
+                          {t("Show Directorate")} - {editDepartmentArName}
+                        </h5>
+                      </Typography>
+                    </Row>
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="DirectorateName(ar)"
+                          className="col-form-label"
+                        >
+                          {t("Directorate Name(ar)")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="DirectorateName(ar)"
+                          name="arTitle"
+                          autoComplete="off"
+                          className={`form-control ${
+                            directorateNameError ? "is-invalid" : ""
+                          }`}
+                          placeholder={t("Directorate Name(ar)")}
+                          value={editDirectorateArName}
+                          onChange={e => {
+                            this.handleDirectorateDataChange(
+                              "arTitle",
+                              e.target.value
+                            );
+                          }}
+                          disabled={true}
+                        />
+                        {directorateNameError && (
+                          <div className="invalid-feedback">
+                            {t("Directorate Name is required")}
+                          </div>
+                        )}
+                      </Col>
+                      <Col lg="2">
+                        <label
+                          htmlFor="DirectorateName"
+                          className="col-form-label"
+                        >
+                          {"Directorate Name"}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="DirectorateName"
+                          name="enTitle"
+                          autoComplete="off"
+                          className="form-control mb-2"
+                          placeholder={t("Directorate Name")}
+                          value={editDirectorateEnName}
+                          onChange={e => {
+                            this.handleDirectorateDataChange(
+                              "enTitle",
+                              e.target.value
+                            );
+                          }}
+                          disabled={true}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="directorateNum"
+                          className="col-form-label"
+                        >
+                          {t("Directorate Number")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="number"
+                          id="directorateNum"
+                          name="directorateNum"
+                          className={`form-control ${
+                            directorateNumError ? "is-invalid" : ""
+                          }`}
+                          placeholder={t("Directorate Number")}
+                          value={editDirectorateNum}
+                          onChange={e => {
+                            this.handleDirectorateDataChange(
+                              "directorateNum",
+                              e.target.value
+                            );
+                          }}
+                          disabled={true}
+                        />
+                        {directorateNumError && (
+                          <div className="invalid-feedback">
+                            {t("Directorate Number is required")}
+                          </div>
+                        )}
+                      </Col>
+                      <Col lg="2">
+                        <label
+                          htmlFor="directorateCode"
+                          className="col-form-label"
+                        >
+                          {t("Directorate Code")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="directorateCode"
+                          name="directorateCode"
+                          className="form-control mb-2"
+                          placeholder={t("Directorate Code")}
+                          value={editDirectorateCode}
+                          onChange={e => {
+                            this.handleDirectorateDataChange(
+                              "directorateCode",
+                              e.target.value
+                            );
+                          }}
+                          disabled={!showEditButton}
+                        />
+                        {directorateCodeError && (
+                          <div className="invalid-feedback">
+                            {t("Directorate Code is required")}
+                          </div>
+                        )}
+                      </Col>
+                    </Row>
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="directorateDean"
+                          className="col-form-label"
+                        >
+                          {t("Dean's Name")}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="directorateDean"
+                          name="directorateDean"
+                          className="form-control mb-2"
+                          placeholder={t("Dean's Name")}
+                          value={editDirectorateDean}
+                          onChange={e => {
+                            this.handleDirectorateDataChange(
+                              "directorateDean",
+                              e.target.value
+                            );
+                          }}
+                          disabled={true}
+                        />
+                      </Col>
+                    </Row>
+                  </div>
+                )}
+
+                {isShowDepartmentInfo && (
+                  <div>
+                    <Row>
+                      <Typography variant="div">
+                        <h5 className="header pt-2 mb-2" id="title">
+                          {t("Show Department")} - {editDepartmentArName}
+                        </h5>
+                      </Typography>
+                    </Row>
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="departmentNameAr"
+                          className="col-form-label"
+                        >
+                          {t("Department Name(ar)")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="departmentNameAr"
+                          name="departmentArName"
+                          className="form-control mb-2"
+                          placeholder={t("Department Name(ar)")}
+                          value={editDepartmentArName}
+                          onChange={e => {
+                            this.handleDepartmentDataChange(
+                              "departmentArName",
+                              e.target.value
+                            );
+                          }}
+                          disabled={true}
+                        />
+                      </Col>
+                      <Col lg="2">
+                        <label
+                          htmlFor="departmentNameEn"
+                          className="col-form-label"
+                        >
+                          {"Department Name"}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="departmentNameEn"
+                          name="departmentEnName"
+                          className="form-control mb-2"
+                          placeholder={t("Department Name")}
+                          value={editDepartmentEnName}
+                          onChange={e => {
+                            this.handleDepartmentDataChange(
+                              "departmentEnName",
+                              e.target.value
+                            );
+                          }}
+                          disabled={true}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="departmentNumber"
+                          className="col-form-label"
+                        >
+                          {t("Department Number")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="departmentNumber"
+                          name="departmentNum"
+                          className="form-control mb-2"
+                          placeholder={t("Department Number")}
+                          value={editDepartmentNum}
+                          onChange={e => {
+                            this.handleDepartmentDataChange(
+                              "departmentNum",
+                              e.target.value
+                            );
+                          }}
+                          disabled={true}
+                        />
+                      </Col>
+                      <Col lg="2">
+                        <label
+                          htmlFor="departmentPresident"
+                          className="col-form-label"
+                        >
+                          {t("Department President")}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="departmentPresident"
+                          name="departmentPresident"
+                          className="form-control mb-2"
+                          placeholder={t("Department President")}
+                          value={editDepartmentPresident}
+                          onChange={e => {
+                            this.handleDepartmentDataChange(
+                              "departmentPresident",
+                              e.target.value
+                            );
+                          }}
+                          disabled={true}
+                        />
+                      </Col>
+                    </Row>
+                  </div>
+                )}
+
+                {isShowOrganismInfo && (
+                  <div>
+                    <Row>
+                      <Typography variant="div">
+                        <h5 className="header pt-2 mb-2" id="title">
+                          {t("Show Organism")} - {editOrganismArName}
+                        </h5>
+                      </Typography>
+                    </Row>
+
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismNameAr"
+                          className="col-form-label"
+                        >
+                          {t("Organism Name(ar)")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="organismNameAr"
+                          name="organismArName"
+                          className={`form-control mb-2 ${
+                            OrganisArnameError ? "is-invalid" : ""
+                          }`}
+                          placeholder={t("Organism Name(ar)")}
+                          value={editOrganismArName}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismArName",
+                              e.target.value
+                            )
+                          }
+                          disabled={true}
+                        />
+                        {OrganisArnameError && (
+                          <div className="invalid-feedback">
+                            {t("Organism Name is required")}
+                          </div>
+                        )}
+                      </Col>
+
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismNameEn"
+                          className="col-form-label"
+                        >
+                          {t("Organism Name")}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="organismNameEn"
+                          name="organismEnName"
+                          className="form-control mb-2"
+                          placeholder={t("Organism Name")}
+                          value={editOrganismEnName}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismEnName",
+                              e.target.value
+                            )
+                          }
+                          disabled={true}
+                        />
+                      </Col>
+                    </Row>
+
+                    <Row className="mt-4">
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismNumber"
+                          className="col-form-label"
+                        >
+                          {t("Organism Number")}:
+                        </label>
+                        <span className="text-danger">*</span>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="number"
+                          id="organismNumber"
+                          name="organismNum"
+                          className={`form-control mb-2 ${
+                            OrganisNumError ? "is-invalid" : ""
+                          }`}
+                          placeholder={t("Organism Number")}
+                          value={editOrganismNum}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismNum",
+                              e.target.value
+                            )
+                          }
+                          disabled={true}
+                        />
+                        {OrganisNumError && (
+                          <div className="invalid-feedback">
+                            {t("Organism Number is required")}
+                          </div>
+                        )}
+                      </Col>
+
+                      <Col lg="2">
+                        <label
+                          htmlFor="organismPresident"
+                          className="col-form-label"
+                        >
+                          {t("Organism President")}:
+                        </label>
+                      </Col>
+                      <Col md="4">
+                        <input
+                          type="text"
+                          id="organismPresident"
+                          name="organismPresident"
+                          className="form-control mb-2"
+                          placeholder={t("Organism President")}
+                          value={editOrganismPresident}
+                          onChange={e =>
+                            this.handleOrganismDataChange(
+                              "organismPresident",
+                              e.target.value
+                            )
+                          }
+                          disabled={true}
+                        />
+                      </Col>
+                    </Row>
                   </div>
                 )}
               </CardContent>

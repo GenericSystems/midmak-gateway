@@ -32,9 +32,9 @@ import {
 import { getSectorsFail, getSectorsSuccess } from "../sectors/actions";
 
 import {
-  getFilteredGradesFail,
-  getFilteredGradesSuccess,
-} from "../grades/actions";
+  getFilteredCertificateGradesFail,
+  getFilteredCertificateGradesSuccess,
+} from "../certificateGrades/actions";
 
 import {
   getCertificateTypesFail,
@@ -175,9 +175,9 @@ function* fetchCertificates(obj) {
   try {
     const response = yield call(getFilteredGrades, get_TrainerGrades_req);
 
-    yield put(getFilteredGradesSuccess(response));
+    yield put(getFilteredCertificateGradesSuccess(response));
   } catch (error) {
-    yield put(getFilteredGradesFail(error));
+    yield put(getFilteredCertificateGradesFail(error));
   }
 }
 

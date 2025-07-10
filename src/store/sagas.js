@@ -85,7 +85,7 @@ import warningRulesSaga from "./warningRules/saga";
 import stdWarningTestSaga from "./stdWarningTest/saga";
 import exceptionalPeriodsSaga from "./exceptionalPeriods/saga";
 import academicLoadSaga from "./academicloads/saga";
-import gradesSaga from "./grades/saga";
+import certificateGradesSaga from "./certificateGrades/saga";
 import academyBuildingStructureSaga from "./academyBuildingStructure/saga";
 import contractsTypesSaga from "./HR/contractsTypes/saga";
 import employmentCasesSaga from "./HR/employmentCases/saga";
@@ -112,6 +112,8 @@ import academyOrgStructureSaga from "./academyOrgStructure/saga";
 import gradeTypesSaga from "./grade-types/saga";
 
 import courseDistributionsSaga from "./courses-distribution/saga";
+
+import enteredGradesSaga from "./enterGrades/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -198,7 +200,7 @@ export default function* rootSaga() {
     fork(warningRulesSaga),
     fork(stdWarningTestSaga),
     fork(exceptionalPeriodsSaga),
-    fork(gradesSaga),
+    fork(certificateGradesSaga),
     fork(contractsTypesSaga),
     fork(employmentCasesSaga),
     fork(workClassificationsSaga),
@@ -220,5 +222,6 @@ export default function* rootSaga() {
     fork(academyOrgStructureSaga),
     fork(gradeTypesSaga),
     fork(courseDistributionsSaga),
+    fork(enteredGradesSaga),
   ]);
 }
