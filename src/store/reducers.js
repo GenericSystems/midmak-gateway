@@ -231,7 +231,7 @@ import exceptionalPeriods from "./exceptionalPeriods/reducer";
 import academicLoads from "./academicloads/reducer";
 
 // grades
-import grades from "./grades/reducer";
+import certificateGrades from "./certificateGrades/reducer";
 
 //academyBuildingStructures
 import academyBuildingStructures from "./academyBuildingStructure/reducer";
@@ -296,6 +296,9 @@ import gradeTypes from "./grade-types/reducer";
 //coursesDest
 
 import courseDistributions from "./courses-distribution/reducer";
+
+//enter grades
+import enteredGrades from "./enterGrades/reducer";
 
 const rootReducer = combineReducers({
   // public
@@ -382,7 +385,7 @@ const rootReducer = combineReducers({
   stdWarningTest,
   exceptionalPeriods,
   academicLoads,
-  grades,
+  certificateGrades,
   distributingCoursesMethods,
   letterGrades,
   transportLines,
@@ -404,6 +407,7 @@ const rootReducer = combineReducers({
   academyOrgStructures,
   gradeTypes,
   courseDistributions,
+  enteredGrades,
 });
 
 export default rootReducer;

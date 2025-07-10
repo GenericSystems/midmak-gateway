@@ -148,7 +148,7 @@ import UserTypesList from "../pages/UserTypes/user-types";
 import Certificates from "../pages/Certificates/certificates";
 
 //Grades
-import GradesList from "../pages/Grades/grades";
+import CertificateGradesList from "../pages/CertificateGrades/certificateGrades";
 
 //academyBuildingStructure
 import AcademyBuildingStructuresList from "../pages/academyBuildingStructure/academyBuildingStructure";
@@ -223,6 +223,10 @@ import GradeTypesList from "pages/GradeSettings/Grade-types";
 //CourseDistributionsList
 
 import CourseDistributionsList from "pages/GradeSettings/courseDistributions";
+
+//EnterGradesList
+
+import EnterGradesList from "pages/GradeSettings/Enter-grades";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -311,7 +315,7 @@ const authProtectedRoutes = [
   { path: "/employees", component: EmployeesList },
 
   // Grades
-  { path: "/grades", component: GradesList },
+  { path: "/certificateGrades", component: CertificateGradesList },
 
   //academyBuildingStructure
   {
@@ -358,6 +362,10 @@ const authProtectedRoutes = [
   { path: "/gradeTypes", component: GradeTypesList },
 
   { path: "/course-distributions", component: CourseDistributionsList },
+
+  //enter grades
+
+  { path: "/enter-grades", component: EnterGradesList },
 
   //Blog
   { path: "/blog-list", component: BlogList },

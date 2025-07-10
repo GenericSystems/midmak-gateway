@@ -78,7 +78,7 @@ export * from "./user-types/actions";
 export * from "./certificates/actions";
 
 //grades
-export * from "./grades/actions";
+export * from "./certificateGrades/actions";
 
 //academyBuildingStructure
 export * from "./academyBuildingStructure/actions";
@@ -282,3 +282,7 @@ export * from "./grade-types/actions";
 
 //GradeMethod
 export * from "./courses-distribution/actions";
+
+//enter grades
+
+export * from "./enterGrades/actions";

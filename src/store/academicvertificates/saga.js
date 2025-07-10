@@ -6,7 +6,7 @@ import {
   ADD_NEW_ACADEMICCERTIFICATES,
   DELETE_ACADEMICCERTIFICATES,
   UPDATE_ACADEMICCERTIFICATE,
-  GET_ACADEMICCERTIFICATE_DELETED_VALUE
+  GET_ACADEMICCERTIFICATE_DELETED_VALUE,
 } from "./actionTypes";
 
 import {
@@ -20,7 +20,6 @@ import {
   deleteAcademicCertificateFail,
   getAcademicCertificateDeletedValueSuccess,
   getAcademicCertificateDeletedValueFail,
-  
 } from "./actions";
 import { GET_FILTERED_DEPARTMENTS } from "../departments/actionTypes";
 
@@ -41,9 +40,9 @@ import {
 } from "../mob-app-faculty-accs/actions";
 
 import {
-  getGradesSuccess,
-  getGradesFail,
-} from "../grades/actions";
+  getCertificateGradesSuccess,
+  getCertificateGradesFail,
+} from "../certificateGrades/actions";
 
 // Include Both Helper File with needed methods
 import {
@@ -56,9 +55,8 @@ import {
   getGrades,
   getDepartments,
   getAcademicCertificateDeletedValue,
-  getFilteredDepartments
+  getFilteredDepartments,
 } from "../../helpers/fakebackend_helper";
-
 
 function* fetchFilteredDepartments(obj) {
   let faculty = obj.payload;
@@ -106,23 +104,22 @@ function* fetchAcademicCertificates() {
   } catch (error) {
     yield put(getYearSemestersFail(error));
   }
-  
-  
-    //get majors_types
-    const get_majors_types = {
-      source: "db",
-      procedure: "Generic_getOptions",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "settings_Grades",
-      fields: "Id,arTitle"
-    };
-    try {
-      const response = yield call(getGrades, get_majors_types);
-      
-      yield put(getGradesSuccess(response));
-    } catch (error) {
-      yield put(getGradesFail(error));
-    }
+
+  //get majors_types
+  const get_majors_types = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "settings_Grades",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getGrades, get_majors_types);
+
+    yield put(getCertificateGradesSuccess(response));
+  } catch (error) {
+    yield put(getCertificateGradesFail(error));
+  }
 
   //get faculty
   const get_faculty_opt = {
@@ -200,14 +197,12 @@ function* onDeleteAcademicCertificate({ payload, academiccertificate }) {
 
 function* onGetAcademicCertificateDeletedValue() {
   try {
-    const response = yield call(getAcademicCertificateDeletedValue)
-    yield put(getAcademicCertificateDeletedValueSuccess(response))
+    const response = yield call(getAcademicCertificateDeletedValue);
+    yield put(getAcademicCertificateDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getAcademicCertificateDeletedValueFail(error))
+    yield put(getAcademicCertificateDeletedValueFail(error));
   }
-  
 }
-
 
 function* academiccertificatesSaga() {
   yield takeEvery(GET_ACADEMICCERTIFICATES, fetchAcademicCertificates);
@@ -215,7 +210,10 @@ function* academiccertificatesSaga() {
   yield takeEvery(ADD_NEW_ACADEMICCERTIFICATES, onAddNewAcademicCertificate);
   yield takeEvery(UPDATE_ACADEMICCERTIFICATE, onUpdateAcademicCertificate);
   yield takeEvery(DELETE_ACADEMICCERTIFICATES, onDeleteAcademicCertificate);
-  yield takeEvery(GET_ACADEMICCERTIFICATE_DELETED_VALUE, onGetAcademicCertificateDeletedValue);
+  yield takeEvery(
+    GET_ACADEMICCERTIFICATE_DELETED_VALUE,
+    onGetAcademicCertificateDeletedValue
+  );
 }
 
 export default academiccertificatesSaga;

@@ -13,12 +13,12 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import Select from "react-select";
 import {
-  getGrades,
-  addNewGrade,
-  updateGrade,
-  deleteGrade,
-  getGradeDeletedValue,
-} from "store/grades/actions";
+  getCertificateGrades,
+  addNewCertificateGrade,
+  updateCertificateGrade,
+  deleteCertificateGrade,
+  getCertificateGradeDeletedValue,
+} from "store/certificateGrades/actions";
 import { getUserTypesOpt } from "store/user-types/actions";
 
 import ToolkitProvider, {
@@ -37,11 +37,11 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
-class GradesList extends Component {
+class CertificateGradesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      grades: [],
+      certificateGrades: [],
       grade: "",
       selectedCertLevel: null,
       deleteModal: false,
@@ -58,17 +58,21 @@ class GradesList extends Component {
   }
 
   componentDidMount = () => {
-    const { grades, onGetUsers, deleted, user_menu, userTypesOpt } = this.props;
+    const { certificateGrades, onGetUsers, deleted, user_menu, userTypesOpt } =
+      this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if ((grades && !grades.length) || grades == undefined) {
-      console.log("in did mount", grades);
+    if (
+      (certificateGrades && !certificateGrades.length) ||
+      certificateGrades == undefined
+    ) {
+      console.log("in did mount", certificateGrades);
       onGetUsers();
     }
-    this.setState({ grades, deleted, userTypesOpt });
-    console.log("in did mount 2222", grades);
+    this.setState({ certificateGrades, deleted, userTypesOpt });
+    console.log("in did mount 2222", certificateGrades);
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -137,7 +141,7 @@ class GradesList extends Component {
   };
 
   handleAddRow = () => {
-    const { grades, onAddNewGrade } = this.props;
+    const { certificateGrades, onAddNewCertificateGrade } = this.props;
     const { selectedUser } = this.state;
     const newRow = {
       userTypeId: selectedUser,
@@ -145,14 +149,16 @@ class GradesList extends Component {
     };
 
     // Check if the same value already exists in the table
-    const emptyRowsExist = grades.some(grade => grade.arTitle.trim() === "---");
+    const emptyRowsExist = certificateGrades.some(
+      grade => grade.arTitle.trim() === "---"
+    );
 
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewGrade(newRow);
+      onAddNewCertificateGrade(newRow);
     }
   };
 
@@ -161,11 +167,11 @@ class GradesList extends Component {
   };
 
   handleDeleteRow = () => {
-    const { onDeleteGrade } = this.props;
+    const { onDeleteCertificateGrade } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteGrade(selectedRowId);
+      onDeleteCertificateGrade(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -174,9 +180,9 @@ class GradesList extends Component {
       });
     }
   };
-  handleGradeDataChange = (rowId, fieldName, fieldValue) => {
-    const { grades, onUpdateGrade } = this.props;
-    const isDuplicate = grades.some(
+  handleCertificateGradeDataChange = (rowId, fieldName, fieldValue) => {
+    const { certificateGrades, onUpdateCertificateGrade } = this.props;
+    const isDuplicate = certificateGrades.some(
       grade => grade.Id !== rowId && grade.arTitle.trim() === fieldValue.trim()
     );
 
@@ -184,25 +190,25 @@ class GradesList extends Component {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateGrade(onUpdate);
+      onUpdateCertificateGrade(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
       console.log("on update", onUpdate);
-      onUpdateGrade(onUpdate);
+      onUpdateCertificateGrade(onUpdate);
     }
   };
 
   handleSuccessClose = () => {
-    const { onGetGradeDeletedValue } = this.props;
+    const { onGetCertificateGradeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetGradeDeletedValue();
+    onGetCertificateGradeDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetGradeDeletedValue } = this.props;
+    const { onGetCertificateGradeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetGradeDeletedValue();
+    onGetCertificateGradeDeletedValue();
   };
 
   toggleSidebar = () => {
@@ -212,15 +218,15 @@ class GradesList extends Component {
   };
 
   handleSelectUser = (fieldName, selectedValue) => {
-    const { onGetGrades } = this.props;
+    const { onGetCertificateGrades } = this.props;
     console.log("selectedValue", selectedValue);
     this.setState({ selectedUser: selectedValue });
-    onGetGrades({ userTypeId: selectedValue });
+    onGetCertificateGrades({ userTypeId: selectedValue });
   };
 
   render() {
     const { SearchBar } = Search;
-    const { grades, deleted, t, userTypesOpt } = this.props;
+    const { certificateGrades, deleted, t, userTypesOpt } = this.props;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
     const {
@@ -249,13 +255,13 @@ class GradesList extends Component {
 
       {
         dataField: "arTitle",
-        text: this.props.t("Grades(ar)"),
+        text: this.props.t("CertificateGrades(ar)"),
         sort: true,
         // editable: showEditButton,
       },
       {
         dataField: "enTitle",
-        text: "Grades",
+        text: "CertificateGrades",
         sort: true,
         // editable: showEditButton,
       },
@@ -287,7 +293,7 @@ class GradesList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: grades ? grades.length : 0,
+      totalSize: certificateGrades ? certificateGrades.length : 0,
       custom: true,
     };
 
@@ -302,7 +308,7 @@ class GradesList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Grades")} />
+            <Breadcrumbs breadcrumbItem={this.props.t("CertificateGrades")} />
 
             <Row>
               <Col>
@@ -412,12 +418,14 @@ class GradesList extends Component {
                               pagination={paginationFactory(pageOptions)}
                               keyField="Id"
                               columns={columns}
-                              data={grades ? grades : []}
+                              data={certificateGrades ? certificateGrades : []}
                             >
                               {({ paginationProps, paginationTableProps }) => (
                                 <ToolkitProvider
                                   keyField="Id"
-                                  data={grades ? grades : []}
+                                  data={
+                                    certificateGrades ? certificateGrades : []
+                                  }
                                   columns={columns}
                                   search
                                 >
@@ -458,7 +466,11 @@ class GradesList extends Component {
                                         keyField="Id"
                                         {...toolkitprops.baseProps}
                                         {...paginationTableProps}
-                                        data={grades ? grades : []}
+                                        data={
+                                          certificateGrades
+                                            ? certificateGrades
+                                            : []
+                                        }
                                         columns={columns}
                                         cellEdit={cellEditFactory({
                                           mode: "click",
@@ -469,7 +481,7 @@ class GradesList extends Component {
                                             row,
                                             column
                                           ) => {
-                                            this.handleGradeDataChange(
+                                            this.handleCertificateGradeDataChange(
                                               row.Id,
                                               column.dataField,
                                               newValue
@@ -477,7 +489,7 @@ class GradesList extends Component {
                                           },
                                         })}
                                         noDataIndication={this.props.t(
-                                          "No GradeType Types found"
+                                          "No CertificateGradeType Types found"
                                         )}
                                         defaultSorted={defaultSorting}
                                       />
@@ -506,23 +518,24 @@ class GradesList extends Component {
   }
 }
 
-const mapStateToProps = ({ grades, userTypes, menu_items }) => ({
-  grades: grades.grades,
-  deleted: grades.deleted,
+const mapStateToProps = ({ certificateGrades, userTypes, menu_items }) => ({
+  certificateGrades: certificateGrades.certificateGrades,
+  deleted: certificateGrades.deleted,
   userTypesOpt: userTypes.userTypesOpt,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
   onGetUsers: () => dispatch(getUserTypesOpt()),
-  onGetGrades: grade => dispatch(getGrades(grade)),
-  onAddNewGrade: grade => dispatch(addNewGrade(grade)),
-  onUpdateGrade: grade => dispatch(updateGrade(grade)),
-  onDeleteGrade: grade => dispatch(deleteGrade(grade)),
-  onGetGradeDeletedValue: () => dispatch(getGradeDeletedValue()),
+  onGetCertificateGrades: grade => dispatch(getCertificateGrades(grade)),
+  onAddNewCertificateGrade: grade => dispatch(addNewCertificateGrade(grade)),
+  onUpdateCertificateGrade: grade => dispatch(updateCertificateGrade(grade)),
+  onDeleteCertificateGrade: grade => dispatch(deleteCertificateGrade(grade)),
+  onGetCertificateGradeDeletedValue: () =>
+    dispatch(getCertificateGradeDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(withTranslation()(GradesList)));
+)(withRouter(withTranslation()(CertificateGradesList)));
