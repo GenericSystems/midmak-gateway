@@ -856,7 +856,7 @@ class AcademyBuildingStructuresList extends Component {
         <Row>
           <Breadcrumbs
             title={this.props.t("Academy Building Structures")}
-            breadcrumbItem={this.props.t("Academy Building Structures List")}
+            breadcrumbItem={this.props.t("Academy Building Structures")}
           />
 
           <Col lg="4">
@@ -1194,7 +1194,7 @@ class AcademyBuildingStructuresList extends Component {
                           className={`form-control ${
                             buildingNameError ? "is-invalid" : ""
                           }`}
-                          placeholder={t("Building Name(ar)")}
+                          placeholder={"Building Name(ar)"}
                           value={newBuildingArName}
                           onChange={e => {
                             this.handleBuildingDataChange(
@@ -1238,7 +1238,7 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Col lg="2">
                         <label htmlFor="buildingNum" className="col-form-label">
-                          {"Building Number"}:
+                          {t("Building Number")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1248,7 +1248,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="buildingNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Building Number")}
+                          placeholder={"Building Number"}
                           value={newBuildingNum}
                           onChange={e => {
                             this.handleBuildingDataChange(
@@ -1344,7 +1344,7 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Col lg="2">
                         <label htmlFor="floorNum" className="col-form-label">
-                          {"Floor Number"}:
+                          {t("Floor Number")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1354,7 +1354,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="floorNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Floor Number")}
+                          placeholder={"Floor Number"}
                           value={newfloorNum}
                           onChange={e => {
                             this.handleFloorDataChange(
@@ -1450,7 +1450,7 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Col lg="2">
                         <label htmlFor="buildingNum" className="col-form-label">
-                          {"Building Number"}:
+                          {t("Building Number")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1460,7 +1460,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="buildingNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Building Number")}
+                          placeholder={"Building Number"}
                           value={editBuildingNum}
                           onChange={e => {
                             this.handleBuildingDataChange(
@@ -1548,7 +1548,7 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Col lg="2">
                         <label htmlFor="floorNum" className="col-form-label">
-                          {"Floor Number"}:
+                          {t("Floor Number")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1558,7 +1558,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="floorNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Floor Number")}
+                          placeholder={"Floor Number"}
                           value={editfloorNum}
                           onChange={e => {
                             this.handleFloorDataChange(

@@ -1166,7 +1166,7 @@ class ClassSchedulingList extends Component {
       },
       {
         dataField: "trainingFormat",
-        text: this.props.t("Traning Format"),
+        text: this.props.t("Training Format"),
         editable: false,
         sort: true,
       },
@@ -1660,7 +1660,7 @@ class ClassSchedulingList extends Component {
                                                   <Form>
                                                     <Card id="employee-card">
                                                       <CardTitle id="course_header">
-                                                        {t("Offering Courses")}
+                                                        {t("Course Offering")}
                                                       </CardTitle>
                                                       <CardBody className="cardBody">
                                                         {emptyError && (
