@@ -146,30 +146,7 @@ function* fetchMethodsOffering() {
   }
 }
 
-function* fetchFilteredAcademicCertificates(obj) {
-  let facultyId = obj.payload;
-  const get_filtered_academicCertificates = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_AcadmicCertificates",
-    fields: "Id,AcadmicCertificatesArName,facultyId",
-    filter: `facultyId = ${facultyId}  `,
-  };
-  try {
-    const response = yield call(
-      getFilteredAcademicCertificates,
-      get_filtered_academicCertificates
-    );
-    yield put(getFilteredAcademicCertificatesSuccess(response));
-  } catch (error) {
-    yield put(getFilteredAcademicCertificatesFail(error));
-  }
-}
-
-function* fetchCoursesOffering(obj) {
-  let yearSemesterId = obj.payload;
-
+function* fetchCoursesOffering() {
   const get_CoursesOffering_req = {
     source: "db",
     procedure: "SisApp_getData",
@@ -201,14 +178,12 @@ function* fetchCoursesOffering(obj) {
   }
 }
 
-function* fetcsectorCoursesOffering(obj) {
-  let yearSemesterId = obj.payload;
+function* fetchAllCoursesOffering(obj) {
   const get_allCoursesOffering_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_CourseOffering",
-    
   };
   try {
     const response = yield call(
@@ -248,17 +223,16 @@ function* onAddNewCourseOffering({ payload, courseOffering }) {
 }
 
 function* onUpdateCourseOffering({ payload }) {
-  payload.newRow["source"] = "db";
-  payload.newRow["procedure"] = "setOfferedCourse";
-  payload.newRow["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload.newRow["tablename"] = "Common_CourseOffering";
-  payload.newRow["queryname"] = "_Common_CourseOffering";
-
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_updateData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_CourseOffering";
+  payload["queryname"] = "_Common_CourseOffering";
   try {
-    const respupdate = yield call(updateCourseOffering, payload.newRow);
-    yield put(updateCourseOfferingSuccess(respupdate[0]));
+    const response = yield call(updateCourseOffering, payload);
+    yield put(updateCourseOfferingSuccess(response[0]));
     if (payload.showAll == true) {
-      yield fetcsectorCoursesOffering({
+      yield fetchAllCoursesOffering({
         type: GET_ALL_COURSES_OFFERING,
       });
     } else {
@@ -281,7 +255,7 @@ function* onDeleteCourseOffering({ payload, courseOffering }) {
     const respdelete = yield call(deleteCourseOffering, payload.delId);
     yield put(deleteCourseOfferingSuccess(respdelete[0]));
     if (payload.showAll == true) {
-      yield fetcsectorCoursesOffering({
+      yield fetchAllCoursesOffering({
         type: GET_ALL_COURSES_OFFERING,
         payload: payload.semester,
       });
@@ -555,7 +529,7 @@ function* onGetScheduleMsgValue() {
 }
 
 function* classSchedulingSaga() {
-  yield takeEvery(GET_ALL_COURSES_OFFERING, fetcsectorCoursesOffering);
+  yield takeEvery(GET_ALL_COURSES_OFFERING, fetchAllCoursesOffering);
 
   yield takeEvery(GET_COURSES_OFFERING, fetchCoursesOffering);
   yield takeEvery(GET_COURSE_OFFERING_PROFILE, fetchCourseOfferingProfile);
@@ -573,10 +547,7 @@ function* classSchedulingSaga() {
   yield takeEvery(ADD_NEW_SCHEDULE_TIMING, onAddNewScheduleTiming);
   yield takeEvery(DELETE_SCHEDULE_TIMING, onDeleteScheduleTiming);
   yield takeEvery(GET_SCHEDULE_TIMING_DESCS, fetchScheduleTimingDescs);
-  yield takeEvery(
-    GET_FILTERED_ACADEMIC_CERTIFICATES,
-    fetchFilteredAcademicCertificates
-  );
+
   yield takeEvery(GET_SCHEDULE_MSG_VALUE, onGetScheduleMsgValue);
   yield takeEvery(GET_SECTOR_TIMINGS, fetchSectorTimings);
 }

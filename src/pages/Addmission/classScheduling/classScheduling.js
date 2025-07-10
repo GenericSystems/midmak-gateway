@@ -129,6 +129,7 @@ class ClassSchedulingList extends Component {
       matchingTimings: [],
       matchingError: null,
       checkedRows: {},
+      currentYearObj: {},
     };
     this.toggle1 = this.toggle1.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -147,7 +148,6 @@ class ClassSchedulingList extends Component {
       filteredAcademicCertificates,
       weekDays,
       lecturePeriods,
-      yearSemesters,
       onfetchSetting,
       onGetMethodsOfOfferingCourses,
       onfetchDefaultSettings,
@@ -162,8 +162,9 @@ class ClassSchedulingList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-       onGetCoursesOffering();
-
+    onGetCoursesOffering();
+    onGetMethodsOfOfferingCourses();
+    onGetSectionLabs();
     this.setState({
       coursesOffering,
       allCoursesOffering,
@@ -176,10 +177,30 @@ class ClassSchedulingList extends Component {
       filteredAcademicCertificates,
       weekDays,
       lecturePeriods,
-      yearSemesters,
     });
 
-    console.log("rsssssssssssssss", coursesOffering);
+    let curentueardata = localStorage.getItem("authUser");
+    if (curentueardata) {
+      try {
+        const parsed = JSON.parse(curentueardata);
+        const firstYear = parsed[0];
+        const selectedYear = {
+          value: firstYear.currentYearId,
+          label: firstYear.currentYearName,
+        };
+        this.setState({
+          selectedYear,
+          currentYearObj: {
+            currentYearId: firstYear.currentYearId,
+            currentYearName: firstYear.currentYearName,
+          },
+        });
+      } catch (error) {
+        console.error("Error parsing authUser:", error);
+      }
+    }
+
+    console.log(this.state.currentYearObj, "gggg");
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -276,13 +297,12 @@ class ClassSchedulingList extends Component {
 
   handleViewAll = isChecked => {
     const { onGetAllCoursesOffering, onGetCoursesOffering } = this.props;
-    console.log("sssssssssssss", isChecked)
+    console.log("sssssssssssss", isChecked);
     this.setState({ showAll: isChecked }, () => {
       if (isChecked) {
-         
         onGetAllCoursesOffering();
       } else {
-            console.log("noooooooooooo", isChecked)
+        console.log("noooooooooooo", isChecked);
         onGetCoursesOffering();
       }
     });
@@ -715,7 +735,13 @@ class ClassSchedulingList extends Component {
   handleSelectYear = (name, value) => {
     document.getElementById("square-switch1").checked = false;
     const { onGetCoursesOffering } = this.props;
-    this.setState({ selectedYear: value });
+    this.setState({
+      selectedYear: value,
+      currentYearObj: {
+        currentYearId: value.value,
+        currentYearName: value.label,
+      },
+    });
     onGetCoursesOffering(value["value"]);
   };
 
@@ -778,6 +804,7 @@ class ClassSchedulingList extends Component {
 
     values["yearId"] = selectedYear["value"];
     values["courseId"] = selectedCourseId;
+    values["methodOfferingId"] = selectedMethodOffering["value"];
 
     let courseOfferingInfo = {};
     if (values.startDate && values.endDate && selectedMethodOffering !== null) {
@@ -1084,7 +1111,10 @@ class ClassSchedulingList extends Component {
       selectedEndDate,
       selectedStartDate,
       selectedYear,
+      currentYearObj,
     } = this.state;
+
+    console.log(currentYearObj, "gggg");
     const selectRow = {
       mode: "checkbox",
       clickToSelect: false,
@@ -1499,7 +1529,6 @@ class ClassSchedulingList extends Component {
                                             }}
                                             value={selectedYear}
                                           />
-                                          <br />
                                         </Col>
                                         <Col sm="4"></Col>
                                         <Col sm="1">
@@ -1666,51 +1695,23 @@ class ClassSchedulingList extends Component {
                                                                 </span>
                                                               </Col>
                                                               <Col md={7}>
-                                                                <div className="d-flex gap-1 mt-2 ">
-                                                                  {methodsOffering.map(
-                                                                    methodOffering => (
-                                                                      <div
-                                                                        className="form-check form-check-inline"
-                                                                        key={
-                                                                          methodOffering.value
-                                                                        }
-                                                                      >
-                                                                        <Input
-                                                                          type="radio"
-                                                                          name="methodOfferingId"
-                                                                          value={
-                                                                            methodOffering.value
-                                                                          }
-                                                                          id={
-                                                                            methodOffering.value
-                                                                          }
-                                                                          onChange={event => {
-                                                                            this.handleSelectChange(
-                                                                              "methodOfferingId",
-                                                                              event
-                                                                                .target
-                                                                                .value
-                                                                            );
-                                                                          }}
-                                                                          defaultChecked={
-                                                                            methodOffering.value ===
-                                                                            selectedMethodOffering
-                                                                          }
-                                                                        />
-                                                                        <Label
-                                                                          className="form-check-label"
-                                                                          for={
-                                                                            methodOffering.value
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            methodOffering.label
-                                                                          )}
-                                                                        </Label>
-                                                                      </div>
-                                                                    )
-                                                                  )}
-                                                                </div>
+                                                                <Select
+                                                                  className="select-style-method"
+                                                                  name="methodOfferingId"
+                                                                  key={`methodOfferingId`}
+                                                                  options={
+                                                                    methodsOffering
+                                                                  }
+                                                                  onChange={newValue => {
+                                                                    this.handleSelectChange(
+                                                                      "methodOfferingId",
+                                                                      newValue
+                                                                    );
+                                                                  }}
+                                                                  value={
+                                                                    selectedMethodOffering
+                                                                  }
+                                                                />
                                                               </Col>
                                                             </Row>
 
@@ -2285,6 +2286,32 @@ class ClassSchedulingList extends Component {
                                       enableReinitialize={true}
                                       validate={values => {
                                         const errors = {};
+                                        if (!values.startDate) {
+                                          errors.startDate =
+                                            "Start Date is required";
+                                        }
+
+                                        if (!values.endDate) {
+                                          errors.endDate =
+                                            "End Date is required";
+                                        }
+
+                                        if (
+                                          values.startDate &&
+                                          values.endDate
+                                        ) {
+                                          const start = new Date(
+                                            values.startDate
+                                          );
+                                          const end = new Date(values.endDate);
+
+                                          if (end < start) {
+                                            errors.endDate =
+                                              "End Date must be greater than or equal to Start Date";
+                                          }
+                                        }
+
+                                        return errors;
 
                                         if (
                                           values.Instructorid &&
