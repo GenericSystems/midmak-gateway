@@ -1809,8 +1809,7 @@ export const deleteAcademicLoad = data => post(url.DELETE_ACADEMIC_LOAD, data);
 export const getAcademicLoadDeletedValue = () =>
   get(url.GET_ACADEMIC_LOAD_DELETED_VALUE);
 
-//update garde
-export const updateCheckedGrade = data => post(url.UPDATE_GRADE, data);
+
 
 //Distributing courses methods
 
@@ -2242,6 +2241,27 @@ export const addNewCertificateGrade = data =>post(url.ADD_NEW_CERTIFICATE_GRADE,
 export const updateCertificateGrade = data =>post(url.UPDATE_CERTIFICATE_GRADE , data);
 export const deleteCertificateGrade = data =>post(url.DELETE_CERTIFICATE_GRADE , data);
 export  const getCertificateGradeDeletedValue = () =>get(url.GET_CERTIFICATE_GRADE_DELETED_VALUE);
+
+
+//CheckedGrade
+export const updateCheckedGrade = data => post(url.UPDATE_CHECKED_GRADE, data);
+export const getCheckedGrades = data => post(url.GET_CHECKED_GRADES, data);
+
+
+//archived_grades
+
+export const getArchivedGrades = data =>post(url.GET_ARCHIVED_GRADES, data);
+export const updateArchivedGrade = data =>post(url.UPDATE_ARCHIVED_GRADE , data);
+
+
+//Unarchive Course Requests
+
+export const getUnarchiveCourseRequests = data =>post(url.UNARCHIVE_COURSE_REQUESTS,data);
+export const addUnarchiveCourseRequest = data =>post(url.ADD_UNARCHIVE_COURSE_REQUEST, data);
+export const updateUnarchiveCourseRequest = data =>post(url.UPDATE_UNARCHIVE_COURSE_REQUEST, data);
+export const deleteUnarchiveCourseRequest = data =>post(url.DELETE_UNARCHIVE_COURSE_REQUEST,data);
+export const getUnarchiveCourseRequestDeletedValue = () =>get(url.GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE);
+
 
 
 export {
