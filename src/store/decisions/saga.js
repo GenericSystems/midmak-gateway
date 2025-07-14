@@ -236,18 +236,21 @@ function* onAddNewDecision({ payload, decision }) {
 }
 
 function* onUpdateDecision({ payload }) {
+  console.log("payload", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_Decision";
   try {
     const response = yield call(updateDecision, payload);
-    yield put(updateDecisionSuccess(response[0]));
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", response);
+
+    yield put(updateDecisionSuccess(response));
   } catch (error) {
     yield put(updateDecisionFail(error));
   }
 }
-function* onDeleteDecision({ payload, Decision }) {
+function* onDeleteDecision({ payload, decision }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";

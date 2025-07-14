@@ -1073,3 +1073,51 @@
   font-weight: lighter;
   color: #0d6efd;
 }
+
+.timetable-container {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 10px;
+}
+
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.timetable th,
+.timetable td {
+  font-size: small;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  user-select: none;
+}
+.timetable th {
+  font-size: small;
+  background-color: #e0ffff;
+}
+
+.lecture-cell {
+  width: 20%;
+}
+
+/* .timetable tbody td:not(.lecture-cell) {
+  width: 100px; 
+} */
+.timetable-cell.selected {
+  background-color: lightgreen;
+}
+
+.color-block {
+  width: 40px;
+  height: 30px;
+  display: inline-block;
+  margin-left: 10px;
+  border: 2px solid black;
+}
+
+.description {
+  display: inline-block;
+  vertical-align: middle;
+}

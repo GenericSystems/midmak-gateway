@@ -270,7 +270,7 @@ class RegistrationList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (registrations && !registrations.length) {
-      onfetchSetting();
+      // onfetchSetting();
       onGetRegistrations();
 
       this.setState({ registrations });

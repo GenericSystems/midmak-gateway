@@ -66,10 +66,6 @@ function* fetchHallTypes() {
 
   try {
     const response = yield call(getHallTypes, get_hallTypes_req);
-    console.log(
-      "ddddddddddddddddddddddddddddddaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      response
-    );
     /* response.map(resp => {
       resp["departments"] = JSON.parse(resp["departments"]);
     }); */
@@ -97,10 +93,13 @@ function* onAddAcademyBuildingStructure({ payload }) {
 
 /* UPDATE */
 function* onUpdateAcademyBuildingStructure({ payload }) {
+  console.log(
+    "jnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
+    payload
+  );
   payload.source = "db";
   payload.procedure = "SisApp_updateData";
   payload.apikey = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-
   try {
     const response = yield call(updateAcademyBuildingStructure, payload);
     yield put(updateAcademyBuildingStructureSuccess(response[0]));
@@ -115,7 +114,6 @@ function* onDeleteAcademyBuildingStructure({ payload }) {
   payload.source = "db";
   payload.procedure = "SisApp_removeData";
   payload.apikey = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-
   try {
     const response = yield call(deleteAcademyBuildingStructure, payload);
     yield put(deleteAcademyBuildingStructureSuccess(response[0]));

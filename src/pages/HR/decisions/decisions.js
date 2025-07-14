@@ -93,14 +93,6 @@ class DecisionsList extends Component {
     this.handleDataListChange = this.handleDataListChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
-  formatDateToInput = isoDate => {
-    if (!isoDate) return "";
-    const date = new Date(isoDate);
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, "0");
-    const dd = String(date.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-  };
   componentDidMount() {
     const {
       decisions,
@@ -231,8 +223,8 @@ class DecisionsList extends Component {
       decision: arg,
       selectedDecisionMaker: arg.decisionMakerId,
       selectedApplyDecisionTo: arg.applyDecisionToId,
-      selectedCorporateNode: arg.corporateId,
-      selectedEmployeeName: arg.employeesId,
+      // selectedCorporateNode: arg.corporateId,
+      // selectedEmployeeName: arg.employeesId,
       selectedDecisionType: arg.decisionTypeId,
       selectedDecisionStatus: arg.decisionStatusId,
       isEdit: true,
@@ -315,91 +307,68 @@ class DecisionsList extends Component {
 
   handleSave = values => {
     const {
-      isEdit,
       selectedEmployeeName,
-      selectedDecisionMaker,
-      selectedApplyDecisionTo,
       selectedCorporateNode,
+      selectedApplyDecisionTo,
+      isEdit,
+      selectedDecisionMaker,
       selectedDecisionType,
       selectedDecisionStatus,
     } = this.state;
-    if (values.decisionDate) {
-      values.decisionDate = this.formatDateToInput(values.decisionDate);
-    }
-    console.log("valuesssssssssssssssssssss", values);
+
     const { onAddNewDecision, onUpdateDecision } = this.props;
-    values["decisionMakerId"] = selectedDecisionMaker;
-    values["applyDecisionToId"] = selectedApplyDecisionTo;
-    values["decisionTypeId"] = selectedDecisionType;
+
+    values.decisionMakerId = selectedDecisionMaker;
+    values.applyDecisionToId = selectedApplyDecisionTo;
+    values.decisionTypeId = selectedDecisionType;
+    values.decisionStatusId = isEdit ? selectedDecisionStatus : 4;
+    console.log("selectedDecisionStatus at save:", selectedDecisionStatus);
+
     if (isEdit) {
-      values["decisionStatusId"] = selectedDecisionStatus;
-    } else {
-      values["decisionStatusId"] = 4;
+      if (selectedDecisionStatus !== 4) {
+        values.executeDate = new Date().toISOString().split("T")[0];
+        values.isExecute = 1;
+      } else {
+        values.executeDate = null;
+        values.isExecute = 0;
+      }
     }
+
+    if (selectedApplyDecisionTo === 1) {
+      delete values.corporateId;
+      delete values.employeesId;
+    } else if (selectedApplyDecisionTo === 2) {
+      values.corporateId = selectedCorporateNode;
+      delete values.employeesId;
+      if (values.corporateId === "") delete values.corporateId;
+    } else if (selectedApplyDecisionTo === 3) {
+      values.employeesId = selectedEmployeeName;
+      delete values.corporateId;
+    }
+    Object.keys(values).forEach(key => {
+      if (typeof values[key] === "string" && values[key].trim() === "") {
+        delete values[key];
+      }
+    });
+
     let decisionInfo = {};
-
-    if (
-      values.decisionNumber &&
-      values.decisionDate &&
-      values.decisionReason &&
-      values.note &&
-      selectedDecisionMaker !== null &&
-      selectedApplyDecisionTo !== null &&
-      selectedDecisionType !== null
-    ) {
-      Object.keys(values).forEach(function (key) {
-        if (
-          values[key] != undefined &&
-          (values[key].length > 0 || values[key] != "")
-        )
-          console.log("9999999", decisionInfo);
-        decisionInfo[key] = values[key];
-      });
-      if (selectedCorporateNode) {
-        decisionInfo.corporateId = selectedCorporateNode;
-        if (decisionInfo.hasOwnProperty("employeesId")) {
-          delete decisionInfo.employeesId;
-        }
-      } else if (selectedEmployeeName) {
-        decisionInfo.employeesId = selectedEmployeeName;
-        if (decisionInfo.hasOwnProperty("corporateId")) {
-          delete decisionInfo.corporateId;
-        }
-      } else {
-        if (decisionInfo.hasOwnProperty("corporateId")) {
-          delete decisionInfo.corporateId;
-        }
-        if (decisionInfo.hasOwnProperty("employeesId")) {
-          delete decisionInfo.employeesId;
-        }
+    Object.keys(values).forEach(key => {
+      const val = values[key];
+      if (val !== undefined && val !== null) {
+        decisionInfo[key] = val;
       }
-      if (
-        decisionInfo.decisionDate &&
-        decisionInfo.decisionDate.includes("T")
-      ) {
-        decisionInfo.decisionDate = decisionInfo.decisionDate.split("T")[0];
-      }
-      if (isEdit) {
-        console.log("9999999", decisionInfo);
-        onUpdateDecision(decisionInfo);
-        this.toggle();
-      } else {
-        onAddNewDecision(decisionInfo);
-        this.addToggle();
-      }
-
-      this.setState({
-        errorMessages: {},
-      });
+    });
+    if (isEdit) {
+      onUpdateDecision(decisionInfo);
+      this.toggle();
+    } else {
+      onAddNewDecision(decisionInfo);
+      this.addToggle();
     }
-    // else {
-    //   let emptyError = "";
-    // if (selectedNcsDate === undefined) {
-    //         emptyError = "Fill the empty select";
-    //       }
-    //   this.setState({ emptyError: emptyError });
-    // }
+
+    this.setState({ errorMessages: {} });
   };
+
   handleSelect = (fieldName, selectedValue) => {
     if (fieldName == "decisionTypeId") {
       this.setState({
@@ -497,35 +466,6 @@ class DecisionsList extends Component {
       {
         dataField: "decisionMakerId",
         text: this.props.t("Decision Maker"),
-        sort: true,
-        editable: false,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-        }),
-      },
-
-      {
-        dataField: "isApprove",
-        text: this.props.t("Is Approve"),
-        sort: true,
-        editable: false,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-        }),
-      },
-
-      {
-        dataField: "approvalDate",
-        text: this.props.t("Approval Date"),
-        sort: true,
-        editable: false,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-        }),
-      },
-      {
-        dataField: "employeesId",
-        text: this.props.t("All Employees"),
         sort: true,
         editable: false,
         filter: textFilter({
@@ -1091,9 +1031,17 @@ class DecisionsList extends Component {
                                                                 name="decisionDate"
                                                                 type="date"
                                                                 id="decisionDate"
-                                                                value={this.formatDateToInput(
+                                                                value={
                                                                   values.decisionDate
-                                                                )}
+                                                                    ? new Date(
+                                                                        values.decisionDate
+                                                                      )
+                                                                        .toISOString()
+                                                                        .split(
+                                                                          "T"
+                                                                        )[0]
+                                                                    : ""
+                                                                }
                                                                 className={`form-control ${
                                                                   errors.decisionDate &&
                                                                   touched.decisionDate
@@ -1719,6 +1667,18 @@ class DecisionsList extends Component {
                                                               <Field
                                                                 name="decisionDate"
                                                                 type="date"
+                                                                id="decisionDate"
+                                                                value={
+                                                                  values.decisionDate
+                                                                    ? new Date(
+                                                                        values.decisionDate
+                                                                      )
+                                                                        .toISOString()
+                                                                        .split(
+                                                                          "T"
+                                                                        )[0]
+                                                                    : ""
+                                                                }
                                                                 className={`form-control ${
                                                                   errors.decisionDate &&
                                                                   touched.decisionDate
@@ -1992,12 +1952,19 @@ class DecisionsList extends Component {
                                                                             ? "active"
                                                                             : ""
                                                                         }
-                                                                        onChange={() =>
+                                                                        onChange={() => {
                                                                           setFieldValue(
                                                                             "decisionStatusId",
                                                                             status.Id
-                                                                          )
-                                                                        }
+                                                                          );
+
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedDecisionStatus:
+                                                                                status.Id,
+                                                                            }
+                                                                          );
+                                                                        }}
                                                                       />
                                                                       <Label
                                                                         className="btn btn-outline-primary smallButton w-sm"
@@ -2031,10 +1998,6 @@ class DecisionsList extends Component {
                                                     >
                                                       {t("Save")}
                                                     </button>
-                                                  </div>
-                                                </Col>
-                                                <Col>
-                                                  <div className="text-center">
                                                     <button
                                                       type="button"
                                                       className="btn btn-primary me-2"

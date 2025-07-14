@@ -328,5 +328,14 @@
   "Number of Hours": "عدد الساعات",
   "Number of Sections": "عدد الشعب",
   "Number of Labs": "عدد الفئات",
-  "Section&Labs": "الشعب والفئات"
+  "Section&Labs": "الشعب والفئات",
+  "Show Building": "عرض المبنى",
+  "Show Floor": "عرض الطابق",
+  "Show Hall": "عرض القاعة",
+  "Show Directorate": "عرض المديرية",
+  "Show Organism": "عرض الدائرة",
+  "Show Department": "عرض القسم",
+  "Edit Building": "تعديل المبنى",
+  "Edit Floor": "تعديل الطابق",
+  "Edit Hall": "تعديل القاعة"
 }
