@@ -1185,12 +1185,34 @@ class ClassSchedulingList extends Component {
         text: this.props.t("Start Date"),
         sort: true,
         editable: false,
+        formatter: (cellContent, coursesOffering) => (
+          <>
+            <h5 className="font-size-14 mb-1">
+              <Link to="#" className="text-dark">
+                {
+                  new Date(coursesOffering.startDate)
+                    .toISOString()
+                    .split("T")[0]
+                }
+              </Link>
+            </h5>
+          </>
+        ),
       },
       {
-        dataField: "startDate",
+        dataField: "endDate",
         text: this.props.t("End Date"),
         sort: true,
         editable: false,
+        formatter: (cellContent, coursesOffering) => (
+          <>
+            <h5 className="font-size-14 mb-1">
+              <Link to="#" className="text-dark">
+                {new Date(coursesOffering.endDate).toISOString().split("T")[0]}
+              </Link>
+            </h5>
+          </>
+        ),
       },
       {
         dataField: "menu",
