@@ -300,6 +300,15 @@ import courseDistributions from "./courses-distribution/reducer";
 //enter grades
 import enteredGrades from "./enterGrades/reducer";
 
+//check grades
+import checked_grades from "./checkGrades/reducer";
+
+//archive grades
+import archived_grades from "./archiveGrades/reducer";
+
+//Unarchive Course Requests
+import unarchiveCourseRequests from "./Unarchive-course-requests/reducer";
+
 const rootReducer = combineReducers({
   // public
   genders,
@@ -408,6 +417,9 @@ const rootReducer = combineReducers({
   gradeTypes,
   courseDistributions,
   enteredGrades,
+  checked_grades,
+  archived_grades,
+  unarchiveCourseRequests,
 });
 
 export default rootReducer;

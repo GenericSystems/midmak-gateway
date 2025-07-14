@@ -1118,3 +1118,21 @@ export const ADD_NEW_CERTIFICATE_GRADE = "/add/certificateGrade";
 export const UPDATE_CERTIFICATE_GRADE = "/update/certificateGrade";
 export const DELETE_CERTIFICATE_GRADE = "/delete/certificateGrade";
 export const GET_CERTIFICATE_GRADE_DELETED_VALUE = "/certificateGrade/deleted";
+
+
+//checkedGrades
+export const GET_CHECKED_GRADES = "/checkedGrades";
+export const UPDATE_CHECKED_GRADE = "/update/checkedGrade";
+
+
+//archived Grades
+export const GET_ARCHIVED_GRADES = "/archived_grades";
+export const UPDATE_ARCHIVED_GRADE = "/update/archived_grade";
+
+//Unarchive Course Requests
+export const UNARCHIVE_COURSE_REQUESTS = "/unarchiveCourseRequests";
+export const ADD_UNARCHIVE_COURSE_REQUEST = "/add/unarchiveCourseRequest"
+export const DELETE_UNARCHIVE_COURSE_REQUEST = "/delete/unarchiveCourseRequest"
+export const UPDATE_UNARCHIVE_COURSE_REQUEST = "/update/unarchiveCourseRequest"
+export const GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE = "/deleted"
+

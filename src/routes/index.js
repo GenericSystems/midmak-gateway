@@ -231,6 +231,12 @@ import CourseDistributionsList from "pages/GradeSettings/courseDistributions";
 
 import EnterGradesList from "pages/GradeSettings/Enter-grades";
 
+//check grades
+import CheckGradesList from "pages/GradeSettings/check-grades"
+
+import ArchiveGradesList from "pages/GradeSettings/archive-grades";
+
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -372,6 +378,14 @@ const authProtectedRoutes = [
   //enter grades
 
   { path: "/enter-grades", component: EnterGradesList },
+
+  //check grades
+  { path: "/check-grades", component: CheckGradesList },
+
+  //archive grades
+
+  {path:"/archive-grades", component:ArchiveGradesList},
+
 
   //Blog
   { path: "/blog-list", component: BlogList },
