@@ -96,7 +96,7 @@ class Certificates extends Component {
       userTypesOpt,
       sectors,
       years,
-      filteredGrades,
+      filteredCertificateGrades,
       filteredMembers,
       onGetUsers,
     } = this.props;
@@ -113,7 +113,7 @@ class Certificates extends Component {
       deleted,
       userTypesOpt,
       sectors,
-      filteredGrades,
+      filteredCertificateGrades,
       filteredMembers,
       years,
     });
@@ -447,7 +447,7 @@ class Certificates extends Component {
       years,
       sectors,
       certificateTypes,
-      filteredGrades,
+      filteredCertificateGrades,
       filteredMembers,
       t,
     } = this.props;
@@ -1063,7 +1063,7 @@ class Certificates extends Component {
                                                           name="trainerGradeId"
                                                           key={`select_endSemester`}
                                                           options={
-                                                            filteredGrades
+                                                            filteredCertificateGrades
                                                           }
                                                           onChange={newValue => {
                                                             this.handleSelectChange(
@@ -1071,7 +1071,7 @@ class Certificates extends Component {
                                                               newValue.value
                                                             );
                                                           }}
-                                                          defaultValue={filteredGrades.find(
+                                                          defaultValue={filteredCertificateGrades.find(
                                                             opt =>
                                                               opt.value ===
                                                               certificate.trainerGradeId
@@ -1263,7 +1263,7 @@ const mapStateToProps = ({
   userTypes,
   certificateTypes,
   sectors,
-  grades,
+  certificateGrades,
   trainingMembers,
 }) => ({
   certificates: certificates.certificates,
@@ -1271,7 +1271,7 @@ const mapStateToProps = ({
   userTypesOpt: userTypes.userTypesOpt,
   sectors: sectors.sectors,
   filteredMembers: trainingMembers.filteredMembers,
-  filteredGrades: grades.filteredGrades,
+  filteredCertificateGrades: certificateGrades.filteredCertificateGrades,
   years: years.years,
   deleted: certificates.deleted,
   user_menu: menu_items.user_menu || [],
