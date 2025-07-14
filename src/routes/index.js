@@ -236,6 +236,9 @@ import CheckGradesList from "pages/GradeSettings/check-grades"
 
 import ArchiveGradesList from "pages/GradeSettings/archive-grades";
 
+//Unarchive Course Requests
+import UnarchiveCourseReq from "pages/Unarchive-course-requests/unarchive-course-requests"
+
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -374,6 +377,10 @@ const authProtectedRoutes = [
   { path: "/gradeTypes", component: GradeTypesList },
 
   { path: "/course-distributions", component: CourseDistributionsList },
+
+  //Unarchive Course Requests
+  {path:"/unarchive-course-request" , component:UnarchiveCourseReq},
+
 
   //enter grades
 
