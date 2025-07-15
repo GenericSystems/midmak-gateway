@@ -337,5 +337,12 @@
   "Show Department": "عرض القسم",
   "Edit Building": "تعديل المبنى",
   "Edit Floor": "تعديل الطابق",
-  "Edit Hall": "تعديل القاعة"
+  "Edit Hall": "تعديل القاعة",
+  "Trainee Name":"اسم المتدرب",
+  "Course Name":"لسم الدورة",
+  "Archive Detailes":"التفاصيل",
+  "Operation Needed":"العملية المطلوبة",
+  "Applyning Date":"تاريخ التقديم",
+  "Applying Notes":"ملاحظات التقديم",
+  "Applying User":"اسم المستخدم"
 }
