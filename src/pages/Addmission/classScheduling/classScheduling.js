@@ -1421,7 +1421,7 @@ class ClassSchedulingList extends Component {
       },
       {
         dataField: "startDate",
-        text: t("From Date"),
+        text: t("Start Date"),
         editable: true,
         sort: false,
         editor: {
