@@ -170,9 +170,7 @@ class ClassSchedulingList extends Component {
       onGetMethodsOfOfferingCourses,
       onfetchDefaultSettings,
       methodsOffering,
-      onGetAllCoursesOffering,
       allCoursesOffering,
-      onGetSectionLabs,
       deleted,
       user_menu,
     } = this.props;
@@ -181,7 +179,6 @@ class ClassSchedulingList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetCoursesOffering();
-    onGetSectionLabs();
     onGetMethodsOfOfferingCourses();
     this.setState({
       coursesOffering,
@@ -420,7 +417,7 @@ class ClassSchedulingList extends Component {
       sectionLabData,
       onGetScheduleTimingDescs,
       onGetScheduleTimings,
-      onGetHallTimings,
+      // onGetHallTimings,
     } = this.props;
     this.setState(prevState => ({
       modal: !prevState.modal,
@@ -428,7 +425,7 @@ class ClassSchedulingList extends Component {
     this.setState({ selectedRowSectionLab: null });
     onGetScheduleTimings(0);
     onGetScheduleTimingDescs(0);
-    onGetHallTimings(0);
+    // onGetHallTimings(0);
     this.setState({ selectedRow: null });
   }
   toggleNestedModal = () => {
@@ -691,10 +688,10 @@ class ClassSchedulingList extends Component {
       ob["lecturePeriodId"] = lectureId;
       ob["yearSemesterId"] = selectedSchedule.value;
       if (
-        selectedRowSectionLab.Instructorid !== null &&
-        selectedRowSectionLab.Instructorid !== 0
+        selectedRowSectionLab.instructorId !== null &&
+        selectedRowSectionLab.instructorId !== 0
       ) {
-        ob["Instructorid"] = selectedRowSectionLab.Instructorid;
+        ob["instructorId"] = selectedRowSectionLab.instructorId;
       }
       if (
         selectedRowSectionLab.hallId !== null &&
@@ -954,12 +951,12 @@ class ClassSchedulingList extends Component {
       coursesOffering,
     } = this.props;
 
-    // if (sectionInfo.Instructorid) {
+    // if (sectionInfo.instructorId) {
     //   const instructorExists = instructors.some(
-    //     instructor => instructor.fullName === sectionInfo.Instructorid
+    //     instructor => instructor.fullName === sectionInfo.instructorId
     //   );
     //   if (!instructorExists) {
-    //     fieldErrors.Instructorid = "Please select a valid instructor.";
+    //     fieldErrors.instructorId = "Please select a valid instructor.";
     //   }
     // }
 
@@ -1038,18 +1035,18 @@ class ClassSchedulingList extends Component {
     // }
     // }
 
-    // if (sectionInfo.Instructorid !== undefined) {
-    //   const selectedInstructorid = sectionInfo.Instructorid;
+    // if (sectionInfo.instructorId !== undefined) {
+    //   const selectedinstructorId = sectionInfo.instructorId;
     //   const selectedInstructor = instructors.find(
-    //     instructor => instructor.fullName === selectedInstructorid
+    //     instructor => instructor.fullName === selectedinstructorId
     //   );
 
     //   if (selectedInstructor) {
-    //     sectionInfo.Instructorid = selectedInstructor.Id;
+    //     sectionInfo.instructorId = selectedInstructor.Id;
     //   } else if (isEdit) {
-    //     sectionInfo.Instructorid = 0;
+    //     sectionInfo.instructorId = 0;
     //   } else {
-    //     sectionInfo.Instructorid = null;
+    //     sectionInfo.instructorId = null;
     //     flag = 1;
     //   }
     // }
@@ -2001,7 +1998,7 @@ class ClassSchedulingList extends Component {
                                               blurToSave: true,
                                             })}
                                             noDataIndication={t(
-                                              "No Scheduling Timing "
+                                              "No Scheduling Timing"
                                             )}
                                             rowStyle={(row, rowIndex) => {
                                               const type = row.type;
@@ -2287,7 +2284,7 @@ class ClassSchedulingList extends Component {
                                   <ModalBody>
                                     <Formik
                                       initialValues={{
-                                        Instructorid:
+                                        instructorId:
                                           (sectionLabData &&
                                             sectionLabData.instructorName) ||
                                           "",
@@ -2336,14 +2333,14 @@ class ClassSchedulingList extends Component {
                                         return errors;
 
                                         if (
-                                          values.Instructorid &&
+                                          values.instructorId &&
                                           !instructors.some(
                                             instructor =>
                                               instructor.fullName ===
-                                              values.Instructorid
+                                              values.instructorId
                                           )
                                         ) {
-                                          errors.Instructorid =
+                                          errors.instructorId =
                                             "Please select a valid instructor.";
                                         }
 
@@ -2433,14 +2430,14 @@ class ClassSchedulingList extends Component {
                                               </Col>
                                               <Col className="col-8">
                                                 <Field
-                                                  name="Instructorid"
+                                                  name="instructorId"
                                                   id="instructor"
                                                   placeholder="Search..."
                                                   type="text"
                                                   // className={
                                                   //   "form-control" +
-                                                  //   (errors.Instructorid &&
-                                                  //   touched.Instructorid
+                                                  //   (errors.instructorId &&
+                                                  //   touched.instructorId
                                                   //     ? " is-invalid"
                                                   //     : "")
                                                   // }
@@ -2456,7 +2453,7 @@ class ClassSchedulingList extends Component {
                                           ))}
                                         </datalist> */}
                                                 <ErrorMessage
-                                                  name="Instructorid"
+                                                  name="instructorId"
                                                   component="div"
                                                   className="invalid-feedback"
                                                 />
@@ -2772,13 +2769,13 @@ class ClassSchedulingList extends Component {
                                                         {t("Instructor")}
                                                       </Label>
                                                       <Field
-                                                        name="Instructorid"
+                                                        name="instructorId"
                                                         placeholder="Search..."
                                                         type="text"
                                                         className={
                                                           "form-control" +
-                                                          (errors.Instructorid &&
-                                                          touched.Instructorid
+                                                          (errors.instructorId &&
+                                                          touched.instructorId
                                                             ? " is-invalid"
                                                             : "")
                                                         }
@@ -2800,7 +2797,7 @@ class ClassSchedulingList extends Component {
                                                         )}
                                                       </datalist>
                                                       <ErrorMessage
-                                                        name="Instructorid"
+                                                        name="instructorId"
                                                         component="div"
                                                         className="invalid-feedback"
                                                       />
@@ -2964,14 +2961,14 @@ class ClassSchedulingList extends Component {
                                               const errors = {};
 
                                               if (
-                                                values.Instructorid &&
+                                                values.instructorId &&
                                                 !instructors.some(
                                                   instructor =>
                                                     instructor.fullName ===
-                                                    values.Instructorid
+                                                    values.instructorId
                                                 )
                                               ) {
-                                                errors.Instructorid =
+                                                errors.instructorId =
                                                   "Please select a valid instructor.";
                                               }
 
@@ -3358,7 +3355,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addNewCourseOffering(CourseOffering)),
   onUpdateCourseOffering: CourseOffering =>
     dispatch(updateCourseOffering(CourseOffering)),
-  onGetSectionLabs: CourseOffering => dispatch(getSectionLabs(CourseOffering)),
+  onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),
   onUpdateSectionLab: sectionLab => dispatch(updateSectionLab(sectionLab)),
   onDeleteSectionLab: sectionLab => dispatch(deleteSectionLab(sectionLab)),
@@ -3374,7 +3371,7 @@ const mapDispatchToProps = dispatch => ({
   onfetchSetting: () => dispatch(fetchYearsSemesters()),
   onfetchDefaultSettings: () => dispatch(fetchDefaultSettings()),
   onGetScheduleMsgValue: () => dispatch(getScheduleMsgValue()),
-  onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
+  // onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
 });
 
 export default connect(

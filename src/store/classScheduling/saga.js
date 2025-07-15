@@ -293,7 +293,7 @@ function* fetchSectionLabs(obj) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_SectionsLabs",
-    // filter: `CourseId = ${sectionLabCourse.courseId} and CourseCode=''''${sectionLabCourse.courseCode}''''`,
+    filter: `courseId = ${sectionLabCourse.courseId} and courseOfferingId=''''${sectionLabCourse.Id}''''`,
   };
 
   try {
