@@ -111,23 +111,23 @@ function* fetchTempStdSchedules(obj) {
     yield put(getTempStdSchedulesFail(error));
   }
 }
-function* fetchAchievedCourses(obj) {
-  let studentId = obj.payload.studentId;
+// function* fetchAchievedCourses(obj) {
+//   let studentId = obj.payload.studentId;
 
-  const get_achieved_courses = {
-    source: "db",
-    procedure: `Student_getPlanAchievements`,
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    StudentId: studentId,
-  };
-  try {
-    const response = yield call(getAchievedCourses, get_achieved_courses);
+//   const get_achieved_courses = {
+//     source: "db",
+//     procedure: `Student_getPlanAchievements`,
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     StudentId: studentId,
+//   };
+//   try {
+//     const response = yield call(getAchievedCourses, get_achieved_courses);
 
-    yield put(getAchievedCoursesSuccess(response));
-  } catch (error) {
-    yield put(getAchievedCoursesFail(error));
-  }
-}
+//     yield put(getAchievedCoursesSuccess(response));
+//   } catch (error) {
+//     yield put(getAchievedCoursesFail(error));
+//   }
+// }
 
 function* fetchRegistrations() {
   const get_Registration_req = {
@@ -144,33 +144,33 @@ function* fetchRegistrations() {
     yield put(getRegistrationsFail(error));
   }
 
-  // //lecture periods
-  // const get_lecturePeriods_req = {
-  //   source: "db",
-  //   procedure: "SisApp_getData",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "settings_lecturePeriods",
-  // };
-  // try {
-  //   const response = yield call(getLecturePeriods, get_lecturePeriods_req);
-  //   yield put(getLecturePeriodsSuccess(response));
-  // } catch (error) {
-  //   yield put(getLecturePeriodsFail(error));
-  // }
-  // //get weekdays
-  // const get_weekDays_req = {
-  //   source: "db",
-  //   procedure: "SisApp_getData",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "settings_weekDays",
-  //   filter: "active=1",
-  // };
-  // try {
-  //   const response = yield call(getWeekDays, get_weekDays_req);
-  //   yield put(getWeekDaysSuccess(response));
-  // } catch (error) {
-  //   yield put(getWeekDaysFail(error));
-  // }
+  // lecture periods
+  const get_lecturePeriods_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_LecturePeriods",
+  };
+  try {
+    const response = yield call(getLecturePeriods, get_lecturePeriods_req);
+    yield put(getLecturePeriodsSuccess(response));
+  } catch (error) {
+    yield put(getLecturePeriodsFail(error));
+  }
+  //get weekdays
+  const get_weekDays_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_WeekDays",
+    filter: "active=1",
+  };
+  try {
+    const response = yield call(getWeekDays, get_weekDays_req);
+    yield put(getWeekDaysSuccess(response));
+  } catch (error) {
+    yield put(getWeekDaysFail(error));
+  }
 }
 
 function* fetchStudentRegisterInfo(obj) {
@@ -390,7 +390,7 @@ function* RegistrationSaga() {
   yield takeEvery(ADD_NEW_AVAILABLE_COURSE, onAddNewAvailableCourse);
   yield takeEvery(GET_AVAILABLE_COURSES, fetchAvailableCourses);
   yield takeEvery(GET_TEMP_STD_SCHEDULES, fetchTempStdSchedules);
-  yield takeEvery(GET_ACHIEVED_COURSES, fetchAchievedCourses);
+  // yield takeEvery(GET_ACHIEVED_COURSES, fetchAchievedCourses);
   yield takeEvery(DELETE_ALL_NON_ACTIVE_STD_CURR, onDeleteAllNonActiveStdCurr);
   yield takeEvery(SAVE_ALL_NON_ACTIVE_STD_CURR, onSaveAllNonActiveStdCurr);
 }

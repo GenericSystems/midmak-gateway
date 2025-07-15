@@ -78,7 +78,7 @@ class RegistrationList extends Component {
       newEndTime: "",
       newDuration: "",
       modal: false,
-      studentEdit: {},
+      traineeEdit: {},
       nonActiveCourse: {},
       deleteModal: false,
       currReqType: null,
@@ -141,7 +141,7 @@ class RegistrationList extends Component {
   }
   toggleTab(tab) {
     // const { onGetAvailableCourses, onGetTempStdSchedules } = this.props;
-    const { studentEdit } = this.state;
+    const { traineeEdit } = this.state;
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab,
@@ -150,7 +150,7 @@ class RegistrationList extends Component {
     }
   }
   toggleMainTab(tab) {
-    const { studentEdit } = this.state;
+    const { traineeEdit } = this.state;
     // const { onGetNonActiveStdCurr } = this.props;
     if (this.state.mainTab !== tab) {
       this.setState({
@@ -160,9 +160,9 @@ class RegistrationList extends Component {
         successMessage: null,
       });
       if (tab === "6") {
-        // onGetNonActiveStdCurr(1, studentEdit.SID);
+        // onGetNonActiveStdCurr(1, traineeEdit.SID);
       } else {
-        // onGetNonActiveStdCurr(0, studentEdit.SID);
+        // onGetNonActiveStdCurr(0, traineeEdit.SID);
       }
     }
   }
@@ -305,7 +305,7 @@ class RegistrationList extends Component {
   };
 
   handleEditUniStudent = universityStudent => {
-    const { studentEdit } = this.state;
+    const { traineeEdit } = this.state;
     // const {
     //   onGetNonActiveStdCurr,
     //   onGetTempStdSchedules,
@@ -316,7 +316,7 @@ class RegistrationList extends Component {
     // } = this.props;
     console.log("universityStudent", universityStudent);
     // onGetNonActiveStdCurr(0, universityStudent.SID);
-    this.setState({ studentEdit: universityStudent });
+    this.setState({ traineeEdit: universityStudent });
 
     // onGetReqTypes({ facultyId: universityStudent.FacultyId });
     // onGetTempStdSchedules(universityStudent.SID);
@@ -344,10 +344,10 @@ class RegistrationList extends Component {
   handleAddToAddedCourses = (row, currentStatus, fieldName) => {
     // const { onAddNewAvailableCourse, currentSemester, onGetNonActiveStdCurr } =
     //   this.props;
-    const { studentEdit, currReqType } = this.state;
+    const { traineeEdit, currReqType } = this.state;
     const newRow = {
       courseId: row.courseId,
-      StudentId: studentEdit.SID,
+      StudentId: traineeEdit.SID,
       Code: row.courseCode,
       YearSemesterId: currentSemester.cuYearSemesterId,
       active: 0,
@@ -358,9 +358,9 @@ class RegistrationList extends Component {
 
   handleActiveSelectChange = (rowId, fieldName, selectedValue, oldValue) => {
     const { onUpdateNonActiveStdCurr, nonActiveStdCurrs } = this.props;
-    const { studentEdit } = this.state;
+    const { traineeEdit } = this.state;
     let onUpdate = { Id: rowId };
-    onUpdate["studentId"] = studentEdit.SID;
+    onUpdate["studentId"] = traineeEdit.SID;
     const checkOverlap = (interval1, interval2) => {
       return (
         interval1.startTimeValue < interval2.endTimeValue &&
@@ -445,10 +445,10 @@ class RegistrationList extends Component {
     }
   };
   handleSelectChange = (row, fieldName, selectedValue) => {
-    const { studentEdit, timings } = this.state;
+    const { traineeEdit, timings } = this.state;
     const { onUpdateNonActiveStdCurr } = this.props;
     let onUpdate = { Id: row.Id };
-    onUpdate["studentId"] = studentEdit.SID;
+    onUpdate["studentId"] = traineeEdit.SID;
     if (fieldName === "section") {
       const selectedSection = row.sections.find(
         section => section.value === selectedValue
@@ -484,10 +484,10 @@ class RegistrationList extends Component {
     this.setState({ selectedEducation: value });
   };
   resetAllNonActiveStdCurrs = () => {
-    const { studentEdit } = this.state;
+    const { traineeEdit } = this.state;
     const { onDeleteAllNonActiveStdCurr, currentSemester } = this.props;
     let ob = {};
-    ob["studentId"] = studentEdit.SID;
+    ob["studentId"] = traineeEdit.SID;
     ob["flag"] = "reset";
     ob["semesterYearId"] = currentSemester.cuYearSemesterId;
     onDeleteAllNonActiveStdCurr(ob);
@@ -495,10 +495,10 @@ class RegistrationList extends Component {
   };
   deleteAllNonActiveStdCurrs = () => {
     this.resetAllNonActiveStdCurrs();
-    const { studentEdit } = this.state;
+    const { traineeEdit } = this.state;
     const { onDeleteAllNonActiveStdCurr, currentSemester } = this.props;
     let ob = {};
-    ob["studentId"] = studentEdit.SID;
+    ob["studentId"] = traineeEdit.SID;
     ob["flag"] = "delete";
     ob["semesterYearId"] = currentSemester.cuYearSemesterId;
 
@@ -510,11 +510,6 @@ class RegistrationList extends Component {
         failedCourses: !prevState.failedCourses,
       }));
       this.setState({ failedWithPassed: false });
-    } else if (course === "failedWithPassed") {
-      this.setState(prevState => ({
-        failedWithPassed: !prevState.failedWithPassed,
-      }));
-      this.setState({ failedCourses: false });
     }
   };
   saveStudent = () => {
@@ -524,14 +519,14 @@ class RegistrationList extends Component {
       onSaveAllNonActiveStdCurr,
       currentSemester,
     } = this.props;
-    const { totalHours, studentEdit } = this.state;
+    const { totalHours, traineeEdit } = this.state;
     const minHours =
       studentRegisterInfo &&
       studentRegisterInfo[0] &&
       studentRegisterInfo[0].minRegisteredHour;
     let errors = [];
     let ob = {};
-    ob["studentId"] = studentEdit.SID;
+    ob["studentId"] = traineeEdit.SID;
     ob["yearSemesterId"] = currentSemester.cuYearSemesterId;
 
     if (minHours > totalHours) {
@@ -564,7 +559,7 @@ class RegistrationList extends Component {
     }
   };
   resetNonActiveStdCurrs = row => {
-    const { studentEdit, timings } = this.state;
+    const { traineeEdit, timings } = this.state;
     // const { onUpdateNonActiveStdCurr, onGetNonActiveStdCurr } = this.props;
 
     const newTimings = timings.filter(timing => timing.rowId !== row.Id);
@@ -575,7 +570,7 @@ class RegistrationList extends Component {
       Id: row.Id,
       LabId: null,
       SectionId: null,
-      studentId: studentEdit.SID,
+      studentId: traineeEdit.SID,
     };
     // onUpdateNonActiveStdCurr(ob, 0);
   };
@@ -622,7 +617,7 @@ class RegistrationList extends Component {
       duplicateStudent,
       successMessage,
       deleteModal,
-      studentEdit,
+      traineeEdit,
       totalHours,
       failedCourses,
       failedWithPassed,
@@ -798,16 +793,16 @@ class RegistrationList extends Component {
       const requiredHours = parseFloat(row.requiredHours);
       return achievedHours >= requiredHours ? "table-success" : "table-danger";
     };
-    const achievedCoursesColumn = [
-      { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "CoursePlanType", text: t("Course Plan Type"), sort: true },
-      {
-        dataField: "nbHours",
-        text: "Hours Achieved",
-        sort: true,
-      },
-      { dataField: "requiredHours", text: t("Required hours"), sort: true },
-    ];
+    // const achievedCoursesColumn = [
+    //   { dataField: "Id", text: t("ID"), hidden: true },
+    //   { dataField: "CoursePlanType", text: t("Course Plan Type"), sort: true },
+    //   {
+    //     dataField: "nbHours",
+    //     text: "Hours Achieved",
+    //     sort: true,
+    //   },
+    //   { dataField: "requiredHours", text: t("Required hours"), sort: true },
+    // ];
     const columnToBeRegistered = [
       {
         dataField: "color",
@@ -1157,11 +1152,11 @@ class RegistrationList extends Component {
                 tag="h4"
                 className="pb-0 d-flex"
               >
-                {studentEdit.studentname}
+                {traineeEdit.traineeName}
                 {" - "}
-                {studentEdit.SID}
+                {traineeEdit.SID}
 
-                <Dropdown
+                {/* <Dropdown
                   className="d-lg-inline-block ms-1"
                   isOpen={this.state.socialDrp}
                   toggle={() => {
@@ -1238,9 +1233,9 @@ class RegistrationList extends Component {
                       </Col>
                     </Row>
                   </DropdownMenu>
-                </Dropdown>
+                </Dropdown> */}
 
-                <Dropdown
+                {/* <Dropdown
                   className=" d-lg-inline-block  "
                   isOpen={this.state.otherDrp}
                   toggle={() => {
@@ -1291,8 +1286,8 @@ class RegistrationList extends Component {
                       </Col>
                     </Row>
                   </DropdownMenu>
-                </Dropdown>
-                <Dropdown
+                </Dropdown> */}
+                {/* <Dropdown
                   className="d-lg-inline-block ms-3"
                   isOpen={this.state.achievements}
                   toggle={() => {
@@ -1325,7 +1320,7 @@ class RegistrationList extends Component {
                       </Col>
                     </Row>
                   </DropdownMenu>
-                </Dropdown>
+                </Dropdown> */}
 
                 <label className="cu-Semes-modal form-label text-center">
                   {years.find(opt => opt.key === currentYear.cuYearId)?.value ||
@@ -1335,12 +1330,11 @@ class RegistrationList extends Component {
 
               <ModalBody>
                 <Row>
-                  <Col md="3"></Col>
-                  <Col md="6">
-                    <Nav pills className="navtab-bg nav-justified">
+                  <Col md="2">
+                    <Nav pills className="flex-column">
                       <NavItem>
                         <NavLink
-                          id="vertical-home-link"
+                          id="horizontal-home-link"
                           style={{ cursor: "pointer" }}
                           className={classnames({
                             active: this.state.mainTab === "5",
@@ -1354,7 +1348,7 @@ class RegistrationList extends Component {
                       </NavItem>
                       <NavItem>
                         <NavLink
-                          id="vertical-home-link"
+                          id="horizontal-home-link"
                           style={{ cursor: "pointer" }}
                           className={classnames({
                             active: this.state.mainTab === "6",
@@ -1368,215 +1362,305 @@ class RegistrationList extends Component {
                       </NavItem>
                     </Nav>
                   </Col>
-                  <Col md="3"></Col>
-                </Row>
-                <TabContent
-                  activeTab={this.state.mainTab}
-                  className="p-3 text-muted"
-                  id="verticalTabContent"
-                >
-                  <TabPane tabId="5">
-                    <Row className="mt-3">
-                      <Col lg="7">
-                        <Row>
-                          <Col lg="4">
-                            <h5 className="header pt-2 ms-3" id="title">
-                              {this.props.t("Available Courses")}
-                            </h5>
-                          </Col>
-                          <Col lg="4">
-                            <div className="btn-group" role="group">
-                              <Tooltip
-                                title={t("Failed With Passed")}
-                                placement="top"
-                              >
-                                <input
-                                  type="checkbox"
-                                  name="failedWithPassed"
-                                  className={`form-check-input-CR form-check-input input-mini warning`}
-                                  id="behaviorButton"
-                                  checked={failedWithPassed}
-                                  onChange={() =>
-                                    this.handleActiveFailed("failedWithPassed")
-                                  }
-                                />
-                              </Tooltip>
-                              <Tooltip
-                                title={t("Failed Courses")}
-                                placement="top"
-                              >
-                                <input
-                                  type="checkbox"
-                                  name="failedCourses"
-                                  className={`form-check-input-CR form-check-input input-mini warning`}
-                                  id="behaviorButton"
-                                  checked={failedCourses}
-                                  onChange={() =>
-                                    this.handleActiveFailed("failedOnly")
-                                  }
-                                />
-                              </Tooltip>
-                            </div>
-                          </Col>
-                          <Col lg="3"></Col>
-                          <Col>
-                            <Tooltip
-                              title={t("Print Available Material")}
-                              key={"print_thing"}
-                              placement="top"
-                            >
-                              <IconButton
-                                className=""
-                                to="#"
-                                color="primary"
-                                onClick={() =>
-                                  this.handleEditUniStudent(universityStudent)
-                                }
-                              >
-                                <i
-                                  className="bx bxs-printer fs-3"
-                                  id="edittooltip"
-                                ></i>
-                              </IconButton>
-                            </Tooltip>
-                          </Col>
-                        </Row>
-                        <div className="bordered mt-1">
-                          <Row>
-                            <Col>
-                              <BootstrapTable
-                                keyField="courseId"
-                                data={filteredAvailableCourses}
-                                columns={columns}
-                                defaultSorted={defaultSorting}
-                                filter={filterFactory()}
-                                filterPosition="top"
-                                rowStyle={rowStyle}
-                              />
-                              <TabContent
-                                activeTab={this.state.activeTab2}
-                                className="p-3 text-muted"
-                                id="verticalTabContent"
-                              >
-                                <TabPane key={5} tabId="5">
-                                  <BootstrapTable
-                                    keyField="Id"
-                                    data={registrations}
-                                    columns={columns12}
-                                    defaultSorted={defaultSorting}
-                                  />
-                                </TabPane>
-                                <TabPane key={6} tabId="6">
-                                  <BootstrapTable
-                                    keyField="Id"
-                                    data={registrations}
-                                    columns={columns12}
-                                    defaultSorted={defaultSorting}
-                                  />
-                                </TabPane>
-                              </TabContent>
-                            </Col>
-                          </Row>
-                        </div>
-                        <Col lg="12">
-                          <Row>
-                            <Col lg="12">
-                              <Row>
-                                <Col lg="8">
-                                  <Row>
-                                    <Col lg="6">
-                                      <h5 className="pt-2 ms-3" id="title">
-                                        {`${this.props.t(
-                                          "Courses to be registered"
-                                        )}  `}
-                                      </h5>
-                                    </Col>
-                                    <Col lg="4">
-                                      <h5 className="header-hours pt-2 ms-3 ">
-                                        {`${totalHours}`}{" "}
-                                        {this.props.t("hours")}
-                                      </h5>
-                                    </Col>
-                                  </Row>
-                                </Col>
-                              </Row>
-                            </Col>
-                          </Row>
-                          <div className="bordered mt-1 mb-0 pb-0">
-                            <div className="d-flex m-0 p-0 ms-3 justify-content-center">
-                              <div
-                                className="p-2 d-inline-flex align-items-center justify-content-center m-0"
-                                style={{ width: "fit-content" }}
-                              >
+
+                  <Col md="10">
+                    <TabContent
+                      activeTab={this.state.mainTab}
+                      className="p-3 text-muted"
+                      id="verticalTabContent"
+                    >
+                      <TabPane tabId="5">
+                        <Row className="mt-3">
+                          <Col lg="7">
+                            <Row>
+                              <Col lg="4">
+                                <h5 className="header pt-2 ms-3" id="title">
+                                  {this.props.t("Available Courses")}
+                                </h5>
+                              </Col>
+                              <Col lg="4">
+                                <div className="btn-group" role="group">
+                                  <Tooltip
+                                    title={t("Failed Courses")}
+                                    placement="top"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      name="failedCourses"
+                                      className={`form-check-input-CR form-check-input input-mini warning`}
+                                      id="behaviorButton"
+                                      checked={failedCourses}
+                                      onChange={() =>
+                                        this.handleActiveFailed("failedOnly")
+                                      }
+                                    />
+                                  </Tooltip>
+                                </div>
+                              </Col>
+                              <Col lg="3"></Col>
+                              <Col>
                                 <Tooltip
-                                  title={t("Save All")}
+                                  title={t("Print Available Material")}
                                   key={"print_thing"}
                                   placement="top"
                                 >
                                   <IconButton
+                                    className=""
                                     to="#"
                                     color="primary"
-                                    onClick={() => this.saveStudent()}
-                                    className="p-0"
+                                    onClick={() =>
+                                      this.handleEditUniStudent(
+                                        universityStudent
+                                      )
+                                    }
                                   >
                                     <i
-                                      className="mdi mdi-content-save-all-outline font-size-18"
+                                      className="bx bxs-printer fs-3"
                                       id="edittooltip"
                                     ></i>
                                   </IconButton>
                                 </Tooltip>
-                              </div>
-                              <div
-                                className="p-2 d-inline-flex align-items-center justify-content-center m-0"
-                                style={{ width: "fit-content" }}
-                              >
-                                <Tooltip
-                                  title={t("Reset All")}
-                                  key={"print_thing"}
-                                  placement="top"
-                                >
-                                  <IconButton
-                                    color="primary"
-                                    onClick={() =>
-                                      this.resetAllNonActiveStdCurrs()
-                                    }
-                                    id="TooltipTop"
-                                    className="p-0"
+                              </Col>
+                            </Row>
+                            <div className="bordered mt-1">
+                              <Row>
+                                <Col>
+                                  <BootstrapTable
+                                    keyField="courseId"
+                                    data={filteredAvailableCourses}
+                                    columns={columns}
+                                    defaultSorted={defaultSorting}
+                                    filter={filterFactory()}
+                                    filterPosition="top"
+                                    rowStyle={rowStyle}
+                                  />
+                                  <TabContent
+                                    activeTab={this.state.activeTab2}
+                                    className="p-3 text-muted"
+                                    id="verticalTabContent"
                                   >
-                                    <i className="bx bx-reset font-size-18" />
-                                  </IconButton>
-                                </Tooltip>
-                              </div>
+                                    <TabPane key={5} tabId="5">
+                                      <BootstrapTable
+                                        keyField="Id"
+                                        data={registrations}
+                                        columns={columns12}
+                                        defaultSorted={defaultSorting}
+                                      />
+                                    </TabPane>
+                                    <TabPane key={6} tabId="6">
+                                      <BootstrapTable
+                                        keyField="Id"
+                                        data={registrations}
+                                        columns={columns12}
+                                        defaultSorted={defaultSorting}
+                                      />
+                                    </TabPane>
+                                  </TabContent>
+                                </Col>
+                              </Row>
+                            </div>
+                            <Col lg="12">
+                              <Row>
+                                <Col lg="12">
+                                  <Row>
+                                    <Col lg="8">
+                                      <Row>
+                                        <Col lg="6">
+                                          <h5 className="pt-2 ms-3" id="title">
+                                            {`${this.props.t(
+                                              "Courses to be registered"
+                                            )}  `}
+                                          </h5>
+                                        </Col>
+                                        <Col lg="4">
+                                          <h5 className="header-hours pt-2 ms-3 ">
+                                            {`${totalHours}`}{" "}
+                                            {this.props.t("hours")}
+                                          </h5>
+                                        </Col>
+                                      </Row>
+                                    </Col>
+                                  </Row>
+                                </Col>
+                              </Row>
+                              <div className="bordered mt-1 mb-0 pb-0">
+                                <div className="d-flex m-0 p-0 ms-3 justify-content-center">
+                                  <div
+                                    className="p-2 d-inline-flex align-items-center justify-content-center m-0"
+                                    style={{ width: "fit-content" }}
+                                  >
+                                    <Tooltip
+                                      title={t("Save All")}
+                                      key={"print_thing"}
+                                      placement="top"
+                                    >
+                                      <IconButton
+                                        to="#"
+                                        color="primary"
+                                        onClick={() => this.saveStudent()}
+                                        className="p-0"
+                                      >
+                                        <i
+                                          className="mdi mdi-content-save-all-outline font-size-18"
+                                          id="edittooltip"
+                                        ></i>
+                                      </IconButton>
+                                    </Tooltip>
+                                  </div>
+                                  <div
+                                    className="p-2 d-inline-flex align-items-center justify-content-center m-0"
+                                    style={{ width: "fit-content" }}
+                                  >
+                                    <Tooltip
+                                      title={t("Reset All")}
+                                      key={"print_thing"}
+                                      placement="top"
+                                    >
+                                      <IconButton
+                                        color="primary"
+                                        onClick={() =>
+                                          this.resetAllNonActiveStdCurrs()
+                                        }
+                                        id="TooltipTop"
+                                        className="p-0"
+                                      >
+                                        <i className="bx bx-reset font-size-18" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </div>
 
-                              <div
-                                className="p-2 d-inline-flex align-items-center justify-content-center m-0 "
-                                style={{ width: "fit-content" }}
-                              >
-                                <Tooltip
-                                  title={t("Delete All")}
-                                  key={"print_thing"}
-                                  placement="top"
-                                >
-                                  <IconButton
-                                    id="deletetooltip"
-                                    onClick={() =>
-                                      this.deleteAllNonActiveStdCurrs()
-                                    }
-                                    className="p-0 text-danger"
+                                  <div
+                                    className="p-2 d-inline-flex align-items-center justify-content-center m-0 "
+                                    style={{ width: "fit-content" }}
                                   >
-                                    <i className="mdi mdi-delete font-size-18" />
-                                  </IconButton>
-                                </Tooltip>
+                                    <Tooltip
+                                      title={t("Delete All")}
+                                      key={"print_thing"}
+                                      placement="top"
+                                    >
+                                      <IconButton
+                                        id="deletetooltip"
+                                        onClick={() =>
+                                          this.deleteAllNonActiveStdCurrs()
+                                        }
+                                        className="p-0 text-danger"
+                                      >
+                                        <i className="mdi mdi-delete font-size-18" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </div>
+                                </div>
+                                <div>
+                                  {duplicateError && (
+                                    <Alert
+                                      color="danger"
+                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                      role="alert"
+                                    >
+                                      {duplicateError}
+                                      <button
+                                        type="button"
+                                        className="btn-close"
+                                        aria-label="Close"
+                                        onClick={this.handleAlertClose}
+                                      ></button>
+                                    </Alert>
+                                  )}
+                                </div>
+                                <div>
+                                  {successMessage && (
+                                    <Alert
+                                      color="success"
+                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                      role="alert"
+                                    >
+                                      {successMessage}
+                                    </Alert>
+                                  )}
+                                </div>
+                                <BootstrapTable
+                                  keyField="Id"
+                                  data={nonActiveStdCurrs.filter(
+                                    item => item.active === 0
+                                  )}
+                                  columns={columnToBeRegistered}
+                                  defaultSorted={defaultSorting}
+                                />
+                              </div>
+                            </Col>
+                          </Col>
+                          <Col lg="5">
+                            <Col lg="4">
+                              <h5 className="header pt-2 ms-3" id="title">
+                                {this.props.t("Scheduling Lectures")}
+                              </h5>
+                            </Col>
+                            <div className="bordered mt-1">
+                              <div className="timetable-container">
+                                <table className="timetable">
+                                  <thead>
+                                    <tr>
+                                      <th>{t("Lecture Periods")}</th>
+                                      {weekDaysColumns.map((header, index) => (
+                                        <th key={index}>{header}</th>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {lecturePeriods.map((lecture, rowIndex) => (
+                                      <tr key={lecture.Id}>
+                                        <td className="lecture-cell">
+                                          {lecture.duration}
+                                        </td>
+                                        {weekDays.map((weekday, cellIndex) => {
+                                          const schedule =
+                                            tempStdSchedules.find(
+                                              item =>
+                                                item.dayOrder ===
+                                                  weekday.dayOrder &&
+                                                item.duration ===
+                                                  lecture.duration
+                                            );
+
+                                          const cellStyle = schedule
+                                            ? {
+                                                backgroundColor: schedule.color,
+                                              }
+                                            : {};
+
+                                          return (
+                                            <td
+                                              key={cellIndex}
+                                              className={`timetable-cell`}
+                                              style={cellStyle}
+                                            ></td>
+                                          );
+                                        })}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
                               </div>
                             </div>
+                          </Col>
+                        </Row>
+                      </TabPane>
+                      <TabPane tabId="6">
+                        <Row>
+                          <Col>
+                            <Col lg="4">
+                              <h5 className="header pt-2 ms-3" id="title">
+                                {this.props.t("Student Courses")}
+                              </h5>
+                            </Col>
                             <div>
-                              {duplicateError && (
+                              {duplicateStudent && (
                                 <Alert
                                   color="danger"
                                   className="d-flex justify-content-center align-items-center alert-dismissible fade show"
                                   role="alert"
                                 >
-                                  {duplicateError}
+                                  {duplicateStudent}
                                   <button
                                     type="button"
                                     className="btn-close"
@@ -1586,119 +1670,23 @@ class RegistrationList extends Component {
                                 </Alert>
                               )}
                             </div>
-                            <div>
-                              {successMessage && (
-                                <Alert
-                                  color="success"
-                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                  role="alert"
-                                >
-                                  {successMessage}
-                                </Alert>
-                              )}
+
+                            <div className="bordered mt-1">
+                              <BootstrapTable
+                                keyField="Id"
+                                columns={columns2}
+                                defaultSorted={defaultSorting}
+                                data={nonActiveStdCurrs.filter(
+                                  item => item.active === 1
+                                )}
+                              />
                             </div>
-                            <BootstrapTable
-                              keyField="Id"
-                              data={nonActiveStdCurrs.filter(
-                                item => item.active === 0
-                              )}
-                              columns={columnToBeRegistered}
-                              defaultSorted={defaultSorting}
-                            />
-                          </div>
-                        </Col>
-                      </Col>
-                      <Col lg="5">
-                        <Col lg="4">
-                          <h5 className="header pt-2 ms-3" id="title">
-                            {this.props.t("Scheduling Lectures")}
-                          </h5>
-                        </Col>
-                        <div className="bordered mt-1">
-                          <div className="timetable-container">
-                            <table className="timetable">
-                              <thead>
-                                <tr>
-                                  <th>{t("Lecture Periods")}</th>
-                                  {weekDaysColumns.map((header, index) => (
-                                    <th key={index}>{header}</th>
-                                  ))}
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {lecturePeriods.map((lecture, rowIndex) => (
-                                  <tr key={lecture.Id}>
-                                    <td className="lecture-cell">
-                                      {lecture.duration}
-                                    </td>
-                                    {weekDays.map((weekday, cellIndex) => {
-                                      const schedule = tempStdSchedules.find(
-                                        item =>
-                                          item.dayOrder === weekday.dayOrder &&
-                                          item.duration === lecture.duration
-                                      );
-
-                                      const cellStyle = schedule
-                                        ? { backgroundColor: schedule.color }
-                                        : {};
-
-                                      return (
-                                        <td
-                                          key={cellIndex}
-                                          className={`timetable-cell`}
-                                          style={cellStyle}
-                                        ></td>
-                                      );
-                                    })}
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </Col>
-                    </Row>
-                  </TabPane>
-                  <TabPane tabId="6">
-                    <Row>
-                      <Col>
-                        <Col lg="4">
-                          <h5 className="header pt-2 ms-3" id="title">
-                            {this.props.t("Student Courses")}
-                          </h5>
-                        </Col>
-                        <div>
-                          {duplicateStudent && (
-                            <Alert
-                              color="danger"
-                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                              role="alert"
-                            >
-                              {duplicateStudent}
-                              <button
-                                type="button"
-                                className="btn-close"
-                                aria-label="Close"
-                                onClick={this.handleAlertClose}
-                              ></button>
-                            </Alert>
-                          )}
-                        </div>
-
-                        <div className="bordered mt-1">
-                          <BootstrapTable
-                            keyField="Id"
-                            columns={columns2}
-                            defaultSorted={defaultSorting}
-                            data={nonActiveStdCurrs.filter(
-                              item => item.active === 1
-                            )}
-                          />
-                        </div>
-                      </Col>
-                    </Row>
-                  </TabPane>
-                </TabContent>
+                          </Col>
+                        </Row>
+                      </TabPane>
+                    </TabContent>
+                  </Col>
+                </Row>
               </ModalBody>
             </Modal>
             <Row>

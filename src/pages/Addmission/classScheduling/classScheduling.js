@@ -135,6 +135,25 @@ class ClassSchedulingList extends Component {
     this.toggle2 = this.toggle2.bind(this);
     this.toggle3 = this.toggle3.bind(this);
   }
+  toggle1(tab) {
+    console.log(
+      "000000000000000000111111111111111111111",
+      this.props.coursesOffering
+    );
+    const { onGetCoursesOffering } = this.props;
+    const { ifUpdateCourse, selectedYear } = this.state;
+    if (this.state.activeTab1 !== tab) {
+      this.setState({
+        activeTab1: tab,
+      });
+    }
+    if (ifUpdateCourse != 0) {
+      onGetCoursesOffering();
+      this.setState({ ifUpdateCourse: 0 });
+    }
+
+    document.getElementById("square-switch1").checked = false;
+  }
 
   componentDidMount() {
     const {
@@ -162,8 +181,8 @@ class ClassSchedulingList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetCoursesOffering();
-    onGetMethodsOfOfferingCourses();
     onGetSectionLabs();
+    onGetMethodsOfOfferingCourses();
     this.setState({
       coursesOffering,
       allCoursesOffering,
@@ -413,20 +432,16 @@ class ClassSchedulingList extends Component {
     this.setState({ selectedRow: null });
   }
   toggleNestedModal = () => {
-    const { isEdit, selectedOption, selectedSchedule } = this.state;
-    const { onGetHallTimings } = this.props;
+    const { isEdit, selectedOption } = this.state;
     if (selectedOption === "Section") {
       if (isEdit) {
         this.setState({
           sectionLabData: {
             Capacity: "",
             SectionNumber: "",
-            instructorName: "",
-            hallName: "",
           },
           isEdit: false,
           selectedOption: "",
-          defaultHallName: null,
         });
       }
     } else {
@@ -435,12 +450,9 @@ class ClassSchedulingList extends Component {
           sectionLabData: {
             Capacity: "",
             LabNumber: "",
-            instructorName: "",
-            hallName: "",
           },
           isEdit: false,
           selectedOption: "",
-          defaultHallName: null,
         });
       }
     }
@@ -467,22 +479,6 @@ class ClassSchedulingList extends Component {
       selectedOption: event.target.value,
     });
   };
-
-  toggle1(tab) {
-    const { onGetCoursesOffering } = this.props;
-    const { ifUpdateCourse, selectedYear } = this.state;
-    if (this.state.activeTab1 !== tab) {
-      this.setState({
-        activeTab1: tab,
-      });
-    }
-    if (ifUpdateCourse != 0) {
-      onGetCoursesOffering(selectedYear["value"]);
-      this.setState({ ifUpdateCourse: 0 });
-    }
-
-    document.getElementById("square-switch1").checked = false;
-  }
 
   hasMatchingTimings = (hallTimings1, hallTimings2) => {
     for (const timing1 of hallTimings1) {
@@ -538,29 +534,30 @@ class ClassSchedulingList extends Component {
     });
   };
   handleEditSectionLab = SLD => {
+    console.log("ssssssssld", SLD);
     this.setState({
-      defaultHallName: SLD.hallName,
+      // defaultHallName: SLD.hallName,
       isEdit: true,
       sectionLabData: {
         Id: SLD.Id,
         Capacity: SLD.Capacity,
         SectionLabNumber: SLD.SectionLabNumber,
-        hallName: SLD.hallName,
-        instructorName: SLD.instructorName,
+        // hallName: SLD.hallName,
+        // instructorName: SLD.instructorName,
         type: SLD.type,
-        facultyName: SLD.facultyName,
-        majorName: SLD.majorName,
+        // facultyName: SLD.facultyName,
+        // majorName: SLD.majorName,
       },
       selectedOption: SLD.type,
       isSectionRadioDisabled: SLD.type === "Lab",
       isLabRadioDisabled: SLD.type === "Section",
     });
 
-    const OB = {
-      yearSemesterId: this.state.selectedSchedule["value"],
-      check: 1,
-    };
-    this.props.onGetHallTimings(OB);
+    // const OB = {
+    //   yearSemesterId: this.state.selectedSchedule["value"],
+    //   check: 1,
+    // };
+    // this.props.onGetHallTimings(OB);
 
     this.toggleNestedModal();
   };
@@ -577,22 +574,22 @@ class ClassSchedulingList extends Component {
     onGetSectionLabs(branchData);
   };
 
-  handleViewHallSchedule = SLD => {
-    const { halls, onGetHallTimings } = this.props;
-    const { selectedSchedule } = this.state;
-    const findingHallId = halls.find(
-      hall => hall.hallName === SLD.hallName
-    ).key;
+  // handleViewHallSchedule = SLD => {
+  //   const { halls, onGetHallTimings } = this.props;
+  //   const { selectedSchedule } = this.state;
+  //   const findingHallId = halls.find(
+  //     hall => hall.hallName === SLD.hallName
+  //   ).key;
 
-    const OB = {
-      hallId: findingHallId,
-      yearSemesterId: selectedSchedule["value"],
-      check: 0,
-    };
+  //   const OB = {
+  //     hallId: findingHallId,
+  //     yearSemesterId: selectedSchedule["value"],
+  //     check: 0,
+  //   };
 
-    onGetHallTimings(OB);
-    this.toggleHallModal();
-  };
+  //   onGetHallTimings(OB);
+  //   this.toggleHallModal();
+  // };
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
   };
@@ -741,7 +738,7 @@ class ClassSchedulingList extends Component {
         currentYearName: value.label,
       },
     });
-    onGetCoursesOffering(value["value"]);
+    onGetCoursesOffering();
   };
 
   onChangeHall(oldValue, newValue) {
@@ -775,18 +772,6 @@ class ClassSchedulingList extends Component {
       }
     }
   }
-
-  // handleSuccessClose = () => {
-  //   const { onGetContractDeletedValue } = this.props;
-  //   this.setState({ showAlert: null });
-  //   onGetContractDeletedValue();
-  // };
-
-  // handleErrorClose = () => {
-  //   const { onGetContractDeletedValue } = this.props;
-  //   this.setState({ showAlert: null });
-  //   onGetContractDeletedValue();
-  // };
 
   handleSave = values => {
     const {
@@ -840,27 +825,10 @@ class ClassSchedulingList extends Component {
   handleSubmit = values => {
     console.log("values", values);
     let flag = 0;
-    const {
-      selectedRowData,
-      selectedOption,
-      isEdit,
-      sectionLabData,
-      selectedSchedule,
-      oldHallId,
-      newHallId,
-    } = this.state;
+    const { selectedRowData, selectedOption, isEdit, sectionLabData } =
+      this.state;
 
-    const {
-      onAddNewSectionLab,
-      halls,
-      onUpdateSectionLab,
-      instructors,
-      sectionLabs,
-      faculties,
-      filteredAcademicCertificates,
-      currentSemester,
-      hallTimings,
-    } = this.props;
+    const { onAddNewSectionLab, onUpdateSectionLab, sectionLabs } = this.props;
 
     let sectionInfo = {};
     if (!isEdit) {
@@ -874,6 +842,8 @@ class ClassSchedulingList extends Component {
     } else {
       sectionInfo = values;
     }
+
+    console.log("sectionInfo", sectionInfo);
     const fieldErrors = {};
 
     if (selectedOption === "Section") {
@@ -885,42 +855,6 @@ class ClassSchedulingList extends Component {
       if (!sectionInfo.LabNumber) {
         fieldErrors.LabNumber = "Please enter Lab Number.";
       }
-    }
-
-    if (sectionInfo.Instructorid) {
-      const instructorExists = instructors.some(
-        instructor => instructor.fullName === sectionInfo.Instructorid
-      );
-      if (!instructorExists) {
-        fieldErrors.Instructorid = "Please select a valid instructor.";
-      }
-    }
-
-    if (sectionInfo.hallId) {
-      const hallExists = halls.some(hall => hall.value === sectionInfo.hallId);
-      if (!hallExists) {
-        fieldErrors.hallId = "Please select a valid hall.";
-      }
-    }
-    if (sectionInfo.facultyId) {
-      const facultyExists = faculties.some(
-        faculty => faculty.label === sectionInfo.facultyId
-      );
-      if (!facultyExists) {
-        fieldErrors.facultyId = "Please select a valid faculty.";
-      }
-    }
-    if (sectionInfo.majorId) {
-      const majorExists = filteredAcademicCertificates.some(
-        major => major.label === sectionInfo.majorId
-      );
-      if (!majorExists) {
-        fieldErrors.majorId = "Please select a valid major.";
-      }
-    }
-
-    if (Object.keys(fieldErrors).length > 0) {
-      return fieldErrors;
     }
 
     const enteredNumber =
@@ -948,110 +882,179 @@ class ClassSchedulingList extends Component {
         `${selectedOption} Number already exists.`
       );
       this.setState({ duplicateError: errorMessage });
-    } else {
-      if (sectionInfo.hallId !== undefined) {
-        const selectedHallName = sectionInfo.hallId;
-        const selectedHall = halls.find(
-          hall => hall.value === selectedHallName
-        );
-
-        if (selectedHall) {
-          sectionInfo.hallId = selectedHall.key;
-        } else if (isEdit) {
-          sectionInfo.hallId = 0;
-        } else {
-          sectionInfo.hallId = null;
-          flag = 1;
-        }
-      }
-
-      if (sectionInfo.facultyId !== undefined) {
-        const selectedFacultyName = sectionInfo.facultyId;
-        const selectedFaculty = faculties.find(
-          faculty => faculty.label === selectedFacultyName
-        );
-
-        if (selectedFaculty) {
-          sectionInfo.facultyId = selectedFaculty.value;
-        } else if (isEdit) {
-          sectionInfo.facultyId = 0;
-        } else {
-          sectionInfo.facultyId = null;
-          flag = 1;
-        }
-      }
-      if (sectionInfo.majorId !== undefined) {
-        const selectedMajorName = sectionInfo.majorId;
-        const selectedMajor = filteredAcademicCertificates.find(
-          major => major.label === selectedMajorName
-        );
-
-        if (selectedMajor) {
-          sectionInfo.majorId = selectedMajor.value;
-        } else if (isEdit) {
-          sectionInfo.majorId = 0;
-        } else {
-          sectionInfo.majorId = null;
-          flag = 1;
-        }
-      }
-
-      if (sectionInfo.Instructorid !== undefined) {
-        const selectedInstructorid = sectionInfo.Instructorid;
-        const selectedInstructor = instructors.find(
-          instructor => instructor.fullName === selectedInstructorid
-        );
-
-        if (selectedInstructor) {
-          sectionInfo.Instructorid = selectedInstructor.Id;
-        } else if (isEdit) {
-          sectionInfo.Instructorid = 0;
-        } else {
-          sectionInfo.Instructorid = null;
-          flag = 1;
-        }
-      }
-
-      sectionInfo["yearSemesterId"] = selectedSchedule["value"];
-      sectionInfo["CourseId"] = selectedRowData.courseId;
-      sectionInfo["CourseCode"] = selectedRowData.courseCode;
-      sectionInfo["tablename"] =
-        selectedOption === "Section" ? "Common_Section" : "Common_Lab";
-      if (flag === 0) {
-        if (isEdit) {
-          sectionInfo["Id"] = sectionLabData.Id;
-          const filteredSectionLabsEdit = sectionLabs.filter(
-            sectionLab =>
-              (selectedOption === "Section" && sectionLab.type === "Section") ||
-              (selectedOption === "Lab" && sectionLab.type === "Lab")
-          );
-
-          let isDuplicateEdit = false;
-
-          for (const sectionLab of filteredSectionLabsEdit) {
-            if (
-              sectionInfo.Id != sectionLab.Id &&
-              sectionLab.SectionLabNumber == enteredNumber
-            ) {
-              isDuplicateEdit = true;
-              break;
-            }
-          }
-          if (!isDuplicateEdit) {
-            // onUpdateSectionLab(sectionInfo);
-            this.toggleNestedModal();
-          } else {
-            const errorMessage = this.props.t(
-              `${selectedOption} Number already exists.`
-            );
-            this.setState({ duplicateError: errorMessage });
-          }
-        } else {
-          // onAddNewSectionLab(sectionInfo);
-          this.toggleNestedModal();
-        }
-      }
+      return;
     }
+
+    sectionInfo["CourseId"] = selectedRowData.courseId;
+    sectionInfo["courseOfferingId"] = selectedRowData.Id;
+    sectionInfo["tablename"] =
+      selectedOption === "Section" ? "Common_Section" : "Common_Lab";
+    // if (flag === 0) {
+    if (isEdit) {
+      sectionInfo["Id"] = sectionLabData.Id;
+      const filteredSectionLabsEdit = sectionLabs.filter(
+        sectionLab =>
+          (selectedOption === "Section" && sectionLab.type === "Section") ||
+          (selectedOption === "Lab" && sectionLab.type === "Lab")
+      );
+
+      let isDuplicateEdit = false;
+
+      for (const sectionLab of filteredSectionLabsEdit) {
+        if (
+          sectionInfo.Id != sectionLab.Id &&
+          sectionLab.SectionLabNumber == enteredNumber
+        ) {
+          isDuplicateEdit = true;
+          break;
+        }
+      }
+      if (!isDuplicateEdit) {
+        onUpdateSectionLab(sectionInfo);
+        this.toggleNestedModal();
+      } else {
+        const errorMessage = this.props.t(
+          `${selectedOption} Number already exists.`
+        );
+        this.setState({ duplicateError: errorMessage });
+        return;
+      }
+    } else {
+      console.log("saaaaave", sectionInfo);
+      onAddNewSectionLab(sectionInfo);
+      this.toggleNestedModal();
+      // }
+      // }
+    }
+  };
+
+  handleSaveScheduleTiming = values => {
+    console.log("values", values);
+    let flag = 0;
+    const {
+      selectedRowData,
+      selectedOption,
+      isEdit,
+      sectionLabData,
+      selectedSchedule,
+      oldHallId,
+      newHallId,
+    } = this.state;
+
+    const {
+      onAddNewSectionLab,
+      halls,
+      onUpdateSectionLab,
+      instructors,
+      sectionLabs,
+      faculties,
+      filteredAcademicCertificates,
+      currentSemester,
+      hallTimings,
+      coursesOffering,
+    } = this.props;
+
+    // if (sectionInfo.Instructorid) {
+    //   const instructorExists = instructors.some(
+    //     instructor => instructor.fullName === sectionInfo.Instructorid
+    //   );
+    //   if (!instructorExists) {
+    //     fieldErrors.Instructorid = "Please select a valid instructor.";
+    //   }
+    // }
+
+    // if (sectionInfo.hallId) {
+    //   const hallExists = halls.some(hall => hall.value === sectionInfo.hallId);
+    //   if (!hallExists) {
+    //     fieldErrors.hallId = "Please select a valid hall.";
+    //   }
+    // }
+    // if (sectionInfo.facultyId) {
+    //   const facultyExists = faculties.some(
+    //     faculty => faculty.label === sectionInfo.facultyId
+    //   );
+    //   if (!facultyExists) {
+    //     fieldErrors.facultyId = "Please select a valid faculty.";
+    //   }
+    // }
+    // if (sectionInfo.majorId) {
+    //   const majorExists = filteredAcademicCertificates.some(
+    //     major => major.label === sectionInfo.majorId
+    //   );
+    //   if (!majorExists) {
+    //     fieldErrors.majorId = "Please select a valid major.";
+    //   }
+    // }
+
+    // if (Object.keys(fieldErrors).length > 0) {
+    //   return fieldErrors;
+    // }
+
+    //  else {
+    //   if (sectionInfo.hallId !== undefined) {
+    //     const selectedHallName = sectionInfo.hallId;
+    //     const selectedHall = halls.find(
+    //       hall => hall.value === selectedHallName
+    //     );
+
+    //     if (selectedHall) {
+    //       sectionInfo.hallId = selectedHall.key;
+    //     } else if (isEdit) {
+    //       sectionInfo.hallId = 0;
+    //     } else {
+    //       sectionInfo.hallId = null;
+    //       flag = 1;
+    //     }
+    //   }
+
+    // if (sectionInfo.facultyId !== undefined) {
+    //   const selectedFacultyName = sectionInfo.facultyId;
+    //   const selectedFaculty = faculties.find(
+    //     faculty => faculty.label === selectedFacultyName
+    //   );
+
+    //   if (selectedFaculty) {
+    //     sectionInfo.facultyId = selectedFaculty.value;
+    //   } else if (isEdit) {
+    //     sectionInfo.facultyId = 0;
+    //   } else {
+    //     sectionInfo.facultyId = null;
+    //     flag = 1;
+    //   }
+    // }
+    // if (sectionInfo.majorId !== undefined) {
+    //   const selectedMajorName = sectionInfo.majorId;
+    //   const selectedMajor = filteredAcademicCertificates.find(
+    //     major => major.label === selectedMajorName
+    //   );
+
+    // if (selectedMajor) {
+    //   sectionInfo.majorId = selectedMajor.value;
+    // } else if (isEdit) {
+    //   sectionInfo.majorId = 0;
+    // } else {
+    //   sectionInfo.majorId = null;
+    //   flag = 1;
+    // }
+    // }
+
+    // if (sectionInfo.Instructorid !== undefined) {
+    //   const selectedInstructorid = sectionInfo.Instructorid;
+    //   const selectedInstructor = instructors.find(
+    //     instructor => instructor.fullName === selectedInstructorid
+    //   );
+
+    //   if (selectedInstructor) {
+    //     sectionInfo.Instructorid = selectedInstructor.Id;
+    //   } else if (isEdit) {
+    //     sectionInfo.Instructorid = 0;
+    //   } else {
+    //     sectionInfo.Instructorid = null;
+    //     flag = 1;
+    //   }
+    // }
+
+    // sectionInfo["yearSemesterId"] = selectedSchedule["value"];
   };
 
   render() {
@@ -1185,34 +1188,34 @@ class ClassSchedulingList extends Component {
         text: this.props.t("Start Date"),
         sort: true,
         editable: false,
-        formatter: (cellContent, coursesOffering) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {
-                  new Date(coursesOffering.startDate)
-                    .toISOString()
-                    .split("T")[0]
-                }
-              </Link>
-            </h5>
-          </>
-        ),
+        // formatter: (cellContent, coursesOffering) => (
+        //   <>
+        //     <h5 className="font-size-14 mb-1">
+        //       <Link to="#" className="text-dark">
+        //         {
+        //           new Date(coursesOffering.startDate)
+        //             .toISOString()
+        //             .split("T")[0]
+        //         }
+        //       </Link>
+        //     </h5>
+        //   </>
+        // ),
       },
       {
         dataField: "endDate",
         text: this.props.t("End Date"),
         sort: true,
         editable: false,
-        formatter: (cellContent, coursesOffering) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {new Date(coursesOffering.endDate).toISOString().split("T")[0]}
-              </Link>
-            </h5>
-          </>
-        ),
+        // formatter: (cellContent, coursesOffering) => (
+        //   <>
+        //     <h5 className="font-size-14 mb-1">
+        //       <Link to="#" className="text-dark">
+        //         {new Date(coursesOffering.endDate).toISOString().split("T")[0]}
+        //       </Link>
+        //     </h5>
+        //   </>
+        // ),
       },
       {
         dataField: "menu",
@@ -1281,19 +1284,19 @@ class ClassSchedulingList extends Component {
         sort: true,
       },
       {
-        dataField: "courseTypeId",
-        text: this.props.t("Course Type"),
+        dataField: "program",
+        text: this.props.t("Training Program"),
         editable: false,
         sort: true,
       },
       {
-        dataField: "numOfSections ",
+        dataField: "sectionsTotal ",
         text: this.props.t("Number of Sections"),
         editable: false,
         sort: true,
       },
       {
-        dataField: "numOfLabs ",
+        dataField: "labsTotal ",
         text: this.props.t("Number of Labs"),
         editable: false,
         sort: true,
@@ -1335,13 +1338,13 @@ class ClassSchedulingList extends Component {
         sort: true,
       },
       {
-        dataField: "sectionLabNumber",
+        dataField: "SectionLabNumber",
         text: t("Section Lab Number"),
         editable: false,
         sort: true,
       },
       {
-        dataField: "capacity",
+        dataField: "Capacity",
         text: t("Capacity"),
         editable: false,
         sort: true,
@@ -1883,8 +1886,7 @@ class ClassSchedulingList extends Component {
                               <ModalBody>
                                 {selectedRowData && (
                                   <div className="TitleStyle">
-                                    {selectedRowData.courseName}{" "}
-                                    {selectedRowData.courseCode}
+                                    {selectedRowData.arTitle}{" "}
                                   </div>
                                 )}
                                 <Row>
@@ -3249,13 +3251,13 @@ class ClassSchedulingList extends Component {
                               pagination={paginationFactory(pageOptions2)}
                               keyField="id"
                               columns={columns2}
-                              data={sectionLabs}
+                              data={coursesOffering}
                             >
                               {({ paginationProps, paginationTableProps }) => (
                                 <ToolkitProvider
                                   keyField="id"
                                   columns={columns2}
-                                  data={sectionLabs}
+                                  data={coursesOffering}
                                   search
                                 >
                                   {toolkitprops => (
@@ -3283,7 +3285,7 @@ class ClassSchedulingList extends Component {
                                           {...toolkitprops.baseProps}
                                           {...paginationTableProps}
                                           keyField="Id"
-                                          data={sectionLabs}
+                                          data={coursesOffering}
                                           columns={columns2}
                                           cellEdit={cellEditFactory({
                                             mode: "click",
@@ -3356,7 +3358,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addNewCourseOffering(CourseOffering)),
   onUpdateCourseOffering: CourseOffering =>
     dispatch(updateCourseOffering(CourseOffering)),
-  onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
+  onGetSectionLabs: CourseOffering => dispatch(getSectionLabs(CourseOffering)),
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),
   onUpdateSectionLab: sectionLab => dispatch(updateSectionLab(sectionLab)),
   onDeleteSectionLab: sectionLab => dispatch(deleteSectionLab(sectionLab)),

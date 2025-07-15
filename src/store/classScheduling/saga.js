@@ -177,7 +177,7 @@ function* fetchCoursesOffering() {
   }
 }
 
-function* fetchAllCoursesOffering(obj) {
+function* fetchAllCoursesOffering() {
   const get_allCoursesOffering_req = {
     source: "db",
     procedure: "SisApp_getData",
@@ -266,9 +266,10 @@ function* onDeleteCourseOffering({ payload, courseOffering }) {
     yield put(deleteCourseOfferingFail(error));
   }
 }
+
 function* fetchSectionLabs(obj) {
-  // let sectionLabCourse = obj.payload;
-  // console.log("obj", obj.payload);
+  let sectionLabCourse = obj.payload;
+  console.log("obj", obj.payload);
   // const facultyId =
   //   sectionLabCourse.facultyId === null ? 0 : sectionLabCourse.facultyId;
 
@@ -291,7 +292,7 @@ function* fetchSectionLabs(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_CourseOffering",
+    tablename: "_SectionsLabs",
     // filter: `CourseId = ${sectionLabCourse.courseId} and CourseCode=''''${sectionLabCourse.courseCode}''''`,
   };
 
@@ -359,6 +360,8 @@ function* fetchSectionLabProfile() {
 }
 
 function* onAddNewSectionLab({ payload, SectionLab }) {
+  console.log("in adddddddddddddddd", payload);
+
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
