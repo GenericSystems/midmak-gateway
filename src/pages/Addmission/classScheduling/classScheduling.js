@@ -89,6 +89,8 @@ class ClassSchedulingList extends Component {
       selectedCourse: null,
       selectedMethodOffering: "",
       selectedYear: null,
+      selectedInstructor: null,
+      selectedHall: null,
       selectedCourseId: "",
       selectedEndDate: "",
       selectedStartDate: "",
@@ -129,6 +131,9 @@ class ClassSchedulingList extends Component {
       matchingError: null,
       checkedRows: {},
       currentYearObj: {},
+      isPlusButtonEnabled: false,
+      languageState: "",
+      showWarning: false,
     };
     this.toggle1 = this.toggle1.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -156,7 +161,9 @@ class ClassSchedulingList extends Component {
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      i18n,
       coursesOffering,
       sectionLabs,
       onGetCoursesOffering,
@@ -166,6 +173,7 @@ class ClassSchedulingList extends Component {
       filteredAcademicCertificates,
       weekDays,
       lecturePeriods,
+      employeesNames,
       onfetchSetting,
       onGetMethodsOfOfferingCourses,
       onfetchDefaultSettings,
@@ -178,7 +186,7 @@ class ClassSchedulingList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    onGetCoursesOffering();
+    onGetCoursesOffering(lang);
     onGetMethodsOfOfferingCourses();
     this.setState({
       coursesOffering,
@@ -192,7 +200,10 @@ class ClassSchedulingList extends Component {
       filteredAcademicCertificates,
       weekDays,
       lecturePeriods,
+      languageState: lang,
+      employeesNames,
     });
+    i18n.on("languageChanged", this.handleLanguageChange);
 
     let curentueardata = localStorage.getItem("authUser");
     if (curentueardata) {
@@ -217,6 +228,16 @@ class ClassSchedulingList extends Component {
 
     console.log(this.state.currentYearObj, "gggg");
   }
+
+  handleLanguageChange = lng => {
+    const { onGetCoursesOffering } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    if (lang != lng) {
+      onGetCoursesOffering(lng);
+      this.setState({ languageState: lng });
+    }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -297,6 +318,7 @@ class ClassSchedulingList extends Component {
   toggle3 = () => {
     this.setState(prevState => ({
       modal3: !prevState.modal3,
+      showWarning: false,
     }));
   };
 
@@ -409,6 +431,23 @@ class ClassSchedulingList extends Component {
   handleSelectChange = (fieldName, selectedValue) => {
     if (fieldName === "methodOfferingId") {
       this.setState({ selectedMethodOffering: selectedValue });
+    }
+  };
+  handleSelect = (fieldName, selectedValue) => {
+    if (fieldName === "instructorId") {
+      this.setState({ selectedInstructor: selectedValue });
+    }
+
+    if (fieldName === "hallId") {
+      const selected = this.state.halls.find(
+        hall => hall.value === selectedValue
+      );
+      console.log("hallllllllllls", this.state.halls);
+      console.log("selectedValue", selectedValue);
+      this.setState({
+        selectedHall: selected ? selected.key : null,
+      });
+      return;
     }
   };
 
@@ -560,15 +599,22 @@ class ClassSchedulingList extends Component {
   };
 
   handleEditBranch = branchData => {
-    const { selectedRowData } = this.state;
+    const { selectedRowData, languageState } = this.state;
     const { onGetSectionLabs } = this.props;
 
     this.setState({
       selectedRowData: branchData,
       modal: !this.state.modal,
     });
+    console.log(languageState, "fff222");
 
-    onGetSectionLabs(branchData);
+    let newdata = {
+      branchData,
+      languageState,
+    };
+    console.log(newdata, "ssssssss");
+
+    onGetSectionLabs(newdata);
   };
 
   // handleViewHallSchedule = SLD => {
@@ -606,6 +652,7 @@ class ClassSchedulingList extends Component {
 
     this.setState({
       selectedRowSectionLab: sectionLabData,
+      isPlusButtonEnabled: true,
     });
     if (returnMessage.msg) {
       onGetScheduleMsgValue();
@@ -929,129 +976,113 @@ class ClassSchedulingList extends Component {
     console.log("values", values);
     let flag = 0;
     const {
-      selectedRowData,
       selectedOption,
       isEdit,
       sectionLabData,
-      selectedSchedule,
+      selectedRowSectionLab,
+      selectedHall,
+      selectedInstructor,
       oldHallId,
       newHallId,
     } = this.state;
 
     const {
-      onAddNewSectionLab,
       halls,
-      onUpdateSectionLab,
       instructors,
-      sectionLabs,
-      faculties,
-      filteredAcademicCertificates,
-      currentSemester,
       hallTimings,
       coursesOffering,
+      onAddNewScheduleTiming,
     } = this.props;
 
-    // if (sectionInfo.instructorId) {
-    //   const instructorExists = instructors.some(
-    //     instructor => instructor.fullName === sectionInfo.instructorId
-    //   );
-    //   if (!instructorExists) {
-    //     fieldErrors.instructorId = "Please select a valid instructor.";
-    //   }
-    // }
+    values["type"] = selectedRowSectionLab.type;
+    values["sectionLabId"] = selectedRowSectionLab.Id;
+    values["hallId"] = selectedHall;
+    if (Array.isArray(selectedInstructor)) {
+      values["instructorId"] = selectedInstructor.map(ins => ins.value);
+    } else if (selectedInstructor) {
+      values["instructorId"] = [selectedInstructor.value];
+    } else {
+      values["instructorId"] = [];
+    }
 
-    // if (sectionInfo.hallId) {
-    //   const hallExists = halls.some(hall => hall.value === sectionInfo.hallId);
-    //   if (!hallExists) {
-    //     fieldErrors.hallId = "Please select a valid hall.";
-    //   }
-    // }
-    // if (sectionInfo.facultyId) {
-    //   const facultyExists = faculties.some(
-    //     faculty => faculty.label === sectionInfo.facultyId
-    //   );
-    //   if (!facultyExists) {
-    //     fieldErrors.facultyId = "Please select a valid faculty.";
-    //   }
-    // }
-    // if (sectionInfo.majorId) {
-    //   const majorExists = filteredAcademicCertificates.some(
-    //     major => major.label === sectionInfo.majorId
-    //   );
-    //   if (!majorExists) {
-    //     fieldErrors.majorId = "Please select a valid major.";
-    //   }
-    // }
+    let scheduleTimingInfo = {};
 
-    // if (Object.keys(fieldErrors).length > 0) {
-    //   return fieldErrors;
-    // }
+    Object.keys(values).forEach(function (key) {
+      if (
+        values[key] != undefined &&
+        (values[key].length > 0 || values[key] != "")
+      )
+        scheduleTimingInfo[key] = values[key];
+    });
 
-    //  else {
-    //   if (sectionInfo.hallId !== undefined) {
-    //     const selectedHallName = sectionInfo.hallId;
-    //     const selectedHall = halls.find(
-    //       hall => hall.value === selectedHallName
-    //     );
+    console.log("scheduleTimingInfo", scheduleTimingInfo);
+    const fieldErrors = {};
+    if (
+      scheduleTimingInfo.instructorId &&
+      scheduleTimingInfo.instructorId.length > 0
+    ) {
+      const invalidInstructors = scheduleTimingInfo.instructorId.filter(
+        id => !instructors.some(ins => ins.value === id)
+      );
+      if (invalidInstructors.length > 0) {
+        fieldErrors.instructorId = "Please select valid instructor(s).";
+      }
+    }
 
-    //     if (selectedHall) {
-    //       sectionInfo.hallId = selectedHall.key;
-    //     } else if (isEdit) {
-    //       sectionInfo.hallId = 0;
-    //     } else {
-    //       sectionInfo.hallId = null;
-    //       flag = 1;
-    //     }
-    //   }
+    if (
+      scheduleTimingInfo.hallId === null ||
+      scheduleTimingInfo.hallId === undefined
+    ) {
+      fieldErrors.hallId = "Hall is required.";
+    } else {
+      const hallExists = halls.some(
+        hall => hall.value === scheduleTimingInfo.hallId
+      );
+      if (!hallExists) {
+        fieldErrors.hallId = "Please select a valid hall.";
+      }
+    }
 
-    // if (sectionInfo.facultyId !== undefined) {
-    //   const selectedFacultyName = sectionInfo.facultyId;
-    //   const selectedFaculty = faculties.find(
-    //     faculty => faculty.label === selectedFacultyName
-    //   );
+    if (Object.keys(fieldErrors).length > 0) {
+      return fieldErrors;
+    }
+    if (
+      scheduleTimingInfo.hallId !== undefined &&
+      scheduleTimingInfo.hallId !== null
+    ) {
+      const selectedHallObj = halls.find(
+        hall => hall.value === scheduleTimingInfo.hallId
+      );
+      if (selectedHallObj) {
+        scheduleTimingInfo.hallId = selectedHallObj.key;
+      } else if (this.state.isEdit) {
+        scheduleTimingInfo.hallId = 0;
+      } else {
+        scheduleTimingInfo.hallId = null;
+        flag = 1;
+      }
+    }
 
-    //   if (selectedFaculty) {
-    //     sectionInfo.facultyId = selectedFaculty.value;
-    //   } else if (isEdit) {
-    //     sectionInfo.facultyId = 0;
-    //   } else {
-    //     sectionInfo.facultyId = null;
-    //     flag = 1;
-    //   }
-    // }
-    // if (sectionInfo.majorId !== undefined) {
-    //   const selectedMajorName = sectionInfo.majorId;
-    //   const selectedMajor = filteredAcademicCertificates.find(
-    //     major => major.label === selectedMajorName
-    //   );
+    if (
+      scheduleTimingInfo.instructorId &&
+      scheduleTimingInfo.instructorId.length > 0
+    ) {
+      scheduleTimingInfo.instructorId = scheduleTimingInfo.instructorId
+        .map(id => {
+          const instructorObj = instructors.find(ins => ins.value === id);
+          return instructorObj ? instructorObj.Id : null;
+        })
+        .filter(id => id !== null);
+    } else {
+      scheduleTimingInfo.instructorId = [];
+    }
 
-    // if (selectedMajor) {
-    //   sectionInfo.majorId = selectedMajor.value;
-    // } else if (isEdit) {
-    //   sectionInfo.majorId = 0;
-    // } else {
-    //   sectionInfo.majorId = null;
-    //   flag = 1;
-    // }
-    // }
+    scheduleTimingInfo["type"] = selectedRowSectionLab.type;
+    scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
 
-    // if (sectionInfo.instructorId !== undefined) {
-    //   const selectedinstructorId = sectionInfo.instructorId;
-    //   const selectedInstructor = instructors.find(
-    //     instructor => instructor.fullName === selectedinstructorId
-    //   );
-
-    //   if (selectedInstructor) {
-    //     sectionInfo.instructorId = selectedInstructor.Id;
-    //   } else if (isEdit) {
-    //     sectionInfo.instructorId = 0;
-    //   } else {
-    //     sectionInfo.instructorId = null;
-    //     flag = 1;
-    //   }
-    // }
-
-    // sectionInfo["yearSemesterId"] = selectedSchedule["value"];
+    console.log("saaaaave", scheduleTimingInfo);
+    // onAddNewScheduleTiming(scheduleTimingInfo);
+    this.toggle3();
   };
 
   render() {
@@ -1072,6 +1103,7 @@ class ClassSchedulingList extends Component {
       t,
       deleted,
       methodsOffering,
+      employeesNames,
       hallTimings,
     } = this.props;
     const {
@@ -1109,7 +1141,10 @@ class ClassSchedulingList extends Component {
       selectedEndDate,
       selectedStartDate,
       selectedYear,
+      selectedInstructor,
+      selectedHall,
       currentYearObj,
+      languageState,
     } = this.state;
 
     console.log(currentYearObj, "gggg");
@@ -1145,8 +1180,11 @@ class ClassSchedulingList extends Component {
     const columns = [
       { dataField: "Id", text: t("ID"), hidden: true },
       {
-        dataField: "arTitle",
-        text: this.props.t("Course Name (ar)"),
+        dataField: languageState === "ar" ? "arTitle" : "enTitle",
+        text:
+          languageState === "ar"
+            ? this.props.t("Course Name (ar)")
+            : this.props.t("Course Name (en)"),
         editable: false,
         sort: true,
       },
@@ -1204,15 +1242,6 @@ class ClassSchedulingList extends Component {
         text: this.props.t("End Date"),
         sort: true,
         editable: false,
-        // formatter: (cellContent, coursesOffering) => (
-        //   <>
-        //     <h5 className="font-size-14 mb-1">
-        //       <Link to="#" className="text-dark">
-        //         {new Date(coursesOffering.endDate).toISOString().split("T")[0]}
-        //       </Link>
-        //     </h5>
-        //   </>
-        // ),
       },
       {
         dataField: "menu",
@@ -1263,8 +1292,11 @@ class ClassSchedulingList extends Component {
     const columns2 = [
       { dataField: "Id", text: t("ID"), hidden: true },
       {
-        dataField: "arTitle",
-        text: this.props.t("Course Name (ar)"),
+        dataField: languageState === "ar" ? "arTitle" : "enTitle",
+        text:
+          languageState === "ar"
+            ? this.props.t("Course Name (ar)")
+            : this.props.t("Course Name (en)"),
         editable: false,
         sort: true,
       },
@@ -1982,6 +2014,10 @@ class ClassSchedulingList extends Component {
                                                 <IconButton
                                                   className="ms-2"
                                                   onClick={this.toggle3}
+                                                  disabled={
+                                                    !this.state
+                                                      .selectedRowSectionLab
+                                                  }
                                                 >
                                                   {" "}
                                                   <i className="mdi mdi-plus-circle blue-noti-icon" />
@@ -2279,7 +2315,13 @@ class ClassSchedulingList extends Component {
                                     tag="h4"
                                     className="horizontalTitles"
                                   >
-                                    {isAdd ? t("Schedule Timing") : ""}
+                                    {selectedRowSectionLab
+                                      ? `${this.props.t("Add Details")} - ${
+                                          selectedRowSectionLab.type
+                                        }${
+                                          selectedRowSectionLab.SectionLabNumber
+                                        } `
+                                      : this.props.t("Schedule Timing")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <Formik
@@ -2368,17 +2410,16 @@ class ClassSchedulingList extends Component {
                                         <Form>
                                           <Col md="12">
                                             <Row>
-                                              <Col className="col-4">
+                                              <Col className="col-4 mb-3">
                                                 <Label for="room">
                                                   {t("Room")}
                                                 </Label>
+                                                <span className="text-danger">
+                                                  *
+                                                </span>
                                               </Col>
-                                              <Col className="col-6">
-                                                <Field
-                                                  name="hallId"
-                                                  id="room"
-                                                  type="text"
-                                                  placeholder="Search..."
+                                              <Col className="col-8">
+                                                <input
                                                   className={
                                                     "form-control" +
                                                     (errors.hallId &&
@@ -2387,24 +2428,19 @@ class ClassSchedulingList extends Component {
                                                       : "")
                                                   }
                                                   list="hallIdList"
-                                                  autoComplete="Off"
+                                                  name="hallId"
+                                                  id="room"
                                                   value={
                                                     this.state.defaultHallName
                                                   }
-                                                  onChange={e => {
-                                                    handleChange(e);
-                                                    const newValue =
-                                                      e.target.value;
-                                                    const defaultValue =
-                                                      (sectionLabData &&
-                                                        sectionLabData.hallName) ||
-                                                      "";
-
-                                                    this.onChangeHall(
-                                                      defaultValue,
-                                                      newValue
-                                                    );
-                                                  }}
+                                                  placeholder="Type to search..."
+                                                  autoComplete="off"
+                                                  onChange={e =>
+                                                    this.handleSelect(
+                                                      e.target.name,
+                                                      e.target.value
+                                                    )
+                                                  }
                                                 />
                                                 <datalist id="hallIdList">
                                                   {" "}
@@ -2423,35 +2459,30 @@ class ClassSchedulingList extends Component {
                                               </Col>
                                             </Row>
                                             <Row>
-                                              <Col className="col-4">
+                                              <Col className="col-4 mb-3">
                                                 <Label for="instructor">
                                                   {t("Instructor")}
                                                 </Label>
+                                                <span className="text-danger">
+                                                  *
+                                                </span>
                                               </Col>
                                               <Col className="col-8">
-                                                <Field
-                                                  name="instructorId"
+                                                <Select
+                                                  className="select-style-instructor"
                                                   id="instructor"
-                                                  placeholder="Search..."
-                                                  type="text"
-                                                  // className={
-                                                  //   "form-control" +
-                                                  //   (errors.instructorId &&
-                                                  //   touched.instructorId
-                                                  //     ? " is-invalid"
-                                                  //     : "")
-                                                  // }
-                                                  autoComplete="Off"
-                                                  list="instructorList"
+                                                  name="instructorId"
+                                                  key={`instructorId`}
+                                                  options={employeesNames}
+                                                  onChange={newValue => {
+                                                    this.handleSelect(
+                                                      "instructorId",
+                                                      newValue
+                                                    );
+                                                  }}
+                                                  isMulti
+                                                  value={selectedInstructor}
                                                 />
-                                                {/* <datalist id="instructorList">
-                                          {instructors.map(instructor => (
-                                            <option
-                                              key={instructor.Id}
-                                              value={instructor.fullName}
-                                            />
-                                          ))}
-                                        </datalist> */}
                                                 <ErrorMessage
                                                   name="instructorId"
                                                   component="div"
@@ -2532,6 +2563,24 @@ class ClassSchedulingList extends Component {
                                                 </Col>
                                               </Row>
                                             </div>
+                                          </Row>
+                                          <Row className="justify-content-center">
+                                            <Col
+                                              lg="3"
+                                              className="d-flex justify-content-center"
+                                            >
+                                              <Link
+                                                to="#"
+                                                className="btn btn-primary me-2"
+                                                onClick={() => {
+                                                  this.handleSaveScheduleTiming(
+                                                    values
+                                                  );
+                                                }}
+                                              >
+                                                {t("Save")}
+                                              </Link>
+                                            </Col>
                                           </Row>
                                         </Form>
                                       )}
@@ -2994,10 +3043,6 @@ class ClassSchedulingList extends Component {
                                                 (sectionLabData &&
                                                   sectionLabData.Capacity) ||
                                                 "",
-                                              majorId:
-                                                (sectionLabData &&
-                                                  sectionLabData.majorName) ||
-                                                "",
                                             }}
                                             validationSchema={Yup.object().shape(
                                               {
@@ -3323,6 +3368,7 @@ class ClassSchedulingList extends Component {
 const mapStateToProps = ({
   classScheduling,
   years,
+  employees,
   weekDays,
   lecturePeriods,
   academiccertificates,
@@ -3343,12 +3389,13 @@ const mapStateToProps = ({
   returnMessage: classScheduling.returnMessage,
   // hallTimings: classScheduling.hallTimings,
   methodsOffering: classScheduling.methodsOffering,
+  employeesNames: employees.employeesNames,
   deleted: classScheduling.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetCoursesOffering: () => dispatch(getCoursesOffering()),
+  onGetCoursesOffering: lng => dispatch(getCoursesOffering(lng)),
   onGetMethodsOfOfferingCourses: () => dispatch(getMethodsOfOfferingCourses()),
   onGetAllCoursesOffering: () => dispatch(getAllCoursesOffering()),
   onAddNewCourseOffering: CourseOffering =>

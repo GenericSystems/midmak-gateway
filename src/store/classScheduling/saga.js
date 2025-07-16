@@ -87,6 +87,11 @@ import {
   getLecturePeriodsFail,
 } from "../lecture-periods/actions";
 
+import {
+  getEmployeesNamesSuccess,
+  getEmployeesNamesFail,
+} from "../HR/employees/actions";
+
 import { getYearsSuccess, getYearsFail } from "../years/actions";
 // Include Both Helper File with needed methods
 import {
@@ -119,6 +124,7 @@ import {
   getMethodsOfOfferingCourses,
   getYears,
   getHalls,
+  getEmployeesNames,
 } from "../../helpers/fakebackend_helper";
 import {
   getFacultiesSuccess,
@@ -145,16 +151,22 @@ function* fetchMethodsOffering() {
   }
 }
 
-function* fetchCoursesOffering() {
-  const get_CoursesOffering_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_CourseOffering",
-    filter: `isOffered = 1`,
-  };
+function* fetchCoursesOffering(selectedpayload) {
+  let lang = selectedpayload.payload;
+
+  console.log("979898989898989898", lang);
+
+  const titleField = lang === "en" ? "enTitle" : "arTitle";
+  const payload = {};
+
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_getData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "_Common_CourseOffering";
+  payload["filter"] = `isOffered = 1`;
+
   try {
-    const response = yield call(getCoursesOffering, get_CoursesOffering_req);
+    const response = yield call(getCoursesOffering, payload);
     console.log("QQQQQQQQQQQQQQQ", response);
     yield put(getCoursesOfferingSuccess(response));
   } catch (error) {
@@ -268,8 +280,14 @@ function* onDeleteCourseOffering({ payload, courseOffering }) {
 }
 
 function* fetchSectionLabs(obj) {
-  let sectionLabCourse = obj.payload;
-  console.log("obj", obj.payload);
+  let lang = obj.payload.languageState;
+  let dataobject = obj.payload;
+
+  console.log("lannnnnnnnnnnnnnnnnnnnn", lang);
+
+  const titleField = lang === "en" ? "enTitle" : "arTitle";
+  let sectionLabCourse = dataobject.branchData;
+  console.log("obj", sectionLabCourse);
   // const facultyId =
   //   sectionLabCourse.facultyId === null ? 0 : sectionLabCourse.facultyId;
 
@@ -288,16 +306,20 @@ function* fetchSectionLabs(obj) {
   // } catch (error) {
   //   yield put(getSectorsFail(error));
   // }
-  const get_sectionLabs_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_SectionsLabs",
-    filter: `courseId = ${sectionLabCourse.courseId} and courseOfferingId=''''${sectionLabCourse.Id}''''`,
-  };
+
+  // form thisssssssssssss
+  const payload = {};
+
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_getData";
+  payload[" apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "_SectionsLabs";
+  payload[
+    "filter"
+  ] = `courseId = ${sectionLabCourse.courseId} and courseOfferingId=''''${sectionLabCourse.Id}''''`;
 
   try {
-    const response = yield call(getSectionLabs, get_sectionLabs_req);
+    const response = yield call(getSectionLabs, payload);
     console.log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", response);
     yield put(getSectionLabsSuccess(response));
   } catch (error) {
@@ -336,10 +358,10 @@ function* fetchSectionLabs(obj) {
   //get halls
   const get_halls_req = {
     source: "db",
-    procedure: "Generic_getOptions",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_AcadmeyBuildingStructure",
-    fields: "Id,arTitle",
+    tablename: "Common_Hall",
+    fields: `Id,${titleField}`,
   };
   try {
     const response = yield call(getHalls, get_halls_req);
@@ -347,6 +369,22 @@ function* fetchSectionLabs(obj) {
     yield put(getHallsSuccess(response));
   } catch (error) {
     yield put(getHallsFail(error));
+  }
+
+  //get instructor
+  const get_instructor_opt = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_EmployeeOption",
+    fields: "Id,fullName",
+  };
+  try {
+    const response = yield call(getEmployeesNames, get_instructor_opt);
+    console.log("employeeName", response);
+    yield put(getEmployeesNamesSuccess(response));
+  } catch (error) {
+    yield put(getEmployeesNamesFail(error));
   }
 }
 
@@ -407,20 +445,6 @@ function* onDeleteSectionLab({ payload, SectionLab }) {
 function* fetchScheduleTimings(obj) {
   let scheduleTimingSL = obj.payload;
 
-  //get instructor
-  const get_instructor_opt = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Instructor",
-    fields: "Id,fullName",
-  };
-  try {
-    const response = yield call(getInstructors, get_instructor_opt);
-    yield put(getInstructorsSuccess(response));
-  } catch (error) {
-    yield put(getInstructorsFail(error));
-  }
   const get_schedule_timings = {
     source: "db",
     procedure: "SisApp_getData",
