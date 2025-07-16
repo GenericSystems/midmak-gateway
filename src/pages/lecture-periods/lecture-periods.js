@@ -217,7 +217,7 @@ class LecturePeriodsList extends Component {
     const defaultSorting = [
       {
         dataField: "Id",
-        order: "desc",
+        order: "asc",
       },
     ];
     const columns = [

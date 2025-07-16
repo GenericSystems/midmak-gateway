@@ -58,7 +58,7 @@
   "Grades": "درجات",
   "Sector(ar)": "القطاع(عربي)",
   "Sectors": "القطاعات",
-  "Certificate Type": "نوع الشهادة",
+  "Certificate Type": "نوع الشهادة الثانوية",
   "Certificate Number": "رقم الشهادة",
   "Certificate Type(ar)": "نوع الشهادة(عربي)",
   "User Types": "المسمى التدريبي",
@@ -233,7 +233,7 @@
   "Directorate Name(ar)": "اسم مديرية(عربي)",
   "Directorate Number": "رقم المديرية",
   "Directorate Code": "رمز المديرية",
-  "Dean's Name": "عميد المديرية",
+  "Dean's Name": "مدير المديرية",
   "Department Name(ar)": "القسم (عربي)",
   "Department Number": "رقم القسم",
   "Department President": "رئيس القسم",
@@ -363,5 +363,10 @@
   "Available Time": "فترة يمكن اختيارها",
   "Busy Hall & Instructor": "القاعة و المدرس مشغولان",
   "Number Of Registered Students": "عدد الطلاب المسجلين",
-  "No Scheduling Timing": "لا يوجد أوقات"
+  "No Scheduling Timing": "لا يوجد أوقات",
+  "Applying User":"اسم المستخدم",
+  "Generate":"إنشاء",
+  "University Logo": "شعار الجامعة",
+  "Certificate Country": "بلد الشهادة",
+  "Certificate Date": "تاريخ الشهادة"
 }

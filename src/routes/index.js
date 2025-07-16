@@ -239,6 +239,9 @@ import ArchiveGradesList from "pages/GradeSettings/archive-grades";
 //Unarchive Course Requests
 import UnarchiveCourseReq from "pages/Unarchive-course-requests/unarchive-course-requests"
 
+//timeline
+import TimeLines from "pages/TimeLines/timeLine";
+
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -392,6 +395,9 @@ const authProtectedRoutes = [
   //archive grades
 
   {path:"/archive-grades", component:ArchiveGradesList},
+
+  ///timeline
+  { path: "/timeLine", component: TimeLines },
 
 
   //Blog
