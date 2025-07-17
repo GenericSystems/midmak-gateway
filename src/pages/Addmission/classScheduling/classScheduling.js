@@ -402,17 +402,17 @@ class ClassSchedulingList extends Component {
   toggle2() {
     const {
       sectionLabData,
-      // onGetScheduleTimingDescs,
-      // onGetScheduleTimings,
-      // onGetHallTimings,
+      onGetScheduleTimingDescs,
+      onGetScheduleTimings,
+      onGetHallTimings,
     } = this.props;
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
     this.setState({ selectedRowSectionLab: null });
-    // onGetScheduleTimings(0);
-    // onGetScheduleTimingDescs(0);
-    // onGetHallTimings(0);
+    onGetScheduleTimings(0);
+    onGetScheduleTimingDescs(0);
+    onGetHallTimings(0);
     this.setState({ selectedRow: null });
   }
   toggleNestedModal = () => {
@@ -553,22 +553,22 @@ class ClassSchedulingList extends Component {
     onGetSectionLabs(newdata);
   };
 
-  // handleViewHallSchedule = SLD => {
-  //   const { halls, onGetHallTimings } = this.props;
-  //   const { selectedSchedule } = this.state;
-  //   const findingHallId = halls.find(
-  //     hall => hall.hallName === SLD.hallName
-  //   ).key;
+  handleViewHallSchedule = SLD => {
+    const { halls, onGetHallTimings } = this.props;
+    const { selectedSchedule } = this.state;
+    const findingHallId = halls.find(
+      hall => hall.hallName === SLD.hallName
+    ).key;
 
-  //   const OB = {
-  //     hallId: findingHallId,
-  //     yearSemesterId: selectedSchedule["value"],
-  //     check: 0,
-  //   };
+    const OB = {
+      hallId: findingHallId,
+      yearSemesterId: selectedSchedule["value"],
+      check: 0,
+    };
 
-  //   onGetHallTimings(OB);
-  //   this.toggleHallModal();
-  // };
+    onGetHallTimings(OB);
+    this.toggleHallModal();
+  };
   handleAlertClose = alertName => {
     this.setState({ [alertName]: null });
   };
@@ -579,121 +579,121 @@ class ClassSchedulingList extends Component {
 
   handleScheduleTiming = (sectionLabData, fromCalender) => {
     const { selectedRowSectionLab } = this.state;
-    // const {
-    //   onGetScheduleTimings,
-    //   onGetScheduleTimingDescs,
-    //   returnMessage,
-    //   onGetScheduleMsgValue,
-    // } = this.props;
+    const {
+      onGetScheduleTimings,
+      onGetScheduleTimingDescs,
+      returnMessage,
+      onGetScheduleMsgValue,
+    } = this.props;
 
     this.setState({
       selectedRowSectionLab: sectionLabData,
       isPlusButtonEnabled: true,
     });
-    // if (returnMessage.msg) {
-    //   onGetScheduleMsgValue();
-    // } else {
-    //   onGetScheduleTimings(sectionLabData);
-    //   onGetScheduleTimingDescs(sectionLabData);
-    //   this.setState({ selectedRow: sectionLabData.Id });
-    // }
-    // if (fromCalender == 1) {
-    //   onGetScheduleTimings(sectionLabData);
-    //   onGetScheduleTimingDescs(sectionLabData);
-    //   this.setState({ selectedRow: sectionLabData.Id });
-    // }
+    if (returnMessage.msg) {
+      onGetScheduleMsgValue();
+    } else {
+      onGetScheduleTimings(sectionLabData);
+      onGetScheduleTimingDescs(sectionLabData);
+      this.setState({ selectedRow: sectionLabData.Id });
+    }
+    if (fromCalender == 1) {
+      onGetScheduleTimings(sectionLabData);
+      onGetScheduleTimingDescs(sectionLabData);
+      this.setState({ selectedRow: sectionLabData.Id });
+    }
   };
 
-  // handleMouseDown = (cellIndex, lectureId, weekdayId) => {
-  //   const {
-  //     onAddNewScheduleTiming,
-  //     onDeleteScheduleTiming,
-  //     scheduleTimings,
-  //     onGetScheduleMsgValue,
-  //     onGetScheduleTimings,
-  //     onGetScheduleTimingDescs,
-  //   } = this.props;
-  //   const { selectedRowSectionLab, selectedSchedule } = this.state;
-  //   onGetScheduleMsgValue();
-  //   this.setState({
-  //     isDragging: true,
-  //   });
+  handleMouseDown = (cellIndex, lectureId, weekdayId) => {
+    const {
+      onAddNewScheduleTiming,
+      onDeleteScheduleTiming,
+      scheduleTimings,
+      onGetScheduleMsgValue,
+      onGetScheduleTimings,
+      onGetScheduleTimingDescs,
+    } = this.props;
+    const { selectedRowSectionLab, selectedSchedule } = this.state;
+    onGetScheduleMsgValue();
+    this.setState({
+      isDragging: true,
+    });
 
-  //   const scheduledTiming = scheduleTimings.find(
-  //     timing =>
-  //       timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
-  //   );
+    const scheduledTiming = scheduleTimings.find(
+      timing =>
+        timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
+    );
 
-  //   if (scheduledTiming && !returnMessage.msg) {
-  //     onDeleteScheduleTiming(scheduledTiming);
+    if (scheduledTiming && !returnMessage.msg) {
+      onDeleteScheduleTiming(scheduledTiming);
 
-  //     onGetScheduleTimings(this.state.selectedRowSectionLab);
-  //     onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
-  //   } else {
-  //     const ob = {};
-  //     ob["type"] = selectedRowSectionLab.type;
-  //     ob["sectionLabId"] = selectedRowSectionLab.Id;
-  //     ob["dayId"] = weekdayId;
-  //     ob["lecturePeriodId"] = lectureId;
+      onGetScheduleTimings(this.state.selectedRowSectionLab);
+      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+    } else {
+      const ob = {};
+      ob["type"] = selectedRowSectionLab.type;
+      ob["sectionLabId"] = selectedRowSectionLab.Id;
+      ob["dayId"] = weekdayId;
+      ob["lecturePeriodId"] = lectureId;
 
-  //     onAddNewScheduleTiming(ob);
-  //     this.handleScheduleTiming(this.state.selectedRowSectionLab);
-  //   }
-  // };
+      onAddNewScheduleTiming(ob);
+      this.handleScheduleTiming(this.state.selectedRowSectionLab);
+    }
+  };
 
-  // handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
-  //   const {
-  //     onAddNewScheduleTiming,
-  //     onDeleteScheduleTiming,
-  //     scheduleTimings,
-  //     onGetScheduleTimingDescs,
-  //     onGetScheduleTimings,
-  //   } = this.props;
-  //   const { selectedRowSectionLab, selectedSchedule } = this.state;
-  //   this.setState({
-  //     isDragging: true,
-  //   });
+  handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
+    const {
+      onAddNewScheduleTiming,
+      onDeleteScheduleTiming,
+      scheduleTimings,
+      onGetScheduleTimingDescs,
+      onGetScheduleTimings,
+    } = this.props;
+    const { selectedRowSectionLab, selectedSchedule } = this.state;
+    this.setState({
+      isDragging: true,
+    });
 
-  //   const scheduledTiming = scheduleTimings.find(
-  //     timing =>
-  //       timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
-  //   );
+    const scheduledTiming = scheduleTimings.find(
+      timing =>
+        timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
+    );
 
-  //   if (scheduledTiming) {
-  //     onDeleteScheduleTiming(scheduledTiming);
-  //     onGetScheduleTimings(this.state.selectedRowSectionLab);
-  //     onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
-  //   } else {
-  //     const ob = {};
-  //     ob["type"] = selectedRowSectionLab.type;
-  //     ob["sectionLabId"] = selectedRowSectionLab.Id;
-  //     ob["dayId"] = weekdayId;
-  //     ob["lecturePeriodId"] = lectureId;
-  //     ob["yearSemesterId"] = selectedSchedule.value;
-  //     if (
-  //       selectedRowSectionLab.instructorsId !== null &&
-  //       selectedRowSectionLab.instructorsId !== 0
-  //     ) {
-  //       ob["instructorsId"] = selectedRowSectionLab.instructorsId;
-  //     }
-  //     if (
-  //       selectedRowSectionLab.hallId !== null &&
-  //       selectedRowSectionLab.hallId !== 0
-  //     ) {
-  //       ob["hallId"] = selectedRowSectionLab.hallId;
-  //     }
+    if (scheduledTiming) {
+      onDeleteScheduleTiming(scheduledTiming);
+      onGetScheduleTimings(this.state.selectedRowSectionLab);
+      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+    } else {
+      const ob = {};
+      ob["type"] = selectedRowSectionLab.type;
+      ob["sectionLabId"] = selectedRowSectionLab.Id;
+      ob["dayId"] = weekdayId;
+      ob["lecturePeriodId"] = lectureId;
+      ob["yearSemesterId"] = selectedSchedule.value;
+      if (
+        selectedRowSectionLab.instructorsId !== null &&
+        selectedRowSectionLab.instructorsId !== 0
+      ) {
+        ob["instructorsId"] = selectedRowSectionLab.instructorsId;
+      }
+      if (
+        selectedRowSectionLab.hallId !== null &&
+        selectedRowSectionLab.hallId !== 0
+      ) {
+        ob["hallId"] = selectedRowSectionLab.hallId;
+      }
 
-  //     onAddNewScheduleTiming(ob);
+      onAddNewScheduleTiming(ob);
 
-  //     this.handleScheduleTiming(this.state.selectedRowSectionLab);
-  //   }
-  // };
+      this.handleScheduleTiming(this.state.selectedRowSectionLab);
+    }
+  };
 
-  // handleMouseUp = () => {
-  //   this.setState({
-  //     isDragging: false,
-  //   });
-  // };
+  handleMouseUp = () => {
+    this.setState({
+      isDragging: false,
+    });
+  };
 
   handleSelectYear = (name, value) => {
     document.getElementById("square-switch1").checked = false;
@@ -708,37 +708,37 @@ class ClassSchedulingList extends Component {
     onGetCoursesOffering();
   };
 
-  // onChangeHall(oldValue, newValue) {
-  //   const { halls, hallTimings } = this.props;
-  //   this.setState({ defaultHallName: newValue });
-  //   if (halls.some(hall => hall.hallName === newValue)) {
-  //     const oldHallId = halls.find(hall => hall.hallName === oldValue).key;
-  //     const newHallId = halls.find(hall => hall.hallName === newValue).key;
-  //     if (oldHallId != newHallId) {
-  //       const oldHallTimings = hallTimings.filter(
-  //         timing => timing.hallId === oldHallId
-  //       );
-  //       const newHallTimings = hallTimings.filter(
-  //         timing => timing.hallId === newHallId
-  //       );
-  //       const isMatching = this.hasMatchingTimings(
-  //         oldHallTimings,
-  //         newHallTimings
-  //       );
-  //       if (isMatching == true) {
-  //         const matchingTimings = this.joinMatchingTimings(
-  //           oldHallTimings,
-  //           newHallTimings
-  //         );
-  //         this.setState({ defaultHallName: oldValue, matchingTimings });
-  //         this.setState({
-  //           matchingError: `${oldValue} and ${newValue} Intersect Together`,
-  //         });
-  //         this.toggleMatchingModal();
-  //       }
-  //     }
-  //   }
-  // }
+  onChangeHall(oldValue, newValue) {
+    const { halls, hallTimings } = this.props;
+    this.setState({ defaultHallName: newValue });
+    if (halls.some(hall => hall.hallName === newValue)) {
+      const oldHallId = halls.find(hall => hall.hallName === oldValue).key;
+      const newHallId = halls.find(hall => hall.hallName === newValue).key;
+      if (oldHallId != newHallId) {
+        const oldHallTimings = hallTimings.filter(
+          timing => timing.hallId === oldHallId
+        );
+        const newHallTimings = hallTimings.filter(
+          timing => timing.hallId === newHallId
+        );
+        const isMatching = this.hasMatchingTimings(
+          oldHallTimings,
+          newHallTimings
+        );
+        if (isMatching == true) {
+          const matchingTimings = this.joinMatchingTimings(
+            oldHallTimings,
+            newHallTimings
+          );
+          this.setState({ defaultHallName: oldValue, matchingTimings });
+          this.setState({
+            matchingError: `${oldValue} and ${newValue} Intersect Together`,
+          });
+          this.toggleMatchingModal();
+        }
+      }
+    }
+  }
 
   handleSave = values => {
     const {
@@ -1402,7 +1402,7 @@ class ClassSchedulingList extends Component {
       },
 
       {
-        dataField: "room",
+        dataField: "hall",
         text: t("Room"),
         editable: false,
         sort: true,
@@ -3527,19 +3527,19 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addNewSectionLabDetails(sectionLab)),
   onUpdateSectionLab: sectionLab => dispatch(updateSectionLab(sectionLab)),
   onDeleteSectionLab: sectionLab => dispatch(deleteSectionLab(sectionLab)),
-  // onGetFilteredAcademicCertificates: academicCer =>
-  //   dispatch(getFilteredAcademicCertificates(academicCer)),
-  // onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),
-  // onDeleteScheduleTiming: scheduleTiming =>
-  // dispatch(deleteScheduleTiming(scheduleTiming)),
-  // onAddNewScheduleTiming: scheduleTiming =>
-  //   dispatch(addNewScheduleTiming(scheduleTiming)),
-  // onGetScheduleTimingDescs: LabSect =>
-  //   dispatch(getScheduleTimingDescs(LabSect)),
-  // onfetchSetting: () => dispatch(fetchYearsSemesters()),
-  // onfetchDefaultSettings: () => dispatch(fetchDefaultSettings()),
-  // onGetScheduleMsgValue: () => dispatch(getScheduleMsgValue()),
-  // onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
+  onGetFilteredAcademicCertificates: academicCer =>
+    dispatch(getFilteredAcademicCertificates(academicCer)),
+  onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),
+  onDeleteScheduleTiming: scheduleTiming =>
+    dispatch(deleteScheduleTiming(scheduleTiming)),
+  onAddNewScheduleTiming: scheduleTiming =>
+    dispatch(addNewScheduleTiming(scheduleTiming)),
+  onGetScheduleTimingDescs: LabSect =>
+    dispatch(getScheduleTimingDescs(LabSect)),
+  onfetchSetting: () => dispatch(fetchYearsSemesters()),
+  onfetchDefaultSettings: () => dispatch(fetchDefaultSettings()),
+  onGetScheduleMsgValue: () => dispatch(getScheduleMsgValue()),
+  onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
 });
 
 export default connect(
