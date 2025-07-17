@@ -1049,7 +1049,7 @@ class ClassSchedulingList extends Component {
     ) {
       return "";
     }
-    return moment(date).format("DD /MM/ YYYY");
+    return moment(date).format("DD-MM-YYYY");
   };
 
   render() {
@@ -1343,6 +1343,20 @@ class ClassSchedulingList extends Component {
         editable: false,
         sort: true,
       },
+      {
+        dataField: "startDate",
+        text: t("Start Date"),
+        editable: false,
+        sort: true,
+        formatter: (cellContent, row) => this.handleValidDate(row.startDate),
+      },
+      {
+        dataField: "endDate",
+        text: t("End Date"),
+        editable: false,
+        sort: true,
+        formatter: (cellContent, row) => this.handleValidDate(row.endDate),
+      },
 
       {
         dataField: "menu",
@@ -1404,22 +1418,6 @@ class ClassSchedulingList extends Component {
       {
         dataField: "hall",
         text: t("Room"),
-        editable: false,
-        sort: true,
-      },
-      {
-        dataField: "startDate",
-        text: t("Start Date"),
-        editable: true,
-        sort: false,
-        editor: {
-          type: "DATE",
-        },
-        formatter: cell => (cell ? formatDate(cell) : ""),
-      },
-      {
-        dataField: "endDate",
-        text: t("End Date"),
         editable: false,
         sort: true,
       },
@@ -1995,10 +1993,6 @@ class ClassSchedulingList extends Component {
                                                 <IconButton
                                                   className="ms-2"
                                                   onClick={this.toggle3}
-                                                  // disabled={
-                                                  //   !this.state
-                                                  //     .selectedRowSectionLab
-                                                  // }
                                                 >
                                                   {" "}
                                                   <i className="mdi mdi-plus-circle blue-noti-icon" />
@@ -2449,15 +2443,6 @@ class ClassSchedulingList extends Component {
                                           (sectionLabData &&
                                             sectionLabData.hallName) ||
                                           "",
-
-                                        startDate:
-                                          (sectionLabData &&
-                                            sectionLabData.startDate) ||
-                                          "",
-                                        endDate:
-                                          (sectionLabData &&
-                                            sectionLabData.endDate) ||
-                                          "",
                                       }}
                                       enableReinitialize={true}
                                       validate={values => {
@@ -2607,78 +2592,6 @@ class ClassSchedulingList extends Component {
                                             </Row>
                                           </Col>
 
-                                          <Row>
-                                            <div className="mb-3">
-                                              <Row>
-                                                <Col className="col-4">
-                                                  <Label for="startDate">
-                                                    {this.props.t("Start Date")}
-                                                  </Label>
-                                                  <span className="text-danger">
-                                                    *
-                                                  </span>
-                                                </Col>
-                                                <Col className="col-8">
-                                                  <Field
-                                                    name="startDate"
-                                                    className={`form-control ${
-                                                      startDateError
-                                                        ? "is-invalid"
-                                                        : ""
-                                                    }`}
-                                                    type="date"
-                                                    value={
-                                                      values.startDate
-                                                        ? new Date(
-                                                            values.startDate
-                                                          )
-                                                            .toISOString()
-                                                            .split("T")[0]
-                                                        : ""
-                                                    }
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    id="startDate-date-input"
-                                                  />
-                                                </Col>
-                                              </Row>
-                                            </div>
-                                            <div className="mb-3">
-                                              <Row>
-                                                <Col className="col-4">
-                                                  <Label for="endDate">
-                                                    {this.props.t("End Date")}
-                                                  </Label>
-                                                  <span className="text-danger">
-                                                    *
-                                                  </span>
-                                                </Col>
-                                                <Col className="col-8">
-                                                  <Field
-                                                    name="endDate"
-                                                    className={`form-control ${
-                                                      endDateError
-                                                        ? "is-invalid"
-                                                        : ""
-                                                    }`}
-                                                    type="date"
-                                                    value={
-                                                      values.endDate
-                                                        ? new Date(
-                                                            values.endDate
-                                                          )
-                                                            .toISOString()
-                                                            .split("T")[0]
-                                                        : ""
-                                                    }
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    id="endDate-date-input"
-                                                  />
-                                                </Col>
-                                              </Row>
-                                            </div>
-                                          </Row>
                                           <Row className="justify-content-center">
                                             <Col
                                               lg="3"
@@ -2770,6 +2683,14 @@ class ClassSchedulingList extends Component {
                                                 (sectionLabData &&
                                                   sectionLabData.Capacity) ||
                                                 "",
+                                              startDate:
+                                                (sectionLabData &&
+                                                  sectionLabData.startDate) ||
+                                                "",
+                                              endDate:
+                                                (sectionLabData &&
+                                                  sectionLabData.endDate) ||
+                                                "",
                                             }}
                                             validationSchema={Yup.object().shape(
                                               {
@@ -2787,6 +2708,7 @@ class ClassSchedulingList extends Component {
                                               touched,
                                               values,
                                               handleChange,
+                                              handleBlur,
                                             }) => (
                                               <>
                                                 <div>
@@ -2874,7 +2796,96 @@ class ClassSchedulingList extends Component {
                                                         </FormGroup>
                                                       </Col>
                                                     </Row>
-
+                                                    <Row>
+                                                      <Col md="6">
+                                                        <FormGroup className="mb-3">
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col>
+                                                                <Label for="startDate">
+                                                                  {this.props.t(
+                                                                    "Start Date"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col>
+                                                                <Field
+                                                                  name="startDate"
+                                                                  className={`form-control ${
+                                                                    startDateError
+                                                                      ? "is-invalid"
+                                                                      : ""
+                                                                  }`}
+                                                                  type="date"
+                                                                  value={
+                                                                    values.startDate
+                                                                      ? new Date(
+                                                                          values.startDate
+                                                                        )
+                                                                          .toISOString()
+                                                                          .split(
+                                                                            "T"
+                                                                          )[0]
+                                                                      : ""
+                                                                  }
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  onBlur={
+                                                                    handleBlur
+                                                                  }
+                                                                  id="startDate-date-input"
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                        </FormGroup>
+                                                      </Col>
+                                                      <Col md="6">
+                                                        <FormGroup className="mb-3">
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col>
+                                                                <Label for="endDate">
+                                                                  {this.props.t(
+                                                                    "End Date"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col>
+                                                                <Field
+                                                                  name="endDate"
+                                                                  className={`form-control ${
+                                                                    endDateError
+                                                                      ? "is-invalid"
+                                                                      : ""
+                                                                  }`}
+                                                                  type="date"
+                                                                  value={
+                                                                    values.endDate
+                                                                      ? new Date(
+                                                                          values.endDate
+                                                                        )
+                                                                          .toISOString()
+                                                                          .split(
+                                                                            "T"
+                                                                          )[0]
+                                                                      : ""
+                                                                  }
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  onBlur={
+                                                                    handleBlur
+                                                                  }
+                                                                  id="endDate-date-input"
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                        </FormGroup>
+                                                      </Col>
+                                                    </Row>
                                                     <Row>
                                                       {/* <Col md="6">
                                                     <FormGroup className="mb-3">
@@ -3125,30 +3136,6 @@ class ClassSchedulingList extends Component {
                                             enableReinitialize={true}
                                             validate={values => {
                                               const errors = {};
-
-                                              if (
-                                                values.instructorsId &&
-                                                !instructors.some(
-                                                  instructor =>
-                                                    instructor.fullName ===
-                                                    values.instructorsId
-                                                )
-                                              ) {
-                                                errors.instructorsId =
-                                                  "Please select a valid instructor.";
-                                              }
-
-                                              if (
-                                                values.hallId &&
-                                                !halls.some(
-                                                  hall =>
-                                                    hall.value === values.hallId
-                                                )
-                                              ) {
-                                                errors.hallId =
-                                                  "Please select a valid hallId.";
-                                              }
-                                              return errors;
                                             }}
                                             initialValues={{
                                               LabNumber:
@@ -3159,6 +3146,14 @@ class ClassSchedulingList extends Component {
                                               Capacity:
                                                 (sectionLabData &&
                                                   sectionLabData.Capacity) ||
+                                                "",
+                                              startDate:
+                                                (sectionLabData &&
+                                                  sectionLabData.startDate) ||
+                                                "",
+                                              endDate:
+                                                (sectionLabData &&
+                                                  sectionLabData.endDate) ||
                                                 "",
                                             }}
                                             validationSchema={Yup.object().shape(
@@ -3259,6 +3254,96 @@ class ClassSchedulingList extends Component {
                                                       </Col>
                                                     </Row>
                                                   </div>
+                                                  <Row>
+                                                    <Col md="6">
+                                                      <FormGroup className="mb-3">
+                                                        <div className="mb-3">
+                                                          <Row>
+                                                            <Col>
+                                                              <Label for="startDate">
+                                                                {this.props.t(
+                                                                  "Start Date"
+                                                                )}
+                                                              </Label>
+                                                            </Col>
+                                                            <Col>
+                                                              <Field
+                                                                name="startDate"
+                                                                className={`form-control ${
+                                                                  startDateError
+                                                                    ? "is-invalid"
+                                                                    : ""
+                                                                }`}
+                                                                type="date"
+                                                                value={
+                                                                  values.startDate
+                                                                    ? new Date(
+                                                                        values.startDate
+                                                                      )
+                                                                        .toISOString()
+                                                                        .split(
+                                                                          "T"
+                                                                        )[0]
+                                                                    : ""
+                                                                }
+                                                                onChange={
+                                                                  handleChange
+                                                                }
+                                                                onBlur={
+                                                                  handleBlur
+                                                                }
+                                                                id="startDate-date-input"
+                                                              />
+                                                            </Col>
+                                                          </Row>
+                                                        </div>
+                                                      </FormGroup>
+                                                    </Col>
+                                                    <Col md="6">
+                                                      <FormGroup className="mb-3">
+                                                        <div className="mb-3">
+                                                          <Row>
+                                                            <Col>
+                                                              <Label for="endDate">
+                                                                {this.props.t(
+                                                                  "End Date"
+                                                                )}
+                                                              </Label>
+                                                            </Col>
+                                                            <Col>
+                                                              <Field
+                                                                name="endDate"
+                                                                className={`form-control ${
+                                                                  endDateError
+                                                                    ? "is-invalid"
+                                                                    : ""
+                                                                }`}
+                                                                type="date"
+                                                                value={
+                                                                  values.endDate
+                                                                    ? new Date(
+                                                                        values.endDate
+                                                                      )
+                                                                        .toISOString()
+                                                                        .split(
+                                                                          "T"
+                                                                        )[0]
+                                                                    : ""
+                                                                }
+                                                                onChange={
+                                                                  handleChange
+                                                                }
+                                                                onBlur={
+                                                                  handleBlur
+                                                                }
+                                                                id="endDate-date-input"
+                                                              />
+                                                            </Col>
+                                                          </Row>
+                                                        </div>
+                                                      </FormGroup>
+                                                    </Col>
+                                                  </Row>
                                                   <div className="bordered">
                                                     <h5
                                                       className="header pt-2"
