@@ -110,6 +110,10 @@ class CourseCatalogeList extends Component {
       selectedCoursId: 0,
       isShowPreReq: false,
       languageState: "",
+      selectedIsNeedSection: "",
+      selectedIsNeedLabs: "",
+      NeedSectionError: false,
+      NeedLabError: false,
     };
     this.toggle = this.toggle.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
@@ -340,6 +344,8 @@ class CourseCatalogeList extends Component {
       isEdit,
       isAdd,
       prerequisiteCoursesArray,
+      selectedIsNeedLabs,
+      selectedIsNeedSection,
     } = this.state;
 
     let arCoursenameError = false;
@@ -361,6 +367,9 @@ class CourseCatalogeList extends Component {
     values["trainingFormatId"] = selectedTrainingFormat;
     values["descriptionAr"] = values["descriptionAr"] || "";
     values["descriptionEn"] = values["descriptionEn"] || "";
+
+    values["isNeedSection"] = selectedIsNeedSection;
+    values["isNeedLab"] = selectedIsNeedLabs;
 
     if (values.arTitle === "") {
       arCoursenameError = true;
@@ -384,6 +393,13 @@ class CourseCatalogeList extends Component {
 
     if (!selectedTrainingType) {
       courseTypeError = true;
+    }
+
+    if (!selectedIsNeedSection) {
+      this.setState({ NeedSectionError: true });
+    }
+    if (!selectedIsNeedLabs) {
+      this.setState({ NeedLabError: true });
     }
 
     if (
@@ -538,6 +554,10 @@ class CourseCatalogeList extends Component {
     }
   };
 
+  handleToggleChange = (field, value) => {
+    this.setState({ [field]: value });
+  };
+
   render() {
     const courseCataloge = this.state.courseCataloge;
     const {
@@ -582,6 +602,10 @@ class CourseCatalogeList extends Component {
       filtredPreReqCourses,
       isShowPreReq,
       languageState,
+      selectedIsNeedSection,
+      selectedIsNeedLabs,
+      NeedSectionError,
+      NeedLabError,
     } = this.state;
     const { SearchBar } = Search;
     const alertMessage =
@@ -968,6 +992,12 @@ class CourseCatalogeList extends Component {
                                           descriptionEn:
                                             courseCataloge?.descriptionEn || "",
                                           //file: null,
+                                          isNeedSection:
+                                            courseCataloge?.isNeedSection ||
+                                            selectedIsNeedSection,
+                                          isNeedLab:
+                                            courseCataloge?.isNeedLab ||
+                                            selectedIsNeedLabs,
                                         }}
                                         validationSchema={Yup.object().shape({
                                           arTitle: Yup.string().required(
@@ -1338,6 +1368,144 @@ class CourseCatalogeList extends Component {
                                                                               courseCataloge?.trainingFormatId
                                                                           )}
                                                                         />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
+                                                                  {/* ssections */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="trainingModule">
+                                                                          {this.props.t(
+                                                                            "Needet Sections"
+                                                                          )}
+                                                                        </Label>
+                                                                        <span className="text-danger">
+                                                                          *
+                                                                        </span>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <div
+                                                                          className={
+                                                                            "btn-group" +
+                                                                            (NeedSectionError
+                                                                              ? " border border-danger rounded p-1"
+                                                                              : "")
+                                                                          }
+                                                                        >
+                                                                          <button
+                                                                            type="button"
+                                                                            className={`btn ${
+                                                                              this
+                                                                                .state
+                                                                                .selectedIsNeedSection ===
+                                                                              1
+                                                                                ? "btn-primary"
+                                                                                : "btn-outline-secondary"
+                                                                            }`}
+                                                                            onClick={() =>
+                                                                              this.handleToggleChange(
+                                                                                "selectedIsNeedSection",
+                                                                                1
+                                                                              )
+                                                                            }
+                                                                          >
+                                                                            {this.props.t(
+                                                                              "Yes"
+                                                                            )}
+                                                                          </button>
+                                                                          <button
+                                                                            type="button"
+                                                                            className={`btn ${
+                                                                              this
+                                                                                .state
+                                                                                .selectedIsNeedSection ===
+                                                                              0
+                                                                                ? "btn-primary"
+                                                                                : "btn-outline-secondary"
+                                                                            }`}
+                                                                            onClick={() =>
+                                                                              this.handleToggleChange(
+                                                                                "selectedIsNeedSection",
+                                                                                0
+                                                                              )
+                                                                            }
+                                                                          >
+                                                                            {this.props.t(
+                                                                              "No"
+                                                                            )}
+                                                                          </button>
+                                                                        </div>
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
+
+                                                                  {/* labbb */}
+
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="trainingModule">
+                                                                          {this.props.t(
+                                                                            "Needet Labs"
+                                                                          )}
+                                                                        </Label>
+                                                                        <span className="text-danger">
+                                                                          *
+                                                                        </span>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <div
+                                                                          className={
+                                                                            "btn-group" +
+                                                                            (NeedLabError
+                                                                              ? " border border-danger rounded p-1"
+                                                                              : "")
+                                                                          }
+                                                                        >
+                                                                          <button
+                                                                            type="button"
+                                                                            className={`btn ${
+                                                                              this
+                                                                                .state
+                                                                                .selectedIsNeedLabs ===
+                                                                              1
+                                                                                ? "btn-primary"
+                                                                                : "btn-outline-secondary"
+                                                                            }`}
+                                                                            onClick={() =>
+                                                                              this.handleToggleChange(
+                                                                                "selectedIsNeedLabs",
+                                                                                1
+                                                                              )
+                                                                            }
+                                                                          >
+                                                                            {this.props.t(
+                                                                              "Yes"
+                                                                            )}
+                                                                          </button>
+                                                                          <button
+                                                                            type="button"
+                                                                            className={`btn ${
+                                                                              this
+                                                                                .state
+                                                                                .selectedIsNeedLabs ===
+                                                                              0
+                                                                                ? "btn-primary"
+                                                                                : "btn-outline-secondary"
+                                                                            }`}
+                                                                            onClick={() =>
+                                                                              this.handleToggleChange(
+                                                                                "selectedIsNeedLabs",
+                                                                                0
+                                                                              )
+                                                                            }
+                                                                          >
+                                                                            {this.props.t(
+                                                                              "No"
+                                                                            )}
+                                                                          </button>
+                                                                        </div>
                                                                       </Col>
                                                                     </Row>
                                                                   </div>

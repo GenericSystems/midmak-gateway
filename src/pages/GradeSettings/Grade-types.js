@@ -94,14 +94,19 @@ class GradeTypesList extends Component {
 
   handleDeleteRow = () => {
     const { selectedRowId } = this.state;
+    const { onDeleteGradeType } = this.props;
     if (selectedRowId) {
-      this.props.onDeleteGradeType(selectedRowId);
+      onDeleteGradeType(selectedRowId);
       this.setState({
         deleteModal: false,
         selectedRowId: null,
         showAlert: true,
       });
     }
+  };
+
+  onClickDelete = rowId => {
+    this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
   handleDataChange = (rowId, fieldName, value) => {
@@ -150,14 +155,12 @@ class GradeTypesList extends Component {
         text: "",
         editable: false,
         hidden: !showDeleteButton,
-        formatter: (_, row) => (
+        formatter: (cellContent, gradeTypes) => (
           <Tooltip title={t("Delete")}>
             <Link className="text-danger" to="#">
               <i
                 className="mdi mdi-delete font-size-18"
-                onClick={() =>
-                  this.setState({ selectedRowId: row, deleteModal: true })
-                }
+                onClick={() => this.onClickDelete(gradeTypes)}
               ></i>
             </Link>
           </Tooltip>
@@ -178,7 +181,9 @@ class GradeTypesList extends Component {
         <DeleteModal
           show={deleteModal}
           onDeleteClick={this.handleDeleteRow}
-          onCloseClick={() => this.setState({ deleteModal: false })}
+          onCloseClick={() =>
+            this.setState({ deleteModal: false, selectedRowId: null })
+          }
         />
 
         <div className="page-content">
@@ -249,8 +254,11 @@ class GradeTypesList extends Component {
                           </Row>
 
                           <BootstrapTable
+                            keyField="Id"
                             {...toolkitProps.baseProps}
                             {...paginationTableProps}
+                            data={gradeTypes}
+                            columns={columns}
                             cellEdit={cellEditFactory({
                               mode: "click",
                               blurToSave: true,

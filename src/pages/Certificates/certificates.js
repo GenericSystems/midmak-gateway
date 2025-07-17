@@ -437,6 +437,10 @@ class Certificates extends Component {
     }));
   };
 
+  handelGenerateReport = repData => {
+    console.log(repData);
+  };
+
   render() {
     const { SearchBar } = Search;
     const {
@@ -601,6 +605,15 @@ class Certificates extends Component {
                   className="mdi mdi-qrcode font-size-18"
                   id="edittooltip"
                   onClick={() => this.handleGenerateQR(certificate)}
+                ></i>
+              </Link>
+            </Tooltip>
+            <Tooltip title={this.props.t("Report")} placement="top">
+              <Link className="text-primary" to="#">
+                <i
+                  className="bx bx-bx bxs-report"
+                  id="report"
+                  onClick={() => this.handelGenerateReport(certificate)}
                 ></i>
               </Link>
             </Tooltip>
