@@ -153,6 +153,9 @@ import CertificateGradesList from "../pages/CertificateGrades/certificateGrades"
 //registration
 import RegistrationList from "../pages/Registration/registration";
 
+//DefineExamDates
+import DefineExamDatesList from "../pages/Exam/DefineExamDates/defineExamDates";
+
 //academyBuildingStructure
 import AcademyBuildingStructuresList from "../pages/academyBuildingStructure/academyBuildingStructure";
 
@@ -232,13 +235,12 @@ import CourseDistributionsList from "pages/GradeSettings/courseDistributions";
 import EnterGradesList from "pages/GradeSettings/Enter-grades";
 
 //check grades
-import CheckGradesList from "pages/GradeSettings/check-grades"
+import CheckGradesList from "pages/GradeSettings/check-grades";
 
 import ArchiveGradesList from "pages/GradeSettings/archive-grades";
 
 //Unarchive Course Requests
-import UnarchiveCourseReq from "pages/Unarchive-course-requests/unarchive-course-requests"
-
+import UnarchiveCourseReq from "pages/Unarchive-course-requests/unarchive-course-requests";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -332,6 +334,9 @@ const authProtectedRoutes = [
   // registration
   { path: "/registration", component: RegistrationList },
 
+  // DefineExamDates
+  { path: "/defineExamDatesList", component: DefineExamDatesList },
+
   //academyBuildingStructure
   {
     path: "/academyBuildingStructure",
@@ -379,8 +384,7 @@ const authProtectedRoutes = [
   { path: "/course-distributions", component: CourseDistributionsList },
 
   //Unarchive Course Requests
-  {path:"/unarchive-course-request" , component:UnarchiveCourseReq},
-
+  { path: "/unarchive-course-request", component: UnarchiveCourseReq },
 
   //enter grades
 
@@ -391,8 +395,7 @@ const authProtectedRoutes = [
 
   //archive grades
 
-  {path:"/archive-grades", component:ArchiveGradesList},
-
+  { path: "/archive-grades", component: ArchiveGradesList },
 
   //Blog
   { path: "/blog-list", component: BlogList },
