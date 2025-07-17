@@ -11,6 +11,7 @@ import {
   GET_SECTION_LABS,
   GET_SECTION_LAB_PROFILE,
   ADD_NEW_SECTION_LAB,
+  ADD_NEW_SECTION_LAB_DETAILS,
   DELETE_SECTION_LAB,
   UPDATE_SECTION_LAB,
   GET_SCHEDULE_TIMINGS,
@@ -46,6 +47,8 @@ import {
   getSectionLabProfileFail,
   addSectionLabFail,
   addSectionLabSuccess,
+  addSectionLabDetailsFail,
+  addSectionLabDetailsSuccess,
   updateSectionLabSuccess,
   updateSectionLabFail,
   deleteSectionLabSuccess,
@@ -106,6 +109,7 @@ import {
   getSectionLabs,
   getSectionLabProfile,
   addNewSectionLab,
+  addNewSectionLabDetails,
   updateSectionLab,
   deleteSectionLab,
   getFaculties,
@@ -515,10 +519,28 @@ function* fetchScheduleTimingDescs(obj) {
   }
 }
 
+function* onAddNewSectionLabDetails({ payload, scheduleTiming }) {
+  delete payload["id"];
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_addData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_SectionLabDetails";
+
+  try {
+    const response = yield call(addNewSectionLabDetails, payload);
+    response.map(resp => {
+      resp["instructorsId"] = JSON.parse(resp["instructorsId"]);
+    });
+    yield put(addSectionLabDetailsSuccess(response[0]));
+  } catch (error) {
+    yield put(addSectionLabDetailsFail(error));
+  }
+}
+
 function* onAddNewScheduleTiming({ payload, scheduleTiming }) {
   delete payload["id"];
   payload["source"] = "db";
-  payload["procedure"] = "addTeachingSchedule";
+  payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_TeachingSchedule";
 
@@ -564,6 +586,7 @@ function* classSchedulingSaga() {
   yield takeEvery(GET_SECTION_LABS, fetchSectionLabs);
   yield takeEvery(GET_SECTION_LAB_PROFILE, fetchSectionLabProfile);
   yield takeEvery(ADD_NEW_SECTION_LAB, onAddNewSectionLab);
+  yield takeEvery(ADD_NEW_SECTION_LAB_DETAILS, onAddNewSectionLabDetails);
   yield takeEvery(UPDATE_SECTION_LAB, onUpdateSectionLab);
   yield takeEvery(DELETE_SECTION_LAB, onDeleteSectionLab);
   yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);

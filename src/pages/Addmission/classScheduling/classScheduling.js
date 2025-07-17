@@ -8,6 +8,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import * as Yup from "yup";
 import Select from "react-select";
+import * as moment from "moment";
 import {
   Card,
   CardBody,
@@ -49,6 +50,7 @@ import {
   updateCourseOffering,
   getSectionLabs,
   addNewSectionLab,
+  addNewSectionLabDetails,
   updateSectionLab,
   deleteSectionLab,
   getScheduleTimings,
@@ -71,6 +73,7 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+import { sectionLabs } from "common/data/sectionLabs";
 class ClassSchedulingList extends Component {
   constructor(props) {
     super(props);
@@ -80,6 +83,7 @@ class ClassSchedulingList extends Component {
       sectionLabData: [],
       years: [],
       halls: [],
+      instructorsArray: [],
       methodsOffering: [],
       courseOffering: "",
       activeTab1: "5",
@@ -133,7 +137,7 @@ class ClassSchedulingList extends Component {
       currentYearObj: {},
       isPlusButtonEnabled: false,
       languageState: "",
-      showWarning: false,
+      showAddWarning: false,
     };
     this.toggle1 = this.toggle1.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -316,9 +320,15 @@ class ClassSchedulingList extends Component {
   };
 
   toggle3 = () => {
+    const { selectedRowSectionLab } = this.state;
+
+    if (!selectedRowSectionLab) {
+      this.setState({ showAddWarning: true });
+      return;
+    }
     this.setState(prevState => ({
       modal3: !prevState.modal3,
-      showWarning: false,
+      showAddWarning: false,
     }));
   };
 
@@ -370,100 +380,38 @@ class ClassSchedulingList extends Component {
     }
   };
 
-  handleChangeCheckbox = (row, currentStatus, fieldName) => {
-    const {
-      onUpdateSchedulingLecture,
-      onAddNewSchedulingLecture,
-      onDeleteSchedulingLecture,
-      currentSemester,
-      onGetSchedulingLectures,
-      onGetAllSchedulingLectures,
-    } = this.props;
-    const { showAll, selectedSchedule } = this.state;
-
-    const newRow = {
-      Id: row.Id,
-      courseId: row.courseId,
-      courseCode: row.courseCode,
-      isCompletedStudy:
-        fieldName === "isCompletedStudy"
-          ? currentStatus
-            ? 1
-            : 0
-          : row.isCompletedStudy,
-      isOnlyExam:
-        fieldName === "isOnlyExam" ? (currentStatus ? 1 : 0) : row.isOnlyExam,
-      isWaitingList:
-        fieldName === "isWaitingList"
-          ? currentStatus
-            ? 1
-            : 0
-          : row.isWaitingList,
-      yearSemesterId: selectedSchedule["value"],
-      queryname: "_courseOffering",
-      fieldName: fieldName,
-      fieldValue: currentStatus ? 1 : 0,
-    };
-
-    if (
-      !newRow.isCompletedStudy &&
-      !newRow.isOnlyExam &&
-      !newRow.isWaitingList
-    ) {
-      //onAddNewSchedulingLecture(newRow);
-      onDeleteSchedulingLecture({ Id: row.Id });
-    } else {
-      if (row.Id) {
-        onUpdateSchedulingLecture(newRow);
-      } else {
-        onDeleteSchedulingLecture({ Id: row.Id });
-      }
-    }
-    if (showAll == false) {
-      onGetSchedulingLectures(selectedSchedule["value"]);
-      this.setState({ ifUpdateSchedule: 0 });
-    } else {
-      onGetAllSchedulingLectures(selectedSchedule["value"]);
-      this.setState({ ifUpdateSchedule: 1 });
-    }
-  };
-
   handleSelectChange = (fieldName, selectedValue) => {
     if (fieldName === "methodOfferingId") {
       this.setState({ selectedMethodOffering: selectedValue });
     }
   };
-  handleSelect = (fieldName, selectedValue) => {
-    if (fieldName === "instructorId") {
-      this.setState({ selectedInstructor: selectedValue });
-    }
-
+  handleSelect = (fieldName, selectedValue, values) => {
     if (fieldName === "hallId") {
-      const selected = this.state.halls.find(
-        hall => hall.value === selectedValue
+      const selected = this.props.halls.find(
+        hallId => hallId.value === selectedValue
       );
       console.log("hallllllllllls", this.state.halls);
       console.log("selectedValue", selectedValue);
       this.setState({
         selectedHall: selected ? selected.key : null,
+        sectionLabData: values,
       });
-      return;
     }
   };
 
   toggle2() {
     const {
       sectionLabData,
-      onGetScheduleTimingDescs,
-      onGetScheduleTimings,
+      // onGetScheduleTimingDescs,
+      // onGetScheduleTimings,
       // onGetHallTimings,
     } = this.props;
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
     this.setState({ selectedRowSectionLab: null });
-    onGetScheduleTimings(0);
-    onGetScheduleTimingDescs(0);
+    // onGetScheduleTimings(0);
+    // onGetScheduleTimingDescs(0);
     // onGetHallTimings(0);
     this.setState({ selectedRow: null });
   }
@@ -562,8 +510,6 @@ class ClassSchedulingList extends Component {
       sectionLabData: {
         Capacity: "",
         SectionNumber: "",
-        instructorName: "",
-        hallName: "",
         LabNumber: "",
       },
       isEdit: false,
@@ -578,22 +524,12 @@ class ClassSchedulingList extends Component {
         Id: SLD.Id,
         Capacity: SLD.Capacity,
         SectionLabNumber: SLD.SectionLabNumber,
-        // hallName: SLD.hallName,
-        // instructorName: SLD.instructorName,
         type: SLD.type,
-        // facultyName: SLD.facultyName,
-        // majorName: SLD.majorName,
       },
       selectedOption: SLD.type,
       isSectionRadioDisabled: SLD.type === "Lab",
       isLabRadioDisabled: SLD.type === "Section",
     });
-
-    // const OB = {
-    //   yearSemesterId: this.state.selectedSchedule["value"],
-    //   check: 1,
-    // };
-    // this.props.onGetHallTimings(OB);
 
     this.toggleNestedModal();
   };
@@ -633,8 +569,8 @@ class ClassSchedulingList extends Component {
   //   onGetHallTimings(OB);
   //   this.toggleHallModal();
   // };
-  handleAlertClose = () => {
-    this.setState({ duplicateError: null });
+  handleAlertClose = alertName => {
+    this.setState({ [alertName]: null });
   };
 
   handleAlertMatching = () => {
@@ -643,135 +579,122 @@ class ClassSchedulingList extends Component {
 
   handleScheduleTiming = (sectionLabData, fromCalender) => {
     const { selectedRowSectionLab } = this.state;
-    const {
-      onGetScheduleTimings,
-      onGetScheduleTimingDescs,
-      returnMessage,
-      onGetScheduleMsgValue,
-    } = this.props;
+    // const {
+    //   onGetScheduleTimings,
+    //   onGetScheduleTimingDescs,
+    //   returnMessage,
+    //   onGetScheduleMsgValue,
+    // } = this.props;
 
     this.setState({
       selectedRowSectionLab: sectionLabData,
       isPlusButtonEnabled: true,
     });
-    if (returnMessage.msg) {
-      onGetScheduleMsgValue();
-    } else {
-      onGetScheduleTimings(sectionLabData);
-      onGetScheduleTimingDescs(sectionLabData);
-      this.setState({ selectedRow: sectionLabData.Id });
-    }
-    if (fromCalender == 1) {
-      onGetScheduleTimings(sectionLabData);
-      onGetScheduleTimingDescs(sectionLabData);
-      this.setState({ selectedRow: sectionLabData.Id });
-    }
+    // if (returnMessage.msg) {
+    //   onGetScheduleMsgValue();
+    // } else {
+    //   onGetScheduleTimings(sectionLabData);
+    //   onGetScheduleTimingDescs(sectionLabData);
+    //   this.setState({ selectedRow: sectionLabData.Id });
+    // }
+    // if (fromCalender == 1) {
+    //   onGetScheduleTimings(sectionLabData);
+    //   onGetScheduleTimingDescs(sectionLabData);
+    //   this.setState({ selectedRow: sectionLabData.Id });
+    // }
   };
 
-  handleMouseDown = (cellIndex, lectureId, weekdayId) => {
-    const {
-      onAddNewScheduleTiming,
-      onDeleteScheduleTiming,
-      scheduleTimings,
-      onGetScheduleMsgValue,
-      onGetScheduleTimings,
-      onGetScheduleTimingDescs,
-    } = this.props;
-    const { selectedRowSectionLab, selectedSchedule } = this.state;
-    onGetScheduleMsgValue();
-    this.setState({
-      isDragging: true,
-    });
+  // handleMouseDown = (cellIndex, lectureId, weekdayId) => {
+  //   const {
+  //     onAddNewScheduleTiming,
+  //     onDeleteScheduleTiming,
+  //     scheduleTimings,
+  //     onGetScheduleMsgValue,
+  //     onGetScheduleTimings,
+  //     onGetScheduleTimingDescs,
+  //   } = this.props;
+  //   const { selectedRowSectionLab, selectedSchedule } = this.state;
+  //   onGetScheduleMsgValue();
+  //   this.setState({
+  //     isDragging: true,
+  //   });
 
-    const scheduledTiming = scheduleTimings.find(
-      timing =>
-        timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
-    );
+  //   const scheduledTiming = scheduleTimings.find(
+  //     timing =>
+  //       timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
+  //   );
 
-    if (scheduledTiming && !returnMessage.msg) {
-      onDeleteScheduleTiming(scheduledTiming);
+  //   if (scheduledTiming && !returnMessage.msg) {
+  //     onDeleteScheduleTiming(scheduledTiming);
 
-      onGetScheduleTimings(this.state.selectedRowSectionLab);
-      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
-    } else {
-      const ob = {};
-      ob["type"] = selectedRowSectionLab.type;
-      ob["sectionLabId"] = selectedRowSectionLab.Id;
-      ob["dayId"] = weekdayId;
-      ob["lecturePeriodId"] = lectureId;
+  //     onGetScheduleTimings(this.state.selectedRowSectionLab);
+  //     onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+  //   } else {
+  //     const ob = {};
+  //     ob["type"] = selectedRowSectionLab.type;
+  //     ob["sectionLabId"] = selectedRowSectionLab.Id;
+  //     ob["dayId"] = weekdayId;
+  //     ob["lecturePeriodId"] = lectureId;
 
-      onAddNewScheduleTiming(ob);
-      this.handleScheduleTiming(this.state.selectedRowSectionLab);
-    }
-  };
+  //     onAddNewScheduleTiming(ob);
+  //     this.handleScheduleTiming(this.state.selectedRowSectionLab);
+  //   }
+  // };
 
-  handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
-    const {
-      onAddNewScheduleTiming,
-      onDeleteScheduleTiming,
-      scheduleTimings,
-      onGetScheduleTimingDescs,
-      onGetScheduleTimings,
-    } = this.props;
-    const { selectedRowSectionLab, selectedSchedule } = this.state;
-    this.setState({
-      isDragging: true,
-    });
+  // handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
+  //   const {
+  //     onAddNewScheduleTiming,
+  //     onDeleteScheduleTiming,
+  //     scheduleTimings,
+  //     onGetScheduleTimingDescs,
+  //     onGetScheduleTimings,
+  //   } = this.props;
+  //   const { selectedRowSectionLab, selectedSchedule } = this.state;
+  //   this.setState({
+  //     isDragging: true,
+  //   });
 
-    const scheduledTiming = scheduleTimings.find(
-      timing =>
-        timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
-    );
+  //   const scheduledTiming = scheduleTimings.find(
+  //     timing =>
+  //       timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
+  //   );
 
-    if (scheduledTiming) {
-      onDeleteScheduleTiming(scheduledTiming);
-      onGetScheduleTimings(this.state.selectedRowSectionLab);
-      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
-    } else {
-      const ob = {};
-      ob["type"] = selectedRowSectionLab.type;
-      ob["sectionLabId"] = selectedRowSectionLab.Id;
-      ob["dayId"] = weekdayId;
-      ob["lecturePeriodId"] = lectureId;
-      ob["yearSemesterId"] = selectedSchedule.value;
-      if (
-        selectedRowSectionLab.instructorId !== null &&
-        selectedRowSectionLab.instructorId !== 0
-      ) {
-        ob["instructorId"] = selectedRowSectionLab.instructorId;
-      }
-      if (
-        selectedRowSectionLab.hallId !== null &&
-        selectedRowSectionLab.hallId !== 0
-      ) {
-        ob["hallId"] = selectedRowSectionLab.hallId;
-      }
+  //   if (scheduledTiming) {
+  //     onDeleteScheduleTiming(scheduledTiming);
+  //     onGetScheduleTimings(this.state.selectedRowSectionLab);
+  //     onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+  //   } else {
+  //     const ob = {};
+  //     ob["type"] = selectedRowSectionLab.type;
+  //     ob["sectionLabId"] = selectedRowSectionLab.Id;
+  //     ob["dayId"] = weekdayId;
+  //     ob["lecturePeriodId"] = lectureId;
+  //     ob["yearSemesterId"] = selectedSchedule.value;
+  //     if (
+  //       selectedRowSectionLab.instructorsId !== null &&
+  //       selectedRowSectionLab.instructorsId !== 0
+  //     ) {
+  //       ob["instructorsId"] = selectedRowSectionLab.instructorsId;
+  //     }
+  //     if (
+  //       selectedRowSectionLab.hallId !== null &&
+  //       selectedRowSectionLab.hallId !== 0
+  //     ) {
+  //       ob["hallId"] = selectedRowSectionLab.hallId;
+  //     }
 
-      onAddNewScheduleTiming(ob);
+  //     onAddNewScheduleTiming(ob);
 
-      this.handleScheduleTiming(this.state.selectedRowSectionLab);
-    }
-  };
+  //     this.handleScheduleTiming(this.state.selectedRowSectionLab);
+  //   }
+  // };
 
-  handleMouseUp = () => {
-    this.setState({
-      isDragging: false,
-    });
-  };
+  // handleMouseUp = () => {
+  //   this.setState({
+  //     isDragging: false,
+  //   });
+  // };
 
-  handleFacultyBlur = e => {
-    const { onGetFilteredAcademicCertificates, faculties } = this.props;
-    const selectedFacultyName2 = e.target.value;
-
-    let selectedFaculty = faculties.find(
-      faculty => faculty.label === selectedFacultyName2
-    );
-
-    if (selectedFaculty) {
-      let selectedFacultyId2 = selectedFaculty.value;
-      onGetFilteredAcademicCertificates(selectedFacultyId2);
-    }
-  };
   handleSelectYear = (name, value) => {
     document.getElementById("square-switch1").checked = false;
     const { onGetCoursesOffering } = this.props;
@@ -785,37 +708,37 @@ class ClassSchedulingList extends Component {
     onGetCoursesOffering();
   };
 
-  onChangeHall(oldValue, newValue) {
-    const { halls, hallTimings } = this.props;
-    this.setState({ defaultHallName: newValue });
-    if (halls.some(hall => hall.hallName === newValue)) {
-      const oldHallId = halls.find(hall => hall.hallName === oldValue).key;
-      const newHallId = halls.find(hall => hall.hallName === newValue).key;
-      if (oldHallId != newHallId) {
-        const oldHallTimings = hallTimings.filter(
-          timing => timing.hallId === oldHallId
-        );
-        const newHallTimings = hallTimings.filter(
-          timing => timing.hallId === newHallId
-        );
-        const isMatching = this.hasMatchingTimings(
-          oldHallTimings,
-          newHallTimings
-        );
-        if (isMatching == true) {
-          const matchingTimings = this.joinMatchingTimings(
-            oldHallTimings,
-            newHallTimings
-          );
-          this.setState({ defaultHallName: oldValue, matchingTimings });
-          this.setState({
-            matchingError: `${oldValue} and ${newValue} Intersect Together`,
-          });
-          this.toggleMatchingModal();
-        }
-      }
-    }
-  }
+  // onChangeHall(oldValue, newValue) {
+  //   const { halls, hallTimings } = this.props;
+  //   this.setState({ defaultHallName: newValue });
+  //   if (halls.some(hall => hall.hallName === newValue)) {
+  //     const oldHallId = halls.find(hall => hall.hallName === oldValue).key;
+  //     const newHallId = halls.find(hall => hall.hallName === newValue).key;
+  //     if (oldHallId != newHallId) {
+  //       const oldHallTimings = hallTimings.filter(
+  //         timing => timing.hallId === oldHallId
+  //       );
+  //       const newHallTimings = hallTimings.filter(
+  //         timing => timing.hallId === newHallId
+  //       );
+  //       const isMatching = this.hasMatchingTimings(
+  //         oldHallTimings,
+  //         newHallTimings
+  //       );
+  //       if (isMatching == true) {
+  //         const matchingTimings = this.joinMatchingTimings(
+  //           oldHallTimings,
+  //           newHallTimings
+  //         );
+  //         this.setState({ defaultHallName: oldValue, matchingTimings });
+  //         this.setState({
+  //           matchingError: `${oldValue} and ${newValue} Intersect Together`,
+  //         });
+  //         this.toggleMatchingModal();
+  //       }
+  //     }
+  //   }
+  // }
 
   handleSave = values => {
     const {
@@ -891,16 +814,23 @@ class ClassSchedulingList extends Component {
     const fieldErrors = {};
 
     if (selectedOption === "Section") {
-      if (!sectionInfo.SectionNumber) {
+      if (
+        !sectionInfo.SectionNumber ||
+        (typeof sectionInfo.SectionNumber === "string" &&
+          sectionInfo.SectionNumber.trim() === "")
+      ) {
         fieldErrors.SectionNumber = "Please enter Section Number.";
       }
     }
     if (selectedOption === "Lab") {
-      if (!sectionInfo.LabNumber) {
+      if (
+        !sectionInfo.LabNumber ||
+        (typeof sectionInfo.LabNumber === "string" &&
+          sectionInfo.LabNumber.trim() === "")
+      ) {
         fieldErrors.LabNumber = "Please enter Lab Number.";
       }
     }
-
     const enteredNumber =
       selectedOption === "Section"
         ? sectionInfo.SectionNumber
@@ -981,7 +911,7 @@ class ClassSchedulingList extends Component {
       sectionLabData,
       selectedRowSectionLab,
       selectedHall,
-      selectedInstructor,
+      instructorsArray,
       oldHallId,
       newHallId,
     } = this.state;
@@ -991,25 +921,33 @@ class ClassSchedulingList extends Component {
       instructors,
       hallTimings,
       coursesOffering,
-      onAddNewScheduleTiming,
+      onAddNewSectionLabDetails,
     } = this.props;
-
+    const instructorsId =
+      instructorsArray?.map(item => item?.value).filter(val => val != null) ||
+      [];
+    const formattedInstructors = instructorsId.map(Id => `{${Id}}`).join(",");
+    console.log("✅ instructorsId to send:", formattedInstructors);
     values["type"] = selectedRowSectionLab.type;
     values["sectionLabId"] = selectedRowSectionLab.Id;
-    values["hallId"] = selectedHall;
-    if (Array.isArray(selectedInstructor)) {
-      values["instructorId"] = selectedInstructor.map(ins => ins.value);
-    } else if (selectedInstructor) {
-      values["instructorId"] = [selectedInstructor.value];
-    } else {
-      values["instructorId"] = [];
-    }
+    values["hallId"] = this.state.selectedHall;
+    values["instructorsId"] = formattedInstructors;
+    // values["instructorsId"] = Array.isArray(instructorsArray)
+    //   ? instructorsArray.map(item => item.value)
+    //   : [];
+
+    // if (Array.isArray(selectedInstructor)) {
+    //   values["instructorsId"] = selectedInstructor.map(ins => ins.value);
+    // } else {
+    //   values["instructorsId"] = [];
+    // }
 
     let scheduleTimingInfo = {};
 
     Object.keys(values).forEach(function (key) {
       if (
         values[key] != undefined &&
+        values[key] !== null &&
         (values[key].length > 0 || values[key] != "")
       )
         scheduleTimingInfo[key] = values[key];
@@ -1017,72 +955,101 @@ class ClassSchedulingList extends Component {
 
     console.log("scheduleTimingInfo", scheduleTimingInfo);
     const fieldErrors = {};
-    if (
-      scheduleTimingInfo.instructorId &&
-      scheduleTimingInfo.instructorId.length > 0
-    ) {
-      const invalidInstructors = scheduleTimingInfo.instructorId.filter(
-        id => !instructors.some(ins => ins.value === id)
-      );
-      if (invalidInstructors.length > 0) {
-        fieldErrors.instructorId = "Please select valid instructor(s).";
-      }
-    }
+    // if (
+    //   scheduleTimingInfo.instructorsId &&
+    //   scheduleTimingInfo.instructorsId.length > 0
+    // ) {
+    //   const invalidInstructors = scheduleTimingInfo.instructorsId.filter(
+    //     id => !instructors.some(ins => ins.value === id)
+    //   );
+    //   if (invalidInstructors.length > 0) {
+    //     fieldErrors.instructorsId = "Please select valid instructor(s).";
+    //   }
+    // }
 
-    if (
-      scheduleTimingInfo.hallId === null ||
-      scheduleTimingInfo.hallId === undefined
-    ) {
-      fieldErrors.hallId = "Hall is required.";
-    } else {
-      const hallExists = halls.some(
-        hall => hall.value === scheduleTimingInfo.hallId
-      );
-      if (!hallExists) {
-        fieldErrors.hallId = "Please select a valid hall.";
-      }
-    }
+    // if (
+    //   scheduleTimingInfo.hallId === null ||
+    //   scheduleTimingInfo.hallId === undefined
+    // ) {
+    //   fieldErrors.hallId = "Hall is required.";
+    // } else {
+    //   const hallExists = halls.some(
+    //     hall => hall.value === scheduleTimingInfo.hallId
+    //   );
+    //   if (!hallExists) {
+    //     fieldErrors.hallId = "Please select a valid hall.";
+    //   }
+    // }
 
-    if (Object.keys(fieldErrors).length > 0) {
-      return fieldErrors;
-    }
-    if (
-      scheduleTimingInfo.hallId !== undefined &&
-      scheduleTimingInfo.hallId !== null
-    ) {
-      const selectedHallObj = halls.find(
-        hall => hall.value === scheduleTimingInfo.hallId
-      );
-      if (selectedHallObj) {
-        scheduleTimingInfo.hallId = selectedHallObj.key;
-      } else if (this.state.isEdit) {
-        scheduleTimingInfo.hallId = 0;
-      } else {
-        scheduleTimingInfo.hallId = null;
-        flag = 1;
-      }
-    }
+    // if (Object.keys(fieldErrors).length > 0) {
+    //   return fieldErrors;
+    // }
+    // if (
+    //   scheduleTimingInfo.hallId !== undefined &&
+    //   scheduleTimingInfo.hallId !== null
+    // ) {
+    //   const selectedHallObj = halls.find(
+    //     hall => hall.value === scheduleTimingInfo.hallId
+    //   );
+    //   if (selectedHallObj) {
+    //     scheduleTimingInfo.hallId = selectedHallObj.key;
+    //   } else if (this.state.isEdit) {
+    //     scheduleTimingInfo.hallId = 0;
+    //   } else {
+    //     scheduleTimingInfo.hallId = null;
+    //     flag = 1;
+    //   }
+    // }
 
-    if (
-      scheduleTimingInfo.instructorId &&
-      scheduleTimingInfo.instructorId.length > 0
-    ) {
-      scheduleTimingInfo.instructorId = scheduleTimingInfo.instructorId
-        .map(id => {
-          const instructorObj = instructors.find(ins => ins.value === id);
-          return instructorObj ? instructorObj.Id : null;
-        })
-        .filter(id => id !== null);
-    } else {
-      scheduleTimingInfo.instructorId = [];
-    }
+    // if (
+    //   scheduleTimingInfo.instructorsId &&
+    //   scheduleTimingInfo.instructorsId.length > 0
+    // ) {
+    //   scheduleTimingInfo.instructorsId = scheduleTimingInfo.instructorsId
+    //     .map(id => {
+    //       const instructorObj = instructors.find(ins => ins.value === id);
+    //       return instructorObj ? instructorObj.Id : null;
+    //     })
+    //     .filter(id => id !== null);
+    // } else {
+    //   scheduleTimingInfo.instructorsId = [];
+    // }
 
-    scheduleTimingInfo["type"] = selectedRowSectionLab.type;
-    scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
+    // scheduleTimingInfo["type"] = selectedRowSectionLab.type;
+    // scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
 
     console.log("saaaaave", scheduleTimingInfo);
-    // onAddNewScheduleTiming(scheduleTimingInfo);
+    onAddNewSectionLabDetails(scheduleTimingInfo);
     this.toggle3();
+  };
+
+  handleMultiInstructors = (fieldName, selectedMulti) => {
+    //   if (fieldName === "instructorsId") {
+    //   const selectedIds = selectedMulti.map(option => option.value);
+
+    //   this.setState({
+    //   instructorsArray: selectedMulti,
+    //   instructorsId: selectedIds,
+    //   });
+    // }
+
+    if (fieldName === "instructorsId") {
+      this.setState({
+        instructorsArray: selectedMulti || [],
+      });
+    }
+  };
+
+  handleValidDate = date => {
+    if (
+      !date ||
+      date === "1970-01-01" ||
+      date === "0000-00-00" ||
+      moment(date).year() === 1970
+    ) {
+      return "";
+    }
+    return moment(date).format("DD /MM/ YYYY");
   };
 
   render() {
@@ -1093,6 +1060,7 @@ class ClassSchedulingList extends Component {
       halls,
       years,
       instructors,
+      instructorsArray,
       faculties,
       onGetFilteredAcademicCertificates,
       filteredAcademicCertificates,
@@ -1145,6 +1113,7 @@ class ClassSchedulingList extends Component {
       selectedHall,
       currentYearObj,
       languageState,
+      showAddWarning,
     } = this.state;
 
     console.log(currentYearObj, "gggg");
@@ -1223,25 +1192,15 @@ class ClassSchedulingList extends Component {
         text: this.props.t("Start Date"),
         sort: true,
         editable: false,
-        // formatter: (cellContent, coursesOffering) => (
-        //   <>
-        //     <h5 className="font-size-14 mb-1">
-        //       <Link to="#" className="text-dark">
-        //         {
-        //           new Date(coursesOffering.startDate)
-        //             .toISOString()
-        //             .split("T")[0]
-        //         }
-        //       </Link>
-        //     </h5>
-        //   </>
-        // ),
+        formatter: (cellContent, row) => this.handleValidDate(row.startDate),
       },
       {
         dataField: "endDate",
         text: this.props.t("End Date"),
         sort: true,
         editable: false,
+
+        formatter: (cellContent, row) => this.handleValidDate(row.endDate),
       },
       {
         dataField: "menu",
@@ -1726,9 +1685,10 @@ class ClassSchedulingList extends Component {
                                                               type="button"
                                                               className="btn-close"
                                                               aria-label="Close"
-                                                              onClick={
-                                                                this
-                                                                  .handleAlertClose
+                                                              onClick={() =>
+                                                                this.handleAlertClose(
+                                                                  "emptyError"
+                                                                )
                                                               }
                                                             ></button>
                                                           </Alert>
@@ -1970,7 +1930,7 @@ class ClassSchedulingList extends Component {
                                               const type = row.type;
                                               const isSelected =
                                                 row.Id ===
-                                                this.state.selectedRow;
+                                                this.state.selectedRows;
 
                                               let backgroundColor = "";
                                               if (type === "Section") {
@@ -2009,15 +1969,36 @@ class ClassSchedulingList extends Component {
                                                 )}
                                               </h5>
                                             </Col>
+                                            {showAddWarning && (
+                                              <Alert
+                                                color="danger"
+                                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                role="alert"
+                                              >
+                                                Please click on the Schedule
+                                                Timing button before adding
+                                                <button
+                                                  type="button"
+                                                  className="btn-close"
+                                                  aria-label="Close"
+                                                  onClick={() =>
+                                                    this.handleAlertClose(
+                                                      "showAddWarning"
+                                                    )
+                                                  }
+                                                  style={{ outline: "none" }}
+                                                ></button>
+                                              </Alert>
+                                            )}
                                             <Col sm="6">
                                               <div className="text-sm-end">
                                                 <IconButton
                                                   className="ms-2"
                                                   onClick={this.toggle3}
-                                                  disabled={
-                                                    !this.state
-                                                      .selectedRowSectionLab
-                                                  }
+                                                  // disabled={
+                                                  //   !this.state
+                                                  //     .selectedRowSectionLab
+                                                  // }
                                                 >
                                                   {" "}
                                                   <i className="mdi mdi-plus-circle blue-noti-icon" />
@@ -2306,6 +2287,140 @@ class ClassSchedulingList extends Component {
                                   </Col>
                                 </Row>
                                 <Modal
+                                  isOpen={matchingHallModal}
+                                  toggle={this.toggleMatchingModal}
+                                  className="modal-lg"
+                                >
+                                  <ModalHeader
+                                    toggle={this.toggleMatchingModal}
+                                  ></ModalHeader>
+                                  <ModalBody>
+                                    <div>
+                                      {matchingError && (
+                                        <Alert
+                                          color="danger"
+                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                          role="alert"
+                                        >
+                                          {matchingError}
+                                          <button
+                                            type="button"
+                                            className="btn-close"
+                                            aria-label="Close"
+                                            onClick={this.handleAlertMatching}
+                                          ></button>
+                                        </Alert>
+                                      )}
+                                    </div>
+                                    <div className="timetable-container">
+                                      <table className="timetable">
+                                        <thead>
+                                          <tr>
+                                            <th>{t("Lecture Periods")}</th>
+                                            {weekDaysColumns.map(
+                                              (header, index) => (
+                                                <th key={index}>{header}</th>
+                                              )
+                                            )}
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {lecturePeriods.map(
+                                            (lecture, rowIndex) => (
+                                              <tr key={lecture.Id}>
+                                                <td className="lecture-cell">
+                                                  {lecture.duration}
+                                                </td>
+                                                {weekDays.map(
+                                                  (weekday, cellIndex) => {
+                                                    const matchingTiming =
+                                                      matchingTimings.find(
+                                                        timing =>
+                                                          timing.dayId ===
+                                                            weekday.Id &&
+                                                          timing.lecturePeriodId ===
+                                                            lecture.Id
+                                                      );
+
+                                                    const cellValue =
+                                                      matchingTiming
+                                                        ? "selected"
+                                                        : "";
+
+                                                    return matchingTiming &&
+                                                      matchingTiming.msg ? (
+                                                      <Tooltip
+                                                        title={
+                                                          matchingTiming.msg ===
+                                                          1
+                                                            ? t(
+                                                                "Busy Hall & Instructor"
+                                                              )
+                                                            : matchingTiming.msg ===
+                                                              2
+                                                            ? t("Busy Hall")
+                                                            : matchingTiming.msg ===
+                                                              3
+                                                            ? t(
+                                                                "Busy Instructor"
+                                                              )
+                                                            : null
+                                                        }
+                                                        placement="top-end"
+                                                        key={cellIndex}
+                                                      >
+                                                        <td
+                                                          key={cellIndex}
+                                                          className={`timetable-cell ${cellValue}`}
+                                                          style={{
+                                                            backgroundColor:
+                                                              matchingTiming
+                                                                ? matchingTiming.msg ===
+                                                                  1
+                                                                  ? "orange"
+                                                                  : matchingTiming.msg ===
+                                                                    2
+                                                                  ? "#48b3fb"
+                                                                  : matchingTiming.msg ===
+                                                                    3
+                                                                  ? "#f9544e"
+                                                                  : "#f9544e"
+                                                                : "",
+                                                          }}
+                                                        ></td>
+                                                      </Tooltip>
+                                                    ) : (
+                                                      <td
+                                                        key={cellIndex}
+                                                        className={`timetable-cell ${cellValue}`}
+                                                        style={{
+                                                          backgroundColor:
+                                                            matchingTiming
+                                                              ? matchingTiming.msg ===
+                                                                1
+                                                                ? "orange"
+                                                                : matchingTiming.msg ===
+                                                                  2
+                                                                ? "#48b3fb"
+                                                                : matchingTiming.msg ===
+                                                                  3
+                                                                ? "#f9544e"
+                                                                : "#f9544e"
+                                                              : "",
+                                                        }}
+                                                      ></td>
+                                                    );
+                                                  }
+                                                )}
+                                              </tr>
+                                            )
+                                          )}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </ModalBody>
+                                </Modal>
+                                <Modal
                                   isOpen={modal3}
                                   toggle={this.toggle3}
                                   size="4"
@@ -2326,7 +2441,7 @@ class ClassSchedulingList extends Component {
                                   <ModalBody>
                                     <Formik
                                       initialValues={{
-                                        instructorId:
+                                        instructorsId:
                                           (sectionLabData &&
                                             sectionLabData.instructorName) ||
                                           "",
@@ -2375,14 +2490,14 @@ class ClassSchedulingList extends Component {
                                         return errors;
 
                                         if (
-                                          values.instructorId &&
+                                          values.instructorsId &&
                                           !instructors.some(
                                             instructor =>
                                               instructor.fullName ===
-                                              values.instructorId
+                                              values.instructorsId
                                           )
                                         ) {
-                                          errors.instructorId =
+                                          errors.instructorsId =
                                             "Please select a valid instructor.";
                                         }
 
@@ -2420,30 +2535,30 @@ class ClassSchedulingList extends Component {
                                               </Col>
                                               <Col className="col-8">
                                                 <input
-                                                  className={
-                                                    "form-control" +
-                                                    (errors.hallId &&
-                                                    touched.hallId
-                                                      ? " is-invalid"
-                                                      : "")
-                                                  }
+                                                  className={`form-control ${this.state.inputClass}`}
                                                   list="hallIdList"
                                                   name="hallId"
                                                   id="room"
-                                                  value={
-                                                    this.state.defaultHallName
-                                                  }
                                                   placeholder="Type to search..."
                                                   autoComplete="off"
                                                   onChange={e =>
                                                     this.handleSelect(
                                                       e.target.name,
-                                                      e.target.value
+                                                      e.target.value,
+                                                      values
                                                     )
+                                                  }
+                                                  value={
+                                                    (
+                                                      halls.find(
+                                                        hall =>
+                                                          hall.key ===
+                                                          selectedHall
+                                                      ) || ""
+                                                    ).value
                                                   }
                                                 />
                                                 <datalist id="hallIdList">
-                                                  {" "}
                                                   {halls.map(hall => (
                                                     <option
                                                       key={hall.key}
@@ -2469,22 +2584,22 @@ class ClassSchedulingList extends Component {
                                               </Col>
                                               <Col className="col-8">
                                                 <Select
-                                                  className="select-style-instructor"
+                                                  classNamePrefix="select2-selection"
                                                   id="instructor"
-                                                  name="instructorId"
-                                                  key={`instructorId`}
+                                                  name="instructorsId"
+                                                  key={`instructorsId`}
                                                   options={employeesNames}
-                                                  onChange={newValue => {
-                                                    this.handleSelect(
-                                                      "instructorId",
-                                                      newValue
-                                                    );
-                                                  }}
+                                                  onChange={selectedOption =>
+                                                    this.handleMultiInstructors(
+                                                      "instructorsId",
+                                                      selectedOption
+                                                    )
+                                                  }
                                                   isMulti
-                                                  value={selectedInstructor}
+                                                  value={instructorsArray}
                                                 />
                                                 <ErrorMessage
-                                                  name="instructorId"
+                                                  name="instructorsId"
                                                   component="div"
                                                   className="invalid-feedback"
                                                 />
@@ -2686,8 +2801,10 @@ class ClassSchedulingList extends Component {
                                                         type="button"
                                                         className="btn-close"
                                                         aria-label="Close"
-                                                        onClick={
-                                                          this.handleAlertClose
+                                                        onClick={() =>
+                                                          this.handleAlertClose(
+                                                            "duplicateError"
+                                                          )
                                                         }
                                                       ></button>
                                                     </Alert>
@@ -2818,13 +2935,13 @@ class ClassSchedulingList extends Component {
                                                         {t("Instructor")}
                                                       </Label>
                                                       <Field
-                                                        name="instructorId"
+                                                        name="instructorsId"
                                                         placeholder="Search..."
                                                         type="text"
                                                         className={
                                                           "form-control" +
-                                                          (errors.instructorId &&
-                                                          touched.instructorId
+                                                          (errors.instructorsId &&
+                                                          touched.instructorsId
                                                             ? " is-invalid"
                                                             : "")
                                                         }
@@ -2846,7 +2963,7 @@ class ClassSchedulingList extends Component {
                                                         )}
                                                       </datalist>
                                                       <ErrorMessage
-                                                        name="instructorId"
+                                                        name="instructorsId"
                                                         component="div"
                                                         className="invalid-feedback"
                                                       />
@@ -3010,14 +3127,14 @@ class ClassSchedulingList extends Component {
                                               const errors = {};
 
                                               if (
-                                                values.instructorId &&
+                                                values.instructorsId &&
                                                 !instructors.some(
                                                   instructor =>
                                                     instructor.fullName ===
-                                                    values.instructorId
+                                                    values.instructorsId
                                                 )
                                               ) {
-                                                errors.instructorId =
+                                                errors.instructorsId =
                                                   "Please select a valid instructor.";
                                               }
 
@@ -3046,9 +3163,9 @@ class ClassSchedulingList extends Component {
                                             }}
                                             validationSchema={Yup.object().shape(
                                               {
-                                                SectionNumber:
+                                                LabNumber:
                                                   Yup.string().required(
-                                                    "Please Enter Your Section Number"
+                                                    "Please Enter Your Lab Number"
                                                   ),
                                               }
                                             )}
@@ -3073,8 +3190,10 @@ class ClassSchedulingList extends Component {
                                                       type="button"
                                                       className="btn-close"
                                                       aria-label="Close"
-                                                      onClick={
-                                                        this.handleAlertClose
+                                                      onClick={() =>
+                                                        this.handleAlertClose(
+                                                          "duplicateError"
+                                                        )
                                                       }
                                                     ></button>
                                                   </Alert>
@@ -3404,20 +3523,22 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateCourseOffering(CourseOffering)),
   onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),
+  onAddNewSectionLabDetails: sectionLab =>
+    dispatch(addNewSectionLabDetails(sectionLab)),
   onUpdateSectionLab: sectionLab => dispatch(updateSectionLab(sectionLab)),
   onDeleteSectionLab: sectionLab => dispatch(deleteSectionLab(sectionLab)),
-  onGetFilteredAcademicCertificates: academicCer =>
-    dispatch(getFilteredAcademicCertificates(academicCer)),
-  onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),
-  onDeleteScheduleTiming: scheduleTiming =>
-    dispatch(deleteScheduleTiming(scheduleTiming)),
-  onAddNewScheduleTiming: scheduleTiming =>
-    dispatch(addNewScheduleTiming(scheduleTiming)),
-  onGetScheduleTimingDescs: LabSect =>
-    dispatch(getScheduleTimingDescs(LabSect)),
-  onfetchSetting: () => dispatch(fetchYearsSemesters()),
-  onfetchDefaultSettings: () => dispatch(fetchDefaultSettings()),
-  onGetScheduleMsgValue: () => dispatch(getScheduleMsgValue()),
+  // onGetFilteredAcademicCertificates: academicCer =>
+  //   dispatch(getFilteredAcademicCertificates(academicCer)),
+  // onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),
+  // onDeleteScheduleTiming: scheduleTiming =>
+  // dispatch(deleteScheduleTiming(scheduleTiming)),
+  // onAddNewScheduleTiming: scheduleTiming =>
+  //   dispatch(addNewScheduleTiming(scheduleTiming)),
+  // onGetScheduleTimingDescs: LabSect =>
+  //   dispatch(getScheduleTimingDescs(LabSect)),
+  // onfetchSetting: () => dispatch(fetchYearsSemesters()),
+  // onfetchDefaultSettings: () => dispatch(fetchDefaultSettings()),
+  // onGetScheduleMsgValue: () => dispatch(getScheduleMsgValue()),
   // onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
 });
 

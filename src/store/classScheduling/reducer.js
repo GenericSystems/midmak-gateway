@@ -21,6 +21,8 @@ import {
   GET_SECTION_LABS_SUCCESS,
   ADD_SECTION_LAB_SUCCESS,
   ADD_SECTION_LAB_FAIL,
+  ADD_SECTION_LAB_DETAILS_SUCCESS,
+  ADD_SECTION_LAB_DETAILS_FAIL,
   UPDATE_SECTION_LAB_SUCCESS,
   UPDATE_SECTION_LAB_FAIL,
   DELETE_SECTION_LAB_SUCCESS,
@@ -48,6 +50,7 @@ const INIT_STATE = {
   methodsOffering: [],
   instructors: [],
   sectionLabs: [],
+  sectionLabsDetails: [],
   weekDays: [],
   lecturePeriods: [],
   classProfile: {},
@@ -185,6 +188,18 @@ const classScheduling = (state = INIT_STATE, action) => {
       };
 
     case ADD_SECTION_LAB_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case ADD_SECTION_LAB_DETAILS_SUCCESS:
+      return {
+        ...state,
+        sectionLabsDetails: [...state.sectionLabs, action.payload],
+      };
+
+    case ADD_SECTION_LAB_DETAILS_FAIL:
       return {
         ...state,
         error: action.payload,

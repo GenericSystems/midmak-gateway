@@ -32,6 +32,9 @@ import {
   ADD_NEW_SECTION_LAB,
   ADD_SECTION_LAB_SUCCESS,
   ADD_SECTION_LAB_FAIL,
+  ADD_NEW_SECTION_LAB_DETAILS,
+  ADD_SECTION_LAB_DETAILS_SUCCESS,
+  ADD_SECTION_LAB_DETAILS_FAIL,
   UPDATE_SECTION_LAB,
   UPDATE_SECTION_LAB_SUCCESS,
   UPDATE_SECTION_LAB_FAIL,
@@ -225,6 +228,21 @@ export const addSectionLabSuccess = SectionLab => ({
 
 export const addSectionLabFail = error => ({
   type: ADD_SECTION_LAB_FAIL,
+  payload: error,
+});
+
+export const addNewSectionLabDetails = SectionLabId => ({
+  type: ADD_NEW_SECTION_LAB_DETAILS,
+  payload: SectionLabId,
+});
+
+export const addSectionLabDetailsSuccess = SectionLab => ({
+  type: ADD_SECTION_LAB_DETAILS_SUCCESS,
+  payload: SectionLab,
+});
+
+export const addSectionLabDetailsFail = error => ({
+  type: ADD_SECTION_LAB_DETAILS_FAIL,
   payload: error,
 });
 

@@ -1,93 +1,93 @@
 import { nationalities } from "common/data";
 import {
-  GET_CONTRACTS,
-  GET_CONTRACTS_FAIL,
-  GET_CONTRACTS_SUCCESS,
-  ADD_NEW_CONTRACT,
-  ADD_CONTRACT_SUCCESS,
-  ADD_CONTRACT_FAIL,
-  UPDATE_CONTRACT,
-  UPDATE_CONTRACT_SUCCESS,
-  UPDATE_CONTRACT_FAIL,
-  GET_CONTRACT_DELETED_VALUE,
-  GET_CONTRACT_DELETED_VALUE_SUCCESS,
-  GET_CONTRACT_DELETED_VALUE_FAIL,
-  DELETE_CONTRACT,
-  DELETE_CONTRACT_SUCCESS,
-  DELETE_CONTRACT_FAIL,
+  GET_DEFINE_EXAM_DATES,
+  GET_DEFINE_EXAM_DATES_FAIL,
+  GET_DEFINE_EXAM_DATES_SUCCESS,
+  ADD_NEW_DEFINE_EXAM_DATE,
+  ADD_DEFINE_EXAM_DATE_SUCCESS,
+  ADD_DEFINE_EXAM_DATE_FAIL,
+  UPDATE_DEFINE_EXAM_DATE,
+  UPDATE_DEFINE_EXAM_DATE_SUCCESS,
+  UPDATE_DEFINE_EXAM_DATE_FAIL,
+  GET_DEFINE_EXAM_DATE_DELETED_VALUE,
+  GET_DEFINE_EXAM_DATE_DELETED_VALUE_SUCCESS,
+  GET_DEFINE_EXAM_DATE_DELETED_VALUE_FAIL,
+  DELETE_DEFINE_EXAM_DATE,
+  DELETE_DEFINE_EXAM_DATE_SUCCESS,
+  DELETE_DEFINE_EXAM_DATE_FAIL,
 } from "./actionTypes";
 
-export const getContracts = () => ({
-  type: GET_CONTRACTS,
+export const getDefineExamDates = () => ({
+  type: GET_DEFINE_EXAM_DATES,
 });
 
-export const getContractsSuccess = contracts => ({
-  type: GET_CONTRACTS_SUCCESS,
-  payload: contracts,
+export const getDefineExamDatesSuccess = defineExamDates => ({
+  type: GET_DEFINE_EXAM_DATES_SUCCESS,
+  payload: defineExamDates,
 });
 
-export const getContractsFail = error => ({
-  type: GET_CONTRACTS_FAIL,
+export const getDefineExamDatesFail = error => ({
+  type: GET_DEFINE_EXAM_DATES_FAIL,
   payload: error,
 });
 
-export const getContractDeletedValue = () => ({
-  type: GET_CONTRACT_DELETED_VALUE,
+export const getDefineExamDateDeletedValue = () => ({
+  type: GET_DEFINE_EXAM_DATE_DELETED_VALUE,
 });
 
-export const getContractDeletedValueSuccess = contract => ({
-  type: GET_CONTRACT_DELETED_VALUE_SUCCESS,
-  payload: contract,
+export const getDefineExamDateDeletedValueSuccess = defineExamDate => ({
+  type: GET_DEFINE_EXAM_DATE_DELETED_VALUE_SUCCESS,
+  payload: defineExamDate,
 });
 
-export const getContractDeletedValueFail = error => ({
-  type: GET_CONTRACT_DELETED_VALUE_FAIL,
+export const getDefineExamDateDeletedValueFail = error => ({
+  type: GET_DEFINE_EXAM_DATE_DELETED_VALUE_FAIL,
   payload: error,
 });
 
-export const addNewContract = contract => ({
-  type: ADD_NEW_CONTRACT,
-  payload: contract,
+export const addNewDefineExamDate = defineExamDates => ({
+  type: ADD_NEW_DEFINE_EXAM_DATE,
+  payload: defineExamDates,
 });
 
-export const addContractSuccess = contract => ({
-  type: ADD_CONTRACT_SUCCESS,
-  payload: contract,
+export const addDefineExamDateSuccess = defineExamDates => ({
+  type: ADD_DEFINE_EXAM_DATE_SUCCESS,
+  payload: defineExamDates,
 });
 
-export const addContractFail = error => ({
-  type: ADD_CONTRACT_FAIL,
+export const addDefineExamDateFail = error => ({
+  type: ADD_DEFINE_EXAM_DATE_FAIL,
   payload: error,
 });
 
-export const updateContract = contract => {
+export const updateDefineExamDate = defineExamDates => {
   return {
-    type: UPDATE_CONTRACT,
-    payload: contract,
+    type: UPDATE_DEFINE_EXAM_DATE,
+    payload: defineExamDates,
   };
 };
 
-export const updateContractSuccess = contract => ({
-  type: UPDATE_CONTRACT_SUCCESS,
-  payload: contract,
+export const updateDefineExamDateSuccess = defineExamDates => ({
+  type: UPDATE_DEFINE_EXAM_DATE_SUCCESS,
+  payload: defineExamDates,
 });
 
-export const updateContractFail = error => ({
-  type: UPDATE_CONTRACT_FAIL,
+export const updateDefineExamDateFail = error => ({
+  type: UPDATE_DEFINE_EXAM_DATE_FAIL,
   payload: error,
 });
 
-export const deleteContract = contract => ({
-  type: DELETE_CONTRACT,
-  payload: contract,
+export const deleteDefineExamDate = defineExamDates => ({
+  type: DELETE_DEFINE_EXAM_DATE,
+  payload: defineExamDates,
 });
 
-export const deleteContractSuccess = contract => ({
-  type: DELETE_CONTRACT_SUCCESS,
-  payload: contract,
+export const deleteDefineExamDateSuccess = defineExamDates => ({
+  type: DELETE_DEFINE_EXAM_DATE_SUCCESS,
+  payload: defineExamDates,
 });
 
-export const deleteContractFail = error => ({
-  type: DELETE_CONTRACT_FAIL,
+export const deleteDefineExamDateFail = error => ({
+  type: DELETE_DEFINE_EXAM_DATE_FAIL,
   payload: error,
 });

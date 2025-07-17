@@ -1,87 +1,88 @@
 import {
-  GET_CONTRACTS_SUCCESS,
-  GET_CONTRACTS_FAIL,
-  ADD_CONTRACT_SUCCESS,
-  ADD_CONTRACT_FAIL,
-  UPDATE_CONTRACT_SUCCESS,
-  UPDATE_CONTRACT_FAIL,
-  GET_CONTRACT_DELETED_VALUE_SUCCESS,
-  GET_CONTRACT_DELETED_VALUE_FAIL,
-  DELETE_CONTRACT_SUCCESS,
-  DELETE_CONTRACT_FAIL,
+  GET_DEFINE_EXAM_DATES_SUCCESS,
+  GET_DEFINE_EXAM_DATES_FAIL,
+  ADD_DEFINE_EXAM_DATE_SUCCESS,
+  ADD_DEFINE_EXAM_DATE_FAIL,
+  UPDATE_DEFINE_EXAM_DATE_SUCCESS,
+  UPDATE_DEFINE_EXAM_DATE_FAIL,
+  GET_DEFINE_EXAM_DATE_DELETED_VALUE_SUCCESS,
+  GET_DEFINE_EXAM_DATE_DELETED_VALUE_FAIL,
+  DELETE_DEFINE_EXAM_DATE_SUCCESS,
+  DELETE_DEFINE_EXAM_DATE_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
-  contracts: [],
+  defineExamDates: [],
   deleted: {},
   error: {},
 };
 
-const contracts = (state = INIT_STATE, action) => {
+const defineExamDates = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_CONTRACTS_SUCCESS:
+    case GET_DEFINE_EXAM_DATES_SUCCESS:
       return {
         ...state,
-        contracts: action.payload,
+        defineExamDates: action.payload,
         deleted: {},
       };
 
-    case GET_CONTRACTS_FAIL:
+    case GET_DEFINE_EXAM_DATES_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case ADD_CONTRACT_SUCCESS:
+    case ADD_DEFINE_EXAM_DATE_SUCCESS:
       return {
         ...state,
-        contracts: [...state.contracts, action.payload],
+        defineExamDates: [...state.defineExamDates, action.payload],
       };
 
-    case ADD_CONTRACT_FAIL:
+    case ADD_DEFINE_EXAM_DATE_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case GET_CONTRACT_DELETED_VALUE_SUCCESS:
+    case GET_DEFINE_EXAM_DATE_DELETED_VALUE_SUCCESS:
       return {
         ...state,
         deleted: action.payload.deleted,
       };
 
-    case GET_CONTRACT_DELETED_VALUE_FAIL:
+    case GET_DEFINE_EXAM_DATE_DELETED_VALUE_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case UPDATE_CONTRACT_SUCCESS:
+    case UPDATE_DEFINE_EXAM_DATE_SUCCESS:
       return {
         ...state,
-        contracts: state.contracts.map(contract =>
-          contract.Id.toString() === action.payload.Id.toString()
-            ? { contract, ...action.payload }
-            : contract
+        defineExamDates: state.defineExamDates.map(defineExamDate =>
+          defineExamDate.Id.toString() === action.payload.Id.toString()
+            ? { defineExamDate, ...action.payload }
+            : defineExamDate
         ),
       };
 
-    case UPDATE_CONTRACT_FAIL:
+    case UPDATE_DEFINE_EXAM_DATE_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case DELETE_CONTRACT_SUCCESS:
+    case DELETE_DEFINE_EXAM_DATE_SUCCESS:
       return {
         ...state,
-        contracts: state.contracts.filter(
-          contract => contract.Id.toString() !== action.payload.Id.toString()
+        defineExamDates: state.defineExamDates.filter(
+          defineExamDate =>
+            defineExamDate.Id.toString() !== action.payload.Id.toString()
         ),
         deleted: action.payload.deleted,
       };
 
-    case DELETE_CONTRACT_FAIL:
+    case DELETE_DEFINE_EXAM_DATE_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -92,4 +93,4 @@ const contracts = (state = INIT_STATE, action) => {
   }
 };
 
-export default contracts;
+export default defineExamDates;

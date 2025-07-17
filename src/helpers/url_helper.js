@@ -638,6 +638,7 @@ export const DELETE_COURSE_OFFERING = "/delete/courseOffering";
 export const GET_SECTION_LABS = "/sectionLabs";
 export const GET_SECTION_LAB_PROFILE = "/sectionLab";
 export const ADD_NEW_SECTION_LAB = "/add/sectionLab";
+export const ADD_NEW_SECTION_LAB_DETAILS = "/add/sectionLabDetails";
 export const UPDATE_SECTION_LAB = "/update/sectionLab";
 export const DELETE_SECTION_LAB = "/delete/sectionLab";
 export const GET_FILTERED_SECTIONS = "/sectionLab";
@@ -1018,6 +1019,14 @@ export const UPDATE_EMPLOYEE = "/update/employee";
 export const DELETE_EMPLOYEE = "/delete/employee";
 export const GET_NATIONALITIES_OPT = "/nationalities";
 export const GET_GENDERSCH = "/genders";
+
+//DEFINE EXAM DATE
+export const GET_DEFINE_EXAM_DATES = "/defineExamDates";
+export const GET_DEFINE_EXAM_DATE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DEFINE_EXAM_DATE = "/add/defineExamDate";
+export const UPDATE_DEFINE_EXAM_DATE = "/update/defineExamDate";
+export const DELETE_DEFINE_EXAM_DATE = "/deleted/defineExamDate";
+
 //CONTRACTS
 export const GET_CONTRACTS = "/contracts";
 export const GET_CONTRACT_DELETED_VALUE = "/deleted";
@@ -1119,11 +1128,9 @@ export const UPDATE_CERTIFICATE_GRADE = "/update/certificateGrade";
 export const DELETE_CERTIFICATE_GRADE = "/delete/certificateGrade";
 export const GET_CERTIFICATE_GRADE_DELETED_VALUE = "/certificateGrade/deleted";
 
-
 //checkedGrades
 export const GET_CHECKED_GRADES = "/checkedGrades";
 export const UPDATE_CHECKED_GRADE = "/update/checkedGrade";
-
 
 //archived Grades
 export const GET_ARCHIVED_GRADES = "/archived_grades";
@@ -1131,8 +1138,7 @@ export const UPDATE_ARCHIVED_GRADE = "/update/archived_grade";
 
 //Unarchive Course Requests
 export const UNARCHIVE_COURSE_REQUESTS = "/unarchiveCourseRequests";
-export const ADD_UNARCHIVE_COURSE_REQUEST = "/add/unarchiveCourseRequest"
-export const DELETE_UNARCHIVE_COURSE_REQUEST = "/delete/unarchiveCourseRequest"
-export const UPDATE_UNARCHIVE_COURSE_REQUEST = "/update/unarchiveCourseRequest"
-export const GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE = "/deleted"
-
+export const ADD_UNARCHIVE_COURSE_REQUEST = "/add/unarchiveCourseRequest";
+export const DELETE_UNARCHIVE_COURSE_REQUEST = "/delete/unarchiveCourseRequest";
+export const UPDATE_UNARCHIVE_COURSE_REQUEST = "/update/unarchiveCourseRequest";
+export const GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE = "/deleted";

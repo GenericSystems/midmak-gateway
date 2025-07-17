@@ -335,7 +335,7 @@ const authProtectedRoutes = [
   { path: "/registration", component: RegistrationList },
 
   // DefineExamDates
-  { path: "/defineExamDatesList", component: DefineExamDatesList },
+  { path: "/defineExamDates", component: DefineExamDatesList },
 
   //academyBuildingStructure
   {
