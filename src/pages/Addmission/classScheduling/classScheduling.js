@@ -3506,7 +3506,7 @@ const mapStateToProps = ({
   filteredAcademicCertificates:
     academiccertificates.filteredAcademicCertificates,
   returnMessage: classScheduling.returnMessage,
-  // hallTimings: classScheduling.hallTimings,
+  hallTimings: classScheduling.hallTimings,
   methodsOffering: classScheduling.methodsOffering,
   employeesNames: employees.employeesNames,
   deleted: classScheduling.deleted,
