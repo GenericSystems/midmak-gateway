@@ -196,7 +196,7 @@ const classScheduling = (state = INIT_STATE, action) => {
     case ADD_SECTION_LAB_DETAILS_SUCCESS:
       return {
         ...state,
-        sectionLabsDetails: [...state.sectionLabs, action.payload],
+        sectionLabsDetails: [...state.sectionLabsDetails, action.payload],
       };
 
     case ADD_SECTION_LAB_DETAILS_FAIL:

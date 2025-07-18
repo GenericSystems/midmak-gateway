@@ -81,6 +81,7 @@ class ClassSchedulingList extends Component {
       coursesOffering: [],
       sectionLabs: [],
       sectionLabData: [],
+      sectionLabsDetails: [],
       years: [],
       halls: [],
       instructorsArray: [],
@@ -124,6 +125,8 @@ class ClassSchedulingList extends Component {
       isModalOpen: false,
       modal3: false,
       selectedRowData: null,
+      selectedHallKey: null,
+      defaultHallName: "",
       errorMessage: null,
       successMessage: null,
       values: "",
@@ -385,18 +388,20 @@ class ClassSchedulingList extends Component {
       this.setState({ selectedMethodOffering: selectedValue });
     }
   };
-  handleSelect = (fieldName, selectedValue, values) => {
-    if (fieldName === "hallId") {
-      const selected = this.props.halls.find(
-        hallId => hallId.value === selectedValue
-      );
-      console.log("hallllllllllls", this.state.halls);
-      console.log("selectedValue", selectedValue);
-      this.setState({
-        selectedHall: selected ? selected.key : null,
-        sectionLabData: values,
-      });
-    }
+  handleSelect = e => {
+    const selectedValue = e.target.value;
+
+    const selected = this.props.halls.find(
+      hall => hall.value === selectedValue
+    );
+
+    console.log("selectedValue", selectedValue);
+    console.log("selected hall object:", selected);
+
+    this.setState({
+      defaultHallName: selectedValue,
+      selectedHallKey: selected ? selected.key : null,
+    });
   };
 
   toggle2() {
@@ -555,14 +560,12 @@ class ClassSchedulingList extends Component {
 
   handleViewHallSchedule = SLD => {
     const { halls, onGetHallTimings } = this.props;
-    const { selectedSchedule } = this.state;
     const findingHallId = halls.find(
       hall => hall.hallName === SLD.hallName
     ).key;
-
+    console.log("findingHallId", findingHallId);
     const OB = {
       hallId: findingHallId,
-      yearSemesterId: selectedSchedule["value"],
       check: 0,
     };
 
@@ -631,8 +634,8 @@ class ClassSchedulingList extends Component {
       onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
     } else {
       const ob = {};
-      ob["type"] = selectedRowSectionLab.type;
-      ob["sectionLabId"] = selectedRowSectionLab.Id;
+      ob["type"] = this.state.selectedRowSectionLab.type;
+      ob["sectionLabId"] = this.state.selectedRowSectionLab.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
 
@@ -907,21 +910,15 @@ class ClassSchedulingList extends Component {
     const {
       selectedOption,
       isEdit,
-      sectionLabData,
       selectedRowSectionLab,
       selectedHall,
       instructorsArray,
+      selectedHallKey,
       oldHallId,
       newHallId,
     } = this.state;
 
-    const {
-      halls,
-      instructors,
-      hallTimings,
-      coursesOffering,
-      onAddNewSectionLabDetails,
-    } = this.props;
+    const { onAddNewSectionLabDetails, halls } = this.props;
     const instructorsId =
       instructorsArray?.map(item => item?.value).filter(val => val != null) ||
       [];
@@ -929,7 +926,7 @@ class ClassSchedulingList extends Component {
     console.log("✅ instructorsId to send:", formattedInstructors);
     values["type"] = selectedRowSectionLab.type;
     values["sectionLabId"] = selectedRowSectionLab.Id;
-    values["hallId"] = this.state.selectedHall;
+    values["hallId"] = this.state.selectedHallKey;
     values["instructorsId"] = formattedInstructors;
     // values["instructorsId"] = Array.isArray(instructorsArray)
     //   ? instructorsArray.map(item => item.value)
@@ -951,6 +948,7 @@ class ClassSchedulingList extends Component {
       )
         scheduleTimingInfo[key] = values[key];
     });
+    scheduleTimingInfo.hallId = this.state.selectedHallKey;
 
     console.log("scheduleTimingInfo", scheduleTimingInfo);
     const fieldErrors = {};
@@ -980,24 +978,14 @@ class ClassSchedulingList extends Component {
     //   }
     // }
 
-    // if (Object.keys(fieldErrors).length > 0) {
-    //   return fieldErrors;
-    // }
-    // if (
-    //   scheduleTimingInfo.hallId !== undefined &&
-    //   scheduleTimingInfo.hallId !== null
-    // ) {
-    //   const selectedHallObj = halls.find(
-    //     hall => hall.value === scheduleTimingInfo.hallId
-    //   );
-    //   if (selectedHallObj) {
-    //     scheduleTimingInfo.hallId = selectedHallObj.key;
-    //   } else if (this.state.isEdit) {
-    //     scheduleTimingInfo.hallId = 0;
-    //   } else {
-    //     scheduleTimingInfo.hallId = null;
-    //     flag = 1;
-    //   }
+    if (Object.keys(fieldErrors).length > 0) {
+      return fieldErrors;
+    }
+    // const selectedHallObj = halls.find(hall => hall.value === selectedHall);
+    // if (selectedHallObj) {
+    //   scheduleTimingInfo.hallId = selectedHallObj.key;
+    // } else {
+    //   scheduleTimingInfo.hallId = null;
     // }
 
     // if (
@@ -1091,6 +1079,7 @@ class ClassSchedulingList extends Component {
       isEdit,
       isAdd,
       sectionLabData,
+      sectionLabsDetails,
       isLabRadioDisabled,
       isSectionRadioDisabled,
       selectedRowSectionLab,
@@ -1372,6 +1361,15 @@ class ClassSchedulingList extends Component {
                 ></i>
               </Link>
             </Tooltip>
+            <Tooltip title={t("View Hall Timing")} placement="top">
+              <Link className="" to="#">
+                <i
+                  className="mdi mdi-google-classroom font-size-18"
+                  id="edittooltip"
+                  onClick={() => this.handleViewHallSchedule(sectionLabData)}
+                ></i>
+              </Link>
+            </Tooltip>
             <Tooltip title={t("Edit Section/Lab")} placement="top">
               <Link className="text-secondary" to="#">
                 <i
@@ -1408,14 +1406,14 @@ class ClassSchedulingList extends Component {
         sort: true,
       },
       {
-        dataField: "instructor",
+        dataField: "instructorsId",
         text: t("Instructor"),
         editable: false,
         sort: true,
       },
 
       {
-        dataField: "hall",
+        dataField: "hallId",
         text: t("Room"),
         editable: false,
         sort: true,
@@ -2413,6 +2411,7 @@ class ClassSchedulingList extends Component {
                                     </div>
                                   </ModalBody>
                                 </Modal>
+
                                 <Modal
                                   isOpen={modal3}
                                   toggle={this.toggle3}
@@ -2435,12 +2434,12 @@ class ClassSchedulingList extends Component {
                                     <Formik
                                       initialValues={{
                                         instructorsId:
-                                          (sectionLabData &&
-                                            sectionLabData.instructorName) ||
+                                          (sectionLabsDetails &&
+                                            sectionLabsDetails.instructorName) ||
                                           "",
                                         hallId:
-                                          (sectionLabData &&
-                                            sectionLabData.hallName) ||
+                                          (sectionLabsDetails &&
+                                            sectionLabsDetails.hallName) ||
                                           "",
                                       }}
                                       enableReinitialize={true}
@@ -2518,20 +2517,27 @@ class ClassSchedulingList extends Component {
                                                 </span>
                                               </Col>
                                               <Col className="col-8">
-                                                <input
-                                                  className={`form-control ${this.state.inputClass}`}
-                                                  list="hallIdList"
+                                                <Field
                                                   name="hallId"
-                                                  id="room"
-                                                  placeholder="Type to search..."
-                                                  autoComplete="off"
+                                                  type="text"
+                                                  placeholder="Search..."
+                                                  className={
+                                                    "form-control" +
+                                                    (errors.hallId &&
+                                                    touched.hallId
+                                                      ? " is-invalid"
+                                                      : "")
+                                                  }
+                                                  value={
+                                                    this.state.defaultHallName
+                                                  }
                                                   onChange={e => {
-                                                    handleChange(e);
+                                                    this.handleSelect(e);
                                                     const newValue =
                                                       e.target.value;
                                                     const defaultValue =
-                                                      (sectionLabData &&
-                                                        sectionLabData.hallName) ||
+                                                      (sectionLabsDetails &&
+                                                        sectionLabsDetails.hallName) ||
                                                       "";
 
                                                     this.onChangeHall(
@@ -2539,17 +2545,11 @@ class ClassSchedulingList extends Component {
                                                       newValue
                                                     );
                                                   }}
-                                                  value={
-                                                    (
-                                                      halls.find(
-                                                        hall =>
-                                                          hall.key ===
-                                                          selectedHall
-                                                      ) || ""
-                                                    ).value
-                                                  }
+                                                  list="hallIdList"
+                                                  autoComplete="Off"
                                                 />
                                                 <datalist id="hallIdList">
+                                                  {" "}
                                                   {halls.map(hall => (
                                                     <option
                                                       key={hall.key}
@@ -3586,6 +3586,7 @@ const mapStateToProps = ({
   menu_items,
 }) => ({
   coursesOffering: classScheduling.coursesOffering,
+  sectionLabsDetails: classScheduling.sectionLabsDetails,
   instructors: classScheduling.instructors,
   sectionLabs: classScheduling.sectionLabs,
   years: years.years,

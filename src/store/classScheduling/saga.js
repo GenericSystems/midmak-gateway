@@ -468,9 +468,7 @@ function* fetchHallTimings(obj) {
   let hallTimingSL = obj.payload;
   let filter;
   if (hallTimingSL.check == 0) {
-    filter = `hallId = ${hallTimingSL.hallId} and yearSemesterId=''''${hallTimingSL.yearSemesterId}''''`;
-  } else {
-    filter = `yearSemesterId=''''${hallTimingSL.yearSemesterId}''''`;
+    filter = `hallId = ${hallTimingSL.hallId} `;
   }
   const get_hall_timings = {
     source: "db",
@@ -481,7 +479,7 @@ function* fetchHallTimings(obj) {
   };
   try {
     const response = yield call(getHallTimings, get_hall_timings);
-
+    console.log("haaaaaal", response);
     yield put(getHallTimingsSuccess(response));
   } catch (error) {
     yield put(getHallTimingsFail(error));
@@ -523,13 +521,14 @@ function* onAddNewSectionLabDetails({ payload, scheduleTiming }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "_scheduleTimingsDescription";
   payload["tablename"] = "Common_SectionLabDetails";
 
   try {
     const response = yield call(addNewSectionLabDetails, payload);
-    response.map(resp => {
-      resp["instructorsId"] = JSON.parse(resp["instructorsId"]);
-    });
+    // response.map(resp => {
+    //   resp["instructorsId"] = JSON.parse(resp["instructorsId"]);
+    // });
     yield put(addSectionLabDetailsSuccess(response[0]));
   } catch (error) {
     yield put(addSectionLabDetailsFail(error));
