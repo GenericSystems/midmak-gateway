@@ -43,6 +43,9 @@ import {
   getTraineeRegCertificate,
   getEstimates,
   getGovernorates,
+  getFaculties,
+  getDiplomaLevels,
+  getHighStudyTypes,
 } from "../../helpers/fakebackend_helper";
 
 import {
@@ -63,7 +66,51 @@ import {
   getGovernoratesFail,
 } from "../governorate/actions";
 
+import {
+  getFacultiesSuccess,
+  getFacultiesFail,
+} from "../mob-app-faculty-accs/actions";
+
+import {
+  getDiplomaLevelsFail,
+  getDiplomaLevelsSuccess,
+} from "../diploma-level/actions";
+
+import {
+  getHighStudyTypesSuccess,
+  getHighStudyTypesFail,
+} from "../high-study-types/actions";
+
 function* fetchTrainees() {
+  const get_faculty_opt = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Faculty",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getFaculties, get_faculty_opt);
+    yield put(getFacultiesSuccess(response));
+  } catch (error) {
+    yield put(getFacultiesFail(error));
+  }
+
+  const getDiploma_opt = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_DiplomaLevels",
+    fields: "Id,arTitle",
+  };
+
+  try {
+    const response = yield call(getDiplomaLevels, getDiploma_opt);
+    yield put(getDiplomaLevelsSuccess(response));
+  } catch (error) {
+    yield put(getDiplomaLevelsFail(error));
+  }
+
   //get nationality
   const get_nationality_opt = {
     source: "db",
@@ -152,12 +199,28 @@ function* fetchTrainees() {
     yield put(getGovernoratesFail(error));
   }
 
+  //get Settings_HighStudyType
+
+  const requestPayload = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_HighStudyType",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getHighStudyTypes, requestPayload);
+    yield put(getHighStudyTypesSuccess(response));
+  } catch (error) {
+    yield put(getHighStudyTypesFail(error));
+  }
+
   /* //get trainees_req
   const get_trainees_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Trainee",
+    tablename: "Common_TempTrainee",
   };
 
   try {
@@ -172,7 +235,7 @@ function* onAddNewTrainee({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_Trainee";
+  payload["tablename"] = "Common_TempTrainee";
 
   try {
     const response = yield call(addNewTrainee, payload);
@@ -186,7 +249,7 @@ function* onUpdateTrainee({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_Trainee";
+  payload["tablename"] = "Common_TempTrainee";
 
   try {
     const response = yield call(updateTrainee, payload);
@@ -200,7 +263,7 @@ function* onDeleteTrainee({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_Trainee";
+  payload["tablename"] = "Common_TempTrainee";
 
   try {
     const response = yield call(deleteTrainee, payload);

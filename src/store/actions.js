@@ -299,4 +299,12 @@ export * from "./checkGrades/actions";
 export * from "./archiveGrades/actions";
 
 //Unarchive Course Requests
-export * from "./Unarchive-course-requests/actions";
+export * from "./Unarchive-course-requests/actions"
+
+
+//DiplomaLevels
+export * from "./diploma-level/actions";
+
+//HighStudyType
+
+export * from "./high-study-types/actions";

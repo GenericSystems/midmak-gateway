@@ -62,12 +62,18 @@ import {
   deleteDistributingCourse,
   getCurrentSemester,
   copyDistributingMethods,
+  getGradeTypes,
 } from "../../helpers/fakebackend_helper";
 
 import {
   getCourseContentsSuccess,
   getCourseContentsFail,
 } from "../coursecontents/actions";
+
+import {
+  getGradeTypesSuccess,
+  getGradeTypesFail,
+} from "../grade-types/actions";
 
 import { getCoursesSuccess, getCoursesFail } from "../courses/actions";
 
@@ -77,7 +83,7 @@ import {
 } from "../semesters/actions";
 
 function* fetchDistributingCoursesMethods() {
-  const get_CourseContents = {
+  /* const get_CourseContents = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -90,6 +96,21 @@ function* fetchDistributingCoursesMethods() {
     yield put(getCourseContentsSuccess(response));
   } catch (error) {
     yield put(getCourseContentsFail(error));
+  } */
+
+  const get_grades_type_content = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_GradeType",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getGradeTypes, get_grades_type_content);
+
+    yield put(getGradeTypesSuccess(response));
+  } catch (error) {
+    yield put(getGradeTypesFail(error));
   }
 
   /* const get_Coursesdatalist = {
@@ -159,7 +180,7 @@ function* onAddNewDistributingCoursesMethod({
   }
 }
 
-///updateDistributingCoursesMethod 
+///updateDistributingCoursesMethod
 
 function* onUpdateDistributingCoursesMethod({ payload }) {
   payload["source"] = "db";

@@ -312,6 +312,12 @@ import archived_grades from "./archiveGrades/reducer";
 //Unarchive Course Requests
 import unarchiveCourseRequests from "./Unarchive-course-requests/reducer";
 
+//DiplomaLevels
+import diplomalevels from "./diploma-level/reducer";
+
+//HighStudyType
+import highstudytypes from "./high-study-types/reducer";
+
 const rootReducer = combineReducers({
   // public
   genders,
@@ -424,6 +430,8 @@ const rootReducer = combineReducers({
   checked_grades,
   archived_grades,
   unarchiveCourseRequests,
+  diplomalevels,
+  highstudytypes,
 });
 
 export default rootReducer;

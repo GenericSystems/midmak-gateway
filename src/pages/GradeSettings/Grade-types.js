@@ -111,8 +111,12 @@ class GradeTypesList extends Component {
 
   handleDataChange = (rowId, fieldName, value) => {
     const { gradeTypes, onUpdateGradeType, t } = this.props;
+
     const isDuplicate = gradeTypes.some(
-      gt => gt.Id !== rowId && gt[fieldName]?.trim() === value?.trim()
+      gt =>
+        gt.Id !== rowId &&
+        ((gt.arTitle && gt.arTitle.trim()) === value.trim() ||
+          (gt.enTitle && gt.enTitle.trim()) === value.trim())
     );
 
     if (isDuplicate) {
@@ -142,11 +146,13 @@ class GradeTypesList extends Component {
         dataField: "arTitle",
         text: t("Grade Type (ar)"),
         sort: true,
+        editable: showEditButton,
       },
       {
         dataField: "enTitle",
         text: t("Grade Type"),
         sort: true,
+        editable: showEditButton,
       },
 
       {

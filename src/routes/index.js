@@ -245,6 +245,11 @@ import UnarchiveCourseReq from "pages/Unarchive-course-requests/unarchive-course
 //timeline
 import TimeLines from "pages/TimeLines/timeLine";
 
+
+//diploma-level
+import DiplomaLevelsList from "pages/diploma-level/diploma-level"
+
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -398,7 +403,15 @@ const authProtectedRoutes = [
 
   //archive grades
 
-  { path: "/archive-grades", component: ArchiveGradesList },
+  {path:"/archive-grades", component:ArchiveGradesList},
+
+  ///timeline
+  { path: "/timeLine", component: TimeLines },
+
+
+  //DiplomaLevelsList
+  {path:"diploma-level" , component:DiplomaLevelsList},
+
 
   //Blog
   { path: "/blog-list", component: BlogList },

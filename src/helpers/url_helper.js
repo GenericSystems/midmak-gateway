@@ -1138,7 +1138,23 @@ export const UPDATE_ARCHIVED_GRADE = "/update/archived_grade";
 
 //Unarchive Course Requests
 export const UNARCHIVE_COURSE_REQUESTS = "/unarchiveCourseRequests";
-export const ADD_UNARCHIVE_COURSE_REQUEST = "/add/unarchiveCourseRequest";
-export const DELETE_UNARCHIVE_COURSE_REQUEST = "/delete/unarchiveCourseRequest";
-export const UPDATE_UNARCHIVE_COURSE_REQUEST = "/update/unarchiveCourseRequest";
-export const GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE = "/deleted";
+export const ADD_UNARCHIVE_COURSE_REQUEST = "/add/unarchiveCourseRequest"
+export const DELETE_UNARCHIVE_COURSE_REQUEST = "/delete/unarchiveCourseRequest"
+export const UPDATE_UNARCHIVE_COURSE_REQUEST = "/update/unarchiveCourseRequest"
+export const GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE = "/deleted"
+
+
+//diploma levels
+export const GET_DIPLOMALEVELS = "/diplomalevels";
+export const GET_DIPLOMALEVEL_DELETED_VALUE = "/deleted"
+export const ADD_NEW_DIPLOMALEVEL = "/add/diplomalevel";
+export const UPDATE_DIPLOMALEVEL  = "/update/diplomalevel";
+export const DELETE_DIPLOMALEVEL =  "/delete/diplomalevel";
+
+
+//HighStudyType
+export const GET_HIGHSTUDYTYPES = "/HighStudyTypes";
+export const GET_HIGHSTUDYTYPE_DELETED_VALUE = "/delet/HighStudyType";
+export const ADD_NEW_HIGHSTUDYTYPE = "/add/HighStudyType";
+export const UPDATE_HIGHSTUDYTYPE = "/update/HighStudyType";
+export const DELETE_HIGHSTUDYTYPE = "/delete/HighStudyType";

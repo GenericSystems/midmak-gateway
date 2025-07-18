@@ -28,7 +28,7 @@ const archived_grades = (state = INIT_STATE, action) => {
         ...state,
         archived_grades: state.archived_grades.map(grade =>
           grade.Id === action.payload.Id
-            ? { ...grade, ...action.payload }
+            ? { grade, ...action.payload }
             : grade
         ),
       };
