@@ -63,9 +63,9 @@ import {
   GET_SCHEDULE_MSG_VALUE,
   GET_SCHEDULE_MSG_VALUE_SUCCESS,
   GET_SCHEDULE_MSG_VALUE_FAIL,
-  GET_SECTOR_TIMINGS,
-  GET_SECTOR_TIMINGS_SUCCESS,
-  GET_SECTOR_TIMINGS_FAIL,
+  GET_HALL_TIMINGS,
+  GET_HALL_TIMINGS_SUCCESS,
+  GET_HALL_TIMINGS_FAIL,
 } from "./actionTypes";
 
 export const getCoursesOffering = coursesOffering => ({
@@ -382,17 +382,17 @@ export const getScheduleMsgValueFail = error => ({
   type: GET_SCHEDULE_MSG_VALUE_FAIL,
   payload: error,
 });
-export const getSectorTimings = hallTimingCourse => ({
-  type: GET_SECTOR_TIMINGS,
+export const getHallTimings = hallTimingCourse => ({
+  type: GET_HALL_TIMINGS,
   payload: hallTimingCourse,
 });
 
-export const getSectorTimingsSuccess = hallTimings => ({
-  type: GET_SECTOR_TIMINGS_SUCCESS,
+export const getHallTimingsSuccess = hallTimings => ({
+  type: GET_HALL_TIMINGS_SUCCESS,
   payload: hallTimings,
 });
 
-export const getSectorTimingsFail = error => ({
-  type: GET_SECTOR_TIMINGS_FAIL,
+export const getHallTimingsFail = error => ({
+  type: GET_HALL_TIMINGS_FAIL,
   payload: error,
 });

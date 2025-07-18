@@ -59,7 +59,7 @@ import {
   getScheduleTimingDescs,
   fetchDefaultSettings,
   getScheduleMsgValue,
-  // getHallTimings,
+  getHallTimings,
 } from "store/classScheduling/actions";
 import paginationFactory, {
   PaginationProvider,
@@ -669,7 +669,6 @@ class ClassSchedulingList extends Component {
       ob["sectionLabId"] = selectedRowSectionLab.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
-      ob["yearSemesterId"] = selectedSchedule.value;
       if (
         selectedRowSectionLab.instructorsId !== null &&
         selectedRowSectionLab.instructorsId !== 0
@@ -2526,13 +2525,20 @@ class ClassSchedulingList extends Component {
                                                   id="room"
                                                   placeholder="Type to search..."
                                                   autoComplete="off"
-                                                  onChange={e =>
-                                                    this.handleSelect(
-                                                      e.target.name,
-                                                      e.target.value,
-                                                      values
-                                                    )
-                                                  }
+                                                  onChange={e => {
+                                                    handleChange(e);
+                                                    const newValue =
+                                                      e.target.value;
+                                                    const defaultValue =
+                                                      (sectionLabData &&
+                                                        sectionLabData.hallName) ||
+                                                      "";
+
+                                                    this.onChangeHall(
+                                                      defaultValue,
+                                                      newValue
+                                                    );
+                                                  }}
                                                   value={
                                                     (
                                                       halls.find(

@@ -650,8 +650,8 @@ export const ADD_NEW_SCHEDULE_TIMING = "/add/ScheduleTiming";
 export const DELETE_SCHEDULE_TIMING = "/delete/ScheduleTiming";
 export const GET_SCHEDULE_MSG_VALUE = "/get/msg";
 
-//SectorTiming
-export const GET_SECTOR_TIMINGS = "/SectorTimings";
+//hallTiming
+export const GET_HALL_TIMINGS = "/hallTimings";
 //ScheduleTimingDesc
 export const GET_SCHEDULE_TIMING_DESCS = "/ScheduleTimingDescs";
 

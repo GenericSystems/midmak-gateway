@@ -1487,8 +1487,8 @@ export const deleteSectionLab = data => post(url.DELETE_SECTION_LAB, data);
 // get ScheduleTiming
 export const getScheduleTimings = data => post(url.GET_SCHEDULE_TIMINGS, data);
 
-// get SectorTiming
-export const getSectorTimings = data => post(url.GET_SECTOR_TIMINGS, data);
+// getHallTimings,
+export const getHallTimings = data => post(url.GET_HALL_TIMINGS, data);
 
 //get ScheduleTiming profile
 export const getScheduleTimingProfile = () =>

@@ -364,9 +364,18 @@
   "Busy Hall & Instructor": "القاعة و المدرس مشغولان",
   "Number Of Registered Students": "عدد الطلاب المسجلين",
   "No Scheduling Timing": "لا يوجد أوقات",
-  "Applying User":"اسم المستخدم",
-  "Generate":"إنشاء",
+  "Applying User": "اسم المستخدم",
+  "Generate": "إنشاء",
   "University Logo": "شعار الجامعة",
   "Certificate Country": "بلد الشهادة",
-  "Certificate Date": "تاريخ الشهادة"
+  "Certificate Date": "تاريخ الشهادة",
+  "Exam": "الامتحان",
+  "Days Count": "عدد الأيام",
+  "Exam Type": "نوع الامتحان",
+  "Exam (ar)": "الامتحان(عربي)",
+  "Define Period": "تحديد الفترة",
+  "Define Exam Dates": "تحديد مواعيد الامتحانات",
+  "Add Exam Date": "إضافة تاريخ الامتحان",
+  "Add Exam Name": "إضافة اسم الامتحان",
+  "Edit Exam Date": "تعديل تاريخ الامتحان"
 }

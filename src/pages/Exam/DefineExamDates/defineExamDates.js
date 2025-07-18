@@ -683,7 +683,7 @@ class DefineExamDatesList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Contracts")} />
+            <Breadcrumbs breadcrumbItem={this.props.t("Define Exam Dates")} />
             <Row>
               <Col>
                 <Card>
@@ -800,7 +800,7 @@ class DefineExamDatesList extends Component {
                                     },
                                   })}
                                   noDataIndication={this.props.t(
-                                    "No Contracts found"
+                                    "No Exam Dates found"
                                   )}
                                   defaultSorted={defaultSorting}
                                 />
@@ -817,8 +817,8 @@ class DefineExamDatesList extends Component {
                                 >
                                   <ModalHeader toggle={this.toggle} tag="h4">
                                     {!!isEdit
-                                      ? t("Edit Define Exam Date")
-                                      : t("Add Define Exam Date ")}
+                                      ? t("Edit Exam Date")
+                                      : t("Add Exam Date")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <Formik
