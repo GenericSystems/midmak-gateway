@@ -151,6 +151,10 @@ class NewTrainee extends Component {
       selectedInstituteCountry: "",
       languageState: "",
       selectedHightStudyTypeId: "",
+      selectedEstimateId: "",
+      selectedRegUniDate: "",
+      IdNumberError: false,
+      perosonalCardNumError: false,
     };
     this.toggle = this.toggle.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
@@ -160,6 +164,8 @@ class NewTrainee extends Component {
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
     const {
       trainees,
       traineesDocuments,
@@ -186,9 +192,10 @@ class NewTrainee extends Component {
       regcertificates,
       onGetTraineesRegCertificates,
       onGetTraineesDocuments,
+      i18n,
     } = this.props;
 
-    onGetTrainees();
+    onGetTrainees(lang);
     onGetTraineesRegCertificates();
     onGetTraineesDocuments();
 
@@ -218,7 +225,25 @@ class NewTrainee extends Component {
     this.setState({
       RegistrationDate: formattedDate,
     });
+
+    this.setState({ languageState: lang });
+
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const {
+      onGetTrainees,
+      onGetTraineesRegCertificates,
+      onGetTraineesDocuments,
+    } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    if (lang != lng) {
+      this.setState({ languageState: lng });
+      onGetTrainees(lng);
+    }
+  };
 
   collapse = () => {
     this.setState(prevState => ({
@@ -243,6 +268,8 @@ class NewTrainee extends Component {
       selectedExaminationSession,
       selectedDiplomaId,
       selectedHightStudyTypeId,
+      selectedEstimateId,
+      selectedRegUniDate,
     } = this.state;
     console.log("values in save", values);
     if (
@@ -298,6 +325,12 @@ class NewTrainee extends Component {
 
       if (selectedExaminationSession === "") {
         this.setState({ examinationSessionError: true, saveError: true });
+      }
+      if (values.IdNumber === "") {
+        this.setState({ IdNumberError: true, saveError: true });
+      }
+      if (perosonalCardNum === "") {
+        this.setState({ perosonalCardNumError: true, saveError: true });
       }
       const errorSaveStudentMessage = this.props.t(
         "Fill the Required Fields to Save Trainee"
@@ -455,6 +488,13 @@ class NewTrainee extends Component {
         studentinfo["registrationDiplomaDate"] =
           selectedRegistrationDiplomaDate;
       }
+
+      //hhhhh
+
+      if (selectedRegUniDate != "") {
+        studentinfo["RegUniDate"] = selectedRegUniDate;
+      }
+
       if (averageValue) {
         studentinfo["Average"] = averageValue;
       }
@@ -469,7 +509,7 @@ class NewTrainee extends Component {
       // studentinfo["stdDocs"] = extractedArray;
       //studentinfo["parentContact"] = relativesArray;
       //studentinfo["siblings"] = siblingsArray;
-      // onAddNewStudent(studentinfo);
+      onAddNewStudent(studentinfo);
       const saveStudentMessage = this.props.t("Trainee saved successfully");
       this.setState({
         successMessage: saveStudentMessage,
@@ -557,6 +597,13 @@ class NewTrainee extends Component {
     }
     if (fieldName == "studyPattern") {
       this.setState({ selectedStudyPattern: option });
+    }
+  };
+
+  handleButtonClick2 = (fieldName, option, values) => {
+    if (fieldName == "registrationCertLevelId") {
+      this.setState({ selectedregistrationCertLevelId: option });
+      this.setState({ trainee: values });
     }
   };
 
@@ -1067,6 +1114,11 @@ class NewTrainee extends Component {
       gradeError,
       selectedInstituteCountry,
       selectedHightStudyTypeId,
+      selectedEstimateId,
+      selectedRegUniDate,
+      languageState,
+      IdNumberError,
+      perosonalCardNumError,
     } = this.state;
     const gradeOptions = [
       { value: 1, label: "Good" },
@@ -1077,13 +1129,13 @@ class NewTrainee extends Component {
 
     const showNewInput = selectedregistrationCertLevelId === 1;
 
-    const showUniForm =
-      selectedregistrationCertLevelId === 3 ||
-      selectedregistrationCertLevelId === 4;
+    const showUniForm = selectedregistrationCertLevelId === 4;
 
     const isShowInstituteinfo = selectedregistrationCertLevelId === 2;
 
     const isShowUlterStudy = selectedregistrationCertLevelId === 5;
+
+    const isHightSchooll = selectedregistrationCertLevelId === 3;
 
     const { SearchBar } = Search;
 
@@ -1111,6 +1163,7 @@ class NewTrainee extends Component {
       studentsOpt,
       regcertificates,
       highstudytypes,
+      estimates,
     } = this.props;
 
     const { isEdit, deleteModal, generateModal } = this.state;
@@ -1561,6 +1614,8 @@ class NewTrainee extends Component {
                                   (trainee &&
                                     trainee.registrationDiplomaAverage) ||
                                   "",
+                                uniAverage:
+                                  (trainee && trainee.uniAverage) || "",
                                 registrationDiplomaDate:
                                   (trainee &&
                                     trainee.registrationDiplomaDate) ||
@@ -1596,10 +1651,10 @@ class NewTrainee extends Component {
                                   (trainee && trainee.CurrentAddrCell) || "",
                                 PermanentAddress:
                                   (trainee && trainee.PermanentAddress) || "",
-                                PermanentAddrPhone:
-                                  (trainee && trainee.PermanentAddrPhone) || "",
-                                PermanentAddrCell:
-                                  (trainee && trainee.PermanentAddrCell) || "",
+                                ParentAddrPhone:
+                                  (trainee && trainee.ParentAddrPhone) || "",
+                                WhatsappMobileNum:
+                                  (trainee && trainee.WhatsappMobileNum) || "",
                                 Email: (trainee && trainee.Email) || "",
                                 GeneralNote:
                                   (trainee && trainee.GeneralNote) || "",
@@ -1612,6 +1667,13 @@ class NewTrainee extends Component {
                                 HighStudyTypeId:
                                   (trainee && trainee.HighStudyTypeId) ||
                                   selectedHightStudyTypeId,
+                                EstimateId:
+                                  (trainee && trainee.EstimateId) ||
+                                  selectedEstimateId,
+
+                                RegUniDate:
+                                  (trainee && trainee.RegUniDate) ||
+                                  selectedRegUniDate,
                               }}
                               validationSchema={Yup.object().shape({
                                 FirstName: Yup.string()
@@ -1666,6 +1728,13 @@ class NewTrainee extends Component {
                                   "Must be a valid Email"
                                 ),
                                 academicYear: Yup.string(),
+
+                                IdNumber: Yup.string().required(
+                                  "Id Number Is Required"
+                                ),
+                                perosonalCardNum: Yup.string().required(
+                                  "Card Number Is Required"
+                                ),
                               })}
                             >
                               {({
@@ -2421,7 +2490,7 @@ class NewTrainee extends Component {
                                                               <div className="mb-3">
                                                                 <Row>
                                                                   <Col className="col-4">
-                                                                    <Label className="form-label">
+                                                                    <Label className="form-label mt-4">
                                                                       {this.props.t(
                                                                         "Gender"
                                                                       )}
@@ -2431,7 +2500,7 @@ class NewTrainee extends Component {
                                                                     lg="3"
                                                                     className="mb-3"
                                                                   >
-                                                                    <div className="radio-buttons-gender-container mt-3">
+                                                                    <div className="radio-buttons-gender-container mt-3 d-flex flex-column">
                                                                       {genders.map(
                                                                         gender => (
                                                                           <div
@@ -2460,7 +2529,7 @@ class NewTrainee extends Component {
                                                                                 selectedGender
                                                                               }
                                                                             />
-                                                                            <label>
+                                                                            <label className="ms-2">
                                                                               {this.props.t(
                                                                                 gender.label
                                                                               )}
@@ -2469,7 +2538,6 @@ class NewTrainee extends Component {
                                                                         )
                                                                       )}
                                                                     </div>
-                                                                    <div className="mb-3"></div>
                                                                   </Col>
                                                                   <Row>
                                                                     <Col className="col-4">
@@ -2522,6 +2590,9 @@ class NewTrainee extends Component {
                                                                       "ID Number"
                                                                     )}
                                                                   </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
@@ -2529,9 +2600,22 @@ class NewTrainee extends Component {
                                                                     name="IdNumber"
                                                                     id="idNum"
                                                                     className={
-                                                                      "form-control"
+                                                                      "form-control" +
+                                                                      ((errors.IdNumber &&
+                                                                        touched.IdNumber) ||
+                                                                      IdNumberError
+                                                                        ? " is-invalid"
+                                                                        : "")
                                                                     }
                                                                   />
+
+                                                                  {IdNumberError && (
+                                                                    <div className="invalid-feedback">
+                                                                      {this.props.t(
+                                                                        "Id Number is required"
+                                                                      )}
+                                                                    </div>
+                                                                  )}
                                                                 </Col>
                                                               </Row>
                                                             </div>
@@ -2543,6 +2627,9 @@ class NewTrainee extends Component {
                                                                       "Card Number"
                                                                     )}
                                                                   </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
@@ -2550,9 +2637,21 @@ class NewTrainee extends Component {
                                                                     name="perosonalCardNum"
                                                                     id="cardNum"
                                                                     className={
-                                                                      "form-control"
+                                                                      "form-control" +
+                                                                      ((errors.perosonalCardNum &&
+                                                                        touched.perosonalCardNum) ||
+                                                                      perosonalCardNumError
+                                                                        ? " is-invalid"
+                                                                        : "")
                                                                     }
                                                                   />
+                                                                  {perosonalCardNumError && (
+                                                                    <div className="invalid-feedback">
+                                                                      {this.props.t(
+                                                                        "Id Number is required"
+                                                                      )}
+                                                                    </div>
+                                                                  )}
                                                                 </Col>
                                                               </Row>
                                                             </div>
@@ -2597,7 +2696,7 @@ class NewTrainee extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="cardCaza">
                                                                     {this.props.t(
-                                                                      "perCardCaza"
+                                                                      "amanaNum"
                                                                     )}
                                                                   </Label>
                                                                 </Col>
@@ -2858,15 +2957,17 @@ class NewTrainee extends Component {
                                                                         : ""
                                                                     }`}
                                                                     onClick={() =>
-                                                                      this.handleButtonClick(
+                                                                      this.handleButtonClick2(
                                                                         "registrationCertLevelId",
-                                                                        level.Id
+                                                                        level.Id,
+                                                                        values
                                                                       )
                                                                     }
                                                                   >
-                                                                    {
-                                                                      level.arTitle //arcertificatelevel
-                                                                    }
+                                                                    {languageState ===
+                                                                    "ar"
+                                                                      ? level.arTitle
+                                                                      : level.enTitle}
                                                                   </button>
                                                                 ))}
                                                             </div>
@@ -2930,7 +3031,7 @@ class NewTrainee extends Component {
                                                             <Row>
                                                               <Col className="col-4">
                                                                 <Label
-                                                                  for="regDiplomaNme"
+                                                                  for="uniName"
                                                                   className="form-label"
                                                                 >
                                                                   {this.props.t(
@@ -2941,8 +3042,8 @@ class NewTrainee extends Component {
                                                               <Col className="col-8">
                                                                 <Field
                                                                   type="text"
-                                                                  name="registrationDiplomaName"
-                                                                  id="regDiplomaDep"
+                                                                  name="uniName"
+                                                                  id="uniName"
                                                                   className={
                                                                     "form-control"
                                                                   }
@@ -3013,7 +3114,7 @@ class NewTrainee extends Component {
                                                             <Row>
                                                               <Col className="col-4">
                                                                 <Label
-                                                                  for="regDiplomaAverage"
+                                                                  for="regUniAvg"
                                                                   className="form-label"
                                                                 >
                                                                   {this.props.t(
@@ -3024,8 +3125,8 @@ class NewTrainee extends Component {
                                                               <Col className="col-8">
                                                                 <Field
                                                                   type="text"
-                                                                  name="registrationDiplomaAverage"
-                                                                  id="regDiplomaAverage"
+                                                                  name="uniAverage"
+                                                                  id="regUniAvg"
                                                                   className={
                                                                     "form-control"
                                                                   }
@@ -3047,13 +3148,13 @@ class NewTrainee extends Component {
                                                               </Col>
                                                               <Col className="col-8">
                                                                 <Field
-                                                                  name="registrationDiplomaDate"
+                                                                  name="RegUniDate"
                                                                   className={`form-control`}
                                                                   type="date"
                                                                   value={
-                                                                    values.registrationDiplomaDate
+                                                                    values.RegUniDate
                                                                       ? new Date(
-                                                                          values.registrationDiplomaDate
+                                                                          values.RegUniDate
                                                                         )
                                                                           .toISOString()
                                                                           .split(
@@ -3083,7 +3184,7 @@ class NewTrainee extends Component {
                                                             <Row>
                                                               <Col className="col-4">
                                                                 <Label
-                                                                  for="grade-id"
+                                                                  for="Estimate-id"
                                                                   className="form-label"
                                                                 >
                                                                   {this.props.t(
@@ -3098,28 +3199,23 @@ class NewTrainee extends Component {
                                                                       ? "is-invalid"
                                                                       : ""
                                                                   }`}
-                                                                  name="Grade"
+                                                                  name="EstimateId"
                                                                   key={`grade_select`}
                                                                   options={
-                                                                    gradeOptions
+                                                                    estimates
                                                                   }
-                                                                  onChange={grade => {
+                                                                  onChange={estimate => {
                                                                     setFieldValue(
-                                                                      "Grade",
-                                                                      grade.value
+                                                                      "EstimateId",
+                                                                      estimate.value
                                                                     );
                                                                   }}
-                                                                  value={gradeOptions.find(
-                                                                    opt =>
-                                                                      opt.value ===
-                                                                      values.Grade
-                                                                  )}
                                                                 />
                                                               </Col>
                                                               {gradeError && (
                                                                 <div className="invalid-feedback">
                                                                   {this.props.t(
-                                                                    "Grade is required"
+                                                                    "Estimate is required"
                                                                   )}
                                                                 </div>
                                                               )}
@@ -3128,7 +3224,8 @@ class NewTrainee extends Component {
                                                         </FormGroup>
                                                       )}
                                                     </Col>
-                                                    {showNewInput && (
+                                                    {(showNewInput ||
+                                                      isShowUlterStudy) && (
                                                       <FormGroup>
                                                         <Row>
                                                           <Col lg="4">
@@ -3391,28 +3488,23 @@ class NewTrainee extends Component {
                                                                       ? "is-invalid"
                                                                       : ""
                                                                   }`}
-                                                                  name="Grade"
+                                                                  name="EstimateId"
                                                                   key={`grade_select`}
                                                                   options={
-                                                                    gradeOptions
+                                                                    estimates
                                                                   }
-                                                                  onChange={grade => {
+                                                                  onChange={estimate => {
                                                                     setFieldValue(
-                                                                      "Grade",
-                                                                      grade.value
+                                                                      "EstimateId",
+                                                                      estimate.value
                                                                     );
                                                                   }}
-                                                                  value={gradeOptions.find(
-                                                                    opt =>
-                                                                      opt.value ===
-                                                                      values.Grade
-                                                                  )}
                                                                 />
                                                               </Col>
                                                               {gradeError && (
                                                                 <div className="invalid-feedback">
                                                                   {this.props.t(
-                                                                    "Grade is required"
+                                                                    "EstimateId is required"
                                                                   )}
                                                                 </div>
                                                               )}
@@ -3455,7 +3547,7 @@ class NewTrainee extends Component {
                                                             <Row>
                                                               <Col className="col-4">
                                                                 <Label
-                                                                  for="tarnsferUni"
+                                                                  for="uniName"
                                                                   className="form-label"
                                                                 >
                                                                   {this.props.t(
@@ -3467,7 +3559,7 @@ class NewTrainee extends Component {
                                                                 <Field
                                                                   type="text"
                                                                   name="uniName"
-                                                                  id="tarnsferUni"
+                                                                  id="uniName"
                                                                   className={
                                                                     "form-control"
                                                                   }
@@ -3663,11 +3755,13 @@ class NewTrainee extends Component {
                                                   </Row>
 
                                                   <Card>
-                                                    <CardTitle id="card_header">
-                                                      {this.props.t(
-                                                        "hight school certificate Info "
-                                                      )}
-                                                    </CardTitle>
+                                                    {!isHightSchooll && (
+                                                      <CardTitle id="card_header">
+                                                        {this.props.t(
+                                                          "hight school certificate Info "
+                                                        )}
+                                                      </CardTitle>
+                                                    )}
 
                                                     <CardBody>
                                                       <Row>
@@ -4493,14 +4587,14 @@ class NewTrainee extends Component {
                                                           <Col className="col-4">
                                                             <Label for="permenant-phobe">
                                                               {this.props.t(
-                                                                "Permanent Phone"
+                                                                "Parent Phone"
                                                               )}
                                                             </Label>
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Field
                                                               type="text"
-                                                              name="PermanentAddrPhone"
+                                                              name="ParentAddrPhone"
                                                               id="permenant-phobe"
                                                               className={
                                                                 "form-control"
@@ -4514,19 +4608,22 @@ class NewTrainee extends Component {
                                                           <Col className="col-4">
                                                             <Label for="permenant-cell">
                                                               {this.props.t(
-                                                                "Permanent Mobile"
+                                                                "Whatsapp Mobile"
                                                               )}
                                                             </Label>
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Field
                                                               type="text"
-                                                              name="PermanentAddrCell"
+                                                              name="WhatsappMobileNum"
                                                               id="permenant-cell"
                                                               className={
                                                                 "form-control"
                                                               }
                                                             />
+                                                            <span className="text-danger">
+                                                              *
+                                                            </span>
                                                           </Col>
                                                         </Row>
                                                       </div>
@@ -4843,6 +4940,7 @@ const mapStateToProps = ({
   universityStudents,
   relatives,
   highstudytypes,
+  estimates,
 }) => ({
   trainees: trainees.trainees,
   traineesDocuments: trainees.traineesDocuments,
@@ -4864,10 +4962,11 @@ const mapStateToProps = ({
   universityStudents: universityStudents.universityStudents,
   regcertificates: trainees.regcertificates,
   highstudytypes: highstudytypes.highstudytypes,
+  estimates: estimates.estimates,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetTrainees: () => dispatch(getTrainees()),
+  onGetTrainees: lng => dispatch(getTrainees(lng)),
   onAddNewStudent: trainee => dispatch(addNewTrainee(trainee)),
   onGetFilteredAcademicCertificates: academicCer =>
     dispatch(getFilteredAcademicCertificates(academicCer)),
