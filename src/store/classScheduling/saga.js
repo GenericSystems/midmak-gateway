@@ -447,7 +447,7 @@ function* onDeleteSectionLab({ payload, SectionLab }) {
 }
 function* fetchScheduleTimings(obj) {
   let scheduleTimingSL = obj.payload;
-
+  console.log("objobjobjobj", obj);
   const get_schedule_timings = {
     source: "db",
     procedure: "SisApp_getData",
@@ -521,8 +521,8 @@ function* onAddNewSectionLabDetails({ payload, scheduleTiming }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "_scheduleTimingsDescription";
-  payload["tablename"] = "Common_SectionLabDetails";
+  payload["tablename"] = "Common_TeachingSchedule";
+  payload["queryname"] = "_scheduleTimingsDescription";
 
   try {
     const response = yield call(addNewSectionLabDetails, payload);
@@ -550,6 +550,7 @@ function* onAddNewScheduleTiming({ payload, scheduleTiming }) {
   }
 }
 function* onDeleteScheduleTiming({ payload, scheduleTiming }) {
+  console.log("payloadDelete", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";

@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Formik, Field, Form, ErrorMessage } from "formik";
+import { returnMessage } from "common/data";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import * as Yup from "yup";
 import Select from "react-select";
@@ -141,6 +142,8 @@ class ClassSchedulingList extends Component {
       isPlusButtonEnabled: false,
       languageState: "",
       showAddWarning: false,
+      isScheduleEditable: false,
+      selectedScheduleRow: null,
     };
     this.toggle1 = this.toggle1.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -168,10 +171,12 @@ class ClassSchedulingList extends Component {
   }
 
   componentDidMount() {
+    document.addEventListener("mouseup", this.handleMouseUp);
     const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
       i18n,
       coursesOffering,
+      returnMessage,
       sectionLabs,
       onGetCoursesOffering,
       halls,
@@ -209,6 +214,7 @@ class ClassSchedulingList extends Component {
       lecturePeriods,
       languageState: lang,
       employeesNames,
+      returnMessage,
     });
     i18n.on("languageChanged", this.handleLanguageChange);
 
@@ -245,7 +251,9 @@ class ClassSchedulingList extends Component {
       this.setState({ languageState: lng });
     }
   };
-
+  componentWillUnmount() {
+    window.removeEventListener("mouseup", this.handleMouseUp);
+  }
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       this.props.user_menu !== prevProps.user_menu ||
@@ -404,6 +412,22 @@ class ClassSchedulingList extends Component {
     });
   };
 
+  // toggle2() {
+  //   const {
+  //     sectionLabData,
+  //     // onGetScheduleTimingDescs,
+  //     onGetScheduleTimings,
+  //     // onGetHallTimings,
+  //   } = this.props;
+  //   this.setState(prevState => ({
+  //     modal: !prevState.modal,
+  //   }));
+  //   this.setState({ selectedRowSectionLab: null });
+  //   onGetScheduleTimings(0);
+  //   // onGetScheduleTimingDescs(0);
+  //   // onGetHallTimings(0);
+  //   this.setState({ selectedRow: null });
+  // }
   toggle2() {
     const {
       sectionLabData,
@@ -414,7 +438,7 @@ class ClassSchedulingList extends Component {
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
-    this.setState({ selectedRowSectionLab: null });
+    this.setState({ selectedScheduleRow: null });
     onGetScheduleTimings(0);
     onGetScheduleTimingDescs(0);
     onGetHallTimings(0);
@@ -470,6 +494,8 @@ class ClassSchedulingList extends Component {
   };
 
   hasMatchingTimings = (hallTimings1, hallTimings2) => {
+    console.log("hallTimings1", hallTimings1, hallTimings2);
+
     for (const timing1 of hallTimings1) {
       for (const timing2 of hallTimings2) {
         if (
@@ -497,6 +523,7 @@ class ClassSchedulingList extends Component {
     }
     return matchingTimings;
   };
+
   onClickDelete = sectionLabData => {
     this.setState({ sectionLabData: sectionLabData });
     this.setState({ deleteModal: true });
@@ -529,6 +556,8 @@ class ClassSchedulingList extends Component {
         Id: SLD.Id,
         Capacity: SLD.Capacity,
         SectionLabNumber: SLD.SectionLabNumber,
+        startDate: SLD.startDate,
+        endDate: SLD.endDate,
         type: SLD.type,
       },
       selectedOption: SLD.type,
@@ -588,12 +617,12 @@ class ClassSchedulingList extends Component {
       returnMessage,
       onGetScheduleMsgValue,
     } = this.props;
-
     this.setState({
       selectedRowSectionLab: sectionLabData,
       isPlusButtonEnabled: true,
+      isScheduleEditable: false,
     });
-    if (returnMessage.msg) {
+    if (returnMessage) {
       onGetScheduleMsgValue();
     } else {
       onGetScheduleTimings(sectionLabData);
@@ -616,7 +645,8 @@ class ClassSchedulingList extends Component {
       onGetScheduleTimings,
       onGetScheduleTimingDescs,
     } = this.props;
-    const { selectedRowSectionLab, selectedSchedule } = this.state;
+    const { selectedScheduleRow, selectedRowSectionLab } = this.state;
+    console.log("selectedScheduleRow", selectedScheduleRow);
     onGetScheduleMsgValue();
     this.setState({
       isDragging: true,
@@ -626,32 +656,42 @@ class ClassSchedulingList extends Component {
       timing =>
         timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
     );
+    console.log("scheduledTiming", scheduledTiming);
 
     if (scheduledTiming && !returnMessage.msg) {
-      onDeleteScheduleTiming(scheduledTiming);
+      console.log("scheduledTiming", scheduledTiming);
 
-      onGetScheduleTimings(this.state.selectedRowSectionLab);
-      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+      onDeleteScheduleTiming(scheduledTiming);
+      onGetScheduleTimings(selectedScheduleRow);
+      onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
-      ob["type"] = this.state.selectedRowSectionLab.type;
-      ob["sectionLabId"] = this.state.selectedRowSectionLab.Id;
+      ob["type"] = selectedRowSectionLab.type;
+      ob["sectionLabId"] = selectedRowSectionLab.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
 
+      // if (
+      //   selectedRowSectionLab.Instructorid !== null &&
+      //   selectedRowSectionLab.Instructorid !== 0
+      // ) {
+      //   ob["Instructorid"] = selectedRowSectionLab.Instructorid;
+      // }
+
+      if (
+        selectedScheduleRow.hallId !== null &&
+        selectedScheduleRow.hallId !== 0
+      ) {
+        ob["hallId"] = selectedScheduleRow.hallId;
+      }
       onAddNewScheduleTiming(ob);
       this.handleScheduleTiming(this.state.selectedRowSectionLab);
     }
   };
 
   handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
-    const {
-      onAddNewScheduleTiming,
-      onDeleteScheduleTiming,
-      scheduleTimings,
-      onGetScheduleTimingDescs,
-      onGetScheduleTimings,
-    } = this.props;
+    const { onAddNewScheduleTiming, onDeleteScheduleTiming, scheduleTimings } =
+      this.props;
     const { selectedRowSectionLab, selectedSchedule } = this.state;
     this.setState({
       isDragging: true,
@@ -672,12 +712,12 @@ class ClassSchedulingList extends Component {
       ob["sectionLabId"] = selectedRowSectionLab.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
-      if (
-        selectedRowSectionLab.instructorsId !== null &&
-        selectedRowSectionLab.instructorsId !== 0
-      ) {
-        ob["instructorsId"] = selectedRowSectionLab.instructorsId;
-      }
+      // if (
+      //   selectedRowSectionLab.instructorsId !== null &&
+      //   selectedRowSectionLab.instructorsId !== 0
+      // ) {
+      //   ob["instructorsId"] = selectedRowSectionLab.instructorsId;
+      // }
       if (
         selectedRowSectionLab.hallId !== null &&
         selectedRowSectionLab.hallId !== 0
@@ -914,29 +954,49 @@ class ClassSchedulingList extends Component {
       selectedHall,
       instructorsArray,
       selectedHallKey,
+      selectedInstructor,
       oldHallId,
       newHallId,
     } = this.state;
 
     const { onAddNewSectionLabDetails, halls } = this.props;
-    const instructorsId =
-      instructorsArray?.map(item => item?.value).filter(val => val != null) ||
-      [];
-    const formattedInstructors = instructorsId.map(Id => `{${Id}}`).join(",");
-    console.log("✅ instructorsId to send:", formattedInstructors);
-    values["type"] = selectedRowSectionLab.type;
-    values["sectionLabId"] = selectedRowSectionLab.Id;
-    values["hallId"] = this.state.selectedHallKey;
-    values["instructorsId"] = formattedInstructors;
+    //output instructorsId: "{25},{23}"
+    const formattedInstructors = instructorsArray
+      ?.map(item => item.value)
+      .filter(val => val != null)
+      .map(val => `{${val}}`)
+      .join(",");
+
+    //instructorsId: "{23},{2}"
+    // const instructorsId =
+    //   instructorsArray?.map(item => item?.value).filter(val => val != null) ||
+    //   [];
+    // const formattedInstructors = instructorsId.map(Id => `{${Id}}`).join(",");
+    // console.log("✅ instructorsId to send:", formattedInstructors);
+
+    //obj label+value
+    // const formattedInstructors =
+    //   instructorsArray?.map(item => ({
+    //     label: item.label,
+    //     value: item.value,
+    //   })) || [];
+
+    // console.log("✅ instructorsId to send:", formattedInstructors);
+
     // values["instructorsId"] = Array.isArray(instructorsArray)
     //   ? instructorsArray.map(item => item.value)
     //   : [];
 
-    // if (Array.isArray(selectedInstructor)) {
-    //   values["instructorsId"] = selectedInstructor.map(ins => ins.value);
-    // } else {
-    //   values["instructorsId"] = [];
-    // }
+    //instructorsId: Array(2)0: {value: 23}1: {value: 25}
+    // const formattedInstructors =
+    //   instructorsArray?.map(item => ({
+    //     value: item.value,
+    //   })) || [];
+
+    values["type"] = selectedRowSectionLab.type;
+    values["sectionLabId"] = selectedRowSectionLab.Id;
+    values["hallId"] = this.state.selectedHallKey;
+    values["instructorsId"] = formattedInstructors;
 
     let scheduleTimingInfo = {};
 
@@ -1039,6 +1099,13 @@ class ClassSchedulingList extends Component {
     return moment(date).format("DD-MM-YYYY");
   };
 
+  handleClickOn = row => {
+    this.setState({
+      selectedScheduleRow: row,
+      isScheduleEditable: true,
+    });
+  };
+
   render() {
     const { courseOffering } = this.state;
     const {
@@ -1102,7 +1169,10 @@ class ClassSchedulingList extends Component {
       currentYearObj,
       languageState,
       showAddWarning,
+      isScheduleEditable,
     } = this.state;
+
+    console.log(isScheduleEditable, "we needddddddd");
 
     console.log(currentYearObj, "gggg");
     const selectRow = {
@@ -1392,24 +1462,33 @@ class ClassSchedulingList extends Component {
         ),
       },
     ];
+    const rowEvents = {
+      onClick: (e, row) => {
+        this.handleClickOn(row);
+      },
+    };
+
     const ScheduleTimingDescsCol = [
       {
         dataField: "dayTitle",
         text: t("Day"),
         editable: false,
         sort: true,
+        // formatter: (cellContent, row) => this.handleClickOn(row),
       },
       {
         dataField: "periodTime",
         text: t("Period Time"),
         editable: false,
         sort: true,
+        // formatter: (cellContent, row) => this.handleClickOn(row),
       },
       {
         dataField: "instructorsId",
         text: t("Instructor"),
         editable: false,
         sort: true,
+        // formatter: (cellContent, row) => this.handleClickOn(row),
       },
 
       {
@@ -1417,6 +1496,7 @@ class ClassSchedulingList extends Component {
         text: t("Room"),
         editable: false,
         sort: true,
+        // formatter: (cellContent, row) => this.handleClickOn(row),
       },
     ];
     const weekDaysColumns = weekDays.map(weekday =>
@@ -1925,7 +2005,7 @@ class ClassSchedulingList extends Component {
                                               const type = row.type;
                                               const isSelected =
                                                 row.Id ===
-                                                this.state.selectedRows;
+                                                this.state.selectedRow;
 
                                               let backgroundColor = "";
                                               if (type === "Section") {
@@ -1937,7 +2017,7 @@ class ClassSchedulingList extends Component {
                                               }
 
                                               if (isSelected) {
-                                                backgroundColor = "#f9cf87";
+                                                backgroundColor = "#c5ab5a";
                                               }
 
                                               return {
@@ -2008,6 +2088,7 @@ class ClassSchedulingList extends Component {
                                             noDataIndication={t(
                                               "No Scheduling Timing"
                                             )}
+                                            rowEvents={rowEvents}
                                             rowStyle={(row, rowIndex) => {
                                               const type = row.type;
                                               if (type === "Section") {
@@ -2124,6 +2205,14 @@ class ClassSchedulingList extends Component {
                                                                 key={cellIndex}
                                                                 className={`timetable-cell ${cellValue}`}
                                                                 onMouseDown={() => {
+                                                                  console.log(
+                                                                    "MouseDown"
+                                                                  );
+                                                                  this.setState(
+                                                                    {
+                                                                      isDragging: true,
+                                                                    }
+                                                                  );
                                                                   this.handleMouseDown(
                                                                     cellIndex +
                                                                       rowIndex *
@@ -2147,6 +2236,10 @@ class ClassSchedulingList extends Component {
                                                                   }
                                                                 }}
                                                                 style={{
+                                                                  pointerEvents:
+                                                                    isScheduleEditable
+                                                                      ? "auto"
+                                                                      : "none",
                                                                   backgroundColor:
                                                                     scheduledTiming
                                                                       ? scheduledTiming.msg ===
@@ -2191,6 +2284,10 @@ class ClassSchedulingList extends Component {
                                                                 }
                                                               }}
                                                               style={{
+                                                                pointerEvents:
+                                                                  isScheduleEditable
+                                                                    ? "auto"
+                                                                    : "none",
                                                                 backgroundColor:
                                                                   scheduledTiming
                                                                     ? scheduledTiming.msg ===
@@ -2277,6 +2374,121 @@ class ClassSchedulingList extends Component {
                                     </div>
                                   </Col>
                                 </Row>
+                                <Modal
+                                  isOpen={isHallModalOpen}
+                                  toggle={this.toggleHallModal}
+                                  className="modal-lg"
+                                >
+                                  <ModalHeader
+                                    toggle={this.toggleHallModal}
+                                  ></ModalHeader>
+                                  <ModalBody>
+                                    <div className="timetable-container">
+                                      <table className="timetable">
+                                        <thead>
+                                          <tr>
+                                            <th>{t("Lecture Periods")}</th>
+                                            {weekDaysColumns.map(
+                                              (header, index) => (
+                                                <th key={index}>{header}</th>
+                                              )
+                                            )}
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {lecturePeriods.map(
+                                            (lecture, rowIndex) => (
+                                              <tr key={lecture.Id}>
+                                                <td className="lecture-cell">
+                                                  {lecture.duration}
+                                                </td>
+                                                {weekDays.map(
+                                                  (weekday, cellIndex) => {
+                                                    const hallTiming =
+                                                      hallTimings.find(
+                                                        timing =>
+                                                          timing.dayId ===
+                                                            weekday.Id &&
+                                                          timing.lecturePeriodId ===
+                                                            lecture.Id
+                                                      );
+
+                                                    const cellValue = hallTiming
+                                                      ? "selected"
+                                                      : "";
+
+                                                    return hallTiming &&
+                                                      hallTiming.msg ? (
+                                                      <Tooltip
+                                                        title={
+                                                          hallTiming.msg === 1
+                                                            ? t(
+                                                                "Busy Hall & Instructor"
+                                                              )
+                                                            : hallTiming.msg ===
+                                                              2
+                                                            ? t("Busy Hall")
+                                                            : hallTiming.msg ===
+                                                              3
+                                                            ? t(
+                                                                "Busy Instructor"
+                                                              )
+                                                            : null
+                                                        }
+                                                        placement="top-end"
+                                                        key={cellIndex}
+                                                      >
+                                                        <td
+                                                          key={cellIndex}
+                                                          className={`timetable-cell ${cellValue}`}
+                                                          style={{
+                                                            backgroundColor:
+                                                              hallTiming
+                                                                ? hallTiming.msg ===
+                                                                  1
+                                                                  ? "orange"
+                                                                  : hallTiming.msg ===
+                                                                    2
+                                                                  ? "#48b3fb"
+                                                                  : hallTiming.msg ===
+                                                                    3
+                                                                  ? "#f9544e"
+                                                                  : "#f9544e"
+                                                                : "",
+                                                          }}
+                                                        ></td>
+                                                      </Tooltip>
+                                                    ) : (
+                                                      <td
+                                                        key={cellIndex}
+                                                        className={`timetable-cell ${cellValue}`}
+                                                        style={{
+                                                          backgroundColor:
+                                                            hallTiming
+                                                              ? hallTiming.msg ===
+                                                                1
+                                                                ? "orange"
+                                                                : hallTiming.msg ===
+                                                                  2
+                                                                ? "#48b3fb"
+                                                                : hallTiming.msg ===
+                                                                  3
+                                                                ? "#f9544e"
+                                                                : "#f9544e"
+                                                              : "",
+                                                        }}
+                                                      ></td>
+                                                    );
+                                                  }
+                                                )}
+                                              </tr>
+                                            )
+                                          )}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </ModalBody>
+                                </Modal>
                                 <Modal
                                   isOpen={matchingHallModal}
                                   toggle={this.toggleMatchingModal}
@@ -3178,6 +3390,7 @@ class ClassSchedulingList extends Component {
                                               touched,
                                               values,
                                               handleChange,
+                                              handleBlur,
                                             }) => (
                                               <>
                                                 {duplicateError && (
