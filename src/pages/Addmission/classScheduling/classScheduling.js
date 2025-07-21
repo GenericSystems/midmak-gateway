@@ -106,6 +106,7 @@ class ClassSchedulingList extends Component {
       showEditButton: false,
       showSearchButton: false,
       selectedRows: [],
+      selectedRow: null,
       deleteModal: false,
       duplicateError: null,
       startDateError: null,
@@ -171,7 +172,6 @@ class ClassSchedulingList extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener("mouseup", this.handleMouseUp);
     const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
       i18n,
@@ -251,9 +251,6 @@ class ClassSchedulingList extends Component {
       this.setState({ languageState: lng });
     }
   };
-  componentWillUnmount() {
-    window.removeEventListener("mouseup", this.handleMouseUp);
-  }
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       this.props.user_menu !== prevProps.user_menu ||
@@ -331,7 +328,7 @@ class ClassSchedulingList extends Component {
   };
 
   toggle3 = () => {
-    const { selectedRowSectionLab } = this.state;
+    const { selectedRowSectionLab, selectedScheduleRow } = this.state;
 
     if (!selectedRowSectionLab) {
       this.setState({ showAddWarning: true });
@@ -341,6 +338,9 @@ class ClassSchedulingList extends Component {
       modal3: !prevState.modal3,
       showAddWarning: false,
     }));
+    // this.setState({
+    //   selectedScheduleRow: null,
+    // });
   };
 
   handleCourseOfferingClick = row => {
@@ -568,6 +568,21 @@ class ClassSchedulingList extends Component {
     this.toggleNestedModal();
   };
 
+  handleEditScheduleTiming = SLD => {
+    console.log("ssssssssld", SLD);
+    this.setState({
+      // defaultHallName: SLD.hallName,
+      isEdit: true,
+      sectionLabData: {
+        Id: SLD.Id,
+        instructorsId: SLD.instructorsId,
+        hallId: SLD.hallId,
+      },
+    });
+
+    this.toggle3();
+  };
+
   handleEditBranch = branchData => {
     const { selectedRowData, languageState } = this.state;
     const { onGetSectionLabs } = this.props;
@@ -588,11 +603,15 @@ class ClassSchedulingList extends Component {
   };
 
   handleViewHallSchedule = SLD => {
-    const { halls, onGetHallTimings } = this.props;
-    const findingHallId = halls.find(
-      hall => hall.hallName === SLD.hallName
-    ).key;
-    console.log("findingHallId", findingHallId);
+    console.log("SLD", SLD);
+    const { onGetHallTimings } = this.props;
+
+    const findingHallId = SLD.hallId;
+    if (!findingHallId) {
+      console.error("❌ Missing hallId in SLD");
+      return;
+    }
+
     const OB = {
       hallId: findingHallId,
       check: 0,
@@ -601,6 +620,7 @@ class ClassSchedulingList extends Component {
     onGetHallTimings(OB);
     this.toggleHallModal();
   };
+
   handleAlertClose = alertName => {
     this.setState({ [alertName]: null });
   };
@@ -651,6 +671,7 @@ class ClassSchedulingList extends Component {
     this.setState({
       isDragging: true,
     });
+    console.log("selectedScheduleRow", scheduleTimings);
 
     const scheduledTiming = scheduleTimings.find(
       timing =>
@@ -668,6 +689,7 @@ class ClassSchedulingList extends Component {
       const ob = {};
       ob["type"] = selectedRowSectionLab.type;
       ob["sectionLabId"] = selectedRowSectionLab.Id;
+      // ob["sectionLabDetailsId"] = selectedScheduleRow.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
 
@@ -967,6 +989,15 @@ class ClassSchedulingList extends Component {
       .map(val => `{${val}}`)
       .join(",");
 
+    //numbers
+    // const formattedInstructors = instructorsArray
+    //   ?.map(item => item.value)
+    //   .filter(val => val != null)
+    //   .join(",");
+
+    //array
+    //values["instructorsId"] = instructorsArray.map(item => item.value);
+
     //instructorsId: "{23},{2}"
     // const instructorsId =
     //   instructorsArray?.map(item => item?.value).filter(val => val != null) ||
@@ -1102,6 +1133,7 @@ class ClassSchedulingList extends Component {
   handleClickOn = row => {
     this.setState({
       selectedScheduleRow: row,
+      selectedRow: row.Id,
       isScheduleEditable: true,
     });
   };
@@ -1431,15 +1463,6 @@ class ClassSchedulingList extends Component {
                 ></i>
               </Link>
             </Tooltip>
-            <Tooltip title={t("View Hall Timing")} placement="top">
-              <Link className="" to="#">
-                <i
-                  className="mdi mdi-google-classroom font-size-18"
-                  id="edittooltip"
-                  onClick={() => this.handleViewHallSchedule(sectionLabData)}
-                ></i>
-              </Link>
-            </Tooltip>
             <Tooltip title={t("Edit Section/Lab")} placement="top">
               <Link className="text-secondary" to="#">
                 <i
@@ -1497,6 +1520,45 @@ class ClassSchedulingList extends Component {
         editable: false,
         sort: true,
         // formatter: (cellContent, row) => this.handleClickOn(row),
+      },
+      {
+        dataField: "menu",
+        isDummyField: true,
+        editable: false,
+        text: this.props.t("Action"),
+        formatter: (cellContent, sectionLabsDetails) => (
+          <div className="d-flex gap-3">
+            {/* <Tooltip title={t("View Hall Timing")} placement="top">
+            <Link className="" to="#">
+              <i
+                className="mdi mdi-google-classroom font-size-18"
+                id="edittooltip"
+                onClick={() => this.handleViewHallSchedule(sectionLabsDetails)}
+              ></i>
+            </Link>
+          </Tooltip> */}
+            <Tooltip title={t("Edit Schedule Timing")} placement="top">
+              <Link className="text-secondary" to="#">
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  onClick={() =>
+                    this.handleEditScheduleTiming(sectionLabsDetails)
+                  }
+                ></i>
+              </Link>
+            </Tooltip>
+            <Tooltip title={t("Delete Section/Lab")} placement="top">
+              <Link className="text-danger m-0" to="#">
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  id="deletetooltip"
+                  onClick={() => this.onClickDelete(sectionLabData)}
+                ></i>
+              </Link>
+            </Tooltip>
+          </div>
+        ),
       },
     ];
     const weekDaysColumns = weekDays.map(weekday =>
@@ -2090,18 +2152,21 @@ class ClassSchedulingList extends Component {
                                             )}
                                             rowEvents={rowEvents}
                                             rowStyle={(row, rowIndex) => {
-                                              const type = row.type;
-                                              if (type === "Section") {
-                                                return {
-                                                  backgroundColor:
-                                                    "rgb(189 199 124 / 23%)",
-                                                };
-                                              } else if (type === "Lab") {
-                                                return {
-                                                  backgroundColor:
-                                                    "rgb(189 199 124 / 23%)",
-                                                };
+                                              const { selectedRow } =
+                                                this.state;
+                                              const isSelected =
+                                                row.Id === selectedRow;
+
+                                              let backgroundColor =
+                                                "rgb(189 199 124 / 23%)";
+
+                                              if (isSelected) {
+                                                backgroundColor = "#ffcccb";
                                               }
+                                              return {
+                                                backgroundColor:
+                                                  backgroundColor,
+                                              };
                                             }}
                                           />
                                         </CardBody>

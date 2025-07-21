@@ -457,6 +457,7 @@ function* fetchScheduleTimings(obj) {
   };
   try {
     const response = yield call(getScheduleTimings, get_schedule_timings);
+    console.log("reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeep", response);
 
     yield put(getScheduleTimingsSuccess(response));
   } catch (error) {
@@ -567,6 +568,7 @@ function* onDeleteScheduleTiming({ payload, scheduleTiming }) {
 function* onGetScheduleMsgValue() {
   try {
     const response = yield call(getScheduleMsgValue);
+    console.log("aaaaaaaaaaaaaaaa99999999999999", response);
     yield put(getScheduleMsgValueSuccess(response));
   } catch (error) {
     yield put(getScheduleMsgValueFail(error));
