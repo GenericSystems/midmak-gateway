@@ -60,7 +60,7 @@ const gradeTypes = (state = INIT_STATE, action) => {
         ...state,
         gradeTypes: state.gradeTypes.map(gradeType =>
           gradeType.Id.toString() === action.payload.Id.toString()
-            ? { ...gradeType, ...action.payload }
+            ? { gradeType, ...action.payload }
             : gradeType
         ),
       };

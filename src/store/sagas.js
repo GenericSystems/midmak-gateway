@@ -119,6 +119,10 @@ import checkedGradesSaga from "./checkGrades/saga";
 
 import archiveGradesSaga from "./archiveGrades/saga";
 
+import DiplomaLevelSaga from "./diploma-level/saga";
+
+import HighStudyTypeSaga from "./high-study-types/saga";
+
 export default function* rootSaga() {
   yield all([
     //public
@@ -230,5 +234,7 @@ export default function* rootSaga() {
     fork(enteredGradesSaga),
     fork(checkedGradesSaga),
     fork(archiveGradesSaga),
+    fork(DiplomaLevelSaga),
+    fork(HighStudyTypeSaga),
   ]);
 }

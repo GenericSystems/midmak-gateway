@@ -112,7 +112,7 @@ class DistributingCoursesMethods extends Component {
       distributingCoursesMethods,
       onGetDistributingCoursesMethods,
       distributingCoursesMethodsContents,
-      coursecontents,
+      gradeTypes,
       user_menu,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -124,7 +124,7 @@ class DistributingCoursesMethods extends Component {
     }
     this.setState({ distributingCoursesMethods });
     this.setState({ distributingCoursesMethodsContents });
-    this.setState({ coursecontents });
+    this.setState({ gradeTypes });
   }
 
   toggle() {
@@ -363,7 +363,7 @@ class DistributingCoursesMethods extends Component {
     onUpdateDistributingCoursesMethodContent(ob);
   };
 
-  handleSelectChange = (rowId, fieldName, selectedValue, defaultValue) => {
+  handleSelectChange = (rowId, fieldName, selectedValue) => {
     const { onUpdateDistributingCoursesMethodContent } = this.props;
     this.setState({
       selectedCoursesContent: selectedValue,
@@ -371,7 +371,7 @@ class DistributingCoursesMethods extends Component {
     let onUpdate = {
       Id: rowId,
       [fieldName]: selectedValue,
-      ["precentage"]: defaultValue,
+      ["precentage"]: 0,
     };
     onUpdateDistributingCoursesMethodContent(onUpdate);
   };
@@ -530,7 +530,7 @@ class DistributingCoursesMethods extends Component {
     const { t } = this.props;
     const {
       distributingCoursesMethods,
-      coursecontents,
+      gradeTypes,
       distributingCourses,
       distributingCoursesMethodsContents,
       onGetDistributingCoursesMethods,
@@ -741,7 +741,7 @@ class DistributingCoursesMethods extends Component {
             {showEditButton && (
               <Select
                 key={`ExamAr_select`}
-                options={coursecontents.filter(
+                options={gradeTypes.filter(
                   option =>
                     !distributingCoursesMethodsContents.some(
                       row => row.courseContentId === option.value
@@ -751,11 +751,10 @@ class DistributingCoursesMethods extends Component {
                   this.handleSelectChange(
                     row.Id,
                     "courseContentId",
-                    newValue.value,
-                    newValue.defaultValue
+                    newValue.value
                   );
                 }}
-                defaultValue={coursecontents.find(
+                defaultValue={gradeTypes.find(
                   opt => opt.value == row.courseContentId
                 )}
               />
@@ -1359,12 +1358,12 @@ class DistributingCoursesMethods extends Component {
 
 const mapStateToProps = ({
   distributingCoursesMethods,
-  coursecontents,
+  gradeTypes,
   menu_items,
 }) => ({
   distributingCoursesMethods:
     distributingCoursesMethods.distributingCoursesMethods,
-  coursecontents: coursecontents.coursecontents,
+  gradeTypes: gradeTypes.gradeTypes,
   distributingCoursesMethodsContents:
     distributingCoursesMethods.distributingCoursesMethodsContents,
   distributingCourses: distributingCoursesMethods.distributingCourses,

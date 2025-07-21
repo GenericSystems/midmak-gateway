@@ -45,7 +45,7 @@ const enteredGrades = (state = INIT_STATE, action) => {
         ...state,
         enteredGrades: state.enteredGrades.map(grade =>
           grade.Id.toString() === action.payload.Id.toString()
-            ? { ...grade, ...action.payload }
+            ? { grade, ...action.payload }
             : grade
         ),
       };

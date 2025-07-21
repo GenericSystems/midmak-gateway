@@ -2282,16 +2282,30 @@ export const updateArchivedGrade = data =>
 
 //Unarchive Course Requests
 
-export const getUnarchiveCourseRequests = data =>
-  post(url.UNARCHIVE_COURSE_REQUESTS, data);
-export const addUnarchiveCourseRequest = data =>
-  post(url.ADD_UNARCHIVE_COURSE_REQUEST, data);
-export const updateUnarchiveCourseRequest = data =>
-  post(url.UPDATE_UNARCHIVE_COURSE_REQUEST, data);
-export const deleteUnarchiveCourseRequest = data =>
-  post(url.DELETE_UNARCHIVE_COURSE_REQUEST, data);
-export const getUnarchiveCourseRequestDeletedValue = () =>
-  get(url.GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE);
+
+export const getUnarchiveCourseRequests = data =>post(url.UNARCHIVE_COURSE_REQUESTS,data);
+export const addUnarchiveCourseRequest = data =>post(url.ADD_UNARCHIVE_COURSE_REQUEST, data);
+export const updateUnarchiveCourseRequest = data =>post(url.UPDATE_UNARCHIVE_COURSE_REQUEST, data);
+export const deleteUnarchiveCourseRequest = data =>post(url.DELETE_UNARCHIVE_COURSE_REQUEST,data);
+export const getUnarchiveCourseRequestDeletedValue = () =>get(url.GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE);
+
+
+//diploma levels
+export const getDiplomaLevels = data =>post(url.GET_DIPLOMALEVELS, data);
+export const getDiplomaLevelDeletedValue = () => get(url.GET_DIPLOMALEVEL_DELETED_VALUE, data);
+export const addNewDiplomaLevel = data => post(url.ADD_NEW_DIPLOMALEVEL, data);
+export const updateDiplomaLevel = data =>post(url.UPDATE_DIPLOMALEVEL,data);
+export const deleteDiplomaLevel = data =>post(url.DELETE_DIPLOMALEVEL , data);
+
+
+//HighStudyType
+export const getHighStudyTypes  = data => post(url.GET_HIGHSTUDYTYPES, data);
+export const getHighStudyTypeDeletedValue = () => get(url.GET_HIGHSTUDYTYPE_DELETED_VALUE);
+export const addNewHighStudyType = data =>post(url.ADD_NEW_HIGHSTUDYTYPE,data);
+export const updateHighStudyType = data =>post(url.UPDATE_HIGHSTUDYTYPE,data);
+export const deleteHighStudyType = data =>post(url.DELETE_HIGHSTUDYTYPE,data);
+
+
 
 export {
   getLoggedInUser,

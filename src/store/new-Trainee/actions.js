@@ -25,8 +25,9 @@ import {
   GET_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
 } from "./actionTypes";
 
-export const getTrainees = () => ({
+export const getTrainees = trainees => ({
   type: GET_TRAINEES,
+  payload: trainees,
 });
 
 export const getTraineesSuccess = trainees => ({
@@ -97,7 +98,7 @@ export const deleteTraineeFail = error => ({
   type: DELETE_TRAINEE_FAIL,
   payload: error,
 });
-export const getTraineeDefaultRegReqDocs =  ()=> ({
+export const getTraineeDefaultRegReqDocs = () => ({
   type: GET_TRAINEE_DEFAULT_REGREQDOCS,
 });
 

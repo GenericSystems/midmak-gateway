@@ -50,7 +50,7 @@ const unarchiveCourseRequests = (state = INIT_STATE, action) => {
         ...state,
         unarchiveCourseRequests: state.unarchiveCourseRequests.map(request =>
           request.Id.toString() === action.payload.Id.toString()
-            ? { ...request, ...action.payload }
+            ? { request, ...action.payload }
             : request
         ),
       };
