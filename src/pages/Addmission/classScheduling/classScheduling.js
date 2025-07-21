@@ -108,6 +108,7 @@ class ClassSchedulingList extends Component {
       selectedRows: [],
       selectedRow: null,
       deleteModal: false,
+      deleteModal1: false,
       duplicateError: null,
       startDateError: null,
       endDateError: null,
@@ -122,6 +123,7 @@ class ClassSchedulingList extends Component {
       isDragging: false,
       modal: false,
       isEdit: false,
+      isEdit1: false,
       isAdd: false,
       isOpen: false,
       isModalOpen: false,
@@ -318,6 +320,12 @@ class ClassSchedulingList extends Component {
   toggleDeleteModal = () => {
     this.setState(prevState => ({
       deleteModal: !prevState.deleteModal,
+    }));
+  };
+
+  toggleDeleteModal1 = () => {
+    this.setState(prevState => ({
+      deleteModal1: !prevState.deleteModal1,
     }));
   };
 
@@ -528,6 +536,12 @@ class ClassSchedulingList extends Component {
     this.setState({ sectionLabData: sectionLabData });
     this.setState({ deleteModal: true });
   };
+
+  onClickDelete1 = sectionLabsDetails => {
+    this.setState({ sectionLabsDetails: sectionLabsDetails });
+    this.setState({ deleteModal1: true });
+  };
+
   handleDeleteSectionLab = () => {
     const { onDeleteSectionLab, selectedOption } = this.props;
     const { sectionLabData } = this.state;
@@ -547,6 +561,22 @@ class ClassSchedulingList extends Component {
       isEdit: false,
     });
   };
+
+  handleDeleteRow = () => {
+    const { onDeleteScheduleTiming } = this.props;
+    const { selectedScheduleRow } = this.state;
+
+    if (selectedScheduleRow !== undefined) {
+      onDeleteScheduleTiming(selectedScheduleRow);
+
+      this.setState({
+        selectedScheduleRow: null,
+        deleteModal1: false,
+        showAlert: true,
+      });
+    }
+  };
+
   handleEditSectionLab = SLD => {
     console.log("ssssssssld", SLD);
     this.setState({
@@ -572,12 +602,12 @@ class ClassSchedulingList extends Component {
     console.log("ssssssssld", SLD);
     this.setState({
       // defaultHallName: SLD.hallName,
-      isEdit: true,
-      sectionLabData: {
-        Id: SLD.Id,
-        instructorsId: SLD.instructorsId,
-        hallId: SLD.hallId,
-      },
+      isEdit1: true,
+      sectionLabsDetails: SLD,
+      Id: SLD.Id,
+      selectedInstructor: SLD.instructorsId,
+      selectedHallKey: SLD.hallId,
+      defaultHallName: SLD.hallName,
     });
 
     this.toggle3();
@@ -971,7 +1001,7 @@ class ClassSchedulingList extends Component {
     let flag = 0;
     const {
       selectedOption,
-      isEdit,
+      isEdit1,
       selectedRowSectionLab,
       selectedHall,
       instructorsArray,
@@ -1095,9 +1125,13 @@ class ClassSchedulingList extends Component {
 
     // scheduleTimingInfo["type"] = selectedRowSectionLab.type;
     // scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
+    if (isEdit1) {
+      onUpdateContract(contractInfo);
+    } else {
+      console.log("saaaaave", scheduleTimingInfo);
+      onAddNewSectionLabDetails(scheduleTimingInfo);
+    }
 
-    console.log("saaaaave", scheduleTimingInfo);
-    onAddNewSectionLabDetails(scheduleTimingInfo);
     this.toggle3();
   };
 
@@ -1117,7 +1151,13 @@ class ClassSchedulingList extends Component {
       });
     }
   };
-
+  handleAddRow = () => {
+    this.setState({
+      sectionLabsDetails: "",
+      isEdit1: false,
+    });
+    this.toggle3();
+  };
   handleValidDate = date => {
     if (
       !date ||
@@ -1163,6 +1203,7 @@ class ClassSchedulingList extends Component {
     const {
       duplicateError,
       deleteModal,
+      deleteModal1,
       modal,
       modal2,
       isOpen,
@@ -1176,6 +1217,7 @@ class ClassSchedulingList extends Component {
       isHallModalOpen,
       selectedOption,
       isEdit,
+      isEdit1,
       isAdd,
       sectionLabData,
       sectionLabsDetails,
@@ -1548,12 +1590,12 @@ class ClassSchedulingList extends Component {
                 ></i>
               </Link>
             </Tooltip>
-            <Tooltip title={t("Delete Section/Lab")} placement="top">
+            <Tooltip title={t("Delete Schedule Timing")} placement="top">
               <Link className="text-danger m-0" to="#">
                 <i
                   className="mdi mdi-delete font-size-18"
                   id="deletetooltip"
-                  onClick={() => this.onClickDelete(sectionLabData)}
+                  onClick={() => this.onClickDelete1(sectionLabsDetails)}
                 ></i>
               </Link>
             </Tooltip>
@@ -2131,7 +2173,7 @@ class ClassSchedulingList extends Component {
                                               <div className="text-sm-end">
                                                 <IconButton
                                                   className="ms-2"
-                                                  onClick={this.toggle3}
+                                                  onClick={this.handleAddRow}
                                                 >
                                                   {" "}
                                                   <i className="mdi mdi-plus-circle blue-noti-icon" />
@@ -2688,7 +2730,15 @@ class ClassSchedulingList extends Component {
                                     </div>
                                   </ModalBody>
                                 </Modal>
-
+                                <DeleteModal
+                                  show={deleteModal1}
+                                  onDeleteClick={this.handleDeleteRow}
+                                  onCloseClick={() =>
+                                    this.setState({
+                                      deleteModal1: false,
+                                    })
+                                  }
+                                />
                                 <Modal
                                   isOpen={modal3}
                                   toggle={this.toggle3}
@@ -2700,9 +2750,11 @@ class ClassSchedulingList extends Component {
                                     className="horizontalTitles"
                                   >
                                     {selectedRowSectionLab
-                                      ? `${this.props.t("Add Details")} - ${
-                                          selectedRowSectionLab.type
-                                        }${
+                                      ? `${this.props.t(
+                                          isEdit1
+                                            ? "Edit Details"
+                                            : "Add Details"
+                                        )} - ${selectedRowSectionLab.type}${
                                           selectedRowSectionLab.SectionLabNumber
                                         } `
                                       : this.props.t("Schedule Timing")}
@@ -2796,6 +2848,74 @@ class ClassSchedulingList extends Component {
                                               <Col className="col-8">
                                                 <Field
                                                   name="hallId"
+                                                  as="input"
+                                                  type="text"
+                                                  placeholder="Search..."
+                                                  className={
+                                                    "form-control" +
+                                                    (errors.hallId &&
+                                                    touched.hallId
+                                                      ? " is-invalid"
+                                                      : "")
+                                                  }
+                                                  value={
+                                                    halls.find(
+                                                      h =>
+                                                        h.key ===
+                                                        this.state
+                                                          .selectedHallKey
+                                                    )?.value || ""
+                                                  }
+                                                  onChange={e => {
+                                                    const newValue =
+                                                      e.target.value;
+
+                                                    // ابحث عن القاعة في القائمة حسب الاسم
+                                                    const selectedHall =
+                                                      halls.find(
+                                                        h =>
+                                                          h.value === newValue
+                                                      );
+
+                                                    if (selectedHall) {
+                                                      // خزّن ID القاعة
+                                                      this.setState({
+                                                        selectedHallKey:
+                                                          selectedHall.key,
+                                                        defaultHallName:
+                                                          selectedHall.value,
+                                                      });
+                                                    } else {
+                                                      // لم يتم اختيار قاعة معروفة (إدخال يدوي خاطئ مثلاً)
+                                                      this.setState({
+                                                        selectedHallKey: null,
+                                                        defaultHallName:
+                                                          newValue,
+                                                      });
+                                                    }
+
+                                                    // إذا كنت تحتاج تشغيل دالة إضافية
+                                                    this.onChangeHall(
+                                                      this.state
+                                                        .defaultHallName,
+                                                      newValue
+                                                    );
+                                                  }}
+                                                  list="hallIdList"
+                                                  autoComplete="off"
+                                                />
+
+                                                <datalist id="hallIdList">
+                                                  {halls.map(hall => (
+                                                    <option
+                                                      key={hall.key}
+                                                      value={hall.value}
+                                                    />
+                                                  ))}
+                                                </datalist>
+
+                                                {/* <Field
+                                                  name="hallId"
                                                   type="text"
                                                   placeholder="Search..."
                                                   className={
@@ -2838,7 +2958,7 @@ class ClassSchedulingList extends Component {
                                                   name="hallId"
                                                   component="div"
                                                   className="invalid-feedback"
-                                                />
+                                                /> */}
                                               </Col>
                                             </Row>
                                             <Row>
