@@ -22,6 +22,11 @@ import {
   deleteDefineExamDateFail,
 } from "./actions";
 
+import {
+  getGradeTypesSuccess,
+  getGradeTypesFail,
+} from "../../grade-types/actions";
+
 //Include Both Helper File with needed methods
 import {
   getDefineExamDates,
@@ -29,6 +34,7 @@ import {
   addNewDefineExamDate,
   updateDefineExamDate,
   deleteDefineExamDate,
+  getGradeTypes,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchDefineExamDates() {
@@ -44,6 +50,22 @@ function* fetchDefineExamDates() {
     yield put(getDefineExamDatesSuccess(response));
   } catch (error) {
     yield put(getDefineExamDatesFail(error));
+  }
+
+  const request = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_GradeType",
+    fields: "Id,arTitle",
+  };
+
+  try {
+    const response = yield call(getGradeTypes, request);
+    console.log("123123123", response);
+    yield put(getGradeTypesSuccess(response));
+  } catch (error) {
+    yield put(getGradeTypesFail(error));
   }
 }
 

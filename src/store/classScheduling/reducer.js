@@ -63,6 +63,7 @@ const INIT_STATE = {
   courseOfferingProfile: {},
   filteredSections: [],
   error: {},
+  deleted: {},
   returnMessage: {},
   hallTimings: [],
 };
@@ -197,6 +198,7 @@ const classScheduling = (state = INIT_STATE, action) => {
       return {
         ...state,
         sectionLabsDetails: [...state.sectionLabsDetails, action.payload],
+        deleted: {},
       };
 
     case ADD_SECTION_LAB_DETAILS_FAIL:
@@ -252,6 +254,7 @@ const classScheduling = (state = INIT_STATE, action) => {
       return {
         ...state,
         scheduleTimings: action.payload,
+        deleted: {},
       };
     case GET_SCHEDULE_TIMINGS_FAIL:
       return {
@@ -285,6 +288,7 @@ const classScheduling = (state = INIT_STATE, action) => {
           scheduleTiming =>
             scheduleTiming.Id.toString() !== action.payload.Id.toString()
         ),
+        deleted: action.payload.deleted,
       };
 
     case DELETE_SCHEDULE_TIMING_FAIL:

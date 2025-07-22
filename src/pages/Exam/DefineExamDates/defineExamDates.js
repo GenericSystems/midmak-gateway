@@ -61,6 +61,7 @@ class DefineExamDatesList extends Component {
     this.state = {
       employees: [],
       defineExamDates: [],
+      gradeTypes: [],
       defineExamDate: "",
       employee: "",
       selectConId: null,
@@ -101,8 +102,8 @@ class DefineExamDatesList extends Component {
   componentDidMount() {
     const {
       defineExamDates,
-      onDefineExamDates,
-
+      onGetDefineExamDates,
+      gradeTypes,
       deleted,
 
       user_menu,
@@ -111,11 +112,12 @@ class DefineExamDatesList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    onDefineExamDates();
+    onGetDefineExamDates();
 
     this.setState({
       defineExamDates,
       deleted,
+      gradeTypes,
     });
   }
 
@@ -233,22 +235,11 @@ class DefineExamDatesList extends Component {
 
   handleSubmit = values => {
     const {
-      // selectedAdministrativeSupervisor,
-      selectedPhysicalWorkLocations,
-      selectedJobRank,
-      selectedJobTitle,
-      selectedCorporateNode,
-      selectedContractType,
-      selectedEmploymentCase,
-      selectedNcsDate,
       selectedEndDate,
       selectedHireDate,
       selectedSignatureDate,
-      selectedWorkClassification,
-      selectedAcademicYearId,
       defineExamDate,
       isEdit,
-      isAdd,
       selectEmpId,
       selectedHasMinistryApprove,
       selectedGovernmentWorker,
@@ -261,16 +252,8 @@ class DefineExamDatesList extends Component {
     // values["physicalWorkLocation"] = selectedPhysicalWorkLocations;
     // values["employeeId"] = selectEmpId;
 
-    values["jobRankId"] = selectedJobRank;
-    values["jobTitleId"] = selectedJobTitle;
-    // values["corporateNodeId"] = selectedCorporateNode;
-    values["contractTypeId"] = selectedContractType;
-    values["fullNameId"] = selectedFullName;
-    values["employmentCaseId"] = selectedEmploymentCase;
-    values["hasMinistryApprove"] = selectedHasMinistryApprove;
-    values["governmentWorker"] = selectedGovernmentWorker;
-    values["workClassificationId"] = selectedWorkClassification;
-    values["academicYearId"] = selectedAcademicYearId;
+    values["examTypeId"] = selectedExamType;
+    values["definPeriodId"] = selectedDefinPeriod;
     console.log("valuesssssssssssssssssssss", values);
 
     let contractInfo = {};
@@ -283,17 +266,10 @@ class DefineExamDatesList extends Component {
     // }
     // console.log("valuesssssssssssssssssssss", values);
     if (
-      values.jobNumber &&
-      values.biometricCode &&
-      values.contractNumber &&
-      values.sequenceInWorkplace &&
-      values.quorum &&
-      values.ncsDate &&
+      values.examAr &&
+      values.examEn &&
+      values.startDate &&
       values.endDate &&
-      values.hireDate &&
-      values.signatureDate &&
-      // selectedAdministrativeSupervisor !== null &&
-      // selectedPhysicalWorkLocations !== null &&
       selectedJobRank !== null &&
       selectedAcademicYearId !== null &&
       selectedWorkClassification !== null &&
@@ -359,85 +335,15 @@ class DefineExamDatesList extends Component {
   };
 
   handleSelect = (fieldName, selectedValue) => {
-    // if (fieldName == "administrativeSupervisor") {
-    //   this.setState({
-    //     selectedAdministrativeSupervisor: selectedValue,
-    //   });
-    // }
-    /*  if (fieldName == "physicalWorkLocation") {
+    if (fieldName == "examTypeId") {
       this.setState({
-        selectedPhysicalWorkLocations: selectedValue,
-      });
-    } */
-    if (fieldName == "jobRankId") {
-      this.setState({
-        selectedJobRank: selectedValue,
+        selectedExamType: selectedValue,
       });
     }
-    if (fieldName == "contractTypeId") {
-      this.setState({
-        selectedContractType: selectedValue,
-      });
-    }
-    if (fieldName == "employmentCaseId") {
-      this.setState({
-        selectedEmploymentCase: selectedValue,
-      });
-    }
-    if (fieldName == "workClassificationId") {
-      this.setState({
-        selectedWorkClassification: selectedValue,
-      });
-    }
-    if (fieldName === "jobTitleId") {
-      const selected = this.state.jobTitlesOpt.find(
-        job => job.arTitle === selectedValue
-      );
-
-      this.setState({
-        selectedJobTitle: selected ? selected.Id : null,
-      });
-      return;
-    }
-
-    if (fieldName === "fullNameId") {
-      const selected = this.state.employeesNames.find(
-        employeeName => employeeName.value === selectedValue
-      );
-
-      this.setState({
-        selectedFullName: selected ? selected.key : null,
-      });
-      return;
-    }
-
-    if (fieldName === "academicYearId") {
-      const selected = this.state.academicYearsOpt.find(
-        academicYear =>
-          academicYear.arTitle.trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
-      );
-      this.setState({
-        selectedAcademicYearId: selected ? selected.Id : null,
-      });
-
-      return;
-    }
-
-    // if (fieldName == "corporateNodeId") {
-    //   this.setState({
-    //     selectedCorporateNode: selectedValue,
-    //   });
-    // }
-    // if (fieldName == "academicYearId") {
-    //   this.setState({
-    //     selectedAcademicYearId: selectedValue,
-    //   });
-    // }
   };
 
-  handleAlertClose = () => {
-    this.setState({ duplicateError: null });
+  handleAlertClose = alertName => {
+    this.setState({ [alertName]: null });
   };
 
   handleSuccessClose = () => {
@@ -492,7 +398,7 @@ class DefineExamDatesList extends Component {
   render() {
     const defineExamDate = this.state.defineExamDate;
     const employee = this.state.employee;
-    const { defineExamDates, t, deleted } = this.props;
+    const { defineExamDates, gradeTypes, t, deleted } = this.props;
     const {
       duplicateError,
       deleteModal,
@@ -700,7 +606,7 @@ class DefineExamDatesList extends Component {
                             type="button"
                             className="btn-close"
                             aria-label="Close"
-                            onClick={this.handleAlertClose}
+                            onClick={this.handleAlertClose("duplicateError")}
                           ></button>
                         </Alert>
                       )}
@@ -866,17 +772,21 @@ class DefineExamDatesList extends Component {
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
-                                        contratType: Yup.string()
+                                        examAr: Yup.string()
                                           .matches(/^[أ-ي]+$/)
                                           .required(
                                             "Please Enter Your Contrat Type"
                                           ),
-                                        ncsDate: Yup.string().required(
-                                          t("Please Enter Your NCS Date")
+                                        startDate: Yup.date().required(
+                                          t("Please Enter Your Start Date")
                                         ),
-                                        hireDate: Yup.string().required(
-                                          t("Please Enter Your Hire Date")
+                                        endDate: Yup.date().required(
+                                          t("Please Enter Your End Date").min(
+                                            Yup.ref("startDate"),
+                                            "End date must be after start date"
+                                          )
                                         ),
+
                                         academicYearId: Yup.string().required(
                                           t("Please Enter Your Academic Year")
                                         ),
@@ -918,9 +828,9 @@ class DefineExamDatesList extends Component {
                                                     type="button"
                                                     className="btn-close"
                                                     aria-label="Close"
-                                                    onClick={
-                                                      this.handleAlertClose
-                                                    }
+                                                    onClick={this.handleAlertClose(
+                                                      "emptyError"
+                                                    )}
                                                   ></button>
                                                 </Alert>
                                               )}
@@ -1083,21 +993,21 @@ class DefineExamDatesList extends Component {
                                                                 <Select
                                                                   name="examTypeId"
                                                                   key={`select_examTypeId`}
-                                                                  // options={
-                                                                  //   examTypes
-                                                                  // }
+                                                                  options={
+                                                                    gradeTypes
+                                                                  }
                                                                   className={`form-control`}
-                                                                  // onChange={newValue => {
-                                                                  //   this.handleSelect(
-                                                                  //     "examTypeId",
-                                                                  //     newValue.value
-                                                                  //   );
-                                                                  // }}
-                                                                  // defaultValue={examTypes.find(
-                                                                  //   opt =>
-                                                                  //     opt.value ===
-                                                                  //     defineExamDate?.examTypeId
-                                                                  // )}
+                                                                  onChange={newValue => {
+                                                                    this.handleSelect(
+                                                                      "examTypeId",
+                                                                      newValue.value
+                                                                    );
+                                                                  }}
+                                                                  defaultValue={gradeTypes.find(
+                                                                    opt =>
+                                                                      opt.value ===
+                                                                      defineExamDate?.examTypeId
+                                                                  )}
                                                                 />
                                                               </Col>
                                                             </Row>
@@ -1156,9 +1066,9 @@ class DefineExamDatesList extends Component {
                                                       type="button"
                                                       className="btn-close"
                                                       aria-label="Close"
-                                                      onClick={
-                                                        this.handleAlertClose
-                                                      }
+                                                      onClick={this.handleAlertClose(
+                                                        "duplicateError"
+                                                      )}
                                                     ></button>
                                                   </Alert>
                                                 )}
@@ -1348,14 +1258,15 @@ class DefineExamDatesList extends Component {
   }
 }
 
-const mapStateToProps = ({ menu_items, defineExamDates }) => ({
+const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
   defineExamDates: defineExamDates.defineExamDates,
   deleted: defineExamDates.deleted,
+  gradeTypes: gradeTypes.gradeTypes,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onDefineExamDates: () => dispatch(getDefineExamDates()),
+  onGetDefineExamDates: () => dispatch(getDefineExamDates()),
   onAddNewDefineExamDate: defineExamDate =>
     dispatch(addNewDefineExamDate(defineExamDate)),
   onUpdateDefineExamDate: defineExamDate =>
