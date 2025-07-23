@@ -54,6 +54,8 @@ import {
   addNewSectionLabDetails,
   updateSectionLab,
   deleteSectionLab,
+  updateSectionLabDetails,
+  deleteSectionLabDetails,
   getScheduleTimings,
   deleteScheduleTiming,
   addNewScheduleTiming,
@@ -346,9 +348,9 @@ class ClassSchedulingList extends Component {
       modal3: !prevState.modal3,
       showAddWarning: false,
     }));
-    // this.setState({
-    //   selectedScheduleRow: null,
-    // });
+    this.setState({
+      selectedScheduleRow: null,
+    });
   };
 
   handleCourseOfferingClick = row => {
@@ -563,16 +565,17 @@ class ClassSchedulingList extends Component {
   };
 
   handleDeleteRow = () => {
-    const { onDeleteScheduleTiming } = this.props;
+    const { onDeleteSectionLabDetails } = this.props;
     const { selectedScheduleRow } = this.state;
 
     if (selectedScheduleRow !== undefined) {
-      onDeleteScheduleTiming(selectedScheduleRow);
+      onDeleteSectionLabDetails(selectedScheduleRow);
 
       this.setState({
         selectedScheduleRow: null,
         deleteModal1: false,
         showAlert: true,
+        isEdit1: false,
       });
     }
   };
@@ -1011,7 +1014,7 @@ class ClassSchedulingList extends Component {
       newHallId,
     } = this.state;
 
-    const { onAddNewSectionLabDetails, halls } = this.props;
+    const { onAddNewSectionLabDetails, onUpdateSectionLabDetails } = this.props;
     //output instructorsId: "{25},{23}"
     // const formattedInstructors = instructorsArray
     //   ?.map(item => item.value)
@@ -1036,21 +1039,21 @@ class ClassSchedulingList extends Component {
     // console.log("✅ instructorsId to send:", formattedInstructors);
 
     //obj label+value
-    // const formattedInstructors =
-    //   instructorsArray?.map(item => ({
-    //     label: item.label,
-    //     value: item.value,
-    //   })) || [];
+    const formattedInstructors =
+      instructorsArray?.map(item => ({
+        label: item.label,
+        value: item.value,
+      })) || [];
 
     // values["instructorsId"] = Array.isArray(instructorsArray)
     //   ? instructorsArray.map(item => item.value)
     //   : [];
 
     //instructorsId: Array(2)0: {value: 23}1: {value: 25}
-    const formattedInstructors =
-      instructorsArray?.map(item => ({
-        value: item.value,
-      })) || [];
+    // const formattedInstructors =
+    //   instructorsArray?.map(item => ({
+    //     value: item.value,
+    //   })) || [];
 
     values["type"] = selectedRowSectionLab.type;
     values["sectionLabId"] = selectedRowSectionLab.Id;
@@ -1124,7 +1127,7 @@ class ClassSchedulingList extends Component {
     // scheduleTimingInfo["type"] = selectedRowSectionLab.type;
     // scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
     if (isEdit1) {
-      onUpdateContract(contractInfo);
+      onUpdateSectionLabDetails(scheduleTimingInfo);
     } else {
       console.log("saaaaave", scheduleTimingInfo);
       onAddNewSectionLabDetails(scheduleTimingInfo);
@@ -1134,14 +1137,20 @@ class ClassSchedulingList extends Component {
   };
 
   handleMultiInstructors = (fieldName, selectedMulti) => {
-    //   if (fieldName === "instructorsId") {
-    //   const selectedIds = selectedMulti.map(option => option.value);
+    // if (fieldName === "instructorsId") {
+    //   const selectedIds = selectedMulti
+    //     ? selectedMulti.map(option => option.value)
+    //     : [];
 
     //   this.setState({
-    //   instructorsArray: selectedMulti,
-    //   instructorsId: selectedIds,
+    //     instructorsArray: selectedMulti,
+    //     instructorsId: selectedIds,
     //   });
     // }
+
+    // this.setState({
+    //   instructorsArray: selectedMulti,
+    // });
 
     if (fieldName === "instructorsId") {
       this.setState({
@@ -1230,7 +1239,6 @@ class ClassSchedulingList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
-      modalContractValue,
       selectedCourse,
       selectedMethodOffering,
       selectedEndDate,
@@ -1547,15 +1555,30 @@ class ClassSchedulingList extends Component {
         // formatter: (cellContent, row) => this.handleClickOn(row),
       },
       {
-        dataField: "instructorsId",
+        dataField: "instructorNames",
         text: t("Instructor"),
         editable: false,
         sort: true,
-        // formatter: (cellContent, row) => this.handleClickOn(row),
+        // formatter: (cellContent, row) => {
+        //   let namesArray = [];
+        //   try {
+        //     const parsed = JSON.parse(cellContent);
+
+        //     if (Array.isArray(parsed)) {
+        //       namesArray = parsed;
+        //     } else {
+        //       return cellContent;
+        //     }
+        //   } catch (e) {
+        //     return cellContent;
+        //   }
+
+        //   return namesArray.join(", ");
+        // },
       },
 
       {
-        dataField: "hallId",
+        dataField: "hallName",
         text: t("Room"),
         editable: false,
         sort: true,
@@ -1621,13 +1644,6 @@ class ClassSchedulingList extends Component {
     };
     return (
       <React.Fragment>
-        <DeleteModal
-          show={deleteModal}
-          onDeleteClick={this.handleDeleteRow}
-          onCloseClick={() =>
-            this.setState({ deleteModal: false, selectedRowId: null })
-          }
-        />
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={this.props.t("Class Scheduling")} />
@@ -1821,17 +1837,17 @@ class ClassSchedulingList extends Component {
                                                       Yup.string().required(
                                                         "Please Enter Your Methods Offering"
                                                       ),
-                                                    endDate:
-                                                      Yup.string().required(
-                                                        t(
-                                                          "Please Enter Your End Offering Date"
-                                                        )
-                                                      ),
                                                     startDate:
-                                                      Yup.string().required(
-                                                        t(
-                                                          "Please Enter Your Offering Date"
-                                                        )
+                                                      Yup.date().required(
+                                                        "Please Enter Your Start Date"
+                                                      ),
+                                                    endDate: Yup.date()
+                                                      .required(
+                                                        "Please Enter Your End Date"
+                                                      )
+                                                      .min(
+                                                        Yup.ref("startDate"),
+                                                        "End date must be after start date"
                                                       ),
                                                   }
                                                 )}
@@ -2770,58 +2786,22 @@ class ClassSchedulingList extends Component {
                                           "",
                                       }}
                                       enableReinitialize={true}
-                                      validate={values => {
-                                        const errors = {};
-                                        if (!values.startDate) {
-                                          errors.startDate =
-                                            "Start Date is required";
-                                        }
-
-                                        if (!values.endDate) {
-                                          errors.endDate =
-                                            "End Date is required";
-                                        }
-
-                                        if (
-                                          values.startDate &&
-                                          values.endDate
-                                        ) {
-                                          const start = new Date(
-                                            values.startDate
-                                          );
-                                          const end = new Date(values.endDate);
-
-                                          if (end < start) {
-                                            errors.endDate =
-                                              "End Date must be greater than or equal to Start Date";
-                                          }
-                                        }
-
-                                        return errors;
-
-                                        if (
-                                          values.instructorsId &&
-                                          !instructors.some(
-                                            instructor =>
-                                              instructor.fullName ===
-                                              values.instructorsId
+                                      validationSchema={Yup.object().shape({
+                                        methodOfferingId: Yup.string().required(
+                                          "Please Enter Your Methods Offering"
+                                        ),
+                                        startDate: Yup.date().required(
+                                          "Please Enter Your Start Date"
+                                        ),
+                                        endDate: Yup.date()
+                                          .required(
+                                            "Please Enter Your End Date"
                                           )
-                                        ) {
-                                          errors.instructorsId =
-                                            "Please select a valid instructor.";
-                                        }
-
-                                        if (
-                                          values.hallId &&
-                                          !halls.some(
-                                            hall => hall.value === values.hallId
-                                          )
-                                        ) {
-                                          errors.hallId =
-                                            "Please select a valid hall.";
-                                        }
-                                        return errors;
-                                      }}
+                                          .min(
+                                            Yup.ref("startDate"),
+                                            "End date must be after start date"
+                                          ),
+                                      })}
                                     >
                                       {({
                                         errors,
@@ -3094,6 +3074,20 @@ class ClassSchedulingList extends Component {
                                                   Yup.string().required(
                                                     "Please Enter Your Section Number"
                                                   ),
+                                                Capacity: Yup.string().required(
+                                                  "Please Enter Your Section Capacity"
+                                                ),
+                                                startDate: Yup.date().required(
+                                                  "Please Enter Your Start Date"
+                                                ),
+                                                endDate: Yup.date()
+                                                  .required(
+                                                    "Please Enter Your End Date"
+                                                  )
+                                                  .min(
+                                                    Yup.ref("startDate"),
+                                                    "End date must be after start date"
+                                                  ),
                                               }
                                             )}
                                             onSubmit={values => {}}
@@ -3176,6 +3170,9 @@ class ClassSchedulingList extends Component {
                                                               "Section Capacity"
                                                             )}
                                                           </Label>
+                                                          <span className="text-danger">
+                                                            *
+                                                          </span>
                                                           <Field
                                                             name="Capacity"
                                                             placeholder="Section Capacity"
@@ -3188,6 +3185,11 @@ class ClassSchedulingList extends Component {
                                                                 : "")
                                                             }
                                                             autoComplete="Off"
+                                                          />
+                                                          <ErrorMessage
+                                                            name="Capacity"
+                                                            component="div"
+                                                            className="invalid-feedback"
                                                           />
                                                         </FormGroup>
                                                       </Col>
@@ -3203,15 +3205,20 @@ class ClassSchedulingList extends Component {
                                                                     "Start Date"
                                                                   )}
                                                                 </Label>
+                                                                <span className="text-danger">
+                                                                  *
+                                                                </span>
                                                               </Col>
                                                               <Col>
                                                                 <Field
                                                                   name="startDate"
-                                                                  className={`form-control ${
-                                                                    startDateError
-                                                                      ? "is-invalid"
-                                                                      : ""
-                                                                  }`}
+                                                                  className={
+                                                                    "form-control" +
+                                                                    (errors.startDate &&
+                                                                    touched.startDate
+                                                                      ? " is-invalid"
+                                                                      : "")
+                                                                  }
                                                                   type="date"
                                                                   value={
                                                                     values.startDate
@@ -3232,6 +3239,11 @@ class ClassSchedulingList extends Component {
                                                                   }
                                                                   id="startDate-date-input"
                                                                 />
+                                                                <ErrorMessage
+                                                                  name="startDate"
+                                                                  component="div"
+                                                                  className="invalid-feedback"
+                                                                />
                                                               </Col>
                                                             </Row>
                                                           </div>
@@ -3247,15 +3259,20 @@ class ClassSchedulingList extends Component {
                                                                     "End Date"
                                                                   )}
                                                                 </Label>
+                                                                <span className="text-danger">
+                                                                  *
+                                                                </span>
                                                               </Col>
                                                               <Col>
                                                                 <Field
                                                                   name="endDate"
-                                                                  className={`form-control ${
-                                                                    endDateError
-                                                                      ? "is-invalid"
-                                                                      : ""
-                                                                  }`}
+                                                                  className={
+                                                                    "form-control" +
+                                                                    (errors.endDate &&
+                                                                    touched.endDate
+                                                                      ? " is-invalid"
+                                                                      : "")
+                                                                  }
                                                                   type="date"
                                                                   value={
                                                                     values.endDate
@@ -3275,6 +3292,11 @@ class ClassSchedulingList extends Component {
                                                                     handleBlur
                                                                   }
                                                                   id="endDate-date-input"
+                                                                />
+                                                                <ErrorMessage
+                                                                  name="endDate"
+                                                                  component="div"
+                                                                  className="invalid-feedback"
                                                                 />
                                                               </Col>
                                                             </Row>
@@ -3530,9 +3552,6 @@ class ClassSchedulingList extends Component {
                                         {selectedOption === "Lab" && (
                                           <Formik
                                             enableReinitialize={true}
-                                            validate={values => {
-                                              const errors = {};
-                                            }}
                                             initialValues={{
                                               LabNumber:
                                                 (sectionLabData &&
@@ -3557,6 +3576,20 @@ class ClassSchedulingList extends Component {
                                                 LabNumber:
                                                   Yup.string().required(
                                                     "Please Enter Your Lab Number"
+                                                  ),
+                                                Capacity: Yup.string().required(
+                                                  "Please Enter Your Lab Capacity"
+                                                ),
+                                                startDate: Yup.date().required(
+                                                  "Please Enter Your Start Date"
+                                                ),
+                                                endDate: Yup.date()
+                                                  .required(
+                                                    "Please Enter Your End Date"
+                                                  )
+                                                  .min(
+                                                    Yup.ref("startDate"),
+                                                    "End date must be after start date"
                                                   ),
                                               }
                                             )}
@@ -3634,6 +3667,9 @@ class ClassSchedulingList extends Component {
                                                           <Label htmlFor="validationCustom05">
                                                             {t("Lab Capacity")}
                                                           </Label>
+                                                          <span className="text-danger">
+                                                            *
+                                                          </span>
                                                           <Field
                                                             name="Capacity"
                                                             placeholder="Lab Capacity"
@@ -3646,6 +3682,11 @@ class ClassSchedulingList extends Component {
                                                                 : "")
                                                             }
                                                             autoComplete="Off"
+                                                          />
+                                                          <ErrorMessage
+                                                            name="Capacity"
+                                                            component="div"
+                                                            className="invalid-feedback"
                                                           />
                                                         </FormGroup>
                                                       </Col>
@@ -3662,15 +3703,20 @@ class ClassSchedulingList extends Component {
                                                                     "Start Date"
                                                                   )}
                                                                 </Label>
+                                                                <span className="text-danger">
+                                                                  *
+                                                                </span>
                                                               </Col>
                                                               <Col>
                                                                 <Field
                                                                   name="startDate"
-                                                                  className={`form-control ${
-                                                                    startDateError
-                                                                      ? "is-invalid"
-                                                                      : ""
-                                                                  }`}
+                                                                  className={
+                                                                    "form-control" +
+                                                                    (errors.startDate &&
+                                                                    touched.startDate
+                                                                      ? " is-invalid"
+                                                                      : "")
+                                                                  }
                                                                   type="date"
                                                                   value={
                                                                     values.startDate
@@ -3691,6 +3737,11 @@ class ClassSchedulingList extends Component {
                                                                   }
                                                                   id="startDate-date-input"
                                                                 />
+                                                                <ErrorMessage
+                                                                  name="startDate"
+                                                                  component="div"
+                                                                  className="invalid-feedback"
+                                                                />
                                                               </Col>
                                                             </Row>
                                                           </div>
@@ -3706,15 +3757,20 @@ class ClassSchedulingList extends Component {
                                                                     "End Date"
                                                                   )}
                                                                 </Label>
+                                                                <span className="text-danger">
+                                                                  *
+                                                                </span>
                                                               </Col>
                                                               <Col>
                                                                 <Field
                                                                   name="endDate"
-                                                                  className={`form-control ${
-                                                                    endDateError
-                                                                      ? "is-invalid"
-                                                                      : ""
-                                                                  }`}
+                                                                  className={
+                                                                    "form-control" +
+                                                                    (errors.endDate &&
+                                                                    touched.endDate
+                                                                      ? " is-invalid"
+                                                                      : "")
+                                                                  }
                                                                   type="date"
                                                                   value={
                                                                     values.endDate
@@ -3734,6 +3790,11 @@ class ClassSchedulingList extends Component {
                                                                     handleBlur
                                                                   }
                                                                   id="endDate-date-input"
+                                                                />
+                                                                <ErrorMessage
+                                                                  name="endDate"
+                                                                  component="div"
+                                                                  className="invalid-feedback"
                                                                 />
                                                               </Col>
                                                             </Row>
@@ -4007,10 +4068,14 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateCourseOffering(CourseOffering)),
   onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),
-  onAddNewSectionLabDetails: sectionLab =>
-    dispatch(addNewSectionLabDetails(sectionLab)),
+  onAddNewSectionLabDetails: sectionLabDetails =>
+    dispatch(addNewSectionLabDetails(sectionLabDetails)),
   onUpdateSectionLab: sectionLab => dispatch(updateSectionLab(sectionLab)),
   onDeleteSectionLab: sectionLab => dispatch(deleteSectionLab(sectionLab)),
+  onUpdateSectionLabDetails: sectionLabDetails =>
+    dispatch(updateSectionLabDetails(sectionLabDetails)),
+  onDeleteSectionLabDetails: sectionLabDetails =>
+    dispatch(deleteSectionLabDetails(sectionLabDetails)),
   onGetFilteredAcademicCertificates: academicCer =>
     dispatch(getFilteredAcademicCertificates(academicCer)),
   onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),

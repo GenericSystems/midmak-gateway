@@ -13,7 +13,9 @@ import {
   ADD_NEW_SECTION_LAB,
   ADD_NEW_SECTION_LAB_DETAILS,
   DELETE_SECTION_LAB,
+  DELETE_SECTION_LAB_DETAILS,
   UPDATE_SECTION_LAB,
+  UPDATE_SECTION_LAB_DETAILS,
   GET_SCHEDULE_TIMINGS,
   GET_SCHEDULE_TIMING_PROFILE,
   ADD_NEW_SCHEDULE_TIMING,
@@ -50,8 +52,12 @@ import {
   addSectionLabDetailsSuccess,
   updateSectionLabSuccess,
   updateSectionLabFail,
+  updateSectionLabDetailsSuccess,
+  updateSectionLabDetailsFail,
   deleteSectionLabSuccess,
   deleteSectionLabFail,
+  deleteSectionLabDetailsSuccess,
+  deleteSectionLabDetailsFail,
   getScheduleTimingsSuccess,
   getScheduleTimingsFail,
   getScheduleTimingProfileSuccess,
@@ -128,6 +134,8 @@ import {
   getYears,
   getHalls,
   getEmployeesNames,
+  updateSectionLabDetails,
+  deleteSectionLabDetails,
 } from "../../helpers/fakebackend_helper";
 import {
   getFacultiesSuccess,
@@ -536,6 +544,36 @@ function* onAddNewSectionLabDetails({ payload, scheduleTiming }) {
   }
 }
 
+function* onUpdateSectionLabDetails({ payload }) {
+  console.log("in update", payload);
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_updateData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["queryname"] = "Common_TeachingSchedule";
+
+  try {
+    const respupdate = yield call(updateSectionLabDetails, payload);
+    yield put(updateSectionLabDetailsSuccess(respupdate[0]));
+  } catch (error) {
+    yield put(updateSectionLabDetailsFail(error));
+  }
+}
+
+function* onDeleteSectionLabDetails({ payload, scheduleTiming }) {
+  console.log("payloadDelete", payload);
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_removeData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_TeachingSchedule";
+
+  try {
+    const respdelete = yield call(deleteSectionLabDetails, payload);
+    yield put(deleteSectionLabDetailsSuccess(respdelete[0]));
+  } catch (error) {
+    yield put(deleteSectionLabDetailsFail(error));
+  }
+}
+
 function* onAddNewScheduleTiming({ payload, scheduleTiming }) {
   delete payload["id"];
   payload["source"] = "db";
@@ -589,7 +627,9 @@ function* classSchedulingSaga() {
   yield takeEvery(ADD_NEW_SECTION_LAB, onAddNewSectionLab);
   yield takeEvery(ADD_NEW_SECTION_LAB_DETAILS, onAddNewSectionLabDetails);
   yield takeEvery(UPDATE_SECTION_LAB, onUpdateSectionLab);
+  yield takeEvery(UPDATE_SECTION_LAB_DETAILS, onUpdateSectionLabDetails);
   yield takeEvery(DELETE_SECTION_LAB, onDeleteSectionLab);
+  yield takeEvery(DELETE_SECTION_LAB_DETAILS, onDeleteSectionLabDetails);
   yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
   yield takeEvery(GET_SCHEDULE_TIMING_PROFILE, fetchScheduleTimingProfile);
   yield takeEvery(ADD_NEW_SCHEDULE_TIMING, onAddNewScheduleTiming);

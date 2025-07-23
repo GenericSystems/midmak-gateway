@@ -640,7 +640,9 @@ export const GET_SECTION_LAB_PROFILE = "/sectionLab";
 export const ADD_NEW_SECTION_LAB = "/add/sectionLab";
 export const ADD_NEW_SECTION_LAB_DETAILS = "/add/sectionLabDetails";
 export const UPDATE_SECTION_LAB = "/update/sectionLab";
+export const UPDATE_SECTION_LAB_DETAILS = "/update/sectionLabDetails";
 export const DELETE_SECTION_LAB = "/delete/sectionLab";
+export const DELETE_SECTION_LAB_DETAILS = "/delete/sectionLabDetails";
 export const GET_FILTERED_SECTIONS = "/sectionLab";
 
 //ScheduleTiming
@@ -1138,19 +1140,17 @@ export const UPDATE_ARCHIVED_GRADE = "/update/archived_grade";
 
 //Unarchive Course Requests
 export const UNARCHIVE_COURSE_REQUESTS = "/unarchiveCourseRequests";
-export const ADD_UNARCHIVE_COURSE_REQUEST = "/add/unarchiveCourseRequest"
-export const DELETE_UNARCHIVE_COURSE_REQUEST = "/delete/unarchiveCourseRequest"
-export const UPDATE_UNARCHIVE_COURSE_REQUEST = "/update/unarchiveCourseRequest"
-export const GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE = "/deleted"
-
+export const ADD_UNARCHIVE_COURSE_REQUEST = "/add/unarchiveCourseRequest";
+export const DELETE_UNARCHIVE_COURSE_REQUEST = "/delete/unarchiveCourseRequest";
+export const UPDATE_UNARCHIVE_COURSE_REQUEST = "/update/unarchiveCourseRequest";
+export const GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE = "/deleted";
 
 //diploma levels
 export const GET_DIPLOMALEVELS = "/diplomalevels";
-export const GET_DIPLOMALEVEL_DELETED_VALUE = "/deleted"
+export const GET_DIPLOMALEVEL_DELETED_VALUE = "/deleted";
 export const ADD_NEW_DIPLOMALEVEL = "/add/diplomalevel";
-export const UPDATE_DIPLOMALEVEL  = "/update/diplomalevel";
-export const DELETE_DIPLOMALEVEL =  "/delete/diplomalevel";
-
+export const UPDATE_DIPLOMALEVEL = "/update/diplomalevel";
+export const DELETE_DIPLOMALEVEL = "/delete/diplomalevel";
 
 //HighStudyType
 export const GET_HIGHSTUDYTYPES = "/HighStudyTypes";

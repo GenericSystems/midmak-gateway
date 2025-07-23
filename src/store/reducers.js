@@ -24,8 +24,8 @@ import crypto from "./crypto/reducer";
 //invoices
 import invoices from "./invoices/reducer";
 
-//students
-import students from "./students/reducer";
+// //students
+// import students from "./students/reducer";
 
 //universityStudents
 import universityStudents from "./university-students/reducer";
@@ -281,6 +281,9 @@ import studentsRequests from "./students-requests/reducer";
 //contract
 import contracts from "./HR/contracts/reducer";
 
+//Applicants
+import applicants from "./Exam/Applicants/reducer";
+
 //Trainees
 import trainees from "./new-Trainee/reducer";
 
@@ -337,7 +340,7 @@ const rootReducer = combineReducers({
   mails,
   crypto,
   invoices,
-  students,
+  // students,
   admissionConditions,
   projects,
   tasks,
@@ -432,6 +435,7 @@ const rootReducer = combineReducers({
   unarchiveCourseRequests,
   diplomalevels,
   highstudytypes,
+  applicants,
 });
 
 export default rootReducer;

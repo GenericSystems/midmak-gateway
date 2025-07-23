@@ -21,8 +21,8 @@ export * from "./crypto/actions";
 //invoices
 export * from "./invoices/actions";
 
-// students
-export * from "./students/actions";
+// // students
+// export * from "./students/actions";
 
 // students history
 export * from "./students-history/actions";
@@ -270,6 +270,10 @@ export * from "./students-requests/actions";
 
 export * from "./HR/contracts/actions";
 
+//Applicants
+
+export * from "./Exam/Applicants/actions";
+
 //Trainees
 export * from "./new-Trainee/actions";
 
@@ -299,8 +303,7 @@ export * from "./checkGrades/actions";
 export * from "./archiveGrades/actions";
 
 //Unarchive Course Requests
-export * from "./Unarchive-course-requests/actions"
-
+export * from "./Unarchive-course-requests/actions";
 
 //DiplomaLevels
 export * from "./diploma-level/actions";

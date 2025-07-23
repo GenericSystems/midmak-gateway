@@ -92,7 +92,6 @@ class DefineExamDatesList extends Component {
       errorMessage: null,
       successMessage: null,
       values: "",
-      modalContractValue: [],
     };
     this.toggle = this.toggle.bind(this);
     this.toggle2 = this.toggle2.bind(this);
@@ -209,11 +208,11 @@ class DefineExamDatesList extends Component {
   };
 
   handleDeleteRow = () => {
-    const { onDeleteContract } = this.props;
+    const { onDeleteDefineExamDate } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteContract(selectedRowId);
+      onDeleteDefineExamDate(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -244,9 +243,11 @@ class DefineExamDatesList extends Component {
       selectedHasMinistryApprove,
       selectedGovernmentWorker,
       selectedFullName,
+      selectedExamType,
+      selectedDefinPeriod,
       fullNamesOpt,
     } = this.state;
-    const { onAddNewContract, onUpdateContract } = this.props;
+    const { onAddNewDefineExamDate, onUpdateDefineExamDate } = this.props;
 
     //values["administrativeSupervisor"] = selectedAdministrativeSupervisor;
     // values["physicalWorkLocation"] = selectedPhysicalWorkLocations;
@@ -256,7 +257,7 @@ class DefineExamDatesList extends Component {
     values["definPeriodId"] = selectedDefinPeriod;
     console.log("valuesssssssssssssssssssss", values);
 
-    let contractInfo = {};
+    let defineExamDateInfo = {};
     // if (values.fullNameId) {
     //   const nameObject = fullNamesOpt.find(
     //     fullName => fullName.value === values.fullNameId
@@ -285,14 +286,14 @@ class DefineExamDatesList extends Component {
           values[key] != undefined &&
           (values[key].length > 0 || values[key] != "")
         )
-          console.log("9999999", contractInfo);
-        contractInfo[key] = values[key];
+          console.log("9999999", defineExamDateInfo);
+        defineExamDateInfo[key] = values[key];
       });
       if (isEdit) {
-        console.log("9999999", contractInfo);
-        onUpdateContract(contractInfo);
+        console.log("9999999", defineExamDateInfo);
+        // onUpdateDefineExamDate(defineExamDateInfo);
       } else {
-        onAddNewContract(contractInfo);
+        // onAddNewDefineExamDate(defineExamDateInfo);
       }
       this.setState({
         errorMessages: {},
@@ -347,33 +348,25 @@ class DefineExamDatesList extends Component {
   };
 
   handleSuccessClose = () => {
-    const { onGetContractDeletedValue } = this.props;
+    const { onGetDefineExamDateDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetContractDeletedValue();
+    onGetDefineExamDateDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetContractDeletedValue } = this.props;
+    const { onGetDefineExamDateDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetContractDeletedValue();
+    onGetDefineExamDateDeletedValue();
   };
 
-  handleContractClick = arg => {
+  handleDefineExamDateClick = arg => {
     console.log("arg", arg);
 
     this.setState({
       defineExamDate: arg,
-      selectedJobRank: arg.jobRankId,
-      selectedJobTitle: arg.jobTitleId,
-      selectedCorporateNode: arg.corporateNodeId,
-      selectedContractType: arg.contractTypeId,
-      selectedEmploymentCase: arg.employmentCaseId,
-      selectedHasMinistryApprove: arg.hasMinistryApprove,
-      selectedGovernmentWorker: arg.governmentWorker,
-      selectedWorkClassification: arg.workClassificationId,
-      selectedAcademicYearId: arg.academicYearId,
+      selectedExamType: arg.examTypeId,
+      selectedDefinPeriod: arg.definPeriodId,
       isEdit: true,
-      isOpen: false,
     });
     this.toggle();
   };
@@ -420,7 +413,6 @@ class DefineExamDatesList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
-      modalContractValue,
       fullNamesOpt,
       selectedDefinPeriod,
       selectedExamType,
@@ -478,7 +470,7 @@ class DefineExamDatesList extends Component {
         //  hidden: !showDeleteButton,
         formatter: (cellContent, defineExamDate) => (
           <div className="d-flex gap-3">
-            <Tooltip
+            {/* <Tooltip
               title={this.props.t("View Employee Information")}
               placement="top"
             >
@@ -489,13 +481,13 @@ class DefineExamDatesList extends Component {
                   onClick={() => this.handleEmployeeDataClick(defineExamDate)}
                 ></i>
               </Link>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title={this.props.t("Edit")} placement="top">
               <Link className="text-sm-end" to="#">
                 <i
                   className="mdi mdi-pencil font-size-18"
                   id="edittooltip"
-                  onClick={() => this.handleContractClick(defineExamDate)}
+                  onClick={() => this.handleDefineExamDateClick(defineExamDate)}
                 ></i>
               </Link>
             </Tooltip>
@@ -773,33 +765,32 @@ class DefineExamDatesList extends Component {
                                       }}
                                       validationSchema={Yup.object().shape({
                                         examAr: Yup.string()
-                                          .matches(/^[أ-ي]+$/)
+                                          .matches(
+                                            /^[أ-ي]+$/,
+                                            "Only Arabic letters are allowed"
+                                          )
                                           .required(
-                                            "Please Enter Your Contrat Type"
+                                            "Please Enter Your Exam Name In Arabic"
+                                          ),
+                                        examEn: Yup.string()
+                                          .matches(
+                                            /^[A-Za-z]+$/,
+                                            "Only English letters are allowed"
+                                          )
+                                          .required(
+                                            "Please Enter Exam Name In English"
                                           ),
                                         startDate: Yup.date().required(
-                                          t("Please Enter Your Start Date")
+                                          "Please Enter Your Start Date"
                                         ),
-                                        endDate: Yup.date().required(
-                                          t("Please Enter Your End Date").min(
+                                        endDate: Yup.date()
+                                          .required(
+                                            "Please Enter Your End Date"
+                                          )
+                                          .min(
                                             Yup.ref("startDate"),
                                             "End date must be after start date"
-                                          )
-                                        ),
-
-                                        academicYearId: Yup.string().required(
-                                          t("Please Enter Your Academic Year")
-                                        ),
-                                        jobTitleId: Yup.string().required(
-                                          t("Please Enter Your Job Title")
-                                        ),
-                                        // corporateNodeId: Yup.string().required(
-                                        //   t("Please Enter Your Corporate Node")
-                                        // ),
-
-                                        signatureDate: Yup.string().required(
-                                          t("Please Enter Your Signature Date")
-                                        ),
+                                          ),
                                       })}
                                     >
                                       {({
@@ -857,9 +848,17 @@ class DefineExamDatesList extends Component {
                                                                   name="examAr"
                                                                   type="text"
                                                                   id="examAr"
-                                                                  className={
-                                                                    "form-control"
-                                                                  }
+                                                                  className={`form-control ${
+                                                                    errors.examAr &&
+                                                                    touched.examAr
+                                                                      ? "is-invalid"
+                                                                      : ""
+                                                                  }`}
+                                                                />
+                                                                <ErrorMessage
+                                                                  name="examAr"
+                                                                  component="div"
+                                                                  className="invalid-feedback"
                                                                 />
                                                               </Col>
                                                             </Row>
@@ -881,9 +880,17 @@ class DefineExamDatesList extends Component {
                                                                   name="examEn"
                                                                   type="text"
                                                                   id="examEn"
-                                                                  className={
-                                                                    "form-control"
-                                                                  }
+                                                                  className={`form-control ${
+                                                                    errors.examEn &&
+                                                                    touched.examEn
+                                                                      ? "is-invalid"
+                                                                      : ""
+                                                                  }`}
+                                                                />
+                                                                <ErrorMessage
+                                                                  name="examEn"
+                                                                  component="div"
+                                                                  className="invalid-feedback"
                                                                 />
                                                               </Col>
                                                             </Row>
@@ -904,7 +911,8 @@ class DefineExamDatesList extends Component {
                                                                 <Field
                                                                   name="startDate"
                                                                   className={`form-control ${
-                                                                    startDateError
+                                                                    errors.startDate &&
+                                                                    touched.startDate
                                                                       ? "is-invalid"
                                                                       : ""
                                                                   }`}
@@ -928,13 +936,11 @@ class DefineExamDatesList extends Component {
                                                                   }
                                                                   id="startDate-date-input"
                                                                 />
-                                                                {startDateError && (
-                                                                  <div className="invalid-feedback">
-                                                                    {this.props.t(
-                                                                      "Start Date is required"
-                                                                    )}
-                                                                  </div>
-                                                                )}
+                                                                <ErrorMessage
+                                                                  name="startDate"
+                                                                  component="div"
+                                                                  className="invalid-feedback"
+                                                                />
                                                               </Col>
                                                             </Row>
                                                           </div>
@@ -952,7 +958,12 @@ class DefineExamDatesList extends Component {
                                                               </Col>
                                                               <Col className="col-8">
                                                                 <Field
-                                                                  className={`form-control`}
+                                                                  className={`form-control ${
+                                                                    errors.endDate &&
+                                                                    touched.endDate
+                                                                      ? "is-invalid"
+                                                                      : ""
+                                                                  }`}
                                                                   name="endDate"
                                                                   type="date"
                                                                   value={
@@ -973,6 +984,11 @@ class DefineExamDatesList extends Component {
                                                                     handleBlur
                                                                   }
                                                                   id="endDate-date-input"
+                                                                />
+                                                                <ErrorMessage
+                                                                  name="endDate"
+                                                                  component="div"
+                                                                  className="invalid-feedback"
                                                                 />
                                                               </Col>
                                                             </Row>
@@ -1026,20 +1042,20 @@ class DefineExamDatesList extends Component {
                                                                   name="definePeriodId"
                                                                   key={`select_definePeriodId`}
                                                                   // options={
-                                                                  //   definePeriods
+                                                                  //   definePeriodOptions
                                                                   // }
                                                                   className={`form-control`}
-                                                                  // onChange={newValue => {
-                                                                  //   this.handleSelect(
+                                                                  // onChange={newValue =>
+                                                                  //   setFieldValue(
                                                                   //     "definePeriodId",
                                                                   //     newValue.value
-                                                                  //   );
-                                                                  // }}
-                                                                  // defaultValue={definePeriods.find(
-                                                                  //   opt =>
-                                                                  //     opt.value ===
-                                                                  //     defineExamDate?.definePeriodId
-                                                                  // )}
+                                                                  //   )
+                                                                  // }
+                                                                  //   value={definePeriodOptions.find(
+                                                                  //     opt =>
+                                                                  //       opt.value ===
+                                                                  //       values.definePeriodId
+                                                                  //   )}
                                                                 />
                                                               </Col>
                                                             </Row>

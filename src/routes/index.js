@@ -180,6 +180,9 @@ import DecisionsList from "../pages/HR/decisions/decisions";
 //Contracts
 import ContractsList from "../pages/HR/contracts/contracts";
 
+//Applicants
+import ApplicantsList from "../pages/Exam/Applicants/applicants";
+
 //Employment cases
 import EmploymentCasesList from "../pages/HR/employmentCases/employmentCases";
 
@@ -245,10 +248,8 @@ import UnarchiveCourseReq from "pages/Unarchive-course-requests/unarchive-course
 //timeline
 import TimeLines from "pages/TimeLines/timeLine";
 
-
 //diploma-level
-import DiplomaLevelsList from "pages/diploma-level/diploma-level"
-
+import DiplomaLevelsList from "pages/diploma-level/diploma-level";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -308,6 +309,10 @@ const authProtectedRoutes = [
   // contracts
 
   { path: "/contracts", component: ContractsList },
+
+  // Applicants
+
+  { path: "/applicants", component: ApplicantsList },
 
   // warningsTypes
 
@@ -403,15 +408,13 @@ const authProtectedRoutes = [
 
   //archive grades
 
-  {path:"/archive-grades", component:ArchiveGradesList},
+  { path: "/archive-grades", component: ArchiveGradesList },
 
   ///timeline
   { path: "/timeLine", component: TimeLines },
 
-
   //DiplomaLevelsList
-  {path:"diploma-level" , component:DiplomaLevelsList},
-
+  { path: "diploma-level", component: DiplomaLevelsList },
 
   //Blog
   { path: "/blog-list", component: BlogList },

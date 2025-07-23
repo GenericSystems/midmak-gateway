@@ -19,8 +19,6 @@ import {
   GET_TEMP_RELATIVES_FAIL,
   GET_TEMP_RELATIVE_DELETED_VALUE_SUCCESS,
   GET_TEMP_RELATIVE_DELETED_VALUE_FAIL,
-
-
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -34,7 +32,7 @@ const INIT_STATE = {
   tempRelatives: [],
 };
 
-const students = (state = INIT_STATE, action) => {
+const applicants = (state = INIT_STATE, action) => {
   switch (action.type) {
     case GET_STUDENTS_SUCCESS:
       return {
@@ -165,13 +163,10 @@ const students = (state = INIT_STATE, action) => {
         ...state,
         error: action.payload,
       };
- 
-
-
 
     default:
       return state;
   }
 };
 
-export default students;
+export default applicants;

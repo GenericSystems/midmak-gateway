@@ -11,7 +11,7 @@ import calendarSaga from "./calendar/saga";
 import chatSaga from "./chat/saga";
 import cryptoSaga from "./crypto/saga";
 import invoiceSaga from "./invoices/saga";
-import StudentsSaga from "./students/saga";
+// import StudentsSaga from "./students/saga";
 import projectsSaga from "./projects/saga";
 import tasksSaga from "./tasks/saga";
 import mailsSaga from "./mails/saga";
@@ -100,6 +100,7 @@ import DefineExamDatesSaga from "./Exam/DefineExamDates/saga";
 import WarningsTypesSaga from "./HR/warningsTypes/saga";
 import RewardsTypesSaga from "./HR/rewardsTypes/saga";
 import DecisionsTypesSaga from "./HR/decisionsTypes/saga";
+import ApplicantsSaga from "./Exam/Applicants/saga";
 
 import traineesSaga from "./new-Trainee/saga";
 
@@ -137,7 +138,7 @@ export default function* rootSaga() {
     fork(mailsSaga),
     fork(cryptoSaga),
     fork(invoiceSaga),
-    fork(StudentsSaga),
+    // fork(StudentsSaga),
     fork(admissionConditionsSaga),
     fork(projectsSaga),
     fork(tasksSaga),
@@ -236,5 +237,6 @@ export default function* rootSaga() {
     fork(archiveGradesSaga),
     fork(DiplomaLevelSaga),
     fork(HighStudyTypeSaga),
+    fork(ApplicantsSaga),
   ]);
 }
