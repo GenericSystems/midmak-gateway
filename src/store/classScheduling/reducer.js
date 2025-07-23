@@ -19,18 +19,20 @@ import {
   GET_SECTION_LAB_PROFILE_SUCCESS,
   GET_SECTION_LABS_FAIL,
   GET_SECTION_LABS_SUCCESS,
+  GET_SECTION_LAB_DETAILS_FAIL,
+  GET_SECTION_LAB_DETAILS_SUCCESS,
   ADD_SECTION_LAB_SUCCESS,
   ADD_SECTION_LAB_FAIL,
   ADD_SECTION_LAB_DETAIL_SUCCESS,
   ADD_SECTION_LAB_DETAIL_FAIL,
   UPDATE_SECTION_LAB_SUCCESS,
-  UPDATE_SECTION_LAB_DETAILS_FAIL,
-  UPDATE_SECTION_LAB_DETAILS_SUCCESS,
+  UPDATE_SECTION_LAB_DETAIL_FAIL,
+  UPDATE_SECTION_LAB_DETAIL_SUCCESS,
   UPDATE_SECTION_LAB_FAIL,
   DELETE_SECTION_LAB_SUCCESS,
   DELETE_SECTION_LAB_FAIL,
-  DELETE_SECTION_LAB_DETAILS_SUCCESS,
-  DELETE_SECTION_LAB_DETAILS_FAIL,
+  DELETE_SECTION_LAB_DETAIL_SUCCESS,
+  DELETE_SECTION_LAB_DETAIL_FAIL,
   GET_SCHEDULE_TIMING_PROFILE_FAIL,
   GET_SCHEDULE_TIMING_PROFILE_SUCCESS,
   GET_SCHEDULE_TIMINGS_FAIL,
@@ -54,7 +56,7 @@ const INIT_STATE = {
   methodsOffering: [],
   instructors: [],
   sectionLabs: [],
-  sectionLabsDetails: [],
+  sectionLabDetails: [],
   weekDays: [],
   lecturePeriods: [],
   classProfile: {},
@@ -185,6 +187,16 @@ const classScheduling = (state = INIT_STATE, action) => {
         ...state,
         error: action.payload,
       };
+    case GET_SECTION_LAB_DETAILS_SUCCESS:
+      return {
+        ...state,
+        sectionLabDetails: action.payload,
+      };
+    case GET_SECTION_LAB_DETAILS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
 
     case ADD_SECTION_LAB_SUCCESS:
       return {
@@ -199,9 +211,11 @@ const classScheduling = (state = INIT_STATE, action) => {
       };
 
     case ADD_SECTION_LAB_DETAIL_SUCCESS:
+      console.log("Reducer handled add:", action.payload);
+
       return {
         ...state,
-        sectionLabsDetails: [...state.sectionLabsDetails, action.payload],
+        sectionLabDetails: [...state.sectionLabDetails, action.payload],
       };
 
     case ADD_SECTION_LAB_DETAIL_FAIL:
@@ -210,17 +224,18 @@ const classScheduling = (state = INIT_STATE, action) => {
         error: action.payload,
       };
 
-    case UPDATE_SECTION_LAB_DETAILS_SUCCESS:
+    case UPDATE_SECTION_LAB_DETAIL_SUCCESS:
+      console.log("Reducer handled upppp:", action.payload);
       return {
         ...state,
-        sectionLabsDetails: state.sectionLabsDetails.map(sectionLabsDetail =>
-          sectionLabsDetail.Id.toString() === action.payload.Id.toString()
-            ? { sectionLabsDetail, ...action.payload }
-            : sectionLabsDetail
+        sectionLabDetails: state.sectionLabDetails.map(sectionLabDetail =>
+          sectionLabDetail.Id.toString() === action.payload.Id.toString()
+            ? { sectionLabDetail, ...action.payload }
+            : sectionLabDetail
         ),
       };
 
-    case UPDATE_SECTION_LAB_DETAILS_FAIL:
+    case UPDATE_SECTION_LAB_DETAIL_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -264,17 +279,18 @@ const classScheduling = (state = INIT_STATE, action) => {
         error: action.payload,
       };
 
-    case DELETE_SECTION_LAB_DETAILS_SUCCESS:
+    case DELETE_SECTION_LAB_DETAIL_SUCCESS:
+      console.log("Reducer handled delete:", action.payload);
       return {
         ...state,
-        sectionLabsDetails: state.sectionLabsDetails.filter(
+        sectionLabDetails: state.sectionLabDetails.filter(
           sectionLabDetail =>
             sectionLabDetail.Id.toString() !== action.payload.Id.toString()
         ),
         deleted: action.payload.deleted,
       };
 
-    case DELETE_SECTION_LAB_DETAILS_FAIL:
+    case DELETE_SECTION_LAB_DETAIL_FAIL:
       return {
         ...state,
         error: action.payload,

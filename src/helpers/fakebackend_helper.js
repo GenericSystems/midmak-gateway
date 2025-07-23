@@ -1468,6 +1468,10 @@ export const getFilteredSections = data =>
 // get SectionLabs
 export const getSectionLabs = data => post(url.GET_SECTION_LABS, data);
 
+// get SectionLabDetails
+export const getSectionLabDetails = data =>
+  post(url.GET_SECTION_LAB_DETAILS, data);
+
 //get SectionLabs profile
 export const getSectionLabProfile = () => get(url.GET_SECTION_LAB_PROFILE);
 
@@ -1481,16 +1485,16 @@ export const addNewSectionLabDetail = data =>
 //update SectionLabs
 export const updateSectionLab = data => post(url.UPDATE_SECTION_LAB, data);
 
-//updateSectionLabDetails
-export const updateSectionLabDetails = data =>
-  post(url.UPDATE_SECTION_LAB, data);
+//updateSectionLabDetail
+export const updateSectionLabDetail = data =>
+  post(url.UPDATE_SECTION_LAB_DETAIL, data);
 
 //delete SectionLabs
 export const deleteSectionLab = data => post(url.DELETE_SECTION_LAB, data);
 
-//delete SectionLabs
-export const deleteSectionLabDetails = data =>
-  post(url.DELETE_SECTION_LAB_DETAILS, data);
+//delete SectionLab
+export const deleteSectionLabDetail = data =>
+  post(url.DELETE_SECTION_LAB_DETAIL, data);
 
 // get ScheduleTiming
 export const getScheduleTimings = data => post(url.GET_SCHEDULE_TIMINGS, data);

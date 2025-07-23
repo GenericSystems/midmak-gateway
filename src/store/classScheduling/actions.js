@@ -32,21 +32,24 @@ import {
   ADD_NEW_SECTION_LAB,
   ADD_SECTION_LAB_SUCCESS,
   ADD_SECTION_LAB_FAIL,
+  GET_SECTION_LAB_DETAILS,
+  GET_SECTION_LAB_DETAILS_FAIL,
+  GET_SECTION_LAB_DETAILS_SUCCESS,
   ADD_NEW_SECTION_LAB_DETAIL,
   ADD_SECTION_LAB_DETAIL_SUCCESS,
   ADD_SECTION_LAB_DETAIL_FAIL,
   UPDATE_SECTION_LAB,
   UPDATE_SECTION_LAB_SUCCESS,
   UPDATE_SECTION_LAB_FAIL,
-  UPDATE_SECTION_LAB_DETAILS,
-  UPDATE_SECTION_LAB_DETAILS_SUCCESS,
-  UPDATE_SECTION_LAB_DETAILS_FAIL,
+  UPDATE_SECTION_LAB_DETAIL,
+  UPDATE_SECTION_LAB_DETAIL_SUCCESS,
+  UPDATE_SECTION_LAB_DETAIL_FAIL,
   DELETE_SECTION_LAB,
   DELETE_SECTION_LAB_SUCCESS,
   DELETE_SECTION_LAB_FAIL,
-  DELETE_SECTION_LAB_DETAILS,
-  DELETE_SECTION_LAB_DETAILS_SUCCESS,
-  DELETE_SECTION_LAB_DETAILS_FAIL,
+  DELETE_SECTION_LAB_DETAIL,
+  DELETE_SECTION_LAB_DETAIL_SUCCESS,
+  DELETE_SECTION_LAB_DETAIL_FAIL,
   GET_SCHEDULE_TIMING_PROFILE,
   GET_SCHEDULE_TIMING_PROFILE_FAIL,
   GET_SCHEDULE_TIMING_PROFILE_SUCCESS,
@@ -237,6 +240,21 @@ export const addSectionLabFail = error => ({
   payload: error,
 });
 
+export const getSectionLabDetails = SectionLabDetails => ({
+  type: GET_SECTION_LAB_DETAILS,
+  payload: SectionLabDetails,
+});
+
+export const getSectionLabDetailsSuccess = SectionLabDetails => ({
+  type: GET_SECTION_LAB_DETAILS_SUCCESS,
+  payload: SectionLabDetails,
+});
+
+export const getSectionLabDetailsFail = error => ({
+  type: GET_SECTION_LAB_DETAILS_FAIL,
+  payload: error,
+});
+
 export const addNewSectionLabDetail = SectionLabDetail => ({
   type: ADD_NEW_SECTION_LAB_DETAIL,
   payload: SectionLabDetail,
@@ -266,33 +284,33 @@ export const updateSectionLabFail = error => ({
   type: UPDATE_SECTION_LAB_FAIL,
   payload: error,
 });
-export const updateSectionLabDetails = SectionLabDetails => ({
-  type: UPDATE_SECTION_LAB_DETAILS,
-  payload: SectionLabDetails,
+export const updateSectionLabDetail = SectionLabDetail => ({
+  type: UPDATE_SECTION_LAB_DETAIL,
+  payload: SectionLabDetail,
 });
 
-export const updateSectionLabDetailsSuccess = SectionLabDetails => ({
-  type: UPDATE_SECTION_LAB_DETAILS_SUCCESS,
-  payload: SectionLabDetails,
+export const updateSectionLabDetailSuccess = SectionLabDetail => ({
+  type: UPDATE_SECTION_LAB_DETAIL_SUCCESS,
+  payload: SectionLabDetail,
 });
 
-export const updateSectionLabDetailsFail = error => ({
-  type: UPDATE_SECTION_LAB_DETAILS_FAIL,
+export const updateSectionLabDetailFail = error => ({
+  type: UPDATE_SECTION_LAB_DETAIL_FAIL,
   payload: error,
 });
 
-export const deleteSectionLabDetails = SectionLabDetails => ({
-  type: DELETE_SECTION_LAB_DETAILS,
-  payload: SectionLabDetails,
+export const deleteSectionLabDetail = SectionLabDetail => ({
+  type: DELETE_SECTION_LAB_DETAIL,
+  payload: SectionLabDetail,
 });
 
-export const deleteSectionLabDetailsSuccess = SectionLabDetails => ({
-  type: DELETE_SECTION_LAB_DETAILS_SUCCESS,
-  payload: SectionLabDetails,
+export const deleteSectionLabDetailSuccess = SectionLabDetail => ({
+  type: DELETE_SECTION_LAB_DETAIL_SUCCESS,
+  payload: SectionLabDetail,
 });
 
-export const deleteSectionLabDetailsFail = error => ({
-  type: DELETE_SECTION_LAB_DETAILS_FAIL,
+export const deleteSectionLabDetailFail = error => ({
+  type: DELETE_SECTION_LAB_DETAIL_FAIL,
   payload: error,
 });
 

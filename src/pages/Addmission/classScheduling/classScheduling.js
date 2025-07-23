@@ -54,8 +54,8 @@ import {
   addNewSectionLabDetail,
   updateSectionLab,
   deleteSectionLab,
-  updateSectionLabDetails,
-  deleteSectionLabDetails,
+  updateSectionLabDetail,
+  deleteSectionLabDetail,
   getScheduleTimings,
   deleteScheduleTiming,
   addNewScheduleTiming,
@@ -63,6 +63,7 @@ import {
   fetchDefaultSettings,
   getScheduleMsgValue,
   getHallTimings,
+  getSectionLabDetails,
 } from "store/classScheduling/actions";
 import paginationFactory, {
   PaginationProvider,
@@ -185,6 +186,7 @@ class ClassSchedulingList extends Component {
       onGetCoursesOffering,
       halls,
       instructors,
+      sectionLabDetails,
       faculties,
       filteredAcademicCertificates,
       weekDays,
@@ -219,6 +221,7 @@ class ClassSchedulingList extends Component {
       languageState: lang,
       employeesNames,
       returnMessage,
+      sectionLabDetails,
     });
     i18n.on("languageChanged", this.handleLanguageChange);
 
@@ -562,14 +565,14 @@ class ClassSchedulingList extends Component {
   };
 
   handleDeleteSectionLabDetails = () => {
-    const { onDeleteSectionLabDetails } = this.props;
+    const { onDeleteSectionLabDetail, onGetSectionLabDetails } = this.props;
     // const { selectedScheduleRow } = this.state;
     const { sectionLabDetails } = this.state;
     //
     // console.log("selectedScheduleRowselectedScheduleRow", selectedScheduleRow);
     if (sectionLabDetails.Id !== undefined) {
       let onDelete = { Id: sectionLabDetails.Id };
-      onDeleteSectionLabDetails(onDelete);
+      onDeleteSectionLabDetail(onDelete);
     }
     // if (selectedScheduleRow !== undefined) {
     //   onDeleteSectionLabDetails(selectedScheduleRow);
@@ -580,6 +583,7 @@ class ClassSchedulingList extends Component {
       showAlert: true,
       isEdit1: false,
     });
+    onGetSectionLabDetails();
   };
 
   handleEditSectionLab = SLD => {
@@ -1129,7 +1133,7 @@ class ClassSchedulingList extends Component {
     // scheduleTimingInfo["type"] = selectedRowSectionLab.type;
     // scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
     if (isEdit1) {
-      onUpdateSectionLabDetails(scheduleTimingInfo);
+      onUpdateSectionLabDetail(scheduleTimingInfo);
     } else {
       console.log("saaaaave", scheduleTimingInfo);
       onAddNewSectionLabDetail(scheduleTimingInfo);
@@ -1255,8 +1259,6 @@ class ClassSchedulingList extends Component {
     } = this.state;
 
     console.log(isScheduleEditable, "we needddddddd");
-
-    console.log(currentYearObj, "gggg");
     const selectRow = {
       mode: "checkbox",
       clickToSelect: false,
@@ -4072,15 +4074,17 @@ const mapDispatchToProps = dispatch => ({
   onUpdateCourseOffering: CourseOffering =>
     dispatch(updateCourseOffering(CourseOffering)),
   onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
+  onGetSectionLabDetails: sectionLabs =>
+    dispatch(getSectionLabDetails(sectionLabs)),
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),
   onAddNewSectionLabDetail: sectionLabDetail =>
     dispatch(addNewSectionLabDetail(sectionLabDetail)),
   onUpdateSectionLab: sectionLab => dispatch(updateSectionLab(sectionLab)),
   onDeleteSectionLab: sectionLab => dispatch(deleteSectionLab(sectionLab)),
-  onUpdateSectionLabDetails: sectionLabDetails =>
-    dispatch(updateSectionLabDetails(sectionLabDetails)),
-  onDeleteSectionLabDetails: sectionLabDetails =>
-    dispatch(deleteSectionLabDetails(sectionLabDetails)),
+  onUpdateSectionLabDetail: sectionLabDetail =>
+    dispatch(updateSectionLabDetail(sectionLabDetail)),
+  onDeleteSectionLabDetail: sectionLabDetail =>
+    dispatch(deleteSectionLabDetail(sectionLabDetail)),
   onGetFilteredAcademicCertificates: academicCer =>
     dispatch(getFilteredAcademicCertificates(academicCer)),
   onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),

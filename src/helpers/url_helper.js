@@ -636,13 +636,14 @@ export const DELETE_COURSE_OFFERING = "/delete/courseOffering";
 
 //SectionLabs
 export const GET_SECTION_LABS = "/sectionLabs";
+export const GET_SECTION_LAB_DETAILS = "/sectionLabDetails";
 export const GET_SECTION_LAB_PROFILE = "/sectionLab";
 export const ADD_NEW_SECTION_LAB = "/add/sectionLab";
 export const ADD_NEW_SECTION_LAB_DETAIL = "/add/sectionLabDetail";
 export const UPDATE_SECTION_LAB = "/update/sectionLab";
-export const UPDATE_SECTION_LAB_DETAILS = "/update/sectionLabDetails";
+export const UPDATE_SECTION_LAB_DETAIL = "/update/sectionLabDetail";
 export const DELETE_SECTION_LAB = "/delete/sectionLab";
-export const DELETE_SECTION_LAB_DETAILS = "/delete/sectionLabDetails";
+export const DELETE_SECTION_LAB_DETAIL = "/delete/sectionLabDetail";
 export const GET_FILTERED_SECTIONS = "/sectionLab";
 
 //ScheduleTiming

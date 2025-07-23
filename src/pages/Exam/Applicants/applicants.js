@@ -93,6 +93,7 @@ class ApplicantsList extends Component {
     this.node = React.createRef();
     this.state = {
       student: "",
+      years: [],
       tempStudentLocal: "",
       activeTab: 1,
       activeTabVartical: 1,
@@ -110,6 +111,8 @@ class ApplicantsList extends Component {
       selecetdDiplomaId: "",
       selectedFacultyId: 0,
       selectedStudyPlanId: 0,
+      selectedYear: null,
+      currentYearObj: {},
       facultyName: "",
       studyPlanName: "",
       selectedregistrationCertLevelId: "",
@@ -225,9 +228,10 @@ class ApplicantsList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     this.getAllObject(this.props.user_menu, this.props.location.pathname);
     const { student } = this.state;
-    if (students && !students.length) {
-      onGetStudents();
-    }
+    // if (students && !students.length) {
+    //   onGetStudents();
+    // }
+    onGetStudents();
     this.setState({ last_created_student });
     this.setState({ students });
     this.setState({ tempStudent_regReqDocs });
@@ -253,6 +257,28 @@ class ApplicantsList extends Component {
     this.setState({ universityStudents, studentsOpt });
     this.setState({ grants });
     this.setState({ tempStudentBrothers });
+    let curentueardata = localStorage.getItem("authUser");
+    if (curentueardata) {
+      try {
+        const parsed = JSON.parse(curentueardata);
+        const firstYear = parsed[0];
+        const selectedYear = {
+          value: firstYear.currentYearId,
+          label: firstYear.currentYearName,
+        };
+        this.setState({
+          selectedYear,
+          currentYearObj: {
+            currentYearId: firstYear.currentYearId,
+            currentYearName: firstYear.currentYearName,
+          },
+        });
+      } catch (error) {
+        console.error("Error parsing authUser:", error);
+      }
+    }
+
+    console.log(this.state.currentYearObj, "gggg");
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -315,7 +341,18 @@ class ApplicantsList extends Component {
       modal: !prevState.modal,
     }));
   }
-
+  handleSelectYear = (name, value) => {
+    document.getElementById("square-switch1").checked = false;
+    const { onGetCoursesOffering } = this.props;
+    this.setState({
+      selectedYear: value,
+      currentYearObj: {
+        currentYearId: value.value,
+        currentYearName: value.label,
+      },
+    });
+    onGetStudents();
+  };
   handleStudentClicks = () => {
     const { tempStudent } = this.props;
     const emptyStudent = {};
@@ -1559,6 +1596,7 @@ class ApplicantsList extends Component {
       "Student List | keyInHands - React Admin & Dashboard Template";
 
     const {
+      selectedYear,
       relativesArray,
       selectedHealthProblems,
       selectedHasDisability,
@@ -1622,6 +1660,7 @@ class ApplicantsList extends Component {
       showEditButton,
       showSearchButton,
       menuObject,
+      currentYearObj,
     } = this.state;
 
     const showNewInput =
@@ -1631,6 +1670,7 @@ class ApplicantsList extends Component {
     const showUniForm = selectedregistrationCertLevelId === 79;
 
     const {
+      years,
       tempRelatives,
       students,
       tempStudent,
@@ -1686,144 +1726,71 @@ class ApplicantsList extends Component {
         key: "img",
         text: "#",
         hidden: true,
-        formatter: (cellContent, student) => (
-          <>
-            {!student.img ? (
-              <div className="avatar-xs">
-                <span>{student.FirstName}</span>
-              </div>
-            ) : (
-              <div>
-                <img
-                  className="rounded-circle avatar-xs"
-                  src={images[student.img]}
-                  alt=""
-                />
-              </div>
-            )}
-          </>
-        ),
       },
       {
-        dataField: "studentname",
+        dataField: "fullName",
         key: "fName",
         text: this.props.t("Full Name"),
         sort: true,
-        formatter: (cellContent, student) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {student.studentname}
-              </Link>
-            </h5>
-          </>
-        ),
+
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: menuObject && menuObject.isSearch == 1 ? false : true,
+          // hidden: menuObject && menuObject.isSearch == 1 ? false : true,
         }),
       },
       {
-        dataField: "MotherName",
+        dataField: "motherName",
         text: this.props.t("Mother Name"),
         key: "mothName",
         sort: true,
-        formatter: (cellContent, student) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {student.MotherName}
-              </Link>
-            </h5>
-          </>
-        ),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
+          // hidden: !showSearchButton,
+        }),
+      },
+      {
+        dataField: "idNum",
+        key: "b-day",
+        text: this.props.t("ID Number"),
+        sort: true,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          // hidden: !showSearchButton,
         }),
       },
       {
         dataField: "birthdate",
-        key: "b-day",
-        text: this.props.t("Birth Date"),
+        text: this.props.t("Registration date"),
         sort: true,
-        formatter: (cellContent, student) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {new Date(student.birthdate).toISOString().slice(0, 10)}
-              </Link>
-            </h5>
-          </>
-        ),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
+          // hidden: !showSearchButton,
         }),
       },
-      {
-        dataField: "nationality",
-        key: "nationality",
-        text: this.props.t("Nationality"),
-        sort: true,
-        formatter: (cellContent, student) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {student.nationality}
-              </Link>
-            </h5>
-          </>
-        ),
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
-        }),
-      },
-      {
-        dataField: "Faculty",
-        key: "faculty",
-        text: this.props.t("Faculty"),
-        sort: true,
-        formatter: (cellContent, student) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {student.Faculty}
-              </Link>
-            </h5>
-          </>
-        ),
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
-        }),
-      },
-
       {
         dataField: "menu",
         isDummyField: true,
         editable: false,
         formatter: (cellContent, student) => (
           <div className="d-flex gap-3">
-            {menuObject && menuObject.isEdit == 1 && (
-              <Link className="text-secondary" to="#">
-                <i
-                  className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
-                  onClick={() => this.handleEditStudent(student)}
-                ></i>
-              </Link>
-            )}
-            {menuObject && menuObject.isDelete == 1 && (
-              <Link className="text-danger" to="#">
-                <i
-                  className="mdi mdi-delete font-size-18"
-                  id="deletetooltip"
-                  onClick={() => this.onClickDelete(student)}
-                ></i>
-              </Link>
-            )}
+            {/* {menuObject && menuObject.isEdit == 1 && ( */}
+            <Link className="text-secondary" to="#">
+              <i
+                className="mdi mdi-pencil font-size-18"
+                id="edittooltip"
+                onClick={() => this.handleEditStudent(student)}
+              ></i>
+            </Link>
+            {/* )} */}
+            {/* {menuObject && menuObject.isDelete == 1 && ( */}
+            <Link className="text-danger" to="#">
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                onClick={() => this.onClickDelete(student)}
+              ></i>
+            </Link>
+            {/* )} */}
           </div>
         ),
       },
@@ -2156,10 +2123,7 @@ class ApplicantsList extends Component {
         <div className="page-content">
           <Container fluid>
             {/* Render Breadcrumbs */}
-            <Breadcrumbs
-              title={this.props.t("Students")}
-              breadcrumbItem={this.props.t("Students List")}
-            />
+            <Breadcrumbs breadcrumbItem={this.props.t("Applicants")} />
 
             <Row>
               <Col lg="12">
@@ -2183,26 +2147,38 @@ class ApplicantsList extends Component {
                           {toolkitprops => (
                             <React.Fragment>
                               <Row className="mb-2">
-                                <Col sm="4"></Col>
-                                {menuObject && menuObject.isAdd == 1 && (
-                                  <Col sm="8">
-                                    <div className="text-sm-end">
-                                      <Tooltip
-                                        title={this.props.t(
-                                          "Create New Student"
-                                        )}
-                                        placement="top"
+                                <Col sm="5"></Col>
+                                <Col sm="3">
+                                  <Select
+                                    className="select-style-year"
+                                    name="yearId"
+                                    key={`yearId`}
+                                    options={years}
+                                    onChange={newValue => {
+                                      this.handleSelectYear("yearId", newValue);
+                                    }}
+                                    value={selectedYear}
+                                  />
+                                </Col>
+                                <Col sm="3"></Col>
+
+                                {/* {menuObject && menuObject.isAdd == 1 && ( */}
+                                <Col sm="1">
+                                  <div className="text-sm-end">
+                                    <Tooltip
+                                      title={this.props.t("Create New Student")}
+                                      placement="top"
+                                    >
+                                      <IconButton
+                                        color="primary"
+                                        onClick={this.handleStudentClicks}
                                       >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleStudentClicks}
-                                        >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </div>
-                                  </Col>
-                                )}
+                                        <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </div>
+                                </Col>
+                                {/* )} */}
                               </Row>
                               <Row>
                                 <div>
@@ -2256,8 +2232,7 @@ class ApplicantsList extends Component {
                                       filter={filterFactory()}
                                       filterPosition="top"
                                     />
-
-                                    <Modal
+                                    {/* <Modal
                                       isOpen={this.state.modal}
                                       className={this.props.className}
                                       fullscreen
@@ -5797,222 +5772,9 @@ class ApplicantsList extends Component {
                                                                       <Col className="col-4">
                                                                         <Label for="permenant-building">
                                                                           {this.props.t(
-                                                                            "Permanent Building Number"
-                                                                          )}
-                                                                        </Label>
-                                                                      </Col>
-                                                                      <Col className="col-8">
-                                                                        <Field
-                                                                          type="text"
-                                                                          name="permanentAddrBuildingNum"
-                                                                          id="permenant-building"
-                                                                          className={
-                                                                            "form-control"
-                                                                          }
-                                                                        />
-                                                                      </Col>
-                                                                    </Row>
-                                                                  </div>
-                                                                  <div className="mb-3">
-                                                                    <Row>
-                                                                      <Col className="col-4">
-                                                                        <Label for="permenant-phobe">
-                                                                          {this.props.t(
-                                                                            "Permanent Phone"
-                                                                          )}
-                                                                        </Label>
-                                                                      </Col>
-                                                                      <Col className="col-8">
-                                                                        <Field
-                                                                          type="text"
-                                                                          name="PermanentAddrPhone"
-                                                                          id="permenant-phobe"
-                                                                          className={
-                                                                            "form-control"
-                                                                          }
-                                                                        />
-                                                                      </Col>
-                                                                    </Row>
-                                                                  </div>
-                                                                  <div className="mb-3">
-                                                                    <Row>
-                                                                      <Col className="col-4">
-                                                                        <Label for="permenant-cell">
-                                                                          {this.props.t(
-                                                                            "Permanent Mobile"
-                                                                          )}
-                                                                        </Label>
-                                                                      </Col>
-                                                                      <Col className="col-8">
-                                                                        <Field
-                                                                          type="text"
-                                                                          name="PermanentAddrCell"
-                                                                          id="permenant-cell"
-                                                                          className={
-                                                                            "form-control"
-                                                                          }
-                                                                        />
-                                                                      </Col>
-                                                                    </Row>
-                                                                  </div>
-                                                                </Col>
-                                                              </Row>
-                                                              <Row>
-                                                                <Col
-                                                                  className="bordered"
-                                                                  lg="8"
-                                                                >
-                                                                  <Row>
-                                                                    <Col lg="6">
-                                                                      <div className="mb-3">
-                                                                        <Row>
-                                                                          <Col className="col-4">
-                                                                            <Label for="email">
-                                                                              {this.props.t(
-                                                                                "Email"
-                                                                              )}
-                                                                            </Label>
-                                                                          </Col>
-                                                                          <Col className="col-8">
-                                                                            <InputGroup>
-                                                                              <Field
-                                                                                type="text"
-                                                                                name="Email"
-                                                                                id="email"
-                                                                                value={
-                                                                                  tempStudent.Email
-                                                                                }
-                                                                                className={
-                                                                                  "form-control"
-                                                                                }
-                                                                              />
-                                                                              <div className="input-group-text">
-                                                                                @
-                                                                              </div>
-                                                                            </InputGroup>
-                                                                          </Col>
-                                                                        </Row>
-                                                                      </div>
-                                                                    </Col>
-                                                                    <Col lg="6">
-                                                                      <div className="md-3">
-                                                                        <Row>
-                                                                          <Col className="col-4 text-center">
-                                                                            <Label for="note">
-                                                                              {this.props.t(
-                                                                                "Notes"
-                                                                              )}
-                                                                            </Label>
-                                                                          </Col>
-                                                                          <Col className="col-8">
-                                                                            <Field
-                                                                              type="textarea"
-                                                                              name="GeneralNote"
-                                                                              as="textarea"
-                                                                              id="note"
-                                                                              className={
-                                                                                "form-control"
-                                                                              }
-                                                                            />
-                                                                          </Col>
-                                                                        </Row>
-                                                                      </div>
-                                                                    </Col>
-                                                                  </Row>
-                                                                </Col>
-                                                              </Row>
-                                                            </Row>
-                                                            <Row>
-                                                              <Accordion defaultActiveKey="1">
-                                                                <Accordion.Item eventKey="2">
-                                                                  <Accordion.Header>
-                                                                    {this.props.t(
-                                                                      "Relatives' Information"
-                                                                    )}
-                                                                  </Accordion.Header>
-                                                                  <Accordion.Body>
-                                                                    {duplicateErrorRelative && (
-                                                                      <Alert
-                                                                        color="danger"
-                                                                        className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                                        role="alert"
-                                                                      >
-                                                                        {
-                                                                          duplicateErrorRelative
-                                                                        }
-                                                                        <button
-                                                                          type="button"
-                                                                          className="btn-close"
-                                                                          aria-label="Close"
-                                                                          onClick={
-                                                                            this
-                                                                              .handleAlertCloseRelative
-                                                                          }
-                                                                        ></button>
-                                                                      </Alert>
-                                                                    )}
-                                                                    <Row>
-                                                                      <Col>
-                                                                        <div className="text-sm-end">
-                                                                          <Tooltip
-                                                                            title={this.props.t(
-                                                                              "Add"
-                                                                            )}
-                                                                            placement="top"
-                                                                          >
-                                                                            <IconButton
-                                                                              color="primary"
-                                                                              onClick={
-                                                                                this
-                                                                                  .handleAddRowRelative
-                                                                              }
-                                                                            >
-                                                                              <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                                                            </IconButton>
-                                                                          </Tooltip>
-                                                                        </div>
-                                                                      </Col>
-                                                                    </Row>
-                                                                    <BootstrapTable
-                                                                      keyField="Id"
-                                                                      data={
-                                                                        relativesArray
-                                                                      }
-                                                                      columns={
-                                                                        ParentsColumns
-                                                                      }
-                                                                      cellEdit={cellEditFactory(
-                                                                        {
-                                                                          mode: "click",
-                                                                          blurToSave: true,
-                                                                          afterSaveCell:
-                                                                            (
-                                                                              oldValue,
-                                                                              newValue,
-                                                                              row,
-                                                                              column
-                                                                            ) => {
-                                                                              this.handleParentsDataChange(
-                                                                                row.Id,
-                                                                                column.dataField,
-                                                                                newValue
-                                                                              );
-                                                                            },
-                                                                        }
-                                                                      )}
-                                                                      noDataIndication={t(
-                                                                        "No Relatives Found"
-                                                                      )}
-                                                                      defaultSorted={
-                                                                        defaultSorting
-                                                                      }
-                                                                    />
-                                                                  </Accordion.Body>
-                                                                </Accordion.Item>
-                                                              </Accordion>
-                                                            </Row>
-                                                          </TabPane>
-                                                          <TabPane
+                                                                            "Permanent Building Number" */}
+                                    /
+                                    {/* <TabPane
                                                             key={5}
                                                             tabId={5}
                                                           >
@@ -6171,7 +5933,7 @@ class ApplicantsList extends Component {
                                           )}
                                         </Formik>
                                       </ModalBody>
-                                    </Modal>
+                                    </Modal> */}
                                   </div>
                                 </Col>
                               </Row>
@@ -6215,10 +5977,13 @@ const mapStateToProps = ({
   academiccertificates,
   universityStudents,
   grants,
+  years,
   menu_items,
   relatives,
 }) => ({
   students: applicants.students,
+  years: years.years,
+
   // universityStudents: universityStudents.universityStudents,
   deleted: applicants.deleted,
   // generated_student: applicants.generated_student,

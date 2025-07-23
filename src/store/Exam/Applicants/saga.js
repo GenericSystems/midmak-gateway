@@ -119,6 +119,7 @@ import {
   getTempRelativeDeletedValueSuccess,
   getTempRelativeDeletedValueFail,
 } from "./actions";
+import { getYearsSuccess, getYearsFail } from "../../years/actions";
 
 //Include Both Helper File with needed methods
 import {
@@ -152,6 +153,7 @@ import {
   getGrants,
   getStudentsOpt,
   getRelatives,
+  getYears,
 } from "helpers/fakebackend_helper";
 
 function* fetchStudents() {
@@ -159,14 +161,30 @@ function* fetchStudents() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_TempStudent",
-    filter: "IsUnivStd <> 1",
+    // tablename: "_TempStudent",
+    tablename: "_Common_Employee",
+    // filter: "IsUnivStd <> 1",
   };
   try {
     const response = yield call(getStudents, get_students_req);
     yield put(getStudentsSuccess(response));
   } catch (error) {
     yield put(getStudentsFail(error));
+  }
+
+  const get_years_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Years",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getYears, get_years_req);
+    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", response);
+    yield put(getYearsSuccess(response));
+  } catch (error) {
+    yield put(getYearsFail(error));
   }
   // // get grants option
   // const get_grants = {

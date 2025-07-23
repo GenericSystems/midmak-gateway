@@ -13,9 +13,9 @@ import {
   ADD_NEW_SECTION_LAB,
   ADD_NEW_SECTION_LAB_DETAIL,
   DELETE_SECTION_LAB,
-  DELETE_SECTION_LAB_DETAILS,
+  DELETE_SECTION_LAB_DETAIL,
   UPDATE_SECTION_LAB,
-  UPDATE_SECTION_LAB_DETAILS,
+  UPDATE_SECTION_LAB_DETAIL,
   GET_SCHEDULE_TIMINGS,
   GET_SCHEDULE_TIMING_PROFILE,
   ADD_NEW_SCHEDULE_TIMING,
@@ -24,6 +24,7 @@ import {
   GET_SCHEDULE_MSG_VALUE,
   GET_HALL_TIMINGS,
   GET_METHODS_OF_OFFERING_COURSES,
+  GET_SECTION_LAB_DETAILS,
 } from "./actionTypes";
 
 import { GET_FILTERED_DEPARTMENTS } from "../departments/actionTypes";
@@ -56,8 +57,8 @@ import {
   updateSectionLabDetailFail,
   deleteSectionLabSuccess,
   deleteSectionLabFail,
-  deleteSectionLabDetailsSuccess,
-  deleteSectionLabDetailsFail,
+  deleteSectionLabDetailSuccess,
+  deleteSectionLabDetailFail,
   getScheduleTimingsSuccess,
   getScheduleTimingsFail,
   getScheduleTimingProfileSuccess,
@@ -74,6 +75,8 @@ import {
   getHallTimingsFail,
   getMethodsOfOfferingCoursesSuccess,
   getMethodsOfOfferingCoursesFail,
+  getSectionLabDetailsSuccess,
+  getSectionLabDetailsFail,
 } from "./actions";
 import {
   getHallsSuccess,
@@ -134,8 +137,9 @@ import {
   getYears,
   getHalls,
   getEmployeesNames,
-  updateSectionLabDetails,
-  deleteSectionLabDetails,
+  updateSectionLabDetail,
+  deleteSectionLabDetail,
+  getSectionLabDetails,
 } from "../../helpers/fakebackend_helper";
 import {
   getFacultiesSuccess,
@@ -525,6 +529,26 @@ function* fetchScheduleTimingDescs(obj) {
   }
 }
 
+function* fetchSectionLabDetails() {
+  // let scheduleTimingD = obj.payload;
+  const get_SectionLabDetail = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_TeachingSchedule",
+    queryname: "_scheduleTimingsDescription",
+
+    // filter: `SectionLabId = ${scheduleTimingD.Id} and type=''''${scheduleTimingD.type}''''`,
+  };
+  try {
+    const response = yield call(getSectionLabDetails, get_SectionLabDetail);
+
+    yield put(getSectionLabDetailsSuccess(response));
+  } catch (error) {
+    yield put(getSectionLabDetailsFail(error));
+  }
+}
+
 function* onAddNewSectionLabDetail({ payload, scheduleTiming }) {
   delete payload["id"];
   payload["source"] = "db";
@@ -546,7 +570,7 @@ function* onAddNewSectionLabDetail({ payload, scheduleTiming }) {
   }
 }
 
-function* onUpdateSectionLabDetails({ payload }) {
+function* onUpdateSectionLabDetail({ payload }) {
   console.log("in update", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
@@ -554,14 +578,14 @@ function* onUpdateSectionLabDetails({ payload }) {
   payload["queryname"] = "Common_TeachingSchedule";
 
   try {
-    const respupdate = yield call(updateSectionLabDetails, payload);
-    yield put(updateSectionLabDetailsSuccess(respupdate[0]));
+    const respupdate = yield call(updateSectionLabDetail, payload);
+    yield put(updateSectionLabDetailSuccess(respupdate[0]));
   } catch (error) {
-    yield put(updateSectionLabDetailsFail(error));
+    yield put(updateSectionLabDetailFail(error));
   }
 }
 
-function* onDeleteSectionLabDetails({ payload, scheduleTiming }) {
+function* onDeleteSectionLabDetail({ payload, scheduleTiming }) {
   console.log("payloadDelete", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
@@ -569,12 +593,12 @@ function* onDeleteSectionLabDetails({ payload, scheduleTiming }) {
   payload["tablename"] = "Common_TeachingSchedule";
 
   try {
-    const respdelete = yield call(deleteSectionLabDetails, payload);
+    const respdelete = yield call(deleteSectionLabDetail, payload);
     console.log("reeeeeeeeeeeeeeewwwwwwwwwwdddd", respdelete);
 
-    yield put(deleteSectionLabDetailsSuccess(respdelete[0]));
+    yield put(deleteSectionLabDetailSuccess(respdelete[0]));
   } catch (error) {
-    yield put(deleteSectionLabDetailsFail(error));
+    yield put(deleteSectionLabDetailFail(error));
   }
 }
 
@@ -631,14 +655,15 @@ function* classSchedulingSaga() {
   yield takeEvery(ADD_NEW_SECTION_LAB, onAddNewSectionLab);
   yield takeEvery(ADD_NEW_SECTION_LAB_DETAIL, onAddNewSectionLabDetail);
   yield takeEvery(UPDATE_SECTION_LAB, onUpdateSectionLab);
-  yield takeEvery(UPDATE_SECTION_LAB_DETAILS, onUpdateSectionLabDetails);
+  yield takeEvery(UPDATE_SECTION_LAB_DETAIL, onUpdateSectionLabDetail);
   yield takeEvery(DELETE_SECTION_LAB, onDeleteSectionLab);
-  yield takeEvery(DELETE_SECTION_LAB_DETAILS, onDeleteSectionLabDetails);
+  yield takeEvery(DELETE_SECTION_LAB_DETAIL, onDeleteSectionLabDetail);
   yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
   yield takeEvery(GET_SCHEDULE_TIMING_PROFILE, fetchScheduleTimingProfile);
   yield takeEvery(ADD_NEW_SCHEDULE_TIMING, onAddNewScheduleTiming);
   yield takeEvery(DELETE_SCHEDULE_TIMING, onDeleteScheduleTiming);
   yield takeEvery(GET_SCHEDULE_TIMING_DESCS, fetchScheduleTimingDescs);
+  yield takeEvery(GET_SECTION_LAB_DETAILS, fetchSectionLabDetails);
 
   yield takeEvery(GET_SCHEDULE_MSG_VALUE, onGetScheduleMsgValue);
   yield takeEvery(GET_HALL_TIMINGS, fetchHallTimings);
