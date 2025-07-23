@@ -11,7 +11,7 @@ import {
   GET_SECTION_LABS,
   GET_SECTION_LAB_PROFILE,
   ADD_NEW_SECTION_LAB,
-  ADD_NEW_SECTION_LAB_DETAILS,
+  ADD_NEW_SECTION_LAB_DETAIL,
   DELETE_SECTION_LAB,
   DELETE_SECTION_LAB_DETAILS,
   UPDATE_SECTION_LAB,
@@ -48,12 +48,12 @@ import {
   getSectionLabProfileFail,
   addSectionLabFail,
   addSectionLabSuccess,
-  addSectionLabDetailsFail,
-  addSectionLabDetailsSuccess,
+  addSectionLabDetailFail,
+  addSectionLabDetailSuccess,
   updateSectionLabSuccess,
   updateSectionLabFail,
-  updateSectionLabDetailsSuccess,
-  updateSectionLabDetailsFail,
+  updateSectionLabDetailSuccess,
+  updateSectionLabDetailFail,
   deleteSectionLabSuccess,
   deleteSectionLabFail,
   deleteSectionLabDetailsSuccess,
@@ -114,7 +114,7 @@ import {
   getSectionLabs,
   getSectionLabProfile,
   addNewSectionLab,
-  addNewSectionLabDetails,
+  addNewSectionLabDetail,
   updateSectionLab,
   deleteSectionLab,
   getFaculties,
@@ -525,7 +525,7 @@ function* fetchScheduleTimingDescs(obj) {
   }
 }
 
-function* onAddNewSectionLabDetails({ payload, scheduleTiming }) {
+function* onAddNewSectionLabDetail({ payload, scheduleTiming }) {
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
@@ -534,13 +534,15 @@ function* onAddNewSectionLabDetails({ payload, scheduleTiming }) {
   payload["queryname"] = "_scheduleTimingsDescription";
 
   try {
-    const response = yield call(addNewSectionLabDetails, payload);
+    const response = yield call(addNewSectionLabDetail, payload);
+    console.log("reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaddddddddd", response);
+
     // response.map(resp => {
     //   resp["instructorsId"] = JSON.parse(resp["instructorsId"]);
     // });
-    yield put(addSectionLabDetailsSuccess(response[0]));
+    yield put(addSectionLabDetailSuccess(response[0]));
   } catch (error) {
-    yield put(addSectionLabDetailsFail(error));
+    yield put(addSectionLabDetailFail(error));
   }
 }
 
@@ -568,6 +570,8 @@ function* onDeleteSectionLabDetails({ payload, scheduleTiming }) {
 
   try {
     const respdelete = yield call(deleteSectionLabDetails, payload);
+    console.log("reeeeeeeeeeeeeeewwwwwwwwwwdddd", respdelete);
+
     yield put(deleteSectionLabDetailsSuccess(respdelete[0]));
   } catch (error) {
     yield put(deleteSectionLabDetailsFail(error));
@@ -625,7 +629,7 @@ function* classSchedulingSaga() {
   yield takeEvery(GET_SECTION_LABS, fetchSectionLabs);
   yield takeEvery(GET_SECTION_LAB_PROFILE, fetchSectionLabProfile);
   yield takeEvery(ADD_NEW_SECTION_LAB, onAddNewSectionLab);
-  yield takeEvery(ADD_NEW_SECTION_LAB_DETAILS, onAddNewSectionLabDetails);
+  yield takeEvery(ADD_NEW_SECTION_LAB_DETAIL, onAddNewSectionLabDetail);
   yield takeEvery(UPDATE_SECTION_LAB, onUpdateSectionLab);
   yield takeEvery(UPDATE_SECTION_LAB_DETAILS, onUpdateSectionLabDetails);
   yield takeEvery(DELETE_SECTION_LAB, onDeleteSectionLab);

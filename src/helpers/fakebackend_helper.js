@@ -1475,8 +1475,8 @@ export const getSectionLabProfile = () => get(url.GET_SECTION_LAB_PROFILE);
 export const addNewSectionLab = data => post(url.ADD_NEW_SECTION_LAB, data);
 
 // add SectionLabs
-export const addNewSectionLabDetails = data =>
-  post(url.ADD_NEW_SECTION_LAB_DETAILS, data);
+export const addNewSectionLabDetail = data =>
+  post(url.ADD_NEW_SECTION_LAB_DETAIL, data);
 
 //update SectionLabs
 export const updateSectionLab = data => post(url.UPDATE_SECTION_LAB, data);

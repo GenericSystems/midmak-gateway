@@ -51,7 +51,7 @@ import {
   updateCourseOffering,
   getSectionLabs,
   addNewSectionLab,
-  addNewSectionLabDetails,
+  addNewSectionLabDetail,
   updateSectionLab,
   deleteSectionLab,
   updateSectionLabDetails,
@@ -84,7 +84,7 @@ class ClassSchedulingList extends Component {
       coursesOffering: [],
       sectionLabs: [],
       sectionLabData: [],
-      sectionLabsDetails: [],
+      sectionLabDetails: [],
       years: [],
       halls: [],
       instructorsArray: [],
@@ -348,9 +348,6 @@ class ClassSchedulingList extends Component {
       modal3: !prevState.modal3,
       showAddWarning: false,
     }));
-    this.setState({
-      selectedScheduleRow: null,
-    });
   };
 
   handleCourseOfferingClick = row => {
@@ -539,8 +536,8 @@ class ClassSchedulingList extends Component {
     this.setState({ deleteModal: true });
   };
 
-  onClickDelete1 = sectionLabsDetails => {
-    this.setState({ sectionLabsDetails: sectionLabsDetails });
+  onClickDelete1 = sectionLabDetails => {
+    this.setState({ sectionLabDetails: sectionLabDetails });
     this.setState({ deleteModal1: true });
   };
 
@@ -564,20 +561,25 @@ class ClassSchedulingList extends Component {
     });
   };
 
-  handleDeleteRow = () => {
+  handleDeleteSectionLabDetails = () => {
     const { onDeleteSectionLabDetails } = this.props;
-    const { selectedScheduleRow } = this.state;
-
-    if (selectedScheduleRow !== undefined) {
-      onDeleteSectionLabDetails(selectedScheduleRow);
-
-      this.setState({
-        selectedScheduleRow: null,
-        deleteModal1: false,
-        showAlert: true,
-        isEdit1: false,
-      });
+    // const { selectedScheduleRow } = this.state;
+    const { sectionLabDetails } = this.state;
+    //
+    // console.log("selectedScheduleRowselectedScheduleRow", selectedScheduleRow);
+    if (sectionLabDetails.Id !== undefined) {
+      let onDelete = { Id: sectionLabDetails.Id };
+      onDeleteSectionLabDetails(onDelete);
     }
+    // if (selectedScheduleRow !== undefined) {
+    //   onDeleteSectionLabDetails(selectedScheduleRow);
+    // }
+    this.setState({
+      sectionLabDetails: "",
+      deleteModal1: false,
+      showAlert: true,
+      isEdit1: false,
+    });
   };
 
   handleEditSectionLab = SLD => {
@@ -606,7 +608,7 @@ class ClassSchedulingList extends Component {
     this.setState({
       // defaultHallName: SLD.hallName,
       isEdit1: true,
-      sectionLabsDetails: SLD,
+      sectionLabDetails: SLD,
       Id: SLD.Id,
       selectedInstructor: SLD.instructorsId,
       selectedHallKey: SLD.hallId,
@@ -1014,7 +1016,7 @@ class ClassSchedulingList extends Component {
       newHallId,
     } = this.state;
 
-    const { onAddNewSectionLabDetails, onUpdateSectionLabDetails } = this.props;
+    const { onAddNewSectionLabDetail, onUpdateSectionLabDetails } = this.props;
     //output instructorsId: "{25},{23}"
     // const formattedInstructors = instructorsArray
     //   ?.map(item => item.value)
@@ -1130,7 +1132,7 @@ class ClassSchedulingList extends Component {
       onUpdateSectionLabDetails(scheduleTimingInfo);
     } else {
       console.log("saaaaave", scheduleTimingInfo);
-      onAddNewSectionLabDetails(scheduleTimingInfo);
+      onAddNewSectionLabDetail(scheduleTimingInfo);
     }
 
     this.toggle3();
@@ -1160,7 +1162,7 @@ class ClassSchedulingList extends Component {
   };
   handleAddRow = () => {
     this.setState({
-      sectionLabsDetails: "",
+      sectionLabDetails: "",
       isEdit1: false,
     });
     this.toggle3();
@@ -1227,7 +1229,7 @@ class ClassSchedulingList extends Component {
       isEdit1,
       isAdd,
       sectionLabData,
-      sectionLabsDetails,
+      sectionLabDetails,
       isLabRadioDisabled,
       isSectionRadioDisabled,
       selectedRowSectionLab,
@@ -1589,14 +1591,14 @@ class ClassSchedulingList extends Component {
         isDummyField: true,
         editable: false,
         text: this.props.t("Action"),
-        formatter: (cellContent, sectionLabsDetails) => (
+        formatter: (cellContent, sectionLabDetails) => (
           <div className="d-flex gap-3">
             {/* <Tooltip title={t("View Hall Timing")} placement="top">
             <Link className="" to="#">
               <i
                 className="mdi mdi-google-classroom font-size-18"
                 id="edittooltip"
-                onClick={() => this.handleViewHallSchedule(sectionLabsDetails)}
+                onClick={() => this.handleViewHallSchedule(sectionLabDetails)}
               ></i>
             </Link>
           </Tooltip> */}
@@ -1606,7 +1608,7 @@ class ClassSchedulingList extends Component {
                   className="mdi mdi-pencil font-size-18"
                   id="edittooltip"
                   onClick={() =>
-                    this.handleEditScheduleTiming(sectionLabsDetails)
+                    this.handleEditScheduleTiming(sectionLabDetails)
                   }
                 ></i>
               </Link>
@@ -1616,7 +1618,7 @@ class ClassSchedulingList extends Component {
                 <i
                   className="mdi mdi-delete font-size-18"
                   id="deletetooltip"
-                  onClick={() => this.onClickDelete1(sectionLabsDetails)}
+                  onClick={() => this.onClickDelete1(sectionLabDetails)}
                 ></i>
               </Link>
             </Tooltip>
@@ -2746,10 +2748,13 @@ class ClassSchedulingList extends Component {
                                 </Modal>
                                 <DeleteModal
                                   show={deleteModal1}
-                                  onDeleteClick={this.handleDeleteRow}
+                                  onDeleteClick={
+                                    this.handleDeleteSectionLabDetails
+                                  }
                                   onCloseClick={() =>
                                     this.setState({
                                       deleteModal1: false,
+                                      selectedScheduleRow: null,
                                     })
                                   }
                                 />
@@ -2777,12 +2782,12 @@ class ClassSchedulingList extends Component {
                                     <Formik
                                       initialValues={{
                                         instructorsId:
-                                          (sectionLabsDetails &&
-                                            sectionLabsDetails.instructorName) ||
+                                          (sectionLabDetails &&
+                                            sectionLabDetails.instructorName) ||
                                           "",
                                         hallId:
-                                          (sectionLabsDetails &&
-                                            sectionLabsDetails.hallName) ||
+                                          (sectionLabDetails &&
+                                            sectionLabDetails.hallName) ||
                                           "",
                                       }}
                                       enableReinitialize={true}
@@ -2906,8 +2911,8 @@ class ClassSchedulingList extends Component {
                                                     const newValue =
                                                       e.target.value;
                                                     const defaultValue =
-                                                      (sectionLabsDetails &&
-                                                        sectionLabsDetails.hallName) ||
+                                                      (sectionLabDetails &&
+                                                        sectionLabDetails.hallName) ||
                                                       "";
 
                                                     this.onChangeHall(
@@ -4039,7 +4044,7 @@ const mapStateToProps = ({
   menu_items,
 }) => ({
   coursesOffering: classScheduling.coursesOffering,
-  sectionLabsDetails: classScheduling.sectionLabsDetails,
+  sectionLabDetails: classScheduling.sectionLabDetails,
   instructors: classScheduling.instructors,
   sectionLabs: classScheduling.sectionLabs,
   years: years.years,
@@ -4068,8 +4073,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateCourseOffering(CourseOffering)),
   onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),
-  onAddNewSectionLabDetails: sectionLabDetails =>
-    dispatch(addNewSectionLabDetails(sectionLabDetails)),
+  onAddNewSectionLabDetail: sectionLabDetail =>
+    dispatch(addNewSectionLabDetail(sectionLabDetail)),
   onUpdateSectionLab: sectionLab => dispatch(updateSectionLab(sectionLab)),
   onDeleteSectionLab: sectionLab => dispatch(deleteSectionLab(sectionLab)),
   onUpdateSectionLabDetails: sectionLabDetails =>

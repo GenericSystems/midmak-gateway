@@ -21,8 +21,8 @@ import {
   GET_SECTION_LABS_SUCCESS,
   ADD_SECTION_LAB_SUCCESS,
   ADD_SECTION_LAB_FAIL,
-  ADD_SECTION_LAB_DETAILS_SUCCESS,
-  ADD_SECTION_LAB_DETAILS_FAIL,
+  ADD_SECTION_LAB_DETAIL_SUCCESS,
+  ADD_SECTION_LAB_DETAIL_FAIL,
   UPDATE_SECTION_LAB_SUCCESS,
   UPDATE_SECTION_LAB_DETAILS_FAIL,
   UPDATE_SECTION_LAB_DETAILS_SUCCESS,
@@ -198,13 +198,13 @@ const classScheduling = (state = INIT_STATE, action) => {
         error: action.payload,
       };
 
-    case ADD_SECTION_LAB_DETAILS_SUCCESS:
+    case ADD_SECTION_LAB_DETAIL_SUCCESS:
       return {
         ...state,
         sectionLabsDetails: [...state.sectionLabsDetails, action.payload],
       };
 
-    case ADD_SECTION_LAB_DETAILS_FAIL:
+    case ADD_SECTION_LAB_DETAIL_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -214,8 +214,7 @@ const classScheduling = (state = INIT_STATE, action) => {
       return {
         ...state,
         sectionLabsDetails: state.sectionLabsDetails.map(sectionLabsDetail =>
-          sectionLabsDetail.Id === action.payload.Id &&
-          sectionLabsDetail.type === action.payload.type
+          sectionLabsDetail.Id.toString() === action.payload.Id.toString()
             ? { sectionLabsDetail, ...action.payload }
             : sectionLabsDetail
         ),
@@ -269,9 +268,10 @@ const classScheduling = (state = INIT_STATE, action) => {
       return {
         ...state,
         sectionLabsDetails: state.sectionLabsDetails.filter(
-          sectionLabsDetail =>
-            sectionLabsDetail.Id.toString() !== action.payload.Id.toString()
+          sectionLabDetail =>
+            sectionLabDetail.Id.toString() !== action.payload.Id.toString()
         ),
+        deleted: action.payload.deleted,
       };
 
     case DELETE_SECTION_LAB_DETAILS_FAIL:
