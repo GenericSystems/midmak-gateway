@@ -452,9 +452,9 @@ class ClassSchedulingList extends Component {
       modal: !prevState.modal,
     }));
     this.setState({ selectedScheduleRow: null });
-    onGetScheduleTimings(0);
-    onGetScheduleTimingDescs(0);
-    onGetHallTimings(0);
+   // onGetScheduleTimings(0);
+   // onGetScheduleTimingDescs(0);
+  //  onGetHallTimings(0);
     this.setState({ selectedRow: null });
   }
   toggleNestedModal = () => {
@@ -621,12 +621,16 @@ class ClassSchedulingList extends Component {
   };
 
   handleEditBranch = branchData => {
-    const { selectedRowData, languageState } = this.state;
+    const { selectedRowData, languageState ,sectionLabDetails} = this.state;
     const { onGetSectionLabs } = this.props;
+    // Yara
+    console.log("222222222222222",sectionLabDetails);
 
     this.setState({
       selectedRowData: branchData,
       modal: !this.state.modal,
+      sectionLabDetails: [],
+      sectionLabData:[],
     });
     console.log(languageState, "fff222");
 
@@ -666,20 +670,26 @@ class ClassSchedulingList extends Component {
     this.setState({ matchingError: null });
   };
 
-  handleScheduleTiming = (sectionLabData, fromCalender) => {
+  handleScheduleTiming = (sectionLabData) => {
+    //Yara
+
+
+    console.log("11111111111111", sectionLabData);
     const { selectedRowSectionLab } = this.state;
     const {
-      onGetScheduleTimings,
-      onGetScheduleTimingDescs,
+      onGetSectionLabDetails,
       returnMessage,
       onGetScheduleMsgValue,
     } = this.props;
     this.setState({
+      
       selectedRowSectionLab: sectionLabData,
       isPlusButtonEnabled: true,
       isScheduleEditable: false,
     });
-    if (returnMessage) {
+    onGetSectionLabDetails(sectionLabData);
+    // onGetScheduleTimingDescs(sectionLabData);
+  /*  if (returnMessage) {
       onGetScheduleMsgValue();
     } else {
       onGetScheduleTimings(sectionLabData);
@@ -690,7 +700,7 @@ class ClassSchedulingList extends Component {
       onGetScheduleTimings(sectionLabData);
       onGetScheduleTimingDescs(sectionLabData);
       this.setState({ selectedRow: sectionLabData.Id });
-    }
+    }*/
   };
 
   handleMouseDown = (cellIndex, lectureId, weekdayId) => {
@@ -719,9 +729,9 @@ class ClassSchedulingList extends Component {
     if (scheduledTiming && !returnMessage.msg) {
       console.log("scheduledTiming", scheduledTiming);
 
-      onDeleteScheduleTiming(scheduledTiming);
-      onGetScheduleTimings(selectedScheduleRow);
-      onGetScheduleTimingDescs(selectedScheduleRow);
+     // onDeleteScheduleTiming(scheduledTiming);
+   //   onGetScheduleTimings(selectedScheduleRow);
+    //  onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
       ob["type"] = selectedRowSectionLab.type;
@@ -762,9 +772,9 @@ class ClassSchedulingList extends Component {
     );
 
     if (scheduledTiming) {
-      onDeleteScheduleTiming(scheduledTiming);
-      onGetScheduleTimings(this.state.selectedRowSectionLab);
-      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+   //   onDeleteScheduleTiming(scheduledTiming);
+    //  onGetScheduleTimings(this.state.selectedRowSectionLab);
+    //  onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
     } else {
       const ob = {};
       ob["type"] = selectedRowSectionLab.type;
@@ -4069,35 +4079,24 @@ const mapDispatchToProps = dispatch => ({
   onGetCoursesOffering: lng => dispatch(getCoursesOffering(lng)),
   onGetMethodsOfOfferingCourses: () => dispatch(getMethodsOfOfferingCourses()),
   onGetAllCoursesOffering: () => dispatch(getAllCoursesOffering()),
-  onAddNewCourseOffering: CourseOffering =>
-    dispatch(addNewCourseOffering(CourseOffering)),
-  onUpdateCourseOffering: CourseOffering =>
-    dispatch(updateCourseOffering(CourseOffering)),
-  onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
-  onGetSectionLabDetails: sectionLabs =>
-    dispatch(getSectionLabDetails(sectionLabs)),
+  onAddNewCourseOffering: CourseOffering =>  dispatch(addNewCourseOffering(CourseOffering)),
+  onUpdateCourseOffering: CourseOffering => dispatch(updateCourseOffering(CourseOffering)),
+
+  onGetSectionLabs: Course => dispatch(getSectionLabs(Course)), 
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),
-  onAddNewSectionLabDetail: sectionLabDetail =>
-    dispatch(addNewSectionLabDetail(sectionLabDetail)),
   onUpdateSectionLab: sectionLab => dispatch(updateSectionLab(sectionLab)),
   onDeleteSectionLab: sectionLab => dispatch(deleteSectionLab(sectionLab)),
-  onUpdateSectionLabDetail: sectionLabDetail =>
-    dispatch(updateSectionLabDetail(sectionLabDetail)),
-  onDeleteSectionLabDetail: sectionLabDetail =>
-    dispatch(deleteSectionLabDetail(sectionLabDetail)),
-  onGetFilteredAcademicCertificates: academicCer =>
-    dispatch(getFilteredAcademicCertificates(academicCer)),
-  onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),
-  onDeleteScheduleTiming: scheduleTiming =>
-    dispatch(deleteScheduleTiming(scheduleTiming)),
-  onAddNewScheduleTiming: scheduleTiming =>
-    dispatch(addNewScheduleTiming(scheduleTiming)),
-  onGetScheduleTimingDescs: LabSect =>
-    dispatch(getScheduleTimingDescs(LabSect)),
-  onfetchSetting: () => dispatch(fetchYearsSemesters()),
-  onfetchDefaultSettings: () => dispatch(fetchDefaultSettings()),
-  onGetScheduleMsgValue: () => dispatch(getScheduleMsgValue()),
-  onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
+ 
+  onGetSectionLabDetails: sectionLabs => dispatch(getSectionLabDetails(sectionLabs)),
+  onAddNewSectionLabDetail: sectionLabDetail => dispatch(addNewSectionLabDetail(sectionLabDetail)),
+  onUpdateSectionLabDetail: sectionLabDetail => dispatch(updateSectionLabDetail(sectionLabDetail)),
+  onDeleteSectionLabDetail: sectionLabDetail => dispatch(deleteSectionLabDetail(sectionLabDetail)),
+ 
+ // onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),
+ // onDeleteScheduleTiming: scheduleTiming => dispatch(deleteScheduleTiming(scheduleTiming)),
+ // onAddNewScheduleTiming: scheduleTiming => dispatch(addNewScheduleTiming(scheduleTiming)),
+ // onGetScheduleTimingDescs: LabSect =>  dispatch(getScheduleTimingDescs(LabSect)),
+ // onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
 });
 
 export default connect(

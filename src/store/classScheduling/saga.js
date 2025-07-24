@@ -457,7 +457,7 @@ function* onDeleteSectionLab({ payload, SectionLab }) {
     yield put(deleteSectionLabFail(error));
   }
 }
-function* fetchScheduleTimings(obj) {
+/*function* fetchScheduleTimings(obj) {
   let scheduleTimingSL = obj.payload;
   console.log("objobjobjobj", obj);
   const get_schedule_timings = {
@@ -476,7 +476,7 @@ function* fetchScheduleTimings(obj) {
     yield put(getScheduleTimingsFail(error));
   }
 }
-
+*/
 function* fetchHallTimings(obj) {
   let hallTimingSL = obj.payload;
   let filter;
@@ -508,7 +508,7 @@ function* fetchScheduleTimingProfile() {
   }
 }
 
-function* fetchScheduleTimingDescs(obj) {
+/*function* fetchScheduleTimingDescs(obj) {
   let scheduleTimingD = obj.payload;
   const get_schedulingTimingDescs = {
     source: "db",
@@ -527,18 +527,16 @@ function* fetchScheduleTimingDescs(obj) {
   } catch (error) {
     yield put(getScheduleTimingDescsFail(error));
   }
-}
+}*/
 
-function* fetchSectionLabDetails() {
-  // let scheduleTimingD = obj.payload;
+function* fetchSectionLabDetails(obj) {
+   let scheduleTimingD = obj.payload;
   const get_SectionLabDetail = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_TeachingSchedule",
-    queryname: "_scheduleTimingsDescription",
-
-    // filter: `SectionLabId = ${scheduleTimingD.Id} and type=''''${scheduleTimingD.type}''''`,
+    tablename: "_scheduleTimingsDescription",
+ filter: `SectionLabId = ${scheduleTimingD.Id} and type=''''${scheduleTimingD.type}''''`,
   };
   try {
     const response = yield call(getSectionLabDetails, get_SectionLabDetail);
@@ -549,7 +547,7 @@ function* fetchSectionLabDetails() {
   }
 }
 
-function* onAddNewSectionLabDetail({ payload, scheduleTiming }) {
+function* onAddNewSectionLabDetail({ payload }) {
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
@@ -658,11 +656,11 @@ function* classSchedulingSaga() {
   yield takeEvery(UPDATE_SECTION_LAB_DETAIL, onUpdateSectionLabDetail);
   yield takeEvery(DELETE_SECTION_LAB, onDeleteSectionLab);
   yield takeEvery(DELETE_SECTION_LAB_DETAIL, onDeleteSectionLabDetail);
-  yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
+  //yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
   yield takeEvery(GET_SCHEDULE_TIMING_PROFILE, fetchScheduleTimingProfile);
   yield takeEvery(ADD_NEW_SCHEDULE_TIMING, onAddNewScheduleTiming);
   yield takeEvery(DELETE_SCHEDULE_TIMING, onDeleteScheduleTiming);
-  yield takeEvery(GET_SCHEDULE_TIMING_DESCS, fetchScheduleTimingDescs);
+  //yield takeEvery(GET_SCHEDULE_TIMING_DESCS, fetchScheduleTimingDescs);
   yield takeEvery(GET_SECTION_LAB_DETAILS, fetchSectionLabDetails);
 
   yield takeEvery(GET_SCHEDULE_MSG_VALUE, onGetScheduleMsgValue);
