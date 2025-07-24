@@ -702,13 +702,14 @@ class ClassSchedulingList extends Component {
       onGetScheduleTimings,
       onGetScheduleTimingDescs,
     } = this.props;
-    const { selectedRowSectionLab, selectedScheduleRow } = this.state;
+    const { selectedScheduleRow, selectedRowSectionLab } = this.state;
+    console.log("selectedScheduleRow", selectedScheduleRow);
     onGetScheduleMsgValue();
     this.setState({
       isDragging: true,
     });
-    console.log("selectedRowSectionLab", selectedRowSectionLab);
-    console.log("scheduleTimings", scheduleTimings);
+    console.log("selectedScheduleRow", scheduleTimings);
+
     const scheduledTiming = scheduleTimings.find(
       timing =>
         timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
@@ -716,22 +717,25 @@ class ClassSchedulingList extends Component {
     console.log("scheduledTiming", scheduledTiming);
 
     if (scheduledTiming && !returnMessage.msg) {
-      onDeleteScheduleTiming(scheduledTiming);
+      console.log("scheduledTiming", scheduledTiming);
 
-      onGetScheduleTimings(this.state.selectedRowSectionLab);
-      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+      onDeleteScheduleTiming(scheduledTiming);
+      onGetScheduleTimings(selectedScheduleRow);
+      onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
       ob["type"] = selectedRowSectionLab.type;
       ob["sectionLabId"] = selectedRowSectionLab.Id;
+      // ob["sectionLabDetailsId"] = selectedScheduleRow.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
-      if (
-        selectedScheduleRow.Instructorid !== null &&
-        selectedScheduleRow.Instructorid !== 0
-      ) {
-        ob["instructorsId"] = selectedScheduleRow.Instructorid;
-      }
+
+      // if (
+      //   selectedRowSectionLab.Instructorid !== null &&
+      //   selectedRowSectionLab.Instructorid !== 0
+      // ) {
+      //   ob["Instructorid"] = selectedRowSectionLab.Instructorid;
+      // }
 
       if (
         selectedScheduleRow.hallId !== null &&
@@ -739,15 +743,15 @@ class ClassSchedulingList extends Component {
       ) {
         ob["hallId"] = selectedScheduleRow.hallId;
       }
-
       onAddNewScheduleTiming(ob);
       this.handleScheduleTiming(this.state.selectedRowSectionLab);
     }
   };
+
   handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
     const { onAddNewScheduleTiming, onDeleteScheduleTiming, scheduleTimings } =
       this.props;
-    const { selectedRowSectionLab, selectedScheduleRow } = this.state;
+    const { selectedRowSectionLab, selectedSchedule } = this.state;
     this.setState({
       isDragging: true,
     });
@@ -774,10 +778,10 @@ class ClassSchedulingList extends Component {
       //   ob["instructorsId"] = selectedRowSectionLab.instructorsId;
       // }
       if (
-        selectedScheduleRow.hallId !== null &&
-        selectedScheduleRow.hallId !== 0
+        selectedRowSectionLab.hallId !== null &&
+        selectedRowSectionLab.hallId !== 0
       ) {
-        ob["hallId"] = selectedScheduleRow.hallId;
+        ob["hallId"] = selectedRowSectionLab.hallId;
       }
 
       onAddNewScheduleTiming(ob);
@@ -1189,7 +1193,6 @@ class ClassSchedulingList extends Component {
     const { courseOffering } = this.state;
     const {
       coursesOffering,
-      selectedSectionLabId,
       sectionLabs,
       sectionLabDetails,
       halls,
@@ -1271,10 +1274,7 @@ class ClassSchedulingList extends Component {
         />
       ),
     };
-    const filteredSectionLabDetails = sectionLabDetails.filter(
-      item => item.sectionLabId === selectedSectionLabId
-    );
-    const combinedData = [...scheduleTimingDescs, ...filteredSectionLabDetails];
+    const combinedData = [...scheduleTimingDescs, ...sectionLabDetails];
 
     const { SearchBar } = Search;
     const alertMessage =
