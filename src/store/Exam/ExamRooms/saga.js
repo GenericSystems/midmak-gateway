@@ -2,88 +2,79 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 // Crypto Redux States
 import {
-  GET_MOB_APP_FACULTY_ACCS,
-  GET_FACULTIES,
-  GET_MOB_APP_FACULTY_ACC_PROFILE,
-  ADD_NEW_MOB_APP_FACULTY_ACC,
-  DELETE_MOB_APP_FACULTY_ACC,
-  UPDATE_MOB_APP_FACULTY_ACC,
-  GET_SETTING,
-  UPDATE_FACULTY,
+  GET_EXAM_ROOMS,
+  GET_EXAM_ROOM_PROFILE,
+  ADD_NEW_EXAM_ROOM,
+  DELETE_EXAM_ROOM,
+  UPDATE_EXAM_ROOM,
 } from "./actionTypes";
 
 import {
-  getMobAppFacultyAccsSuccess,
-  getMobAppFacultyAccsFail,
-  getMobAppFacultyAccProfileSuccess,
-  getMobAppFacultyAccProfileFail,
-  addMobAppFacultyAccFail,
-  addMobAppFacultyAccSuccess,
-  updateMobAppFacultyAccSuccess,
-  updateMobAppFacultyAccFail,
-  deleteMobAppFacultyAccSuccess,
-  deleteMobAppFacultyAccFail,
-  getFacultiesSuccess,
-  getFacultiesFail,
-  updateFacultySuccess,
-  updateFacultyFail,
+  getExamRoomsSuccess,
+  getExamRoomsFail,
+  getExamRoomProfileSuccess,
+  getExamRoomProfileFail,
+  addExamRoomFail,
+  addExamRoomSuccess,
+  updateExamRoomSuccess,
+  updateExamRoomFail,
+  deleteExamRoomSuccess,
+  deleteExamRoomFail,
 } from "./actions";
 
-import {
-  getStudentManagementsSuccess,
-  getStudentManagementsFail,
-} from "../studentManagements/actions";
-import { getLevelsSuccess, getLevelsFail } from "../levels/actions";
+// import {
+//   getStudentManagementsSuccess,
+//   getStudentManagementsFail,
+// } from "../studentManagements/actions";
+// import { getLevelsSuccess, getLevelsFail } from "../levels/actions";
 
 // Include Both Helper File with needed methods
 import {
-  getMobAppFacultyAccs,
-  getMobAppFacultyAccProfile,
-  addNewMobAppFacultyAcc,
-  updateMobAppFacultyAcc,
-  deleteMobAppFacultyAcc,
+  getExamRooms,
+  getExamRoomProfile,
+  addNewExamRoom,
+  updateExamRoom,
+  deleteExamRoom,
   getStudentManagements,
   getLevels,
-  getFaculties,
-  updateFaculty,
-} from "../../helpers/fakebackend_helper";
+} from "../../../helpers/fakebackend_helper";
 
-function* fetchSetting() {
-  //get faculty
-  const get_faculty_opt = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_Faculty",
-  };
-  try {
-    const response = yield call(getFaculties, get_faculty_opt);
-    yield put(getFacultiesSuccess(response));
-  } catch (error) {
-    yield put(getFacultiesFail(error));
-  }
+// function* fetchSetting() {
+//   //get faculty
+//   const get_faculty_opt = {
+//     source: "db",
+//     procedure: "SisApp_getData",
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     tablename: "_Common_Faculty",
+//   };
+//   try {
+//     const response = yield call(getFaculties, get_faculty_opt);
+//     yield put(getFacultiesSuccess(response));
+//   } catch (error) {
+//     yield put(getFacultiesFail(error));
+//   }
 
-  //get course level
-  const get_Level = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_Levels",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getLevels, get_Level);
+//   //get course level
+//   const get_Level = {
+//     source: "db",
+//     procedure: "Generic_getOptions",
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     tablename: "settings_Levels",
+//     fields: "Id,arTitle",
+//   };
+//   try {
+//     const response = yield call(getLevels, get_Level);
 
-    yield put(getLevelsSuccess(response));
-  } catch (error) {
-    yield put(getLevelsFail(error));
-  }
-}
+//     yield put(getLevelsSuccess(response));
+//   } catch (error) {
+//     yield put(getLevelsFail(error));
+//   }
+// }
 
-function* fetchMobAppFacultyAccs(obj) {
+function* fetchExamRooms(obj) {
   let faculty = obj.payload;
 
-  const get_mobAppFacultyAccs_req = {
+  const get_ExamRooms_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -91,13 +82,24 @@ function* fetchMobAppFacultyAccs(obj) {
     filter: `facultyId = ${faculty}  `,
   };
   try {
-    const response = yield call(
-      getMobAppFacultyAccs,
-      get_mobAppFacultyAccs_req
-    );
-    yield put(getMobAppFacultyAccsSuccess(response));
+    const response = yield call(getExamRooms, get_ExamRooms_req);
+    yield put(getExamRoomsSuccess(response));
   } catch (error) {
-    yield put(getMobAppFacultyAccsFail(error));
+    yield put(getExamRoomsFail(error));
+  }
+
+  const get_defineExamDate_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_Contract",
+  };
+  try {
+    const response = yield call(getDefineExamDates, get_defineExamDate_req);
+    console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", response);
+    yield put(getDefineExamDatesSuccess(response));
+  } catch (error) {
+    yield put(getDefineExamDatesFail(error));
   }
 
   // const get_studentManagement_opt = {
@@ -117,16 +119,16 @@ function* fetchMobAppFacultyAccs(obj) {
   // }
 }
 
-function* fetchMobAppFacultyAccProfile() {
+function* fetchExamRoomProfile() {
   try {
-    const response = yield call(getMobAppFacultyAccProfile);
-    yield put(getMobAppFacultyAccProfileSuccess(response));
+    const response = yield call(getExamRoomProfile);
+    yield put(getExamRoomProfileSuccess(response));
   } catch (error) {
-    yield put(getMobAppFacultyAccProfileFail(error));
+    yield put(getExamRoomProfileFail(error));
   }
 }
 
-function* onAddNewMobAppFacultyAcc({ payload, mobAppFacultyAcc }) {
+function* onAddNewExamRoom({ payload, ExamRoom }) {
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
@@ -134,65 +136,48 @@ function* onAddNewMobAppFacultyAcc({ payload, mobAppFacultyAcc }) {
   payload["tablename"] = "mobApp_FacultiesAccessConfig";
 
   try {
-    const response = yield call(addNewMobAppFacultyAcc, payload);
-    yield put(addMobAppFacultyAccSuccess(response[0]));
+    const response = yield call(addNewExamRoom, payload);
+    yield put(addExamRoomSuccess(response[0]));
   } catch (error) {
-    yield put(addMobAppFacultyAccFail(error));
+    yield put(addExamRoomFail(error));
   }
 }
 
-function* onUpdateMobAppFacultyAcc({ payload }) {
+function* onUpdateExamRoom({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "updateActiveStudentsAccordingFacultyAccess";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["queryname"] = "mobApp_FacultiesAccessConfig";
 
   try {
-    const respupdate = yield call(updateMobAppFacultyAcc, payload);
-    yield put(updateMobAppFacultyAccSuccess(respupdate[0]));
+    const respupdate = yield call(updateExamRoom, payload);
+    yield put(updateExamRoomSuccess(respupdate[0]));
   } catch (error) {
-    yield put(updateMobAppFacultyAccFail(error));
+    yield put(updateExamRoomFail(error));
   }
 }
 
-function* onDeleteMobAppFacultyAcc({ payload, mobAppFacultyAcc }) {
+function* onDeleteExamRoom({ payload, ExamRoom }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "mobApp_FacultiesAccessConfig";
 
   try {
-    const respdelete = yield call(deleteMobAppFacultyAcc, payload);
-    yield put(deleteMobAppFacultyAccSuccess(respdelete[0]));
+    const respdelete = yield call(deleteExamRoom, payload);
+    yield put(deleteExamRoomSuccess(respdelete[0]));
   } catch (error) {
-    yield put(deleteMobAppFacultyAccFail(error));
+    yield put(deleteExamRoomFail(error));
   }
 }
 
-function* onUpdateFaculty({ payload }) {
-  payload["source"] = "db";
-  payload["procedure"] = "SisApp_updateData";
-  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_Faculty";
-
-  try {
-    const respupdate = yield call(updateFaculty, payload);
-    yield put(updateFacultySuccess(respupdate[0]));
-  } catch (error) {
-    yield put(updateFacultyFail(error));
-  }
-}
-function* mobAppFacultyAccsSaga() {
-  yield takeEvery(UPDATE_FACULTY, onUpdateFaculty);
-  yield takeEvery(GET_SETTING, fetchSetting);
-  yield takeEvery(GET_MOB_APP_FACULTY_ACCS, fetchMobAppFacultyAccs);
-  yield takeEvery(
-    GET_MOB_APP_FACULTY_ACC_PROFILE,
-    fetchMobAppFacultyAccProfile
-  );
-  yield takeEvery(ADD_NEW_MOB_APP_FACULTY_ACC, onAddNewMobAppFacultyAcc);
-  yield takeEvery(UPDATE_MOB_APP_FACULTY_ACC, onUpdateMobAppFacultyAcc);
-  yield takeEvery(DELETE_MOB_APP_FACULTY_ACC, onDeleteMobAppFacultyAcc);
+function* ExamRoomsSaga() {
+  // yield takeEvery(GET_SETTING, fetchSetting);
+  yield takeEvery(GET_EXAM_ROOMS, fetchExamRooms);
+  yield takeEvery(GET_EXAM_ROOM_PROFILE, fetchExamRoomProfile);
+  yield takeEvery(ADD_NEW_EXAM_ROOM, onAddNewExamRoom);
+  yield takeEvery(UPDATE_EXAM_ROOM, onUpdateExamRoom);
+  yield takeEvery(DELETE_EXAM_ROOM, onDeleteExamRoom);
 }
 
-export default mobAppFacultyAccsSaga;
+export default ExamRoomsSaga;

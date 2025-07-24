@@ -239,6 +239,9 @@ import academyBuildingStructures from "./academyBuildingStructure/reducer";
 // contractsTypes
 import contractsTypes from "./HR/contractsTypes/reducer";
 
+// ExamRooms
+import examRooms from "./Exam/ExamRooms/reducer";
+
 // defineExamDates
 import defineExamDates from "./Exam/DefineExamDates/reducer";
 
@@ -418,6 +421,7 @@ const rootReducer = combineReducers({
   workClassifications,
   employees,
   contracts,
+  examRooms,
   defineExamDates,
   academyBuildingStructures,
   warningsTypes,

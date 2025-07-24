@@ -210,6 +210,13 @@ export const ADD_NEW_MOB_APP_FACULTY_ACC = "/add/mobAppFacultyAcc";
 export const UPDATE_MOB_APP_FACULTY_ACC = "/update/mobAppFacultyAcc";
 export const DELETE_MOB_APP_FACULTY_ACC = "/delete/mobAppFacultyAcc";
 
+//EXAM_ROOMS
+export const GET_EXAM_ROOMS = "/examRooms";
+export const GET_EXAM_ROOM_PROFILE = "/examRoom";
+export const ADD_NEW_EXAM_ROOM = "/add/examRoom";
+export const UPDATE_EXAM_ROOM = "/update/examRoom";
+export const DELETE_EXAM_ROOM = "/delete/examRoom";
+
 //SECTORS
 export const GET_SECTORS = "/sectors";
 export const GET_SECTOR_PROFILE = "/sector";

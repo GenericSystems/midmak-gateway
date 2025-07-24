@@ -1146,6 +1146,53 @@ const fakeBackend = () => {
       });
     });
   });
+  // examRoom
+  mock.onGet(url.GET_EXAM_ROOMS).reply(() => {
+    console.log("Calling mock get examRooms");
+    return new Promise((resolve, reject) => {});
+  });
+
+  mock.onPut(url.UPDATE_EXAM_ROOM).reply(examRoom => {
+    console.log("in mock onPut reply updating ...", examRoom);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log("updated examRoom");
+        if (examRoom && examRoom.data) {
+          // Passing fake JSON data as response
+          resolve([200, examRoom.data]);
+        } else {
+          reject([400, "Cannot update examRoom"]);
+        }
+      });
+    });
+  });
+  mock.onDelete(url.DELETE_EXAM_ROOM).reply(config => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log("deleted examRoom");
+        if (config && config.headers) {
+          // Passing fake JSON data as response
+          resolve([200, config.headers.examRoom]);
+        } else {
+          reject([400, "Cannot delete examRoom"]);
+        }
+      });
+    });
+  });
+
+  mock.onPost(url.ADD_NEW_EXAM_ROOM).reply(order => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log("added examRoom");
+        if (order && order.data) {
+          // Passing fake JSON data as response
+          resolve([200, order.data]);
+        } else {
+          reject([400, "Cannot add order"]);
+        }
+      });
+    });
+  });
 
   // admissionCondition
   mock.onGet(url.GET_ADMISSION_CONDITIONS).reply(() => {

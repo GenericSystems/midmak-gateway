@@ -464,7 +464,7 @@ function* fetchScheduleTimings(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_TeachingSchedule",
+    tablename: "_scheduleTimingsDescription",
     filter: `SectionLabId = ${scheduleTimingSL.Id} and type=''''${scheduleTimingSL.type}''''`,
   };
   try {

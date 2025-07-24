@@ -228,9 +228,6 @@ class ApplicantsList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     this.getAllObject(this.props.user_menu, this.props.location.pathname);
     const { student } = this.state;
-    // if (students && !students.length) {
-    //   onGetStudents();
-    // }
     onGetStudents();
     this.setState({ last_created_student });
     this.setState({ students });
@@ -343,7 +340,7 @@ class ApplicantsList extends Component {
   }
   handleSelectYear = (name, value) => {
     document.getElementById("square-switch1").checked = false;
-    const { onGetCoursesOffering } = this.props;
+    const { onGetStudents } = this.props;
     this.setState({
       selectedYear: value,
       currentYearObj: {

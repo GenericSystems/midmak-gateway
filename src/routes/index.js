@@ -165,6 +165,9 @@ import classSchedulingList from "../pages/Addmission/classScheduling/classSchedu
 //ContractsTypes
 import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 
+//ExamRooms
+import ExamRoomsList from "../pages/Exam/ExamRooms/examRooms";
+
 //WarningsTypes
 import WarningsTypesList from "../pages/HR/warningsTypes/warningsTypes";
 
@@ -305,6 +308,10 @@ const authProtectedRoutes = [
   // contractsTypes
 
   { path: "/contractsTypes", component: ContractsTypesList },
+
+  // ExamRooms
+
+  { path: "/examRooms", component: ExamRoomsList },
 
   // contracts
 

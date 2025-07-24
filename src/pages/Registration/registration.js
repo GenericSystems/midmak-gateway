@@ -67,6 +67,9 @@ class RegistrationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      years: [],
+      selectedYear: null,
+      currentYearObj: {},
       activeTab1: "5",
       activeTab: "0",
       activeTab2: "0",
@@ -279,6 +282,26 @@ class RegistrationList extends Component {
       this.setState({ reqTypes });
       this.setState({ years });
     }
+    let curentueardata = localStorage.getItem("authUser");
+    if (curentueardata) {
+      try {
+        const parsed = JSON.parse(curentueardata);
+        const firstYear = parsed[0];
+        const selectedYear = {
+          value: firstYear.currentYearId,
+          label: firstYear.currentYearName,
+        };
+        this.setState({
+          selectedYear,
+          currentYearObj: {
+            currentYearId: firstYear.currentYearId,
+            currentYearName: firstYear.currentYearName,
+          },
+        });
+      } catch (error) {
+        console.error("Error parsing authUser:", error);
+      }
+    }
   }
 
   toggle() {
@@ -444,6 +467,19 @@ class RegistrationList extends Component {
       this.setState({ duplicateStudent: null });
     }
   };
+
+  handleSelectYear = (name, value) => {
+    const { onGetRegistrations } = this.props;
+    this.setState({
+      selectedYear: value,
+      currentYearObj: {
+        currentYearId: value.value,
+        currentYearName: value.label,
+      },
+    });
+    onGetRegistrations();
+  };
+
   handleSelectChange = (row, fieldName, selectedValue) => {
     const { traineeEdit, timings } = this.state;
     const { onUpdateNonActiveStdCurr } = this.props;
@@ -626,6 +662,8 @@ class RegistrationList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      currentYearObj,
+      selectedYear,
     } = this.state;
     const minHours =
       studentRegisterInfo &&
@@ -1322,10 +1360,10 @@ class RegistrationList extends Component {
                   </DropdownMenu>
                 </Dropdown> */}
 
-                <label className="cu-Semes-modal form-label text-center">
+                {/* <label className="cu-Semes-modal form-label text-center">
                   {years.find(opt => opt.key === currentYear.cuYearId)?.value ||
                     null}
-                </label>
+                </label> */}
               </ModalHeader>
 
               <ModalBody>
@@ -1709,7 +1747,23 @@ class RegistrationList extends Component {
                           >
                             {toolkitprops => (
                               <React.Fragment>
-                                <Row>
+                                <Row className="mb-2">
+                                  <Col sm="5"></Col>
+                                  <Col sm="3">
+                                    <Select
+                                      className="select-style-year"
+                                      name="yearId"
+                                      key={`yearId`}
+                                      options={years}
+                                      onChange={newValue => {
+                                        this.handleSelectYear(
+                                          "yearId",
+                                          newValue
+                                        );
+                                      }}
+                                      value={selectedYear}
+                                    />
+                                  </Col>
                                   <Col sm="4"></Col>
                                 </Row>
 

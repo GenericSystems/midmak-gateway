@@ -466,6 +466,21 @@ export const updateMobAppFacultyAcc = data =>
 export const deleteMobAppFacultyAcc = data =>
   post(url.DELETE_MOB_APP_FACULTY_ACC, data);
 
+// get ExamRooms
+export const getExamRooms = data => post(url.GET_EXAM_ROOMS, data);
+
+//get ExamRooms profile
+export const getExamRoomProfile = () => get(url.GET_EXAM_ROOM_PROFILE);
+
+// add ExamRoom
+export const addNewExamRoom = data => post(url.ADD_NEW_EXAM_ROOM, data);
+
+//update ExamRoom
+export const updateExamRoom = data => post(url.UPDATE_EXAM_ROOM, data);
+
+//delete ExamRoom
+export const deleteExamRoom = data => post(url.DELETE_EXAM_ROOM, data);
+
 // get Sectors
 export const getSectors = data => post(url.GET_SECTORS, data);
 

@@ -280,6 +280,9 @@ class ClassSchedulingList extends Component {
         this.props.location.pathname
       );
     }
+    if (prevProps.sectionLabDetails !== this.props.sectionLabDetails) {
+      console.log("Updated sectionLabDetails:", this.props.sectionLabDetails);
+    }
     if (
       prevProps.coursesOffering !== this.props.coursesOffering &&
       Array.isArray(this.props.coursesOffering) &&
@@ -570,20 +573,15 @@ class ClassSchedulingList extends Component {
     const { sectionLabDetails } = this.state;
     //
     // console.log("selectedScheduleRowselectedScheduleRow", selectedScheduleRow);
-    if (sectionLabDetails.Id !== undefined) {
+    if (sectionLabDetails && sectionLabDetails.Id !== undefined) {
       let onDelete = { Id: sectionLabDetails.Id };
       onDeleteSectionLabDetail(onDelete);
     }
-    // if (selectedScheduleRow !== undefined) {
-    //   onDeleteSectionLabDetails(selectedScheduleRow);
-    // }
     this.setState({
-      sectionLabDetails: "",
       deleteModal1: false,
       showAlert: true,
       isEdit1: false,
     });
-    onGetSectionLabDetails();
   };
 
   handleEditSectionLab = SLD => {
@@ -704,14 +702,13 @@ class ClassSchedulingList extends Component {
       onGetScheduleTimings,
       onGetScheduleTimingDescs,
     } = this.props;
-    const { selectedScheduleRow, selectedRowSectionLab } = this.state;
-    console.log("selectedScheduleRow", selectedScheduleRow);
+    const { selectedRowSectionLab, selectedScheduleRow } = this.state;
     onGetScheduleMsgValue();
     this.setState({
       isDragging: true,
     });
-    console.log("selectedScheduleRow", scheduleTimings);
-
+    console.log("selectedRowSectionLab", selectedRowSectionLab);
+    console.log("scheduleTimings", scheduleTimings);
     const scheduledTiming = scheduleTimings.find(
       timing =>
         timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
@@ -719,25 +716,22 @@ class ClassSchedulingList extends Component {
     console.log("scheduledTiming", scheduledTiming);
 
     if (scheduledTiming && !returnMessage.msg) {
-      console.log("scheduledTiming", scheduledTiming);
-
       onDeleteScheduleTiming(scheduledTiming);
-      onGetScheduleTimings(selectedScheduleRow);
-      onGetScheduleTimingDescs(selectedScheduleRow);
+
+      onGetScheduleTimings(this.state.selectedRowSectionLab);
+      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
     } else {
       const ob = {};
       ob["type"] = selectedRowSectionLab.type;
       ob["sectionLabId"] = selectedRowSectionLab.Id;
-      // ob["sectionLabDetailsId"] = selectedScheduleRow.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
-
-      // if (
-      //   selectedRowSectionLab.Instructorid !== null &&
-      //   selectedRowSectionLab.Instructorid !== 0
-      // ) {
-      //   ob["Instructorid"] = selectedRowSectionLab.Instructorid;
-      // }
+      if (
+        selectedScheduleRow.Instructorid !== null &&
+        selectedScheduleRow.Instructorid !== 0
+      ) {
+        ob["instructorsId"] = selectedScheduleRow.Instructorid;
+      }
 
       if (
         selectedScheduleRow.hallId !== null &&
@@ -745,15 +739,15 @@ class ClassSchedulingList extends Component {
       ) {
         ob["hallId"] = selectedScheduleRow.hallId;
       }
+
       onAddNewScheduleTiming(ob);
       this.handleScheduleTiming(this.state.selectedRowSectionLab);
     }
   };
-
   handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
     const { onAddNewScheduleTiming, onDeleteScheduleTiming, scheduleTimings } =
       this.props;
-    const { selectedRowSectionLab, selectedSchedule } = this.state;
+    const { selectedRowSectionLab, selectedScheduleRow } = this.state;
     this.setState({
       isDragging: true,
     });
@@ -780,10 +774,10 @@ class ClassSchedulingList extends Component {
       //   ob["instructorsId"] = selectedRowSectionLab.instructorsId;
       // }
       if (
-        selectedRowSectionLab.hallId !== null &&
-        selectedRowSectionLab.hallId !== 0
+        selectedScheduleRow.hallId !== null &&
+        selectedScheduleRow.hallId !== 0
       ) {
-        ob["hallId"] = selectedRowSectionLab.hallId;
+        ob["hallId"] = selectedScheduleRow.hallId;
       }
 
       onAddNewScheduleTiming(ob);
@@ -1020,7 +1014,7 @@ class ClassSchedulingList extends Component {
       newHallId,
     } = this.state;
 
-    const { onAddNewSectionLabDetail, onUpdateSectionLabDetails } = this.props;
+    const { onAddNewSectionLabDetail, onUpdateSectionLabDetail } = this.props;
     //output instructorsId: "{25},{23}"
     // const formattedInstructors = instructorsArray
     //   ?.map(item => item.value)
@@ -1195,7 +1189,9 @@ class ClassSchedulingList extends Component {
     const { courseOffering } = this.state;
     const {
       coursesOffering,
+      selectedSectionLabId,
       sectionLabs,
+      sectionLabDetails,
       halls,
       years,
       instructors,
@@ -1233,7 +1229,6 @@ class ClassSchedulingList extends Component {
       isEdit1,
       isAdd,
       sectionLabData,
-      sectionLabDetails,
       isLabRadioDisabled,
       isSectionRadioDisabled,
       selectedRowSectionLab,
@@ -1276,6 +1271,11 @@ class ClassSchedulingList extends Component {
         />
       ),
     };
+    const filteredSectionLabDetails = sectionLabDetails.filter(
+      item => item.sectionLabId === selectedSectionLabId
+    );
+    const combinedData = [...scheduleTimingDescs, ...filteredSectionLabDetails];
+
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -2201,7 +2201,7 @@ class ClassSchedulingList extends Component {
                                           </Row>
                                           <BootstrapTable
                                             keyField="Id"
-                                            data={scheduleTimingDescs}
+                                            data={combinedData}
                                             columns={ScheduleTimingDescsCol}
                                             cellEdit={cellEditFactory({
                                               mode: "click",

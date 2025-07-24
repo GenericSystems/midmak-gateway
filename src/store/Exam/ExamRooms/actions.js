@@ -1,132 +1,92 @@
 import {
-  GET_SETTING,
-  GET_MOB_APP_FACULTY_ACCS,
-  GET_MOB_APP_FACULTY_ACCS_FAIL,
-  GET_MOB_APP_FACULTY_ACCS_SUCCESS,
-  GET_MOB_APP_FACULTY_ACC_PROFILE,
-  GET_MOB_APP_FACULTY_ACC_PROFILE_FAIL,
-  GET_MOB_APP_FACULTY_ACC_PROFILE_SUCCESS,
-  ADD_NEW_MOB_APP_FACULTY_ACC,
-  ADD_MOB_APP_FACULTY_ACC_SUCCESS,
-  ADD_MOB_APP_FACULTY_ACC_FAIL,
-  UPDATE_MOB_APP_FACULTY_ACC,
-  UPDATE_MOB_APP_FACULTY_ACC_SUCCESS,
-  UPDATE_MOB_APP_FACULTY_ACC_FAIL,
-  DELETE_MOB_APP_FACULTY_ACC,
-  DELETE_MOB_APP_FACULTY_ACC_SUCCESS,
-  DELETE_MOB_APP_FACULTY_ACC_FAIL,
-  GET_FACULTIES,
-  GET_FACULTIES_FAIL,
-  GET_FACULTIES_SUCCESS,
-  UPDATE_FACULTY,
-  UPDATE_FACULTY_FAIL,
-  UPDATE_FACULTY_SUCCESS
+  GET_EXAM_ROOMS,
+  GET_EXAM_ROOMS_FAIL,
+  GET_EXAM_ROOMS_SUCCESS,
+  GET_EXAM_ROOM_PROFILE,
+  GET_EXAM_ROOM_PROFILE_FAIL,
+  GET_EXAM_ROOM_PROFILE_SUCCESS,
+  ADD_NEW_EXAM_ROOM,
+  ADD_EXAM_ROOM_SUCCESS,
+  ADD_EXAM_ROOM_FAIL,
+  UPDATE_EXAM_ROOM,
+  UPDATE_EXAM_ROOM_SUCCESS,
+  UPDATE_EXAM_ROOM_FAIL,
+  DELETE_EXAM_ROOM,
+  DELETE_EXAM_ROOM_SUCCESS,
+  DELETE_EXAM_ROOM_FAIL,
 } from "./actionTypes";
 
-export const getMobAppFacultyAccs = faculty => ({
-  type: GET_MOB_APP_FACULTY_ACCS,
-  payload: faculty,
+export const getExamRooms = examRooms => ({
+  type: GET_EXAM_ROOMS,
+  payload: examRooms,
 });
 
-export const getMobAppFacultyAccsSuccess = mobAppFacultyAccs => ({
-  type: GET_MOB_APP_FACULTY_ACCS_SUCCESS,
-  payload: mobAppFacultyAccs,
+export const getExamRoomsSuccess = examRooms => ({
+  type: GET_EXAM_ROOMS_SUCCESS,
+  payload: examRooms,
 });
 
-export const getMobAppFacultyAccsFail = error => ({
-  type: GET_MOB_APP_FACULTY_ACCS_FAIL,
+export const getExamRoomsFail = error => ({
+  type: GET_EXAM_ROOMS_FAIL,
   payload: error,
 });
 
-export const getMobAppFacultyAccProfile = mobAppFacultyAccId => ({
-  type: GET_MOB_APP_FACULTY_ACC_PROFILE,
-  mobAppFacultyAccId,
+export const getExamRoomProfile = examRoomId => ({
+  type: GET_EXAM_ROOM_PROFILE,
+  examRoomId,
 });
 
-export const getMobAppFacultyAccProfileSuccess = mobAppFacultyAccProfiles => ({
-  type: GET_MOB_APP_FACULTY_ACC_PROFILE_SUCCESS,
-  payload: mobAppFacultyAccProfiles,
+export const getExamRoomProfileSuccess = examRoomProfiles => ({
+  type: GET_EXAM_ROOM_PROFILE_SUCCESS,
+  payload: examRoomProfiles,
 });
 
-export const getMobAppFacultyAccProfileFail = error => ({
-  type: GET_MOB_APP_FACULTY_ACC_PROFILE_FAIL,
+export const getExamRoomProfileFail = error => ({
+  type: GET_EXAM_ROOM_PROFILE_FAIL,
   payload: error,
 });
 
-export const addNewMobAppFacultyAcc = mobAppFacultyAcc => ({
-  type: ADD_NEW_MOB_APP_FACULTY_ACC,
-  payload: mobAppFacultyAcc,
+export const addNewExamRoom = examRoom => ({
+  type: ADD_NEW_EXAM_ROOM,
+  payload: examRoom,
 });
 
-export const addMobAppFacultyAccSuccess = mobAppFacultyAcc => ({
-  type: ADD_MOB_APP_FACULTY_ACC_SUCCESS,
-  payload: mobAppFacultyAcc,
+export const addExamRoomSuccess = examRoom => ({
+  type: ADD_EXAM_ROOM_SUCCESS,
+  payload: examRoom,
 });
 
-export const addMobAppFacultyAccFail = error => ({
-  type: ADD_MOB_APP_FACULTY_ACC_FAIL,
+export const addExamRoomFail = error => ({
+  type: ADD_EXAM_ROOM_FAIL,
   payload: error,
 });
 
-export const updateMobAppFacultyAcc = mobAppFacultyAcc => ({
-  type: UPDATE_MOB_APP_FACULTY_ACC,
-  payload: mobAppFacultyAcc,
+export const updateExamRoom = examRoom => ({
+  type: UPDATE_EXAM_ROOM,
+  payload: examRoom,
 });
 
-export const updateMobAppFacultyAccSuccess = mobAppFacultyAcc => ({
-  type: UPDATE_MOB_APP_FACULTY_ACC_SUCCESS,
-  payload: mobAppFacultyAcc,
+export const updateExamRoomSuccess = examRoom => ({
+  type: UPDATE_EXAM_ROOM_SUCCESS,
+  payload: examRoom,
 });
 
-export const updateMobAppFacultyAccFail = error => ({
-  type: UPDATE_MOB_APP_FACULTY_ACC_FAIL,
+export const updateExamRoomFail = error => ({
+  type: UPDATE_EXAM_ROOM_FAIL,
   payload: error,
 });
 
-export const deleteMobAppFacultyAcc = mobAppFacultyAcc => ({
-  type: DELETE_MOB_APP_FACULTY_ACC,
-  payload: mobAppFacultyAcc,
+export const deleteExamRoom = examRoom => ({
+  type: DELETE_EXAM_ROOM,
+  payload: examRoom,
 });
 
-export const deleteMobAppFacultyAccSuccess = mobAppFacultyAcc => ({
-  type: DELETE_MOB_APP_FACULTY_ACC_SUCCESS,
-  payload: mobAppFacultyAcc,
+export const deleteExamRoomSuccess = examRoom => ({
+  type: DELETE_EXAM_ROOM_SUCCESS,
+  payload: examRoom,
 });
 
-export const deleteMobAppFacultyAccFail = error => ({
-  type: DELETE_MOB_APP_FACULTY_ACC_FAIL,
+export const deleteExamRoomFail = error => ({
+  type: DELETE_EXAM_ROOM_FAIL,
   payload: error,
-});
-
-export const getFaculties = () => ({
-  type: GET_FACULTIES,
-});
-
-export const getFacultiesSuccess = Faculties => ({
-  type: GET_FACULTIES_SUCCESS,
-  payload: Faculties,
-});
-
-export const getFacultiesFail = error => ({
-  type: GET_FACULTIES_FAIL,
-  payload: error,
-});
-
-export const updateFaculty = Faculty=> ({
-  type: UPDATE_FACULTY,
-  payload: Faculty,
-});
-
-export const updateFacultySuccess = Faculty => ({
-  type: UPDATE_FACULTY_SUCCESS,
-  payload: Faculty,
-});
-
-export const updateFacultyFail = error => ({
-  type: UPDATE_FACULTY_FAIL,
-  payload: error,
-});
-
-export const fetchSetting = () => ({
-  type: GET_SETTING,
 });

@@ -30,12 +30,11 @@ import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 import {
-  fetchSetting,
-  getMobAppFacultyAccs,
-  addNewMobAppFacultyAcc,
-  updateMobAppFacultyAcc,
-  deleteMobAppFacultyAcc,
-} from "store/mob-app-faculty-accs/actions";
+  getExamRooms,
+  addNewExamRoom,
+  updateExamRoom,
+  deleteExamRoom,
+} from "store/Exam/ExamRooms/actions";
 import paginationFactory, {
   PaginationListStandalone,
   PaginationProvider,
@@ -48,14 +47,14 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-class MobAppFacultyAccsList extends Component {
+class ExamRoomsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       duplicateError: null,
       selectedLevel: null,
       verticalActiveTab: 0,
-      currentFacultyId: null,
+      currentdefineExamDatesId: null,
       showAddButton: false,
       showDeleteButton: false,
       showEditButton: false,
@@ -63,38 +62,31 @@ class MobAppFacultyAccsList extends Component {
     };
     this.toggleVertical = this.toggleVertical.bind(this);
   }
-  toggleVertical(facultyId) {
-    const { onGetMobAppFacultyAccs } = this.props;
+  toggleVertical(defineExamDatesId) {
+    const { onGetExamRooms } = this.props;
     const { verticalActiveTab } = this.state;
 
     // Only update the state if the clicked tab is different from the current active tab
-    if (verticalActiveTab !== facultyId) {
+    if (verticalActiveTab !== defineExamDatesId) {
       this.setState({
-        verticalActiveTab: facultyId,
-        currentFacultyId: facultyId,
+        verticalActiveTab: defineExamDatesId,
+        currentdefineExamDatesId: defineExamDatesId,
       });
-      onGetMobAppFacultyAccs(facultyId);
+      onGetExamRooms(defineExamDatesId);
     }
   }
   componentDidMount() {
-    const {
-      studentManagements,
-      onfetchSetting,
-      mobAppFacultyAccs,
-      levels,
-      faculties,
-      user_menu,
-    } = this.props;
+    const { studentManagements, examRooms, levels, faculties, user_menu } =
+      this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (mobAppFacultyAccs && !mobAppFacultyAccs.length) {
+    if (examRooms && !examRooms.length) {
     }
     this.setState({ studentManagements });
     this.setState({ levels });
     this.setState({ faculties });
-    onfetchSetting();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -142,36 +134,34 @@ class MobAppFacultyAccsList extends Component {
   };
 
   handleAddRow = () => {
-    const { onAddNewMobAppFacultyAcc, mobAppFacultyAccs } = this.props;
-    const { currentFacultyId } = this.state;
-    const emptyLevelExists = mobAppFacultyAccs.some(
-      row => row.levelId === null
-    );
+    const { onAddNewExamRoom, examRooms } = this.props;
+    const { currentdefineExamDatesId } = this.state;
+    const emptyLevelExists = examRooms.some(row => row.levelId === null);
     if (emptyLevelExists) {
       const errorMessage = this.props.t("Fill in the empty row");
       this.setState({ duplicateError: errorMessage });
       return;
     } else {
       const newRow = {
-        facultyId: currentFacultyId,
+        defineExamDatesId: currentdefineExamDatesId,
         AllLogin: 0,
         AllowRegister: 0,
         AllowPay: 0,
       };
       this.setState({ duplicateError: null });
-      onAddNewMobAppFacultyAcc(newRow);
+      onAddNewExamRoom(newRow);
     }
   };
 
   handleDeleteRow = rowId => {
-    const { onDeleteMobAppFacultyAcc } = this.props;
+    const { onDeleteExamRoom } = this.props;
     let onDelete = { Id: rowId };
-    onDeleteMobAppFacultyAcc(onDelete);
+    onDeleteExamRoom(onDelete);
   };
 
   handleChangeCheckbox = (row, currentStatus, fieldName) => {
-    const { onUpdateMobAppFacultyAcc } = this.props;
-    const { currentFacultyId } = this.state;
+    const { onUpdateExamRoom } = this.props;
+    const { currentdefineExamDatesId } = this.state;
     const newStatus = currentStatus ? 1 : 0;
     let rlogin = row.AllLogin == null ? 0 : row.AllLogin;
     let rAllowRegister = row.AllowRegister == null ? 0 : row.AllowRegister;
@@ -180,24 +170,24 @@ class MobAppFacultyAccsList extends Component {
     let ob = {
       Id: row.Id,
       levelId: row.levelId,
-      facultyId: currentFacultyId,
+      defineExamDatesId: currentdefineExamDatesId,
       AllLogin: fieldName === "AllLogin" ? newStatus : rlogin,
       AllowRegister: fieldName === "AllowRegister" ? newStatus : rAllowRegister,
       AllowPay: fieldName === "AllowPay" ? newStatus : rAllowPay,
     };
-    onUpdateMobAppFacultyAcc(ob);
+    onUpdateExamRoom(ob);
   };
-  resetMobAppFacultyAcc = row => {
-    const { currentFacultyId } = this.state;
-    const { onUpdateMobAppFacultyAcc } = this.props;
+  resetExamRoom = row => {
+    const { currentdefineExamDatesId } = this.state;
+    const { onUpdateExamRoom } = this.props;
     let ob = {};
     ob["Id"] = row.Id;
     ob["levelId"] = row.levelId;
-    (ob["facultyId"] = currentFacultyId), (ob["AllLogin"] = 0);
+    (ob["defineExamDatesId"] = currentdefineExamDatesId), (ob["AllLogin"] = 0);
     ob["AllowRegister"] = 0;
     ob["AllowPay"] = 0;
 
-    onUpdateMobAppFacultyAcc(ob);
+    onUpdateExamRoom(ob);
   };
 
   toggleCheckboxEditMode = () => {
@@ -210,15 +200,13 @@ class MobAppFacultyAccsList extends Component {
     this.setState({
       selectedLevel: selectedValue,
     });
-    const { onUpdateMobAppFacultyAcc, mobAppFacultyAccs } = this.props;
-    const levelExists = mobAppFacultyAccs.some(
-      row => row.levelId === selectedValue
-    );
+    const { onUpdateExamRoom, examRooms } = this.props;
+    const levelExists = examRooms.some(row => row.levelId === selectedValue);
     if (levelExists) {
       return;
     }
     let onUpdate = { Id: rowId, [fieldName]: selectedValue };
-    onUpdateMobAppFacultyAcc(onUpdate);
+    onUpdateExamRoom(onUpdate);
   };
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
@@ -232,32 +220,31 @@ class MobAppFacultyAccsList extends Component {
       showEditButton,
       showSearchButton,
     } = this.state;
-    const { t, studentManagements, mobAppFacultyAccs, levels, faculties } =
+    const { t, studentManagements, examRooms, levels, defineExamDates } =
       this.props;
 
     const pageOptions = {
       sizePerPage: 20,
-      totalSize: mobAppFacultyAccs.length,
+      totalSize: examRooms.length,
       custom: true,
     };
 
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "facultyId",
-        text: this.props.t("facultyId"),
+        dataField: "defineExamDatesId",
+        text: this.props.t("defineExamDatesId"),
         hidden: true,
       },
 
       {
-        dataField: "levelId",
-        text: this.props.t("Level"),
+        dataField: "hallName",
+        text: this.props.t("Hall Name"),
         formatter: (cell, row) => (
           <Select
             key={`level_select`}
             options={levels.filter(
-              option =>
-                !mobAppFacultyAccs.some(row => row.levelId === option.value)
+              option => !examRooms.some(row => row.levelId === option.value)
             )}
             onChange={newValue => {
               this.handleSelectChange(row.Id, "levelId", newValue.value);
@@ -274,9 +261,9 @@ class MobAppFacultyAccsList extends Component {
       },
 
       {
-        key: "AllLogin",
-        dataField: "AllLogin",
-        text: this.props.t("Allow Login"),
+        key: "hallNum",
+        dataField: "hallNum",
+        text: this.props.t("Hall Number"),
         editable: false,
         formatter: (cellContent, row, column) => (
           <Input
@@ -293,9 +280,9 @@ class MobAppFacultyAccsList extends Component {
         ),
       },
       {
-        key: "AllowRegister",
-        dataField: "AllowRegister",
-        text: this.props.t("Allow Register"),
+        key: "buildingArName",
+        dataField: "buildingArName",
+        text: this.props.t("Building Name"),
         editable: false,
         formatter: (cellContent, row, column) => (
           <Input
@@ -316,9 +303,9 @@ class MobAppFacultyAccsList extends Component {
         ),
       },
       {
-        key: "AllowPay",
-        dataField: "AllowPay",
-        text: this.props.t("Allow Pay"),
+        key: "examCapacity",
+        dataField: "examCapacity",
+        text: this.props.t("Exam Capacity"),
         editable: false,
         formatter: (cellContent, row, column) => (
           <Input
@@ -335,39 +322,15 @@ class MobAppFacultyAccsList extends Component {
         ),
       },
       {
-        dataField: "reset",
-        text: "",
-        isDummyField: true,
-        editable: false,
-        text: this.props.t("Reset"),
-        formatter: (cellContent, mobAppFacultyAcc) => (
-          <IconButton
-            color="primary"
-            onClick={() => this.resetMobAppFacultyAcc(mobAppFacultyAcc)}
-            id="TooltipTop"
-            disabled={mobAppFacultyAcc.levelId === null || !showEditButton}
-          >
-            <i
-              className="bx bx-reset"
-              style={{
-                color: mobAppFacultyAcc.levelId === null ? "gray" : "",
-                pointerEvents:
-                  mobAppFacultyAcc.levelId === null ? "none" : "auto",
-              }}
-            />
-          </IconButton>
-        ),
-      },
-      {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
         hidden: !showDeleteButton,
-        formatter: (cellContent, mobAppFacultyAcc) => (
+        formatter: (cellContent, examRoom) => (
           <IconButton
             color="secondary"
-            onClick={() => this.handleDeleteRow(mobAppFacultyAcc.Id)}
+            onClick={() => this.handleDeleteRow(examRoom.Id)}
           >
             <DeleteIcon style={{ color: "red" }} />
           </IconButton>
@@ -382,107 +345,103 @@ class MobAppFacultyAccsList extends Component {
     return (
       <React.Fragment>
         <div className="page-content">
-          <Container fluid>
-            <Breadcrumbs
-              title={t("Mobile Application")}
-              breadcrumbItem={t("Faculty Access Management")}
-            />
+          {/* <Container fluid>*/}
 
-            <div className="checkout-tabs">
+          <Breadcrumbs
+            title={t("Mobile Application")}
+            breadcrumbItem={t("defineExamDates Access Management")}
+          />
+          {/* <div className="checkout-tabs">
               <Row>
                 <Col lg="2">
                   <Nav pills className="flex-column">
-                    {faculties.map(faculty => (
+                    {defineExamDates.map(defineExamDate => (
                       <NavItem
                         className="justify-content-center"
-                        key={faculty.Id}
-                        navlink={faculty.Id}
+                        key={defineExamDate.Id}
+                        navlink={defineExamDate.Id}
                       >
                         <NavLink
                           className={classnames({
-                            active: this.state.verticalActiveTab === faculty.Id,
+                            active:
+                              this.state.verticalActiveTab ===
+                              defineExamDate.Id,
                           })}
                           onClick={() => {
-                            this.toggleVertical(faculty.Id);
+                            this.toggleVertical(defineExamDate.Id);
                           }}
                         >
                           <p className="font-weight-bold m-1 pt-2 ">
                             <span style={{ fontWeight: "bold" }}>
-                              {faculty.title}
+                              {defineExamDate.title}
                             </span>
                           </p>
                         </NavLink>
                       </NavItem>
                     ))}
                   </Nav>
-                </Col>
-
-                <Col lg="10">
-                  <TabContent
+                </Col> */}
+          {/* <Col lg="10"> */}
+          {/* <TabContent
                     activeTab={this.state.verticalActiveTab}
                     className="text-muted mt-4 mt-md-0"
+                  > */}
+          {/* {faculties.map(defineExamDates => ( */}
+          {/* <TabPane
+                      key={defineExamDates.Id}
+                      tabId={defineExamDates.Id}
+                    > */}
+          <Card>
+            <CardBody>
+              <div>
+                {duplicateError && (
+                  <Alert
+                    color="danger"
+                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                    role="alert"
                   >
-                    {faculties.map(faculty => (
-                      <TabPane key={faculty.Id} tabId={faculty.Id}>
-                        <Card>
-                          <CardBody>
-                            <div>
-                              {duplicateError && (
-                                <Alert
-                                  color="danger"
-                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                  role="alert"
-                                >
-                                  {duplicateError}
-                                  <button
-                                    type="button"
-                                    className="btn-close"
-                                    aria-label="Close"
-                                    onClick={this.handleAlertClose}
-                                  ></button>
-                                </Alert>
-                              )}
-                            </div>
+                    {duplicateError}
+                    <button
+                      type="button"
+                      className="btn-close"
+                      aria-label="Close"
+                      onClick={this.handleAlertClose}
+                    ></button>
+                  </Alert>
+                )}
+              </div>
 
-                            <div className="table-responsive">
-                              {showAddButton && (
-                                <div className="text-sm-end">
-                                  <Tooltip
-                                    title={this.props.t("Add")}
-                                    placement="top"
-                                  >
-                                    <IconButton
-                                      color="primary"
-                                      onClick={this.handleAddRow}
-                                    >
-                                      <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                    </IconButton>
-                                  </Tooltip>
-                                </div>
-                              )}
-                              <BootstrapTable
-                                keyField="Id"
-                                data={mobAppFacultyAccs}
-                                columns={columns}
-                                filter={filterFactory()}
-                                cellEdit={cellEditFactory({
-                                  mode: "click",
-                                  blurToSave: true,
-                                })}
-                                noDataIndication={this.props.t(
-                                  "No Students found"
-                                )}
-                              />
-                            </div>
-                          </CardBody>
-                        </Card>
-                      </TabPane>
-                    ))}
-                  </TabContent>
-                </Col>
-              </Row>
-            </div>
-          </Container>
+              <div className="table-responsive">
+                {showAddButton && (
+                  <div className="text-sm-end">
+                    <Tooltip title={this.props.t("Add")} placement="top">
+                      <IconButton color="primary" onClick={this.handleAddRow}>
+                        <i className="mdi mdi-plus-circle blue-noti-icon" />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                )}
+                <BootstrapTable
+                  keyField="Id"
+                  data={examRooms}
+                  columns={columns}
+                  filter={filterFactory()}
+                  cellEdit={cellEditFactory({
+                    mode: "click",
+                    blurToSave: true,
+                  })}
+                  noDataIndication={this.props.t("No Students found")}
+                />
+              </div>
+            </CardBody>
+          </Card>
+          {/* </TabPane> */}
+          {/* ))} */}
+          {/* </TabContent> */}
+          {/* </Col> */}
+          {/* </Row> */}
+          {/* </div> */}
+          {/* </Container> */}
         </div>
       </React.Fragment>
     );
@@ -490,32 +449,29 @@ class MobAppFacultyAccsList extends Component {
 }
 
 const mapStateToProps = ({
-  mobAppFacultyAccs,
+  examRooms,
+  defineExamDates,
   studentManagements,
   levels,
   menu_items,
 }) => ({
-  mobAppFacultyAccs: mobAppFacultyAccs.mobAppFacultyAccs,
-  studentManagements: studentManagements.studentManagements,
-  levels: levels.levels,
-  faculties: mobAppFacultyAccs.faculties,
+  defineExamDates: defineExamDates.defineExamDates,
+  examRooms: examRooms.examRooms,
+  // studentManagements: studentManagements.studentManagements,
+  // levels: levels.levels,
+  // faculties: examRooms.faculties,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onfetchSetting: () => dispatch(fetchSetting()),
-
-  onGetMobAppFacultyAccs: facultyId =>
-    dispatch(getMobAppFacultyAccs(facultyId)),
-  onAddNewMobAppFacultyAcc: mobAppFacultyAcc =>
-    dispatch(addNewMobAppFacultyAcc(mobAppFacultyAcc)),
-  onUpdateMobAppFacultyAcc: mobAppFacultyAcc =>
-    dispatch(updateMobAppFacultyAcc(mobAppFacultyAcc)),
-  onDeleteMobAppFacultyAcc: mobAppFacultyAcc =>
-    dispatch(deleteMobAppFacultyAcc(mobAppFacultyAcc)),
+  onGetExamRooms: defineExamDatesId =>
+    dispatch(getExamRooms(defineExamDatesId)),
+  onAddNewExamRoom: examRoom => dispatch(addNewExamRoom(examRoom)),
+  onUpdateExamRoom: examRoom => dispatch(updateExamRoom(examRoom)),
+  onDeleteExamRoom: examRoom => dispatch(deleteExamRoom(examRoom)),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(MobAppFacultyAccsList));
+)(withTranslation()(ExamRoomsList));
