@@ -557,11 +557,6 @@ function* onAddNewSectionLabDetail({ payload }) {
 
   try {
     const response = yield call(addNewSectionLabDetail, payload);
-    console.log("reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaddddddddd", response);
-
-    // response.map(resp => {
-    //   resp["instructorsId"] = JSON.parse(resp["instructorsId"]);
-    // });
     yield put(addSectionLabDetailSuccess(response[0]));
   } catch (error) {
     yield put(addSectionLabDetailFail(error));
