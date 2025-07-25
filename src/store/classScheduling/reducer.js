@@ -292,7 +292,6 @@ const classScheduling = (state = INIT_STATE, action) => {
       return {
         ...state,
         scheduleTimings: action.payload,
-        deleted: {},
       };
     case GET_SCHEDULE_TIMINGS_FAIL:
       return {
@@ -326,7 +325,6 @@ const classScheduling = (state = INIT_STATE, action) => {
           scheduleTiming =>
             scheduleTiming.Id.toString() !== action.payload.Id.toString()
         ),
-        deleted: action.payload.deleted,
       };
 
     case DELETE_SCHEDULE_TIMING_FAIL:

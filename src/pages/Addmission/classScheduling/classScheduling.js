@@ -86,8 +86,6 @@ class ClassSchedulingList extends Component {
       sectionLabs: [],
       sectionLabData: [],
       sectionLabDetails: [],
-      scheduleTimingDescs: [],
-      scheduleTimings: [],
       years: [],
       halls: [],
       instructorsArray: [],
@@ -437,7 +435,7 @@ class ClassSchedulingList extends Component {
     this.setState({ selectedRowSectionLab: null });
     onGetScheduleTimings(0);
     onGetSectionLabDetails(0);
-    onGetScheduleTimingDescs(0);
+    // onGetScheduleTimingDescs(0);
     // onGetHallTimings(0);
     this.setState({ selectedRow: null, selectedType: "" });
   }
@@ -485,6 +483,8 @@ class ClassSchedulingList extends Component {
     }));
   };
   handleChangeOption = event => {
+    const { onGetScheduleTimings, onGetScheduleTimingDescs, onGetHallTimings } =
+      this.props;
     this.setState({
       selectedOption: event.target.value,
     });
@@ -680,8 +680,9 @@ class ClassSchedulingList extends Component {
       onDeleteScheduleTiming,
       scheduleTimings,
       onGetScheduleMsgValue,
+      onGetSectionLabDetails,
       onGetScheduleTimings,
-      onGetScheduleTimingDescs,
+      // onGetScheduleTimingDescs,
     } = this.props;
     const { selectedScheduleRow, selectedRowSectionLab } = this.state;
     console.log("selectedScheduleRow", selectedScheduleRow);
@@ -705,7 +706,7 @@ class ClassSchedulingList extends Component {
 
       onDeleteScheduleTiming(scheduledTiming);
       onGetScheduleTimings(selectedScheduleRow);
-      onGetScheduleTimingDescs(selectedScheduleRow);
+      // onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
       // ob["type"] = selectedScheduleRow.type;
@@ -718,8 +719,7 @@ class ClassSchedulingList extends Component {
         ob
       );
       onAddNewScheduleTiming(ob);
-      onGetScheduleTimings(selectedScheduleRow);
-      onGetScheduleTimingDescs(selectedScheduleRow);
+      onGetSectionLabDetails(this.state.selectedRowSectionLab);
     }
   };
 
@@ -729,6 +729,7 @@ class ClassSchedulingList extends Component {
       onDeleteScheduleTiming,
       onGetScheduleTimings,
       onGetScheduleTimingDescs,
+      onGetSectionLabDetails,
       scheduleTimings,
     } = this.props;
     const { selectedRowSectionLab, selectedScheduleRow } = this.state;
@@ -745,7 +746,7 @@ class ClassSchedulingList extends Component {
     if (scheduledTiming) {
       onDeleteScheduleTiming(scheduledTiming);
       onGetScheduleTimings(selectedScheduleRow);
-      onGetScheduleTimingDescs(selectedScheduleRow);
+      // onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
       ob["teachingScheduleId"] = selectedScheduleRow.Id;
@@ -754,7 +755,7 @@ class ClassSchedulingList extends Component {
       console.log("thhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhe ob", ob);
 
       onAddNewScheduleTiming(ob);
-      this.handleClickOn(this.state.selectedScheduleRow);
+      onGetSectionLabDetails(this.state.selectedRowSectionLab);
     }
   };
 
@@ -1168,7 +1169,7 @@ class ClassSchedulingList extends Component {
       isScheduleEditable: true,
     });
     onGetScheduleTimings(row);
-    onGetScheduleTimingDescs(row);
+    // onGetScheduleTimingDescs(row);
   };
 
   render() {
@@ -1179,11 +1180,7 @@ class ClassSchedulingList extends Component {
       sectionLabDetails,
       halls,
       years,
-      instructors,
       instructorsArray,
-      faculties,
-      onGetFilteredAcademicCertificates,
-      filteredAcademicCertificates,
       weekDays,
       lecturePeriods,
       scheduleTimings,
@@ -1199,7 +1196,6 @@ class ClassSchedulingList extends Component {
       deleteModal,
       deleteModal1,
       modal,
-      modal2,
       isOpen,
       emptyError,
       startDateError,
@@ -1230,9 +1226,6 @@ class ClassSchedulingList extends Component {
       selectedEndDate,
       selectedStartDate,
       selectedYear,
-      selectedInstructor,
-      selectedHall,
-      currentYearObj,
       languageState,
       showAddWarning,
       isScheduleEditable,
@@ -1263,11 +1256,6 @@ class ClassSchedulingList extends Component {
     };
 
     const { SearchBar } = Search;
-    const alertMessage =
-      deleted == 0
-        ? this.props.t("Can't Delete")
-        : this.props.t("Deleted Successfully");
-
     const defaultSorting = [
       {
         dataField: "Id",
@@ -1600,11 +1588,6 @@ class ClassSchedulingList extends Component {
     const weekDaysColumns = weekDays.map(weekday =>
       this.props.t(weekday.enTitle)
     );
-    const addButtonStyle = {
-      backgroundColor: "#75dfd1",
-      color: "#ffffff",
-      textAlign: "left",
-    };
     const pageOptions = {
       sizePerPage: 20,
       totalSize: coursesOffering.length,
@@ -2299,14 +2282,6 @@ class ClassSchedulingList extends Component {
                                                                 key={cellIndex}
                                                                 className={`timetable-cell ${cellValue}`}
                                                                 onMouseDown={() => {
-                                                                  console.log(
-                                                                    "MouseDown"
-                                                                  );
-                                                                  this.setState(
-                                                                    {
-                                                                      isDragging: true,
-                                                                    }
-                                                                  );
                                                                   this.handleMouseDown(
                                                                     cellIndex +
                                                                       rowIndex *
@@ -4015,8 +3990,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteScheduleTiming(scheduleTiming)),
   onAddNewScheduleTiming: scheduleTiming =>
     dispatch(addNewScheduleTiming(scheduleTiming)),
-  onGetScheduleTimingDescs: SectLabDet =>
-    dispatch(getScheduleTimingDescs(SectLabDet)),
+  // onGetScheduleTimingDescs: SectLabDet =>
+  //   dispatch(getScheduleTimingDescs(SectLabDet)),
   // onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
 });
 
