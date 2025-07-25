@@ -347,6 +347,7 @@ function* fetchSectionLabs(obj) {
   };
   try {
     const response = yield call(getLecturePeriods, get_lecturePeriods_req);
+    console.log("rees121212", response);
     yield put(getLecturePeriodsSuccess(response));
   } catch (error) {
     yield put(getLecturePeriodsFail(error));
@@ -454,15 +455,18 @@ function* onDeleteSectionLab({ payload, SectionLab }) {
     yield put(deleteSectionLabFail(error));
   }
 }
-/*function* fetchScheduleTimings(obj) {
+function* fetchScheduleTimings(obj) {
   let scheduleTimingSL = obj.payload;
-  console.log("objobjobjobj", obj);
+  console.log(
+    "fetchScheduleTimingsfetchScheduleTimingsfetchScheduleTimings",
+    obj
+  );
   const get_schedule_timings = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_scheduleTimingsDescription",
-    filter: `SectionLabId = ${scheduleTimingSL.Id} and type=''''${scheduleTimingSL.type}''''`,
+    tablename: "Common_TeachingScheduleDetails",
+    filter: `teachingScheduleId = ${scheduleTimingSL.Id}`,
   };
   try {
     const response = yield call(getScheduleTimings, get_schedule_timings);
@@ -473,7 +477,7 @@ function* onDeleteSectionLab({ payload, SectionLab }) {
     yield put(getScheduleTimingsFail(error));
   }
 }
-*/
+
 function* fetchHallTimings(obj) {
   let hallTimingSL = obj.payload;
   let filter;
@@ -505,14 +509,14 @@ function* fetchScheduleTimingProfile() {
   }
 }
 
-/*function* fetchScheduleTimingDescs(obj) {
+function* fetchScheduleTimingDescs(obj) {
   let scheduleTimingD = obj.payload;
   const get_schedulingTimingDescs = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_scheduleTimingsDescription",
-    filter: `SectionLabId = ${scheduleTimingD.Id} and type=''''${scheduleTimingD.type}''''`,
+    tablename: "Common_TeachingScheduleDetails",
+    filter: `teachingScheduleId = ${scheduleTimingD.Id}`,
   };
   try {
     const response = yield call(
@@ -524,7 +528,7 @@ function* fetchScheduleTimingProfile() {
   } catch (error) {
     yield put(getScheduleTimingDescsFail(error));
   }
-}*/
+}
 
 function* fetchSectionLabDetails(obj) {
   let scheduleTimingD = obj.payload;
@@ -602,7 +606,7 @@ function* onAddNewScheduleTiming({ payload, scheduleTiming }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_TeachingSchedule";
+  payload["tablename"] = "Common_TeachingScheduleDetails";
 
   try {
     const response = yield call(addNewScheduleTiming, payload);
@@ -653,11 +657,11 @@ function* classSchedulingSaga() {
   yield takeEvery(UPDATE_SECTION_LAB_DETAIL, onUpdateSectionLabDetail);
   yield takeEvery(DELETE_SECTION_LAB, onDeleteSectionLab);
   yield takeEvery(DELETE_SECTION_LAB_DETAIL, onDeleteSectionLabDetail);
-  //yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
+  yield takeEvery(GET_SCHEDULE_TIMINGS, fetchScheduleTimings);
   yield takeEvery(GET_SCHEDULE_TIMING_PROFILE, fetchScheduleTimingProfile);
   yield takeEvery(ADD_NEW_SCHEDULE_TIMING, onAddNewScheduleTiming);
   yield takeEvery(DELETE_SCHEDULE_TIMING, onDeleteScheduleTiming);
-  //yield takeEvery(GET_SCHEDULE_TIMING_DESCS, fetchScheduleTimingDescs);
+  yield takeEvery(GET_SCHEDULE_TIMING_DESCS, fetchScheduleTimingDescs);
   yield takeEvery(GET_SECTION_LAB_DETAILS, fetchSectionLabDetails);
 
   yield takeEvery(GET_SCHEDULE_MSG_VALUE, onGetScheduleMsgValue);

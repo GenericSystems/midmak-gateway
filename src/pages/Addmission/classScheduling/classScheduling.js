@@ -425,22 +425,6 @@ class ClassSchedulingList extends Component {
     });
   };
 
-  // toggle2() {
-  //   const {
-  //     sectionLabData,
-  //     // onGetScheduleTimingDescs,
-  //     onGetScheduleTimings,
-  //     // onGetHallTimings,
-  //   } = this.props;
-  //   this.setState(prevState => ({
-  //     modal: !prevState.modal,
-  //   }));
-  //   this.setState({ selectedRowSectionLab: null });
-  //   onGetScheduleTimings(0);
-  //   // onGetScheduleTimingDescs(0);
-  //   // onGetHallTimings(0);
-  //   this.setState({ selectedRow: null });
-  // }
   toggle2() {
     const {
       sectionLabData,
@@ -453,7 +437,7 @@ class ClassSchedulingList extends Component {
       modal: !prevState.modal,
     }));
     this.setState({ selectedRowSectionLab: null });
-    // onGetScheduleTimings(0);
+    onGetScheduleTimings(0);
     onGetSectionLabDetails(0);
     // onGetScheduleTimingDescs(0);
     //  onGetHallTimings(0);
@@ -680,16 +664,12 @@ class ClassSchedulingList extends Component {
       selectedRowSectionLab: sectionLabData,
       sectionLabDetails: {
         hallId: "",
-        instructorsId: "",
+        instructors: "",
       },
       isPlusButtonEnabled: true,
       isScheduleEditable: false,
     });
     onGetSectionLabDetails(sectionLabData);
-    this.setState({
-      selectedRow: sectionLabData.Id,
-      selectedType: sectionLabData.type,
-    });
   };
 
   handleMouseDown = (cellIndex, lectureId, weekdayId) => {
@@ -703,89 +683,69 @@ class ClassSchedulingList extends Component {
     } = this.props;
     const { selectedScheduleRow, selectedRowSectionLab } = this.state;
     console.log("selectedScheduleRow", selectedScheduleRow);
-    onGetScheduleMsgValue();
+    // onGetScheduleMsgValue();
     this.setState({
       isDragging: true,
     });
-    console.log("selectedScheduleRow", scheduleTimings);
-
     const scheduledTiming = scheduleTimings.find(
       timing =>
-        timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
+        timing.teachingScheduleId === selectedScheduleRow?.Id &&
+        timing.dayId === weekdayId &&
+        timing.lecturePeriodId === lectureId
     );
-    console.log("scheduledTiming", scheduledTiming);
+    console.log("✅ scheduledTiming:", scheduledTiming);
 
-    if (scheduledTiming && !returnMessage.msg) {
-      console.log("scheduledTiming", scheduledTiming);
+    // if (scheduledTiming && !returnMessage.msg) {
+    //   console.log("scheduledTiming", scheduledTiming);
 
-      // onDeleteScheduleTiming(scheduledTiming);
-      //   onGetScheduleTimings(selectedScheduleRow);
-      //  onGetScheduleTimingDescs(selectedScheduleRow);
-    } else {
-      const ob = {};
-      ob["type"] = selectedRowSectionLab.type;
-      ob["sectionLabId"] = selectedRowSectionLab.Id;
-      // ob["sectionLabDetailsId"] = selectedScheduleRow.Id;
-      ob["dayId"] = weekdayId;
-      ob["lecturePeriodId"] = lectureId;
-
-      // if (
-      //   selectedRowSectionLab.Instructorid !== null &&
-      //   selectedRowSectionLab.Instructorid !== 0
-      // ) {
-      //   ob["Instructorid"] = selectedRowSectionLab.Instructorid;
-      // }
-
-      if (
-        selectedScheduleRow.hallId !== null &&
-        selectedScheduleRow.hallId !== 0
-      ) {
-        ob["hallId"] = selectedScheduleRow.hallId;
-      }
-      onAddNewScheduleTiming(ob);
-      this.handleScheduleTiming(this.state.selectedRowSectionLab);
-    }
+    //   onDeleteScheduleTiming(scheduledTiming);
+    //   onGetScheduleTimings(selectedScheduleRow);
+    //   onGetScheduleTimingDescs(selectedScheduleRow);
+    // } else {
+    const ob = {};
+    // ob["type"] = selectedScheduleRow.type;
+    // ob["sectionLabId"] = selectedScheduleRow.Id;
+    ob["teachingScheduleId"] = selectedScheduleRow.Id;
+    ob["dayId"] = weekdayId;
+    ob["lecturePeriodId"] = lectureId;
+    console.log(
+      "thhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhe obeeeeeeeeeeee",
+      ob
+    );
+    onAddNewScheduleTiming(ob);
+    // this.handleScheduleTiming(this.state.selectedRowSectionLab);
+    // }
   };
 
   handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
     const { onAddNewScheduleTiming, onDeleteScheduleTiming, scheduleTimings } =
       this.props;
-    const { selectedRowSectionLab, selectedSchedule } = this.state;
+    const { selectedRowSectionLab, selectedScheduleRow } = this.state;
     this.setState({
       isDragging: true,
     });
 
     const scheduledTiming = scheduleTimings.find(
       timing =>
-        timing.dayId === weekdayId && timing.lecturePeriodId === lectureId
+        Number(timing.teachingScheduleId) === Number(selectedScheduleRow?.Id) &&
+        Number(timing.dayId) === Number(weekdayId) &&
+        Number(timing.lecturePeriodId) === Number(lectureId)
     );
 
     if (scheduledTiming) {
-      //   onDeleteScheduleTiming(scheduledTiming);
-      //  onGetScheduleTimings(this.state.selectedRowSectionLab);
-      //  onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+      onDeleteScheduleTiming(scheduledTiming);
+      onGetScheduleTimings(this.state.selectedRowSectionLab);
+      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
     } else {
       const ob = {};
-      ob["type"] = selectedRowSectionLab.type;
-      ob["sectionLabId"] = selectedRowSectionLab.Id;
+      // ob["type"] = selectedScheduleRow.type;
+      // ob["sectionLabId"] = selectedScheduleRow.Id;
+      ob["teachingScheduleId"] = selectedScheduleRow.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
-      // if (
-      //   selectedRowSectionLab.instructorsId !== null &&
-      //   selectedRowSectionLab.instructorsId !== 0
-      // ) {
-      //   ob["instructorsId"] = selectedRowSectionLab.instructorsId;
-      // }
-      if (
-        selectedRowSectionLab.hallId !== null &&
-        selectedRowSectionLab.hallId !== 0
-      ) {
-        ob["hallId"] = selectedRowSectionLab.hallId;
-      }
+      console.log("thhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhe ob", ob);
 
       onAddNewScheduleTiming(ob);
-
-      this.handleScheduleTiming(this.state.selectedRowSectionLab);
     }
   };
 
@@ -1191,11 +1151,15 @@ class ClassSchedulingList extends Component {
   };
 
   handleClickOn = row => {
+    console.log("roooooooooooooooooow", row);
+    const { onGetScheduleTimings, onGetScheduleTimingDescs } = this.props;
     this.setState({
       selectedScheduleRow: row,
       selectedRow: row.Id,
       isScheduleEditable: true,
     });
+    onGetScheduleTimings(row);
+    onGetScheduleTimingDescs(row);
   };
 
   render() {
@@ -1553,20 +1517,20 @@ class ClassSchedulingList extends Component {
     };
 
     const ScheduleTimingDescsCol = [
-      // {
-      //   dataField: "dayTitle",
-      //   text: t("Day"),
-      //   editable: false,
-      //   sort: true,
-      //   // formatter: (cellContent, row) => this.handleClickOn(row),
-      // },
-      // {
-      //   dataField: "periodTime",
-      //   text: t("Period Time"),
-      //   editable: false,
-      //   sort: true,
-      //   // formatter: (cellContent, row) => this.handleClickOn(row),
-      // },
+      {
+        dataField: "dayId",
+        text: t("Day"),
+        editable: false,
+        sort: true,
+        // formatter: (cellContent, row) => this.handleClickOn(row),
+      },
+      {
+        dataField: "lecturePeriodId",
+        text: t("Period Time"),
+        editable: false,
+        sort: true,
+        // formatter: (cellContent, row) => this.handleClickOn(row),
+      },
       {
         dataField: "instructorNames",
         text: t("Instructor"),
@@ -4050,10 +4014,12 @@ const mapDispatchToProps = dispatch => ({
   onDeleteSectionLabDetail: sectionLabDetail =>
     dispatch(deleteSectionLabDetail(sectionLabDetail)),
 
-  // onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),
+  onGetScheduleTimings: SectLabDet => dispatch(getScheduleTimings(SectLabDet)),
   // onDeleteScheduleTiming: scheduleTiming => dispatch(deleteScheduleTiming(scheduleTiming)),
-  // onAddNewScheduleTiming: scheduleTiming => dispatch(addNewScheduleTiming(scheduleTiming)),
-  // onGetScheduleTimingDescs: LabSect =>  dispatch(getScheduleTimingDescs(LabSect)),
+  onAddNewScheduleTiming: scheduleTiming =>
+    dispatch(addNewScheduleTiming(scheduleTiming)),
+  onGetScheduleTimingDescs: SectLabDet =>
+    dispatch(getScheduleTimingDescs(SectLabDet)),
   // onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
 });
 
