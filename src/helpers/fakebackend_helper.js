@@ -1722,9 +1722,6 @@ export const updateFaculty = data => post(url.UPDATE_FACULTY, data);
 // get TempStudents
 export const getTempStudents = data => post(url.GET_TEMPSTUDENTS, data);
 
-// get Instructors
-export const getInstructors = data => post(url.GET_INSTRUCTORS, data);
-
 // get YearSemesters
 export const getYearSemesters = data => post(url.GET_YEAR_SEMESTERS, data);
 

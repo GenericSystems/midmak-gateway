@@ -54,7 +54,6 @@ import {
 const INIT_STATE = {
   classScheduling: [],
   methodsOffering: [],
-  instructors: [],
   sectionLabs: [],
   sectionLabDetails: [],
   weekDays: [],
@@ -76,18 +75,6 @@ const INIT_STATE = {
 
 const classScheduling = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_INSTRUCTORS_SUCCESS:
-      return {
-        ...state,
-        instructors: action.payload,
-      };
-
-    case GET_INSTRUCTORS_FAIL:
-      return {
-        ...state,
-        error: action.payload,
-      };
-
     case GET_METHODS_OF_OFFERING_COURSES_SUCCESS:
       return {
         ...state,

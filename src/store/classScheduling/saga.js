@@ -41,8 +41,6 @@ import {
   updateCourseOfferingFail,
   deleteCourseOfferingSuccess,
   deleteCourseOfferingFail,
-  getInstructorsFail,
-  getInstructorsSuccess,
   getSectionLabsSuccess,
   getSectionLabsFail,
   getSectionLabProfileSuccess,
@@ -113,7 +111,6 @@ import {
   updateCourseOffering,
   deleteCourseOffering,
   getSectors,
-  getInstructors,
   getSectionLabs,
   getSectionLabProfile,
   addNewSectionLab,
@@ -530,13 +527,13 @@ function* fetchScheduleTimingProfile() {
 }*/
 
 function* fetchSectionLabDetails(obj) {
-   let scheduleTimingD = obj.payload;
+  let scheduleTimingD = obj.payload;
   const get_SectionLabDetail = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_scheduleTimingsDescription",
- filter: `SectionLabId = ${scheduleTimingD.Id} and type=''''${scheduleTimingD.type}''''`,
+    filter: `SectionLabId = ${scheduleTimingD.Id} and type=''''${scheduleTimingD.type}''''`,
   };
   try {
     const response = yield call(getSectionLabDetails, get_SectionLabDetail);

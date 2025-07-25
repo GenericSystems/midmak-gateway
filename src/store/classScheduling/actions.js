@@ -20,9 +20,6 @@ import {
   DELETE_COURSE_OFFERING,
   DELETE_COURSE_OFFERING_SUCCESS,
   DELETE_COURSE_OFFERING_FAIL,
-  GET_INSTRUCTORS,
-  GET_INSTRUCTORS_FAIL,
-  GET_INSTRUCTORS_SUCCESS,
   GET_SECTION_LAB_PROFILE,
   GET_SECTION_LAB_PROFILE_FAIL,
   GET_SECTION_LAB_PROFILE_SUCCESS,
@@ -181,20 +178,6 @@ export const deleteCourseOfferingFail = error => ({
   type: DELETE_COURSE_OFFERING_FAIL,
   payload: error,
 });
-
-export const getInstructors = () => ({
-  type: GET_INSTRUCTORS,
-});
-export const getInstructorsSuccess = Instructors => ({
-  type: GET_INSTRUCTORS_SUCCESS,
-  payload: Instructors,
-});
-
-export const getInstructorsFail = error => ({
-  type: GET_INSTRUCTORS_FAIL,
-  payload: error,
-});
-
 export const getSectionLabs = SectionLabs => ({
   type: GET_SECTION_LABS,
   payload: SectionLabs,

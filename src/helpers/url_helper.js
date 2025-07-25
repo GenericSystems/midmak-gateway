@@ -784,8 +784,6 @@ export const GET_EARNING_DATA = "/earning-charts-data";
 //FACULTIES
 export const GET_FACULTIES = "/faculties";
 export const UPDATE_FACULTY = "update/faculty";
-//INSTRUCTORS
-export const GET_INSTRUCTORS = "/instructors";
 
 //TEMPSTUDENTS
 export const GET_TEMPSTUDENTS = "/temp-students";

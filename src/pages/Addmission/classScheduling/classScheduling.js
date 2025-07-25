@@ -86,6 +86,8 @@ class ClassSchedulingList extends Component {
       sectionLabs: [],
       sectionLabData: [],
       sectionLabDetails: [],
+      scheduleTimingDescs: [],
+      scheduleTimings: [],
       years: [],
       halls: [],
       instructorsArray: [],
@@ -185,7 +187,6 @@ class ClassSchedulingList extends Component {
       sectionLabs,
       onGetCoursesOffering,
       halls,
-      instructors,
       sectionLabDetails,
       faculties,
       filteredAcademicCertificates,
@@ -213,7 +214,6 @@ class ClassSchedulingList extends Component {
       deleted,
       sectionLabs,
       halls,
-      instructors,
       faculties,
       filteredAcademicCertificates,
       weekDays,
@@ -279,9 +279,6 @@ class ClassSchedulingList extends Component {
         this.props.user_menu,
         this.props.location.pathname
       );
-    }
-    if (prevProps.sectionLabDetails !== this.props.sectionLabDetails) {
-      console.log("Updated sectionLabDetails:", this.props.sectionLabDetails);
     }
     if (
       prevProps.coursesOffering !== this.props.coursesOffering &&
@@ -354,6 +351,9 @@ class ClassSchedulingList extends Component {
       modal3: !prevState.modal3,
       showAddWarning: false,
     }));
+    this.setState({
+      sectionLabDetails: {},
+    });
   };
 
   handleCourseOfferingClick = row => {
@@ -445,17 +445,19 @@ class ClassSchedulingList extends Component {
     const {
       sectionLabData,
       onGetScheduleTimingDescs,
+      onGetSectionLabDetails,
       onGetScheduleTimings,
       onGetHallTimings,
     } = this.props;
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
-    this.setState({ selectedScheduleRow: null });
-   // onGetScheduleTimings(0);
-   // onGetScheduleTimingDescs(0);
-  //  onGetHallTimings(0);
-    this.setState({ selectedRow: null });
+    this.setState({ selectedRowSectionLab: null });
+    // onGetScheduleTimings(0);
+    onGetSectionLabDetails(0);
+    // onGetScheduleTimingDescs(0);
+    //  onGetHallTimings(0);
+    this.setState({ selectedRow: null, selectedType: "" });
   }
   toggleNestedModal = () => {
     const { isEdit, selectedOption } = this.state;
@@ -568,7 +570,7 @@ class ClassSchedulingList extends Component {
   };
 
   handleDeleteSectionLabDetails = () => {
-    const { onDeleteSectionLabDetail, onGetSectionLabDetails } = this.props;
+    const { onDeleteSectionLabDetail } = this.props;
     // const { selectedScheduleRow } = this.state;
     const { sectionLabDetails } = this.state;
     //
@@ -578,6 +580,7 @@ class ClassSchedulingList extends Component {
       onDeleteSectionLabDetail(onDelete);
     }
     this.setState({
+      sectionLabDetails: {},
       deleteModal1: false,
       showAlert: true,
       isEdit1: false,
@@ -612,7 +615,7 @@ class ClassSchedulingList extends Component {
       isEdit1: true,
       sectionLabDetails: SLD,
       Id: SLD.Id,
-      selectedInstructor: SLD.instructorsId,
+      instructorsArray: SLD.instructorsId,
       selectedHallKey: SLD.hallId,
       defaultHallName: SLD.hallName,
     });
@@ -621,16 +624,12 @@ class ClassSchedulingList extends Component {
   };
 
   handleEditBranch = branchData => {
-    const { selectedRowData, languageState ,sectionLabDetails} = this.state;
+    const { selectedRowData, languageState } = this.state;
     const { onGetSectionLabs } = this.props;
     // Yara
-    console.log("222222222222222",sectionLabDetails);
-
     this.setState({
       selectedRowData: branchData,
       modal: !this.state.modal,
-      sectionLabDetails: [],
-      sectionLabData:[],
     });
     console.log(languageState, "fff222");
 
@@ -670,37 +669,27 @@ class ClassSchedulingList extends Component {
     this.setState({ matchingError: null });
   };
 
-  handleScheduleTiming = (sectionLabData) => {
+  handleScheduleTiming = sectionLabData => {
     //Yara
-
 
     console.log("11111111111111", sectionLabData);
     const { selectedRowSectionLab } = this.state;
-    const {
-      onGetSectionLabDetails,
-      returnMessage,
-      onGetScheduleMsgValue,
-    } = this.props;
+    const { onGetSectionLabDetails } = this.props;
+
     this.setState({
-      
       selectedRowSectionLab: sectionLabData,
+      sectionLabDetails: {
+        hallId: "",
+        instructorsId: "",
+      },
       isPlusButtonEnabled: true,
       isScheduleEditable: false,
     });
     onGetSectionLabDetails(sectionLabData);
-    // onGetScheduleTimingDescs(sectionLabData);
-  /*  if (returnMessage) {
-      onGetScheduleMsgValue();
-    } else {
-      onGetScheduleTimings(sectionLabData);
-      onGetScheduleTimingDescs(sectionLabData);
-      this.setState({ selectedRow: sectionLabData.Id });
-    }
-    if (fromCalender == 1) {
-      onGetScheduleTimings(sectionLabData);
-      onGetScheduleTimingDescs(sectionLabData);
-      this.setState({ selectedRow: sectionLabData.Id });
-    }*/
+    this.setState({
+      selectedRow: sectionLabData.Id,
+      selectedType: sectionLabData.type,
+    });
   };
 
   handleMouseDown = (cellIndex, lectureId, weekdayId) => {
@@ -729,9 +718,9 @@ class ClassSchedulingList extends Component {
     if (scheduledTiming && !returnMessage.msg) {
       console.log("scheduledTiming", scheduledTiming);
 
-     // onDeleteScheduleTiming(scheduledTiming);
-   //   onGetScheduleTimings(selectedScheduleRow);
-    //  onGetScheduleTimingDescs(selectedScheduleRow);
+      // onDeleteScheduleTiming(scheduledTiming);
+      //   onGetScheduleTimings(selectedScheduleRow);
+      //  onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
       ob["type"] = selectedRowSectionLab.type;
@@ -772,9 +761,9 @@ class ClassSchedulingList extends Component {
     );
 
     if (scheduledTiming) {
-   //   onDeleteScheduleTiming(scheduledTiming);
-    //  onGetScheduleTimings(this.state.selectedRowSectionLab);
-    //  onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+      //   onDeleteScheduleTiming(scheduledTiming);
+      //  onGetScheduleTimings(this.state.selectedRowSectionLab);
+      //  onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
     } else {
       const ob = {};
       ob["type"] = selectedRowSectionLab.type;
@@ -942,6 +931,11 @@ class ClassSchedulingList extends Component {
         fieldErrors.LabNumber = "Please enter Lab Number.";
       }
     }
+
+    if (Object.keys(fieldErrors).length > 0) {
+      return fieldErrors;
+    }
+
     const enteredNumber =
       selectedOption === "Section"
         ? sectionInfo.SectionNumber
@@ -974,42 +968,45 @@ class ClassSchedulingList extends Component {
     sectionInfo["courseOfferingId"] = selectedRowData.Id;
     sectionInfo["tablename"] =
       selectedOption === "Section" ? "Common_Section" : "Common_Lab";
-    // if (flag === 0) {
-    if (isEdit) {
-      sectionInfo["Id"] = sectionLabData.Id;
-      const filteredSectionLabsEdit = sectionLabs.filter(
-        sectionLab =>
-          (selectedOption === "Section" && sectionLab.type === "Section") ||
-          (selectedOption === "Lab" && sectionLab.type === "Lab")
-      );
-
-      let isDuplicateEdit = false;
-
-      for (const sectionLab of filteredSectionLabsEdit) {
-        if (
-          sectionInfo.Id != sectionLab.Id &&
-          sectionLab.SectionLabNumber == enteredNumber
-        ) {
-          isDuplicateEdit = true;
-          break;
-        }
-      }
-      if (!isDuplicateEdit) {
-        onUpdateSectionLab(sectionInfo);
-        this.toggleNestedModal();
-      } else {
-        const errorMessage = this.props.t(
-          `${selectedOption} Number already exists.`
+    if (flag === 0) {
+      if (isEdit) {
+        sectionInfo["Id"] = sectionLabData.Id;
+        const filteredSectionLabsEdit = sectionLabs.filter(
+          sectionLab =>
+            (selectedOption === "Section" && sectionLab.type === "Section") ||
+            (selectedOption === "Lab" && sectionLab.type === "Lab")
         );
-        this.setState({ duplicateError: errorMessage });
-        return;
+
+        let isDuplicateEdit = false;
+
+        for (const sectionLab of filteredSectionLabsEdit) {
+          if (
+            sectionInfo.Id != sectionLab.Id &&
+            sectionLab.SectionLabNumber == enteredNumber
+          ) {
+            isDuplicateEdit = true;
+            break;
+          }
+        }
+        if (!isDuplicateEdit) {
+          onUpdateSectionLab(sectionInfo);
+          this.setState({ selectedOption: "" });
+
+          this.toggleNestedModal();
+        } else {
+          const errorMessage = this.props.t(
+            `${selectedOption} Number already exists.`
+          );
+          this.setState({ duplicateError: errorMessage });
+          return;
+        }
+      } else {
+        console.log("saaaaave", sectionInfo);
+        onAddNewSectionLab(sectionInfo);
+        this.setState({ selectedOption: "" });
+
+        this.toggleNestedModal();
       }
-    } else {
-      console.log("saaaaave", sectionInfo);
-      onAddNewSectionLab(sectionInfo);
-      this.toggleNestedModal();
-      // }
-      // }
     }
   };
 
@@ -1142,12 +1139,12 @@ class ClassSchedulingList extends Component {
     // scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
     if (isEdit1) {
       onUpdateSectionLabDetail(scheduleTimingInfo);
+      this.toggle3();
     } else {
       console.log("saaaaave", scheduleTimingInfo);
       onAddNewSectionLabDetail(scheduleTimingInfo);
+      this.toggle3();
     }
-
-    this.toggle3();
   };
 
   handleMultiInstructors = (fieldName, selectedMulti) => {
@@ -1175,6 +1172,8 @@ class ClassSchedulingList extends Component {
   handleAddRow = () => {
     this.setState({
       sectionLabDetails: "",
+      selectedHallKey: null,
+      defaultHallName: "",
       isEdit1: false,
     });
     this.toggle3();
@@ -1554,20 +1553,20 @@ class ClassSchedulingList extends Component {
     };
 
     const ScheduleTimingDescsCol = [
-      {
-        dataField: "dayTitle",
-        text: t("Day"),
-        editable: false,
-        sort: true,
-        // formatter: (cellContent, row) => this.handleClickOn(row),
-      },
-      {
-        dataField: "periodTime",
-        text: t("Period Time"),
-        editable: false,
-        sort: true,
-        // formatter: (cellContent, row) => this.handleClickOn(row),
-      },
+      // {
+      //   dataField: "dayTitle",
+      //   text: t("Day"),
+      //   editable: false,
+      //   sort: true,
+      //   // formatter: (cellContent, row) => this.handleClickOn(row),
+      // },
+      // {
+      //   dataField: "periodTime",
+      //   text: t("Period Time"),
+      //   editable: false,
+      //   sort: true,
+      //   // formatter: (cellContent, row) => this.handleClickOn(row),
+      // },
       {
         dataField: "instructorNames",
         text: t("Instructor"),
@@ -2211,7 +2210,7 @@ class ClassSchedulingList extends Component {
                                           </Row>
                                           <BootstrapTable
                                             keyField="Id"
-                                            data={combinedData}
+                                            data={sectionLabDetails}
                                             columns={ScheduleTimingDescsCol}
                                             cellEdit={cellEditFactory({
                                               mode: "click",
@@ -2903,52 +2902,6 @@ class ClassSchedulingList extends Component {
                                                     />
                                                   ))}
                                                 </datalist>
-
-                                                {/* <Field
-                                                  name="hallId"
-                                                  type="text"
-                                                  placeholder="Search..."
-                                                  className={
-                                                    "form-control" +
-                                                    (errors.hallId &&
-                                                    touched.hallId
-                                                      ? " is-invalid"
-                                                      : "")
-                                                  }
-                                                  value={
-                                                    this.state.defaultHallName
-                                                  }
-                                                  onChange={e => {
-                                                    this.handleSelect(e);
-                                                    const newValue =
-                                                      e.target.value;
-                                                    const defaultValue =
-                                                      (sectionLabDetails &&
-                                                        sectionLabDetails.hallName) ||
-                                                      "";
-
-                                                    this.onChangeHall(
-                                                      defaultValue,
-                                                      newValue
-                                                    );
-                                                  }}
-                                                  list="hallIdList"
-                                                  autoComplete="Off"
-                                                />
-                                                <datalist id="hallIdList">
-                                                  {" "}
-                                                  {halls.map(hall => (
-                                                    <option
-                                                      key={hall.key}
-                                                      value={hall.value}
-                                                    />
-                                                  ))}
-                                                </datalist>
-                                                <ErrorMessage
-                                                  name="hallId"
-                                                  component="div"
-                                                  className="invalid-feedback"
-                                                /> */}
                                               </Col>
                                             </Row>
                                             <Row>
@@ -4057,7 +4010,6 @@ const mapStateToProps = ({
 }) => ({
   coursesOffering: classScheduling.coursesOffering,
   sectionLabDetails: classScheduling.sectionLabDetails,
-  instructors: classScheduling.instructors,
   sectionLabs: classScheduling.sectionLabs,
   years: years.years,
   halls: academyBuildingStructures.halls,
@@ -4079,24 +4031,30 @@ const mapDispatchToProps = dispatch => ({
   onGetCoursesOffering: lng => dispatch(getCoursesOffering(lng)),
   onGetMethodsOfOfferingCourses: () => dispatch(getMethodsOfOfferingCourses()),
   onGetAllCoursesOffering: () => dispatch(getAllCoursesOffering()),
-  onAddNewCourseOffering: CourseOffering =>  dispatch(addNewCourseOffering(CourseOffering)),
-  onUpdateCourseOffering: CourseOffering => dispatch(updateCourseOffering(CourseOffering)),
+  onAddNewCourseOffering: CourseOffering =>
+    dispatch(addNewCourseOffering(CourseOffering)),
+  onUpdateCourseOffering: CourseOffering =>
+    dispatch(updateCourseOffering(CourseOffering)),
 
-  onGetSectionLabs: Course => dispatch(getSectionLabs(Course)), 
+  onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),
   onUpdateSectionLab: sectionLab => dispatch(updateSectionLab(sectionLab)),
   onDeleteSectionLab: sectionLab => dispatch(deleteSectionLab(sectionLab)),
- 
-  onGetSectionLabDetails: sectionLabs => dispatch(getSectionLabDetails(sectionLabs)),
-  onAddNewSectionLabDetail: sectionLabDetail => dispatch(addNewSectionLabDetail(sectionLabDetail)),
-  onUpdateSectionLabDetail: sectionLabDetail => dispatch(updateSectionLabDetail(sectionLabDetail)),
-  onDeleteSectionLabDetail: sectionLabDetail => dispatch(deleteSectionLabDetail(sectionLabDetail)),
- 
- // onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),
- // onDeleteScheduleTiming: scheduleTiming => dispatch(deleteScheduleTiming(scheduleTiming)),
- // onAddNewScheduleTiming: scheduleTiming => dispatch(addNewScheduleTiming(scheduleTiming)),
- // onGetScheduleTimingDescs: LabSect =>  dispatch(getScheduleTimingDescs(LabSect)),
- // onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
+
+  onGetSectionLabDetails: sectionLabs =>
+    dispatch(getSectionLabDetails(sectionLabs)),
+  onAddNewSectionLabDetail: sectionLabDetail =>
+    dispatch(addNewSectionLabDetail(sectionLabDetail)),
+  onUpdateSectionLabDetail: sectionLabDetail =>
+    dispatch(updateSectionLabDetail(sectionLabDetail)),
+  onDeleteSectionLabDetail: sectionLabDetail =>
+    dispatch(deleteSectionLabDetail(sectionLabDetail)),
+
+  // onGetScheduleTimings: SectLab => dispatch(getScheduleTimings(SectLab)),
+  // onDeleteScheduleTiming: scheduleTiming => dispatch(deleteScheduleTiming(scheduleTiming)),
+  // onAddNewScheduleTiming: scheduleTiming => dispatch(addNewScheduleTiming(scheduleTiming)),
+  // onGetScheduleTimingDescs: LabSect =>  dispatch(getScheduleTimingDescs(LabSect)),
+  // onGetHallTimings: SectLab => dispatch(getHallTimings(SectLab)),
 });
 
 export default connect(
