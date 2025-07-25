@@ -470,7 +470,6 @@ function* fetchScheduleTimings(obj) {
   };
   try {
     const response = yield call(getScheduleTimings, get_schedule_timings);
-    console.log("reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeep", response);
 
     yield put(getScheduleTimingsSuccess(response));
   } catch (error) {
@@ -509,7 +508,7 @@ function* fetchScheduleTimingProfile() {
   }
 }
 
-function* fetchScheduleTimingDescs(obj) {
+/*function* fetchScheduleTimingDescs(obj) {
   let scheduleTimingD = obj.payload;
   const get_schedulingTimingDescs = {
     source: "db",
@@ -528,7 +527,7 @@ function* fetchScheduleTimingDescs(obj) {
   } catch (error) {
     yield put(getScheduleTimingDescsFail(error));
   }
-}
+}*/
 
 function* fetchSectionLabDetails(obj) {
   let scheduleTimingD = obj.payload;
@@ -593,7 +592,7 @@ function* onDeleteSectionLabDetail({ payload, scheduleTiming }) {
 
   try {
     const respdelete = yield call(deleteSectionLabDetail, payload);
-    console.log("reeeeeeeeeeeeeeewwwwwwwwwwdddd", respdelete);
+    
 
     yield put(deleteSectionLabDetailSuccess(respdelete[0]));
   } catch (error) {
@@ -601,16 +600,26 @@ function* onDeleteSectionLabDetail({ payload, scheduleTiming }) {
   }
 }
 
-function* onAddNewScheduleTiming({ payload, scheduleTiming }) {
+function* onAddNewScheduleTiming({ payload }) {
+ // Yara Important
+ const obj = { ...payload }; 
   delete payload["id"];
+delete payload["sectionLabId"];
+delete payload["type"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_TeachingScheduleDetails";
-
   try {
     const response = yield call(addNewScheduleTiming, payload);
     yield put(addScheduleTimingSuccess(response[0]));
+    yield (fetchSectionLabDetails({
+        type: GET_SECTION_LAB_DETAILS,
+        payload: {
+          Id: obj["sectionLabId"],
+          type: obj["type"],
+        },
+      }));
   } catch (error) {
     yield put(addScheduleTimingFail(error));
   }
@@ -661,7 +670,7 @@ function* classSchedulingSaga() {
   yield takeEvery(GET_SCHEDULE_TIMING_PROFILE, fetchScheduleTimingProfile);
   yield takeEvery(ADD_NEW_SCHEDULE_TIMING, onAddNewScheduleTiming);
   yield takeEvery(DELETE_SCHEDULE_TIMING, onDeleteScheduleTiming);
-  yield takeEvery(GET_SCHEDULE_TIMING_DESCS, fetchScheduleTimingDescs);
+  // yield takeEvery(GET_SCHEDULE_TIMING_DESCS, fetchScheduleTimingDescs);
   yield takeEvery(GET_SECTION_LAB_DETAILS, fetchSectionLabDetails);
 
   yield takeEvery(GET_SCHEDULE_MSG_VALUE, onGetScheduleMsgValue);

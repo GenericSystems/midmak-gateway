@@ -654,19 +654,16 @@ class ClassSchedulingList extends Component {
   handleScheduleTiming = sectionLabData => {
     //Yara
 
-    console.log("11111111111111", sectionLabData);
+    console.log("11111111111ddddddddddd111", sectionLabData);
     const { selectedRowSectionLab } = this.state;
     const { onGetSectionLabDetails } = this.props;
 
     this.setState({
-      selectedRowSectionLab: sectionLabData,
-      sectionLabDetails: {
-        hallId: "",
-        instructors: "",
-      },
+      selectedRowSectionLab: sectionLabData,      
       isPlusButtonEnabled: true,
       isScheduleEditable: false,
     });
+    // Yara
     onGetSectionLabDetails(sectionLabData);
     this.setState({
       selectedRow: sectionLabData.Id,
@@ -680,7 +677,7 @@ class ClassSchedulingList extends Component {
       onDeleteScheduleTiming,
       scheduleTimings,
       onGetScheduleMsgValue,
-      onGetSectionLabDetails,
+    //  onGetSectionLabDetails,
       onGetScheduleTimings,
       // onGetScheduleTimingDescs,
     } = this.props;
@@ -709,17 +706,20 @@ class ClassSchedulingList extends Component {
       // onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
-      // ob["type"] = selectedScheduleRow.type;
-      // ob["sectionLabId"] = selectedScheduleRow.Id;
+       ob["type"] = selectedRowSectionLab.type;
+       ob["sectionLabId"] = selectedRowSectionLab.Id;
       ob["teachingScheduleId"] = selectedScheduleRow.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
+  
       console.log(
         "thhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhe obeeeeeeeeeeee",
-        ob
+        this.state.selectedRowSectionLab
       );
+      //Yara
       onAddNewScheduleTiming(ob);
-      onGetSectionLabDetails(this.state.selectedRowSectionLab);
+         // this.handleScheduleTiming(this.state.selectedRowSectionLab);
+     // onGetSectionLabDetails(this.state.selectedRowSectionLab);
     }
   };
 
