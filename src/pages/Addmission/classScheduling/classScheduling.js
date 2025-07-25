@@ -695,26 +695,29 @@ class ClassSchedulingList extends Component {
     );
     console.log("✅ scheduledTiming:", scheduledTiming);
 
-    // if (scheduledTiming && !returnMessage.msg) {
-    //   console.log("scheduledTiming", scheduledTiming);
+    if (
+      scheduledTiming
+      // && !returnMessage.msg
+    ) {
+      console.log("scheduledTiming", scheduledTiming);
 
-    //   onDeleteScheduleTiming(scheduledTiming);
-    //   onGetScheduleTimings(selectedScheduleRow);
-    //   onGetScheduleTimingDescs(selectedScheduleRow);
-    // } else {
-    const ob = {};
-    // ob["type"] = selectedScheduleRow.type;
-    // ob["sectionLabId"] = selectedScheduleRow.Id;
-    ob["teachingScheduleId"] = selectedScheduleRow.Id;
-    ob["dayId"] = weekdayId;
-    ob["lecturePeriodId"] = lectureId;
-    console.log(
-      "thhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhe obeeeeeeeeeeee",
-      ob
-    );
-    onAddNewScheduleTiming(ob);
-    // this.handleScheduleTiming(this.state.selectedRowSectionLab);
-    // }
+      onDeleteScheduleTiming(scheduledTiming);
+      onGetScheduleTimings(selectedScheduleRow);
+      // onGetScheduleTimingDescs(selectedScheduleRow);
+    } else {
+      const ob = {};
+      // ob["type"] = selectedScheduleRow.type;
+      // ob["sectionLabId"] = selectedScheduleRow.Id;
+      ob["teachingScheduleId"] = selectedScheduleRow.Id;
+      ob["dayId"] = weekdayId;
+      ob["lecturePeriodId"] = lectureId;
+      console.log(
+        "thhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhe obeeeeeeeeeeee",
+        ob
+      );
+      onAddNewScheduleTiming(ob);
+      // this.handleScheduleTiming(this.state.selectedRowSectionLab);
+    }
   };
 
   handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
@@ -727,15 +730,14 @@ class ClassSchedulingList extends Component {
 
     const scheduledTiming = scheduleTimings.find(
       timing =>
-        Number(timing.teachingScheduleId) === Number(selectedScheduleRow?.Id) &&
-        Number(timing.dayId) === Number(weekdayId) &&
-        Number(timing.lecturePeriodId) === Number(lectureId)
+        timing.teachingScheduleId === selectedScheduleRow?.Id &&
+        timing.dayId === weekdayId &&
+        timing.lecturePeriodId === lectureId
     );
-
     if (scheduledTiming) {
       onDeleteScheduleTiming(scheduledTiming);
       onGetScheduleTimings(this.state.selectedRowSectionLab);
-      onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+      // onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
     } else {
       const ob = {};
       // ob["type"] = selectedScheduleRow.type;
@@ -1159,7 +1161,7 @@ class ClassSchedulingList extends Component {
       isScheduleEditable: true,
     });
     onGetScheduleTimings(row);
-    onGetScheduleTimingDescs(row);
+    // onGetScheduleTimingDescs(row);
   };
 
   render() {
@@ -4015,7 +4017,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteSectionLabDetail(sectionLabDetail)),
 
   onGetScheduleTimings: SectLabDet => dispatch(getScheduleTimings(SectLabDet)),
-  // onDeleteScheduleTiming: scheduleTiming => dispatch(deleteScheduleTiming(scheduleTiming)),
+  onDeleteScheduleTiming: scheduleTiming =>
+    dispatch(deleteScheduleTiming(scheduleTiming)),
   onAddNewScheduleTiming: scheduleTiming =>
     dispatch(addNewScheduleTiming(scheduleTiming)),
   onGetScheduleTimingDescs: SectLabDet =>

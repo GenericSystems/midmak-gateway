@@ -620,7 +620,7 @@ function* onDeleteScheduleTiming({ payload, scheduleTiming }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_TeachingSchedule";
+  payload["tablename"] = "Common_TeachingScheduleDetails";
 
   try {
     const respdelete = yield call(deleteScheduleTiming, payload);
