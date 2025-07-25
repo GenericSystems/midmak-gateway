@@ -193,9 +193,7 @@ class ClassSchedulingList extends Component {
       weekDays,
       lecturePeriods,
       employeesNames,
-      onfetchSetting,
       onGetMethodsOfOfferingCourses,
-      onfetchDefaultSettings,
       methodsOffering,
       allCoursesOffering,
       deleted,
@@ -439,8 +437,8 @@ class ClassSchedulingList extends Component {
     this.setState({ selectedRowSectionLab: null });
     onGetScheduleTimings(0);
     onGetSectionLabDetails(0);
-    // onGetScheduleTimingDescs(0);
-    //  onGetHallTimings(0);
+    onGetScheduleTimingDescs(0);
+    // onGetHallTimings(0);
     this.setState({ selectedRow: null, selectedType: "" });
   }
   toggleNestedModal = () => {
@@ -670,6 +668,10 @@ class ClassSchedulingList extends Component {
       isScheduleEditable: false,
     });
     onGetSectionLabDetails(sectionLabData);
+    this.setState({
+      selectedRow: sectionLabData.Id,
+      selectedType: sectionLabData.type,
+    });
   };
 
   handleMouseDown = (cellIndex, lectureId, weekdayId) => {
@@ -703,7 +705,7 @@ class ClassSchedulingList extends Component {
 
       onDeleteScheduleTiming(scheduledTiming);
       onGetScheduleTimings(selectedScheduleRow);
-      // onGetScheduleTimingDescs(selectedScheduleRow);
+      onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
       // ob["type"] = selectedScheduleRow.type;
@@ -716,13 +718,19 @@ class ClassSchedulingList extends Component {
         ob
       );
       onAddNewScheduleTiming(ob);
-      // this.handleScheduleTiming(this.state.selectedRowSectionLab);
+      onGetScheduleTimings(selectedScheduleRow);
+      onGetScheduleTimingDescs(selectedScheduleRow);
     }
   };
 
   handleMouseEnter = (cellIndex, lectureId, weekdayId) => {
-    const { onAddNewScheduleTiming, onDeleteScheduleTiming, scheduleTimings } =
-      this.props;
+    const {
+      onAddNewScheduleTiming,
+      onDeleteScheduleTiming,
+      onGetScheduleTimings,
+      onGetScheduleTimingDescs,
+      scheduleTimings,
+    } = this.props;
     const { selectedRowSectionLab, selectedScheduleRow } = this.state;
     this.setState({
       isDragging: true,
@@ -736,18 +744,17 @@ class ClassSchedulingList extends Component {
     );
     if (scheduledTiming) {
       onDeleteScheduleTiming(scheduledTiming);
-      onGetScheduleTimings(this.state.selectedRowSectionLab);
-      // onGetScheduleTimingDescs(this.state.selectedRowSectionLab);
+      onGetScheduleTimings(selectedScheduleRow);
+      onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
-      // ob["type"] = selectedScheduleRow.type;
-      // ob["sectionLabId"] = selectedScheduleRow.Id;
       ob["teachingScheduleId"] = selectedScheduleRow.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
       console.log("thhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhe ob", ob);
 
       onAddNewScheduleTiming(ob);
+      this.handleClickOn(this.state.selectedScheduleRow);
     }
   };
 
@@ -1161,7 +1168,7 @@ class ClassSchedulingList extends Component {
       isScheduleEditable: true,
     });
     onGetScheduleTimings(row);
-    // onGetScheduleTimingDescs(row);
+    onGetScheduleTimingDescs(row);
   };
 
   render() {
@@ -1230,7 +1237,12 @@ class ClassSchedulingList extends Component {
       showAddWarning,
       isScheduleEditable,
     } = this.state;
-
+    console.log(
+      "sectionlab scheduletiming",
+      sectionLabDetails,
+      scheduleTimings,
+      scheduleTimingDescs
+    );
     console.log(isScheduleEditable, "we needddddddd");
     const selectRow = {
       mode: "checkbox",
@@ -1249,7 +1261,6 @@ class ClassSchedulingList extends Component {
         />
       ),
     };
-    const combinedData = [...scheduleTimingDescs, ...sectionLabDetails];
 
     const { SearchBar } = Search;
     const alertMessage =
@@ -1519,35 +1530,25 @@ class ClassSchedulingList extends Component {
     };
 
     const ScheduleTimingDescsCol = [
-     
       {
         dataField: "periodTime",
         text: t("Period Time"),
         editable: false,
         sort: true,
-        // formatter: (cellContent, row) => this.handleClickOn(row),
+        formatter: (cellContent, row) => {
+          if (cellContent) {
+            return cellContent
+              .split(",")
+              .map((item, index) => <div key={index}>{item.trim()}</div>);
+          }
+          return null;
+        },
       },
       {
         dataField: "instructorNames",
         text: t("Instructor"),
         editable: false,
         sort: true,
-        // formatter: (cellContent, row) => {
-        //   let namesArray = [];
-        //   try {
-        //     const parsed = JSON.parse(cellContent);
-
-        //     if (Array.isArray(parsed)) {
-        //       namesArray = parsed;
-        //     } else {
-        //       return cellContent;
-        //     }
-        //   } catch (e) {
-        //     return cellContent;
-        //   }
-
-        //   return namesArray.join(", ");
-        // },
       },
 
       {
@@ -1555,7 +1556,6 @@ class ClassSchedulingList extends Component {
         text: t("Room"),
         editable: false,
         sort: true,
-        // formatter: (cellContent, row) => this.handleClickOn(row),
       },
       {
         dataField: "menu",
