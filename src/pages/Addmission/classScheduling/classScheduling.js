@@ -1517,15 +1517,9 @@ class ClassSchedulingList extends Component {
     };
 
     const ScheduleTimingDescsCol = [
+     
       {
-        dataField: "dayId",
-        text: t("Day"),
-        editable: false,
-        sort: true,
-        // formatter: (cellContent, row) => this.handleClickOn(row),
-      },
-      {
-        dataField: "lecturePeriodId",
+        dataField: "periodTime",
         text: t("Period Time"),
         editable: false,
         sort: true,
