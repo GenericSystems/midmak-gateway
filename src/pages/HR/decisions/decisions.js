@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import Select from "react-select";
+import * as moment from "moment";
+
 import {
   Card,
   CardBody,
@@ -377,6 +379,18 @@ class DecisionsList extends Component {
     }
   };
 
+  handleValidDate = date => {
+    if (
+      !date ||
+      date === "1970-01-01" ||
+      date === "0000-00-00" ||
+      moment(date).year() === 1970
+    ) {
+      return "";
+    }
+    return moment(date).format("DD-MM-YYYY");
+  };
+
   render() {
     const decision = this.state.decision;
     const {
@@ -448,6 +462,7 @@ class DecisionsList extends Component {
         text: this.props.t("Decision Date"),
         sort: true,
         editable: false,
+        formatter: (cellContent, row) => this.handleValidDate(row.decisionDate),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
@@ -486,6 +501,7 @@ class DecisionsList extends Component {
         text: this.props.t("Execute Date"),
         sort: true,
         editable: false,
+        formatter: (cellContent, row) => this.handleValidDate(row.executeDate),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
@@ -1834,7 +1850,7 @@ class DecisionsList extends Component {
                                                 </Card>
                                                 <Card>
                                                   <CardTitle id="card_header">
-                                                    {t("Decision Information")}
+                                                    {t("Decision Types")}
                                                   </CardTitle>
                                                   <CardBody className="cardBody">
                                                     <Col lg="6">

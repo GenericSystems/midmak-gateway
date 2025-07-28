@@ -7,6 +7,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import * as Yup from "yup";
 import Select from "react-select";
+import * as moment from "moment";
 import {
   Card,
   CardBody,
@@ -302,6 +303,10 @@ class EmployeesList extends Component {
 
     this.setState({
       employee: arg,
+      // perosonalCardNum: arg.perosonalCardNum,
+      // perosonalCardGrantDate: arg.perosonalCardGrantDate,
+      // perosonalCardExpirationDate: arg.perosonalCardExpirationDate,
+      // amanaNum: arg.amanaNum,
       selectedGender: arg.genderId,
       selectedNationality: arg.nationalityId,
       selectedStateId: arg.stateId,
@@ -765,6 +770,18 @@ class EmployeesList extends Component {
     onGetEmployeeDeletedValue();
   };
 
+  handleValidDate = date => {
+    if (
+      !date ||
+      date === "1970-01-01" ||
+      date === "0000-00-00" ||
+      moment(date).year() === 1970
+    ) {
+      return "";
+    }
+    return moment(date).format("DD-MM-YYYY");
+  };
+
   render() {
     const employee = this.state.employee;
     const contract = this.state.contract;
@@ -882,6 +899,7 @@ class EmployeesList extends Component {
         text: this.props.t("Birth Date"),
         sort: true,
         editable: false,
+        formatter: (cellContent, row) => this.handleValidDate(row.birthDate),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
@@ -1937,7 +1955,7 @@ class EmployeesList extends Component {
                                                               <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
-                                                                    <Label className="form-label">
+                                                                    <Label for="nationalityId">
                                                                       {this.props.t(
                                                                         "Nationality"
                                                                       )}
@@ -1954,6 +1972,7 @@ class EmployeesList extends Component {
                                                                           : ""
                                                                       }`}
                                                                       name="nationalityId"
+                                                                      id="nationalityId"
                                                                       key="nationality_select"
                                                                       options={
                                                                         nationalitiesOpt
@@ -1964,10 +1983,10 @@ class EmployeesList extends Component {
                                                                           newValue.value
                                                                         )
                                                                       }
-                                                                      value={nationalitiesOpt.find(
+                                                                      defaultValue={nationalitiesOpt.find(
                                                                         opt =>
-                                                                          opt.label ===
-                                                                          selectedNationality
+                                                                          opt.value ===
+                                                                          employee?.nationalityId
                                                                       )}
                                                                     />
                                                                   </Col>

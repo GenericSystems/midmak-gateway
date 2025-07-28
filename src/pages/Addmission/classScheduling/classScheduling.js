@@ -139,7 +139,6 @@ class ClassSchedulingList extends Component {
       values: "",
       oldHallId: null,
       newHallId: null,
-      defaultHallName: null,
       matchingHallModal: null,
       matchingTimings: [],
       matchingError: null,
@@ -659,7 +658,7 @@ class ClassSchedulingList extends Component {
     const { onGetSectionLabDetails } = this.props;
 
     this.setState({
-      selectedRowSectionLab: sectionLabData,      
+      selectedRowSectionLab: sectionLabData,
       isPlusButtonEnabled: true,
       isScheduleEditable: false,
     });
@@ -677,7 +676,7 @@ class ClassSchedulingList extends Component {
       onDeleteScheduleTiming,
       scheduleTimings,
       onGetScheduleMsgValue,
-    //  onGetSectionLabDetails,
+      //  onGetSectionLabDetails,
       onGetScheduleTimings,
       // onGetScheduleTimingDescs,
     } = this.props;
@@ -706,20 +705,20 @@ class ClassSchedulingList extends Component {
       // onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
-       ob["type"] = selectedRowSectionLab.type;
-       ob["sectionLabId"] = selectedRowSectionLab.Id;
+      ob["type"] = selectedRowSectionLab.type;
+      ob["sectionLabId"] = selectedRowSectionLab.Id;
       ob["teachingScheduleId"] = selectedScheduleRow.Id;
       ob["dayId"] = weekdayId;
       ob["lecturePeriodId"] = lectureId;
-  
+
       console.log(
         "thhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhe obeeeeeeeeeeee",
         this.state.selectedRowSectionLab
       );
       //Yara
       onAddNewScheduleTiming(ob);
-         // this.handleScheduleTiming(this.state.selectedRowSectionLab);
-     // onGetSectionLabDetails(this.state.selectedRowSectionLab);
+      // this.handleScheduleTiming(this.state.selectedRowSectionLab);
+      // onGetSectionLabDetails(this.state.selectedRowSectionLab);
     }
   };
 
@@ -3209,101 +3208,7 @@ class ClassSchedulingList extends Component {
                                                         </FormGroup>
                                                       </Col>
                                                     </Row>
-                                                    <Row>
-                                                      {/* <Col md="6">
-                                                    <FormGroup className="mb-3">
-                                                      <Label htmlFor="validationCustom03">
-                                                        {t("Room")}
-                                                      </Label>
-                                                      <Field
-                                                        name="hallId"
-                                                        type="text"
-                                                        placeholder="Search..."
-                                                        className={
-                                                          "form-control" +
-                                                          (errors.hallId &&
-                                                          touched.hallId
-                                                            ? " is-invalid"
-                                                            : "")
-                                                        }
-                                                        value={
-                                                          this.state
-                                                            .defaultHallName
-                                                        }
-                                                        onChange={e => {
-                                                          handleChange(e);
-                                                          const newValue =
-                                                            e.target.value;
-                                                          const defaultValue =
-                                                            (sectionLabData &&
-                                                              sectionLabData.hallName) ||
-                                                            "";
-
-                                                          this.onChangeHall(
-                                                            defaultValue,
-                                                            newValue
-                                                          );
-                                                        }}
-                                                        list="hallIdList"
-                                                        autoComplete="Off"
-                                                      />
-                                                      <datalist id="hallIdList">
-                                                        {" "}
-                                                        {halls.map(hall => (
-                                                          <option
-                                                            key={hall.key}
-                                                            value={hall.value}
-                                                          />
-                                                        ))}
-                                                      </datalist>
-                                                      <ErrorMessage
-                                                        name="hallId"
-                                                        component="div"
-                                                        className="invalid-feedback"
-                                                      />
-                                                    </FormGroup>
-                                                  </Col> */}
-                                                      {/* <Col md="6">
-                                                    <FormGroup className="mb-3">
-                                                      <Label htmlFor="validationCustom02">
-                                                        {t("Instructor")}
-                                                      </Label>
-                                                      <Field
-                                                        name="instructorsId"
-                                                        placeholder="Search..."
-                                                        type="text"
-                                                        className={
-                                                          "form-control" +
-                                                          (errors.instructorsId &&
-                                                          touched.instructorsId
-                                                            ? " is-invalid"
-                                                            : "")
-                                                        }
-                                                        autoComplete="Off"
-                                                        list="instructorList"
-                                                      />
-                                                      <datalist id="instructorList">
-                                                        {instructors.map(
-                                                          instructor => (
-                                                            <option
-                                                              key={
-                                                                instructor.Id
-                                                              }
-                                                              value={
-                                                                instructor.fullName
-                                                              }
-                                                            />
-                                                          )
-                                                        )}
-                                                      </datalist>
-                                                      <ErrorMessage
-                                                        name="instructorsId"
-                                                        component="div"
-                                                        className="invalid-feedback"
-                                                      />
-                                                    </FormGroup>
-                                                  </Col> */}
-                                                    </Row>
+                                                    <Row></Row>
                                                   </div>
                                                   <div className="bordered">
                                                     <h5
