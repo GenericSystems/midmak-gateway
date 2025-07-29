@@ -76,8 +76,7 @@ class ExamRoomsList extends Component {
     }
   }
   componentDidMount() {
-    const { studentManagements, examRooms, levels, faculties, user_menu } =
-      this.props;
+    const { studentManagements, examRooms, levels, user_menu } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
@@ -86,7 +85,6 @@ class ExamRoomsList extends Component {
     }
     this.setState({ studentManagements });
     this.setState({ levels });
-    this.setState({ faculties });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -345,13 +343,9 @@ class ExamRoomsList extends Component {
     return (
       <React.Fragment>
         <div className="page-content">
-          {/* <Container fluid>*/}
-
-          <Breadcrumbs
-            title={t("Mobile Application")}
-            breadcrumbItem={t("defineExamDates Access Management")}
-          />
-          {/* <div className="checkout-tabs">
+          <Container fluid>
+            <Breadcrumbs breadcrumbItem={t("Exam Rooms")} />
+            <div className="checkout-tabs">
               <Row>
                 <Col lg="2">
                   <Nav pills className="flex-column">
@@ -380,68 +374,76 @@ class ExamRoomsList extends Component {
                       </NavItem>
                     ))}
                   </Nav>
-                </Col> */}
-          {/* <Col lg="10"> */}
-          {/* <TabContent
+                </Col>
+                <Col lg="10">
+                  <TabContent
                     activeTab={this.state.verticalActiveTab}
                     className="text-muted mt-4 mt-md-0"
-                  > */}
-          {/* {faculties.map(defineExamDates => ( */}
-          {/* <TabPane
+                  >
+                    {/* {faculties.map(defineExamDates => ( */}
+                    <TabPane
                       key={defineExamDates.Id}
                       tabId={defineExamDates.Id}
-                    > */}
-          <Card>
-            <CardBody>
-              <div>
-                {duplicateError && (
-                  <Alert
-                    color="danger"
-                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                    role="alert"
-                  >
-                    {duplicateError}
-                    <button
-                      type="button"
-                      className="btn-close"
-                      aria-label="Close"
-                      onClick={this.handleAlertClose}
-                    ></button>
-                  </Alert>
-                )}
-              </div>
+                    >
+                      <Card>
+                        <CardBody>
+                          <div>
+                            {duplicateError && (
+                              <Alert
+                                color="danger"
+                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                role="alert"
+                              >
+                                {duplicateError}
+                                <button
+                                  type="button"
+                                  className="btn-close"
+                                  aria-label="Close"
+                                  onClick={this.handleAlertClose}
+                                ></button>
+                              </Alert>
+                            )}
+                          </div>
 
-              <div className="table-responsive">
-                {showAddButton && (
-                  <div className="text-sm-end">
-                    <Tooltip title={this.props.t("Add")} placement="top">
-                      <IconButton color="primary" onClick={this.handleAddRow}>
-                        <i className="mdi mdi-plus-circle blue-noti-icon" />
-                      </IconButton>
-                    </Tooltip>
-                  </div>
-                )}
-                <BootstrapTable
-                  keyField="Id"
-                  data={examRooms}
-                  columns={columns}
-                  filter={filterFactory()}
-                  cellEdit={cellEditFactory({
-                    mode: "click",
-                    blurToSave: true,
-                  })}
-                  noDataIndication={this.props.t("No Students found")}
-                />
-              </div>
-            </CardBody>
-          </Card>
-          {/* </TabPane> */}
-          {/* ))} */}
-          {/* </TabContent> */}
-          {/* </Col> */}
-          {/* </Row> */}
-          {/* </div> */}
-          {/* </Container> */}
+                          <div className="table-responsive">
+                            {showAddButton && (
+                              <div className="text-sm-end">
+                                <Tooltip
+                                  title={this.props.t("Add")}
+                                  placement="top"
+                                >
+                                  <IconButton
+                                    color="primary"
+                                    onClick={this.handleAddRow}
+                                  >
+                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                  </IconButton>
+                                </Tooltip>
+                              </div>
+                            )}
+                            <BootstrapTable
+                              keyField="Id"
+                              data={examRooms}
+                              columns={columns}
+                              filter={filterFactory()}
+                              cellEdit={cellEditFactory({
+                                mode: "click",
+                                blurToSave: true,
+                              })}
+                              noDataIndication={this.props.t(
+                                "No Students found"
+                              )}
+                            />
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </TabPane>
+                    {/* ))} */}
+                  </TabContent>
+                </Col>
+              </Row>
+            </div>
+          </Container>
         </div>
       </React.Fragment>
     );

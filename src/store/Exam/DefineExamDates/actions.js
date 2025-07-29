@@ -15,6 +15,9 @@ import {
   DELETE_DEFINE_EXAM_DATE,
   DELETE_DEFINE_EXAM_DATE_SUCCESS,
   DELETE_DEFINE_EXAM_DATE_FAIL,
+  GET_STUDENTS_ORDER,
+  GET_STUDENTS_ORDER_FAIL,
+  GET_STUDENTS_ORDER_SUCCESS,
 } from "./actionTypes";
 
 export const getDefineExamDates = () => ({
@@ -89,5 +92,19 @@ export const deleteDefineExamDateSuccess = defineExamDates => ({
 
 export const deleteDefineExamDateFail = error => ({
   type: DELETE_DEFINE_EXAM_DATE_FAIL,
+  payload: error,
+});
+
+export const getStudentsOrder = () => ({
+  type: GET_STUDENTS_ORDER,
+});
+
+export const getStudentsOrderSuccess = studentsOrder => ({
+  type: GET_STUDENTS_ORDER_SUCCESS,
+  payload: studentsOrder,
+});
+
+export const getStudentsOrderFail = error => ({
+  type: GET_STUDENTS_ORDER_FAIL,
   payload: error,
 });

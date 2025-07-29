@@ -168,6 +168,9 @@ import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 //ExamRooms
 import ExamRoomsList from "../pages/Exam/ExamRooms/examRooms";
 
+//trainees
+import TraineesList from "../pages/Addmission/AcadmeyStudents/trainees";
+
 //WarningsTypes
 import WarningsTypesList from "../pages/HR/warningsTypes/warningsTypes";
 
@@ -379,6 +382,9 @@ const authProtectedRoutes = [
 
   // New Trainee
   { path: "/newTrainee", component: NewTrainee },
+
+  // trainees
+  { path: "/trainees", component: TraineesList },
 
   //trainingFormat
   { path: "/trainingFormat", component: TrainingFormatsList },

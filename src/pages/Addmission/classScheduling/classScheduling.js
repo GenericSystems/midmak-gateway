@@ -93,7 +93,6 @@ class ClassSchedulingList extends Component {
       courseOffering: "",
       activeTab1: "5",
       activeTab2: "5",
-      selectConId: null,
       showAlert: null,
       selectedCourse: null,
       selectedMethodOffering: "",

@@ -42,6 +42,7 @@ import {
   updateDefineExamDate,
   deleteDefineExamDate,
   getDefineExamDateDeletedValue,
+  getStudentsOrder,
 } from "store/Exam/DefineExamDates/actions";
 import paginationFactory, {
   PaginationProvider,
@@ -84,6 +85,7 @@ class DefineExamDatesList extends Component {
       isAdd: false,
       selectedExamType: "",
       selectedDefinPeriod: "",
+      selectedStudentsOrder: "",
       startDateError: false,
       endDateError: false,
       examArError: false,
@@ -102,9 +104,10 @@ class DefineExamDatesList extends Component {
     const {
       defineExamDates,
       onGetDefineExamDates,
+      onGetStudentsOrder,
       gradeTypes,
       deleted,
-
+      studentsOrder,
       user_menu,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -112,11 +115,13 @@ class DefineExamDatesList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetDefineExamDates();
+    onGetStudentsOrder();
 
     this.setState({
       defineExamDates,
       deleted,
       gradeTypes,
+      studentsOrder,
     });
   }
 
@@ -207,6 +212,29 @@ class DefineExamDatesList extends Component {
     this.toggle();
   };
 
+  // handleAddDefinePeriod = () => {
+  //   const { onAddNewContractType, contractsTypes } = this.props;
+
+  //   const newRow = {
+  //     arTitle: "-----",
+  //   };
+
+  //   // Check if the same value already exists in the table
+  //   const emptyRowsExist = contractsTypes.some(
+  //     contractsTypes => contractsTypes.arTitle.trim() === "-----"
+  //     // ||
+  //     // contractType.enTitle.trim() === ""
+  //   );
+
+  //   if (emptyRowsExist) {
+  //     const errorMessage = this.props.t("Fill in the empty row");
+  //     this.setState({ duplicateError: errorMessage });
+  //   } else {
+  //     this.setState({ duplicateError: null });
+  //     onAddNewContractType(newRow);
+  //   }
+  // };
+
   handleDeleteRow = () => {
     const { onDeleteDefineExamDate } = this.props;
     const { selectedRowId } = this.state;
@@ -222,65 +250,24 @@ class DefineExamDatesList extends Component {
     }
   };
 
-  handleButtonClick = (fieldName, option) => {
-    if (fieldName === "hasMinistryApprove") {
-      this.setState({ selectedHasMinistryApprove: option });
-    }
-
-    if (fieldName === "governmentWorker") {
-      this.setState({ selectedGovernmentWorker: option });
-    }
-  };
-
   handleSubmit = values => {
-    const {
-      selectedEndDate,
-      selectedHireDate,
-      selectedSignatureDate,
-      defineExamDate,
-      isEdit,
-      selectEmpId,
-      selectedHasMinistryApprove,
-      selectedGovernmentWorker,
-      selectedFullName,
-      selectedExamType,
-      selectedDefinPeriod,
-      fullNamesOpt,
-    } = this.state;
+    const { selectedExamType, selectedStudentsOrder, isEdit } = this.state;
     const { onAddNewDefineExamDate, onUpdateDefineExamDate } = this.props;
 
-    //values["administrativeSupervisor"] = selectedAdministrativeSupervisor;
-    // values["physicalWorkLocation"] = selectedPhysicalWorkLocations;
-    // values["employeeId"] = selectEmpId;
-
     values["examTypeId"] = selectedExamType;
-    values["definPeriodId"] = selectedDefinPeriod;
+    values["studentOrderId"] = selectedStudentsOrder;
+    // values["definPeriodId"] = selectedDefinPeriod;
     console.log("valuesssssssssssssssssssss", values);
 
     let defineExamDateInfo = {};
-    // if (values.fullNameId) {
-    //   const nameObject = fullNamesOpt.find(
-    //     fullName => fullName.value === values.fullNameId
-    //   );
-    //   console.log("nameObject", nameObject);
-    //   values["fullNameId"] = nameObject.key;
-    // }
-    // console.log("valuesssssssssssssssssssss", values);
     if (
-      values.examAr &&
-      values.examEn &&
+      values.arTitle &&
+      values.enTitle &&
       values.startDate &&
       values.endDate &&
-      selectedJobRank !== null &&
-      selectedAcademicYearId !== null &&
-      selectedWorkClassification !== null &&
-      selectedJobTitle !== null &&
-      // selectedCorporateNode !== null &&
-      selectedContractType !== null &&
-      selectedEmploymentCase !== null &&
-      selectedFullName !== null
+      selectedExamType !== null &&
+      selectedStudentsOrder !== null
     ) {
-      console.log("selectedFullName", selectedFullName);
       Object.keys(values).forEach(function (key) {
         if (
           values[key] != undefined &&
@@ -291,9 +278,9 @@ class DefineExamDatesList extends Component {
       });
       if (isEdit) {
         console.log("9999999", defineExamDateInfo);
-        // onUpdateDefineExamDate(defineExamDateInfo);
+        onUpdateDefineExamDate(defineExamDateInfo);
       } else {
-        // onAddNewDefineExamDate(defineExamDateInfo);
+        onAddNewDefineExamDate(defineExamDateInfo);
       }
       this.setState({
         errorMessages: {},
@@ -301,36 +288,10 @@ class DefineExamDatesList extends Component {
       this.toggle();
     } else {
       let emptyError = "";
-      // if (selectedAdministrativeSupervisor === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      // if (selectedPhysicalWorkLocations === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      if (selectedJobTitle === undefined) {
+      if (selectedExamType === undefined) {
         emptyError = "Fill the empty select";
       }
-      if (selectedNcsDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedContractType === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedAcademicYearId === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedHireDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedSignatureDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedFullName === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      // if (selectedCorporateNode === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
+
       this.setState({ emptyError: emptyError });
     }
   };
@@ -365,33 +326,57 @@ class DefineExamDatesList extends Component {
     this.setState({
       defineExamDate: arg,
       selectedExamType: arg.examTypeId,
-      selectedDefinPeriod: arg.definPeriodId,
+      selectedStudentsOrder: arg.studentOrderId,
+      // selectedDefinPeriod: arg.definPeriodId,
       isEdit: true,
     });
     this.toggle();
   };
 
-  handleEmployeeDataClick = defineExamDate => {
-    console.log("arg", defineExamDate);
+  // handleEmployeeDataClick = defineExamDate => {
+  //   console.log("arg", defineExamDate);
 
-    this.setState({
-      isOpen: true,
-      selectConId: defineExamDate.Id,
-      modalContractValue: defineExamDate,
-    });
-    this.toggle2();
-  };
-  testselected = val => {
-    console.log(val, "vvvvvvvvvvvvvvvvvv");
-  };
+  //   this.setState({
+  //     isOpen: true,
+  //     selectConId: defineExamDate.Id,
+  //     modalContractValue: defineExamDate,
+  //   });
+  //   this.toggle2();
+  // };
+  // testselected = val => {
+  //   console.log(val, "vvvvvvvvvvvvvvvvvv");
+  // };
   handleValidDate = date => {
     const date1 = moment(new Date(date)).format("DD /MM/ Y");
     return date1;
   };
+
+  handleDefinePeriodDataChange = (rowId, fieldName, fieldValue) => {
+    const { contractsTypes, onUpdateContractType } = this.props;
+
+    const isDuplicate = contractsTypes.some(contractType => {
+      return (
+        contractType.Id !== rowId &&
+        contractType.arTitle.trim() === fieldValue.trim()
+      );
+    });
+
+    if (isDuplicate) {
+      const errorMessage = this.props.t("Value already exists");
+      this.setState({ duplicateError: errorMessage });
+      let onUpdate = { Id: rowId, [fieldName]: "-----" };
+      onUpdateContractType(onUpdate);
+    } else {
+      this.setState({ duplicateError: null });
+      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+      onUpdateContractType(onUpdate);
+    }
+  };
+
   render() {
     const defineExamDate = this.state.defineExamDate;
-    const employee = this.state.employee;
-    const { defineExamDates, gradeTypes, t, deleted } = this.props;
+    const { defineExamDates, studentsOrder, gradeTypes, t, deleted } =
+      this.props;
     const {
       duplicateError,
       deleteModal,
@@ -402,20 +387,13 @@ class DefineExamDatesList extends Component {
       isAdd,
       emptyError,
       showAlert,
-      selectedHasMinistryApprove,
-      selectedGovernmentWorker,
-      endDateError,
-      startDateError,
-      examArError,
-      examEnError,
-      examTypeError,
       showAddButton,
       showDeleteButton,
       showEditButton,
       showSearchButton,
-      fullNamesOpt,
       selectedDefinPeriod,
       selectedExamType,
+      selectedStudentsOrder,
     } = this.state;
     const { SearchBar } = Search;
     const alertMessage =
@@ -432,23 +410,24 @@ class DefineExamDatesList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "jobNumber",
+        dataField: "arTitle,",
         text: this.props.t("Exam"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "ncsDate",
+        dataField: "startDate",
         text: this.props.t("Start Date"),
         sort: true,
         editable: false,
-        formatter: (cellContent, row) => this.handleValidDate(row.ncsDate),
+        formatter: (cellContent, row) => this.handleValidDate(row.startDate),
       },
       {
-        dataField: "employeeName",
+        dataField: "endDate",
         text: this.props.t("End Date"),
         sort: true,
         editable: false,
+        formatter: (cellContent, row) => this.handleValidDate(row.endDate),
       },
       {
         dataField: "position",
@@ -457,7 +436,7 @@ class DefineExamDatesList extends Component {
         editable: false,
       },
       {
-        dataField: "jobTitle",
+        dataField: "examTypeId",
         text: this.props.t("Exam Type"),
         sort: true,
         editable: false,
@@ -510,43 +489,13 @@ class DefineExamDatesList extends Component {
         dataField: "startTime",
         text: t("Start Time"),
         sort: true,
-        editable: false,
-        formatter: (cellContent, row, column) => (
-          <Input
-            className="form-control"
-            type="time"
-            value={row.startTime}
-            onChange={newValue => {
-              this.handleLecturePeriodDataChange(
-                row.Id,
-                "startTime",
-                newValue.target.value
-              );
-            }}
-            disabled={!showEditButton}
-          />
-        ),
+        editable: true,
       },
       {
         dataField: "endTime",
         text: t("End Time"),
         sort: true,
-        editable: false,
-        formatter: (cellContent, row, column) => (
-          <Input
-            className="form-control"
-            type="time"
-            value={row.endTime}
-            onChange={newValue => {
-              this.handleLecturePeriodDataChange(
-                row.Id,
-                "endTime",
-                newValue.target.value
-              );
-            }}
-            disabled={!showEditButton}
-          />
-        ),
+        editable: true,
       },
       {
         dataField: "delete",
@@ -726,22 +675,22 @@ class DefineExamDatesList extends Component {
                                           defineExamDate && {
                                             Id: defineExamDate.Id,
                                           }),
-                                        examAr:
+                                        arTitle:
                                           (defineExamDate &&
-                                            defineExamDate.examAr) ||
+                                            defineExamDate.arTitle) ||
                                           "",
-                                        examEn:
+                                        enTitle:
                                           (defineExamDate &&
-                                            defineExamDate.examEn) ||
+                                            defineExamDate.enTitle) ||
                                           "",
                                         examTypeId:
                                           (defineExamDate &&
                                             defineExamDate.jobTitleId) ||
                                           selectedExamType,
-                                        definPeriodId:
-                                          (defineExamDate &&
-                                            defineExamDate.definPeriodId) ||
-                                          selectedDefinPeriod,
+                                        // definPeriodId:
+                                        //   (defineExamDate &&
+                                        //     defineExamDate.definPeriodId) ||
+                                        //   selectedDefinPeriod,
                                         startDate:
                                           (defineExamDate &&
                                             defineExamDate.startDate) ||
@@ -754,17 +703,17 @@ class DefineExamDatesList extends Component {
                                           (defineExamDate &&
                                             defineExamDate.studentOrderId) ||
                                           "",
-                                        startTime:
-                                          (defineExamDate &&
-                                            defineExamDate.startTime) ||
-                                          "",
-                                        endTime:
-                                          (defineExamDate &&
-                                            defineExamDate.endTime) ||
-                                          "",
+                                        // startTime:
+                                        //   (defineExamDate &&
+                                        //     defineExamDate.startTime) ||
+                                        //   "",
+                                        // endTime:
+                                        //   (defineExamDate &&
+                                        //     defineExamDate.endTime) ||
+                                        //   "",
                                       }}
                                       validationSchema={Yup.object().shape({
-                                        examAr: Yup.string()
+                                        arTitle: Yup.string()
                                           .matches(
                                             /^[أ-ي]+$/,
                                             "Only Arabic letters are allowed"
@@ -772,7 +721,7 @@ class DefineExamDatesList extends Component {
                                           .required(
                                             "Please Enter Your Exam Name In Arabic"
                                           ),
-                                        examEn: Yup.string()
+                                        enTitle: Yup.string()
                                           .matches(
                                             /^[A-Za-z]+$/,
                                             "Only English letters are allowed"
@@ -834,7 +783,7 @@ class DefineExamDatesList extends Component {
                                                           <div className="mb-3">
                                                             <Row>
                                                               <Col className="col-4">
-                                                                <Label for="examAr">
+                                                                <Label for="arTitle">
                                                                   {this.props.t(
                                                                     "Exam (ar)"
                                                                   )}
@@ -845,18 +794,18 @@ class DefineExamDatesList extends Component {
                                                               </Col>
                                                               <Col className="col-8">
                                                                 <Field
-                                                                  name="examAr"
+                                                                  name="arTitle"
                                                                   type="text"
-                                                                  id="examAr"
+                                                                  id="arTitle"
                                                                   className={`form-control ${
-                                                                    errors.examAr &&
-                                                                    touched.examAr
+                                                                    errors.arTitle &&
+                                                                    touched.arTitle
                                                                       ? "is-invalid"
                                                                       : ""
                                                                   }`}
                                                                 />
                                                                 <ErrorMessage
-                                                                  name="examAr"
+                                                                  name="arTitle"
                                                                   component="div"
                                                                   className="invalid-feedback"
                                                                 />
@@ -866,7 +815,7 @@ class DefineExamDatesList extends Component {
                                                           <div className="mb-3">
                                                             <Row>
                                                               <Col className="col-4">
-                                                                <Label for="examEn">
+                                                                <Label for="enTitle">
                                                                   {this.props.t(
                                                                     "Exam (en)"
                                                                   )}
@@ -877,18 +826,18 @@ class DefineExamDatesList extends Component {
                                                               </Col>
                                                               <Col className="col-8">
                                                                 <Field
-                                                                  name="examEn"
+                                                                  name="enTitle"
                                                                   type="text"
-                                                                  id="examEn"
+                                                                  id="enTitle"
                                                                   className={`form-control ${
-                                                                    errors.examEn &&
-                                                                    touched.examEn
+                                                                    errors.enTitle &&
+                                                                    touched.enTitle
                                                                       ? "is-invalid"
                                                                       : ""
                                                                   }`}
                                                                 />
                                                                 <ErrorMessage
-                                                                  name="examEn"
+                                                                  name="enTitle"
                                                                   component="div"
                                                                   className="invalid-feedback"
                                                                 />
@@ -1028,48 +977,110 @@ class DefineExamDatesList extends Component {
                                                               </Col>
                                                             </Row>
                                                           </div>
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="definePeriodId">
-                                                                  {this.props.t(
-                                                                    "Define Period"
+                                                          <Row>
+                                                            <Col lg="4">
+                                                              <Label
+                                                                for="studentOrder-Id"
+                                                                className="form-label d-flex"
+                                                              >
+                                                                {this.props.t(
+                                                                  "Students Order"
+                                                                )}
+                                                                <span className="text-danger">
+                                                                  *
+                                                                </span>
+                                                              </Label>
+                                                            </Col>
+                                                            <Col lg="8">
+                                                              <div className="d-flex flex-wrap gap-3">
+                                                                <div
+                                                                  className="btn-group button-or"
+                                                                  role="group"
+                                                                >
+                                                                  {studentsOrder.map(
+                                                                    (
+                                                                      status,
+                                                                      index
+                                                                    ) => (
+                                                                      <React.Fragment
+                                                                        key={
+                                                                          index
+                                                                        }
+                                                                      >
+                                                                        <input
+                                                                          type="radio"
+                                                                          className={`btn-check button-or ${
+                                                                            selectedStudentsOrder ===
+                                                                            status.value
+                                                                              ? "active"
+                                                                              : ""
+                                                                          }`}
+                                                                          name="studentOrderId"
+                                                                          id={`btnradio${index}`}
+                                                                          autoComplete="off"
+                                                                          checked={
+                                                                            selectedStudentsOrder ===
+                                                                            status.value
+                                                                          }
+                                                                          onChange={() => {
+                                                                            setFieldValue(
+                                                                              "studentOrderId",
+                                                                              status.value
+                                                                            );
+
+                                                                            this.setState(
+                                                                              {
+                                                                                selectedStudentsOrder:
+                                                                                  status.value,
+                                                                              }
+                                                                            );
+                                                                          }}
+                                                                        />
+                                                                        <Label
+                                                                          className="btn btn-outline-primary smallButton w-sm"
+                                                                          for={`btnradio${index}`}
+                                                                        >
+                                                                          {
+                                                                            status.label
+                                                                          }
+                                                                        </Label>
+                                                                      </React.Fragment>
+                                                                    )
                                                                   )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col className="col-8">
-                                                                <Select
-                                                                  name="definePeriodId"
-                                                                  key={`select_definePeriodId`}
-                                                                  // options={
-                                                                  //   definePeriodOptions
-                                                                  // }
-                                                                  className={`form-control`}
-                                                                  // onChange={newValue =>
-                                                                  //   setFieldValue(
-                                                                  //     "definePeriodId",
-                                                                  //     newValue.value
-                                                                  //   )
-                                                                  // }
-                                                                  //   value={definePeriodOptions.find(
-                                                                  //     opt =>
-                                                                  //       opt.value ===
-                                                                  //       values.definePeriodId
-                                                                  //   )}
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
+                                                                </div>
+                                                              </div>
+                                                            </Col>
+                                                          </Row>
                                                         </Col>
                                                       </Row>
                                                     </Col>
                                                   </div>
+                                                  <Row>
+                                                    <Col>
+                                                      <div className="text-center">
+                                                        <Link
+                                                          to="#"
+                                                          className="btn btn-primary me-2"
+                                                          onClick={() => {
+                                                            this.handleSubmit(
+                                                              values
+                                                            );
+                                                          }}
+                                                        >
+                                                          {t("Save")}
+                                                        </Link>
+                                                      </div>
+                                                    </Col>
+                                                  </Row>
                                                 </Col>
                                               </Row>
                                             </CardBody>
                                           </Card>
-                                          <Card>
-                                            <CardBody>
+                                          <Card id="employee-card">
+                                            <CardTitle id="course_header">
+                                              {t("Add Define Period")}
+                                            </CardTitle>
+                                            <CardBody className="cardBody">
                                               <div>
                                                 {duplicateError && (
                                                   <Alert
@@ -1111,21 +1122,56 @@ class DefineExamDatesList extends Component {
                                                       {toolkitprops => (
                                                         <React.Fragment>
                                                           <Row>
-                                                            <Col sm="4">
-                                                              <div className="search-box ms-2 mb-2 d-inline-block">
-                                                                {showSearchButton && (
-                                                                  <div className="position-relative">
-                                                                    <SearchBar
-                                                                      {...toolkitprops.searchProps}
-                                                                    />
-                                                                  </div>
+                                                            <Col className="col-3">
+                                                              <Label for="definePeriodId">
+                                                                {this.props.t(
+                                                                  "Define Period"
                                                                 )}
+                                                              </Label>
+                                                            </Col>
+                                                            <Col className="col-5">
+                                                              <Select
+                                                                name="definePeriodId"
+                                                                key={`select_definePeriodId`}
+                                                                // options={
+                                                                //   definePeriodOptions
+                                                                // }
+                                                                // className={`form-control`}
+                                                                // onChange={newValue =>
+                                                                //   setFieldValue(
+                                                                //     "definePeriodId",
+                                                                //     newValue.value
+                                                                //   )
+                                                                // }
+                                                                //   value={definePeriodOptions.find(
+                                                                //     opt =>
+                                                                //       opt.value ===
+                                                                //       values.definePeriodId
+                                                                //   )}
+                                                              />
+                                                            </Col>
+                                                            <Col className="col-4">
+                                                              <div className="text-sm-end">
+                                                                <Tooltip
+                                                                  title={this.props.t(
+                                                                    "Add"
+                                                                  )}
+                                                                  placement="top"
+                                                                >
+                                                                  <IconButton
+                                                                    color="primary"
+                                                                    onClick={
+                                                                      this
+                                                                        .handleAddRow
+                                                                    }
+                                                                  >
+                                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                                  </IconButton>
+                                                                </Tooltip>
                                                               </div>
                                                             </Col>
                                                           </Row>
-                                                          <br />
-                                                          <br />
-                                                          <div className="marginTop">
+                                                          {/* <div className="marginTop">
                                                             <Row>
                                                               <Col lg="2">
                                                                 <div className="centeraligne">
@@ -1197,7 +1243,7 @@ class DefineExamDatesList extends Component {
                                                                 </div>
                                                               </Col>
                                                             </Row>
-                                                          </div>
+                                                          </div> */}
 
                                                           <BootstrapTable
                                                             keyField="Id"
@@ -1209,7 +1255,7 @@ class DefineExamDatesList extends Component {
                                                             columns={columns2}
                                                             cellEdit={cellEditFactory(
                                                               {
-                                                                mode: "click",
+                                                                mode: "dbclick",
                                                                 blurToSave: true,
                                                                 afterSaveCell: (
                                                                   oldValue,
@@ -1217,7 +1263,7 @@ class DefineExamDatesList extends Component {
                                                                   row,
                                                                   column
                                                                 ) => {
-                                                                  this.handleLecturePeriodDataChange(
+                                                                  this.handleDefinePeriodDataChange(
                                                                     row.Id,
                                                                     column.dataField,
                                                                     newValue
@@ -1237,21 +1283,6 @@ class DefineExamDatesList extends Component {
                                               </div>
                                             </CardBody>
                                           </Card>
-                                          <Row>
-                                            <Col>
-                                              <div className="text-center">
-                                                <Link
-                                                  to="#"
-                                                  className="btn btn-primary me-2"
-                                                  onClick={() => {
-                                                    this.handleSubmit(values);
-                                                  }}
-                                                >
-                                                  {t("Save")}
-                                                </Link>
-                                              </div>
-                                            </Col>
-                                          </Row>
                                         </Form>
                                       )}
                                     </Formik>
@@ -1276,6 +1307,7 @@ class DefineExamDatesList extends Component {
 
 const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
   defineExamDates: defineExamDates.defineExamDates,
+  studentsOrder: defineExamDates.studentsOrder,
   deleted: defineExamDates.deleted,
   gradeTypes: gradeTypes.gradeTypes,
   user_menu: menu_items.user_menu || [],
@@ -1283,6 +1315,7 @@ const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onGetDefineExamDates: () => dispatch(getDefineExamDates()),
+  onGetStudentsOrder: () => dispatch(getStudentsOrder()),
   onAddNewDefineExamDate: defineExamDate =>
     dispatch(addNewDefineExamDate(defineExamDate)),
   onUpdateDefineExamDate: defineExamDate =>

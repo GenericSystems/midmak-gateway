@@ -2145,6 +2145,9 @@ export const updateDefineExamDate = data =>
 export const deleteDefineExamDate = data =>
   post(url.DELETE_DEFINE_EXAM_DATE, data);
 
+//students order
+export const getStudentsOrder = data => post(url.GET_STUDENTS_ORDER, data);
+
 //WARNING_TYPE
 export const getWarningsTypes = data => post(url.GET_WARNINGS_TYPES, data);
 

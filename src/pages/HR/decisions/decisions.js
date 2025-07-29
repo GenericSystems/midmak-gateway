@@ -655,18 +655,6 @@ class DecisionsList extends Component {
                                   data={decisions}
                                   columns={columns}
                                   filter={filterFactory()}
-                                  cellEdit={cellEditFactory({
-                                    mode: "click",
-                                    blurToSave: true,
-                                    afterSaveCell: (
-                                      oldValue,
-                                      newValue,
-                                      row,
-                                      column
-                                    ) => {
-                                      row.Id, column.dataField, newValue;
-                                    },
-                                  })}
                                   noDataIndication={this.props.t(
                                     "No Decisions found"
                                   )}

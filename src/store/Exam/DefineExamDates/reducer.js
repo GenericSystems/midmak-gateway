@@ -9,10 +9,13 @@ import {
   GET_DEFINE_EXAM_DATE_DELETED_VALUE_FAIL,
   DELETE_DEFINE_EXAM_DATE_SUCCESS,
   DELETE_DEFINE_EXAM_DATE_FAIL,
+  GET_STUDENTS_ORDER_SUCCESS,
+  GET_STUDENTS_ORDER_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   defineExamDates: [],
+  studentsOrder: [],
   deleted: {},
   error: {},
 };
@@ -83,6 +86,19 @@ const defineExamDates = (state = INIT_STATE, action) => {
       };
 
     case DELETE_DEFINE_EXAM_DATE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_STUDENTS_ORDER_SUCCESS:
+      return {
+        ...state,
+        studentsOrder: action.payload,
+        deleted: {},
+      };
+
+    case GET_STUDENTS_ORDER_FAIL:
       return {
         ...state,
         error: action.payload,

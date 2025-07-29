@@ -1035,6 +1035,9 @@ export const ADD_NEW_DEFINE_EXAM_DATE = "/add/defineExamDate";
 export const UPDATE_DEFINE_EXAM_DATE = "/update/defineExamDate";
 export const DELETE_DEFINE_EXAM_DATE = "/deleted/defineExamDate";
 
+//students order
+export const GET_STUDENTS_ORDER = "/studentsOrder";
+
 //CONTRACTS
 export const GET_CONTRACTS = "/contracts";
 export const GET_CONTRACT_DELETED_VALUE = "/deleted";
