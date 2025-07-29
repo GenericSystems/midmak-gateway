@@ -94,6 +94,8 @@ class DefineExamDatesList extends Component {
       errorMessage: null,
       successMessage: null,
       values: "",
+      isShowPreReq: false,
+      examTypesOpt: [],
     };
     this.toggle = this.toggle.bind(this);
     this.toggle2 = this.toggle2.bind(this);
@@ -253,7 +255,8 @@ class DefineExamDatesList extends Component {
   handleSubmit = values => {
     const { selectedExamType, selectedStudentsOrder, isEdit } = this.state;
     const { onAddNewDefineExamDate, onUpdateDefineExamDate } = this.props;
-
+    values["arTitle"] = values["arTitle"] || "";
+    values["enTitle"] = values["enTitle"] || "";
     values["examTypeId"] = selectedExamType;
     values["studentOrderId"] = selectedStudentsOrder;
     // values["definPeriodId"] = selectedDefinPeriod;
@@ -279,13 +282,14 @@ class DefineExamDatesList extends Component {
       if (isEdit) {
         console.log("9999999", defineExamDateInfo);
         onUpdateDefineExamDate(defineExamDateInfo);
+        this.toggle();
       } else {
         onAddNewDefineExamDate(defineExamDateInfo);
+        this.setState({ isShowPreReq: true });
       }
       this.setState({
         errorMessages: {},
       });
-      this.toggle();
     } else {
       let emptyError = "";
       if (selectedExamType === undefined) {
@@ -394,6 +398,7 @@ class DefineExamDatesList extends Component {
       selectedDefinPeriod,
       selectedExamType,
       selectedStudentsOrder,
+      isShowPreReq,
     } = this.state;
     const { SearchBar } = Search;
     const alertMessage =
@@ -407,6 +412,7 @@ class DefineExamDatesList extends Component {
         order: "desc",
       },
     ];
+    const examTypesOpt = gradeTypes;
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
@@ -957,9 +963,8 @@ class DefineExamDatesList extends Component {
                                                               <Col className="col-8">
                                                                 <Select
                                                                   name="examTypeId"
-                                                                  key={`select_examTypeId`}
                                                                   options={
-                                                                    gradeTypes
+                                                                    examTypesOpt
                                                                   }
                                                                   className={`form-control`}
                                                                   onChange={newValue => {
@@ -968,7 +973,7 @@ class DefineExamDatesList extends Component {
                                                                       newValue.value
                                                                     );
                                                                   }}
-                                                                  defaultValue={gradeTypes.find(
+                                                                  defaultValue={examTypesOpt.find(
                                                                     opt =>
                                                                       opt.value ===
                                                                       defineExamDate?.examTypeId
@@ -1076,31 +1081,106 @@ class DefineExamDatesList extends Component {
                                               </Row>
                                             </CardBody>
                                           </Card>
-                                          <Card id="employee-card">
-                                            <CardTitle id="course_header">
-                                              {t("Add Define Period")}
-                                            </CardTitle>
-                                            <CardBody className="cardBody">
-                                              <div>
-                                                {duplicateError && (
-                                                  <Alert
-                                                    color="danger"
-                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                    role="alert"
-                                                  >
-                                                    {duplicateError}
-                                                    <button
-                                                      type="button"
-                                                      className="btn-close"
-                                                      aria-label="Close"
-                                                      onClick={this.handleAlertClose(
-                                                        "duplicateError"
+                                          {(isEdit || isShowPreReq) && (
+                                            <Card id="employee-card">
+                                              <CardTitle id="course_header">
+                                                {t("Define Period")}
+                                              </CardTitle>
+                                              <CardBody className="cardBody">
+                                                <div>
+                                                  {duplicateError && (
+                                                    <Alert
+                                                      color="danger"
+                                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                      role="alert"
+                                                    >
+                                                      {duplicateError}
+                                                      <button
+                                                        type="button"
+                                                        className="btn-close"
+                                                        aria-label="Close"
+                                                        onClick={this.handleAlertClose(
+                                                          "duplicateError"
+                                                        )}
+                                                      ></button>
+                                                    </Alert>
+                                                  )}
+                                                </div>
+                                                <Row>
+                                                  <Col className="col-3">
+                                                    <Label for="definePeriodId">
+                                                      {this.props.t(
+                                                        "Define Period"
                                                       )}
-                                                    ></button>
-                                                  </Alert>
-                                                )}
-                                              </div>
-                                              <div className="table-responsive">
+                                                    </Label>
+                                                  </Col>
+                                                  <Col className="col-5">
+                                                    <Select
+                                                      name="definePeriodId"
+                                                      key={`select_definePeriodId`}
+                                                      // options={
+                                                      //   definePeriodOptions
+                                                      // }
+                                                      // className={`form-control`}
+                                                      // onChange={newValue =>
+                                                      //   setFieldValue(
+                                                      //     "definePeriodId",
+                                                      //     newValue.value
+                                                      //   )
+                                                      // }
+                                                      //   value={definePeriodOptions.find(
+                                                      //     opt =>
+                                                      //       opt.value ===
+                                                      //       values.definePeriodId
+                                                      //   )}
+                                                    />
+                                                  </Col>
+                                                  <Col className="col-4">
+                                                    <div className="text-sm-end">
+                                                      <Tooltip
+                                                        title={this.props.t(
+                                                          "Add"
+                                                        )}
+                                                        placement="top"
+                                                      >
+                                                        <IconButton
+                                                          color="primary"
+                                                          onClick={
+                                                            this
+                                                              .handleAddDefinePeriod
+                                                          }
+                                                        >
+                                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                        </IconButton>
+                                                      </Tooltip>
+                                                    </div>
+                                                  </Col>
+                                                </Row>
+                                                <BootstrapTable
+                                                  keyField="Id"
+                                                  {...toolkitprops.baseProps}
+                                                  {...paginationTableProps}
+                                                  data={defineExamDates}
+                                                  columns={columns2}
+                                                  cellEdit={cellEditFactory({
+                                                    mode: "dbclick",
+                                                    blurToSave: true,
+                                                    afterSaveCell: (
+                                                      oldValue,
+                                                      newValue,
+                                                      row,
+                                                      column
+                                                    ) => {
+                                                      this.handleDefinePeriodDataChange(
+                                                        row.Id,
+                                                        column.dataField,
+                                                        newValue
+                                                      );
+                                                    },
+                                                  })}
+                                                  defaultSorted={defaultSorting}
+                                                />
+                                                {/* <div className="table-responsive">
                                                 <PaginationProvider
                                                   pagination={paginationFactory(
                                                     pageOptions
@@ -1121,168 +1201,17 @@ class DefineExamDatesList extends Component {
                                                     >
                                                       {toolkitprops => (
                                                         <React.Fragment>
-                                                          <Row>
-                                                            <Col className="col-3">
-                                                              <Label for="definePeriodId">
-                                                                {this.props.t(
-                                                                  "Define Period"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-5">
-                                                              <Select
-                                                                name="definePeriodId"
-                                                                key={`select_definePeriodId`}
-                                                                // options={
-                                                                //   definePeriodOptions
-                                                                // }
-                                                                // className={`form-control`}
-                                                                // onChange={newValue =>
-                                                                //   setFieldValue(
-                                                                //     "definePeriodId",
-                                                                //     newValue.value
-                                                                //   )
-                                                                // }
-                                                                //   value={definePeriodOptions.find(
-                                                                //     opt =>
-                                                                //       opt.value ===
-                                                                //       values.definePeriodId
-                                                                //   )}
-                                                              />
-                                                            </Col>
-                                                            <Col className="col-4">
-                                                              <div className="text-sm-end">
-                                                                <Tooltip
-                                                                  title={this.props.t(
-                                                                    "Add"
-                                                                  )}
-                                                                  placement="top"
-                                                                >
-                                                                  <IconButton
-                                                                    color="primary"
-                                                                    onClick={
-                                                                      this
-                                                                        .handleAddRow
-                                                                    }
-                                                                  >
-                                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                                                  </IconButton>
-                                                                </Tooltip>
-                                                              </div>
-                                                            </Col>
-                                                          </Row>
-                                                          {/* <div className="marginTop">
-                                                            <Row>
-                                                              <Col lg="2">
-                                                                <div className="centeraligne">
-                                                                  {this.props.t(
-                                                                    "Start Time"
-                                                                  )}
-                                                                </div>
-                                                              </Col>
-                                                              <Col lg="3">
-                                                                <Input
-                                                                  type="time"
-                                                                  value={
-                                                                    this.state
-                                                                      .newStartTime
-                                                                  }
-                                                                  onChange={e =>
-                                                                    this.setState(
-                                                                      {
-                                                                        newStartTime:
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                      }
-                                                                    )
-                                                                  }
-                                                                />
-                                                              </Col>
-                                                              <Col lg="2">
-                                                                <div className="centeraligne">
-                                                                  {this.props.t(
-                                                                    "End Time"
-                                                                  )}
-                                                                </div>
-                                                              </Col>
-                                                              <Col lg="3">
-                                                                <Input
-                                                                  type="time"
-                                                                  value={
-                                                                    this.state
-                                                                      .newEndTime
-                                                                  }
-                                                                  onChange={e =>
-                                                                    this.setState(
-                                                                      {
-                                                                        newEndTime:
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                      }
-                                                                    )
-                                                                  }
-                                                                />
-                                                              </Col>
-                                                              <Col>
-                                                                <div className="text-sm-start">
-                                                                  <Button
-                                                                    size="md"
-                                                                    className="btn btn-warning ms-auto"
-                                                                    onClick={
-                                                                      this
-                                                                        .handleGenerateNewData
-                                                                    }
-                                                                  >
-                                                                    <i className="bx bx-error font-size-16 align-middle me-2"></i>
-                                                                    {this.props.t(
-                                                                      "Generate"
-                                                                    )}
-                                                                  </Button>
-                                                                </div>
-                                                              </Col>
-                                                            </Row>
-                                                          </div> */}
-
-                                                          <BootstrapTable
-                                                            keyField="Id"
-                                                            {...toolkitprops.baseProps}
-                                                            {...paginationTableProps}
-                                                            data={
-                                                              defineExamDates
-                                                            }
-                                                            columns={columns2}
-                                                            cellEdit={cellEditFactory(
-                                                              {
-                                                                mode: "dbclick",
-                                                                blurToSave: true,
-                                                                afterSaveCell: (
-                                                                  oldValue,
-                                                                  newValue,
-                                                                  row,
-                                                                  column
-                                                                ) => {
-                                                                  this.handleDefinePeriodDataChange(
-                                                                    row.Id,
-                                                                    column.dataField,
-                                                                    newValue
-                                                                  );
-                                                                },
-                                                              }
-                                                            )}
-                                                            defaultSorted={
-                                                              defaultSorting
-                                                            }
-                                                          />
+                                                         
+                                                         
                                                         </React.Fragment>
                                                       )}
                                                     </ToolkitProvider>
                                                   )}
                                                 </PaginationProvider>
-                                              </div>
-                                            </CardBody>
-                                          </Card>
+                                              </div> */}
+                                              </CardBody>
+                                            </Card>
+                                          )}
                                         </Form>
                                       )}
                                     </Formik>
