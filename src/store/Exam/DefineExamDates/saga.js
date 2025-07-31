@@ -68,7 +68,7 @@ function* fetchDefineExamDates(selectedpayload) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_DefineExamDates",
+    tablename: "_Common_DefineExamDates",
   };
   try {
     const response = yield call(getDefineExamDates, get_defineExamDate_req);

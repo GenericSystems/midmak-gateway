@@ -379,7 +379,8 @@ class DefineExamDatesList extends Component {
       defineExamDate: arg,
       selectedExamType: arg.examTypeId,
       selectedStudentsOrder: arg.studentOrderId,
-      // selectedDefinPeriod: arg.definPeriodId,
+      selectedDefinPeriod: arg.definPeriodId || null,
+      allDaysArray: arg.all_days || [],
       isEdit: true,
     });
     this.toggle();
@@ -503,7 +504,7 @@ class DefineExamDatesList extends Component {
         editable: false,
       },
       {
-        dataField: "examTypeId",
+        dataField: "examType",
         text: this.props.t("Exam Type"),
         sort: true,
         editable: false,
@@ -754,10 +755,10 @@ class DefineExamDatesList extends Component {
                                           (defineExamDate &&
                                             defineExamDate.jobTitleId) ||
                                           selectedExamType,
-                                        // definPeriodId:
-                                        //   (defineExamDate &&
-                                        //     defineExamDate.definPeriodId) ||
-                                        //   selectedDefinPeriod,
+                                        definePeriodId:
+                                          (defineExamDate &&
+                                            defineExamDate.definePeriodId) ||
+                                          selectedDefinPeriod,
 
                                         startDate: defineExamDate?.startDate
                                           ? moment
@@ -1170,18 +1171,25 @@ class DefineExamDatesList extends Component {
                                                       name="definePeriodId"
                                                       key={`select_definePeriodId`}
                                                       options={allDaysArray}
-                                                      // className={`form-control`}
+                                                      className={`form-control`}
                                                       onChange={newValue =>
                                                         setFieldValue(
                                                           "definePeriodId",
                                                           newValue.value
                                                         )
                                                       }
-                                                      // value={allDaysArray.find(
-                                                      //   opt =>
-                                                      //     opt.value ===
-                                                      //     values.definePeriodId
-                                                      // )}
+                                                      value={
+                                                        allDaysArray &&
+                                                        Array.isArray(
+                                                          allDaysArray
+                                                        )
+                                                          ? allDaysArray.find(
+                                                              opt =>
+                                                                opt.value ===
+                                                                values.definePeriodId
+                                                            )
+                                                          : null
+                                                      }
                                                     />
                                                   </Col>
                                                   <Col className="col-4">
