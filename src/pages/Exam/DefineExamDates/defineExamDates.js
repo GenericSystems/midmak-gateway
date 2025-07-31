@@ -43,19 +43,25 @@ import {
   deleteDefineExamDate,
   getDefineExamDateDeletedValue,
   getStudentsOrder,
+  getDefinePeriods,
+  addNewDefinePeriod,
+  updateDefinePeriod,
+  deleteDefinePeriod,
+  getDefinePeriodDeletedValue,
 } from "store/Exam/DefineExamDates/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
 } from "react-bootstrap-table2-paginator";
 
-import { isEmpty, size, map } from "lodash";
+import { isEmpty, size, map, values } from "lodash";
 import {
   checkIsAddForPage,
   checkIsDeleteForPage,
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+import defineExamDates from "store/Exam/DefineExamDates/reducer";
 class DefineExamDatesList extends Component {
   constructor(props) {
     super(props);
@@ -63,6 +69,7 @@ class DefineExamDatesList extends Component {
       employees: [],
       defineExamDates: [],
       gradeTypes: [],
+      allDaysArray: [],
       defineExamDate: "",
       employee: "",
       selectConId: null,
@@ -75,6 +82,7 @@ class DefineExamDatesList extends Component {
       newEndTime: "",
     };
     this.state = {
+      languageState: "",
       deleteModal: false,
       duplicateError: null,
       selectedRowId: null,
@@ -103,10 +111,13 @@ class DefineExamDatesList extends Component {
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      i18n,
       defineExamDates,
       onGetDefineExamDates,
       onGetStudentsOrder,
+      onGetDefinePeriods,
       gradeTypes,
       deleted,
       studentsOrder,
@@ -116,18 +127,45 @@ class DefineExamDatesList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    onGetDefineExamDates();
+    onGetDefineExamDates(lang);
     onGetStudentsOrder();
-
+    onGetDefinePeriods();
     this.setState({
       defineExamDates,
       deleted,
       gradeTypes,
       studentsOrder,
+      languageState: lang,
     });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
 
+  handleLanguageChange = lng => {
+    const { i18n, onGetDefineExamDates } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    if (lang != lng) {
+      onGetDefineExamDates(lng);
+      this.setState({ languageState: lng });
+    }
+  };
+
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (
+      prevProps.defineExamDates !== this.props.defineExamDates &&
+      this.props.defineExamDates.length > 0
+    ) {
+      const lastItem =
+        this.props.defineExamDates[this.props.defineExamDates.length - 1];
+      if (lastItem.allDays) {
+        try {
+          const allDaysArray = JSON.parse(lastItem.allDays);
+          this.setState({ allDaysArray });
+        } catch (e) {
+          console.error("Error parsing allDays JSON", e);
+        }
+      }
+    }
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -207,35 +245,34 @@ class DefineExamDatesList extends Component {
   handleAddRow = () => {
     this.setState({
       defineExamDate: "",
+      selectedStudentsOrder: null,
       isEdit: false,
-      isOpen: false,
-      isAdd: true,
     });
     this.toggle();
   };
 
-  // handleAddDefinePeriod = () => {
-  //   const { onAddNewContractType, contractsTypes } = this.props;
+  handleAddDefinePeriod = () => {
+    const { onAddNewDefinePeriod, definePeriods } = this.props;
 
-  //   const newRow = {
-  //     arTitle: "-----",
-  //   };
+    const newRow = {
+      arTitle: "-----",
+    };
 
-  //   // Check if the same value already exists in the table
-  //   const emptyRowsExist = contractsTypes.some(
-  //     contractsTypes => contractsTypes.arTitle.trim() === "-----"
-  //     // ||
-  //     // contractType.enTitle.trim() === ""
-  //   );
+    // Check if the same value already exists in the table
+    const emptyRowsExist = definePeriods.some(
+      definePeriods => definePeriods.arTitle.trim() === "-----"
+      // ||
+      // contractType.enTitle.trim() === ""
+    );
 
-  //   if (emptyRowsExist) {
-  //     const errorMessage = this.props.t("Fill in the empty row");
-  //     this.setState({ duplicateError: errorMessage });
-  //   } else {
-  //     this.setState({ duplicateError: null });
-  //     onAddNewContractType(newRow);
-  //   }
-  // };
+    if (emptyRowsExist) {
+      const errorMessage = this.props.t("Fill in the empty row");
+      this.setState({ duplicateError: errorMessage });
+    } else {
+      this.setState({ duplicateError: null });
+      onAddNewDefinePeriod(newRow);
+    }
+  };
 
   handleDeleteRow = () => {
     const { onDeleteDefineExamDate } = this.props;
@@ -254,7 +291,11 @@ class DefineExamDatesList extends Component {
 
   handleSubmit = values => {
     const { selectedExamType, selectedStudentsOrder, isEdit } = this.state;
-    const { onAddNewDefineExamDate, onUpdateDefineExamDate } = this.props;
+    const {
+      onAddNewDefineExamDate,
+      onUpdateDefineExamDate,
+      onGetDefinePeriods,
+    } = this.props;
     values["arTitle"] = values["arTitle"] || "";
     values["enTitle"] = values["enTitle"] || "";
     values["examTypeId"] = selectedExamType;
@@ -284,7 +325,13 @@ class DefineExamDatesList extends Component {
         onUpdateDefineExamDate(defineExamDateInfo);
         this.toggle();
       } else {
-        onAddNewDefineExamDate(defineExamDateInfo);
+        const response = onAddNewDefineExamDate(defineExamDateInfo);
+        if (response?.allDays) {
+          const parsedDays = JSON.parse(response.allDays);
+          this.setState({ allDaysArray: parsedDays });
+        }
+        // onAddNewDefineExamDate(defineExamDateInfo);
+        // onGetDefinePeriods();
         this.setState({ isShowPreReq: true });
       }
       this.setState({
@@ -300,10 +347,11 @@ class DefineExamDatesList extends Component {
     }
   };
 
-  handleSelect = (fieldName, selectedValue) => {
+  handleSelect = (fieldName, selectedValue, values) => {
     if (fieldName == "examTypeId") {
       this.setState({
         selectedExamType: selectedValue,
+        defineExamDate: values,
       });
     }
   };
@@ -379,10 +427,19 @@ class DefineExamDatesList extends Component {
 
   render() {
     const defineExamDate = this.state.defineExamDate;
-    const { defineExamDates, studentsOrder, gradeTypes, t, deleted } =
-      this.props;
+
     const {
+      defineExamDates,
+      definePeriods,
+      studentsOrder,
+      gradeTypes,
+      t,
+      deleted,
+    } = this.props;
+    const {
+      languageState,
       duplicateError,
+      allDaysArray,
       deleteModal,
       modal,
       modal2,
@@ -400,6 +457,7 @@ class DefineExamDatesList extends Component {
       selectedStudentsOrder,
       isShowPreReq,
     } = this.state;
+    console.log("allDaysArray", allDaysArray);
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -416,8 +474,11 @@ class DefineExamDatesList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "arTitle,",
-        text: this.props.t("Exam"),
+        dataField: languageState === "ar" ? "arTitle" : "enTitle",
+        text:
+          languageState === "ar"
+            ? this.props.t("Exam (ar)")
+            : this.props.t("Exam (en)"),
         sort: true,
         editable: false,
       },
@@ -492,13 +553,13 @@ class DefineExamDatesList extends Component {
     const columns2 = [
       { dataField: "Id", text: t("ID"), hidden: true },
       {
-        dataField: "startTime",
+        dataField: "arTitle",
         text: t("Start Time"),
         sort: true,
         editable: true,
       },
       {
-        dataField: "endTime",
+        dataField: "enTitle",
         text: t("End Time"),
         sort: true,
         editable: true,
@@ -697,14 +758,20 @@ class DefineExamDatesList extends Component {
                                         //   (defineExamDate &&
                                         //     defineExamDate.definPeriodId) ||
                                         //   selectedDefinPeriod,
-                                        startDate:
-                                          (defineExamDate &&
-                                            defineExamDate.startDate) ||
-                                          "",
-                                        endDate:
-                                          (defineExamDate &&
-                                            defineExamDate.endDate) ||
-                                          "",
+
+                                        startDate: defineExamDate?.startDate
+                                          ? moment
+                                              .utc(defineExamDate.startDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+
+                                        endDate: defineExamDate?.endDate
+                                          ? moment
+                                              .utc(defineExamDate.endDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
                                         studentOrderId:
                                           (defineExamDate &&
                                             defineExamDate.studentOrderId) ||
@@ -970,7 +1037,8 @@ class DefineExamDatesList extends Component {
                                                                   onChange={newValue => {
                                                                     this.handleSelect(
                                                                       "examTypeId",
-                                                                      newValue.value
+                                                                      newValue.value,
+                                                                      values
                                                                     );
                                                                   }}
                                                                   defaultValue={examTypesOpt.find(
@@ -1060,23 +1128,6 @@ class DefineExamDatesList extends Component {
                                                       </Row>
                                                     </Col>
                                                   </div>
-                                                  <Row>
-                                                    <Col>
-                                                      <div className="text-center">
-                                                        <Link
-                                                          to="#"
-                                                          className="btn btn-primary me-2"
-                                                          onClick={() => {
-                                                            this.handleSubmit(
-                                                              values
-                                                            );
-                                                          }}
-                                                        >
-                                                          {t("Save")}
-                                                        </Link>
-                                                      </div>
-                                                    </Col>
-                                                  </Row>
                                                 </Col>
                                               </Row>
                                             </CardBody>
@@ -1118,21 +1169,19 @@ class DefineExamDatesList extends Component {
                                                     <Select
                                                       name="definePeriodId"
                                                       key={`select_definePeriodId`}
-                                                      // options={
-                                                      //   definePeriodOptions
-                                                      // }
+                                                      options={allDaysArray}
                                                       // className={`form-control`}
-                                                      // onChange={newValue =>
-                                                      //   setFieldValue(
-                                                      //     "definePeriodId",
-                                                      //     newValue.value
-                                                      //   )
-                                                      // }
-                                                      //   value={definePeriodOptions.find(
-                                                      //     opt =>
-                                                      //       opt.value ===
-                                                      //       values.definePeriodId
-                                                      //   )}
+                                                      onChange={newValue =>
+                                                        setFieldValue(
+                                                          "definePeriodId",
+                                                          newValue.value
+                                                        )
+                                                      }
+                                                      // value={allDaysArray.find(
+                                                      //   opt =>
+                                                      //     opt.value ===
+                                                      //     values.definePeriodId
+                                                      // )}
                                                     />
                                                   </Col>
                                                   <Col className="col-4">
@@ -1160,7 +1209,7 @@ class DefineExamDatesList extends Component {
                                                   keyField="Id"
                                                   {...toolkitprops.baseProps}
                                                   {...paginationTableProps}
-                                                  data={defineExamDates}
+                                                  data={definePeriods}
                                                   columns={columns2}
                                                   cellEdit={cellEditFactory({
                                                     mode: "dbclick",
@@ -1212,6 +1261,21 @@ class DefineExamDatesList extends Component {
                                               </CardBody>
                                             </Card>
                                           )}
+                                          <Row>
+                                            <Col>
+                                              <div className="text-center">
+                                                <Link
+                                                  to="#"
+                                                  className="btn btn-primary me-2"
+                                                  onClick={() => {
+                                                    this.handleSubmit(values);
+                                                  }}
+                                                >
+                                                  {t("Save")}
+                                                </Link>
+                                              </div>
+                                            </Col>
+                                          </Row>
                                         </Form>
                                       )}
                                     </Formik>
@@ -1237,6 +1301,7 @@ class DefineExamDatesList extends Component {
 const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
   defineExamDates: defineExamDates.defineExamDates,
   studentsOrder: defineExamDates.studentsOrder,
+  definePeriods: defineExamDates.definePeriods,
   deleted: defineExamDates.deleted,
   gradeTypes: gradeTypes.gradeTypes,
   user_menu: menu_items.user_menu || [],
@@ -1253,6 +1318,14 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteDefineExamDate(defineExamDate)),
   onGetDefineExamDateDeletedValue: () =>
     dispatch(getDefineExamDateDeletedValue()),
+  onGetDefinePeriods: () => dispatch(getDefinePeriods()),
+  onAddNewDefinePeriod: definePeriod =>
+    dispatch(addNewDefinePeriod(definePeriod)),
+  onUpdateDefinePeriod: definePeriod =>
+    dispatch(updateDefinePeriod(definePeriod)),
+  onDeleteDefinePeriod: definePeriod =>
+    dispatch(deleteDefinePeriod(definePeriod)),
+  onGetDefinePeriodDeletedValue: () => dispatch(getDefinePeriodDeletedValue()),
 });
 
 export default connect(

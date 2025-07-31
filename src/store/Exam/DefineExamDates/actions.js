@@ -18,10 +18,26 @@ import {
   GET_STUDENTS_ORDER,
   GET_STUDENTS_ORDER_FAIL,
   GET_STUDENTS_ORDER_SUCCESS,
+  GET_DEFINE_PERIODS,
+  GET_DEFINE_PERIODS_FAIL,
+  GET_DEFINE_PERIODS_SUCCESS,
+  ADD_NEW_DEFINE_PERIOD,
+  ADD_DEFINE_PERIOD_SUCCESS,
+  ADD_DEFINE_PERIOD_FAIL,
+  UPDATE_DEFINE_PERIOD,
+  UPDATE_DEFINE_PERIOD_SUCCESS,
+  UPDATE_DEFINE_PERIOD_FAIL,
+  GET_DEFINE_PERIOD_DELETED_VALUE,
+  GET_DEFINE_PERIOD_DELETED_VALUE_SUCCESS,
+  GET_DEFINE_PERIOD_DELETED_VALUE_FAIL,
+  DELETE_DEFINE_PERIOD,
+  DELETE_DEFINE_PERIOD_SUCCESS,
+  DELETE_DEFINE_PERIOD_FAIL,
 } from "./actionTypes";
 
-export const getDefineExamDates = () => ({
+export const getDefineExamDates = defineExamDates => ({
   type: GET_DEFINE_EXAM_DATES,
+  payload: defineExamDates,
 });
 
 export const getDefineExamDatesSuccess = defineExamDates => ({
@@ -106,5 +122,80 @@ export const getStudentsOrderSuccess = studentsOrder => ({
 
 export const getStudentsOrderFail = error => ({
   type: GET_STUDENTS_ORDER_FAIL,
+  payload: error,
+});
+
+export const getDefinePeriods = () => ({
+  type: GET_DEFINE_PERIODS,
+});
+
+export const getDefinePeriodsSuccess = definePeriods => ({
+  type: GET_DEFINE_PERIODS_SUCCESS,
+  payload: definePeriods,
+});
+
+export const getDefinePeriodsFail = error => ({
+  type: GET_DEFINE_PERIODS_FAIL,
+  payload: error,
+});
+
+export const getDefinePeriodDeletedValue = () => ({
+  type: GET_DEFINE_PERIOD_DELETED_VALUE,
+});
+
+export const getDefinePeriodDeletedValueSuccess = definePeriod => ({
+  type: GET_DEFINE_PERIOD_DELETED_VALUE_SUCCESS,
+  payload: definePeriod,
+});
+
+export const getDefinePeriodDeletedValueFail = error => ({
+  type: GET_DEFINE_PERIOD_DELETED_VALUE_FAIL,
+  payload: error,
+});
+
+export const addNewDefinePeriod = definePeriod => ({
+  type: ADD_NEW_DEFINE_PERIOD,
+  payload: definePeriod,
+});
+
+export const addDefinePeriodSuccess = definePeriod => ({
+  type: ADD_DEFINE_PERIOD_SUCCESS,
+  payload: definePeriod,
+});
+
+export const addDefinePeriodFail = error => ({
+  type: ADD_DEFINE_PERIOD_FAIL,
+  payload: error,
+});
+
+export const updateDefinePeriod = definePeriod => {
+  return {
+    type: UPDATE_DEFINE_PERIOD,
+    payload: definePeriod,
+  };
+};
+
+export const updateDefinePeriodSuccess = definePeriod => ({
+  type: UPDATE_DEFINE_PERIOD_SUCCESS,
+  payload: definePeriod,
+});
+
+export const updateDefinePeriodFail = error => ({
+  type: UPDATE_DEFINE_PERIOD_FAIL,
+  payload: error,
+});
+
+export const deleteDefinePeriod = definePeriod => ({
+  type: DELETE_DEFINE_PERIOD,
+  payload: definePeriod,
+});
+
+export const deleteDefinePeriodSuccess = definePeriod => ({
+  type: DELETE_DEFINE_PERIOD_SUCCESS,
+  payload: definePeriod,
+});
+
+export const deleteDefinePeriodFail = error => ({
+  type: DELETE_DEFINE_PERIOD_FAIL,
   payload: error,
 });

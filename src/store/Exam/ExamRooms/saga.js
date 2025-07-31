@@ -27,6 +27,16 @@ import {
 //   getStudentManagementsFail,
 // } from "../studentManagements/actions";
 // import { getLevelsSuccess, getLevelsFail } from "../levels/actions";
+import {
+  getDefineExamDatesSuccess,
+  getDefineExamDatesFail,
+} from "../DefineExamDates/actions";
+import { GET_DEFINE_EXAM_DATES } from "../DefineExamDates/actionTypes";
+import {
+  getHallsSuccess,
+  getHallsFail,
+} from "../../academyBuildingStructure/actions";
+import { GET_HALLS } from "../../academyBuildingStructure/actionTypes";
 
 // Include Both Helper File with needed methods
 import {
@@ -35,71 +45,60 @@ import {
   addNewExamRoom,
   updateExamRoom,
   deleteExamRoom,
+  getDefineExamDates,
   getStudentManagements,
+  getHalls,
   getLevels,
 } from "../../../helpers/fakebackend_helper";
 
-// function* fetchSetting() {
-//   //get faculty
-//   const get_faculty_opt = {
-//     source: "db",
-//     procedure: "SisApp_getData",
-//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-//     tablename: "_Common_Faculty",
-//   };
-//   try {
-//     const response = yield call(getFaculties, get_faculty_opt);
-//     yield put(getFacultiesSuccess(response));
-//   } catch (error) {
-//     yield put(getFacultiesFail(error));
-//   }
+function* fetchDefineExamDate() {
+  //get faculty
+  const get_defineExamDate_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_DefineExamDates",
+  };
+  try {
+    const response = yield call(getDefineExamDates, get_defineExamDate_req);
+    console.log("wwwwwwwwwwwww", response);
+    yield put(getDefineExamDatesSuccess(response));
+  } catch (error) {
+    yield put(getDefineExamDatesFail(error));
+  }
 
-//   //get course level
-//   const get_Level = {
-//     source: "db",
-//     procedure: "Generic_getOptions",
-//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-//     tablename: "settings_Levels",
-//     fields: "Id,arTitle",
-//   };
-//   try {
-//     const response = yield call(getLevels, get_Level);
+  //get course level
+  // const get_Level = {
+  //   source: "db",
+  //   procedure: "Generic_getOptions",
+  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+  //   tablename: "Common_Floor",
+  //   fields: "Id,arTitle",
+  // };
+  // try {
+  //   const response = yield call(getDefineExamDates, get_Level);
 
-//     yield put(getLevelsSuccess(response));
-//   } catch (error) {
-//     yield put(getLevelsFail(error));
-//   }
-// }
+  //   yield put(getDefineExamDatesSuccess(response));
+  // } catch (error) {
+  //   yield put(getDefineExamDatesFail(error));
+  // }
+}
 
 function* fetchExamRooms(obj) {
-  let faculty = obj.payload;
+  let defineExamDate = obj.payload;
 
   const get_ExamRooms_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "mobApp_FacultiesAccessConfig",
-    filter: `facultyId = ${faculty}  `,
+    tablename: "_AcadmeyBuildingStructure",
+    filter: ` defineExamDateId = ${defineExamDate}`,
   };
   try {
     const response = yield call(getExamRooms, get_ExamRooms_req);
     yield put(getExamRoomsSuccess(response));
   } catch (error) {
     yield put(getExamRoomsFail(error));
-  }
-
-  const get_defineExamDate_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_Contract",
-  };
-  try {
-    const response = yield call(getDefineExamDates, get_defineExamDate_req);
-    console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", response);
-    yield put(getDefineExamDatesSuccess(response));
-  } catch (error) {
-    yield put(getDefineExamDatesFail(error));
   }
 
   // const get_studentManagement_opt = {
@@ -172,7 +171,7 @@ function* onDeleteExamRoom({ payload, ExamRoom }) {
 }
 
 function* ExamRoomsSaga() {
-  // yield takeEvery(GET_SETTING, fetchSetting);
+  yield takeEvery(GET_HALLS, fetchDefineExamDate);
   yield takeEvery(GET_EXAM_ROOMS, fetchExamRooms);
   yield takeEvery(GET_EXAM_ROOM_PROFILE, fetchExamRoomProfile);
   yield takeEvery(ADD_NEW_EXAM_ROOM, onAddNewExamRoom);

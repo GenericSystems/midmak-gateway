@@ -8,6 +8,11 @@ import {
   UPDATE_DEFINE_EXAM_DATE,
   DELETE_DEFINE_EXAM_DATE,
   GET_STUDENTS_ORDER,
+  GET_DEFINE_PERIODS,
+  GET_DEFINE_PERIOD_DELETED_VALUE,
+  ADD_NEW_DEFINE_PERIOD,
+  UPDATE_DEFINE_PERIOD,
+  DELETE_DEFINE_PERIOD,
 } from "./actionTypes";
 
 import {
@@ -23,6 +28,16 @@ import {
   deleteDefineExamDateFail,
   getStudentsOrderSuccess,
   getStudentsOrderFail,
+  getDefinePeriodsSuccess,
+  getDefinePeriodsFail,
+  getDefinePeriodDeletedValueSuccess,
+  getDefinePeriodDeletedValueFail,
+  addDefinePeriodFail,
+  addDefinePeriodSuccess,
+  updateDefinePeriodSuccess,
+  updateDefinePeriodFail,
+  deleteDefinePeriodSuccess,
+  deleteDefinePeriodFail,
 } from "./actions";
 
 import {
@@ -39,9 +54,16 @@ import {
   deleteDefineExamDate,
   getGradeTypes,
   getStudentsOrder,
+  getDefinePeriods,
+  getDefinePeriodDeletedValue,
+  addNewDefinePeriod,
+  updateDefinePeriod,
+  deleteDefinePeriod,
 } from "../../../helpers/fakebackend_helper";
 
-function* fetchDefineExamDates() {
+function* fetchDefineExamDates(selectedpayload) {
+  let lang = selectedpayload.payload;
+  // const titleField = lang === "en" ? "enTitle" : "arTitle";
   const get_defineExamDate_req = {
     source: "db",
     procedure: "SisApp_getData",
@@ -110,7 +132,7 @@ function* onAddNewDefineExamDate({ payload }) {
 
   try {
     const response = yield call(addNewDefineExamDate, payload);
-    //console.log("ppppppppppppppppppppp", response);
+    console.log("اااااااااااااااااااااااااااااااا", response);
     yield put(addDefineExamDateSuccess(response[0]));
   } catch (error) {
     yield put(addDefineExamDateFail(error));
@@ -156,6 +178,77 @@ function* onGetDefineExamDateDeletedValue() {
   }
 }
 
+function* fetchDefinePeriods() {
+  const get_definePeriods_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_ContractType",
+  };
+  try {
+    const response = yield call(getDefinePeriods, get_definePeriods_req);
+    console.log("nnnnnnnnnnnnnnnnnnnnnnnnnnnn", response);
+    yield put(getDefinePeriodsSuccess(response));
+  } catch (error) {
+    yield put(getDefinePeriodsFail(error));
+  }
+}
+
+function* onAddNewDefinePeriod({ payload }) {
+  delete payload["id"];
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_addData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_DefinePeriods";
+  // payload["queryname"] = "_Common_DefineExamDate";
+
+  try {
+    const response = yield call(addNewDefinePeriod, payload);
+    yield put(addDefinePeriodSuccess(response[0]));
+  } catch (error) {
+    yield put(addDefinePeriodFail(error));
+  }
+}
+
+function* onDeleteDefinePeriod({ payload, contract }) {
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_removeData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_DefinePeriods";
+
+  try {
+    const response = yield call(deleteDefinePeriod, payload);
+    yield put(deleteDefinePeriodSuccess(response[0]));
+  } catch (error) {
+    yield put(deleteDefinePeriodFail(error));
+  }
+}
+
+function* onUpdateDefinePeriod({ payload }) {
+  console.log("qqqqqqqqqqqqqqqq", payload);
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_updateData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_DefinePeriods";
+  // payload["queryname"] = "_Common_DefinePeriod";
+  try {
+    const respupdate = yield call(updateDefinePeriod, payload);
+    console.log("UpdateDefinePeriod", respupdate);
+    yield put(updateDefinePeriodSuccess(respupdate[0]));
+  } catch (error) {
+    yield put(updateDefinePeriodFail(error));
+  }
+}
+
+function* onGetDefinePeriodDeletedValue() {
+  try {
+    const response = yield call(getDefinePeriodDeletedValue);
+    yield put(getDefinePeriodDeletedValueSuccess(response));
+  } catch (error) {
+    yield put(getDefinePeriodDeletedValueFail(error));
+  }
+}
+
 function* DefineExamDatesSaga() {
   yield takeEvery(GET_DEFINE_EXAM_DATES, fetchDefineExamDates);
   yield takeEvery(
@@ -167,6 +260,14 @@ function* DefineExamDatesSaga() {
   yield takeEvery(UPDATE_DEFINE_EXAM_DATE, onUpdateDefineExamDate);
   yield takeEvery(DELETE_DEFINE_EXAM_DATE, onDeleteDefineExamDate);
   yield takeEvery(GET_STUDENTS_ORDER, fetchStudentsOrder);
+  yield takeEvery(GET_DEFINE_PERIODS, fetchDefinePeriods);
+  yield takeEvery(
+    GET_DEFINE_PERIOD_DELETED_VALUE,
+    onGetDefinePeriodDeletedValue
+  );
+  yield takeEvery(ADD_NEW_DEFINE_PERIOD, onAddNewDefinePeriod);
+  yield takeEvery(UPDATE_DEFINE_PERIOD, onUpdateDefinePeriod);
+  yield takeEvery(DELETE_DEFINE_PERIOD, onDeleteDefinePeriod);
 }
 
 export default DefineExamDatesSaga;

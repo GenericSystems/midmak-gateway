@@ -2148,6 +2148,23 @@ export const deleteDefineExamDate = data =>
 //students order
 export const getStudentsOrder = data => post(url.GET_STUDENTS_ORDER, data);
 
+//DefinePeriod
+export const getDefinePeriods = data => post(url.GET_DEFINE_PERIODS, data);
+
+// add DefinePeriod
+
+export const addNewDefinePeriod = data => post(url.ADD_NEW_DEFINE_PERIOD, data);
+
+//DefinePeriod
+export const getDefinePeriodDeletedValue = () =>
+  get(url.GET_DEFINE_PERIOD_DELETED_VALUE);
+
+//update DefinePeriod
+export const updateDefinePeriod = data => post(url.UPDATE_DEFINE_PERIOD, data);
+
+//delete DefinePeriod
+export const deleteDefinePeriod = data => post(url.DELETE_DEFINE_PERIOD, data);
+
 //WARNING_TYPE
 export const getWarningsTypes = data => post(url.GET_WARNINGS_TYPES, data);
 

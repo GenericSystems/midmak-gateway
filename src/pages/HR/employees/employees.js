@@ -623,7 +623,7 @@ class EmployeesList extends Component {
   //   }
   // };
 
-  handleSelectChange = (fieldName, selectedValue) => {
+  handleSelectChange = (fieldName, selectedValue, values) => {
     const { nationalitiesOpt } = this.props;
 
     if (fieldName == "nationalityId") {
@@ -634,6 +634,7 @@ class EmployeesList extends Component {
       this.setState({
         selectedNationality: selectedValue,
         nationalityId: name.label,
+        employee: values,
       });
     }
     if (fieldName === "countryId") {
@@ -643,6 +644,7 @@ class EmployeesList extends Component {
 
       this.setState({
         selectedCountryId: selected ? selected.Id : null,
+        employee: values,
       });
       return;
     }
@@ -653,6 +655,7 @@ class EmployeesList extends Component {
 
       this.setState({
         selectedCityId: selected ? selected.Id : null,
+        employee: values,
       });
       return;
     }
@@ -664,15 +667,16 @@ class EmployeesList extends Component {
 
       this.setState({
         selectedStateId: selected ? selected.Id : null,
+        employee: values,
       });
       return;
     }
     if (fieldName === "genderId") {
-      this.setState({ selectedGender: selectedValue });
+      this.setState({ selectedGender: selectedValue, employee: values });
     }
   };
 
-  handleSelect = (fieldName, selectedValue) => {
+  handleSelect = (fieldName, selectedValue, values) => {
     let updatedField = {};
     // if (fieldName == "administrativeSupervisor") {
     //   this.setState({
@@ -687,21 +691,25 @@ class EmployeesList extends Component {
     if (fieldName == "jobRankId") {
       this.setState({
         selectedJobRank: selectedValue,
+        contract: values,
       });
     }
     if (fieldName == "contractTypeId") {
       this.setState({
         selectedContractType: selectedValue,
+        contract: values,
       });
     }
     if (fieldName == "employmentCaseId") {
       this.setState({
         selectedEmploymentCase: selectedValue,
+        contract: values,
       });
     }
     if (fieldName == "workClassificationId") {
       this.setState({
         selectedWorkClassification: selectedValue,
+        contract: values,
       });
     }
     if (fieldName === "jobTitleId") {
@@ -711,6 +719,7 @@ class EmployeesList extends Component {
 
       this.setState({
         selectedJobTitle: selected ? selected.Id : null,
+        contract: values,
       });
       return;
     }
@@ -722,6 +731,7 @@ class EmployeesList extends Component {
       );
       this.setState({
         selectedAcademicYearId: selected ? selected.Id : null,
+        contract: values,
       });
 
       return;
@@ -1932,7 +1942,8 @@ class EmployeesList extends Component {
                                                                                   "genderId",
                                                                                   event
                                                                                     .target
-                                                                                    .value
+                                                                                    .value,
+                                                                                  values
                                                                                 );
                                                                               }}
                                                                               defaultChecked={
@@ -1980,7 +1991,8 @@ class EmployeesList extends Component {
                                                                       onChange={newValue =>
                                                                         this.handleSelectChange(
                                                                           "nationalityId",
-                                                                          newValue.value
+                                                                          newValue.value,
+                                                                          values
                                                                         )
                                                                       }
                                                                       defaultValue={nationalitiesOpt.find(
@@ -2458,7 +2470,8 @@ class EmployeesList extends Component {
                                                                             .name,
                                                                           e
                                                                             .target
-                                                                            .value
+                                                                            .value,
+                                                                          values
                                                                         )
                                                                       }
                                                                     />
@@ -2508,7 +2521,8 @@ class EmployeesList extends Component {
                                                                             .name,
                                                                           e
                                                                             .target
-                                                                            .value
+                                                                            .value,
+                                                                          values
                                                                         )
                                                                       }
                                                                     />
@@ -2555,7 +2569,9 @@ class EmployeesList extends Component {
                                                                             .name,
                                                                           e
                                                                             .target
-                                                                            .value
+                                                                            .value,
+                                                                          values,
+                                                                          values
                                                                         )
                                                                       }
                                                                     />
@@ -3051,7 +3067,8 @@ class EmployeesList extends Component {
                                                                         onChange={newValue => {
                                                                           this.handleSelect(
                                                                             "jobRankId",
-                                                                            newValue.value
+                                                                            newValue.value,
+                                                                            values
                                                                           );
                                                                         }}
                                                                         defaultValue={jobRanksOpt.find(
@@ -3133,7 +3150,8 @@ class EmployeesList extends Component {
                                                                             .name,
                                                                           e
                                                                             .target
-                                                                            .value
+                                                                            .value,
+                                                                          values
                                                                         )
                                                                       }
                                                                     />
@@ -3193,7 +3211,8 @@ class EmployeesList extends Component {
                                                                       onChange={newValue => {
                                                                         this.handleSelect(
                                                                           "contractTypeId",
-                                                                          newValue.value
+                                                                          newValue.value,
+                                                                          values
                                                                         );
                                                                       }}
                                                                       defaultValue={contractsTypes.find(
@@ -3237,7 +3256,8 @@ class EmployeesList extends Component {
                                                                       onChange={newValue => {
                                                                         this.handleSelect(
                                                                           "workClassificationId",
-                                                                          newValue.value
+                                                                          newValue.value,
+                                                                          values
                                                                         );
                                                                       }}
                                                                       defaultValue={workClassifications.find(
@@ -3323,7 +3343,8 @@ class EmployeesList extends Component {
                                                                             .name,
                                                                           e
                                                                             .target
-                                                                            .value
+                                                                            .value,
+                                                                          values
                                                                         )
                                                                       }
                                                                     />
@@ -3497,7 +3518,8 @@ class EmployeesList extends Component {
                                                                       onChange={newValue => {
                                                                         this.handleSelect(
                                                                           "employmentCaseId",
-                                                                          newValue.value
+                                                                          newValue.value,
+                                                                          values
                                                                         );
                                                                       }}
                                                                       defaultValue={employmentCases.find(

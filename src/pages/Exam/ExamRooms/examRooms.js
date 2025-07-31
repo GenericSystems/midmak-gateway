@@ -17,6 +17,7 @@ import {
   Input,
 } from "reactstrap";
 import classnames from "classnames";
+import * as moment from "moment";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
@@ -35,6 +36,8 @@ import {
   updateExamRoom,
   deleteExamRoom,
 } from "store/Exam/ExamRooms/actions";
+
+import { getDefineExamDates } from "store/Exam/DefineExamDates/actions";
 import paginationFactory, {
   PaginationListStandalone,
   PaginationProvider,
@@ -51,10 +54,12 @@ class ExamRoomsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      defineExamDates: [],
+      defineExamDate: "",
       duplicateError: null,
       selectedLevel: null,
       verticalActiveTab: 0,
-      currentdefineExamDatesId: null,
+      currentDefineExamDatesId: null,
       showAddButton: false,
       showDeleteButton: false,
       showEditButton: false,
@@ -62,29 +67,39 @@ class ExamRoomsList extends Component {
     };
     this.toggleVertical = this.toggleVertical.bind(this);
   }
-  toggleVertical(defineExamDatesId) {
+  toggleVertical(defineExamDateId) {
     const { onGetExamRooms } = this.props;
     const { verticalActiveTab } = this.state;
 
     // Only update the state if the clicked tab is different from the current active tab
-    if (verticalActiveTab !== defineExamDatesId) {
+    if (verticalActiveTab !== defineExamDateId) {
       this.setState({
-        verticalActiveTab: defineExamDatesId,
-        currentdefineExamDatesId: defineExamDatesId,
+        verticalActiveTab: defineExamDateId,
+        currentDefineExamDatesId: defineExamDateId,
       });
-      onGetExamRooms(defineExamDatesId);
+      onGetExamRooms(defineExamDateId);
     }
   }
   componentDidMount() {
-    const { studentManagements, examRooms, levels, user_menu } = this.props;
+    const {
+      studentManagements,
+      examRooms,
+      defineExamDates,
+      onGetDefineExamDates,
+      levels,
+      user_menu,
+    } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (examRooms && !examRooms.length) {
     }
-    this.setState({ studentManagements });
-    this.setState({ levels });
+
+    onGetDefineExamDates();
+    this.setState({ examRooms });
+    this.setState({ defineExamDates });
+    console.log("defineExamDates", defineExamDates);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -133,7 +148,7 @@ class ExamRoomsList extends Component {
 
   handleAddRow = () => {
     const { onAddNewExamRoom, examRooms } = this.props;
-    const { currentdefineExamDatesId } = this.state;
+    const { currentDefineExamDatesId } = this.state;
     const emptyLevelExists = examRooms.some(row => row.levelId === null);
     if (emptyLevelExists) {
       const errorMessage = this.props.t("Fill in the empty row");
@@ -141,7 +156,7 @@ class ExamRoomsList extends Component {
       return;
     } else {
       const newRow = {
-        defineExamDatesId: currentdefineExamDatesId,
+        defineExamDatesId: currentDefineExamDatesId,
         AllLogin: 0,
         AllowRegister: 0,
         AllowPay: 0,
@@ -159,16 +174,12 @@ class ExamRoomsList extends Component {
 
   handleChangeCheckbox = (row, currentStatus, fieldName) => {
     const { onUpdateExamRoom } = this.props;
-    const { currentdefineExamDatesId } = this.state;
+    const { currentDefineExamDatesId } = this.state;
     const newStatus = currentStatus ? 1 : 0;
-    let rlogin = row.AllLogin == null ? 0 : row.AllLogin;
-    let rAllowRegister = row.AllowRegister == null ? 0 : row.AllowRegister;
-    let rAllowPay = row.AllowPay == null ? 0 : row.AllowPay;
-
     let ob = {
       Id: row.Id,
-      levelId: row.levelId,
-      defineExamDatesId: currentdefineExamDatesId,
+      hallId: row.levelId,
+      defineExamDateId: currentDefineExamDatesId,
       AllLogin: fieldName === "AllLogin" ? newStatus : rlogin,
       AllowRegister: fieldName === "AllowRegister" ? newStatus : rAllowRegister,
       AllowPay: fieldName === "AllowPay" ? newStatus : rAllowPay,
@@ -176,12 +187,12 @@ class ExamRoomsList extends Component {
     onUpdateExamRoom(ob);
   };
   resetExamRoom = row => {
-    const { currentdefineExamDatesId } = this.state;
+    const { currentDefineExamDatesId } = this.state;
     const { onUpdateExamRoom } = this.props;
     let ob = {};
     ob["Id"] = row.Id;
     ob["levelId"] = row.levelId;
-    (ob["defineExamDatesId"] = currentdefineExamDatesId), (ob["AllLogin"] = 0);
+    (ob["defineExamDateId"] = currentDefineExamDatesId), (ob["AllLogin"] = 0);
     ob["AllowRegister"] = 0;
     ob["AllowPay"] = 0;
 
@@ -220,7 +231,7 @@ class ExamRoomsList extends Component {
     } = this.state;
     const { t, studentManagements, examRooms, levels, defineExamDates } =
       this.props;
-
+    console.log("DefineExamDates from props:", this.props.defineExamDates);
     const pageOptions = {
       sizePerPage: 20,
       totalSize: examRooms.length,
@@ -230,27 +241,27 @@ class ExamRoomsList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "defineExamDatesId",
-        text: this.props.t("defineExamDatesId"),
-        hidden: true,
+        dataField: "defineExamDateId",
+        text: this.props.t("defineExamDateId"),
+        hidden: false,
       },
 
       {
-        dataField: "hallName",
-        text: this.props.t("Hall Name"),
-        formatter: (cell, row) => (
-          <Select
-            key={`level_select`}
-            options={levels.filter(
-              option => !examRooms.some(row => row.levelId === option.value)
-            )}
-            onChange={newValue => {
-              this.handleSelectChange(row.Id, "levelId", newValue.value);
-            }}
-            defaultValue={levels.find(opt => opt.value == row.levelId)}
-            isDisabled={!showEditButton}
-          />
-        ),
+        dataField: "arTitle",
+        text: this.props.t("hall Name"),
+        // formatter: (cell, row) => (
+        //   <Select
+        //     key={`level_select`}
+        //     options={levels.filter(
+        //       option => !examRooms.some(row => row.levelId === option.value)
+        //     )}
+        //     onChange={newValue => {
+        //       this.handleSelectChange(row.Id, "levelId", newValue.value);
+        //     }}
+        //     defaultValue={levels.find(opt => opt.value == row.levelId)}
+        //     isDisabled={!showEditButton}
+        //   />
+        // ),
         editable: false,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -259,65 +270,52 @@ class ExamRoomsList extends Component {
       },
 
       {
-        key: "hallNum",
-        dataField: "hallNum",
-        text: this.props.t("Hall Number"),
+        key: "defineExamDateNum",
+        dataField: "defineExamDateNum",
+        text: this.props.t("DefineExamDate Number"),
         editable: false,
-        formatter: (cellContent, row, column) => (
-          <Input
-            type="checkbox"
-            name="AllowRegister"
-            className={`form-check-input input-mini warning}`}
-            id="behaviorButton"
-            disabled={row.levelId === null || !showEditButton}
-            defaultChecked={cellContent == 1}
-            onChange={event =>
-              this.handleChangeCheckbox(row, event.target.checked, "AllLogin")
-            }
-          />
-        ),
+        // formatter: (cellContent, row, column) => (
+        //   <Input
+        //     type="checkbox"
+        //     name="AllowRegister"
+        //     className={`form-check-input input-mini warning}`}
+        //     id="behaviorButton"
+        //     disabled={row.levelId === null || !showEditButton}
+        //     defaultChecked={cellContent == 1}
+        //     onChange={event =>
+        //       this.handleChangeCheckbox(row, event.target.checked, "AllLogin")
+        //     }
+        //   />
+        // ),
       },
       {
         key: "buildingArName",
         dataField: "buildingArName",
         text: this.props.t("Building Name"),
         editable: false,
-        formatter: (cellContent, row, column) => (
-          <Input
-            type="checkbox"
-            name="AllowRegister"
-            className={`form-check-input input-mini warning}`}
-            id="behaviorButton"
-            disabled={row.levelId === null || !showEditButton}
-            defaultChecked={cellContent == 1}
-            onChange={event =>
-              this.handleChangeCheckbox(
-                row,
-                event.target.checked,
-                "AllowRegister"
-              )
-            }
-          />
-        ),
+        // formatter: (cellContent, row, column) => (
+        //   <Input
+        //     type="checkbox"
+        //     name="AllowRegister"
+        //     className={`form-check-input input-mini warning}`}
+        //     id="behaviorButton"
+        //     disabled={row.levelId === null || !showEditButton}
+        //     defaultChecked={cellContent == 1}
+        //     onChange={event =>
+        //       this.handleChangeCheckbox(
+        //         row,
+        //         event.target.checked,
+        //         "AllowRegister"
+        //       )
+        //     }
+        //   />
+        // ),
       },
       {
         key: "examCapacity",
         dataField: "examCapacity",
         text: this.props.t("Exam Capacity"),
-        editable: false,
-        formatter: (cellContent, row, column) => (
-          <Input
-            type="checkbox"
-            name="AllowRegister"
-            className={`form-check-input input-mini warning}`}
-            id="behaviorButton"
-            disabled={row.levelId === null || !showEditButton}
-            defaultChecked={cellContent == 1}
-            onChange={event =>
-              this.handleChangeCheckbox(row, event.target.checked, "AllowPay")
-            }
-          />
-        ),
+        editable: true,
       },
       {
         dataField: "delete",
@@ -325,14 +323,14 @@ class ExamRoomsList extends Component {
         isDummyField: true,
         editable: false,
         hidden: !showDeleteButton,
-        formatter: (cellContent, examRoom) => (
-          <IconButton
-            color="secondary"
-            onClick={() => this.handleDeleteRow(examRoom.Id)}
-          >
-            <DeleteIcon style={{ color: "red" }} />
-          </IconButton>
-        ),
+        // formatter: (cellContent, examRoom) => (
+        //   <IconButton
+        //     color="secondary"
+        //     onClick={() => this.handleDeleteRow(examRoom.Id)}
+        //   >
+        //     <DeleteIcon style={{ color: "red" }} />
+        //   </IconButton>
+        // ),
       },
     ];
     const addButtonStyle = {
@@ -347,15 +345,17 @@ class ExamRoomsList extends Component {
             <Breadcrumbs breadcrumbItem={t("Exam Rooms")} />
             <div className="checkout-tabs">
               <Row>
-                <Col lg="2">
+                <Col lg="3">
                   <Nav pills className="flex-column">
                     {defineExamDates.map(defineExamDate => (
                       <NavItem
-                        className="justify-content-center"
+                        // className="justify-content-center"
                         key={defineExamDate.Id}
                         navlink={defineExamDate.Id}
                       >
                         <NavLink
+                          // id="horizontal-home-link"
+                          style={{ cursor: "pointer" }}
                           className={classnames({
                             active:
                               this.state.verticalActiveTab ===
@@ -367,7 +367,15 @@ class ExamRoomsList extends Component {
                         >
                           <p className="font-weight-bold m-1 pt-2 ">
                             <span style={{ fontWeight: "bold" }}>
-                              {defineExamDate.title}
+                              (
+                              {moment(defineExamDate.startDate).format(
+                                "DD/MM/YYYY"
+                              )}{" "}
+                              -{" "}
+                              {moment(defineExamDate.endDate).format(
+                                "DD/MM/YYYY"
+                              )}
+                              )
                             </span>
                           </p>
                         </NavLink>
@@ -375,70 +383,70 @@ class ExamRoomsList extends Component {
                     ))}
                   </Nav>
                 </Col>
-                <Col lg="10">
+                <Col lg="9">
                   <TabContent
                     activeTab={this.state.verticalActiveTab}
                     className="text-muted mt-4 mt-md-0"
                   >
-                    {/* {faculties.map(defineExamDates => ( */}
-                    <TabPane
-                      key={defineExamDates.Id}
-                      tabId={defineExamDates.Id}
-                    >
-                      <Card>
-                        <CardBody>
-                          <div>
-                            {duplicateError && (
-                              <Alert
-                                color="danger"
-                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                role="alert"
-                              >
-                                {duplicateError}
-                                <button
-                                  type="button"
-                                  className="btn-close"
-                                  aria-label="Close"
-                                  onClick={this.handleAlertClose}
-                                ></button>
-                              </Alert>
-                            )}
-                          </div>
-
-                          <div className="table-responsive">
-                            {showAddButton && (
-                              <div className="text-sm-end">
-                                <Tooltip
-                                  title={this.props.t("Add")}
-                                  placement="top"
+                    {defineExamDates.map(defineExamDate => (
+                      <TabPane
+                        key={defineExamDate.Id}
+                        tabId={defineExamDate.Id}
+                      >
+                        <Card>
+                          <CardBody>
+                            <div>
+                              {duplicateError && (
+                                <Alert
+                                  color="danger"
+                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                  role="alert"
                                 >
-                                  <IconButton
-                                    color="primary"
-                                    onClick={this.handleAddRow}
-                                  >
-                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                  </IconButton>
-                                </Tooltip>
-                              </div>
-                            )}
-                            <BootstrapTable
-                              keyField="Id"
-                              data={examRooms}
-                              columns={columns}
-                              filter={filterFactory()}
-                              cellEdit={cellEditFactory({
-                                mode: "click",
-                                blurToSave: true,
-                              })}
-                              noDataIndication={this.props.t(
-                                "No Students found"
+                                  {duplicateError}
+                                  <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                    onClick={this.handleAlertClose}
+                                  ></button>
+                                </Alert>
                               )}
-                            />
-                          </div>
-                        </CardBody>
-                      </Card>
-                    </TabPane>
-                    {/* ))} */}
+                            </div>
+
+                            <div className="table-responsive">
+                              {showAddButton && (
+                                <div className="text-sm-end">
+                                  <Tooltip
+                                    title={this.props.t("Add")}
+                                    placement="top"
+                                  >
+                                    <IconButton
+                                      color="primary"
+                                      onClick={this.handleAddRow}
+                                    >
+                                      <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                    </IconButton>
+                                  </Tooltip>
+                                </div>
+                              )}
+                              <BootstrapTable
+                                keyField="Id"
+                                data={examRooms}
+                                columns={columns}
+                                filter={filterFactory()}
+                                cellEdit={cellEditFactory({
+                                  mode: "click",
+                                  blurToSave: true,
+                                })}
+                                noDataIndication={this.props.t(
+                                  "No trainee found"
+                                )}
+                              />
+                            </div>
+                          </CardBody>
+                        </Card>
+                      </TabPane>
+                    ))}
                   </TabContent>
                 </Col>
               </Row>
@@ -452,11 +460,13 @@ class ExamRoomsList extends Component {
 
 const mapStateToProps = ({
   examRooms,
-  defineExamDates,
+  academyBuildingStructures,
   studentManagements,
+  defineExamDates,
   levels,
   menu_items,
 }) => ({
+  defineExamDates: academyBuildingStructures.defineExamDates,
   defineExamDates: defineExamDates.defineExamDates,
   examRooms: examRooms.examRooms,
   // studentManagements: studentManagements.studentManagements,
@@ -466,8 +476,8 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetExamRooms: defineExamDatesId =>
-    dispatch(getExamRooms(defineExamDatesId)),
+  onGetExamRooms: defineExamDates => dispatch(getExamRooms(defineExamDates)),
+  onGetDefineExamDates: () => dispatch(getDefineExamDates()),
   onAddNewExamRoom: examRoom => dispatch(addNewExamRoom(examRoom)),
   onUpdateExamRoom: examRoom => dispatch(updateExamRoom(examRoom)),
   onDeleteExamRoom: examRoom => dispatch(deleteExamRoom(examRoom)),

@@ -1038,6 +1038,13 @@ export const DELETE_DEFINE_EXAM_DATE = "/deleted/defineExamDate";
 //students order
 export const GET_STUDENTS_ORDER = "/studentsOrder";
 
+//define Periods
+export const GET_DEFINE_PERIODS = "/definePeriods";
+export const GET_DEFINE_PERIOD_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DEFINE_PERIOD = "/add/definePeriod";
+export const UPDATE_DEFINE_PERIOD = "/update/definePeriod";
+export const DELETE_DEFINE_PERIOD = "/deleted/definePeriod";
+
 //CONTRACTS
 export const GET_CONTRACTS = "/contracts";
 export const GET_CONTRACT_DELETED_VALUE = "/deleted";
