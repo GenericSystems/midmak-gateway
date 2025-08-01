@@ -1145,7 +1145,7 @@ class TraineesList extends Component {
                   }
                 />
                 <Row>
-                  {/* <Col md="2">
+                  <Col md="2">
                     <Nav pills className="flex-column" id="margTop">
                       <NavItem>
                         <NavLink
@@ -1176,7 +1176,7 @@ class TraineesList extends Component {
                         </NavLink>
                       </NavItem>
                     </Nav>
-                  </Col> */}
+                  </Col>
                   {/* {sidebarOpen && (
                   <Row>
                                         
@@ -2626,125 +2626,107 @@ class TraineesList extends Component {
                                           )}
                                         </Formik>
                                       </ModalBody>
-                                    </Modal>
+                                    </Modal>*/}
 
-                                    <Row>
-                                      <Col sm="3">
-                                        <div className="search-box ms-2 mb-2 d-inline-block">
-                                          {showSearchButton && (
-                                            <div className="position-relative">
-                                              <SearchBar
-                                                {...toolkitprops.searchProps}
-                                              />
-                                            </div>
-                                          )}
-                                        </div>
-                                      </Col>
-                                      <Col>
-                                        {showAddButton && (
-                                          <div className="text-sm-end">
-                                            <Tooltip
-                                              title={this.props.t("Add")}
-                                              placement="top"
-                                            >
-                                              <IconButton
-                                                color="primary"
-                                                onClick={this.handleAddWarning}
-                                              >
-                                                <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                              </IconButton>
-                                            </Tooltip>
-                                          </div>
-                                        )}
-                                      </Col>
-                                    </Row>
-                                    <Row>
-                                      <div>
-                                        {deleted == 0 && showAlert && (
-                                          <Alert
-                                            color="danger"
-                                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                            role="alert"
-                                          >
-                                            {alertMessage}
-                                            <button
-                                              type="button"
-                                              className="btn-close"
-                                              aria-label="Close"
-                                              onClick={
-                                                this.handleDeletedErrorClose
-                                              }
-                                            ></button>
-                                          </Alert>
-                                        )}
-                                        {deleted == 1 && showAlert && (
-                                          <Alert
-                                            color="success"
-                                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                            role="alert"
-                                          >
-                                            {alertMessage}
-                                            <button
-                                              type="button"
-                                              className="btn-close"
-                                              aria-label="Close"
-                                              onClick={
-                                                this.handleDeletedSuccessClose
-                                              }
-                                            ></button>
-                                          </Alert>
-                                        )}
-                                        {errorMessage && (
-                                          <Alert
-                                            color="danger"
-                                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                            role="alert"
-                                          >
-                                            {errorMessage}
-                                            <button
-                                              type="button"
-                                              className="btn-close"
-                                              aria-label="Close"
-                                              onClick={this.handleErrorClose}
-                                            ></button>
-                                          </Alert>
-                                        )}
-                                      </div>
-                                    </Row>
-                                    <BootstrapTable
-                                      keyField="Id"
-                                      {...toolkitprops.baseProps}
-                                      {...paginationTableProps}
-                                      data={studentsRequests}
-                                      columns={studentsRequestsColumns}
-                                      cellEdit={cellEditFactory({
-                                        mode: "click",
-                                        blurToSave: true,
-                                        afterSaveCell: (
-                                          oldValue,
-                                          newValue,
-                                          row,
-                                          column
-                                        ) => {
-                                          this.handleStdWarningTestDataChange(
-                                            row.Id,
-                                            column.dataField,
-                                            newValue
-                                          );
-                                        },
-                                      })}
-                                      noDataIndication={t(
-                                        "No Warning Rules Definition found"
-                                      )}
-                                      defaultSorted={defaultSorting}
-                                      filter={filterFactory()}
-                                    />
-                                    <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                      <PaginationListStandalone
-                                        {...paginationProps}
-                                      />
-                                    </Col>
-                                  </React.Fragment>
+                  <Row>
+                    <Col sm="3">
+                      <div className="search-box ms-2 mb-2 d-inline-block">
+                        {showSearchButton && (
+                          <div className="position-relative">
+                            <SearchBar {...toolkitprops.searchProps} />
+                          </div>
+                        )}
+                      </div>
+                    </Col>
+                    <Col>
+                      {showAddButton && (
+                        <div className="text-sm-end">
+                          <Tooltip title={this.props.t("Add")} placement="top">
+                            <IconButton
+                              color="primary"
+                              onClick={this.handleAddWarning}
+                            >
+                              <i className="mdi mdi-plus-circle blue-noti-icon" />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
+                      )}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <div>
+                      {deleted == 0 && showAlert && (
+                        <Alert
+                          color="danger"
+                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                          role="alert"
+                        >
+                          {alertMessage}
+                          <button
+                            type="button"
+                            className="btn-close"
+                            aria-label="Close"
+                            onClick={this.handleDeletedErrorClose}
+                          ></button>
+                        </Alert>
+                      )}
+                      {deleted == 1 && showAlert && (
+                        <Alert
+                          color="success"
+                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                          role="alert"
+                        >
+                          {alertMessage}
+                          <button
+                            type="button"
+                            className="btn-close"
+                            aria-label="Close"
+                            onClick={this.handleDeletedSuccessClose}
+                          ></button>
+                        </Alert>
+                      )}
+                      {errorMessage && (
+                        <Alert
+                          color="danger"
+                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                          role="alert"
+                        >
+                          {errorMessage}
+                          <button
+                            type="button"
+                            className="btn-close"
+                            aria-label="Close"
+                            onClick={this.handleErrorClose}
+                          ></button>
+                        </Alert>
+                      )}
+                    </div>
+                  </Row>
+                  {/* <BootstrapTable
+                    keyField="Id"
+                    {...toolkitprops.baseProps}
+                    {...paginationTableProps}
+                    data={studentsRequests}
+                    columns={studentsRequestsColumns}
+                    cellEdit={cellEditFactory({
+                      mode: "click",
+                      blurToSave: true,
+                      afterSaveCell: (oldValue, newValue, row, column) => {
+                        this.handleStdWarningTestDataChange(
+                          row.Id,
+                          column.dataField,
+                          newValue
+                        );
+                      },
+                    })}
+                    noDataIndication={t("No Warning Rules Definition found")}
+                    defaultSorted={defaultSorting}
+                    filter={filterFactory()}
+                  />
+                  <Col className="pagination pagination-rounded justify-content-end mb-2">
+                    <PaginationListStandalone {...paginationProps} />
+                  </Col> */}
+                  {/* </React.Fragment>
                                 )}
                               </ToolkitProvider>
                             )}

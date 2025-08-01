@@ -92,7 +92,7 @@ class DefineExamDatesList extends Component {
       isOpen: false,
       isAdd: false,
       selectedExamType: "",
-      selectedDefinPeriod: "",
+      selectedDefinePeriodId: "",
       selectedStudentsOrder: "",
       startDateError: false,
       endDateError: false,
@@ -253,24 +253,28 @@ class DefineExamDatesList extends Component {
 
   handleAddDefinePeriod = () => {
     const { onAddNewDefinePeriod, definePeriods } = this.props;
-
+    const { defineExamDateId, selectedDefinePeriodId } = this.state;
+    const definePeriodToSend =
+      selectedDefinePeriodId == null ? "all" : selectedDefinePeriodId;
     const newRow = {
-      arTitle: "-----",
+      startTime: "-----",
+      defineExamDateId: defineExamDateId,
+      definePeriodId: definePeriodToSend,
     };
 
     // Check if the same value already exists in the table
     const emptyRowsExist = definePeriods.some(
-      definePeriods => definePeriods.arTitle.trim() === "-----"
+      definePeriods => definePeriods.startTime.trim() === "-----"
       // ||
       // contractType.enTitle.trim() === ""
     );
-
+    console.log("newRoeeeeeeeeeeeeeeeee", newRow);
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewDefinePeriod(newRow);
+      // onAddNewDefinePeriod(newRow);
     }
   };
 
@@ -300,7 +304,7 @@ class DefineExamDatesList extends Component {
     values["enTitle"] = values["enTitle"] || "";
     values["examTypeId"] = selectedExamType;
     values["studentOrderId"] = selectedStudentsOrder;
-    // values["definPeriodId"] = selectedDefinPeriod;
+    // values["definPeriodId"] = selectedDefinePeriodId;
     console.log("valuesssssssssssssssssssss", values);
 
     let defineExamDateInfo = {};
@@ -320,6 +324,7 @@ class DefineExamDatesList extends Component {
           console.log("9999999", defineExamDateInfo);
         defineExamDateInfo[key] = values[key];
       });
+      delete defineExamDateInfo.definePeriodId;
       if (isEdit) {
         console.log("9999999", defineExamDateInfo);
         onUpdateDefineExamDate(defineExamDateInfo);
@@ -330,6 +335,10 @@ class DefineExamDatesList extends Component {
           const parsedDays = JSON.parse(response.allDays);
           this.setState({ allDaysArray: parsedDays });
         }
+        if (response?.id) {
+          this.setState({ defineExamDateId: response.id });
+        }
+
         // onAddNewDefineExamDate(defineExamDateInfo);
         // onGetDefinePeriods();
         this.setState({ isShowPreReq: true });
@@ -379,11 +388,15 @@ class DefineExamDatesList extends Component {
       defineExamDate: arg,
       selectedExamType: arg.examTypeId,
       selectedStudentsOrder: arg.studentOrderId,
-      selectedDefinPeriod: arg.definPeriodId || null,
+      selectedDefinePeriodId: arg.definPeriodId || null,
       allDaysArray: arg.all_days || [],
       isEdit: true,
     });
     this.toggle();
+  };
+
+  handleDefinePeriodChange = selectedId => {
+    this.setState({ selectedDefinePeriod: selectedId });
   };
 
   // handleEmployeeDataClick = defineExamDate => {
@@ -453,7 +466,7 @@ class DefineExamDatesList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
-      selectedDefinPeriod,
+      selectedDefinePeriodId,
       selectedExamType,
       selectedStudentsOrder,
       isShowPreReq,
@@ -758,7 +771,7 @@ class DefineExamDatesList extends Component {
                                         definePeriodId:
                                           (defineExamDate &&
                                             defineExamDate.definePeriodId) ||
-                                          selectedDefinPeriod,
+                                          selectedDefinePeriodId,
 
                                         startDate: defineExamDate?.startDate
                                           ? moment
@@ -1175,19 +1188,23 @@ class DefineExamDatesList extends Component {
                                                       onChange={newValue =>
                                                         setFieldValue(
                                                           "definePeriodId",
-                                                          newValue.value
+                                                          newValue
+                                                            ? newValue.value
+                                                            : null
                                                         )
                                                       }
                                                       value={
-                                                        allDaysArray &&
                                                         Array.isArray(
                                                           allDaysArray
-                                                        )
+                                                        ) &&
+                                                        values &&
+                                                        values.definePeriodId !==
+                                                          undefined
                                                           ? allDaysArray.find(
                                                               opt =>
                                                                 opt.value ===
                                                                 values.definePeriodId
-                                                            )
+                                                            ) || null
                                                           : null
                                                       }
                                                     />
