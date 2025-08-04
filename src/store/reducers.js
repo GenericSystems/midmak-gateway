@@ -239,6 +239,10 @@ import academyBuildingStructures from "./academyBuildingStructure/reducer";
 // contractsTypes
 import contractsTypes from "./HR/contractsTypes/reducer";
 
+//AbsenceWarnings
+import absenceWarnings from "./Rules-and-Regulations/Absence-warnings/reducer";
+
+
 // ExamRooms
 import examRooms from "./Exam/ExamRooms/reducer";
 
@@ -440,6 +444,7 @@ const rootReducer = combineReducers({
   diplomalevels,
   highstudytypes,
   applicants,
+  absenceWarnings,
 });
 
 export default rootReducer;

@@ -1002,6 +1002,13 @@ export const ADD_NEW_CONTRACT_TYPE = "/add/contractType";
 export const UPDATE_CONTRACT_TYPE = "/update/contractType";
 export const DELETE_CONTRACT_TYPE = "/delete/contractType";
 
+//ABSCENCE_WARNINGS
+export const GET_ABSENCE_WARNINGS = "/absenceWarnings";
+export const GET_ABSENCE_WARNING_DELETED_VALUE = "/deleted";
+export const ADD_NEW_ABSENCE_WARNING = "/add/absenceWarning";
+export const UPDATE_ABSENCE_WARNING = "/update/absenceWarning";
+export const DELETE_ABSENCE_WARNING = "/delete/absenceWarning";
+
 //EMPLOYMENT_CASES
 export const GET_EMPLOYMENT_CASES = "/employmentCases";
 export const GET_EMPLOYMENT_CASE_DELETED_VALUE = "/deleted";
