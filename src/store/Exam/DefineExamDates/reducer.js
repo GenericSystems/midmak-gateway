@@ -29,6 +29,8 @@ const INIT_STATE = {
   definePeriods: [],
   deleted: {},
   error: {},
+  lastAddedId: 0,
+  last_all_days: [],
 };
 
 const defineExamDates = (state = INIT_STATE, action) => {
@@ -50,6 +52,8 @@ const defineExamDates = (state = INIT_STATE, action) => {
       return {
         ...state,
         defineExamDates: [...state.defineExamDates, action.payload],
+        lastAddedId: action.payload.Id,
+        last_all_days: action.payload.all_days,
       };
 
     case ADD_DEFINE_EXAM_DATE_FAIL:

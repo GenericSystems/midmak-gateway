@@ -133,6 +133,9 @@ function* onAddNewDefineExamDate({ payload }) {
   try {
     const response = yield call(addNewDefineExamDate, payload);
     console.log("اااااااااااااااااااااااااااااااا", response);
+    // response.map(resp => {
+    //   resp["allDays"] = JSON.parse(resp["allDays"]);
+    // });
     yield put(addDefineExamDateSuccess(response[0]));
   } catch (error) {
     yield put(addDefineExamDateFail(error));
@@ -178,12 +181,15 @@ function* onGetDefineExamDateDeletedValue() {
   }
 }
 
-function* fetchDefinePeriods() {
+function* fetchDefinePeriods(obj) {
+  let defineExamDateId = obj.payload;
+  console.log("objaaaaaaaaaaaaaaaaaaaaaaaaaaaa", defineExamDateId);
   const get_definePeriods_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_DefinePeriods",
+    tablename: "Common_ExamPeriods",
+    filter: `defineExamDateId = ${defineExamDateId}`,
   };
   try {
     const response = yield call(getDefinePeriods, get_definePeriods_req);
@@ -195,15 +201,16 @@ function* fetchDefinePeriods() {
 }
 
 function* onAddNewDefinePeriod({ payload }) {
+  console.log("payloadpayload", payload);
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_DefinePeriods";
-  // payload["queryname"] = "_Common_DefineExamDate";
+  payload["tablename"] = "Common_ExamPeriods";
 
   try {
     const response = yield call(addNewDefinePeriod, payload);
+
     yield put(addDefinePeriodSuccess(response[0]));
   } catch (error) {
     yield put(addDefinePeriodFail(error));
@@ -214,7 +221,7 @@ function* onDeleteDefinePeriod({ payload, contract }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_DefinePeriods";
+  payload["tablename"] = "Common_ExamPeriods";
 
   try {
     const response = yield call(deleteDefinePeriod, payload);
@@ -229,8 +236,7 @@ function* onUpdateDefinePeriod({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_DefinePeriods";
-  // payload["queryname"] = "_Common_DefinePeriod";
+  payload["tablename"] = "Common_ExamPeriods";
   try {
     const respupdate = yield call(updateDefinePeriod, payload);
     console.log("UpdateDefinePeriod", respupdate);
