@@ -125,8 +125,9 @@ export const getStudentsOrderFail = error => ({
   payload: error,
 });
 
-export const getDefinePeriods = () => ({
+export const getDefinePeriods = defineExamDates => ({
   type: GET_DEFINE_PERIODS,
+  payload: defineExamDates,
 });
 
 export const getDefinePeriodsSuccess = definePeriods => ({

@@ -182,14 +182,14 @@ function* onGetDefineExamDateDeletedValue() {
 }
 
 function* fetchDefinePeriods(obj) {
-  let defineExamDateId = obj.payload;
-  console.log("objaaaaaaaaaaaaaaaaaaaaaaaaaaaa", defineExamDateId);
+  let ExamId = obj.payload;
+  console.log("objaaaaaaaaaaaaaaaaaaaaaaaaaaaa", obj);
   const get_definePeriods_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_ExamPeriods",
-    filter: `defineExamDateId = ${defineExamDateId}`,
+    filter: `ExamId = ${ExamId}`,
   };
   try {
     const response = yield call(getDefinePeriods, get_definePeriods_req);
@@ -217,7 +217,7 @@ function* onAddNewDefinePeriod({ payload }) {
   }
 }
 
-function* onDeleteDefinePeriod({ payload, contract }) {
+function* onDeleteDefinePeriod({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";

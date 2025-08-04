@@ -79,13 +79,13 @@ class DefineExamDatesList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
-      newStartTime: "",
-      newEndTime: "",
     };
     this.state = {
       languageState: "",
-      deleteModal: false,
       duplicateError: null,
+      deleteModal: false,
+      deleteModal1: false,
+      duplicateErrorDePer: null,
       selectedRowId: null,
       modal: false,
       modal2: false,
@@ -108,7 +108,6 @@ class DefineExamDatesList extends Component {
     };
     this.toggle = this.toggle.bind(this);
     this.toggle2 = this.toggle2.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentDidMount() {
@@ -118,10 +117,10 @@ class DefineExamDatesList extends Component {
       defineExamDates,
       onGetDefineExamDates,
       onGetStudentsOrder,
-      onGetDefinePeriods,
       gradeTypes,
       deleted,
       studentsOrder,
+      definePeriods,
       user_menu,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -130,9 +129,9 @@ class DefineExamDatesList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetDefineExamDates(lang);
     onGetStudentsOrder();
-    onGetDefinePeriods();
     this.setState({
       defineExamDates,
+      definePeriods,
       deleted,
       gradeTypes,
       studentsOrder,
@@ -243,6 +242,10 @@ class DefineExamDatesList extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
+  onClickDelete1 = rowId => {
+    this.setState({ selectedRowId: rowId, deleteModal1: true });
+  };
+
   handleAddRow = () => {
     this.setState({
       defineExamDate: "",
@@ -258,8 +261,8 @@ class DefineExamDatesList extends Component {
       onAddNewDefinePeriod,
       definePeriods,
       lastAddedId,
-      t,
       last_all_days,
+      all_days,
     } = this.props;
     const { isAdd, selecteDefineExamDateId, selectedDay } = this.state;
     console.log("selectedDay", selectedDay);
@@ -271,26 +274,30 @@ class DefineExamDatesList extends Component {
     //   : Array.isArray(selectedDay)
     //   ? selectedDay.map(day => day.value)
     //   : "all";
+    console.log("definePeriods", definePeriods);
 
     const emptyRowExists = definePeriods.some(
-      defPer => !defPer.definePerioidsId
+      defPer => !defPer.startTime || defPer.startTime === "00:00:00"
     );
 
+    console.log("emptyRowExists", emptyRowExists);
+
     if (emptyRowExists) {
-      const errorMessage = t("Fill in the empty row");
-      this.setState({ duplicateError: errorMessage });
+      this.setState({
+        duplicateErrorDePer: this.props.t("Fill in the empty row"),
+      });
       return;
     }
     const newRow = {
       examId: isAdd ? lastAddedId : selecteDefineExamDateId,
-      flag: selectedDay != null ? selectedDay : "all",
-      startTime: "---",
-      endTime: "----",
+      flag: selectedDay != null ? selectedDay : "all_days",
+      startTime: "",
+      endTime: "",
     };
     console.log("newRow", newRow);
     onAddNewDefinePeriod(newRow);
 
-    this.setState({ duplicateError: null });
+    this.setState({ duplicateErrorDePer: null });
   };
 
   handleDeleteRow = () => {
@@ -303,6 +310,19 @@ class DefineExamDatesList extends Component {
       this.setState({
         selectedRowId: null,
         deleteModal: false,
+        showAlert: true,
+      });
+    }
+  };
+
+  handleDeleteRow1 = () => {
+    const { onDeleteDefinePeriod } = this.props;
+    const { selectedRowId } = this.state;
+    if (selectedRowId !== null) {
+      onDeleteDefinePeriod(selectedRowId);
+      this.setState({
+        selectedRowId: null,
+        deleteModal1: false,
         showAlert: true,
       });
     }
@@ -343,6 +363,7 @@ class DefineExamDatesList extends Component {
       if (isEdit) {
         console.log("9999999", defineExamDateInfo);
         onUpdateDefineExamDate(defineExamDateInfo);
+        onGetDefinePeriods(defineExamDateInfo);
         this.toggle();
       } else if (isAdd) {
         const response = onAddNewDefineExamDate(defineExamDateInfo);
@@ -471,8 +492,10 @@ class DefineExamDatesList extends Component {
     const {
       languageState,
       duplicateError,
+      duplicateErrorDePer,
       allDaysArray,
       deleteModal,
+      deleteModal1,
       modal,
       modal2,
       isEdit,
@@ -504,7 +527,7 @@ class DefineExamDatesList extends Component {
     ];
     const examTypesOpt = gradeTypes;
     const columns = [
-      { dataField: "Id", text: this.props.t("ID"), hidden: false },
+      { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: languageState === "ar" ? "arTitle" : "enTitle",
         text:
@@ -602,12 +625,12 @@ class DefineExamDatesList extends Component {
         isDummyField: true,
         editable: false,
         // hidden: !showDeleteButton,
-        formatter: (cellContent, lecturePeriod) => (
+        formatter: (cellContent, definePeriod) => (
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
               id="deletetooltip"
-              onClick={() => this.onClickDelete(lecturePeriod)}
+              onClick={() => this.onClickDelete1(definePeriod)}
             ></i>
           </Link>
         ),
@@ -1162,159 +1185,164 @@ class DefineExamDatesList extends Component {
                                                   </div>
                                                 </Col>
                                               </Row>
-                                            </CardBody>
-                                          </Card>
-                                          {(isEdit || isShowPreReq) && (
-                                            <Card id="employee-card">
-                                              <CardTitle id="course_header">
-                                                {t("Define Period")}
-                                              </CardTitle>
-                                              <CardBody className="cardBody">
-                                                <div>
-                                                  {duplicateError && (
-                                                    <Alert
-                                                      color="danger"
-                                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                      role="alert"
-                                                    >
-                                                      {duplicateError}
-                                                      <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        aria-label="Close"
-                                                        onClick={this.handleAlertClose(
-                                                          "duplicateError"
-                                                        )}
-                                                      ></button>
-                                                    </Alert>
-                                                  )}
-                                                </div>
-                                                <Row>
-                                                  <Col className="col-3">
-                                                    <Label for="dayId">
-                                                      {this.props.t(
-                                                        "Define Period"
-                                                      )}
-                                                    </Label>
-                                                  </Col>
-                                                  <Col className="col-5">
-                                                    <Select
-                                                      name="dayId"
-                                                      key={`select_dayId`}
-                                                      options={allDaysArray}
-                                                      className={`form-control`}
-                                                      onChange={newValue => {
-                                                        this.handleSelect(
-                                                          "dayId",
-                                                          newValue.value,
+                                              <Row>
+                                                <Col>
+                                                  <div className="text-center">
+                                                    <Link
+                                                      to="#"
+                                                      className="btn btn-primary me-2"
+                                                      onClick={() => {
+                                                        this.handleSubmit(
                                                           values
                                                         );
                                                       }}
-                                                      value={
-                                                        Array.isArray(
-                                                          allDaysArray
-                                                        )
-                                                          ? allDaysArray.find(
-                                                              opt =>
-                                                                opt.value ===
-                                                                values.dayId
-                                                            )
-                                                          : null
-                                                      }
-                                                    />
-                                                  </Col>
-                                                  <Col className="col-4">
-                                                    <div className="text-sm-end">
-                                                      <Tooltip
-                                                        title={this.props.t(
-                                                          "Add"
-                                                        )}
-                                                        placement="top"
-                                                      >
-                                                        <IconButton
-                                                          color="primary"
-                                                          onClick={
-                                                            this
-                                                              .handleAddDefinePeriod
-                                                          }
-                                                        >
-                                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                                        </IconButton>
-                                                      </Tooltip>
-                                                    </div>
-                                                  </Col>
-                                                </Row>
-                                                <BootstrapTable
-                                                  keyField="Id"
-                                                  {...toolkitprops.baseProps}
-                                                  {...paginationTableProps}
-                                                  data={definePeriods}
-                                                  columns={columns2}
-                                                  cellEdit={cellEditFactory({
-                                                    mode: "dbclick",
-                                                    blurToSave: true,
-                                                    afterSaveCell: (
-                                                      oldValue,
-                                                      newValue,
-                                                      row,
-                                                      column
-                                                    ) => {
-                                                      this.handleDefinePeriodDataChange(
-                                                        row.Id,
-                                                        column.dataField,
-                                                        newValue
-                                                      );
-                                                    },
-                                                  })}
-                                                  defaultSorted={defaultSorting}
-                                                />
-                                                {/* <div className="table-responsive">
-                                                <PaginationProvider
-                                                  pagination={paginationFactory(
-                                                    pageOptions
-                                                  )}
-                                                  keyField="Id"
-                                                  columns={columns2}
-                                                  data={defineExamDates}
-                                                >
-                                                  {({
-                                                    paginationProps,
-                                                    paginationTableProps,
-                                                  }) => (
-                                                    <ToolkitProvider
-                                                      keyField="Id"
-                                                      data={defineExamDates}
-                                                      columns={columns2}
-                                                      search
                                                     >
-                                                      {toolkitprops => (
-                                                        <React.Fragment>
-                                                         
-                                                         
-                                                        </React.Fragment>
-                                                      )}
-                                                    </ToolkitProvider>
-                                                  )}
-                                                </PaginationProvider>
-                                              </div> */}
-                                              </CardBody>
-                                            </Card>
+                                                      {t("Save")}
+                                                    </Link>
+                                                  </div>
+                                                </Col>
+                                              </Row>
+                                            </CardBody>
+                                          </Card>
+                                          {(isEdit || isShowPreReq) && (
+                                            <Row>
+                                              <Col lg="12 mt-6">
+                                                <div>
+                                                  <Col lg="12">
+                                                    <Card id="employee-card">
+                                                      <CardTitle id="course_header">
+                                                        {t("Define Period")}
+                                                      </CardTitle>
+                                                      <CardBody className="cardBody">
+                                                        <Row className="mt-10">
+                                                          <div>
+                                                            {duplicateErrorDePer && (
+                                                              <Alert
+                                                                color="danger"
+                                                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                role="alert"
+                                                              >
+                                                                {
+                                                                  duplicateErrorDePer
+                                                                }
+                                                                <button
+                                                                  type="button"
+                                                                  className="btn-close"
+                                                                  aria-label="Close"
+                                                                  onClick={() =>
+                                                                    this.handleAlertClose(
+                                                                      "duplicateErrorDePer"
+                                                                    )
+                                                                  }
+                                                                ></button>
+                                                              </Alert>
+                                                            )}
+                                                          </div>
+                                                          <Row>
+                                                            <Col className="col-3">
+                                                              <Label for="dayId">
+                                                                {this.props.t(
+                                                                  "Define Period"
+                                                                )}
+                                                              </Label>
+                                                            </Col>
+                                                            <Col className="col-5">
+                                                              <Select
+                                                                name="dayId"
+                                                                key={`select_dayId`}
+                                                                options={
+                                                                  allDaysArray
+                                                                }
+                                                                className={`form-control`}
+                                                                onChange={newValue => {
+                                                                  this.handleSelect(
+                                                                    "dayId",
+                                                                    newValue.value,
+                                                                    values
+                                                                  );
+                                                                }}
+                                                                value={
+                                                                  Array.isArray(
+                                                                    allDaysArray
+                                                                  )
+                                                                    ? allDaysArray.find(
+                                                                        opt =>
+                                                                          opt.value ===
+                                                                          values.dayId
+                                                                      )
+                                                                    : null
+                                                                }
+                                                              />
+                                                            </Col>
+                                                            <Col className="col-4">
+                                                              <div className="text-sm-end">
+                                                                <Tooltip
+                                                                  title={this.props.t(
+                                                                    "Add"
+                                                                  )}
+                                                                  placement="top"
+                                                                >
+                                                                  <IconButton
+                                                                    color="primary"
+                                                                    onClick={
+                                                                      this
+                                                                        .handleAddDefinePeriod
+                                                                    }
+                                                                  >
+                                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                                  </IconButton>
+                                                                </Tooltip>
+                                                              </div>
+                                                            </Col>
+                                                          </Row>
+                                                          <BootstrapTable
+                                                            keyField="Id"
+                                                            data={definePeriods}
+                                                            columns={columns2}
+                                                            cellEdit={cellEditFactory(
+                                                              {
+                                                                mode: "dbclick",
+                                                                blurToSave: true,
+                                                                afterSaveCell: (
+                                                                  oldValue,
+                                                                  newValue,
+                                                                  row,
+                                                                  column
+                                                                ) => {
+                                                                  this.handleDefinePeriodDataChange(
+                                                                    row.Id,
+                                                                    column.dataField,
+                                                                    newValue
+                                                                  );
+                                                                },
+                                                              }
+                                                            )}
+                                                            defaultSorted={
+                                                              defaultSorting
+                                                            }
+                                                          />
+                                                          <DeleteModal
+                                                            show={deleteModal1}
+                                                            onDeleteClick={
+                                                              this
+                                                                .handleDeleteRow1
+                                                            }
+                                                            onCloseClick={() =>
+                                                              this.setState({
+                                                                deleteModal1: false,
+                                                                selectedRowId:
+                                                                  null,
+                                                              })
+                                                            }
+                                                          />
+                                                        </Row>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </Col>
+                                                </div>
+                                              </Col>
+                                            </Row>
                                           )}
-                                          <Row>
-                                            <Col>
-                                              <div className="text-center">
-                                                <Link
-                                                  to="#"
-                                                  className="btn btn-primary me-2"
-                                                  onClick={() => {
-                                                    this.handleSubmit(values);
-                                                  }}
-                                                >
-                                                  {t("Save")}
-                                                </Link>
-                                              </div>
-                                            </Col>
-                                          </Row>
                                         </Form>
                                       )}
                                     </Formik>
@@ -1359,7 +1387,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteDefineExamDate(defineExamDate)),
   onGetDefineExamDateDeletedValue: () =>
     dispatch(getDefineExamDateDeletedValue()),
-  onGetDefinePeriods: () => dispatch(getDefinePeriods()),
+  onGetDefinePeriods: defineExamDateId =>
+    dispatch(getDefinePeriods(defineExamDateId)),
   onAddNewDefinePeriod: definePeriod =>
     dispatch(addNewDefinePeriod(definePeriod)),
   onUpdateDefinePeriod: definePeriod =>

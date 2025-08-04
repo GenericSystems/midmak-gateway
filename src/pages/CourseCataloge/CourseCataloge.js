@@ -1660,7 +1660,7 @@ class CourseCatalogeList extends Component {
                                                                                   }
                                                                                   cellEdit={cellEditFactory(
                                                                                     {
-                                                                                      mode: "click",
+                                                                                      mode: "dbclick",
                                                                                       blurToSave: true,
                                                                                       afterSaveCell:
                                                                                         (
