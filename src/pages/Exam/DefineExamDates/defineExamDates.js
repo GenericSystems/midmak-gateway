@@ -23,6 +23,7 @@ import {
   Label,
   Alert,
   Input,
+  Spinner,
 } from "reactstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
@@ -114,13 +115,14 @@ class DefineExamDatesList extends Component {
     const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
       i18n,
+      isLoading,
       defineExamDates,
       onGetDefineExamDates,
       onGetStudentsOrder,
       gradeTypes,
       deleted,
       studentsOrder,
-      definePeriods,
+      examPeriods,
       user_menu,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -131,11 +133,12 @@ class DefineExamDatesList extends Component {
     onGetStudentsOrder();
     this.setState({
       defineExamDates,
-      definePeriods,
+      examPeriods,
       deleted,
       gradeTypes,
       studentsOrder,
       languageState: lang,
+      isLoading,
     });
     i18n.on("languageChanged", this.handleLanguageChange);
   }
@@ -259,7 +262,7 @@ class DefineExamDatesList extends Component {
   handleAddDefinePeriod = () => {
     const {
       onAddNewDefinePeriod,
-      definePeriods,
+      examPeriods,
       lastAddedId,
       last_all_days,
       all_days,
@@ -274,9 +277,9 @@ class DefineExamDatesList extends Component {
     //   : Array.isArray(selectedDay)
     //   ? selectedDay.map(day => day.value)
     //   : "all";
-    console.log("definePeriods", definePeriods);
+    console.log("definePeriods", examPeriods);
 
-    const emptyRowExists = definePeriods.some(
+    const emptyRowExists = examPeriods.some(
       defPer => !defPer.startTime || defPer.startTime === "00:00:00"
     );
 
@@ -290,7 +293,7 @@ class DefineExamDatesList extends Component {
     }
     const newRow = {
       examId: isAdd ? lastAddedId : selecteDefineExamDateId,
-      flag: selectedDay != null ? selectedDay : "all_days",
+      flag: selectedDay != null ? selectedDay : "all",
       startTime: "",
       endTime: "",
     };
@@ -363,7 +366,7 @@ class DefineExamDatesList extends Component {
       if (isEdit) {
         console.log("9999999", defineExamDateInfo);
         onUpdateDefineExamDate(defineExamDateInfo);
-        onGetDefinePeriods(defineExamDateInfo);
+        // onGetDefinePeriods(defineExamDateInfo);
         this.toggle();
       } else if (isAdd) {
         const response = onAddNewDefineExamDate(defineExamDateInfo);
@@ -422,11 +425,18 @@ class DefineExamDatesList extends Component {
 
   handleDefineExamDateClick = arg => {
     console.log("arg", arg);
-    const { definePeriods, onGetDefinePeriods } = this.props;
-
-    const filteredDefinePeriods = definePeriods.filter(
+    const { examPeriods, onGetDefinePeriods } = this.props;
+    // console.log("1", arg.examPeriods);
+    const filteredDefinePeriods = examPeriods.filter(
       defineExamDate => defineExamDate.key != arg.Id
     );
+    // const periodsForGrid = (arg.examPeriods || []).map(period => ({
+    //   Id: period.Id,
+    //   flag: period.flag,
+    //   startTime: this.handleValidTime(period.startTime),
+    //   endTime: this.handleValidTime(period.endTime),
+    // }));
+
     this.setState({
       defineExamDate: arg,
       filteredDefinePeriods: filteredDefinePeriods,
@@ -435,9 +445,17 @@ class DefineExamDatesList extends Component {
       selectedStudentsOrder: arg.studentOrderId,
       // selectedDay: arg.all_days,
       allDaysArray: arg.all_days || [],
+      // examPeriods: arg.examPeriods,
+      // startTime: arg.startTime,
+      // endTime: arg.endTime,
+      // flag: arg.flag,
+      // examPeriodsGridData: periodsForGrid,
       isEdit: true,
     });
     onGetDefinePeriods(arg.Id);
+    // this.setState({
+    //   examPeriodsGridData: periodsForGrid,
+    // });
     this.toggle();
   };
 
@@ -454,6 +472,11 @@ class DefineExamDatesList extends Component {
   handleValidDate = date => {
     const date1 = moment(new Date(date)).format("DD /MM/ Y");
     return date1;
+  };
+
+  handleValidTime = time => {
+    if (!time) return "";
+    return moment(time, "HH:mm:ss.SSSSSS").format("HH:mm:ss");
   };
 
   // handleDefinePeriodDataChange = (rowId, fieldName, fieldValue) => {
@@ -483,11 +506,12 @@ class DefineExamDatesList extends Component {
 
     const {
       defineExamDates,
-      definePeriods,
+      examPeriods,
       studentsOrder,
       gradeTypes,
       t,
       deleted,
+      isLoading,
     } = this.props;
     const {
       languageState,
@@ -513,6 +537,7 @@ class DefineExamDatesList extends Component {
       isShowPreReq,
     } = this.state;
     console.log("allDaysArray", allDaysArray);
+    console.log("examPeriods", examPeriods);
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -607,6 +632,12 @@ class DefineExamDatesList extends Component {
     ];
     const columns2 = [
       { dataField: "Id", text: t("ID"), hidden: true },
+      {
+        dataField: "flag",
+        text: t("Flag"),
+        sort: true,
+        editable: true,
+      },
       {
         dataField: "startTime",
         text: t("Start Time"),
@@ -704,656 +735,665 @@ class DefineExamDatesList extends Component {
                         </Alert>
                       )}
                     </div>
-                    <div className="table-responsive">
-                      <PaginationProvider
-                        pagination={paginationFactory(pageOptions)}
-                        keyField="Id"
-                        columns={columns}
-                        data={defineExamDates}
-                      >
-                        {({ paginationProps, paginationTableProps }) => (
-                          <ToolkitProvider
-                            keyField="Id"
-                            data={defineExamDates}
-                            columns={columns}
-                            search
-                          >
-                            {toolkitprops => (
-                              <React.Fragment>
-                                <Row>
-                                  <Col sm="4">
-                                    <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {/*   {showSearchButton && ( */}
-                                      <div className="position-relative">
-                                        <SearchBar
-                                          {...toolkitprops.searchProps}
-                                          placeholder={t("Search...")}
-                                        />
+                    {isLoading ? (
+                      <div className="d-flex justify-content-center align-items-center m-13">
+                        <Spinner color="info" className="my-4" />
+                      </div>
+                    ) : (
+                      <div className="table-responsive">
+                        <PaginationProvider
+                          pagination={paginationFactory(pageOptions)}
+                          keyField="Id"
+                          columns={columns}
+                          data={defineExamDates}
+                        >
+                          {({ paginationProps, paginationTableProps }) => (
+                            <ToolkitProvider
+                              keyField="Id"
+                              data={defineExamDates}
+                              columns={columns}
+                              search
+                            >
+                              {toolkitprops => (
+                                <React.Fragment>
+                                  <Row>
+                                    <Col sm="4">
+                                      <div className="search-box ms-2 mb-2 d-inline-block">
+                                        {/*   {showSearchButton && ( */}
+                                        <div className="position-relative">
+                                          <SearchBar
+                                            {...toolkitprops.searchProps}
+                                            placeholder={t("Search...")}
+                                          />
+                                        </div>
                                       </div>
-                                    </div>
-                                  </Col>
-                                  {/*    {showAddButton && ( */}
-                                  <Col sm="8">
-                                    <div className="text-sm-end">
-                                      <Tooltip
-                                        title={this.props.t("Add")}
-                                        placement="top"
-                                      >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleAddRow}
+                                    </Col>
+                                    {/*    {showAddButton && ( */}
+                                    <Col sm="8">
+                                      <div className="text-sm-end">
+                                        <Tooltip
+                                          title={this.props.t("Add")}
+                                          placement="top"
                                         >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </div>
-                                  </Col>
-                                </Row>
+                                          <IconButton
+                                            color="primary"
+                                            onClick={this.handleAddRow}
+                                          >
+                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </div>
+                                    </Col>
+                                  </Row>
 
-                                <BootstrapTable
-                                  keyField="Id"
-                                  {...toolkitprops.baseProps}
-                                  {...paginationTableProps}
-                                  data={defineExamDates}
-                                  columns={columns}
-                                  cellEdit={cellEditFactory({
-                                    mode: "click",
-                                    blurToSave: true,
-                                    afterSaveCell: (
-                                      oldValue,
-                                      newValue,
-                                      row,
-                                      column
-                                    ) => {
-                                      row.Id, column.dataField, newValue;
-                                    },
-                                  })}
-                                  noDataIndication={this.props.t(
-                                    "No Exam Dates found"
-                                  )}
-                                  defaultSorted={defaultSorting}
-                                />
-                                <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                  <PaginationListStandalone
-                                    {...paginationProps}
+                                  <BootstrapTable
+                                    keyField="Id"
+                                    {...toolkitprops.baseProps}
+                                    {...paginationTableProps}
+                                    data={defineExamDates}
+                                    columns={columns}
+                                    cellEdit={cellEditFactory({
+                                      mode: "click",
+                                      blurToSave: true,
+                                      afterSaveCell: (
+                                        oldValue,
+                                        newValue,
+                                        row,
+                                        column
+                                      ) => {
+                                        row.Id, column.dataField, newValue;
+                                      },
+                                    })}
+                                    noDataIndication={this.props.t(
+                                      "No Exam Dates found"
+                                    )}
+                                    defaultSorted={defaultSorting}
                                   />
-                                </Col>
-                                <Modal
-                                  isOpen={modal}
-                                  toggle={this.toggle}
-                                  // className={"modal-fullscreen"}
-                                  size="lg"
-                                >
-                                  <ModalHeader toggle={this.toggle} tag="h4">
-                                    {!!isEdit
-                                      ? t("Edit Exam Date")
-                                      : t("Add Exam Date")}
-                                  </ModalHeader>
-                                  <ModalBody>
-                                    <Formik
-                                      enableReinitialize={true}
-                                      initialValues={{
-                                        ...(isEdit &&
-                                          defineExamDate && {
-                                            Id: defineExamDate.Id,
-                                          }),
-                                        arTitle:
-                                          (defineExamDate &&
-                                            defineExamDate.arTitle) ||
-                                          "",
-                                        enTitle:
-                                          (defineExamDate &&
-                                            defineExamDate.enTitle) ||
-                                          "",
-                                        examTypeId:
-                                          (defineExamDate &&
-                                            defineExamDate.jobTitleId) ||
-                                          selectedExamType,
-                                        dayId:
-                                          (defineExamDate &&
-                                            defineExamDate.dayId) ||
-                                          selectedDay,
+                                  <Col className="pagination pagination-rounded justify-content-end mb-2">
+                                    <PaginationListStandalone
+                                      {...paginationProps}
+                                    />
+                                  </Col>
+                                  <Modal
+                                    isOpen={modal}
+                                    toggle={this.toggle}
+                                    // className={"modal-fullscreen"}
+                                    size="lg"
+                                  >
+                                    <ModalHeader toggle={this.toggle} tag="h4">
+                                      {!!isEdit
+                                        ? t("Edit Exam Date")
+                                        : t("Add Exam Date")}
+                                    </ModalHeader>
+                                    <ModalBody>
+                                      <Formik
+                                        enableReinitialize={true}
+                                        initialValues={{
+                                          ...(isEdit &&
+                                            defineExamDate && {
+                                              Id: defineExamDate.Id,
+                                            }),
+                                          arTitle:
+                                            (defineExamDate &&
+                                              defineExamDate.arTitle) ||
+                                            "",
+                                          enTitle:
+                                            (defineExamDate &&
+                                              defineExamDate.enTitle) ||
+                                            "",
+                                          examTypeId:
+                                            (defineExamDate &&
+                                              defineExamDate.jobTitleId) ||
+                                            selectedExamType,
+                                          dayId:
+                                            (defineExamDate &&
+                                              defineExamDate.dayId) ||
+                                            selectedDay,
 
-                                        startDate: defineExamDate?.startDate
-                                          ? moment
-                                              .utc(defineExamDate.startDate)
-                                              .local()
-                                              .format("YYYY-MM-DD")
-                                          : "",
+                                          startDate: defineExamDate?.startDate
+                                            ? moment
+                                                .utc(defineExamDate.startDate)
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
 
-                                        endDate: defineExamDate?.endDate
-                                          ? moment
-                                              .utc(defineExamDate.endDate)
-                                              .local()
-                                              .format("YYYY-MM-DD")
-                                          : "",
-                                        studentOrderId:
-                                          (defineExamDate &&
-                                            defineExamDate.studentOrderId) ||
-                                          "",
-                                        // startTime:
-                                        //   (defineExamDate &&
-                                        //     defineExamDate.startTime) ||
-                                        //   "",
-                                        // endTime:
-                                        //   (defineExamDate &&
-                                        //     defineExamDate.endTime) ||
-                                        //   "",
-                                      }}
-                                      validationSchema={Yup.object().shape({
-                                        arTitle: Yup.string()
-                                          .matches(
-                                            /^[أ-ي]+$/,
-                                            "Only Arabic letters are allowed"
-                                          )
-                                          .required(
-                                            "Please Enter Your Exam Name In Arabic"
+                                          endDate: defineExamDate?.endDate
+                                            ? moment
+                                                .utc(defineExamDate.endDate)
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+                                          studentOrderId:
+                                            (defineExamDate &&
+                                              defineExamDate.studentOrderId) ||
+                                            "",
+                                          // startTime:
+                                          //   (defineExamDate &&
+                                          //     defineExamDate.startTime) ||
+                                          //   "",
+                                          // endTime:
+                                          //   (defineExamDate &&
+                                          //     defineExamDate.endTime) ||
+                                          //   "",
+                                        }}
+                                        validationSchema={Yup.object().shape({
+                                          arTitle: Yup.string()
+                                            .matches(
+                                              /^[أ-ي]+$/,
+                                              "Only Arabic letters are allowed"
+                                            )
+                                            .required(
+                                              "Please Enter Your Exam Name In Arabic"
+                                            ),
+                                          enTitle: Yup.string()
+                                            .matches(
+                                              /^[A-Za-z]+$/,
+                                              "Only English letters are allowed"
+                                            )
+                                            .required(
+                                              "Please Enter Exam Name In English"
+                                            ),
+                                          startDate: Yup.date().required(
+                                            "Please Enter Your Start Date"
                                           ),
-                                        enTitle: Yup.string()
-                                          .matches(
-                                            /^[A-Za-z]+$/,
-                                            "Only English letters are allowed"
-                                          )
-                                          .required(
-                                            "Please Enter Exam Name In English"
-                                          ),
-                                        startDate: Yup.date().required(
-                                          "Please Enter Your Start Date"
-                                        ),
-                                        endDate: Yup.date()
-                                          .required(
-                                            "Please Enter Your End Date"
-                                          )
-                                          .min(
-                                            Yup.ref("startDate"),
-                                            "End date must be after start date"
-                                          ),
-                                      })}
-                                    >
-                                      {({
-                                        errors,
-                                        status,
-                                        touched,
-                                        values,
-                                        handleChange,
-                                        handleBlur,
-                                        setFieldValue,
-                                      }) => (
-                                        <Form>
-                                          <Card id="employee-card">
-                                            <CardTitle id="course_header">
-                                              {t("Add Exam Name")}
-                                            </CardTitle>
-                                            <CardBody className="cardBody">
-                                              {emptyError && (
-                                                <Alert
-                                                  color="danger"
-                                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                  role="alert"
-                                                >
-                                                  {emptyError}
-                                                  <button
-                                                    type="button"
-                                                    className="btn-close"
-                                                    aria-label="Close"
-                                                    onClick={this.handleAlertClose(
-                                                      "emptyError"
-                                                    )}
-                                                  ></button>
-                                                </Alert>
-                                              )}
+                                          endDate: Yup.date()
+                                            .required(
+                                              "Please Enter Your End Date"
+                                            )
+                                            .min(
+                                              Yup.ref("startDate"),
+                                              "End date must be after start date"
+                                            ),
+                                        })}
+                                      >
+                                        {({
+                                          errors,
+                                          status,
+                                          touched,
+                                          values,
+                                          handleChange,
+                                          handleBlur,
+                                          setFieldValue,
+                                        }) => (
+                                          <Form>
+                                            <Card id="employee-card">
+                                              <CardTitle id="course_header">
+                                                {t("Add Exam Name")}
+                                              </CardTitle>
+                                              <CardBody className="cardBody">
+                                                {emptyError && (
+                                                  <Alert
+                                                    color="danger"
+                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                    role="alert"
+                                                  >
+                                                    {emptyError}
+                                                    <button
+                                                      type="button"
+                                                      className="btn-close"
+                                                      aria-label="Close"
+                                                      onClick={this.handleAlertClose(
+                                                        "emptyError"
+                                                      )}
+                                                    ></button>
+                                                  </Alert>
+                                                )}
+                                                <Row>
+                                                  <Col lg="12">
+                                                    <div className="bordered">
+                                                      <Col lg="12">
+                                                        <Row>
+                                                          <Col lg="12">
+                                                            <div className="mb-3">
+                                                              <Row>
+                                                                <Col className="col-4">
+                                                                  <Label for="arTitle">
+                                                                    {this.props.t(
+                                                                      "Exam (ar)"
+                                                                    )}
+                                                                  </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
+                                                                </Col>
+                                                                <Col className="col-8">
+                                                                  <Field
+                                                                    name="arTitle"
+                                                                    type="text"
+                                                                    id="arTitle"
+                                                                    className={`form-control ${
+                                                                      errors.arTitle &&
+                                                                      touched.arTitle
+                                                                        ? "is-invalid"
+                                                                        : ""
+                                                                    }`}
+                                                                  />
+                                                                  <ErrorMessage
+                                                                    name="arTitle"
+                                                                    component="div"
+                                                                    className="invalid-feedback"
+                                                                  />
+                                                                </Col>
+                                                              </Row>
+                                                            </div>
+                                                            <div className="mb-3">
+                                                              <Row>
+                                                                <Col className="col-4">
+                                                                  <Label for="enTitle">
+                                                                    {this.props.t(
+                                                                      "Exam (en)"
+                                                                    )}
+                                                                  </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
+                                                                </Col>
+                                                                <Col className="col-8">
+                                                                  <Field
+                                                                    name="enTitle"
+                                                                    type="text"
+                                                                    id="enTitle"
+                                                                    className={`form-control ${
+                                                                      errors.enTitle &&
+                                                                      touched.enTitle
+                                                                        ? "is-invalid"
+                                                                        : ""
+                                                                    }`}
+                                                                  />
+                                                                  <ErrorMessage
+                                                                    name="enTitle"
+                                                                    component="div"
+                                                                    className="invalid-feedback"
+                                                                  />
+                                                                </Col>
+                                                              </Row>
+                                                            </div>
+                                                            <div className="mb-3">
+                                                              <Row>
+                                                                <Col className="col-4">
+                                                                  <Label for="startDate">
+                                                                    {this.props.t(
+                                                                      "Start Date"
+                                                                    )}
+                                                                  </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
+                                                                </Col>
+                                                                <Col className="col-8">
+                                                                  <Field
+                                                                    name="startDate"
+                                                                    className={`form-control ${
+                                                                      errors.startDate &&
+                                                                      touched.startDate
+                                                                        ? "is-invalid"
+                                                                        : ""
+                                                                    }`}
+                                                                    type="date"
+                                                                    value={
+                                                                      values.startDate
+                                                                        ? new Date(
+                                                                            values.startDate
+                                                                          )
+                                                                            .toISOString()
+                                                                            .split(
+                                                                              "T"
+                                                                            )[0]
+                                                                        : ""
+                                                                    }
+                                                                    onChange={
+                                                                      handleChange
+                                                                    }
+                                                                    onBlur={
+                                                                      handleBlur
+                                                                    }
+                                                                    id="startDate-date-input"
+                                                                  />
+                                                                  <ErrorMessage
+                                                                    name="startDate"
+                                                                    component="div"
+                                                                    className="invalid-feedback"
+                                                                  />
+                                                                </Col>
+                                                              </Row>
+                                                            </div>
+                                                            <div className="mb-3">
+                                                              <Row>
+                                                                <Col className="col-4">
+                                                                  <Label for="endDate">
+                                                                    {this.props.t(
+                                                                      "End Date"
+                                                                    )}
+                                                                  </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
+                                                                </Col>
+                                                                <Col className="col-8">
+                                                                  <Field
+                                                                    className={`form-control ${
+                                                                      errors.endDate &&
+                                                                      touched.endDate
+                                                                        ? "is-invalid"
+                                                                        : ""
+                                                                    }`}
+                                                                    name="endDate"
+                                                                    type="date"
+                                                                    value={
+                                                                      values.endDate
+                                                                        ? new Date(
+                                                                            values.endDate
+                                                                          )
+                                                                            .toISOString()
+                                                                            .split(
+                                                                              "T"
+                                                                            )[0]
+                                                                        : ""
+                                                                    }
+                                                                    onChange={
+                                                                      handleChange
+                                                                    }
+                                                                    onBlur={
+                                                                      handleBlur
+                                                                    }
+                                                                    id="endDate-date-input"
+                                                                  />
+                                                                  <ErrorMessage
+                                                                    name="endDate"
+                                                                    component="div"
+                                                                    className="invalid-feedback"
+                                                                  />
+                                                                </Col>
+                                                              </Row>
+                                                            </div>
+                                                            <div className="mb-3">
+                                                              <Row>
+                                                                <Col className="col-4">
+                                                                  <Label for="examTypeId">
+                                                                    {this.props.t(
+                                                                      "Exam Type"
+                                                                    )}
+                                                                  </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
+                                                                </Col>
+                                                                <Col className="col-8">
+                                                                  <Select
+                                                                    name="examTypeId"
+                                                                    options={
+                                                                      examTypesOpt
+                                                                    }
+                                                                    className={`form-control`}
+                                                                    onChange={newValue => {
+                                                                      this.handleSelect(
+                                                                        "examTypeId",
+                                                                        newValue.value,
+                                                                        values
+                                                                      );
+                                                                    }}
+                                                                    defaultValue={examTypesOpt.find(
+                                                                      opt =>
+                                                                        opt.value ===
+                                                                        defineExamDate?.examTypeId
+                                                                    )}
+                                                                  />
+                                                                </Col>
+                                                              </Row>
+                                                            </div>
+                                                            <Row>
+                                                              <Col lg="4">
+                                                                <Label
+                                                                  for="studentOrder-Id"
+                                                                  className="form-label d-flex"
+                                                                >
+                                                                  {this.props.t(
+                                                                    "Students Order"
+                                                                  )}
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
+                                                                </Label>
+                                                              </Col>
+                                                              <Col lg="8">
+                                                                <div className="d-flex flex-wrap gap-3">
+                                                                  <div
+                                                                    className="btn-group button-or"
+                                                                    role="group"
+                                                                  >
+                                                                    {studentsOrder.map(
+                                                                      (
+                                                                        status,
+                                                                        index
+                                                                      ) => (
+                                                                        <React.Fragment
+                                                                          key={
+                                                                            index
+                                                                          }
+                                                                        >
+                                                                          <input
+                                                                            type="radio"
+                                                                            className={`btn-check button-or ${
+                                                                              selectedStudentsOrder ===
+                                                                              status.value
+                                                                                ? "active"
+                                                                                : ""
+                                                                            }`}
+                                                                            name="studentOrderId"
+                                                                            id={`btnradio${index}`}
+                                                                            autoComplete="off"
+                                                                            checked={
+                                                                              selectedStudentsOrder ===
+                                                                              status.value
+                                                                            }
+                                                                            onChange={() => {
+                                                                              setFieldValue(
+                                                                                "studentOrderId",
+                                                                                status.value
+                                                                              );
+
+                                                                              this.setState(
+                                                                                {
+                                                                                  selectedStudentsOrder:
+                                                                                    status.value,
+                                                                                }
+                                                                              );
+                                                                            }}
+                                                                          />
+                                                                          <Label
+                                                                            className="btn btn-outline-primary smallButton w-sm"
+                                                                            for={`btnradio${index}`}
+                                                                          >
+                                                                            {
+                                                                              status.label
+                                                                            }
+                                                                          </Label>
+                                                                        </React.Fragment>
+                                                                      )
+                                                                    )}
+                                                                  </div>
+                                                                </div>
+                                                              </Col>
+                                                            </Row>
+                                                          </Col>
+                                                        </Row>
+                                                      </Col>
+                                                    </div>
+                                                  </Col>
+                                                </Row>
+                                                <Row>
+                                                  <Col>
+                                                    <div className="text-center">
+                                                      <Link
+                                                        to="#"
+                                                        className="btn btn-primary me-2"
+                                                        onClick={() => {
+                                                          this.handleSubmit(
+                                                            values
+                                                          );
+                                                        }}
+                                                      >
+                                                        {t("Save")}
+                                                      </Link>
+                                                    </div>
+                                                  </Col>
+                                                </Row>
+                                              </CardBody>
+                                            </Card>
+                                            {(isEdit || isShowPreReq) && (
                                               <Row>
-                                                <Col lg="12">
-                                                  <div className="bordered">
+                                                <Col lg="12 mt-6">
+                                                  <div>
                                                     <Col lg="12">
-                                                      <Row>
-                                                        <Col lg="12">
-                                                          <div className="mb-3">
+                                                      <Card id="employee-card">
+                                                        <CardTitle id="course_header">
+                                                          {t("Define Period")}
+                                                        </CardTitle>
+                                                        <CardBody className="cardBody">
+                                                          <Row className="mt-10">
+                                                            <div>
+                                                              {duplicateErrorDePer && (
+                                                                <Alert
+                                                                  color="danger"
+                                                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                  role="alert"
+                                                                >
+                                                                  {
+                                                                    duplicateErrorDePer
+                                                                  }
+                                                                  <button
+                                                                    type="button"
+                                                                    className="btn-close"
+                                                                    aria-label="Close"
+                                                                    onClick={() =>
+                                                                      this.handleAlertClose(
+                                                                        "duplicateErrorDePer"
+                                                                      )
+                                                                    }
+                                                                  ></button>
+                                                                </Alert>
+                                                              )}
+                                                            </div>
                                                             <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="arTitle">
+                                                              <Col className="col-3">
+                                                                <Label for="dayId">
                                                                   {this.props.t(
-                                                                    "Exam (ar)"
+                                                                    "Define Period"
                                                                   )}
                                                                 </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
                                                               </Col>
-                                                              <Col className="col-8">
-                                                                <Field
-                                                                  name="arTitle"
-                                                                  type="text"
-                                                                  id="arTitle"
-                                                                  className={`form-control ${
-                                                                    errors.arTitle &&
-                                                                    touched.arTitle
-                                                                      ? "is-invalid"
-                                                                      : ""
-                                                                  }`}
-                                                                />
-                                                                <ErrorMessage
-                                                                  name="arTitle"
-                                                                  component="div"
-                                                                  className="invalid-feedback"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="enTitle">
-                                                                  {this.props.t(
-                                                                    "Exam (en)"
-                                                                  )}
-                                                                </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
-                                                              </Col>
-                                                              <Col className="col-8">
-                                                                <Field
-                                                                  name="enTitle"
-                                                                  type="text"
-                                                                  id="enTitle"
-                                                                  className={`form-control ${
-                                                                    errors.enTitle &&
-                                                                    touched.enTitle
-                                                                      ? "is-invalid"
-                                                                      : ""
-                                                                  }`}
-                                                                />
-                                                                <ErrorMessage
-                                                                  name="enTitle"
-                                                                  component="div"
-                                                                  className="invalid-feedback"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="startDate">
-                                                                  {this.props.t(
-                                                                    "Start Date"
-                                                                  )}
-                                                                </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
-                                                              </Col>
-                                                              <Col className="col-8">
-                                                                <Field
-                                                                  name="startDate"
-                                                                  className={`form-control ${
-                                                                    errors.startDate &&
-                                                                    touched.startDate
-                                                                      ? "is-invalid"
-                                                                      : ""
-                                                                  }`}
-                                                                  type="date"
-                                                                  value={
-                                                                    values.startDate
-                                                                      ? new Date(
-                                                                          values.startDate
-                                                                        )
-                                                                          .toISOString()
-                                                                          .split(
-                                                                            "T"
-                                                                          )[0]
-                                                                      : ""
-                                                                  }
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  onBlur={
-                                                                    handleBlur
-                                                                  }
-                                                                  id="startDate-date-input"
-                                                                />
-                                                                <ErrorMessage
-                                                                  name="startDate"
-                                                                  component="div"
-                                                                  className="invalid-feedback"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="endDate">
-                                                                  {this.props.t(
-                                                                    "End Date"
-                                                                  )}
-                                                                </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
-                                                              </Col>
-                                                              <Col className="col-8">
-                                                                <Field
-                                                                  className={`form-control ${
-                                                                    errors.endDate &&
-                                                                    touched.endDate
-                                                                      ? "is-invalid"
-                                                                      : ""
-                                                                  }`}
-                                                                  name="endDate"
-                                                                  type="date"
-                                                                  value={
-                                                                    values.endDate
-                                                                      ? new Date(
-                                                                          values.endDate
-                                                                        )
-                                                                          .toISOString()
-                                                                          .split(
-                                                                            "T"
-                                                                          )[0]
-                                                                      : ""
-                                                                  }
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  onBlur={
-                                                                    handleBlur
-                                                                  }
-                                                                  id="endDate-date-input"
-                                                                />
-                                                                <ErrorMessage
-                                                                  name="endDate"
-                                                                  component="div"
-                                                                  className="invalid-feedback"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="examTypeId">
-                                                                  {this.props.t(
-                                                                    "Exam Type"
-                                                                  )}
-                                                                </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
-                                                              </Col>
-                                                              <Col className="col-8">
+                                                              <Col className="col-5">
                                                                 <Select
-                                                                  name="examTypeId"
+                                                                  name="dayId"
+                                                                  key={`select_dayId`}
                                                                   options={
-                                                                    examTypesOpt
+                                                                    allDaysArray
                                                                   }
                                                                   className={`form-control`}
                                                                   onChange={newValue => {
                                                                     this.handleSelect(
-                                                                      "examTypeId",
+                                                                      "dayId",
                                                                       newValue.value,
                                                                       values
                                                                     );
                                                                   }}
-                                                                  defaultValue={examTypesOpt.find(
-                                                                    opt =>
-                                                                      opt.value ===
-                                                                      defineExamDate?.examTypeId
-                                                                  )}
+                                                                  value={
+                                                                    Array.isArray(
+                                                                      allDaysArray
+                                                                    )
+                                                                      ? allDaysArray.find(
+                                                                          opt =>
+                                                                            opt.value ===
+                                                                            values.dayId
+                                                                        )
+                                                                      : null
+                                                                  }
                                                                 />
                                                               </Col>
-                                                            </Row>
-                                                          </div>
-                                                          <Row>
-                                                            <Col lg="4">
-                                                              <Label
-                                                                for="studentOrder-Id"
-                                                                className="form-label d-flex"
-                                                              >
-                                                                {this.props.t(
-                                                                  "Students Order"
-                                                                )}
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
-                                                              </Label>
-                                                            </Col>
-                                                            <Col lg="8">
-                                                              <div className="d-flex flex-wrap gap-3">
-                                                                <div
-                                                                  className="btn-group button-or"
-                                                                  role="group"
-                                                                >
-                                                                  {studentsOrder.map(
-                                                                    (
-                                                                      status,
-                                                                      index
-                                                                    ) => (
-                                                                      <React.Fragment
-                                                                        key={
-                                                                          index
-                                                                        }
-                                                                      >
-                                                                        <input
-                                                                          type="radio"
-                                                                          className={`btn-check button-or ${
-                                                                            selectedStudentsOrder ===
-                                                                            status.value
-                                                                              ? "active"
-                                                                              : ""
-                                                                          }`}
-                                                                          name="studentOrderId"
-                                                                          id={`btnradio${index}`}
-                                                                          autoComplete="off"
-                                                                          checked={
-                                                                            selectedStudentsOrder ===
-                                                                            status.value
-                                                                          }
-                                                                          onChange={() => {
-                                                                            setFieldValue(
-                                                                              "studentOrderId",
-                                                                              status.value
-                                                                            );
-
-                                                                            this.setState(
-                                                                              {
-                                                                                selectedStudentsOrder:
-                                                                                  status.value,
-                                                                              }
-                                                                            );
-                                                                          }}
-                                                                        />
-                                                                        <Label
-                                                                          className="btn btn-outline-primary smallButton w-sm"
-                                                                          for={`btnradio${index}`}
-                                                                        >
-                                                                          {
-                                                                            status.label
-                                                                          }
-                                                                        </Label>
-                                                                      </React.Fragment>
-                                                                    )
-                                                                  )}
+                                                              <Col className="col-4">
+                                                                <div className="text-sm-end">
+                                                                  <Tooltip
+                                                                    title={this.props.t(
+                                                                      "Add"
+                                                                    )}
+                                                                    placement="top"
+                                                                  >
+                                                                    <IconButton
+                                                                      color="primary"
+                                                                      onClick={
+                                                                        this
+                                                                          .handleAddDefinePeriod
+                                                                      }
+                                                                    >
+                                                                      <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                                    </IconButton>
+                                                                  </Tooltip>
                                                                 </div>
-                                                              </div>
-                                                            </Col>
+                                                              </Col>
+                                                            </Row>
+                                                            <BootstrapTable
+                                                              keyField="Id"
+                                                              data={examPeriods}
+                                                              columns={columns2}
+                                                              cellEdit={cellEditFactory(
+                                                                {
+                                                                  mode: "dbclick",
+                                                                  blurToSave: true,
+                                                                  afterSaveCell:
+                                                                    (
+                                                                      oldValue,
+                                                                      newValue,
+                                                                      row,
+                                                                      column
+                                                                    ) => {
+                                                                      this.handleDefinePeriodDataChange(
+                                                                        row.Id,
+                                                                        column.dataField,
+                                                                        newValue
+                                                                      );
+                                                                    },
+                                                                }
+                                                              )}
+                                                              defaultSorted={
+                                                                defaultSorting
+                                                              }
+                                                            />
+                                                            <DeleteModal
+                                                              show={
+                                                                deleteModal1
+                                                              }
+                                                              onDeleteClick={
+                                                                this
+                                                                  .handleDeleteRow1
+                                                              }
+                                                              onCloseClick={() =>
+                                                                this.setState({
+                                                                  deleteModal1: false,
+                                                                  selectedRowId:
+                                                                    null,
+                                                                })
+                                                              }
+                                                            />
                                                           </Row>
-                                                        </Col>
-                                                      </Row>
+                                                        </CardBody>
+                                                      </Card>
                                                     </Col>
                                                   </div>
                                                 </Col>
                                               </Row>
-                                              <Row>
-                                                <Col>
-                                                  <div className="text-center">
-                                                    <Link
-                                                      to="#"
-                                                      className="btn btn-primary me-2"
-                                                      onClick={() => {
-                                                        this.handleSubmit(
-                                                          values
-                                                        );
-                                                      }}
-                                                    >
-                                                      {t("Save")}
-                                                    </Link>
-                                                  </div>
-                                                </Col>
-                                              </Row>
-                                            </CardBody>
-                                          </Card>
-                                          {(isEdit || isShowPreReq) && (
-                                            <Row>
-                                              <Col lg="12 mt-6">
-                                                <div>
-                                                  <Col lg="12">
-                                                    <Card id="employee-card">
-                                                      <CardTitle id="course_header">
-                                                        {t("Define Period")}
-                                                      </CardTitle>
-                                                      <CardBody className="cardBody">
-                                                        <Row className="mt-10">
-                                                          <div>
-                                                            {duplicateErrorDePer && (
-                                                              <Alert
-                                                                color="danger"
-                                                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                                role="alert"
-                                                              >
-                                                                {
-                                                                  duplicateErrorDePer
-                                                                }
-                                                                <button
-                                                                  type="button"
-                                                                  className="btn-close"
-                                                                  aria-label="Close"
-                                                                  onClick={() =>
-                                                                    this.handleAlertClose(
-                                                                      "duplicateErrorDePer"
-                                                                    )
-                                                                  }
-                                                                ></button>
-                                                              </Alert>
-                                                            )}
-                                                          </div>
-                                                          <Row>
-                                                            <Col className="col-3">
-                                                              <Label for="dayId">
-                                                                {this.props.t(
-                                                                  "Define Period"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-5">
-                                                              <Select
-                                                                name="dayId"
-                                                                key={`select_dayId`}
-                                                                options={
-                                                                  allDaysArray
-                                                                }
-                                                                className={`form-control`}
-                                                                onChange={newValue => {
-                                                                  this.handleSelect(
-                                                                    "dayId",
-                                                                    newValue.value,
-                                                                    values
-                                                                  );
-                                                                }}
-                                                                value={
-                                                                  Array.isArray(
-                                                                    allDaysArray
-                                                                  )
-                                                                    ? allDaysArray.find(
-                                                                        opt =>
-                                                                          opt.value ===
-                                                                          values.dayId
-                                                                      )
-                                                                    : null
-                                                                }
-                                                              />
-                                                            </Col>
-                                                            <Col className="col-4">
-                                                              <div className="text-sm-end">
-                                                                <Tooltip
-                                                                  title={this.props.t(
-                                                                    "Add"
-                                                                  )}
-                                                                  placement="top"
-                                                                >
-                                                                  <IconButton
-                                                                    color="primary"
-                                                                    onClick={
-                                                                      this
-                                                                        .handleAddDefinePeriod
-                                                                    }
-                                                                  >
-                                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                                                  </IconButton>
-                                                                </Tooltip>
-                                                              </div>
-                                                            </Col>
-                                                          </Row>
-                                                          <BootstrapTable
-                                                            keyField="Id"
-                                                            data={definePeriods}
-                                                            columns={columns2}
-                                                            cellEdit={cellEditFactory(
-                                                              {
-                                                                mode: "dbclick",
-                                                                blurToSave: true,
-                                                                afterSaveCell: (
-                                                                  oldValue,
-                                                                  newValue,
-                                                                  row,
-                                                                  column
-                                                                ) => {
-                                                                  this.handleDefinePeriodDataChange(
-                                                                    row.Id,
-                                                                    column.dataField,
-                                                                    newValue
-                                                                  );
-                                                                },
-                                                              }
-                                                            )}
-                                                            defaultSorted={
-                                                              defaultSorting
-                                                            }
-                                                          />
-                                                          <DeleteModal
-                                                            show={deleteModal1}
-                                                            onDeleteClick={
-                                                              this
-                                                                .handleDeleteRow1
-                                                            }
-                                                            onCloseClick={() =>
-                                                              this.setState({
-                                                                deleteModal1: false,
-                                                                selectedRowId:
-                                                                  null,
-                                                              })
-                                                            }
-                                                          />
-                                                        </Row>
-                                                      </CardBody>
-                                                    </Card>
-                                                  </Col>
-                                                </div>
-                                              </Col>
-                                            </Row>
-                                          )}
-                                        </Form>
-                                      )}
-                                    </Formik>
-                                  </ModalBody>
-                                </Modal>
-                              </React.Fragment>
-                            )}
-                          </ToolkitProvider>
-                        )}
-                      </PaginationProvider>
-                    </div>
+                                            )}
+                                          </Form>
+                                        )}
+                                      </Formik>
+                                    </ModalBody>
+                                  </Modal>
+                                </React.Fragment>
+                              )}
+                            </ToolkitProvider>
+                          )}
+                        </PaginationProvider>
+                      </div>
+                    )}
                   </CardBody>
                 </Card>
               </Col>
@@ -1368,8 +1408,9 @@ class DefineExamDatesList extends Component {
 const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
   defineExamDates: defineExamDates.defineExamDates,
   studentsOrder: defineExamDates.studentsOrder,
-  definePeriods: defineExamDates.definePeriods,
+  examPeriods: defineExamDates.examPeriods,
   lastAddedId: defineExamDates.lastAddedId,
+  isLoading: defineExamDates.isLoading,
   last_all_days: defineExamDates.last_all_days,
   deleted: defineExamDates.deleted,
   gradeTypes: gradeTypes.gradeTypes,

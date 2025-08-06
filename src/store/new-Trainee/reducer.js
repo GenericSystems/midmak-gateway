@@ -15,6 +15,16 @@ import {
   GET_REGISTER_CERTIFICATES_FAIL,
   GET_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
   GET_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
+  GET_PROFESSIONAL_EXPERIENCES_SUCCESS,
+  GET_PROFESSIONAL_EXPERIENCES_FAIL,
+  ADD_PROFESSIONAL_EXPERIENCE_SUCCESS,
+  ADD_PROFESSIONAL_EXPERIENCE_FAIL,
+  UPDATE_PROFESSIONAL_EXPERIENCE_SUCCESS,
+  UPDATE_PROFESSIONAL_EXPERIENCE_FAIL,
+  DELETE_PROFESSIONAL_EXPERIENCE_SUCCESS,
+  DELETE_PROFESSIONAL_EXPERIENCE_FAIL,
+  GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE_SUCCESS,
+  GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -24,6 +34,7 @@ const INIT_STATE = {
   traineesDocuments: [],
   tempRelatives: [],
   regcertificates: [],
+  trnProfExperiences: [],
   isLoading: false,
 };
 
@@ -121,6 +132,74 @@ const trainees = (state = INIT_STATE, action) => {
         regcertificates: action.payload,
       };
     case GET_REGISTER_CERTIFICATES_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_PROFESSIONAL_EXPERIENCES_SUCCESS:
+      return {
+        ...state,
+        trnProfExperiences: action.payload,
+      };
+
+    case GET_PROFESSIONAL_EXPERIENCES_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case ADD_PROFESSIONAL_EXPERIENCE_SUCCESS:
+      return {
+        ...state,
+        trnProfExperiences: [...state.trnProfExperiences, action.payload],
+      };
+
+    case ADD_PROFESSIONAL_EXPERIENCE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE_SUCCESS:
+      return {
+        ...state,
+        deleted: action.payload,
+      };
+
+    case UPDATE_PROFESSIONAL_EXPERIENCE_SUCCESS:
+      return {
+        ...state,
+        trnProfExperiences: state.trnProfExperiences.map(trnProfExperience =>
+          trnProfExperience.Id.toString() === action.payload.Id.toString()
+            ? { trnProfExperience, ...action.payload }
+            : trnProfExperience
+        ),
+      };
+
+    case UPDATE_PROFESSIONAL_EXPERIENCE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case DELETE_PROFESSIONAL_EXPERIENCE_SUCCESS:
+      return {
+        ...state,
+        trnProfExperiences: state.trnProfExperiences.filter(
+          trnProfExperience =>
+            trnProfExperience.Id.toString() !== action.payload.Id.toString()
+        ),
+        deleted: action.payload.deleted,
+      };
+
+    case DELETE_PROFESSIONAL_EXPERIENCE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE_FAIL:
       return {
         ...state,
         error: action.payload,

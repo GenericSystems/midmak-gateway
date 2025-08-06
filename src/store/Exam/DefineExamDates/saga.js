@@ -143,6 +143,7 @@ function* onAddNewDefineExamDate({ payload }) {
 }
 
 function* onDeleteDefineExamDate({ payload, contract }) {
+  console.log("payloaddelete", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
@@ -218,6 +219,7 @@ function* onAddNewDefinePeriod({ payload }) {
 }
 
 function* onDeleteDefinePeriod({ payload }) {
+  console.log("payloaddelete", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";

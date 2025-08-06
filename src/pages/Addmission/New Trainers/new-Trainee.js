@@ -733,7 +733,7 @@ class NewTrainee extends Component {
     );
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateErrorRelative: errorMessage });
+      this.setState({ duplicateErrorProfessionalexperiences: errorMessage });
     } else {
       const newRelative = {
         Id: lastUsedId,
@@ -1042,6 +1042,36 @@ class NewTrainee extends Component {
     console.log("selectedMulti", selectedMulti);
   };
 
+  handleAddRowProfessionalexperiences = () => {
+    const { relativesArray, lastUsedId } = this.state;
+    const emptyRowsExist = relativesArray.some(
+      relative => relative.arName.trim() === ""
+    );
+    if (emptyRowsExist) {
+      const errorMessage = this.props.t("Fill in the empty row");
+      this.setState({ duplicateErrorProfessionalexperiences: errorMessage });
+    } else {
+      const newRelative = {
+        Id: lastUsedId,
+        arName: "",
+        enName: "",
+        relativeId: null,
+        nationalityId: null,
+        phone: "",
+        cellular: "",
+      };
+      this.setState({
+        relativesArray: [...relativesArray, newRelative],
+        lastUsedId: lastUsedId + 1,
+      });
+      this.setState({ duplicateErrorProfessionalexperiences: null });
+    }
+  };
+
+  handleAlertCloseProfessionalexperiences = () => {
+    this.setState({ duplicateErrorProfessionalexperiences: null });
+  };
+
   render() {
     //meta title
     document.title =
@@ -1054,6 +1084,7 @@ class NewTrainee extends Component {
       duplicateErrorRelative,
       diplomaIdError,
       studentListColumns,
+      duplicateErrorProfessionalexperiences,
       selectedRegistrationDate,
       selectedregistrationCertLevelId,
       selectedStudyPattern,
@@ -4368,6 +4399,48 @@ class NewTrainee extends Component {
                                                     <Card>
                                                       <CardBody>
                                                         <div className="table-responsive">
+                                                          {duplicateErrorProfessionalexperiences && (
+                                                            <Alert
+                                                              color="danger"
+                                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                              role="alert"
+                                                            >
+                                                              {
+                                                                duplicateErrorProfessionalexperiences
+                                                              }
+                                                              <button
+                                                                type="button"
+                                                                className="btn-close"
+                                                                aria-label="Close"
+                                                                onClick={
+                                                                  this
+                                                                    .handleAlertCloseProfessionalexperiences
+                                                                }
+                                                              ></button>
+                                                            </Alert>
+                                                          )}
+                                                          <Row>
+                                                            <Col>
+                                                              <div className="text-sm-end">
+                                                                <Tooltip
+                                                                  title={this.props.t(
+                                                                    "Add"
+                                                                  )}
+                                                                  placement="top"
+                                                                >
+                                                                  <IconButton
+                                                                    color="primary"
+                                                                    onClick={
+                                                                      this
+                                                                        .handleAddRowProfessionalexperiences
+                                                                    }
+                                                                  >
+                                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                                  </IconButton>
+                                                                </Tooltip>
+                                                              </div>
+                                                            </Col>
+                                                          </Row>
                                                           <BootstrapTable
                                                             keyField="Id"
                                                             data={
@@ -4962,6 +5035,7 @@ const mapStateToProps = ({
   universityStudents: universityStudents.universityStudents,
   regcertificates: trainees.regcertificates,
   highstudytypes: highstudytypes.highstudytypes,
+  trnProfExperience: trainees.trnProfExperience,
   estimates: estimates.estimates,
 });
 
