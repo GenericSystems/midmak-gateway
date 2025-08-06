@@ -62,7 +62,6 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-import defineExamDates from "store/Exam/DefineExamDates/reducer";
 class DefineExamDatesList extends Component {
   constructor(props) {
     super(props);
@@ -430,12 +429,12 @@ class DefineExamDatesList extends Component {
     const filteredDefinePeriods = examPeriods.filter(
       defineExamDate => defineExamDate.key != arg.Id
     );
-    // const periodsForGrid = (arg.examPeriods || []).map(period => ({
-    //   Id: period.Id,
-    //   flag: period.flag,
-    //   startTime: this.handleValidTime(period.startTime),
-    //   endTime: this.handleValidTime(period.endTime),
-    // }));
+    const periodsForGrid = (arg.examPeriods || []).map(period => ({
+      Id: period.Id,
+      flag: period.flag,
+      startTime: this.handleValidTime(period.startTime),
+      endTime: this.handleValidTime(period.endTime),
+    }));
 
     this.setState({
       defineExamDate: arg,
@@ -449,13 +448,13 @@ class DefineExamDatesList extends Component {
       // startTime: arg.startTime,
       // endTime: arg.endTime,
       // flag: arg.flag,
-      // examPeriodsGridData: periodsForGrid,
+      examPeriodsGridData: periodsForGrid,
       isEdit: true,
     });
-    onGetDefinePeriods(arg.Id);
-    // this.setState({
-    //   examPeriodsGridData: periodsForGrid,
-    // });
+    // onGetDefinePeriods(arg.Id);
+    this.setState({
+      examPeriodsGridData: periodsForGrid,
+    });
     this.toggle();
   };
 
@@ -1333,7 +1332,10 @@ class DefineExamDatesList extends Component {
                                                             </Row>
                                                             <BootstrapTable
                                                               keyField="Id"
-                                                              data={examPeriods}
+                                                              data={
+                                                                this.state
+                                                                  .examPeriodsGridData
+                                                              }
                                                               columns={columns2}
                                                               cellEdit={cellEditFactory(
                                                                 {
