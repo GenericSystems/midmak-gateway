@@ -30,7 +30,7 @@ import {
 const INIT_STATE = {
   defineExamDates: [],
   studentsOrder: [],
-  examPeriods: [],
+  definePeriods: [],
   deleted: {},
   error: {},
   lastAddedId: 0,
@@ -39,14 +39,14 @@ const INIT_STATE = {
 
 const defineExamDates = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_DEFINE_EXAM_DATES:
-    case ADD_NEW_DEFINE_EXAM_DATE:
-    case UPDATE_DEFINE_EXAM_DATE:
-    case DELETE_DEFINE_EXAM_DATE:
-      return {
-        ...state,
-        isLoading: true,
-      };
+    // case GET_DEFINE_EXAM_DATES:
+    // case ADD_NEW_DEFINE_EXAM_DATE:
+    // case UPDATE_DEFINE_EXAM_DATE:
+    // case DELETE_DEFINE_EXAM_DATE:
+    //   return {
+    //     ...state,
+    //     isLoading: true,
+    //   };
     case GET_DEFINE_EXAM_DATES_SUCCESS:
       return {
         ...state,
@@ -142,7 +142,7 @@ const defineExamDates = (state = INIT_STATE, action) => {
     case GET_DEFINE_PERIODS_SUCCESS:
       return {
         ...state,
-        examPeriods: action.payload,
+        definePeriods: action.payload,
         deleted: {},
       };
 
@@ -155,7 +155,7 @@ const defineExamDates = (state = INIT_STATE, action) => {
     case ADD_DEFINE_PERIOD_SUCCESS:
       return {
         ...state,
-        examPeriods: [...state.examPeriods, action.payload],
+        definePeriods: [...state.definePeriods, action.payload],
       };
 
     case ADD_DEFINE_PERIOD_FAIL:
@@ -179,10 +179,10 @@ const defineExamDates = (state = INIT_STATE, action) => {
     case UPDATE_DEFINE_PERIOD_SUCCESS:
       return {
         ...state,
-        examPeriods: state.examPeriods.map(examPeriod =>
-          examPeriod.Id.toString() === action.payload.Id.toString()
-            ? { examPeriod, ...action.payload }
-            : examPeriod
+        definePeriods: state.definePeriods.map(definePeriod =>
+          definePeriod.Id.toString() === action.payload.Id.toString()
+            ? { definePeriod, ...action.payload }
+            : definePeriod
         ),
       };
 
@@ -195,9 +195,9 @@ const defineExamDates = (state = INIT_STATE, action) => {
     case DELETE_DEFINE_PERIOD_SUCCESS:
       return {
         ...state,
-        examPeriods: state.examPeriods.filter(
-          examPeriod =>
-            examPeriod.Id.toString() !== action.payload.Id.toString()
+        definePeriods: state.definePeriods.filter(
+          definePeriod =>
+            definePeriod.Id.toString() !== action.payload.Id.toString()
         ),
         deleted: action.payload.deleted,
       };

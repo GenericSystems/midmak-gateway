@@ -72,6 +72,9 @@ function* fetchDefineExamDates(selectedpayload) {
   };
   try {
     const response = yield call(getDefineExamDates, get_defineExamDate_req);
+    // response.map(resp => {
+    //   resp["examPeriods"] = JSON.parse(resp["examPeriods"]);
+    // });
     console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", response);
     yield put(getDefineExamDatesSuccess(response));
   } catch (error) {
@@ -133,9 +136,9 @@ function* onAddNewDefineExamDate({ payload }) {
   try {
     const response = yield call(addNewDefineExamDate, payload);
     console.log("اااااااااااااااااااااااااااااااا", response);
-    // response.map(resp => {
-    //   resp["allDays"] = JSON.parse(resp["allDays"]);
-    // });
+    response.map(resp => {
+      resp["allDays"] = JSON.parse(resp["allDays"]);
+    });
     yield put(addDefineExamDateSuccess(response[0]));
   } catch (error) {
     yield put(addDefineExamDateFail(error));
@@ -211,7 +214,9 @@ function* onAddNewDefinePeriod({ payload }) {
 
   try {
     const response = yield call(addNewDefinePeriod, payload);
-
+    // response.map(resp => {
+    //   resp["examPeriods"] = JSON.parse(resp["examPeriods"]);
+    // });
     yield put(addDefinePeriodSuccess(response[0]));
   } catch (error) {
     yield put(addDefinePeriodFail(error));

@@ -62,6 +62,7 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+import periods from "store/periods/reducer";
 class DefineExamDatesList extends Component {
   constructor(props) {
     super(props);
@@ -121,7 +122,7 @@ class DefineExamDatesList extends Component {
       gradeTypes,
       deleted,
       studentsOrder,
-      examPeriods,
+      definePeriods,
       user_menu,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -132,7 +133,7 @@ class DefineExamDatesList extends Component {
     onGetStudentsOrder();
     this.setState({
       defineExamDates,
-      examPeriods,
+      definePeriods,
       deleted,
       gradeTypes,
       studentsOrder,
@@ -153,21 +154,6 @@ class DefineExamDatesList extends Component {
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (
-      prevProps.defineExamDates !== this.props.defineExamDates &&
-      this.props.defineExamDates.length > 0
-    ) {
-      const lastItem =
-        this.props.defineExamDates[this.props.defineExamDates.length - 1];
-      if (lastItem.allDays) {
-        try {
-          const allDaysArray = JSON.parse(lastItem.allDays);
-          this.setState({ allDaysArray });
-        } catch (e) {
-          console.error("Error parsing allDays JSON", e);
-        }
-      }
-    }
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -261,12 +247,13 @@ class DefineExamDatesList extends Component {
   handleAddDefinePeriod = () => {
     const {
       onAddNewDefinePeriod,
-      examPeriods,
+
       lastAddedId,
       last_all_days,
       all_days,
     } = this.props;
-    const { isAdd, selecteDefineExamDateId, selectedDay } = this.state;
+    const { isAdd, selecteDefineExamDateId, selectedDay, definePeriods } =
+      this.state;
     console.log("selectedDay", selectedDay);
 
     // const dayToSend = isAdd
@@ -276,9 +263,8 @@ class DefineExamDatesList extends Component {
     //   : Array.isArray(selectedDay)
     //   ? selectedDay.map(day => day.value)
     //   : "all";
-    console.log("definePeriods", examPeriods);
 
-    const emptyRowExists = examPeriods.some(
+    const emptyRowExists = definePeriods.some(
       defPer => !defPer.startTime || defPer.startTime === "00:00:00"
     );
 
@@ -369,14 +355,9 @@ class DefineExamDatesList extends Component {
         this.toggle();
       } else if (isAdd) {
         const response = onAddNewDefineExamDate(defineExamDateInfo);
-        if (response?.allDays) {
-          const parsedDays = JSON.parse(response.allDays);
-          this.setState({ allDaysArray: parsedDays });
-        }
         if (response?.Id) {
           this.setState({ examId: response.Id });
         }
-
         this.setState({ isShowPreReq: true });
       }
       this.setState({
@@ -422,39 +403,32 @@ class DefineExamDatesList extends Component {
     onGetDefineExamDateDeletedValue();
   };
 
-  handleDefineExamDateClick = arg => {
+  handleExamDateEdit = arg => {
     console.log("arg", arg);
-    const { examPeriods, onGetDefinePeriods } = this.props;
-    // console.log("1", arg.examPeriods);
-    const filteredDefinePeriods = examPeriods.filter(
-      defineExamDate => defineExamDate.key != arg.Id
-    );
-    const periodsForGrid = (arg.examPeriods || []).map(period => ({
-      Id: period.Id,
-      flag: period.flag,
-      startTime: this.handleValidTime(period.startTime),
-      endTime: this.handleValidTime(period.endTime),
-    }));
+    const { definePeriods, onGetDefinePeriods } = this.props;
+    console.log("1", arg.examPeriods);
 
     this.setState({
       defineExamDate: arg,
-      filteredDefinePeriods: filteredDefinePeriods,
+      // filteredDefinePeriods: filteredDefinePeriods,
       selecteDefineExamDateId: arg.Id,
       selectedExamType: arg.examTypeId,
       selectedStudentsOrder: arg.studentOrderId,
       // selectedDay: arg.all_days,
       allDaysArray: arg.all_days || [],
-      // examPeriods: arg.examPeriods,
-      // startTime: arg.startTime,
-      // endTime: arg.endTime,
-      // flag: arg.flag,
-      examPeriodsGridData: periodsForGrid,
+      definePeriods: arg.examPeriods,
+      // periodId: periods.Id,
+      // startTime: periods.startTime,
+      // endTime: periods.endTime,
+      // flag: periods.flag,
+      // examPeriodsGridData: periodsForGrid,
       isEdit: true,
-    });
+    }),
+      console.log("definePeriods in state:", this.state.definePeriods);
     // onGetDefinePeriods(arg.Id);
-    this.setState({
-      examPeriodsGridData: periodsForGrid,
-    });
+    // this.setState({
+    //   examPeriodsGridData: periodsForGrid,
+    // });
     this.toggle();
   };
 
@@ -505,7 +479,6 @@ class DefineExamDatesList extends Component {
 
     const {
       defineExamDates,
-      examPeriods,
       studentsOrder,
       gradeTypes,
       t,
@@ -513,6 +486,7 @@ class DefineExamDatesList extends Component {
       isLoading,
     } = this.props;
     const {
+      definePeriods,
       languageState,
       duplicateError,
       duplicateErrorDePer,
@@ -536,7 +510,7 @@ class DefineExamDatesList extends Component {
       isShowPreReq,
     } = this.state;
     console.log("allDaysArray", allDaysArray);
-    console.log("examPeriods", examPeriods);
+    console.log("definePeriods", definePeriods);
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -612,7 +586,7 @@ class DefineExamDatesList extends Component {
                 <i
                   className="mdi mdi-pencil font-size-18"
                   id="edittooltip"
-                  onClick={() => this.handleDefineExamDateClick(defineExamDate)}
+                  onClick={() => this.handleExamDateEdit(defineExamDate)}
                 ></i>
               </Link>
             </Tooltip>
@@ -642,12 +616,14 @@ class DefineExamDatesList extends Component {
         text: t("Start Time"),
         sort: true,
         editable: true,
+        formatter: (cellContent, row) => this.handleValidTime(row.startTime),
       },
       {
         dataField: "endTime",
         text: t("End Time"),
         sort: true,
         editable: true,
+        formatter: (cellContent, row) => this.handleValidTime(row.endTime),
       },
       {
         dataField: "delete",
@@ -1333,8 +1309,7 @@ class DefineExamDatesList extends Component {
                                                             <BootstrapTable
                                                               keyField="Id"
                                                               data={
-                                                                this.state
-                                                                  .examPeriodsGridData
+                                                                definePeriods
                                                               }
                                                               columns={columns2}
                                                               cellEdit={cellEditFactory(
@@ -1410,7 +1385,7 @@ class DefineExamDatesList extends Component {
 const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
   defineExamDates: defineExamDates.defineExamDates,
   studentsOrder: defineExamDates.studentsOrder,
-  examPeriods: defineExamDates.examPeriods,
+  definePeriods: defineExamDates.definePeriods,
   lastAddedId: defineExamDates.lastAddedId,
   isLoading: defineExamDates.isLoading,
   last_all_days: defineExamDates.last_all_days,
