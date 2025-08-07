@@ -247,13 +247,12 @@ class DefineExamDatesList extends Component {
   handleAddDefinePeriod = () => {
     const {
       onAddNewDefinePeriod,
-
+      definePeriods,
       lastAddedId,
       last_all_days,
       all_days,
     } = this.props;
-    const { isAdd, selecteDefineExamDateId, selectedDay, definePeriods } =
-      this.state;
+    const { isAdd, selecteDefineExamDateId, selectedDay } = this.state;
     console.log("selectedDay", selectedDay);
 
     // const dayToSend = isAdd
@@ -424,12 +423,12 @@ class DefineExamDatesList extends Component {
       // examPeriodsGridData: periodsForGrid,
       isEdit: true,
     }),
-      console.log("definePeriods in state:", this.state.definePeriods);
-    // onGetDefinePeriods(arg.Id);
-    // this.setState({
-    //   examPeriodsGridData: periodsForGrid,
-    // });
-    this.toggle();
+      // console.log("definePeriods in state:", this.state.definePeriods);
+      // onGetDefinePeriods(arg.Id);
+      // this.setState({
+      //   examPeriodsGridData: periodsForGrid,
+      // });
+      this.toggle();
   };
 
   handleDefinePeriodDataChange = (id, fieldName, value) => {
@@ -478,6 +477,7 @@ class DefineExamDatesList extends Component {
     const defineExamDate = this.state.defineExamDate;
 
     const {
+      definePeriods,
       defineExamDates,
       studentsOrder,
       gradeTypes,
@@ -486,7 +486,6 @@ class DefineExamDatesList extends Component {
       isLoading,
     } = this.props;
     const {
-      definePeriods,
       languageState,
       duplicateError,
       duplicateErrorDePer,
@@ -913,6 +912,7 @@ class DefineExamDatesList extends Component {
                                                     ></button>
                                                   </Alert>
                                                 )}
+
                                                 <Row>
                                                   <Col lg="12">
                                                     <div className="bordered">
@@ -1248,6 +1248,48 @@ class DefineExamDatesList extends Component {
                                                                   ></button>
                                                                 </Alert>
                                                               )}
+                                                              {deleted == 0 &&
+                                                                showAlert && (
+                                                                  <Alert
+                                                                    color="danger"
+                                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                    role="alert"
+                                                                  >
+                                                                    {
+                                                                      alertMessage
+                                                                    }
+                                                                    <button
+                                                                      type="button"
+                                                                      className="btn-close"
+                                                                      aria-label="Close"
+                                                                      onClick={
+                                                                        this
+                                                                          .handleErrorClose
+                                                                      }
+                                                                    ></button>
+                                                                  </Alert>
+                                                                )}
+                                                              {deleted == 1 &&
+                                                                showAlert && (
+                                                                  <Alert
+                                                                    color="success"
+                                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                    role="alert"
+                                                                  >
+                                                                    {
+                                                                      alertMessage
+                                                                    }
+                                                                    <button
+                                                                      type="button"
+                                                                      className="btn-close"
+                                                                      aria-label="Close"
+                                                                      onClick={
+                                                                        this
+                                                                          .handleSuccessClose
+                                                                      }
+                                                                    ></button>
+                                                                  </Alert>
+                                                                )}
                                                             </div>
                                                             <Row>
                                                               <Col className="col-3">
