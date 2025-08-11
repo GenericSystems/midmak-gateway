@@ -1002,6 +1002,13 @@ export const ADD_NEW_CONTRACT_TYPE = "/add/contractType";
 export const UPDATE_CONTRACT_TYPE = "/update/contractType";
 export const DELETE_CONTRACT_TYPE = "/delete/contractType";
 
+// DOCUMENTS_TYPES
+export const GET_DOCUMENTS_TYPES = "/documentsTypes";
+export const GET_DOCUMENT_TYPE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DOCUMENT_TYPE = "/add/documentType";
+export const UPDATE_DOCUMENT_TYPE = "/update/documentType";
+export const DELETE_DOCUMENT_TYPE = "/delete/documentType";
+
 //ABSCENCE_WARNINGS
 export const GET_ABSENCE_WARNINGS = "/absenceWarnings";
 export const GET_ABSENCE_WARNING_DELETED_VALUE = "/deleted";

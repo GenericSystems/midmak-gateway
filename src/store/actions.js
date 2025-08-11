@@ -95,6 +95,9 @@ export * from "./HR/contractsTypes/actions";
 //AbsenceWarnings
 export * from "./Rules-and-Regulations/Absence-warnings/actions";
 
+//DocumentTypes
+export * from "./documents-types/actions";
+
 //ExamRooms
 export * from "./Exam/ExamRooms/actions";
 

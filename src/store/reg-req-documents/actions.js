@@ -1,4 +1,5 @@
 import {
+
   GET_REG_REQ_DOCUMENT_DELETED_VALUE,
   GET_REG_REQ_DOCUMENT_DELETED_VALUE_FAIL,
   GET_REG_REQ_DOCUMENT_DELETED_VALUE_SUCCESS,
@@ -110,4 +111,5 @@ export const copyRegReqDocFail = error => ({
   type: COPY_REG_REQ_DOC_FAIL,
   payload: error,
 });
+
 

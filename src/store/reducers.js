@@ -239,6 +239,9 @@ import academyBuildingStructures from "./academyBuildingStructure/reducer";
 // contractsTypes
 import contractsTypes from "./HR/contractsTypes/reducer";
 
+// documentTypes
+import documentsTypes from "./documents-types/reducer";
+
 //AbsenceWarnings
 import absenceWarnings from "./Rules-and-Regulations/Absence-warnings/reducer";
 
@@ -421,6 +424,7 @@ const rootReducer = combineReducers({
   studentsHistory,
   studentsRequests,
   contractsTypes,
+  documentsTypes,
   employmentCases,
   workClassifications,
   employees,

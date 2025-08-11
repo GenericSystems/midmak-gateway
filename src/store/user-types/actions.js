@@ -33,7 +33,7 @@ export const getUserTypesFail = error => ({
   payload: error,
 });
 
-export const getUserTypesOpt = () => ({
+export const getUserTypesOpt = () => ({ 
   type: GET_USER_TYPES_OPT,
 });
 

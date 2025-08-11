@@ -443,5 +443,10 @@
   "Edit Decision": "تعديل قرار",
   "Decision Information": "معلومات القرار",
   "Decision Types": "أنواع القرار",
-  "Decision Text": "نص القرار"
+  "Decidsion Text": "نص القرار",
+  "No documents found":" لا يوجد مستندات",
+  "documents":"المستندات",
+  "Name(en)":" الاسم"
+  
+
 }

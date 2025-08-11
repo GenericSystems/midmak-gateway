@@ -36,10 +36,11 @@ function* fetchDocuments() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_RegDocType",
+    tablename: "Settings_RegDocType",
   };
   try {
     const response = yield call(getDocuments, get_settings_req);
+    console.log("responseresponse",response);
     yield put(getDocumentsSuccess(response));
   } catch (error) {
     yield put(getDocumentsFail(error));
@@ -60,7 +61,7 @@ function* onAddNewDocument({ payload, document }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_RegDocType";
+  payload["tablename"] = "Settings_RegDocType";
   try {
     const response = yield call(addNewDocument, payload);
     yield put(addDocumentSuccess(response[0]));

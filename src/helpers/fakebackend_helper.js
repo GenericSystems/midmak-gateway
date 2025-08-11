@@ -2019,6 +2019,7 @@ export const updateContractType = data => post(url.UPDATE_CONTRACT_TYPE, data);
 //delete contractType
 export const deleteContractType = data => post(url.DELETE_CONTRACT_TYPE, data);
 
+//ABSENCE WARNINGS
 export const getAbsenceWarnings = data => post(url.GET_ABSENCE_WARNINGS, data);
 
 export const addNewAbsenceWarning = data =>
@@ -2032,6 +2033,19 @@ export const updateAbsenceWarning = data =>
 
 export const deleteAbsenceWarning = data =>
   post(url.DELETE_ABSENCE_WARNING, data);
+
+// DOCUMENT_TYPE
+export const getDocumentsTypes = data => post(url.GET_DOCUMENTS_TYPES, data);
+
+// add documentTypes
+export const addNewDocumentType = data => post(url.ADD_NEW_DOCUMENT_TYPE, data);
+
+// DOCUMENT_TYPE
+export const getDocumentTypeDeletedValue = () =>
+  get(url.GET_DOCUMENT_TYPE_DELETED_VALUE);
+
+// update documentType
+export const updateDocumentType = data => post(url.UPDATE_DOCUMENT_TYPE, data);
 
 //EMPLOYMENT_CASE
 export const getEmploymentCases = data => post(url.GET_EMPLOYMENT_CASES, data);
