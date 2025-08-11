@@ -75,6 +75,15 @@ function* fetchDefineExamDates(selectedpayload) {
     // response.map(resp => {
     //   resp["examPeriods"] = JSON.parse(resp["examPeriods"]);
     // });
+    // response.map(resp => {
+    //   if (typeof resp.examPeriods === "string") {
+    //     try {
+    //       resp.examPeriods = JSON.parse(resp.examPeriods);
+    //     } catch (e) {
+    //       console.error("Failed to parse examPeriods:", e);
+    //     }
+    //   }
+    // });
     console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", response);
     yield put(getDefineExamDatesSuccess(response));
   } catch (error) {
@@ -136,9 +145,9 @@ function* onAddNewDefineExamDate({ payload }) {
   try {
     const response = yield call(addNewDefineExamDate, payload);
     console.log("اااااااااااااااااااااااااااااااا", response);
-    response.map(resp => {
-      resp["allDays"] = JSON.parse(resp["allDays"]);
-    });
+    // response.map(resp => {
+    //   resp["allDays"] = JSON.parse(resp["allDays"]);
+    // });
     yield put(addDefineExamDateSuccess(response[0]));
   } catch (error) {
     yield put(addDefineExamDateFail(error));
@@ -166,7 +175,7 @@ function* onUpdateDefineExamDate({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_DefineExamDates";
-  // payload["queryname"] = "_Common_DefineExamDate";
+  payload["queryname"] = "_Common_DefineExamDate";
   try {
     const respupdate = yield call(updateDefineExamDate, payload);
     console.log("UpdateDefineExamDate", respupdate);
@@ -206,7 +215,9 @@ function* fetchDefinePeriods(obj) {
 
 function* onAddNewDefinePeriod({ payload }) {
   console.log("payloadpayload", payload);
+  // const obj = { ...payload };
   delete payload["id"];
+  // delete payload["examId"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
@@ -214,10 +225,13 @@ function* onAddNewDefinePeriod({ payload }) {
 
   try {
     const response = yield call(addNewDefinePeriod, payload);
-    // response.map(resp => {
-    //   resp["examPeriods"] = JSON.parse(resp["examPeriods"]);
-    // });
     yield put(addDefinePeriodSuccess(response[0]));
+    // yield fetchDefineExamDates({
+    //   type: GET_DEFINE_EXAM_DATES,
+    //   payload: {
+    //     Id: obj["examId"],
+    //   },
+    // });
   } catch (error) {
     yield put(addDefinePeriodFail(error));
   }

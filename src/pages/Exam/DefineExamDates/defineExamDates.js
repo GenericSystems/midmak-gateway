@@ -63,17 +63,16 @@ import {
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
 import periods from "store/periods/reducer";
+import defineExamDates from "store/Exam/DefineExamDates/reducer";
 class DefineExamDatesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      employees: [],
       defineExamDates: [],
       selecteDefineExamDateId: 0,
       gradeTypes: [],
       allDaysArray: [],
       defineExamDate: "",
-      employee: "",
       selectConId: null,
       showAlert: null,
       showAddButton: false,
@@ -107,8 +106,6 @@ class DefineExamDatesList extends Component {
       isShowPreReq: false,
       examTypesOpt: [],
     };
-    this.toggle = this.toggle.bind(this);
-    this.toggle2 = this.toggle2.bind(this);
   }
 
   componentDidMount() {
@@ -154,6 +151,21 @@ class DefineExamDatesList extends Component {
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (
+      prevProps.defineExamDates !== this.props.defineExamDates &&
+      this.props.defineExamDates.length > 0
+    ) {
+      const lastItem =
+        this.props.defineExamDates[this.props.defineExamDates.length - 1];
+      if (lastItem.allDays) {
+        try {
+          const allDaysArray = JSON.parse(lastItem.allDays);
+          this.setState({ allDaysArray });
+        } catch (e) {
+          console.error("Error parsing allDays JSON", e);
+        }
+      }
+    }
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -219,13 +231,6 @@ class DefineExamDatesList extends Component {
       modal: !prevState.modal,
     }));
   };
-
-  toggle2 = () => {
-    this.setState(prevState => ({
-      modal2: !prevState.modal2,
-    }));
-  };
-
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
@@ -237,6 +242,7 @@ class DefineExamDatesList extends Component {
   handleAddRow = () => {
     this.setState({
       defineExamDate: "",
+      definePeriods: "",
       selectedStudentsOrder: null,
       isAdd: true,
       isEdit: false,
@@ -290,9 +296,9 @@ class DefineExamDatesList extends Component {
   handleDeleteRow = () => {
     const { onDeleteDefineExamDate } = this.props;
     const { selectedRowId } = this.state;
-
+    console.log("selectedRowId", selectedRowId.Id);
     if (selectedRowId !== null) {
-      onDeleteDefineExamDate(selectedRowId);
+      onDeleteDefineExamDate({ Id: selectedRowId.Id });
 
       this.setState({
         selectedRowId: null,
@@ -354,6 +360,10 @@ class DefineExamDatesList extends Component {
         this.toggle();
       } else if (isAdd) {
         const response = onAddNewDefineExamDate(defineExamDateInfo);
+        if (response?.allDays) {
+          const parsedDays = JSON.parse(response.allDays);
+          this.setState({ allDaysArray: parsedDays });
+        }
         if (response?.Id) {
           this.setState({ examId: response.Id });
         }
@@ -406,16 +416,23 @@ class DefineExamDatesList extends Component {
     console.log("arg", arg);
     const { definePeriods, onGetDefinePeriods } = this.props;
     console.log("1", arg.examPeriods);
-
+    const filteredDefinePeriods = definePeriods.filter(
+      defineExamDate => defineExamDate.key != arg.Id
+    );
+    const periodsForGrid = (arg.examPeriods || []).map(period => ({
+      id: period.Id,
+      flag: period.flag,
+      startTime: period.startTime,
+      endTime: period.endTime,
+    }));
     this.setState({
       defineExamDate: arg,
-      // filteredDefinePeriods: filteredDefinePeriods,
+      filteredDefinePeriods: filteredDefinePeriods,
       selecteDefineExamDateId: arg.Id,
       selectedExamType: arg.examTypeId,
       selectedStudentsOrder: arg.studentOrderId,
       // selectedDay: arg.all_days,
-      allDaysArray: arg.all_days || [],
-      definePeriods: arg.examPeriods,
+      allDaysArray: arg.all_days,
       // periodId: periods.Id,
       // startTime: periods.startTime,
       // endTime: periods.endTime,
@@ -424,54 +441,50 @@ class DefineExamDatesList extends Component {
       isEdit: true,
     }),
       // console.log("definePeriods in state:", this.state.definePeriods);
-      // onGetDefinePeriods(arg.Id);
-      // this.setState({
-      //   examPeriodsGridData: periodsForGrid,
-      // });
-      this.toggle();
+      onGetDefinePeriods(arg.Id);
+    // this.setState({
+    //   examPeriodsGridData: periodsForGrid,
+    // });
+    this.toggle();
   };
 
-  handleDefinePeriodDataChange = (id, fieldName, value) => {
-    const updatedItem = {
-      Id: id,
-      [fieldName]: value,
-    };
-    const { onUpdateDefinePeriod } = this.props;
+  // handleDefinePeriodDataChange = (id, fieldName, value) => {
+  //   const updatedItem = {
+  //     Id: id,
+  //     [fieldName]: value,
+  //   };
+  //   const { onUpdateDefinePeriod } = this.props;
 
-    onUpdateDefinePeriod(updatedItem);
-  };
+  //   onUpdateDefinePeriod(updatedItem);
+  // };
 
   handleValidDate = date => {
     const date1 = moment(new Date(date)).format("DD /MM/ Y");
     return date1;
   };
 
-  handleValidTime = time => {
-    if (!time) return "";
-    return moment(time, "HH:mm:ss.SSSSSS").format("HH:mm:ss");
+  handleExamPeriodDataChange = (rowId, fieldName, fieldValue) => {
+    const { onUpdateDefinePeriod, definePeriods } = this.props;
+
+    const updatedTimeParts = fieldValue.split(":");
+    const updatedHours = parseInt(updatedTimeParts[0], 10);
+
+    const isConflict = definePeriods.some(period => {
+      const existingTimeParts = period.startTime.split(":");
+      const existingHours = parseInt(existingTimeParts[0], 10);
+
+      return rowId !== period.Id && updatedHours === existingHours;
+    });
+
+    if (isConflict) {
+      const errorMessage = this.props.t("Value already exists");
+      this.setState({ duplicateError: errorMessage });
+    } else {
+      this.setState({ duplicateError: null });
+      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+      onUpdateDefinePeriod(onUpdate);
+    }
   };
-
-  // handleDefinePeriodDataChange = (rowId, fieldName, fieldValue) => {
-  //   const { contractsTypes, onUpdateContractType } = this.props;
-
-  //   const isDuplicate = contractsTypes.some(contractType => {
-  //     return (
-  //       contractType.Id !== rowId &&
-  //       contractType.arTitle.trim() === fieldValue.trim()
-  //     );
-  //   });
-
-  //   if (isDuplicate) {
-  //     const errorMessage = this.props.t("Value already exists");
-  //     this.setState({ duplicateError: errorMessage });
-  //     let onUpdate = { Id: rowId, [fieldName]: "-----" };
-  //     onUpdateContractType(onUpdate);
-  //   } else {
-  //     this.setState({ duplicateError: null });
-  //     let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-  //     onUpdateContractType(onUpdate);
-  //   }
-  // };
 
   render() {
     const defineExamDate = this.state.defineExamDate;
@@ -602,27 +615,56 @@ class DefineExamDatesList extends Component {
         ),
       },
     ];
+
     const columns2 = [
       { dataField: "Id", text: t("ID"), hidden: true },
       {
         dataField: "flag",
         text: t("Flag"),
         sort: true,
-        editable: true,
+        editable: false,
       },
       {
         dataField: "startTime",
         text: t("Start Time"),
         sort: true,
-        editable: true,
-        formatter: (cellContent, row) => this.handleValidTime(row.startTime),
+        // editable: true,
+        formatter: (cellContent, row, column) => (
+          <Input
+            className="form-control"
+            type="time"
+            value={row.startTime}
+            onChange={newValue => {
+              this.handleExamPeriodDataChange(
+                row.Id,
+                "startTime",
+                newValue.target.value
+              );
+            }}
+            // disabled={!showEditButton}
+          />
+        ),
       },
       {
         dataField: "endTime",
         text: t("End Time"),
         sort: true,
-        editable: true,
-        formatter: (cellContent, row) => this.handleValidTime(row.endTime),
+        // editable: true,
+        formatter: (cellContent, row, column) => (
+          <Input
+            className="form-control"
+            type="time"
+            value={row.endTime}
+            onChange={newValue => {
+              this.handleExamPeriodDataChange(
+                row.Id,
+                "endTime",
+                newValue.target.value
+              );
+            }}
+            // disabled={!showEditButton}
+          />
+        ),
       },
       {
         dataField: "delete",
@@ -1350,6 +1392,8 @@ class DefineExamDatesList extends Component {
                                                             </Row>
                                                             <BootstrapTable
                                                               keyField="Id"
+                                                              {...toolkitprops.baseProps}
+                                                              {...paginationTableProps}
                                                               data={
                                                                 definePeriods
                                                               }
@@ -1365,7 +1409,7 @@ class DefineExamDatesList extends Component {
                                                                       row,
                                                                       column
                                                                     ) => {
-                                                                      this.handleDefinePeriodDataChange(
+                                                                      this.handleExamPeriodDataChange(
                                                                         row.Id,
                                                                         column.dataField,
                                                                         newValue

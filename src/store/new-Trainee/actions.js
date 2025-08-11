@@ -14,21 +14,6 @@ import {
   DELETE_TRAINEE,
   DELETE_TRAINEE_SUCCESS,
   DELETE_TRAINEE_FAIL,
-  GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE,
-  GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE_FAIL,
-  GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE_SUCCESS,
-  GET_PROFESSIONAL_EXPERIENCES,
-  GET_PROFESSIONAL_EXPERIENCES_FAIL,
-  GET_PROFESSIONAL_EXPERIENCES_SUCCESS,
-  ADD_NEW_PROFESSIONAL_EXPERIENCE,
-  ADD_PROFESSIONAL_EXPERIENCE_SUCCESS,
-  ADD_PROFESSIONAL_EXPERIENCE_FAIL,
-  UPDATE_PROFESSIONAL_EXPERIENCE,
-  UPDATE_PROFESSIONAL_EXPERIENCE_SUCCESS,
-  UPDATE_PROFESSIONAL_EXPERIENCE_FAIL,
-  DELETE_PROFESSIONAL_EXPERIENCE,
-  DELETE_PROFESSIONAL_EXPERIENCE_SUCCESS,
-  DELETE_PROFESSIONAL_EXPERIENCE_FAIL,
   GET_TEMP_RELATIVES,
   GET_TEMP_RELATIVES_SUCCESS,
   GET_TEMP_RELATIVES_FAIL,
@@ -147,80 +132,5 @@ export const getRegisterCertificatesSuccess = regcertificates => ({
 });
 export const getRegisterCertificatesFail = error => ({
   type: GET_REGISTER_CERTIFICATES_FAIL,
-  payload: error,
-});
-
-export const getProfessionalExperiences = profExperiences => ({
-  type: GET_PROFESSIONAL_EXPERIENCES,
-  payload: profExperiences,
-});
-
-export const getProfessionalExperiencesSuccess = profExperiences => ({
-  type: GET_PROFESSIONAL_EXPERIENCES_SUCCESS,
-  payload: profExperiences,
-});
-
-export const getProfessionalExperiencesFail = error => ({
-  type: GET_PROFESSIONAL_EXPERIENCES_FAIL,
-  payload: error,
-});
-
-export const getProfessionalExperienceDeletedValue = () => ({
-  type: GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE,
-});
-
-export const getProfessionalExperienceDeletedValueSuccess =
-  profExperienceProfile => ({
-    type: GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE_SUCCESS,
-    payload: profExperienceProfile,
-  });
-
-export const getProfessionalExperienceDeletedValueFail = error => ({
-  type: GET_PROFESSIONAL_EXPERIENCE_DELETED_VALUE_FAIL,
-  payload: error,
-});
-
-export const addNewProfessionalExperience = profExperience => ({
-  type: ADD_NEW_PROFESSIONAL_EXPERIENCE,
-  payload: profExperience,
-});
-
-export const addProfessionalExperienceSuccess = profExperience => ({
-  type: ADD_PROFESSIONAL_EXPERIENCE_SUCCESS,
-  payload: profExperience,
-});
-
-export const addProfessionalExperienceFail = error => ({
-  type: ADD_PROFESSIONAL_EXPERIENCE_FAIL,
-  payload: error,
-});
-
-export const updateProfessionalExperience = profExperience => ({
-  type: UPDATE_PROFESSIONAL_EXPERIENCE,
-  payload: profExperience,
-});
-
-export const updateProfessionalExperienceSuccess = profExperience => ({
-  type: UPDATE_PROFESSIONAL_EXPERIENCE_SUCCESS,
-  payload: profExperience,
-});
-
-export const updateProfessionalExperienceFail = error => ({
-  type: UPDATE_PROFESSIONAL_EXPERIENCE_FAIL,
-  payload: error,
-});
-
-export const deleteProfessionalExperience = profExperience => ({
-  type: DELETE_PROFESSIONAL_EXPERIENCE,
-  payload: profExperience,
-});
-
-export const deleteProfessionalExperienceSuccess = profExperience => ({
-  type: DELETE_PROFESSIONAL_EXPERIENCE_SUCCESS,
-  payload: ProfExperience,
-});
-
-export const deleteProfessionalExperienceFail = error => ({
-  type: DELETE_PROFESSIONAL_EXPERIENCE_FAIL,
   payload: error,
 });

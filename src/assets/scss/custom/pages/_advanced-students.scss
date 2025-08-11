@@ -20,7 +20,8 @@
 
 .accordion-button {
   &:not(.collapsed) {
-    background-color: rgb(255, 219, 120);
+    // background-color: rgb(255, 219, 120);
+    background-color: #c5ab5a;
     color: #464141e0;
   }
 }

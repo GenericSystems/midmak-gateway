@@ -73,6 +73,8 @@ class NewTrainee extends Component {
   constructor(props) {
     super(props);
     this.node = React.createRef();
+    this.formikRef = React.createRef();
+
     this.state = {
       trainee: {},
       activeTab: 1,
@@ -329,7 +331,7 @@ class NewTrainee extends Component {
       if (values.IdNumber === "") {
         this.setState({ IdNumberError: true, saveError: true });
       }
-      if (perosonalCardNum === "") {
+      if (values.perosonalCardNum === "") {
         this.setState({ perosonalCardNumError: true, saveError: true });
       }
       const errorSaveStudentMessage = this.props.t(
@@ -507,7 +509,7 @@ class NewTrainee extends Component {
       console.log("studentinfo in save", studentinfo);
 
       // studentinfo["stdDocs"] = extractedArray;
-      //studentinfo["parentContact"] = relativesArray;
+      studentinfo["profExperience"] = trnProfExperience;
       //studentinfo["siblings"] = siblingsArray;
       onAddNewStudent(studentinfo);
       const saveStudentMessage = this.props.t("Trainee saved successfully");
@@ -558,7 +560,7 @@ class NewTrainee extends Component {
       }
     }
 
-    if (tab == 3) {
+    if (tab == 4) {
       //onGetDefaultRegReqDocs(obj);
       this.setState({
         trnProfExperience: [],
@@ -624,24 +626,6 @@ class NewTrainee extends Component {
     }));
   };
 
-  handleRegReqDocDataChange = (rowId, fieldName, fieldValue) => {
-    this.setState(prevState => {
-      const updatedRegReqDocs = prevState.stdDocsArray.map(document => {
-        if (document.Id === rowId) {
-          return {
-            ...document,
-            [fieldName]: fieldValue,
-          };
-        }
-        return document;
-      });
-
-      return {
-        stdDocsArray: updatedRegReqDocs,
-      };
-    });
-  };
-
   handleGenerateStudent = studentId => {
     //const { onGenerateStudent } = this.props;
     //onGenerateStudent(studentId);
@@ -704,26 +688,51 @@ class NewTrainee extends Component {
     });
   };
 
-  handeladdExperience = () => {
-    const { trnProfExperience } = this.state;
-    const emptyRowsExist = trnProfExperience.some(
+  handelAddExperience = () => {
+    const { lastUsedId } = this.state;
+    const { values, setFieldValue } = this.formikRef.current;
+    // const { trnProfExperience } = this.state;
+    const emptyRowsExist = values.profExperience.some(
       experience => experience.companyName.trim() === ""
     );
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateError: errorMessage });
+      this.setState({ duplicateErrorProfExperiences: errorMessage });
     } else {
       const newExperience = {
+        Id: lastUsedId,
+        workType: "",
         companyName: "",
-        jobTitle: "",
-        startDate: "",
-        endDate: "",
+        workPlace: "",
+        workField: "",
+        duaration: "",
       };
-      this.setState({
-        trnProfExperience: [...trnProfExperience, newExperience],
-      });
-      this.setState({ duplicateError: null });
+      setFieldValue("profExperience", [
+        ...values.profExperience,
+        newExperience,
+      ]);
+      this.setState({ duplicateErrorProfExperiences: null });
     }
+  };
+
+  handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
+    this.setState(prevState => {
+      const updatedExperience = prevState.trnProfExperience.map(
+        profExperience => {
+          if (profExperience.Id === rowId) {
+            return {
+              ...profExperience,
+              [fieldName]: fieldValue,
+            };
+          }
+          return profExperience;
+        }
+      );
+
+      return {
+        trnProfExperience: updatedExperience,
+      };
+    });
   };
 
   handleAddRowRelative = () => {
@@ -733,7 +742,7 @@ class NewTrainee extends Component {
     );
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateErrorProfessionalexperiences: errorMessage });
+      this.setState({ duplicateErrorRelative: errorMessage });
     } else {
       const newRelative = {
         Id: lastUsedId,
@@ -1042,34 +1051,26 @@ class NewTrainee extends Component {
     console.log("selectedMulti", selectedMulti);
   };
 
-  handleAddRowProfessionalexperiences = () => {
-    const { relativesArray, lastUsedId } = this.state;
-    const emptyRowsExist = relativesArray.some(
-      relative => relative.arName.trim() === ""
-    );
-    if (emptyRowsExist) {
-      const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateErrorProfessionalexperiences: errorMessage });
-    } else {
-      const newRelative = {
-        Id: lastUsedId,
-        arName: "",
-        enName: "",
-        relativeId: null,
-        nationalityId: null,
-        phone: "",
-        cellular: "",
-      };
-      this.setState({
-        relativesArray: [...relativesArray, newRelative],
-        lastUsedId: lastUsedId + 1,
-      });
-      this.setState({ duplicateErrorProfessionalexperiences: null });
-    }
+  handleAlertCloseProfExperiences = () => {
+    this.setState({ duplicateErrorProfExperiences: null });
   };
 
-  handleAlertCloseProfessionalexperiences = () => {
-    this.setState({ duplicateErrorProfessionalexperiences: null });
+  handleRegReqDocDataChange = (rowId, fieldName, fieldValue) => {
+    this.setState(prevState => {
+      const updatedRegReqDocs = prevState.stdDocsArray.map(document => {
+        if (document.Id === rowId) {
+          return {
+            ...document,
+            [fieldName]: fieldValue,
+          };
+        }
+        return document;
+      });
+
+      return {
+        stdDocsArray: updatedRegReqDocs,
+      };
+    });
   };
 
   render() {
@@ -1084,7 +1085,7 @@ class NewTrainee extends Component {
       duplicateErrorRelative,
       diplomaIdError,
       studentListColumns,
-      duplicateErrorProfessionalexperiences,
+      duplicateErrorProfExperiences,
       selectedRegistrationDate,
       selectedregistrationCertLevelId,
       selectedStudyPattern,
@@ -1537,6 +1538,7 @@ class NewTrainee extends Component {
                         <Col xl="12">
                           <div>
                             <Formik
+                              innerRef={this.formikRef}
                               enableReinitialize={true}
                               initialValues={{
                                 FirstName: (trainee && trainee.FirstName) || "",
@@ -1705,6 +1707,14 @@ class NewTrainee extends Component {
                                 RegUniDate:
                                   (trainee && trainee.RegUniDate) ||
                                   selectedRegUniDate,
+                                profExperience:
+                                  (trainee && trainee.profExperience) || [],
+                                // workType: (trainee && trainee.workType) || "",
+                                // companyName:
+                                //   (trainee && trainee.companyName) || "",
+                                // workPlace: (trainee && trainee.workPlace) || "",
+                                // workField: (trainee && trainee.workField) || "",
+                                // Duration: (trainee && trainee.Duration) || "",
                               }}
                               validationSchema={Yup.object().shape({
                                 FirstName: Yup.string()
@@ -1862,7 +1872,7 @@ class NewTrainee extends Component {
                                                       3.
                                                     </span>
                                                     {this.props.t(
-                                                      "Professional experiences"
+                                                      "Contact Info"
                                                     )}
                                                   </h3>
                                                 </NavLink>
@@ -1890,7 +1900,7 @@ class NewTrainee extends Component {
                                                       4.
                                                     </span>
                                                     {this.props.t(
-                                                      "Contact Info"
+                                                      "Professional experiences"
                                                     )}
                                                   </h3>
                                                 </NavLink>
@@ -4394,88 +4404,6 @@ class NewTrainee extends Component {
                                                 </Row>
                                               </TabPane>
                                               <TabPane key={3} tabId={3}>
-                                                <Row className="documents-table">
-                                                  <Col>
-                                                    <Card>
-                                                      <CardBody>
-                                                        <div className="table-responsive">
-                                                          {duplicateErrorProfessionalexperiences && (
-                                                            <Alert
-                                                              color="danger"
-                                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                              role="alert"
-                                                            >
-                                                              {
-                                                                duplicateErrorProfessionalexperiences
-                                                              }
-                                                              <button
-                                                                type="button"
-                                                                className="btn-close"
-                                                                aria-label="Close"
-                                                                onClick={
-                                                                  this
-                                                                    .handleAlertCloseProfessionalexperiences
-                                                                }
-                                                              ></button>
-                                                            </Alert>
-                                                          )}
-                                                          <Row>
-                                                            <Col>
-                                                              <div className="text-sm-end">
-                                                                <Tooltip
-                                                                  title={this.props.t(
-                                                                    "Add"
-                                                                  )}
-                                                                  placement="top"
-                                                                >
-                                                                  <IconButton
-                                                                    color="primary"
-                                                                    onClick={
-                                                                      this
-                                                                        .handleAddRowProfessionalexperiences
-                                                                    }
-                                                                  >
-                                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                                                  </IconButton>
-                                                                </Tooltip>
-                                                              </div>
-                                                            </Col>
-                                                          </Row>
-                                                          <BootstrapTable
-                                                            keyField="Id"
-                                                            data={
-                                                              trnProfExperience
-                                                            }
-                                                            columns={
-                                                              trnProfExperienceColumns
-                                                            }
-                                                            key={document.Id}
-                                                            cellEdit={cellEditFactory(
-                                                              {
-                                                                mode: "click",
-                                                                blurToSave: true,
-                                                                afterSaveCell: (
-                                                                  oldValue,
-                                                                  newValue,
-                                                                  row,
-                                                                  column
-                                                                ) => {
-                                                                  this.handleRegReqDocDataChange(
-                                                                    row.Id,
-                                                                    column.dataField,
-                                                                    newValue
-                                                                  );
-                                                                },
-                                                              }
-                                                            )}
-                                                          />
-                                                        </div>
-                                                      </CardBody>
-                                                    </Card>
-                                                  </Col>
-                                                </Row>
-                                              </TabPane>
-                                              <TabPane key={4} tabId={4}>
                                                 <Row className="bordered">
                                                   <Row>
                                                     <Col
@@ -4851,6 +4779,87 @@ class NewTrainee extends Component {
                                                   </Accordion>
                                                 </Row> */}
                                               </TabPane>
+                                              <TabPane key={4} tabId={4}>
+                                                <Row className="documents-table">
+                                                  <Col>
+                                                    <Card>
+                                                      <CardBody>
+                                                        <div className="table-responsive">
+                                                          {duplicateErrorProfExperiences && (
+                                                            <Alert
+                                                              color="danger"
+                                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                              role="alert"
+                                                            >
+                                                              {
+                                                                duplicateErrorProfExperiences
+                                                              }
+                                                              <button
+                                                                type="button"
+                                                                className="btn-close"
+                                                                aria-label="Close"
+                                                                onClick={
+                                                                  this
+                                                                    .handleAlertCloseProfExperiences
+                                                                }
+                                                              ></button>
+                                                            </Alert>
+                                                          )}
+                                                          <Row>
+                                                            <Col>
+                                                              <div className="text-sm-end">
+                                                                <Tooltip
+                                                                  title={this.props.t(
+                                                                    "Add"
+                                                                  )}
+                                                                  placement="top"
+                                                                >
+                                                                  <IconButton
+                                                                    color="primary"
+                                                                    onClick={
+                                                                      this
+                                                                        .handelAddExperience
+                                                                    }
+                                                                  >
+                                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                                  </IconButton>
+                                                                </Tooltip>
+                                                              </div>
+                                                            </Col>
+                                                          </Row>
+                                                          <BootstrapTable
+                                                            keyField="Id"
+                                                            data={
+                                                              values.profExperience
+                                                            }
+                                                            columns={
+                                                              trnProfExperienceColumns
+                                                            }
+                                                            cellEdit={cellEditFactory(
+                                                              {
+                                                                mode: "dbclick",
+                                                                blurToSave: true,
+                                                                afterSaveCell: (
+                                                                  oldValue,
+                                                                  newValue,
+                                                                  row,
+                                                                  column
+                                                                ) => {
+                                                                  this.handleExperienceDataChange(
+                                                                    row.Id,
+                                                                    column.dataField,
+                                                                    newValue
+                                                                  );
+                                                                },
+                                                              }
+                                                            )}
+                                                          />
+                                                        </div>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </Col>
+                                                </Row>
+                                              </TabPane>
                                               <TabPane key={5} tabId={5}>
                                                 <Row className="documents-table">
                                                   <Col>
@@ -5035,7 +5044,6 @@ const mapStateToProps = ({
   universityStudents: universityStudents.universityStudents,
   regcertificates: trainees.regcertificates,
   highstudytypes: highstudytypes.highstudytypes,
-  trnProfExperience: trainees.trnProfExperience,
   estimates: estimates.estimates,
 });
 

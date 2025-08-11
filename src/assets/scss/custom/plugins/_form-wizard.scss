@@ -2,7 +2,6 @@
 // Form Wizard
 //
 
-
 .form-wizard-wrapper {
   label {
     font-size: 14px;
@@ -10,11 +9,10 @@
   }
 }
 
-.wizard{
-
+.wizard {
   // step
-  .steps{
-    >ul{
+  .steps {
+    > ul {
       display: flex;
       flex-wrap: wrap;
       padding-left: 0;
@@ -26,17 +24,18 @@
         flex-direction: column;
       }
 
-      > a, > li{
+      > a,
+      > li {
         flex-basis: 0;
         flex-grow: 1;
       }
 
-      >li{
+      > li {
         width: 100%;
 
-        a{
+        a {
           display: block;
-          padding: .5rem 1rem;
+          padding: 0.5rem 1rem;
           color: $gray-700;
           font-weight: $fw-medium;
 
@@ -44,12 +43,10 @@
         }
       }
 
-      .current-info{
+      .current-info {
         position: absolute;
         left: -999em;
-    }
-
-    
+      }
     }
 
     .number {
@@ -57,20 +54,22 @@
       width: 38px;
       height: 38px;
       line-height: 34px;
-      border: 2px solid $primary;
-      color: $primary;
+      border: 2px solid #c5ab5a;
+      color: #c5ab5a;
       text-align: center;
       border-radius: 50%;
-      margin-right: .5rem;
+      margin-right: 0.5rem;
     }
 
     .current {
-      a, a:active, a:hover {
-        background-color: rgb(172, 240, 174);
+      a,
+      a:active,
+      a:hover {
+        background-color: #114290;
         //rgba($primary, 0.2);
         color: $gray-700;
         .number {
-          background-color: $primary;
+          background-color: #c5ab5a;
           color: $white;
         }
       }
@@ -78,97 +77,100 @@
   }
 
   // content
-  >.content {
+  > .content {
     background-color: transparent;
     padding: 14px;
     margin-top: 0;
     border-radius: 0;
     min-height: 150px;
-    > .title{
+    > .title {
       position: absolute;
       left: -999em;
     }
-    >.body {
+    > .body {
       width: 100%;
       height: 100%;
       margin-top: -35px;
       padding: 14px 0 0;
-      position: static
+      position: static;
     }
   }
 
   // actions
 
-  >.actions {
+  > .actions {
     position: relative;
     display: block;
     text-align: right;
     width: 100%;
     > ul {
-        display: block;
-        text-align: right;
-        padding-left: 0;
-          > li{
-            display: inline-block;
-            margin: 0 0.5em;
-
-          }
+      display: block;
+      text-align: right;
+      padding-left: 0;
+      > li {
+        display: inline-block;
+        margin: 0 0.5em;
       }
-      a, a:active, a:hover {
+    }
+    a,
+    a:active,
+    a:hover {
+      background-color: $primary;
+      border-radius: 4px;
+      padding: 8px 15px;
+      color: $white;
+    }
+
+    .disabled {
+      a,
+      a:active,
+      a:hover {
+        opacity: 0.65;
         background-color: $primary;
-        border-radius: 4px;
-        padding: 8px 15px;
         color: $white;
+        cursor: not-allowed;
       }
-
-      .disabled {
-        a, a:active, a:hover {
-          opacity: .65;
-          background-color: $primary;
-          color: $white;
-          cursor: not-allowed;
-        }
-      }
+    }
   }
 
   // verticl wixard
-  &.vertical-wizard{
+  &.vertical-wizard {
     display: flex;
     flex-wrap: wrap;
 
     // step
-    .steps{
-      >ul{
+    .steps {
+      > ul {
         flex-direction: column;
 
-        >li{
-            width: 100% !important;
+        > li {
+          width: 100% !important;
         }
-        
       }
     }
 
-    .steps, .content, .actions{
+    .steps,
+    .content,
+    .actions {
       width: 100%;
     }
 
-    .steps{
-        @media (min-width: 1200px) {
-          width: 25%;
+    .steps {
+      @media (min-width: 1200px) {
+        width: 25%;
       }
     }
 
-      .content{
-        padding: 24px;
-        @media (min-width: 1200px) {
-          width: 75%;
-          padding: 12px 24px;
+    .content {
+      padding: 24px;
+      @media (min-width: 1200px) {
+        width: 75%;
+        padding: 12px 24px;
       }
 
-      >.body{
+      > .body {
         padding: 0;
       }
-      
     }
   }
 }

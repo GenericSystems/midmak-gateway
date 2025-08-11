@@ -39,14 +39,14 @@ const INIT_STATE = {
 
 const defineExamDates = (state = INIT_STATE, action) => {
   switch (action.type) {
-    // case GET_DEFINE_EXAM_DATES:
-    // case ADD_NEW_DEFINE_EXAM_DATE:
-    // case UPDATE_DEFINE_EXAM_DATE:
-    // case DELETE_DEFINE_EXAM_DATE:
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //   };
+    case GET_DEFINE_EXAM_DATES:
+    case ADD_NEW_DEFINE_EXAM_DATE:
+    case UPDATE_DEFINE_EXAM_DATE:
+    case DELETE_DEFINE_EXAM_DATE:
+      return {
+        ...state,
+        isLoading: true,
+      };
     case GET_DEFINE_EXAM_DATES_SUCCESS:
       return {
         ...state,

@@ -64,14 +64,14 @@ export const getDefineExamDateDeletedValueFail = error => ({
   payload: error,
 });
 
-export const addNewDefineExamDate = defineExamDates => ({
+export const addNewDefineExamDate = defineExamDate => ({
   type: ADD_NEW_DEFINE_EXAM_DATE,
-  payload: defineExamDates,
+  payload: defineExamDate,
 });
 
-export const addDefineExamDateSuccess = defineExamDates => ({
+export const addDefineExamDateSuccess = defineExamDate => ({
   type: ADD_DEFINE_EXAM_DATE_SUCCESS,
-  payload: defineExamDates,
+  payload: defineExamDate,
 });
 
 export const addDefineExamDateFail = error => ({
@@ -79,16 +79,16 @@ export const addDefineExamDateFail = error => ({
   payload: error,
 });
 
-export const updateDefineExamDate = defineExamDates => {
+export const updateDefineExamDate = defineExamDate => {
   return {
     type: UPDATE_DEFINE_EXAM_DATE,
-    payload: defineExamDates,
+    payload: defineExamDate,
   };
 };
 
-export const updateDefineExamDateSuccess = defineExamDates => ({
+export const updateDefineExamDateSuccess = defineExamDate => ({
   type: UPDATE_DEFINE_EXAM_DATE_SUCCESS,
-  payload: defineExamDates,
+  payload: defineExamDate,
 });
 
 export const updateDefineExamDateFail = error => ({
@@ -96,14 +96,14 @@ export const updateDefineExamDateFail = error => ({
   payload: error,
 });
 
-export const deleteDefineExamDate = defineExamDates => ({
+export const deleteDefineExamDate = defineExamDate => ({
   type: DELETE_DEFINE_EXAM_DATE,
-  payload: defineExamDates,
+  payload: defineExamDate,
 });
 
-export const deleteDefineExamDateSuccess = defineExamDates => ({
+export const deleteDefineExamDateSuccess = defineExamDate => ({
   type: DELETE_DEFINE_EXAM_DATE_SUCCESS,
-  payload: defineExamDates,
+  payload: defineExamDate,
 });
 
 export const deleteDefineExamDateFail = error => ({
@@ -125,9 +125,9 @@ export const getStudentsOrderFail = error => ({
   payload: error,
 });
 
-export const getDefinePeriods = defineExamDates => ({
+export const getDefinePeriods = definePeriods => ({
   type: GET_DEFINE_PERIODS,
-  payload: defineExamDates,
+  payload: definePeriods,
 });
 
 export const getDefinePeriodsSuccess = definePeriods => ({
