@@ -55,11 +55,12 @@ function* fetchCurrentSemester() {
     source: 'db',
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_SystemCurrentSemester",
-   filter: "facultyNum = 0 or facultyNum is null",
+    tablename: "Settings_SystemCurrentYear",
+ 
      }  
 try {
 const response = yield call(getCurrentSemester,get_current_semester)
+// console.log("CurrentSemesterresponseffff",response)
 yield put(getCurrentSemesterSuccess(response[0]))
 } catch (error) {
 yield put(getCurrentSemesterFail(error))

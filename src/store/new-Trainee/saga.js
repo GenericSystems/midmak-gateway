@@ -300,7 +300,6 @@ function* fetchTraineesRegisterCertificates() {
       getTraineeRegCertificate,
       get_TraineeReg_Certificate
     );
-    console.log("responseresponseresponse", response);
     yield put(getRegisterCertificatesSuccess(response));
   } catch (error) {
     yield put(getRegisterCertificatesFail(error));

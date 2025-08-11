@@ -104,6 +104,8 @@ import DecisionsTypesSaga from "./HR/decisionsTypes/saga";
 import ApplicantsSaga from "./Exam/Applicants/saga";
 import AbsenceWarningsSaga from "./Rules-and-Regulations/Absence-warnings/saga";
 
+import DocumentTypesSaga from "./documents-types/saga";
+
 import traineesSaga from "./new-Trainee/saga";
 
 import trainingFormatsSaga from "./trainingFormat/saga";
@@ -242,5 +244,6 @@ export default function* rootSaga() {
     fork(HighStudyTypeSaga),
     fork(ApplicantsSaga),
     fork(AbsenceWarningsSaga),
+    fork(DocumentTypesSaga),
   ]);
 }

@@ -168,6 +168,13 @@ import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 //Absence warnings
 import AbsenceWarningsList from "../pages/Rules-and-Regulations/Absence-warnings/absenceWarnings";
 
+//documet types
+import DocumentsTypesList from "../pages/Addmission/AdmissionSettings/documents-types";
+
+// RegReqDocuments
+
+import RegReqDocumentsTable from "../pages/Addmission/AdmissionSettings/regReqDocuments";
+
 //ExamRooms
 import ExamRoomsList from "../pages/Exam/ExamRooms/examRooms";
 
@@ -314,6 +321,13 @@ const authProtectedRoutes = [
   // contractsTypes
 
   { path: "/contractsTypes", component: ContractsTypesList },
+
+  // documentsTypes
+
+  { path: "/documents-Types", component: DocumentsTypesList },
+
+  //regReqDocument
+  { path: "/regReqDocuments", component: RegReqDocumentsTable },
 
   // ExamRooms
 
