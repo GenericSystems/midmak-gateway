@@ -2019,7 +2019,6 @@ export const updateContractType = data => post(url.UPDATE_CONTRACT_TYPE, data);
 //delete contractType
 export const deleteContractType = data => post(url.DELETE_CONTRACT_TYPE, data);
 
-
 export const getAbsenceWarnings = data => post(url.GET_ABSENCE_WARNINGS, data);
 
 export const addNewAbsenceWarning = data =>
@@ -2236,6 +2235,9 @@ export const updateTrainee = data => post(url.UPDATE_TRAINEE, data);
 export const deleteTrainee = data => post(url.DELETE_TRAINEE, data);
 export const getTraineeRegCertificate = data =>
   post(url.GET_REGISTER_CERTIFICATES, data);
+
+//social status
+export const getSocialStatus = data => post(url.GET_SOCIAL_STATUS, data);
 
 //trainingFormat
 export const getTrainingFormats = data => post(url.GET_TRAINING_FORMATS, data);

@@ -15,10 +15,13 @@ import {
   GET_REGISTER_CERTIFICATES_FAIL,
   GET_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
   GET_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
+  GET_SOCIAL_STATUS_SUCCESS,
+  GET_SOCIAL_STATUS_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   trainees: [],
+  socialStatus: [],
   deleted: {},
   error: {},
   traineesDocuments: [],
@@ -122,6 +125,18 @@ const trainees = (state = INIT_STATE, action) => {
         regcertificates: action.payload,
       };
     case GET_REGISTER_CERTIFICATES_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_SOCIAL_STATUS_SUCCESS:
+      return {
+        ...state,
+        socialStatus: action.payload,
+      };
+
+    case GET_SOCIAL_STATUS_FAIL:
       return {
         ...state,
         error: action.payload,

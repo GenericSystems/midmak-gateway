@@ -104,6 +104,7 @@ class NewTrainee extends Component {
       selectedCountry: "",
       selectedSemester: "",
       selectedGovernorate: "",
+      selectedSocialStatus: "",
       selectedCity: "",
       selectedGender: "",
       genderName: "",
@@ -122,6 +123,7 @@ class NewTrainee extends Component {
       birthLocError: false,
       birthdateError: false,
       nationalityError: false,
+      genderError: false,
       facultyError: false,
       errorMessage: null,
       successMessage: null,
@@ -265,15 +267,18 @@ class NewTrainee extends Component {
       selectedRegistrationDiplomaDate,
       selectedNationalityId,
       selectedFacultyId,
+      selectedGender,
       selectedStudyPlanId,
       isEdit,
       selectedExaminationSession,
+      selectedSocialStatus,
       selectedDiplomaId,
       selectedHightStudyTypeId,
       selectedEstimateId,
       selectedRegUniDate,
     } = this.state;
     console.log("values in save", values);
+    values["socialStatusId"] = selectedSocialStatus;
     if (
       values.FirstName === "" ||
       values.LastName === "" ||
@@ -285,6 +290,7 @@ class NewTrainee extends Component {
       values.birthdate === "" ||
       selectedExaminationSession === "" ||
       (values.NationalityId === "" && selectedNationalityId === "") ||
+      (values.GenderId === "" && selectedGender === "") ||
       (values.FacultyId === "" && selectedFacultyId === "")
     ) {
       if (values.FirstName.trim() === "") {
@@ -320,6 +326,9 @@ class NewTrainee extends Component {
       if (values.NationalityId === "" && selectedNationalityId === "") {
         this.setState({ nationalityError: true, saveError: true });
       }
+      if (values.GenderId === "" && selectedGender === "") {
+        this.setState({ genderError: true, saveError: true });
+      }
 
       if (values.FacultyId === "" && selectedFacultyId === "") {
         this.setState({ facultyError: true, saveError: true });
@@ -348,6 +357,7 @@ class NewTrainee extends Component {
       this.setState({ birthLocError: false, saveError: false });
       this.setState({ birthdateError: false, saveError: false });
       this.setState({ nationalityError: false, saveError: false });
+      this.setState({ genderError: false, saveError: false });
       this.setState({ facultyError: false, saveError: false });
       this.setState({ grandFatherNameError: false, saveError: false });
       this.setState({ diplomaIdError: false, saveError: false });
@@ -361,7 +371,6 @@ class NewTrainee extends Component {
         )
           studentinfo[key] = values[key];
       });
-
       const {
         trainee,
         selectedExaminationSession,
@@ -375,6 +384,7 @@ class NewTrainee extends Component {
         selectedDiplomaVerificationDate,
         selectedRegistrationDate,
         selectedGender,
+        selectedSocialStatus,
         relativesArray,
         averageValue,
         stdDocsArray,
@@ -446,6 +456,9 @@ class NewTrainee extends Component {
 
       if (selectedExaminationSession) {
         studentinfo["ExaminationSession"] = selectedExaminationSession;
+      }
+      if (selectedSocialStatus) {
+        studentinfo["socialStatusId"] = selectedSocialStatus;
       }
 
       if (selectedStudyPattern) {
@@ -560,8 +573,81 @@ class NewTrainee extends Component {
       }
     }
 
+    if (tab == 1) {
+      const {
+        selectedBirthDate,
+        selectedRegistrationDiplomaDate,
+        selectedNationalityId,
+        selectedFacultyId,
+        selectedStudyPlanId,
+        isEdit,
+        selectedExaminationSession,
+        selectedDiplomaId,
+        selectedHightStudyTypeId,
+        selectedEstimateId,
+        selectedRegUniDate,
+      } = this.state;
+      console.log("values in save", values);
+      if (
+        values.FirstName === "" ||
+        values.LastName === "" ||
+        values.FatherName === "" ||
+        values.grandFatherName === "" ||
+        values.MotherName === "" ||
+        values.diplomaId === "" ||
+        values.BirthLocation === "" ||
+        values.birthdate === "" ||
+        selectedExaminationSession === "" ||
+        (values.NationalityId === "" && selectedNationalityId === "") ||
+        (values.FacultyId === "" && selectedFacultyId === "")
+      ) {
+        if (values.FirstName.trim() === "") {
+          this.setState({ firstNameError: true, saveError: true });
+        }
+
+        if (values.LastName.trim() === "") {
+          this.setState({ lastNameError: true, saveError: true });
+        }
+
+        if (values.FatherName.trim() === "") {
+          this.setState({ fatherNameError: true, saveError: true });
+        }
+        if (values.grandFatherName.trim() === "") {
+          this.setState({ grandFatherNameError: true, saveError: true });
+        }
+        if (values.MotherName.trim() === "") {
+          this.setState({ motherNameError: true, saveError: true });
+        }
+
+        if (values.BirthLocation.trim() === "") {
+          this.setState({ birthLocError: true, saveError: true });
+        }
+
+        if (values.birthdate === "" && selectedBirthDate === "") {
+          this.setState({ birthdateError: true, saveError: true });
+        }
+
+        if (values.NationalityId === "" && selectedNationalityId === "") {
+          this.setState({ nationalityError: true, saveError: true });
+        }
+        if (values.GenderId === "" && selectedGender === "") {
+          this.setState({ genderError: true, saveError: true });
+        }
+
+        if (values.IdNumber === "") {
+          this.setState({ IdNumberError: true, saveError: true });
+        }
+        if (values.perosonalCardNum === "") {
+          this.setState({ perosonalCardNumError: true, saveError: true });
+        }
+        const errorSaveStudentMessage = this.props.t(
+          "Fill the Required Fields to Save Trainee"
+        );
+        this.setState({ errorMessage: errorSaveStudentMessage });
+      }
+    }
+
     if (tab == 4) {
-      //onGetDefaultRegReqDocs(obj);
       this.setState({
         trnProfExperience: [],
       });
@@ -1073,6 +1159,15 @@ class NewTrainee extends Component {
     });
   };
 
+  handleSelect = (fieldName, selectedValue, values) => {
+    if (fieldName == "socialStatusId") {
+      this.setState({
+        selectedSocialStatus: selectedValue,
+        trainee: values,
+      });
+    }
+  };
+
   render() {
     //meta title
     document.title =
@@ -1110,6 +1205,7 @@ class NewTrainee extends Component {
       selectedCity,
       selectedSemester,
       selectedGovernorate,
+      selectedSocialStatus,
       selectedGender,
       IsTransferStudentCheck,
       emptyStudent,
@@ -1121,6 +1217,7 @@ class NewTrainee extends Component {
       birthLocError,
       birthdateError,
       nationalityError,
+      genderError,
       facultyError,
       errorMessage,
       successMessage,
@@ -1173,6 +1270,7 @@ class NewTrainee extends Component {
 
     const {
       trainees,
+      socialStatus,
       tempStudent,
       traineesDocuments,
       nationalities,
@@ -1570,7 +1668,8 @@ class NewTrainee extends Component {
                                   selectedNationalityId,
                                 GenderId:
                                   (trainee && trainee.GenderId) ||
-                                  selectedGender,
+                                  selectedGender ||
+                                  "",
 
                                 IdNumber: (trainee && trainee.IdNumber) || "",
                                 perosonalCardNum:
@@ -1627,7 +1726,9 @@ class NewTrainee extends Component {
                                   (trainee &&
                                     trainee.diplomaVerificationDate) ||
                                   selectedDiplomaVerificationDate,
-
+                                socialStatusId:
+                                  (trainee && trainee.socialStatusId) ||
+                                  selectedSocialStatus,
                                 registrationCertLevelId:
                                   (trainee &&
                                     trainee.registrationCertLevelId) ||
@@ -1746,6 +1847,9 @@ class NewTrainee extends Component {
 
                                 ExaminationSession: Yup.string().required(
                                   "Examination Session Is Required"
+                                ),
+                                GenderId: Yup.string().required(
+                                  "Please Select Your Gender"
                                 ),
                                 diplomaId: Yup.string()
                                   .matches(/^[\u0600-\u06FF\s]+$/)
@@ -2200,7 +2304,9 @@ class NewTrainee extends Component {
                                                                 <Row>
                                                                   <Col className="col-4">
                                                                     <Label for="enfirstName">
-                                                                      First Name
+                                                                      {this.props.t(
+                                                                        "First Name(En)"
+                                                                      )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
@@ -2229,7 +2335,9 @@ class NewTrainee extends Component {
                                                                 <Row>
                                                                   <Col className="col-4">
                                                                     <Label for="enlastName">
-                                                                      Last Name
+                                                                      {this.props.t(
+                                                                        "Last Name(En)"
+                                                                      )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
@@ -2258,8 +2366,9 @@ class NewTrainee extends Component {
                                                                 <Row>
                                                                   <Col className="col-4">
                                                                     <Label for="enfatherName">
-                                                                      Father
-                                                                      Name
+                                                                      {this.props.t(
+                                                                        "Father Name(En)"
+                                                                      )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
@@ -2288,8 +2397,9 @@ class NewTrainee extends Component {
                                                                 <Row>
                                                                   <Col className="col-4">
                                                                     <Label for="enGrandFatherName">
-                                                                      Grandfather
-                                                                      Name
+                                                                      {this.props.t(
+                                                                        "Grandfather Name(En)"
+                                                                      )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
@@ -2318,8 +2428,9 @@ class NewTrainee extends Component {
                                                                 <Row>
                                                                   <Col className="col-4">
                                                                     <Label for="enmotherName">
-                                                                      Mother
-                                                                      Name
+                                                                      {this.props.t(
+                                                                        "Mother Name(En)"
+                                                                      )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
@@ -2348,8 +2459,9 @@ class NewTrainee extends Component {
                                                                 <Row>
                                                                   <Col className="col-4">
                                                                     <Label for="enbirthLoc">
-                                                                      Place of
-                                                                      Birth
+                                                                      {this.props.t(
+                                                                        "Birth Location(En)"
+                                                                      )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
@@ -2536,6 +2648,9 @@ class NewTrainee extends Component {
                                                                         "Gender"
                                                                       )}
                                                                     </Label>
+                                                                    <span className="text-danger">
+                                                                      *
+                                                                    </span>
                                                                   </Col>
                                                                   <Col
                                                                     lg="3"
@@ -2551,6 +2666,12 @@ class NewTrainee extends Component {
                                                                             }
                                                                           >
                                                                             <Input
+                                                                              className={
+                                                                                errors.GenderId &&
+                                                                                touched.GenderId
+                                                                                  ? "is-invalid"
+                                                                                  : ""
+                                                                              }
                                                                               type="radio"
                                                                               name="GenderId"
                                                                               value={
@@ -2578,6 +2699,18 @@ class NewTrainee extends Component {
                                                                           </div>
                                                                         )
                                                                       )}
+                                                                      {genderError && (
+                                                                        <div className="invalid-feedback">
+                                                                          {this.props.t(
+                                                                            "Gender is required"
+                                                                          )}
+                                                                        </div>
+                                                                      )}
+                                                                      <ErrorMessage
+                                                                        name="GenderId"
+                                                                        component="div"
+                                                                        className="invalid-feedback"
+                                                                      />
                                                                     </div>
                                                                   </Col>
                                                                   <Row>
@@ -2589,13 +2722,24 @@ class NewTrainee extends Component {
                                                                       </Label>
                                                                     </Col>
                                                                     <Col className="col-8">
-                                                                      <Field
-                                                                        type="text"
-                                                                        name="socialStatus"
-                                                                        id="socialStatus"
-                                                                        className={
-                                                                          "form-control"
+                                                                      <Select
+                                                                        name="socialStatusId"
+                                                                        options={
+                                                                          socialStatus
                                                                         }
+                                                                        className={`form-control`}
+                                                                        onChange={newValue => {
+                                                                          this.handleSelect(
+                                                                            "socialStatusId",
+                                                                            newValue.value,
+                                                                            values
+                                                                          );
+                                                                        }}
+                                                                        defaultValue={socialStatus.find(
+                                                                          opt =>
+                                                                            opt.value ===
+                                                                            trainee?.socialStatusId
+                                                                        )}
                                                                       />
                                                                     </Col>
                                                                   </Row>
@@ -2657,6 +2801,11 @@ class NewTrainee extends Component {
                                                                       )}
                                                                     </div>
                                                                   )}
+                                                                  <ErrorMessage
+                                                                    name="IdNumber"
+                                                                    component="div"
+                                                                    className="invalid-feedback"
+                                                                  />
                                                                 </Col>
                                                               </Row>
                                                             </div>
@@ -2693,6 +2842,11 @@ class NewTrainee extends Component {
                                                                       )}
                                                                     </div>
                                                                   )}
+                                                                  <ErrorMessage
+                                                                    name="perosonalCardNum"
+                                                                    component="div"
+                                                                    className="invalid-feedback"
+                                                                  />
                                                                 </Col>
                                                               </Row>
                                                             </div>
@@ -5039,6 +5193,7 @@ const mapStateToProps = ({
   filteredAcademicCertificates:
     academiccertificates.filteredAcademicCertificates,
   tempRelatives: trainees.tempRelatives,
+  socialStatus: trainees.socialStatus,
   relatives: relatives.relatives,
   studentsOpt: universityStudents.studentsOpt,
   universityStudents: universityStudents.universityStudents,

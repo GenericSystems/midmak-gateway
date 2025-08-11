@@ -23,6 +23,9 @@ import {
   GET_TRAINEE_DEFAULT_REGREQDOCS,
   GET_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
   GET_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
+  GET_SOCIAL_STATUS,
+  GET_SOCIAL_STATUS_FAIL,
+  GET_SOCIAL_STATUS_SUCCESS,
 } from "./actionTypes";
 
 export const getTrainees = trainees => ({
@@ -132,5 +135,20 @@ export const getRegisterCertificatesSuccess = regcertificates => ({
 });
 export const getRegisterCertificatesFail = error => ({
   type: GET_REGISTER_CERTIFICATES_FAIL,
+  payload: error,
+});
+
+export const getSocialStatus = socialStatus => ({
+  type: GET_SOCIAL_STATUS,
+  payload: socialStatus,
+});
+
+export const getSocialStatusSuccess = socialStatus => ({
+  type: GET_SOCIAL_STATUS_SUCCESS,
+  payload: socialStatus,
+});
+
+export const getSocialStatusFail = error => ({
+  type: GET_SOCIAL_STATUS_FAIL,
   payload: error,
 });

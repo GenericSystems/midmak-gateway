@@ -859,7 +859,7 @@ class DefineExamDatesList extends Component {
                                             "",
                                           examTypeId:
                                             (defineExamDate &&
-                                              defineExamDate.jobTitleId) ||
+                                              defineExamDate.examTypeId) ||
                                             selectedExamType,
                                           dayId:
                                             (defineExamDate &&

@@ -9,6 +9,7 @@ import {
   UPDATE_TRAINEE,
   GET_REGISTER_CERTIFICATES,
   GET_TRAINEE_DEFAULT_REGREQDOCS,
+  GET_SOCIAL_STATUS,
 } from "./actionTypes";
 
 import {
@@ -26,6 +27,8 @@ import {
   getTraineeDefaultRegReqDocsFail,
   getRegisterCertificatesSuccess,
   getRegisterCertificatesFail,
+  getSocialStatusSuccess,
+  getSocialStatusFail,
 } from "./actions";
 
 // Include helper functions
@@ -46,6 +49,7 @@ import {
   getFaculties,
   getDiplomaLevels,
   getHighStudyTypes,
+  getSocialStatus,
 } from "../../helpers/fakebackend_helper";
 
 import {
@@ -174,6 +178,22 @@ function* fetchTrainees(selectedpayload) {
   } catch (error) {
     yield put(getGendersFail(error));
   }
+
+  //get SocialStatus
+  const get_SocialStatus = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Gender",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getSocialStatus, get_SocialStatus);
+    yield put(getSocialStatusSuccess(response));
+  } catch (error) {
+    yield put(getSocialStatusFail(error));
+  }
+
   // get estimates
   const get_estimates_req = {
     source: "db",

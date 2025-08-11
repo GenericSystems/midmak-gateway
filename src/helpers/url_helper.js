@@ -1098,6 +1098,9 @@ export const UPDATE_TRAINEE = "/update/trainee";
 export const DELETE_TRAINEE = "/delete/trainee";
 export const GET_REGISTER_CERTIFICATES = "/registerCertificates";
 
+//social status
+export const GET_SOCIAL_STATUS = "/socialStatus";
+
 //Training Formats
 export const GET_TRAINING_FORMATS = "/trainingFormats";
 export const GET_TRAINING_FORMAT_DELETED_VALUE = "/deleted";
