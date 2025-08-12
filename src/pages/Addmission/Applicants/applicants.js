@@ -1765,6 +1765,33 @@ class ApplicantsList extends Component {
         }),
       },
       {
+        dataField: "registeredUnder",
+        text: this.props.t("Registered Under"),
+        sort: true,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          // hidden: !showSearchButton,
+        }),
+      },
+      {
+        dataField: "studentStatus",
+        text: this.props.t("Student Status"),
+        sort: true,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          // hidden: !showSearchButton,
+        }),
+      },
+      {
+        dataField: "applicationProcess",
+        text: this.props.t("Application Process"),
+        sort: true,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          // hidden: !showSearchButton,
+        }),
+      },
+      {
         dataField: "menu",
         isDummyField: true,
         editable: false,
@@ -1779,15 +1806,15 @@ class ApplicantsList extends Component {
               ></i>
             </Link>
             {/* )} */}
-            {/* {menuObject && menuObject.isDelete == 1 && ( */}
-            <Link className="text-danger" to="#">
-              <i
-                className="mdi mdi-delete font-size-18"
-                id="deletetooltip"
-                onClick={() => this.onClickDelete(student)}
-              ></i>
-            </Link>
-            {/* )} */}
+            {/* {menuObject && menuObject.isDelete == 1 && (
+              <Link className="text-danger" to="#">
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  id="deletetooltip"
+                  onClick={() => this.onClickDelete(student)}
+                ></i>
+              </Link>
+            )} */}
           </div>
         ),
       },
@@ -2145,7 +2172,7 @@ class ApplicantsList extends Component {
                             <React.Fragment>
                               <Row className="mb-2">
                                 <Col sm="5"></Col>
-                                <Col sm="3">
+                                <Col sm="2">
                                   <Select
                                     className="select-style-year"
                                     name="yearId"
@@ -2157,9 +2184,9 @@ class ApplicantsList extends Component {
                                     value={selectedYear}
                                   />
                                 </Col>
-                                <Col sm="3"></Col>
+                                <Col sm="4"></Col>
 
-                                {/* {menuObject && menuObject.isAdd == 1 && ( */}
+                                {/* {menuObject && menuObject.isAdd == 1 && ( 
                                 <Col sm="1">
                                   <div className="text-sm-end">
                                     <Tooltip
@@ -2175,7 +2202,7 @@ class ApplicantsList extends Component {
                                     </Tooltip>
                                   </div>
                                 </Col>
-                                {/* )} */}
+                                )} */}
                               </Row>
                               <Row>
                                 <div>
