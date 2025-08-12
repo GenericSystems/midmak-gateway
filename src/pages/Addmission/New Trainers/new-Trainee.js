@@ -110,9 +110,9 @@ class NewTrainee extends Component {
       genderName: "",
       selectedBirthDate: "",
       selectedRegistrationDiplomaDate: "",
-      selectedEmissionDate: "",
-      selectedPassportGrantDate: "",
-      selectedPassportExpirationDate: "",
+      selectedIdentityIssueDate: "",
+      selectedPassportIssueDate: "",
+      selectedPassportExpiryDate: "",
       selectedDiplomaDate: "",
       selectedDiplomaVerificationDate: "",
       values: "",
@@ -157,8 +157,8 @@ class NewTrainee extends Component {
       selectedHightStudyTypeId: "",
       selectedEstimateId: "",
       selectedRegUniDate: "",
-      IdNumberError: false,
-      perosonalCardNumError: false,
+      nationalNoError: false,
+      identityNoError: false,
     };
     this.toggle = this.toggle.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
@@ -279,6 +279,7 @@ class NewTrainee extends Component {
     } = this.state;
     console.log("values in save", values);
     values["socialStatusId"] = selectedSocialStatus;
+
     if (
       values.FirstName === "" ||
       values.LastName === "" ||
@@ -337,11 +338,11 @@ class NewTrainee extends Component {
       if (selectedExaminationSession === "") {
         this.setState({ examinationSessionError: true, saveError: true });
       }
-      if (values.IdNumber === "") {
-        this.setState({ IdNumberError: true, saveError: true });
+      if (values.nationalNo === "") {
+        this.setState({ nationalNoError: true, saveError: true });
       }
-      if (values.perosonalCardNum === "") {
-        this.setState({ perosonalCardNumError: true, saveError: true });
+      if (values.identityNo === "") {
+        this.setState({ identityNoError: true, saveError: true });
       }
       const errorSaveStudentMessage = this.props.t(
         "Fill the Required Fields to Save Trainee"
@@ -377,9 +378,9 @@ class NewTrainee extends Component {
         selectedStudyPattern,
         selectedregistrationCertLevelId,
         selectedBirthDate,
-        selectedEmissionDate,
-        selectedPassportGrantDate,
-        selectedPassportExpirationDate,
+        selectedIdentityIssueDate,
+        selectedPassportIssueDate,
+        selectedPassportExpiryDate,
         selectedDiplomaDate,
         selectedDiplomaVerificationDate,
         selectedRegistrationDate,
@@ -415,13 +416,16 @@ class NewTrainee extends Component {
         );
         studentinfo["DiplomaCountryId"] = countryObject.key;
       }
-
-      if (values.DiplomaGovernorateId) {
-        const governorateObject = governorates.find(
-          governorate => governorate.value === values.DiplomaGovernorateId
-        );
-        studentinfo["DiplomaGovernorateId"] = governorateObject.key;
-      }
+      // console.log(
+      //   "DiplomaGovernorateIdDiplomaGovernorateId",
+      //   values.DiplomaGovernorateId
+      // );
+      // if (values.DiplomaGovernorateId) {
+      //   const governorateObject = governorates.find(
+      //     governorate => governorate.value === values.DiplomaGovernorateId
+      //   );
+      //   studentinfo["DiplomaGovernorateId"] = governorateObject.key;
+      // }
 
       /*  if (values.DiplomaCityId) {
         const cityObject = cities.find(
@@ -474,16 +478,16 @@ class NewTrainee extends Component {
         studentinfo["birthdate"] = selectedBirthDate;
       }
 
-      if (selectedEmissionDate) {
-        studentinfo["EmissionDate"] = selectedEmissionDate;
+      if (selectedIdentityIssueDate) {
+        studentinfo["identityIssueDate"] = selectedIdentityIssueDate;
       }
 
-      if (selectedPassportGrantDate) {
-        studentinfo["passportGrantDate"] = selectedPassportGrantDate;
+      if (selectedPassportIssueDate) {
+        studentinfo["passportIssueDate"] = selectedPassportIssueDate;
       }
 
-      if (selectedPassportExpirationDate) {
-        studentinfo["passportExpirationDate"] = selectedPassportExpirationDate;
+      if (selectedPassportExpiryDate) {
+        studentinfo["passportExpiryDate"] = selectedPassportExpiryDate;
       }
 
       if (selectedDiplomaDate) {
@@ -522,7 +526,7 @@ class NewTrainee extends Component {
       console.log("studentinfo in save", studentinfo);
 
       // studentinfo["stdDocs"] = extractedArray;
-      studentinfo["profExperience"] = trnProfExperience;
+      // studentinfo["profExperience"] = trnProfExperience;
       //studentinfo["siblings"] = siblingsArray;
       onAddNewStudent(studentinfo);
       const saveStudentMessage = this.props.t("Trainee saved successfully");
@@ -570,80 +574,6 @@ class NewTrainee extends Component {
           activeTab: tab,
           passedSteps: modifiedSteps,
         });
-      }
-    }
-
-    if (tab == 1) {
-      const {
-        selectedBirthDate,
-        selectedRegistrationDiplomaDate,
-        selectedNationalityId,
-        selectedFacultyId,
-        selectedStudyPlanId,
-        isEdit,
-        selectedExaminationSession,
-        selectedDiplomaId,
-        selectedHightStudyTypeId,
-        selectedEstimateId,
-        selectedRegUniDate,
-      } = this.state;
-      console.log("values in save", values);
-      if (
-        values.FirstName === "" ||
-        values.LastName === "" ||
-        values.FatherName === "" ||
-        values.grandFatherName === "" ||
-        values.MotherName === "" ||
-        values.diplomaId === "" ||
-        values.BirthLocation === "" ||
-        values.birthdate === "" ||
-        selectedExaminationSession === "" ||
-        (values.NationalityId === "" && selectedNationalityId === "") ||
-        (values.FacultyId === "" && selectedFacultyId === "")
-      ) {
-        if (values.FirstName.trim() === "") {
-          this.setState({ firstNameError: true, saveError: true });
-        }
-
-        if (values.LastName.trim() === "") {
-          this.setState({ lastNameError: true, saveError: true });
-        }
-
-        if (values.FatherName.trim() === "") {
-          this.setState({ fatherNameError: true, saveError: true });
-        }
-        if (values.grandFatherName.trim() === "") {
-          this.setState({ grandFatherNameError: true, saveError: true });
-        }
-        if (values.MotherName.trim() === "") {
-          this.setState({ motherNameError: true, saveError: true });
-        }
-
-        if (values.BirthLocation.trim() === "") {
-          this.setState({ birthLocError: true, saveError: true });
-        }
-
-        if (values.birthdate === "" && selectedBirthDate === "") {
-          this.setState({ birthdateError: true, saveError: true });
-        }
-
-        if (values.NationalityId === "" && selectedNationalityId === "") {
-          this.setState({ nationalityError: true, saveError: true });
-        }
-        if (values.GenderId === "" && selectedGender === "") {
-          this.setState({ genderError: true, saveError: true });
-        }
-
-        if (values.IdNumber === "") {
-          this.setState({ IdNumberError: true, saveError: true });
-        }
-        if (values.perosonalCardNum === "") {
-          this.setState({ perosonalCardNumError: true, saveError: true });
-        }
-        const errorSaveStudentMessage = this.props.t(
-          "Fill the Required Fields to Save Trainee"
-        );
-        this.setState({ errorMessage: errorSaveStudentMessage });
       }
     }
 
@@ -776,7 +706,7 @@ class NewTrainee extends Component {
 
   handelAddExperience = () => {
     const { lastUsedId } = this.state;
-    const { values, setFieldValue } = this.formikRef.current;
+    // const { values, setFieldValue } = this.formikRef.current;
     // const { trnProfExperience } = this.state;
     const emptyRowsExist = values.profExperience.some(
       experience => experience.companyName.trim() === ""
@@ -793,10 +723,10 @@ class NewTrainee extends Component {
         workField: "",
         duaration: "",
       };
-      setFieldValue("profExperience", [
-        ...values.profExperience,
-        newExperience,
-      ]);
+      // setFieldValue("profExperience", [
+      //   ...values.profExperience,
+      //   newExperience,
+      // ]);
       this.setState({ duplicateErrorProfExperiences: null });
     }
   };
@@ -1187,9 +1117,9 @@ class NewTrainee extends Component {
       selectedExaminationSession,
       selectedBirthDate,
       selectedRegistrationDiplomaDate,
-      selectedEmissionDate,
-      selectedPassportGrantDate,
-      selectedPassportExpirationDate,
+      selectedIdentityIssueDate,
+      selectedPassportIssueDate,
+      selectedPassportExpiryDate,
       selectedDiploma,
       selectedDiplomaDate,
       selectedDiplomaVerificationDate,
@@ -1246,8 +1176,8 @@ class NewTrainee extends Component {
       selectedEstimateId,
       selectedRegUniDate,
       languageState,
-      IdNumberError,
-      perosonalCardNumError,
+      nationalNoError,
+      identityNoError,
     } = this.state;
     const gradeOptions = [
       { value: 1, label: "Good" },
@@ -1671,29 +1601,27 @@ class NewTrainee extends Component {
                                   selectedGender ||
                                   "",
 
-                                IdNumber: (trainee && trainee.IdNumber) || "",
-                                perosonalCardNum:
-                                  (trainee && trainee.perosonalCardNum) || "",
-                                EmissionDate:
-                                  (trainee && trainee.EmissionDate) ||
-                                  selectedEmissionDate ||
+                                nationalNo:
+                                  (trainee && trainee.nationalNo) || "",
+                                identityNo:
+                                  (trainee && trainee.identityNo) || "",
+                                identityIssueDate:
+                                  (trainee && trainee.identityIssueDate) ||
+                                  selectedIdentityIssueDate ||
                                   "",
-                                perCardCaza:
-                                  (trainee && trainee.perCardCaza) || "",
-                                perCardPlaceRegistration:
-                                  (trainee &&
-                                    trainee.perCardPlaceRegistration) ||
-                                  "",
-                                perCardRegNum:
-                                  (trainee && trainee.perCardRegNum) || "",
+                                civicZone: (trainee && trainee.civicZone) || "",
+                                registerZone:
+                                  (trainee && trainee.registerZone) || "",
+                                registerNo:
+                                  (trainee && trainee.registerNo) || "",
                                 PassNumber:
                                   (trainee && trainee.PassNumber) || "",
-                                passportGrantDate:
-                                  (trainee && trainee.passportGrantDate) ||
-                                  selectedPassportGrantDate,
-                                passportExpirationDate:
-                                  (trainee && trainee.passportExpirationDate) ||
-                                  selectedPassportExpirationDate,
+                                passportIssueDate:
+                                  (trainee && trainee.passportIssueDate) ||
+                                  selectedPassportIssueDate,
+                                passportExpiryDate:
+                                  (trainee && trainee.passportExpiryDate) ||
+                                  selectedPassportExpiryDate,
                                 diplomaId:
                                   (trainee && trainee.diplomaId) ||
                                   selectedDiploma,
@@ -1808,8 +1736,6 @@ class NewTrainee extends Component {
                                 RegUniDate:
                                   (trainee && trainee.RegUniDate) ||
                                   selectedRegUniDate,
-                                profExperience:
-                                  (trainee && trainee.profExperience) || [],
                                 // workType: (trainee && trainee.workType) || "",
                                 // companyName:
                                 //   (trainee && trainee.companyName) || "",
@@ -1874,10 +1800,10 @@ class NewTrainee extends Component {
                                 ),
                                 academicYear: Yup.string(),
 
-                                IdNumber: Yup.string().required(
+                                nationalNo: Yup.string().required(
                                   "Id Number Is Required"
                                 ),
-                                perosonalCardNum: Yup.string().required(
+                                identityNo: Yup.string().required(
                                   "Card Number Is Required"
                                 ),
                               })}
@@ -2772,7 +2698,7 @@ class NewTrainee extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="idNum">
                                                                     {this.props.t(
-                                                                      "ID Number"
+                                                                      "National No"
                                                                     )}
                                                                   </Label>
                                                                   <span className="text-danger">
@@ -2782,19 +2708,19 @@ class NewTrainee extends Component {
                                                                 <Col className="col-8">
                                                                   <Field
                                                                     type="text"
-                                                                    name="IdNumber"
+                                                                    name="nationalNo"
                                                                     id="idNum"
                                                                     className={
                                                                       "form-control" +
-                                                                      ((errors.IdNumber &&
-                                                                        touched.IdNumber) ||
-                                                                      IdNumberError
+                                                                      ((errors.nationalNo &&
+                                                                        touched.nationalNo) ||
+                                                                      nationalNoError
                                                                         ? " is-invalid"
                                                                         : "")
                                                                     }
                                                                   />
 
-                                                                  {IdNumberError && (
+                                                                  {nationalNoError && (
                                                                     <div className="invalid-feedback">
                                                                       {this.props.t(
                                                                         "Id Number is required"
@@ -2802,7 +2728,7 @@ class NewTrainee extends Component {
                                                                     </div>
                                                                   )}
                                                                   <ErrorMessage
-                                                                    name="IdNumber"
+                                                                    name="nationalNo"
                                                                     component="div"
                                                                     className="invalid-feedback"
                                                                   />
@@ -2814,7 +2740,7 @@ class NewTrainee extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="cardNum">
                                                                     {this.props.t(
-                                                                      "Card Number"
+                                                                      "Identity No"
                                                                     )}
                                                                   </Label>
                                                                   <span className="text-danger">
@@ -2824,18 +2750,18 @@ class NewTrainee extends Component {
                                                                 <Col className="col-8">
                                                                   <Field
                                                                     type="text"
-                                                                    name="perosonalCardNum"
+                                                                    name="identityNo"
                                                                     id="cardNum"
                                                                     className={
                                                                       "form-control" +
-                                                                      ((errors.perosonalCardNum &&
-                                                                        touched.perosonalCardNum) ||
-                                                                      perosonalCardNumError
+                                                                      ((errors.identityNo &&
+                                                                        touched.identityNo) ||
+                                                                      identityNoError
                                                                         ? " is-invalid"
                                                                         : "")
                                                                     }
                                                                   />
-                                                                  {perosonalCardNumError && (
+                                                                  {identityNoError && (
                                                                     <div className="invalid-feedback">
                                                                       {this.props.t(
                                                                         "Id Number is required"
@@ -2843,7 +2769,7 @@ class NewTrainee extends Component {
                                                                     </div>
                                                                   )}
                                                                   <ErrorMessage
-                                                                    name="perosonalCardNum"
+                                                                    name="identityNo"
                                                                     component="div"
                                                                     className="invalid-feedback"
                                                                   />
@@ -2855,19 +2781,19 @@ class NewTrainee extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="emissionDate">
                                                                     {this.props.t(
-                                                                      "Grant Date"
+                                                                      "Identity Issue Date"
                                                                     )}
                                                                   </Label>
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
-                                                                    name="EmissionDate"
+                                                                    name="identityIssueDate"
                                                                     className={`form-control`}
                                                                     type="date"
                                                                     value={
-                                                                      values.EmissionDate
+                                                                      values.identityIssueDate
                                                                         ? new Date(
-                                                                            values.EmissionDate
+                                                                            values.identityIssueDate
                                                                           )
                                                                             .toISOString()
                                                                             .split(
@@ -2881,7 +2807,7 @@ class NewTrainee extends Component {
                                                                     onBlur={
                                                                       handleBlur
                                                                     }
-                                                                    id="EmissionDate-date-input"
+                                                                    id="identityIssueDate-date-input"
                                                                   />
                                                                 </Col>
                                                               </Row>
@@ -2891,14 +2817,14 @@ class NewTrainee extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="cardCaza">
                                                                     {this.props.t(
-                                                                      "amanaNum"
+                                                                      "Civic Zone"
                                                                     )}
                                                                   </Label>
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
                                                                     type="text"
-                                                                    name="perCardCaza"
+                                                                    name="civicZone"
                                                                     id="cardCaza"
                                                                     className={
                                                                       "form-control"
@@ -2912,14 +2838,14 @@ class NewTrainee extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="cardCazaReg">
                                                                     {this.props.t(
-                                                                      "Place of Registration"
+                                                                      "Register Zone"
                                                                     )}
                                                                   </Label>
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
                                                                     type="text"
-                                                                    name="perCardPlaceRegistration"
+                                                                    name="registerZone"
                                                                     id="cardCazaReg"
                                                                     className={
                                                                       "form-control"
@@ -2933,14 +2859,14 @@ class NewTrainee extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="cardRegNum">
                                                                     {this.props.t(
-                                                                      "Number of Registration"
+                                                                      "Register No"
                                                                     )}
                                                                   </Label>
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
                                                                     type="text"
-                                                                    name="perCardRegNum"
+                                                                    name="registerNo"
                                                                     id="cardRegNum"
                                                                     className={
                                                                       "form-control"
@@ -2981,19 +2907,19 @@ class NewTrainee extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="passGrantdate">
                                                                     {this.props.t(
-                                                                      "Granting Date"
+                                                                      "Passport Issue Date"
                                                                     )}
                                                                   </Label>
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
-                                                                    name="passportGrantDate"
+                                                                    name="passportIssueDate"
                                                                     className={`form-control`}
                                                                     type="date"
                                                                     value={
-                                                                      values.passportGrantDate
+                                                                      values.passportIssueDate
                                                                         ? new Date(
-                                                                            values.passportGrantDate
+                                                                            values.passportIssueDate
                                                                           )
                                                                             .toISOString()
                                                                             .split(
@@ -3007,7 +2933,7 @@ class NewTrainee extends Component {
                                                                     onBlur={
                                                                       handleBlur
                                                                     }
-                                                                    id="passportGrantDate-date-input"
+                                                                    id="passportIssueDate-date-input"
                                                                   />
                                                                 </Col>
                                                               </Row>
@@ -3017,19 +2943,19 @@ class NewTrainee extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="passExpDate">
                                                                     {this.props.t(
-                                                                      "Expiration Date"
+                                                                      "Passport Expiry Date"
                                                                     )}
                                                                   </Label>
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
-                                                                    name="passportExpirationDate"
+                                                                    name="passportExpiryDate"
                                                                     className={`form-control`}
                                                                     type="date"
                                                                     value={
-                                                                      values.passportExpirationDate
+                                                                      values.passportExpiryDate
                                                                         ? new Date(
-                                                                            values.passportExpirationDate
+                                                                            values.passportExpiryDate
                                                                           )
                                                                             .toISOString()
                                                                             .split(
@@ -3043,7 +2969,7 @@ class NewTrainee extends Component {
                                                                     onBlur={
                                                                       handleBlur
                                                                     }
-                                                                    id="passportExpirationDate-date-input"
+                                                                    id="passportExpiryDate-date-input"
                                                                   />
                                                                 </Col>
                                                               </Row>
@@ -4984,7 +4910,7 @@ class NewTrainee extends Component {
                                                           <BootstrapTable
                                                             keyField="Id"
                                                             data={
-                                                              values.profExperience
+                                                              trnProfExperience
                                                             }
                                                             columns={
                                                               trnProfExperienceColumns
@@ -5059,7 +4985,7 @@ class NewTrainee extends Component {
                                               {(isEdit ||
                                                 (showGenerateButton &&
                                                   this.state.activeTab ===
-                                                    5)) && (
+                                                    3)) && (
                                                 <li>
                                                   <Link
                                                     to="#"
@@ -5076,7 +5002,7 @@ class NewTrainee extends Component {
                                               )}
 
                                               {!isEdit &&
-                                                this.state.activeTab === 5 && (
+                                                this.state.activeTab === 3 && (
                                                   <li>
                                                     <Link
                                                       to="#"

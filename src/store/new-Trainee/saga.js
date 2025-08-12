@@ -219,6 +219,8 @@ function* fetchTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getGovernorates, get_governorate_opt);
+
+    console.log("responseresponseresponse", response);
     yield put(getGovernoratesSuccess(response));
   } catch (error) {
     yield put(getGovernoratesFail(error));
