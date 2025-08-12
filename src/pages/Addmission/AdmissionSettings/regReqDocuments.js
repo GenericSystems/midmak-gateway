@@ -108,6 +108,7 @@ class RegReqDocumentsTable extends Component {
         years,
         regcertificates,
       });
+     
     }
 
     this.setState({ defaultYear: defaultYear, isCurrentYear: true });
@@ -361,7 +362,8 @@ class RegReqDocumentsTable extends Component {
   }
 
   handleShowColumn = (fieldName, Id) => {
-    const { onGetRegReqDocuments, currentSemester } = this.props;
+    console.log("starttttttttttttttttt");
+    const { onGetRegReqDocuments, currentSemester , regReqDocuments} = this.props;
     const { selectedYear, defaultYear } = this.state;
     console.log("select selectedYear", selectedYear);
     console.log("select defaultYear", defaultYear);
@@ -373,9 +375,9 @@ class RegReqDocumentsTable extends Component {
       console.log("no", defaultYear);
       obj = { yearId: currentSemester.cuYearId, certificateLevelId: Id };
     }
-    console.log("objjjjjjjjjjjjjjjjj", obj);
+    
     onGetRegReqDocuments(obj);
-    console.log("shhhhhhhhhhhhhhhhh");
+    console.log("shhhhhhhhhhhhhhhhh", regReqDocuments);
 
     this.setState({ checkedId: Id });
   };
@@ -407,9 +409,6 @@ class RegReqDocumentsTable extends Component {
       currentSemester,
       regcertificates,
     } = this.props;
-    console.log("documentsssssssssssss", documents);
-    console.log("years", years);
-    console.log("defaultYear", defaultYear);
 
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";

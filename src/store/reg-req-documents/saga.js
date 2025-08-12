@@ -80,12 +80,13 @@ function* fetchRegReqDocuments(obj) {
   }
 
   let regReqDoc = obj.payload;
+    console.log("regReqDocccccccccccccc", regReqDoc);
   const get_settings_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_RequiredRegistrationDocuments",
-    filter: ` yearId = ${regReqDoc.yearId} and certificateTypeId = ${regReqDoc.certificateTypeId} `,
+    filter: ` yearId = ${regReqDoc.yearId} and certificateLevelId = ${regReqDoc.certificateLevelId} `,
   };
   try {
     const response = yield call(getRegReqDocuments, get_settings_req);
