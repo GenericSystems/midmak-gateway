@@ -24,6 +24,7 @@ import {
   NavLink,
   Form,
 } from "reactstrap";
+import * as moment from "moment";
 import Select from "react-select";
 import { IconButton } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
@@ -1587,6 +1588,18 @@ class ApplicantsList extends Component {
     }
   };
 
+  handleValidDate = date => {
+    if (
+      !date ||
+      date === "1970-01-01" ||
+      date === "0000-00-00" ||
+      moment(date).year() === 1970
+    ) {
+      return "";
+    }
+    return moment(date).format("DD-MM-YYYY");
+  };
+
   render() {
     //meta title
     document.title =
@@ -1709,7 +1722,7 @@ class ApplicantsList extends Component {
       },
     ];
 
-    const studentListColumns = [
+    const traineeListColumns = [
       {
         text: "Id",
         key: "Id",
@@ -1736,7 +1749,7 @@ class ApplicantsList extends Component {
         }),
       },
       {
-        dataField: "motherName",
+        dataField: "MotherName",
         text: this.props.t("Mother Name"),
         key: "mothName",
         sort: true,
@@ -1746,9 +1759,9 @@ class ApplicantsList extends Component {
         }),
       },
       {
-        dataField: "idNum",
-        key: "b-day",
-        text: this.props.t("ID Number"),
+        dataField: "nationalNo",
+        key: "idNum",
+        text: this.props.t("National Number"),
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -1756,16 +1769,18 @@ class ApplicantsList extends Component {
         }),
       },
       {
-        dataField: "birthdate",
+        dataField: "RegistrationDate",
         text: this.props.t("Registration date"),
         sort: true,
+        formatter: (cellContent, row) =>
+          this.handleValidDate(row.RegistrationDate),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           // hidden: !showSearchButton,
         }),
       },
       {
-        dataField: "registeredUnder",
+        dataField: "registrationCertLevelId",
         text: this.props.t("Registered Under"),
         sort: true,
         filter: textFilter({
@@ -2157,14 +2172,14 @@ class ApplicantsList extends Component {
                       pagination={paginationFactory(pageOptions)}
                       key="unique-pagination-key"
                       keyField="Pagination-Provider"
-                      columns={studentListColumns}
+                      columns={traineeListColumns}
                       data={students}
                     >
                       {({ paginationProps, paginationTableProps }) => (
                         <ToolkitProvider
                           key="unique-toolkit-key"
                           keyField="Toolkit-Provider"
-                          columns={studentListColumns}
+                          columns={traineeListColumns}
                           data={students}
                           search
                         >

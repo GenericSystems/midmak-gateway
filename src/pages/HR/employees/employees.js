@@ -1918,7 +1918,7 @@ class EmployeesList extends Component {
                                                                       *
                                                                     </span>
                                                                   </Col>
-                                                                  <Col className="col-6 mb-3">
+                                                                  <Col className="col-3 mb-3">
                                                                     <div className="radio-buttons-gender-container mt-3">
                                                                       {genders.map(
                                                                         gender => (
@@ -2009,6 +2009,11 @@ class EmployeesList extends Component {
                                                                       )}
                                                                     </div>
                                                                   )}
+                                                                  <ErrorMessage
+                                                                    name="nationalityId"
+                                                                    component="div"
+                                                                    className="invalid-feedback"
+                                                                  />
                                                                 </Row>
                                                               </div>
                                                             </Col>

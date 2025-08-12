@@ -156,17 +156,17 @@ import {
   getYears,
 } from "helpers/fakebackend_helper";
 
-function* fetchStudents() {
-  const get_students_req = {
+function* fetchTrainees() {
+  const get_trainees_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    // tablename: "_TempStudent",
-    tablename: "_Common_Employee",
+    tablename: "_Common_TempTrainee",
     // filter: "IsUnivStd <> 1",
   };
   try {
-    const response = yield call(getStudents, get_students_req);
+    const response = yield call(getStudents, get_trainees_req);
+    console.log("response", response);
     yield put(getStudentsSuccess(response));
   } catch (error) {
     yield put(getStudentsFail(error));
@@ -636,7 +636,7 @@ function* onGetTempRelativeDeletedValue() {
 }
 
 function* ApplicantsSaga() {
-  yield takeEvery(GET_STUDENTS, fetchStudents);
+  yield takeEvery(GET_STUDENTS, fetchTrainees);
   yield takeEvery(GET_STUDENT_BY_ID, fetchStudentById);
   yield takeEvery(ADD_NEW_STUDENT, onAddNewStudent);
   yield takeEvery(UPDATE_STUDENT, onUpdateStudent);

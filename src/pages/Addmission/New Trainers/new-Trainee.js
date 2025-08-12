@@ -116,8 +116,9 @@ class NewTrainee extends Component {
       selectedDiplomaDate: "",
       selectedDiplomaVerificationDate: "",
       values: "",
-      firstNameError: false,
+      plan_studyError: false,
       lastNameError: false,
+      firstNameError: false,
       fatherNameError: false,
       motherNameError: false,
       birthLocError: false,
@@ -130,12 +131,10 @@ class NewTrainee extends Component {
       averageValue: "",
       grandFatherNameError: false,
       diplomaIdError: false,
-      DiplomaCountryIdError: false,
       HasBrotherCheck: false,
       duplicateError: null,
       averageError: false,
       diplomaNumberError: false,
-      examinationSessionError: false,
       selectedParentNationality: null,
       relativesArray: [],
       lastUsedId: 0,
@@ -289,7 +288,7 @@ class NewTrainee extends Component {
       values.diplomaId === "" ||
       values.BirthLocation === "" ||
       values.birthdate === "" ||
-      selectedExaminationSession === "" ||
+      values.plan_study === "" ||
       (values.NationalityId === "" && selectedNationalityId === "") ||
       (values.GenderId === "" && selectedGender === "") ||
       (values.FacultyId === "" && selectedFacultyId === "")
@@ -320,6 +319,10 @@ class NewTrainee extends Component {
         this.setState({ birthLocError: true, saveError: true });
       }
 
+      if (values.plan_study.trim() === "") {
+        this.setState({ plan_studyError: true, saveError: true });
+      }
+
       if (values.birthdate === "" && selectedBirthDate === "") {
         this.setState({ birthdateError: true, saveError: true });
       }
@@ -335,9 +338,6 @@ class NewTrainee extends Component {
         this.setState({ facultyError: true, saveError: true });
       }
 
-      if (selectedExaminationSession === "") {
-        this.setState({ examinationSessionError: true, saveError: true });
-      }
       if (values.nationalNo === "") {
         this.setState({ nationalNoError: true, saveError: true });
       }
@@ -362,7 +362,6 @@ class NewTrainee extends Component {
       this.setState({ facultyError: false, saveError: false });
       this.setState({ grandFatherNameError: false, saveError: false });
       this.setState({ diplomaIdError: false, saveError: false });
-      this.setState({ examinationSessionError: false, saveError: true });
       this.setState({ stdTotalGradeError: false, saveError: false });
       let studentinfo = {};
       Object.keys(values).forEach(function (key) {
@@ -416,16 +415,16 @@ class NewTrainee extends Component {
         );
         studentinfo["DiplomaCountryId"] = countryObject.key;
       }
-      // console.log(
-      //   "DiplomaGovernorateIdDiplomaGovernorateId",
-      //   values.DiplomaGovernorateId
-      // );
-      // if (values.DiplomaGovernorateId) {
-      //   const governorateObject = governorates.find(
-      //     governorate => governorate.value === values.DiplomaGovernorateId
-      //   );
-      //   studentinfo["DiplomaGovernorateId"] = governorateObject.key;
-      // }
+      console.log(
+        "DiplomaGovernorateIdDiplomaGovernorateId",
+        values.DiplomaGovernorateId
+      );
+      if (values.DiplomaGovernorateId) {
+        const governorateObject = governorates.find(
+          governorate => governorate.value === values.DiplomaGovernorateId
+        );
+        studentinfo["DiplomaGovernorateId"] = governorateObject.key;
+      }
 
       /*  if (values.DiplomaCityId) {
         const cityObject = cities.find(
@@ -1158,9 +1157,7 @@ class NewTrainee extends Component {
       IsSpecial,
       showSiblingsSelect,
       stdTotalGradeError,
-      DiplomaCountryIdError,
       diplomaNumberError,
-      examinationSessionError,
       relativesArray,
       studentGrade,
       totalGradeValue,
@@ -1178,6 +1175,7 @@ class NewTrainee extends Component {
       languageState,
       nationalNoError,
       identityNoError,
+      plan_studyError,
     } = this.state;
     const gradeOptions = [
       { value: 1, label: "Good" },
@@ -1767,13 +1765,6 @@ class NewTrainee extends Component {
                                   .matches(/^[0-9]+$/)
                                   .required("Please Enter Your Average"),
                                 DiplomaNumber: Yup.string().matches(/^[0-9]+$/),
-
-                                DiplomaCountryId:
-                                  Yup.string().matches(/^[أ-ي]+$/),
-
-                                ExaminationSession: Yup.string().required(
-                                  "Examination Session Is Required"
-                                ),
                                 GenderId: Yup.string().required(
                                   "Please Select Your Gender"
                                 ),
@@ -1799,12 +1790,14 @@ class NewTrainee extends Component {
                                   "Must be a valid Email"
                                 ),
                                 academicYear: Yup.string(),
-
+                                plan_study: Yup.string().required(
+                                  "Please Enter Your Specialty"
+                                ),
                                 nationalNo: Yup.string().required(
-                                  "Id Number Is Required"
+                                  "National Number Is Required"
                                 ),
                                 identityNo: Yup.string().required(
-                                  "Card Number Is Required"
+                                  "Identity Number Is Required"
                                 ),
                               })}
                             >
@@ -2519,7 +2512,7 @@ class NewTrainee extends Component {
                                                                 <Row>
                                                                   <Col className="col-4">
                                                                     <div>
-                                                                      <Label className="form-label">
+                                                                      <Label className="nationalityId">
                                                                         {this.props.t(
                                                                           "Nationality"
                                                                         )}
@@ -2531,12 +2524,13 @@ class NewTrainee extends Component {
                                                                   </Col>
                                                                   <Col className="col-8">
                                                                     <Select
-                                                                      className={`select-style-std ${
+                                                                      className={`form-control ${
                                                                         nationalityError
                                                                           ? "is-invalid"
                                                                           : ""
                                                                       }`}
                                                                       name="NationalityId"
+                                                                      id="nationalityId"
                                                                       key={`nationality_select`}
                                                                       options={
                                                                         nationalities
@@ -2592,6 +2586,7 @@ class NewTrainee extends Component {
                                                                             }
                                                                           >
                                                                             <Input
+                                                                              id="genderId"
                                                                               className={
                                                                                 errors.GenderId &&
                                                                                 touched.GenderId
@@ -2617,11 +2612,14 @@ class NewTrainee extends Component {
                                                                                 selectedGender
                                                                               }
                                                                             />
-                                                                            <label className="ms-2">
+                                                                            <Label
+                                                                              for="genderId"
+                                                                              className="ms-2"
+                                                                            >
                                                                               {this.props.t(
                                                                                 gender.label
                                                                               )}
-                                                                            </label>
+                                                                            </Label>
                                                                           </div>
                                                                         )
                                                                       )}
@@ -2723,7 +2721,7 @@ class NewTrainee extends Component {
                                                                   {nationalNoError && (
                                                                     <div className="invalid-feedback">
                                                                       {this.props.t(
-                                                                        "Id Number is required"
+                                                                        "National Number is required"
                                                                       )}
                                                                     </div>
                                                                   )}
@@ -2764,7 +2762,7 @@ class NewTrainee extends Component {
                                                                   {identityNoError && (
                                                                     <div className="invalid-feedback">
                                                                       {this.props.t(
-                                                                        "Id Number is required"
+                                                                        "Identity Number is required"
                                                                       )}
                                                                     </div>
                                                                   )}
@@ -3848,13 +3846,23 @@ class NewTrainee extends Component {
                                                                       "Specialty"
                                                                     )}
                                                                   </Label>
+                                                                  <span className="text-danger">
+                                                                    *
+                                                                  </span>
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Input
                                                                     type="text"
                                                                     name="plan_study"
                                                                     id="study-plan"
-                                                                    className="form-control"
+                                                                    className={
+                                                                      "form-control" +
+                                                                      ((errors.plan_study &&
+                                                                        touched.plan_study) ||
+                                                                      plan_studyError
+                                                                        ? " is-invalid"
+                                                                        : "")
+                                                                    }
                                                                     value={
                                                                       values.plan_study
                                                                     }
@@ -3865,6 +3873,18 @@ class NewTrainee extends Component {
                                                                           .value
                                                                       )
                                                                     }
+                                                                  />
+                                                                  {plan_studyError && (
+                                                                    <div className="invalid-feedback">
+                                                                      {this.props.t(
+                                                                        "Specialty is required"
+                                                                      )}
+                                                                    </div>
+                                                                  )}
+                                                                  <ErrorMessage
+                                                                    name="plan_study"
+                                                                    component="div"
+                                                                    className="invalid-feedback"
                                                                   />
                                                                 </Col>
                                                               </Row>
@@ -3879,7 +3899,7 @@ class NewTrainee extends Component {
                                                     {!isHightSchooll && (
                                                       <CardTitle id="card_header">
                                                         {this.props.t(
-                                                          "hight school certificate Info "
+                                                          "Hight School Diploma Info "
                                                         )}
                                                       </CardTitle>
                                                     )}
@@ -3971,12 +3991,9 @@ class NewTrainee extends Component {
                                                               <Col className="col-4">
                                                                 <Label for="diplomaCountry">
                                                                   {this.props.t(
-                                                                    "Certificate Country"
+                                                                    "Diploma Country"
                                                                   )}
                                                                 </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
                                                               </Col>
                                                               <Col className="col-8">
                                                                 <Field
@@ -4019,12 +4036,6 @@ class NewTrainee extends Component {
                                                                     )
                                                                   )}
                                                                 </datalist>
-
-                                                                <ErrorMessage
-                                                                  name="DiplomaCountryId"
-                                                                  component="div"
-                                                                  className="invalid-feedback"
-                                                                />
                                                               </Col>
                                                             </Row>
                                                           </div>
@@ -4117,9 +4128,6 @@ class NewTrainee extends Component {
                                                                     "Examination Session"
                                                                   )}
                                                                 </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
                                                               </Col>
                                                               <Col className="col-8">
                                                                 <div
@@ -4127,12 +4135,7 @@ class NewTrainee extends Component {
                                                                   id="exam-session"
                                                                   role="group"
                                                                   className={
-                                                                    "btn-group btn-group-example mb-3 bg-transparent form-control" +
-                                                                    ((errors.ExaminationSession &&
-                                                                      touched.ExaminationSession) ||
-                                                                    examinationSessionError
-                                                                      ? " is-invalid"
-                                                                      : "")
+                                                                    "btn-group btn-group-example mb-3 bg-transparent form-control"
                                                                   }
                                                                 >
                                                                   <button
@@ -4191,18 +4194,6 @@ class NewTrainee extends Component {
                                                                     )}
                                                                   </button>
                                                                 </div>
-                                                                {examinationSessionError && (
-                                                                  <div className="invalid-feedback">
-                                                                    {this.props.t(
-                                                                      "Examination Session is required"
-                                                                    )}
-                                                                  </div>
-                                                                )}
-                                                                <ErrorMessage
-                                                                  name="ExaminationSession"
-                                                                  component="div"
-                                                                  className="invalid-feedback"
-                                                                />
                                                               </Col>
                                                             </Row>
                                                           </div>
@@ -4213,7 +4204,7 @@ class NewTrainee extends Component {
                                                               <Col className="col-4">
                                                                 <Label for="diploma-num">
                                                                   {this.props.t(
-                                                                    "Certificate Number"
+                                                                    "Diploma Number"
                                                                   )}
                                                                 </Label>
                                                               </Col>
