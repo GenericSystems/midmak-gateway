@@ -84,40 +84,34 @@ class RegReqDocumentsTable extends Component {
       years,
       regcertificates,
     } = this.props;
-
-    // Update button visibility based on user menu & path
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
 
-    // Get default year from current semester
     const defaultYear = years.find(
       year => year.value === currentSemester.cuYearId
     );
 
-    // Always fetch fresh data from DB on mount
-    if (currentSemester?.cuYearId) {
+    if (regReqDocuments && !regReqDocuments.length) {
       let ob = {
         yearId: currentSemester.cuYearId,
         certificateLevelId: 1,
       };
+      // console.log(" certificateLevelId certificateLevelId", certificateLevelId)
       onGetRegReqDocuments(ob);
+
+      this.setState({ regReqDocuments, deleted });
+      this.setState({
+        documents,
+        currentSemester,
+        years,
+        regcertificates,
+      });
     }
 
-    // Set initial state values
-    this.setState({
-      regReqDocuments,
-      deleted,
-      documents,
-      currentSemester,
-      years,
-      regcertificates,
-      defaultYear: defaultYear,
-      isCurrentYear: true,
-    });
+    this.setState({ defaultYear: defaultYear, isCurrentYear: true });
   }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { years, currentSemester } = this.state;
     if (years && years.length && currentSemester) {
