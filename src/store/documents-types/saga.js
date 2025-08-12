@@ -74,7 +74,7 @@ function* onUpdateDocument({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_RegDocType";
+  payload["tablename"] = "Settings_RegDocType";
   try {
     const respupdate = yield call(updateDocument, payload);
     yield put(updateDocumentSuccess(respupdate[0]));
@@ -87,7 +87,7 @@ function* onDeleteDocument({ payload, document }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_RegDocType";
+  payload["tablename"] = "Settings_RegDocType";
   try {
     const respdelete = yield call(deleteDocument, payload);
     yield put(deleteDocumentSuccess(respdelete[0]));

@@ -96,9 +96,9 @@ class RegReqDocumentsTable extends Component {
     if (regReqDocuments && !regReqDocuments.length) {
       let ob = {
         yearId: currentSemester.cuYearId,
-        regcertificateId: 1,
+        certificateLevelId: 1,
       };
-      // console.log("regcertificateIdregcertificateId",regcertificateId)
+      // console.log(" certificateLevelId certificateLevelId", certificateLevelId)
       onGetRegReqDocuments(ob);
 
       this.setState({ regReqDocuments, deleted });
@@ -108,11 +108,11 @@ class RegReqDocumentsTable extends Component {
         years,
         regcertificates,
       });
+     
     }
 
     this.setState({ defaultYear: defaultYear, isCurrentYear: true });
   }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { years, currentSemester } = this.state;
     if (years && years.length && currentSemester) {
@@ -201,10 +201,10 @@ class RegReqDocumentsTable extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
-handleAddRow = () => {
+  handleAddRow = () => {
     const { onAddNewRegReqDocument, regReqDocuments, currentSemester } =
       this.props;
-      const { checkedId } = this.state
+    const { checkedId } = this.state;
     const emptyLevelExists = regReqDocuments.some(
       row => row.documentTypeId === 0
     );
@@ -215,7 +215,7 @@ handleAddRow = () => {
     } else {
       const newRow = {
         yearId: currentSemester.cuYearId,
-        certificateLevelId: checkedId
+        certificateLevelId: checkedId,
       };
       this.setState({ duplicateError: null });
       onAddNewRegReqDocument(newRow);
@@ -246,7 +246,7 @@ handleAddRow = () => {
     let onUpdate = {
       Id: rowId,
       [fieldName]: fieldValue,
-      regcertificateId: checkedId,
+      certificateLevelId: checkedId,
     };
     onUpdateRegReqDocument(onUpdate);
   };
@@ -275,8 +275,9 @@ handleAddRow = () => {
   handleChangeCheckbox = (row, fieldName) => {
     const { onUpdateRegReqDocument } = this.props;
     const newStatus = row[fieldName] ? 0 : 1;
+
     let ob = {
-      Id: row.Id,
+      ...row,
       [fieldName]: newStatus,
     };
 
@@ -329,7 +330,7 @@ handleAddRow = () => {
 
     let ob = {
       yearId: selectedValue.value,
-      regcertificateId: checkedId,
+      certificateLevelId: checkedId,
     };
 
     if (ob) {
@@ -361,24 +362,22 @@ handleAddRow = () => {
   }
 
   handleShowColumn = (fieldName, Id) => {
-    const { onGetRegReqDocuments, currentSemester } = this.props;
+    console.log("starttttttttttttttttt");
+    const { onGetRegReqDocuments, currentSemester , regReqDocuments} = this.props;
     const { selectedYear, defaultYear } = this.state;
     console.log("select selectedYear", selectedYear);
     console.log("select defaultYear", defaultYear);
     let obj;
     if (defaultYear) {
       console.log("yes");
-      obj = { yearId: defaultYear.value, regcertificateId: Id };
-      console.log("regcertificateId", regcertificateId);
+      obj = { yearId: defaultYear.value, certificateLevelId: Id };
     } else {
       console.log("no", defaultYear);
-      obj = {
-        yearId: currentSemester.cuYearId,
-        regcertificateId: Id,
-      };
+      obj = { yearId: currentSemester.cuYearId, certificateLevelId: Id };
     }
-    console.log("obbbbbbbbb", obj);
+    
     onGetRegReqDocuments(obj);
+    console.log("shhhhhhhhhhhhhhhhh", regReqDocuments);
 
     this.setState({ checkedId: Id });
   };
@@ -410,9 +409,6 @@ handleAddRow = () => {
       currentSemester,
       regcertificates,
     } = this.props;
-    console.log("currentSemester", currentSemester);
-    console.log("years", years);
-    console.log("defaultYear", defaultYear);
 
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
@@ -434,6 +430,7 @@ handleAddRow = () => {
         dataField: "documentTypeId",
         text: this.props.t("Document Name"),
         editable: false,
+
         sort: true,
         formatter: (cellContent, row) => (
           <Select
@@ -454,7 +451,7 @@ handleAddRow = () => {
             defaultValue={this.props.documents.find(
               opt => opt.value === row.documentTypeId
             )}
-            isDisabled={!this.props.showEditButton}
+            //  isDisabled={!this.props.showEditButton}
           />
         ),
       },
@@ -464,7 +461,7 @@ handleAddRow = () => {
         dataField: "requiredNumber",
         text: this.props.t("Required Number"),
         sort: true,
-        editable: showEditButton,
+        editable: true,
       },
       {
         key: "prevent-admission",
@@ -478,7 +475,7 @@ handleAddRow = () => {
             name="AllowAdmission"
             className={`form-check-input input-mini warning}`}
             id="admissionButton"
-            disabled={row.documentTypeId === 0 || !showEditButton}
+            disabled={row.documentTypeId === 0}
             defaultChecked={cellContent == 1}
             onChange={event =>
               this.handleChangeCheckbox(row, "preventAdmission")
@@ -499,7 +496,7 @@ handleAddRow = () => {
             name="AllowRegister"
             className={`form-check-input input-mini warning}`}
             id="behaviorButton"
-            disabled={row.documentTypeId === 0 || !showEditButton}
+            disabled={row.documentTypeId === 0} // Disable the checkbox if documentTypeId is 0
             defaultChecked={cellContent == 1}
             onChange={event =>
               this.handleChangeCheckbox(row, "preventRegistration")
@@ -521,7 +518,7 @@ handleAddRow = () => {
             name="AllowGraduation"
             className={`form-check-input input-mini warning}`}
             id="graduationButton"
-            disabled={row.documentTypeId === 0 || !showEditButton} // Disable the checkbox if documentTypeId is 0
+            disabled={row.documentTypeId === 0} // Disable the checkbox if documentTypeId is 0
             defaultChecked={cellContent == 1}
             onChange={event =>
               this.handleChangeCheckbox(
@@ -546,7 +543,7 @@ handleAddRow = () => {
             name="RequireAttestation"
             className={`form-check-input input-mini warning}`}
             id="attestationButton"
-            disabled={row.documentTypeId === 0 || !showEditButton} // Disable the checkbox if documentTypeId is 0
+            disabled={row.documentTypeId === 0} // Disable the checkbox if documentTypeId is 0
             defaultChecked={cellContent == 1}
             onChange={event =>
               this.handleChangeCheckbox(row, "requireAttestation")
@@ -558,7 +555,7 @@ handleAddRow = () => {
       {
         dataField: "delete",
         text: "",
-        hidden: !showDeleteButton,
+        // hidden: !showDeleteButton,
         isDummyField: true,
         editable: false,
         formatter: (cellContent, regReqdocument) => (
