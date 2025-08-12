@@ -59,7 +59,7 @@ import {
   getDefaultRegReqDocs,
   getStudentDeletedValue,
   getTempRelativeDeletedValue,
-} from "store/Exam/Applicants/actions";
+} from "store/Admission/Applicants/actions";
 
 // import { getFilteredFaculties } from "store/admissionConditions/actions";
 // import { getFilteredAcademicCertificates } from "store/academicvertificates/actions";
