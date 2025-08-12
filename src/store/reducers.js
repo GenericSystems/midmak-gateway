@@ -292,7 +292,7 @@ import studentsRequests from "./students-requests/reducer";
 import contracts from "./HR/contracts/reducer";
 
 //Applicants
-import applicants from "./Exam/Applicants/reducer";
+import applicants from "./Admission/Applicants/reducer";
 
 //Trainees
 import trainees from "./new-Trainee/reducer";

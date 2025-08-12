@@ -281,7 +281,7 @@ export * from "./HR/contracts/actions";
 
 //Applicants
 
-export * from "./Exam/Applicants/actions";
+export * from "./Admission/Applicants/actions";
 
 //Trainees
 export * from "./new-Trainee/actions";

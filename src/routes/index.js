@@ -197,7 +197,7 @@ import DecisionsList from "../pages/HR/decisions/decisions";
 import ContractsList from "../pages/HR/contracts/contracts";
 
 //Applicants
-import ApplicantsList from "../pages/Exam/Applicants/applicants";
+import ApplicantsList from "../pages/Addmission/Applicants/applicants";
 
 //Employment cases
 import EmploymentCasesList from "../pages/HR/employmentCases/employmentCases";
