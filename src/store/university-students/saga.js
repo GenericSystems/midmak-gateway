@@ -328,7 +328,7 @@ function* fetchUniversityStudents() {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "settings_RegDocType",
-    fields: "Id,arDocument",
+    fields: "Id,arTitle",
   };
   try {
     const response = yield call(getDocuments, get_Documents_opt);
