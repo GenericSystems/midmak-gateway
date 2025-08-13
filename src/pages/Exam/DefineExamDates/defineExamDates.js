@@ -580,19 +580,19 @@ class DefineExamDatesList extends Component {
         editable: false,
         //  hidden: !showDeleteButton,
         formatter: (cellContent, defineExamDate) => (
-          <div className="d-flex gap-3">
-            {/* <Tooltip
-              title={this.props.t("View Employee Information")}
-              placement="top"
-            >
-              <Link className="text-sm-end" to="#">
+          <div className="d-flex gap-4">
+            <Tooltip title={this.props.t("Exam Date Settings")} placement="top">
+              <Link
+                className="d-flex align-items-center justify-content-center"
+                to="#"
+              >
                 <i
-                  className="fas fa-male font-size-18"
-                  id="viewtooltip"
-                  onClick={() => this.handleEmployeeDataClick(defineExamDate)}
+                  className="dripicons-document-edit font-size-16 mt=-5"
+                  id="viewEdittooltip"
+                  onClick={() => this.handleExamDateDetailEdit(defineExamDate)}
                 ></i>
               </Link>
-            </Tooltip> */}
+            </Tooltip>
             <Tooltip title={this.props.t("Edit")} placement="top">
               <Link className="text-sm-end" to="#">
                 <i

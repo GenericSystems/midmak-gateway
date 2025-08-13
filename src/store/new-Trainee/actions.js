@@ -26,6 +26,15 @@ import {
   GET_SOCIAL_STATUS,
   GET_SOCIAL_STATUS_FAIL,
   GET_SOCIAL_STATUS_SUCCESS,
+  ADD_NEW_PROFESSIONAL_EXPERIENCE,
+  ADD_PROFESSIONAL_EXPERIENCE_SUCCESS,
+  ADD_PROFESSIONAL_EXPERIENCE_FAIL,
+  UPDATE_PROFESSIONAL_EXPERIENCE,
+  UPDATE_PROFESSIONAL_EXPERIENCE_SUCCESS,
+  UPDATE_PROFESSIONAL_EXPERIENCE_FAIL,
+  DELETE_PROFESSIONAL_EXPERIENCE,
+  DELETE_PROFESSIONAL_EXPERIENCE_SUCCESS,
+  DELETE_PROFESSIONAL_EXPERIENCE_FAIL,
 } from "./actionTypes";
 
 export const getTrainees = trainees => ({
@@ -150,5 +159,50 @@ export const getSocialStatusSuccess = socialStatus => ({
 
 export const getSocialStatusFail = error => ({
   type: GET_SOCIAL_STATUS_FAIL,
+  payload: error,
+});
+
+export const addNewProfessionalExperience = profExper => ({
+  type: ADD_NEW_PROFESSIONAL_EXPERIENCE,
+  payload: profExper,
+});
+
+export const addProfessionalExperienceSuccess = profExper => ({
+  type: ADD_PROFESSIONAL_EXPERIENCE_SUCCESS,
+  payload: profExper,
+});
+
+export const addProfessionalExperienceFail = error => ({
+  type: ADD_PROFESSIONAL_EXPERIENCE_FAIL,
+  payload: error,
+});
+
+export const updateProfessionalExperience = profExper => ({
+  type: UPDATE_PROFESSIONAL_EXPERIENCE,
+  payload: profExper,
+});
+
+export const updateProfessionalExperienceSuccess = profExper => ({
+  type: UPDATE_PROFESSIONAL_EXPERIENCE_SUCCESS,
+  payload: profExper,
+});
+
+export const updateProfessionalExperienceFail = error => ({
+  type: UPDATE_PROFESSIONAL_EXPERIENCE_FAIL,
+  payload: error,
+});
+
+export const deleteProfessionalExperience = profExper => ({
+  type: DELETE_PROFESSIONAL_EXPERIENCE,
+  payload: profExper,
+});
+
+export const deleteProfessionalExperienceSuccess = profExper => ({
+  type: DELETE_PROFESSIONAL_EXPERIENCE_SUCCESS,
+  payload: profExper,
+});
+
+export const deleteProfessionalExperienceFail = error => ({
+  type: DELETE_PROFESSIONAL_EXPERIENCE_FAIL,
   payload: error,
 });

@@ -56,6 +56,9 @@ import {
   addNewTrainee,
   getRegisterCertificates,
   getTraineeDefaultRegReqDocs,
+  updateProfessionalExperience,
+  addNewProfessionalExperience,
+  deleteProfessionalExperience,
 } from "store/new-Trainee/actions";
 import { isEmpty, size, map, values } from "lodash";
 
@@ -68,6 +71,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
 import { ConsoleLineIcon } from "@icons/material";
 import { da } from "date-fns/locale";
+import trainees from "../AcadmeyStudents/trainees";
 
 class NewTrainee extends Component {
   constructor(props) {
@@ -95,7 +99,7 @@ class NewTrainee extends Component {
       selectedregistrationCertLevelId: "",
       selectedStudyPattern: "",
       selectedExaminationSession: "",
-      IsTransferStudentCheck: false,
+      IsTransferTraineeCheck: false,
       transferUniName: "",
       selectedUnivCountry: "",
       selectedRegistrationDate: new Date().toISOString().split("T")[0],
@@ -149,7 +153,7 @@ class NewTrainee extends Component {
       showSiblingsSelect: false,
       siblingsArray: [],
       duplicateErrorSibling: null,
-      trnProfExperience: [],
+      trnProfExperiences: [],
       gradeError: false,
       selectedInstituteCountry: "",
       languageState: "",
@@ -170,11 +174,12 @@ class NewTrainee extends Component {
     const lang = localStorage.getItem("I18N_LANGUAGE");
 
     const {
+      last_created_trainee,
       trainees,
       traineesDocuments,
       onGetTrainees,
-      onGetStudentById,
-      tempStudent,
+      onGetTraineeById,
+      tempTrainee,
       generated_student,
       nationalities,
       relatives,
@@ -202,6 +207,7 @@ class NewTrainee extends Component {
     onGetTraineesRegCertificates();
     onGetTraineesDocuments();
 
+    this.setState({ last_created_trainee });
     this.setState({ trainees });
     this.setState({ traineesDocuments });
     this.setState({ nationalities });
@@ -217,7 +223,7 @@ class NewTrainee extends Component {
     this.setState({ admissionConditions });
     this.setState({ academiccertificates });
     this.setState({ filteredAcademicCertificates });
-    this.setState({ tempStudent });
+    this.setState({ tempTrainee });
     this.setState({ generated_student });
     this.setState({ studentsOpt, universityStudents });
 
@@ -344,10 +350,10 @@ class NewTrainee extends Component {
       if (values.identityNo === "") {
         this.setState({ identityNoError: true, saveError: true });
       }
-      const errorSaveStudentMessage = this.props.t(
+      const errorSaveTraineeMessage = this.props.t(
         "Fill the Required Fields to Save Trainee"
       );
-      this.setState({ errorMessage: errorSaveStudentMessage }, () => {
+      this.setState({ errorMessage: errorSaveTraineeMessage }, () => {
         window.scrollTo(0, 0);
       });
     } else {
@@ -363,13 +369,13 @@ class NewTrainee extends Component {
       this.setState({ grandFatherNameError: false, saveError: false });
       this.setState({ diplomaIdError: false, saveError: false });
       this.setState({ stdTotalGradeError: false, saveError: false });
-      let studentinfo = {};
+      let traineeinfo = {};
       Object.keys(values).forEach(function (key) {
         if (
           values[key] != undefined &&
           (values[key].length > 0 || values[key] != "")
         )
-          studentinfo[key] = values[key];
+          traineeinfo[key] = values[key];
       });
       const {
         trainee,
@@ -389,11 +395,11 @@ class NewTrainee extends Component {
         averageValue,
         stdDocsArray,
         siblingsArray,
-        trnProfExperience,
+        trnProfExperiences,
         selectedDiplomaId,
       } = this.state;
 
-      const { onUpdateStudent, onAddNewStudent, tempStudent } = this.props;
+      const { onUpdateTrainee, onAddNewTrainee, tempTrainee } = this.props;
       const {
         cities,
         countries,
@@ -406,14 +412,14 @@ class NewTrainee extends Component {
         const diplomaObject = diplomalevels.find(
           certificate => certificate.value === values.diplomaId
         );
-        studentinfo["diplomaId"] = diplomaObject.key;
+        traineeinfo["diplomaId"] = diplomaObject.key;
       }
 
       if (values.DiplomaCountryId) {
         const countryObject = countries.find(
           country => country.value === values.DiplomaCountryId
         );
-        studentinfo["DiplomaCountryId"] = countryObject.key;
+        traineeinfo["DiplomaCountryId"] = countryObject.key;
       }
       console.log(
         "DiplomaGovernorateIdDiplomaGovernorateId",
@@ -423,98 +429,98 @@ class NewTrainee extends Component {
         const governorateObject = governorates.find(
           governorate => governorate.value === values.DiplomaGovernorateId
         );
-        studentinfo["DiplomaGovernorateId"] = governorateObject.key;
+        traineeinfo["DiplomaGovernorateId"] = governorateObject.key;
       }
 
       /*  if (values.DiplomaCityId) {
         const cityObject = cities.find(
           city => city.value === values.DiplomaCityId
         );
-        studentinfo["DiplomaCityId"] = cityObject.key;
+        traineeinfo["DiplomaCityId"] = cityObject.key;
       } */
 
       if (values.UnivCountryId) {
         const univCountryObject = countries.find(
           country => country.value === values.UnivCountryId
         );
-        studentinfo["UnivCountryId"] = univCountryObject.key;
+        traineeinfo["UnivCountryId"] = univCountryObject.key;
       }
 
       if (values.InstituteCountryId) {
         const InstirCountryObject = countries.find(
           country => country.value === values.InstituteCountryId
         );
-        studentinfo["InstituteCountryId"] = InstirCountryObject.key;
+        traineeinfo["InstituteCountryId"] = InstirCountryObject.key;
       }
 
       if (selectedGender) {
-        studentinfo["GenderId"] = parseInt(selectedGender);
+        traineeinfo["GenderId"] = parseInt(selectedGender);
       }
 
       if (selectedNationalityId) {
-        studentinfo["NationalityId"] = selectedNationalityId;
+        traineeinfo["NationalityId"] = selectedNationalityId;
       } else {
-        studentinfo["NationalityId"] = tempStudent.NationalityId;
+        traineeinfo["NationalityId"] = tempTrainee.NationalityId;
       }
 
       if (selectedExaminationSession) {
-        studentinfo["ExaminationSession"] = selectedExaminationSession;
+        traineeinfo["ExaminationSession"] = selectedExaminationSession;
       }
       if (selectedSocialStatus) {
-        studentinfo["socialStatusId"] = selectedSocialStatus;
+        traineeinfo["socialStatusId"] = selectedSocialStatus;
       }
 
       if (selectedStudyPattern) {
-        studentinfo["studyPattern"] = selectedStudyPattern;
+        traineeinfo["studyPattern"] = selectedStudyPattern;
       }
 
       if (selectedregistrationCertLevelId) {
-        studentinfo["registrationCertLevelId"] =
+        traineeinfo["registrationCertLevelId"] =
           selectedregistrationCertLevelId;
       }
 
       if (selectedBirthDate != "") {
-        studentinfo["birthdate"] = selectedBirthDate;
+        traineeinfo["birthdate"] = selectedBirthDate;
       }
 
       if (selectedIdentityIssueDate) {
-        studentinfo["identityIssueDate"] = selectedIdentityIssueDate;
+        traineeinfo["identityIssueDate"] = selectedIdentityIssueDate;
       }
 
       if (selectedPassportIssueDate) {
-        studentinfo["passportIssueDate"] = selectedPassportIssueDate;
+        traineeinfo["passportIssueDate"] = selectedPassportIssueDate;
       }
 
       if (selectedPassportExpiryDate) {
-        studentinfo["passportExpiryDate"] = selectedPassportExpiryDate;
+        traineeinfo["passportExpiryDate"] = selectedPassportExpiryDate;
       }
 
       if (selectedDiplomaDate) {
-        studentinfo["diplomaDate"] = selectedDiplomaDate;
+        traineeinfo["diplomaDate"] = selectedDiplomaDate;
       }
 
       if (selectedDiplomaVerificationDate) {
-        studentinfo["diplomaVerificationDate"] =
+        traineeinfo["diplomaVerificationDate"] =
           selectedDiplomaVerificationDate;
       }
 
       if (selectedRegistrationDate) {
-        studentinfo["RegistrationDate"] = selectedRegistrationDate;
+        traineeinfo["RegistrationDate"] = selectedRegistrationDate;
       }
 
       if (selectedRegistrationDiplomaDate != "") {
-        studentinfo["registrationDiplomaDate"] =
+        traineeinfo["registrationDiplomaDate"] =
           selectedRegistrationDiplomaDate;
       }
 
       //hhhhh
 
       if (selectedRegUniDate != "") {
-        studentinfo["RegUniDate"] = selectedRegUniDate;
+        traineeinfo["RegUniDate"] = selectedRegUniDate;
       }
 
       if (averageValue) {
-        studentinfo["Average"] = averageValue;
+        traineeinfo["Average"] = averageValue;
       }
 
       const extractedArray = stdDocsArray.map(item => ({
@@ -522,15 +528,18 @@ class NewTrainee extends Component {
         attestated: item.attestated,
         availableNumber: item.availableNumber,
       }));
-      console.log("studentinfo in save", studentinfo);
+      console.log("traineeinfo in save", traineeinfo);
 
-      // studentinfo["stdDocs"] = extractedArray;
-      // studentinfo["profExperience"] = trnProfExperience;
-      //studentinfo["siblings"] = siblingsArray;
-      onAddNewStudent(studentinfo);
-      const saveStudentMessage = this.props.t("Trainee saved successfully");
+      // traineeinfo["stdDocs"] = extractedArray;
+      // traineeinfo["profExperience"] = trnProfExperience;
+      //traineeinfo["siblings"] = siblingsArray;
+      const response = onAddNewTrainee(traineeinfo);
+      if (response?.Id) {
+        this.setState({ traineeId: response.Id });
+      }
+      const saveTraineeMessage = this.props.t("Trainee saved successfully");
       this.setState({
-        successMessage: saveStudentMessage,
+        successMessage: saveTraineeMessage,
       });
     }
   };
@@ -578,7 +587,7 @@ class NewTrainee extends Component {
 
     if (tab == 4) {
       this.setState({
-        trnProfExperience: [],
+        trnProfExperiences: [],
       });
     }
 
@@ -624,10 +633,10 @@ class NewTrainee extends Component {
     }
   };
 
-  handleIsTransferStudentChange = event => {
+  handleIsTransferTraineeChange = event => {
     const { name, checked } = event.target;
     this.setState({
-      IsTransferStudentCheck: checked,
+      IsTransferTraineeCheck: checked,
     });
   };
 
@@ -641,9 +650,9 @@ class NewTrainee extends Component {
     }));
   };
 
-  handleGenerateStudent = studentId => {
-    //const { onGenerateStudent } = this.props;
-    //onGenerateStudent(studentId);
+  handleGenerateTrainee = traineeId => {
+    //const { onGenerateTrainee } = this.props;
+    //onGenerateTrainee(traineeId);
 
     this.setState({ generateModal: true });
   };
@@ -704,10 +713,12 @@ class NewTrainee extends Component {
   };
 
   handelAddExperience = () => {
-    const { lastUsedId } = this.state;
+    const { onAddNewProfessionalExperience, lastAddedId } = this.props;
+    const { last_created_trainee } = this.state;
+    console.log("last_created_trainee", last_created_trainee);
     // const { values, setFieldValue } = this.formikRef.current;
-    // const { trnProfExperience } = this.state;
-    const emptyRowsExist = values.profExperience.some(
+    const { trnProfExperiences } = this.state;
+    const emptyRowsExist = trnProfExperiences.some(
       experience => experience.companyName.trim() === ""
     );
     if (emptyRowsExist) {
@@ -715,8 +726,8 @@ class NewTrainee extends Component {
       this.setState({ duplicateErrorProfExperiences: errorMessage });
     } else {
       const newExperience = {
-        Id: lastUsedId,
-        workType: "",
+        traineeId: lastAddedId,
+        workType: "----",
         companyName: "",
         workPlace: "",
         workField: "",
@@ -726,13 +737,21 @@ class NewTrainee extends Component {
       //   ...values.profExperience,
       //   newExperience,
       // ]);
+      console.log("newExperience", newExperience);
+      onAddNewProfessionalExperience(newExperience);
+      this.setState({
+        trnProfExperiences: [...trnProfExperiences, newExperience],
+        //   last_created_trainee: last_created_trainee ,
+      });
       this.setState({ duplicateErrorProfExperiences: null });
     }
   };
 
-  handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
+  handleExperienceDataChange = (row, fieldName, fieldValue) => {
+    const { onUpdateProfessionalExperience, trnProfExperiences } = this.props;
+    console.log("rowwwww", row);
     this.setState(prevState => {
-      const updatedExperience = prevState.trnProfExperience.map(
+      const updatedExperience = prevState.trnProfExperiences.map(
         profExperience => {
           if (profExperience.Id === rowId) {
             return {
@@ -745,9 +764,13 @@ class NewTrainee extends Component {
       );
 
       return {
-        trnProfExperience: updatedExperience,
+        trnProfExperiences: updatedExperience,
       };
+      console.log("wwwwww", trnProfExperiences);
     });
+    // let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+    // console.log("wwwwww", trnProfExperiences);
+    // onUpdateProfessionalExperience(onUpdate);
   };
 
   handleAddRowRelative = () => {
@@ -835,7 +858,7 @@ class NewTrainee extends Component {
   };
 
   handleDataListChange = (event, fieldName) => {
-    const { IsTransferStudentCheck, HasBrotherCheck } = this.state;
+    const { IsTransferTraineeCheck, HasBrotherCheck } = this.state;
 
     const selectedValue = event.target.value;
 
@@ -1097,6 +1120,16 @@ class NewTrainee extends Component {
     }
   };
 
+  handleCheckboxEdit = (Id, fieldName) => {
+    this.setState(prevState => ({
+      reqDocuments: prevState.reqDocuments.map(document =>
+        document.Id === Id
+          ? { ...document, [fieldName]: document[fieldName] ? 0 : 1 }
+          : document
+      ),
+    }));
+  };
+
   render() {
     //meta title
     document.title =
@@ -1136,8 +1169,8 @@ class NewTrainee extends Component {
       selectedGovernorate,
       selectedSocialStatus,
       selectedGender,
-      IsTransferStudentCheck,
-      emptyStudent,
+      IsTransferTraineeCheck,
+      emptyTrainee,
       firstNameError,
       lastNameError,
       fatherNameError,
@@ -1166,7 +1199,7 @@ class NewTrainee extends Component {
       duplicateErrorSibling,
       stdDocsArray,
       siblingsArray,
-      trnProfExperience,
+      trnProfExperiences,
       gradeError,
       selectedInstituteCountry,
       selectedHightStudyTypeId,
@@ -1199,7 +1232,7 @@ class NewTrainee extends Component {
     const {
       trainees,
       socialStatus,
-      tempStudent,
+      tempTrainee,
       traineesDocuments,
       nationalities,
       faculties,
@@ -1266,10 +1299,10 @@ class NewTrainee extends Component {
             />
 
             <datalist id="brothersOptionlist">
-              {studentsOpt.map(uniStudent => (
+              {studentsOpt.map(uniTrainee => (
                 <option
-                  key={uniStudent.key}
-                  value={uniStudent.value + " " + uniStudent.key}
+                  key={uniTrainee.key}
+                  value={uniTrainee.value + " " + uniTrainee.key}
                 />
               ))}
             </datalist>
@@ -1328,10 +1361,95 @@ class NewTrainee extends Component {
         hidden: true,
       },
       {
-        dataField: "arTitle",
+        dataField: "documentTypeId",
 
         text: this.props.t("Document Name"),
         editable: false,
+      },
+      {
+        dataField: "requiredNumber",
+
+        text: this.props.t("Required Number"),
+        editable: false,
+      },
+      {
+        dataField: "availableNumber",
+
+        text: this.props.t("Available Number"),
+        editor: {
+          type: "number",
+        },
+        validator: (newValue, row, column) => {
+          if (newValue < 0) {
+            return {
+              valid: false,
+              message: this.props.t("Available number value must be > 0"),
+            };
+          }
+          return true;
+        },
+      },
+      {
+        dataField: "preventAdmission",
+
+        text: this.props.t("Prevent Admission"),
+        editable: false,
+        formatter: (cellContent, row) => (
+          <input
+            type="checkbox"
+            checked={cellContent === 1}
+            disabled
+            onChange={() => this.handleCheckboxEdit(row.Id, "preventAdmission")}
+          />
+        ),
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Prevent Registration"),
+        editable: false,
+        formatter: (cellContent, row) => (
+          <input
+            type="checkbox"
+            checked={cellContent === 1}
+            disabled
+            onChange={() =>
+              this.handleCheckboxEdit(row.Id, "preventRegistration")
+            }
+          />
+        ),
+      },
+      {
+        dataField: "preventGraduation",
+
+        text: this.props.t("Prevent Graduation"),
+        editable: false,
+        formatter: (cellContent, row) => (
+          <input
+            type="checkbox"
+            checked={cellContent === 1}
+            disabled
+            onChange={() =>
+              this.handleCheckboxEdit(row.Id, "preventGraduation")
+            }
+          />
+        ),
+      },
+      {
+        dataField: "requireAttestation",
+
+        text: this.props.t("Require Attestation"),
+        editable: false,
+        formatter: (cellContent, row) => (
+          <input
+            type="checkbox"
+            checked={cellContent === 1}
+            disabled
+            onChange={() =>
+              this.handleCheckboxEdit(row.Id, "requireAttestation")
+            }
+          />
+        ),
       },
 
       {
@@ -1504,6 +1622,22 @@ class NewTrainee extends Component {
               {this.props.t("Upload File")}
             </button>
           </div>
+        ),
+      },
+      {
+        dataField: "delete",
+        text: "",
+        isDummyField: true,
+        editable: false,
+        // hidden: !showDeleteButton,
+        formatter: (cellContent, trnProfExperience) => (
+          <Link className="text-danger" to="#">
+            <i
+              className="mdi mdi-delete font-size-18"
+              id="deletetooltip"
+              onClick={() => this.onClickDelete(trnProfExperience)}
+            ></i>
+          </Link>
         ),
       },
     ];
@@ -2561,7 +2695,7 @@ class NewTrainee extends Component {
                                                             </Col>
                                                             <Col lg="4">
                                                               <div className="mb-3">
-                                                                <Row>
+                                                                <Row className="align-items-center">
                                                                   <Col className="col-4">
                                                                     <Label className="form-label mt-4">
                                                                       {this.props.t(
@@ -2574,13 +2708,13 @@ class NewTrainee extends Component {
                                                                   </Col>
                                                                   <Col
                                                                     lg="3"
-                                                                    className="mb-3"
+                                                                    // className="mb-3"
                                                                   >
-                                                                    <div className="radio-buttons-gender-container mt-3 d-flex flex-column">
+                                                                    <div className="d-flex gap-3">
                                                                       {genders.map(
                                                                         gender => (
                                                                           <div
-                                                                            className="radio-button-gender"
+                                                                            className="radio-button-gender d-flex align-items-center"
                                                                             key={
                                                                               gender.value
                                                                             }
@@ -2612,10 +2746,7 @@ class NewTrainee extends Component {
                                                                                 selectedGender
                                                                               }
                                                                             />
-                                                                            <Label
-                                                                              for="genderId"
-                                                                              className="ms-2"
-                                                                            >
+                                                                            <Label for="genderId">
                                                                               {this.props.t(
                                                                                 gender.label
                                                                               )}
@@ -2637,36 +2768,38 @@ class NewTrainee extends Component {
                                                                       />
                                                                     </div>
                                                                   </Col>
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="socialStatus">
-                                                                        {t(
-                                                                          "Social Status"
-                                                                        )}
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Select
-                                                                        name="socialStatusId"
-                                                                        options={
-                                                                          socialStatus
-                                                                        }
-                                                                        className={`form-control`}
-                                                                        onChange={newValue => {
-                                                                          this.handleSelect(
-                                                                            "socialStatusId",
-                                                                            newValue.value,
-                                                                            values
-                                                                          );
-                                                                        }}
-                                                                        defaultValue={socialStatus.find(
-                                                                          opt =>
-                                                                            opt.value ===
-                                                                            trainee?.socialStatusId
-                                                                        )}
-                                                                      />
-                                                                    </Col>
-                                                                  </Row>
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                      <Col className="col-4">
+                                                                        <Label for="socialStatus">
+                                                                          {t(
+                                                                            "Social Status"
+                                                                          )}
+                                                                        </Label>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Select
+                                                                          name="socialStatusId"
+                                                                          options={
+                                                                            socialStatus
+                                                                          }
+                                                                          className={`form-control`}
+                                                                          onChange={newValue => {
+                                                                            this.handleSelect(
+                                                                              "socialStatusId",
+                                                                              newValue.value,
+                                                                              values
+                                                                            );
+                                                                          }}
+                                                                          defaultValue={socialStatus.find(
+                                                                            opt =>
+                                                                              opt.value ===
+                                                                              trainee?.socialStatusId
+                                                                          )}
+                                                                        />
+                                                                      </Col>
+                                                                    </Row>
+                                                                  </div>
                                                                 </Row>
                                                               </div>
                                                             </Col>
@@ -4901,7 +5034,7 @@ class NewTrainee extends Component {
                                                           <BootstrapTable
                                                             keyField="Id"
                                                             data={
-                                                              trnProfExperience
+                                                              trnProfExperiences
                                                             }
                                                             columns={
                                                               trnProfExperienceColumns
@@ -4917,7 +5050,7 @@ class NewTrainee extends Component {
                                                                   column
                                                                 ) => {
                                                                   this.handleExperienceDataChange(
-                                                                    row.Id,
+                                                                    row,
                                                                     column.dataField,
                                                                     newValue
                                                                   );
@@ -4982,7 +5115,7 @@ class NewTrainee extends Component {
                                                     to="#"
                                                     className="generate-button"
                                                     onClick={() => {
-                                                      this.handleGenerateStudent(
+                                                      this.handleGenerateTrainee(
                                                         values.Id
                                                       );
                                                     }}
@@ -5096,6 +5229,9 @@ const mapStateToProps = ({
   estimates,
 }) => ({
   trainees: trainees.trainees,
+  last_created_trainee: trainees.last_created_trainee,
+  lastAddedId: trainees.lastAddedId,
+  trnProfExperiences: trainees.trnProfExperiences,
   traineesDocuments: trainees.traineesDocuments,
   nationalities: nationalities.nationalities,
   faculties: mobAppFacultyAccs.faculties,
@@ -5121,11 +5257,17 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   onGetTrainees: lng => dispatch(getTrainees(lng)),
-  onAddNewStudent: trainee => dispatch(addNewTrainee(trainee)),
+  onAddNewTrainee: trainee => dispatch(addNewTrainee(trainee)),
   onGetFilteredAcademicCertificates: academicCer =>
     dispatch(getFilteredAcademicCertificates(academicCer)),
   onGetTraineesRegCertificates: () => dispatch(getRegisterCertificates()),
   onGetTraineesDocuments: () => dispatch(getTraineeDefaultRegReqDocs()),
+  onAddNewProfessionalExperience: profExperience =>
+    dispatch(addNewProfessionalExperience(profExperience)),
+  onUpdateProfessionalExperience: profExperience =>
+    dispatch(updateProfessionalExperience(profExperience)),
+  onDeleteProfessionalExperience: profExperience =>
+    dispatch(deleteProfessionalExperience(profExperience)),
 });
 
 export default connect(

@@ -10,6 +10,9 @@ import {
   GET_REGISTER_CERTIFICATES,
   GET_TRAINEE_DEFAULT_REGREQDOCS,
   GET_SOCIAL_STATUS,
+  ADD_NEW_PROFESSIONAL_EXPERIENCE,
+  DELETE_PROFESSIONAL_EXPERIENCE,
+  UPDATE_PROFESSIONAL_EXPERIENCE,
 } from "./actionTypes";
 
 import {
@@ -29,6 +32,12 @@ import {
   getRegisterCertificatesFail,
   getSocialStatusSuccess,
   getSocialStatusFail,
+  addProfessionalExperienceSuccess,
+  addProfessionalExperienceFail,
+  updateProfessionalExperienceSuccess,
+  updateProfessionalExperienceFail,
+  deleteProfessionalExperienceSuccess,
+  deleteProfessionalExperienceFail,
 } from "./actions";
 
 // Include helper functions
@@ -50,6 +59,9 @@ import {
   getDiplomaLevels,
   getHighStudyTypes,
   getSocialStatus,
+  addNewProfessionalExperience,
+  updateProfessionalExperience,
+  deleteProfessionalExperience,
 } from "../../helpers/fakebackend_helper";
 
 import {
@@ -266,6 +278,7 @@ function* onAddNewTrainee({ payload }) {
 
   try {
     const response = yield call(addNewTrainee, payload);
+    console.log("adddresssss123", response);
     yield put(addTraineeSuccess(response[0]));
   } catch (error) {
     yield put(addTraineeFail(error));
@@ -333,7 +346,7 @@ function* fetchTraineesReqDocs() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "AdmissionSettings_RegDocType",
+    tablename: "Settings_RequiredRegistrationDocuments",
   };
 
   try {
@@ -341,6 +354,48 @@ function* fetchTraineesReqDocs() {
     yield put(getTraineeDefaultRegReqDocsSuccess(response));
   } catch (error) {
     yield put(getTraineeDefaultRegReqDocsFail(error));
+  }
+}
+
+function* onAddNewProfessionalExperience({ payload }) {
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_addData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_ProfessionalExperiences";
+
+  try {
+    const response = yield call(addNewProfessionalExperience, payload);
+    yield put(addProfessionalExperienceSuccess(response[0]));
+  } catch (error) {
+    yield put(addProfessionalExperienceFail(error));
+  }
+}
+
+function* onUpdateProfessionalExperience({ payload }) {
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_updateData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_ProfessionalExperiences";
+
+  try {
+    const response = yield call(updateProfessionalExperience, payload);
+    yield put(updateProfessionalExperienceSuccess(response[0]));
+  } catch (error) {
+    yield put(updateProfessionalExperienceFail(error));
+  }
+}
+
+function* onDeleteProfessionalExperience({ payload }) {
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_removeData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_ProfessionalExperiences";
+
+  try {
+    const response = yield call(deleteProfessionalExperience, payload);
+    yield put(deleteProfessionalExperienceSuccess(response[0]));
+  } catch (error) {
+    yield put(deleteProfessionalExperienceFail(error));
   }
 }
 
@@ -352,6 +407,18 @@ function* traineesSaga() {
   yield takeEvery(UPDATE_TRAINEE, onUpdateTrainee);
   yield takeEvery(DELETE_TRAINEE, onDeleteTrainee);
   yield takeEvery(GET_TRAINEE_DELETED_VALUE, onGetTraineeDeletedValue);
+  yield takeEvery(
+    ADD_NEW_PROFESSIONAL_EXPERIENCE,
+    onAddNewProfessionalExperience
+  );
+  yield takeEvery(
+    UPDATE_PROFESSIONAL_EXPERIENCE,
+    onUpdateProfessionalExperience
+  );
+  yield takeEvery(
+    DELETE_PROFESSIONAL_EXPERIENCE,
+    onDeleteProfessionalExperience
+  );
 }
 
 export default traineesSaga;

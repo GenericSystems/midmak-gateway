@@ -2253,6 +2253,14 @@ export const getTraineeRegCertificate = data =>
 //social status
 export const getSocialStatus = data => post(url.GET_SOCIAL_STATUS, data);
 
+//ProfessionalExperience
+export const addNewProfessionalExperience = data =>
+  post(url.ADD_NEW_PROFESSIONAL_EXPERIENCE, data);
+export const updateProfessionalExperience = data =>
+  post(url.UPDATE_PROFESSIONAL_EXPERIENCE, data);
+export const deleteProfessionalExperience = data =>
+  post(url.DELETE_PROFESSIONAL_EXPERIENCE, data);
+
 //trainingFormat
 export const getTrainingFormats = data => post(url.GET_TRAINING_FORMATS, data);
 export const getTrainingFormatDeletedValue = () =>

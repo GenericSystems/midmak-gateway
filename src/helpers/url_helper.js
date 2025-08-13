@@ -1108,6 +1108,11 @@ export const GET_REGISTER_CERTIFICATES = "/registerCertificates";
 //social status
 export const GET_SOCIAL_STATUS = "/socialStatus";
 
+//professionalExperience
+export const ADD_NEW_PROFESSIONAL_EXPERIENCE = "/add/professionalExperience";
+export const UPDATE_PROFESSIONAL_EXPERIENCE = "/update/professionalExperience";
+export const DELETE_PROFESSIONAL_EXPERIENCE = "/delete/professionalExperience";
+
 //Training Formats
 export const GET_TRAINING_FORMATS = "/trainingFormats";
 export const GET_TRAINING_FORMAT_DELETED_VALUE = "/deleted";
