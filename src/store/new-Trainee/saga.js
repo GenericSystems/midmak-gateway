@@ -365,6 +365,7 @@ function* onAddNewProfessionalExperience({ payload }) {
 
   try {
     const response = yield call(addNewProfessionalExperience, payload);
+    console.log("response", response);
     yield put(addProfessionalExperienceSuccess(response[0]));
   } catch (error) {
     yield put(addProfessionalExperienceFail(error));
