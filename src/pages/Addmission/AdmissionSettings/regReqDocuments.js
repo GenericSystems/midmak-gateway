@@ -18,7 +18,7 @@ import Select from "react-select";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
 
-import { getCurrentSemester } from "store/semesters/actions";
+//import { getCurrentSemester } from "store/semesters/actions";
 
 import {
   getRegReqDocuments,
@@ -92,21 +92,21 @@ class RegReqDocumentsTable extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onfetchSetting();
      this.setState({ currentSemester });
-
+/* 
  
-/*console.log("ddddddddddddddddd", currentSemester.cuYearId) 
+console.log("ddddddddddddddddd", currentSemester.cuYearId) 
 console.log("YEARSSSSSSSSSSS", years) 
    const defaultYear = years.find(
       year => year.value === currentSemester.cuYearId
     );
 */
-    if (regReqDocuments && !regReqDocuments.length) {
-      let ob = {
+   if (regReqDocuments && !regReqDocuments.length) {
+    /*  let ob = {
         yearId: currentSemester.cuYearId,
         certificateLevelId: 1,
-      };
+      };*/
       // console.log(" certificateLevelId certificateLevelId", certificateLevelId)
-      onGetRegReqDocuments(ob);
+      // onGetRegReqDocuments(ob);
 
       this.setState({ regReqDocuments, deleted });
       this.setState({
@@ -115,11 +115,11 @@ console.log("YEARSSSSSSSSSSS", years)
         years,
         regcertificates,
       });
-      console.log("bbbbbbbbbbbb", ob);
+      //console.log("bbbbbbbbbbbb", ob);
     }
 
-    this.setState({  isCurrentYear: true });
-  }
+   this.setState({ isCurrentYear: true });
+ }
   componentDidUpdate(prevProps, prevState) {
     const { years, currentSemester, onGetRegReqDocuments } = this.props;
 
@@ -901,7 +901,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteRegReqDocument(regReqDocument)),
   onGetRegReqDocumentDeletedValue: () =>
     dispatch(getRegReqDocumentDeletedValue()),
-  onGetCurrentSemester: () => dispatch(getCurrentSemester()),
+  //onGetCurrentSemester: () => dispatch(getCurrentSemester()),
 });
 
 export default connect(
