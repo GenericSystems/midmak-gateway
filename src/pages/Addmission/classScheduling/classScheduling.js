@@ -219,10 +219,10 @@ class ClassSchedulingList extends Component {
     });
     i18n.on("languageChanged", this.handleLanguageChange);
 
-    let curentueardata = localStorage.getItem("authUser");
-    if (curentueardata) {
+    let curentYeardata = localStorage.getItem("authUser");
+    if (curentYeardata) {
       try {
-        const parsed = JSON.parse(curentueardata);
+        const parsed = JSON.parse(curentYeardata);
         const firstYear = parsed[0];
         const selectedYear = {
           value: firstYear.currentYearId,

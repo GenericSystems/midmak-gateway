@@ -85,7 +85,6 @@ class NewTrainee extends Component {
       activeTabVartical: 1,
       passedSteps: [1],
       passedStepsVertical: [1],
-      hasError: false,
       isOpen: false,
       modal: false,
       deleteModal: false,
@@ -278,6 +277,7 @@ class NewTrainee extends Component {
       selectedBirthDate,
       selectedRegistrationDiplomaDate,
       selectedNationalityId,
+      selectedregistrationCertLevelId,
       selectedFacultyId,
       selectedGender,
       selectedStudyPlanId,
@@ -291,7 +291,6 @@ class NewTrainee extends Component {
     } = this.state;
     console.log("values in save", values);
     values["socialStatusId"] = selectedSocialStatus;
-
     if (
       values.FirstName === "" ||
       values.LastName === "" ||
@@ -303,10 +302,36 @@ class NewTrainee extends Component {
       values.birthdate === "" ||
       // values.plan_study === "" ||
       (values.NationalityId === "" && selectedNationalityId === "") ||
-      (values.GenderId === "" && selectedGender === "")
-      // ||
-      // (values.FacultyId === "" && selectedFacultyId === "")
+      (values.GenderId === "" && selectedGender === "") ||
+      (values.registrationCertLevelId === "" &&
+        selectedregistrationCertLevelId === "")
     ) {
+      if (selectedregistrationCertLevelId === 1) {
+        if (values.FacultyId === "" && selectedFacultyId === "") {
+          this.setState({ facultyError: true, saveError: true });
+        }
+        if (values.plan_study.trim() === "") {
+          this.setState({ plan_studyError: true, saveError: true });
+        }
+      } else if (selectedregistrationCertLevelId === 2) {
+        if (values.plan_study.trim() === "") {
+          this.setState({ plan_studyError: true, saveError: true });
+        }
+      } else if (selectedregistrationCertLevelId === 4) {
+        if (values.FacultyId === "" && selectedFacultyId === "") {
+          this.setState({ facultyError: true, saveError: true });
+        }
+        if (values.plan_study.trim() === "") {
+          this.setState({ plan_studyError: true, saveError: true });
+        }
+      } else if (selectedregistrationCertLevelId === 5) {
+        if (values.FacultyId === "" && selectedFacultyId === "") {
+          this.setState({ facultyError: true, saveError: true });
+        }
+        if (values.plan_study.trim() === "") {
+          this.setState({ plan_studyError: true, saveError: true });
+        }
+      }
       if (values.FirstName.trim() === "") {
         this.setState({ firstNameError: true, saveError: true });
       }
@@ -389,7 +414,6 @@ class NewTrainee extends Component {
         trainee,
         selectedExaminationSession,
         selectedStudyPattern,
-        selectedregistrationCertLevelId,
         selectedBirthDate,
         selectedIdentityIssueDate,
         selectedPassportIssueDate,
@@ -415,6 +439,13 @@ class NewTrainee extends Component {
         currentSemester,
         governorates,
       } = this.props;
+
+      if (values.diplomaId) {
+        const diplomaObject = diplomalevels.find(
+          certificate => certificate.value === values.diplomaId
+        );
+        traineeinfo["diplomaId"] = diplomaObject.key;
+      }
 
       if (values.diplomaId) {
         const diplomaObject = diplomalevels.find(
@@ -645,10 +676,6 @@ class NewTrainee extends Component {
   };
 
   handleButtonClick2 = (fieldName, option, values) => {
-    const { onGetTraineesDocuments } = this.props;
-    let obj = { certificateLevelId: option };
-    console.log("objobjobj", obj);
-    onGetTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
       this.setState({ selectedregistrationCertLevelId: option });
       this.setState({ trainee: values });
@@ -744,8 +771,6 @@ class NewTrainee extends Component {
   handelAddExperience = () => {
     const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
       this.props;
-    const { last_created_trainee } = this.state;
-    console.log("last_created_trainee", last_created_trainee);
     const newExperience = {
       traineeId: lastAddedId,
       workType: "",
@@ -848,6 +873,7 @@ class NewTrainee extends Component {
   };
 
   handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
+    const { onGetTraineesDocuments } = this.props;
     const { diplomalevels } = this.props;
     const selectedValue = event.target.value;
     console.log("selectedValue", selectedValue);
@@ -860,7 +886,9 @@ class NewTrainee extends Component {
       certificate => certificate.value === event.target.value
     );
     console.log(diplomaObject, "ollllllll");
-
+    let obj = { certificateLevelId: diplomaObject.key };
+    console.log("objobjobj", obj);
+    onGetTraineesDocuments(obj);
     setFieldValue("diplomaId", selectedValue);
 
     if (diplomaObject) {
@@ -1155,6 +1183,30 @@ class NewTrainee extends Component {
         showAlert: true,
       });
     }
+  };
+
+  handleSubmit = values => {
+    const { lastAddedId, stdDocsArray } = this.props;
+    console.log("values in save", values);
+    //hhhhh
+    let traineeinfo = {};
+    Object.keys(values).forEach(function (key) {
+      if (
+        values[key] != undefined &&
+        (values[key].length > 0 || values[key] != "")
+      )
+        traineeinfo[key] = values[key];
+    });
+    const extractedArray = stdDocsArray.map(item => ({
+      traineeId: lastAddedId,
+      regReqDocId: item.regReqDocId,
+      attestated: item.attestated,
+      availableNumber: item.availableNumber,
+    }));
+
+    traineeinfo["stdDocs"] = extractedArray;
+    // traineeinfo["profExperience"] = trnProfExperience;
+    //traineeinfo["siblings"] = siblingsArray;
   };
 
   render() {
@@ -1484,71 +1536,85 @@ class NewTrainee extends Component {
           />
         ),
       },
-
       {
         dataField: "attestated",
 
         text: this.props.t("Attestated"),
+        editable: false,
         formatter: (cellContent, row) => (
-          <div className="btn-group">
-            <button
-              type="button"
-              className={`btn ${
-                row.attestated === 1 ? "btn-primary" : "btn-outline-secondary"
-              }`}
-              onClick={() =>
-                this.handleRegReqDocDataChange(row.Id, "attestated", 1)
-              }
-            >
-              {this.props.t("Yes")}
-            </button>
-            <button
-              type="button"
-              className={`btn ${
-                row.attestated === 0 ? "btn-primary" : "btn-outline-secondary"
-              }`}
-              onClick={() =>
-                this.handleRegReqDocDataChange(row.Id, "attestated", 0)
-              }
-            >
-              {this.props.t("No")}
-            </button>
-          </div>
-        ),
-        editorRenderer: (
-          editorProps,
-          value,
-          row,
-          column,
-          rowIndex,
-          columnIndex
-        ) => (
-          <div className="btn-group">
-            <button
-              type="button"
-              className={`btn ${
-                value === 1 ? "btn-primary" : "btn-outline-secondary"
-              }`}
-              onClick={() =>
-                this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 1)
-              }
-            >
-              {this.props.t("Yes")}
-            </button>
-            <button
-              type="button"
-              className={`btn ${
-                value === 0 ? "btn-primary" : "btn-outline-secondary"
-              }`}
-              onClick={() =>
-                this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 0)
-              }
-            >
-              {this.props.t("No")}
-            </button>
-          </div>
+          <input
+            type="checkbox"
+            checked={cellContent === 1}
+            disabled
+            onChange={() => this.handleCheckboxEdit(row.Id, "attestated")}
+          />
         ),
       },
+
+      // {
+      //   dataField: "attestated",
+
+      //   text: this.props.t("Attestated"),
+      //   formatter: (cellContent, row) => (
+      //     <div className="btn-group">
+      //       <button
+      //         type="button"
+      //         className={`btn ${
+      //           row.attestated === 1 ? "btn-primary" : "btn-outline-secondary"
+      //         }`}
+      //         onClick={() =>
+      //           this.handleRegReqDocDataChange(row.Id, "attestated", 1)
+      //         }
+      //       >
+      //         {this.props.t("Yes")}
+      //       </button>
+      //       <button
+      //         type="button"
+      //         className={`btn ${
+      //           row.attestated === 0 ? "btn-primary" : "btn-outline-secondary"
+      //         }`}
+      //         onClick={() =>
+      //           this.handleRegReqDocDataChange(row.Id, "attestated", 0)
+      //         }
+      //       >
+      //         {this.props.t("No")}
+      //       </button>
+      //     </div>
+      //   ),
+      //   editorRenderer: (
+      //     editorProps,
+      //     value,
+      //     row,
+      //     column,
+      //     rowIndex,
+      //     columnIndex
+      //   ) => (
+      //     <div className="btn-group">
+      //       <button
+      //         type="button"
+      //         className={`btn ${
+      //           value === 1 ? "btn-primary" : "btn-outline-secondary"
+      //         }`}
+      //         onClick={() =>
+      //           this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 1)
+      //         }
+      //       >
+      //         {this.props.t("Yes")}
+      //       </button>
+      //       <button
+      //         type="button"
+      //         className={`btn ${
+      //           value === 0 ? "btn-primary" : "btn-outline-secondary"
+      //         }`}
+      //         onClick={() =>
+      //           this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 0)
+      //         }
+      //       >
+      //         {this.props.t("No")}
+      //       </button>
+      //     </div>
+      //   ),
+      // },
       {
         dataField: "uploadFile",
         id: 8,
@@ -5230,6 +5296,34 @@ class NewTrainee extends Component {
                                                     }}
                                                   >
                                                     {this.props.t("Generate")}
+                                                  </Link>
+                                                </li>
+                                              )}
+
+                                              {!isEdit &&
+                                                this.state.activeTab === 5 && (
+                                                  <li>
+                                                    <Link
+                                                      to="#"
+                                                      onClick={() => {
+                                                        this.handleSubmit(
+                                                          values
+                                                        );
+                                                      }}
+                                                    >
+                                                      save
+                                                    </Link>
+                                                  </li>
+                                                )}
+                                              {isEdit && (
+                                                <li>
+                                                  <Link
+                                                    to="#"
+                                                    onClick={() => {
+                                                      this.handleSubmit(values);
+                                                    }}
+                                                  >
+                                                    save
                                                   </Link>
                                                 </li>
                                               )}
