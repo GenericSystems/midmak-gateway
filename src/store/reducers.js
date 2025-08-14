@@ -246,6 +246,7 @@ import documentsTypes from "./documents-types/reducer";
 import absenceWarnings from "./Rules-and-Regulations/Absence-warnings/reducer";
 
 
+
 // ExamRooms
 import examRooms from "./Exam/ExamRooms/reducer";
 
@@ -355,7 +356,7 @@ const rootReducer = combineReducers({
   projects,
   tasks,
   contacts,
-  nationalities,
+  
   certificateTypes,
   studentManagements,
   nationalities,
@@ -449,6 +450,7 @@ const rootReducer = combineReducers({
   highstudytypes,
   applicants,
   absenceWarnings,
+ 
 });
 
 export default rootReducer;

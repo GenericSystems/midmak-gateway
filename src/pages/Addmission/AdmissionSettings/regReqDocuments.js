@@ -76,7 +76,7 @@ class RegReqDocumentsTable extends Component {
 
   componentDidMount() {
     const {
-       onfetchSetting,
+      onfetchSetting,
       regReqDocuments,
       user_menu,
       onGetRegReqDocuments,
@@ -90,31 +90,10 @@ class RegReqDocumentsTable extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    onfetchSetting();
-     let curentueardata = localStorage.getItem("authUser");
+       onfetchSetting();     
+    this.setState({ currentSemester });
+       if (regReqDocuments && !regReqDocuments.length) {
  
-       if (curentueardata) {
-      try {
-        const parsed = JSON.parse(curentueardata);
-     
-       let ob = {
-        yearId: parsed[0].currentYearId,
-        certificateLevelId: 1,
-      }
-       onGetRegReqDocuments(ob);
-      } catch (error) {
-        console.error("Error parsing authUser:", error);
-      }
-    }
-
-     this.setState({ currentSemester });
-   const defaultYear = years.find(
-      year => year.value === currentSemester.cuYearId
-    );
-
-   if (regReqDocuments && !regReqDocuments.length) {
-   
-
       this.setState({ regReqDocuments, deleted });
       this.setState({
         documents,
@@ -123,9 +102,8 @@ class RegReqDocumentsTable extends Component {
         regcertificates,
       }); 
     }
-   this.setState({ isCurrentYear: true });
+     this.setState({ isCurrentYear: true });  
  }
-
   componentDidUpdate(prevProps, prevState) {
     const { years, currentSemester, onGetRegReqDocuments } = this.props;
 
@@ -244,13 +222,15 @@ class RegReqDocumentsTable extends Component {
     const { onAddNewRegReqDocument, regReqDocuments, currentSemester } =
       this.props;
     const { checkedId } = this.state;
+    console.log("regggggggggggggg", regReqDocuments);
+
     const emptyLevelExists = regReqDocuments.some(
-      row => row.documentTypeId === 0
+      row => row.documentTypeId === null
     );
     if (emptyLevelExists) {
-      const errorMessage = this.props.t("Fill in the empty row");
+      const errorMessage = this.props.t("Fill the empty row");
       this.setState({ duplicateError: errorMessage });
-      return;
+      r;
     } else {
       const newRow = {
         yearId: currentSemester.cuYearId,
