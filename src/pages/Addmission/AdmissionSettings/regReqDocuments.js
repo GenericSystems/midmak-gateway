@@ -27,6 +27,7 @@ import {
   deleteRegReqDocument,
   getRegReqDocumentDeletedValue,
   copyRegReqDoc,
+  fetchRegReqDocSettings,
 } from "store/reg-req-documents/actions";
 import DeleteModal from "components/Common/DeleteModal";
 import { isEmpty, size, map } from "lodash";
@@ -75,6 +76,7 @@ class RegReqDocumentsTable extends Component {
 
   componentDidMount() {
     const {
+       onfetchSetting,
       regReqDocuments,
       user_menu,
       onGetRegReqDocuments,
@@ -88,11 +90,16 @@ class RegReqDocumentsTable extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
+    onfetchSetting();
+     this.setState({ currentSemester });
 
-    const defaultYear = years.find(
+ 
+/*console.log("ddddddddddddddddd", currentSemester.cuYearId) 
+console.log("YEARSSSSSSSSSSS", years) 
+   const defaultYear = years.find(
       year => year.value === currentSemester.cuYearId
     );
-
+*/
     if (regReqDocuments && !regReqDocuments.length) {
       let ob = {
         yearId: currentSemester.cuYearId,
@@ -111,17 +118,17 @@ class RegReqDocumentsTable extends Component {
      
     }
 
-    this.setState({ defaultYear: defaultYear, isCurrentYear: true });
+    this.setState({  isCurrentYear: true });
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { years, currentSemester } = this.state;
     if (years && years.length && currentSemester) {
-      const defaultYear = years.find(
+     /* const defaultYear = years.find(
         year => year.value === currentSemester.cuYearId
       );
       if (defaultYear) {
         this.setState({ defaultYear });
-      }
+      }*/
     }
     if (
       this.props.user_menu !== prevProps.user_menu ||
@@ -856,6 +863,7 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  onfetchSetting: () => dispatch(fetchRegReqDocSettings()),
   onGetRegReqDocuments: regReqDocs => dispatch(getRegReqDocuments(regReqDocs)),
   onCopyRegReqDoc: () => dispatch(copyRegReqDoc()),
   onAddNewRegReqDocument: regReqDocument =>

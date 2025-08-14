@@ -18,6 +18,7 @@ import {
   COPY_REG_REQ_DOC,
   COPY_REG_REQ_DOC_SUCCESS,
   COPY_REG_REQ_DOC_FAIL,
+  GET_REG_REQ_DOC_SETTINGS,
 } from "./actionTypes";
 
 export const getRegReqDocuments = RegReqDocuments => ({
@@ -112,4 +113,6 @@ export const copyRegReqDocFail = error => ({
   payload: error,
 });
 
-
+ export const fetchRegReqDocSettings = () => ({
+    type: GET_REG_REQ_DOC_SETTINGS,
+  });
