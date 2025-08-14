@@ -77,10 +77,10 @@ class NewTrainee extends Component {
   constructor(props) {
     super(props);
     this.node = React.createRef();
-    this.formikRef = React.createRef();
-
     this.state = {
-      trainee: {},
+      trainees: {},
+      trnProfExperiences: {},
+      trnProfExperience: "",
       activeTab: 1,
       activeTabVartical: 1,
       passedSteps: [1],
@@ -131,7 +131,9 @@ class NewTrainee extends Component {
       genderError: false,
       facultyError: false,
       errorMessage: null,
+      errorMessage1: null,
       successMessage: null,
+      successMessage1: null,
       averageValue: "",
       grandFatherNameError: false,
       diplomaIdError: false,
@@ -162,6 +164,8 @@ class NewTrainee extends Component {
       selectedRegUniDate: "",
       nationalNoError: false,
       identityNoError: false,
+      selectedRowId: null,
+      showAlert: null,
     };
     this.toggle = this.toggle.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
@@ -174,6 +178,7 @@ class NewTrainee extends Component {
     const lang = localStorage.getItem("I18N_LANGUAGE");
 
     const {
+      trnProfExperiences,
       last_created_trainee,
       trainees,
       traineesDocuments,
@@ -201,13 +206,14 @@ class NewTrainee extends Component {
       onGetTraineesRegCertificates,
       onGetTraineesDocuments,
       i18n,
+      deleted,
     } = this.props;
 
     onGetTrainees(lang);
     onGetTraineesRegCertificates();
     onGetTraineesDocuments();
 
-    this.setState({ last_created_trainee });
+    this.setState({ trnProfExperiences, deleted });
     this.setState({ trainees });
     this.setState({ traineesDocuments });
     this.setState({ nationalities });
@@ -550,9 +556,8 @@ class NewTrainee extends Component {
     }));
   };
 
-  onClickDelete = trainee => {
-    this.setState({ trainee: trainee });
-    this.setState({ deleteModal: true });
+  onClickDelete = rowId => {
+    this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
   state = {
@@ -587,7 +592,7 @@ class NewTrainee extends Component {
 
     if (tab == 4) {
       this.setState({
-        trnProfExperiences: [],
+        trnProfExperiences: {},
       });
     }
 
@@ -608,6 +613,11 @@ class NewTrainee extends Component {
           passedStepsVertical: modifiedSteps,
         });
       }
+    }
+    if (tab == 4) {
+      this.setState({
+        trnProfExperiences: {},
+      });
     }
   }
 
@@ -673,9 +683,16 @@ class NewTrainee extends Component {
   handleSuccessClose = () => {
     this.setState({ successMessage: null });
   };
+  handleExpSuccessClose = () => {
+    this.setState({ successMessage1: null, showAlert: null });
+  };
 
   handleErrorClose = () => {
     this.setState({ errorMessage: null });
+  };
+
+  handleExpErrorClose = () => {
+    this.setState({ errorMessage1: null, showAlert: null });
   };
 
   handleSelectNationalityDetails = (rowId, fieldName, selectedValue) => {
@@ -713,64 +730,51 @@ class NewTrainee extends Component {
   };
 
   handelAddExperience = () => {
-    const { onAddNewProfessionalExperience, lastAddedId } = this.props;
+    const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
+      this.props;
     const { last_created_trainee } = this.state;
     console.log("last_created_trainee", last_created_trainee);
-    // const { values, setFieldValue } = this.formikRef.current;
-    const { trnProfExperiences } = this.state;
+    const newExperience = {
+      traineeId: lastAddedId,
+      workType: "",
+      companyName: "",
+      workPlace: "",
+      workField: "",
+      duaration: "",
+    };
     const emptyRowsExist = trnProfExperiences.some(
-      experience => experience.companyName.trim() === ""
+      trnProfExperiences => trnProfExperiences.workType.trim() === ""
     );
+    console.log("emptyRowsExist", emptyRowsExist);
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
       this.setState({ duplicateErrorProfExperiences: errorMessage });
     } else {
-      const newExperience = {
-        traineeId: lastAddedId,
-        workType: "----",
-        companyName: "",
-        workPlace: "",
-        workField: "",
-        duaration: "",
-      };
-      // setFieldValue("profExperience", [
-      //   ...values.profExperience,
-      //   newExperience,
-      // ]);
-      console.log("newExperience", newExperience);
       onAddNewProfessionalExperience(newExperience);
       this.setState({
+        duplicateErrorProfExperiences: null,
         trnProfExperiences: [...trnProfExperiences, newExperience],
-        //   last_created_trainee: last_created_trainee ,
       });
-      this.setState({ duplicateErrorProfExperiences: null });
     }
   };
 
-  handleExperienceDataChange = (row, fieldName, fieldValue) => {
+  handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
     const { onUpdateProfessionalExperience, trnProfExperiences } = this.props;
-    console.log("rowwwww", row);
-    this.setState(prevState => {
-      const updatedExperience = prevState.trnProfExperiences.map(
-        profExperience => {
-          if (profExperience.Id === rowId) {
-            return {
-              ...profExperience,
-              [fieldName]: fieldValue,
-            };
-          }
-          return profExperience;
-        }
+    const isDuplicate = trnProfExperiences.some(trnProfExperience => {
+      return (
+        trnProfExperience.Id !== rowId &&
+        trnProfExperience.workType.trim() === fieldValue.trim()
       );
-
-      return {
-        trnProfExperiences: updatedExperience,
-      };
-      console.log("wwwwww", trnProfExperiences);
     });
-    // let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-    // console.log("wwwwww", trnProfExperiences);
-    // onUpdateProfessionalExperience(onUpdate);
+
+    if (isDuplicate) {
+      const errorMessage = this.props.t("Value already exists");
+      this.setState({ duplicateErrorProfExperiences: errorMessage });
+    } else {
+      this.setState({ duplicateErrorProfExperiences: null });
+      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+      onUpdateProfessionalExperience(onUpdate);
+    }
   };
 
   handleAddRowRelative = () => {
@@ -1079,7 +1083,7 @@ class NewTrainee extends Component {
   };
 
   handleAlertClose = () => {
-    this.setState({ duplicateErrorSibling: null });
+    this.setState({ duplicateErrorProfExperiences: null });
   };
 
   handleMulti = (fieldName, selectedMulti) => {
@@ -1087,10 +1091,6 @@ class NewTrainee extends Component {
       this.setState({ siblingsArray: selectedMulti });
     }
     console.log("selectedMulti", selectedMulti);
-  };
-
-  handleAlertCloseProfExperiences = () => {
-    this.setState({ duplicateErrorProfExperiences: null });
   };
 
   handleRegReqDocDataChange = (rowId, fieldName, fieldValue) => {
@@ -1128,6 +1128,21 @@ class NewTrainee extends Component {
           : document
       ),
     }));
+  };
+
+  handleDeleteRow = () => {
+    const { onDeleteProfessionalExperience } = this.props;
+    const { selectedRowId } = this.state;
+    console.log("ssssssssssssssssssssssselectedrow", selectedRowId);
+    if (selectedRowId !== null) {
+      onDeleteProfessionalExperience(selectedRowId);
+
+      this.setState({
+        selectedRowId: null,
+        deleteModal: false,
+        showAlert: true,
+      });
+    }
   };
 
   render() {
@@ -1199,7 +1214,6 @@ class NewTrainee extends Component {
       duplicateErrorSibling,
       stdDocsArray,
       siblingsArray,
-      trnProfExperiences,
       gradeError,
       selectedInstituteCountry,
       selectedHightStudyTypeId,
@@ -1209,6 +1223,7 @@ class NewTrainee extends Component {
       nationalNoError,
       identityNoError,
       plan_studyError,
+      showAlert,
     } = this.state;
     const gradeOptions = [
       { value: 1, label: "Good" },
@@ -1230,6 +1245,8 @@ class NewTrainee extends Component {
     const { SearchBar } = Search;
 
     const {
+      lastAddedId,
+      trnProfExperiences,
       trainees,
       socialStatus,
       tempTrainee,
@@ -1239,6 +1256,7 @@ class NewTrainee extends Component {
       countries,
       currentSemester,
       cities,
+      deleted,
       diplomalevels,
       governorates,
       genders,
@@ -1260,7 +1278,10 @@ class NewTrainee extends Component {
     const { isEdit, deleteModal, generateModal } = this.state;
 
     const trainee = this.state.trainee;
-
+    const alertMessage =
+      deleted == 0
+        ? this.props.t("Can't Delete")
+        : this.props.t("Deleted Successfully");
     const pageOptions = {
       sizePerPage: 10,
       TotalGradeSize: trainees.length,
@@ -1600,7 +1621,7 @@ class NewTrainee extends Component {
       },
     ];
     const trnProfExperienceColumns = [
-      { dataField: "Id", text: t("Id"), hidden: true },
+      { dataField: "Id", text: t("ID"), hidden: true },
       { dataField: "workType", text: t("Work Type"), sort: true },
       { dataField: "companyName", text: t("Company Name"), sort: true },
       { dataField: "workPlace", text: t("Work Place"), sort: true },
@@ -1698,7 +1719,6 @@ class NewTrainee extends Component {
                         <Col xl="12">
                           <div>
                             <Formik
-                              innerRef={this.formikRef}
                               enableReinitialize={true}
                               initialValues={{
                                 FirstName: (trainee && trainee.FirstName) || "",
@@ -4989,7 +5009,7 @@ class NewTrainee extends Component {
                                                     <Card>
                                                       <CardBody>
                                                         <div className="table-responsive">
-                                                          {duplicateErrorProfExperiences && (
+                                                          {/* {duplicateErrorProfExperiences && (
                                                             <Alert
                                                               color="danger"
                                                               className="d-flex justify-content-center align-items-center alert-dismissible fade show"
@@ -5008,7 +5028,67 @@ class NewTrainee extends Component {
                                                                 }
                                                               ></button>
                                                             </Alert>
-                                                          )}
+                                                          )} */}
+                                                          <div>
+                                                            {duplicateErrorProfExperiences && (
+                                                              <Alert
+                                                                color="danger"
+                                                                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                role="alert"
+                                                              >
+                                                                {
+                                                                  duplicateErrorProfExperiences
+                                                                }
+                                                                <button
+                                                                  type="button"
+                                                                  className="btn-close"
+                                                                  aria-label="Close"
+                                                                  onClick={
+                                                                    this
+                                                                      .handleAlertClose
+                                                                  }
+                                                                ></button>
+                                                              </Alert>
+                                                            )}
+                                                            {deleted == 0 &&
+                                                              showAlert && (
+                                                                <Alert
+                                                                  color="danger"
+                                                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                  role="alert"
+                                                                >
+                                                                  {alertMessage}
+                                                                  <button
+                                                                    type="button"
+                                                                    className="btn-close"
+                                                                    aria-label="Close"
+                                                                    onClick={
+                                                                      this
+                                                                        .handleExpErrorClose
+                                                                    }
+                                                                  ></button>
+                                                                </Alert>
+                                                              )}
+                                                            {deleted == 1 &&
+                                                              showAlert && (
+                                                                <Alert
+                                                                  color="success"
+                                                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                  role="alert"
+                                                                >
+                                                                  {alertMessage}
+                                                                  <button
+                                                                    type="button"
+                                                                    className="btn-close"
+                                                                    aria-label="Close"
+                                                                    onClick={
+                                                                      this
+                                                                        .handleExpSuccessClose
+                                                                    }
+                                                                  ></button>
+                                                                </Alert>
+                                                              )}
+                                                          </div>
                                                           <Row>
                                                             <Col>
                                                               <div className="text-sm-end">
@@ -5024,6 +5104,9 @@ class NewTrainee extends Component {
                                                                       this
                                                                         .handelAddExperience
                                                                     }
+                                                                    disabled={
+                                                                      !lastAddedId
+                                                                    }
                                                                   >
                                                                     <i className="mdi mdi-plus-circle blue-noti-icon" />
                                                                   </IconButton>
@@ -5031,6 +5114,20 @@ class NewTrainee extends Component {
                                                               </div>
                                                             </Col>
                                                           </Row>
+                                                          <DeleteModal
+                                                            show={deleteModal}
+                                                            onDeleteClick={
+                                                              this
+                                                                .handleDeleteRow
+                                                            }
+                                                            onCloseClick={() =>
+                                                              this.setState({
+                                                                deleteModal: false,
+                                                                selectedRowId:
+                                                                  null,
+                                                              })
+                                                            }
+                                                          />
                                                           <BootstrapTable
                                                             keyField="Id"
                                                             data={
@@ -5050,7 +5147,7 @@ class NewTrainee extends Component {
                                                                   column
                                                                 ) => {
                                                                   this.handleExperienceDataChange(
-                                                                    row,
+                                                                    row.Id,
                                                                     column.dataField,
                                                                     newValue
                                                                   );
@@ -5212,6 +5309,7 @@ class NewTrainee extends Component {
 
 const mapStateToProps = ({
   trainees,
+  deleted,
   nationalities,
   mobAppFacultyAccs,
   countries,
@@ -5251,6 +5349,7 @@ const mapStateToProps = ({
   studentsOpt: universityStudents.studentsOpt,
   universityStudents: universityStudents.universityStudents,
   regcertificates: trainees.regcertificates,
+  deleted: trainees.deleted,
   highstudytypes: highstudytypes.highstudytypes,
   estimates: estimates.estimates,
 });

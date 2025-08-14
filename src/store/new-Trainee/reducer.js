@@ -166,10 +166,10 @@ const trainees = (state = INIT_STATE, action) => {
     case UPDATE_PROFESSIONAL_EXPERIENCE_SUCCESS:
       return {
         ...state,
-        trnProfExperiences: state.trnProfExperiences.map(profExperience =>
-          profExperience.Id.toString() === action.payload.Id.toString()
-            ? { ...profExperience, ...action.payload }
-            : profExperience
+        trnProfExperiences: state.trnProfExperiences.map(trnProfExperience =>
+          trnProfExperience.Id.toString() === action.payload.Id.toString()
+            ? { ...trnProfExperience, ...action.payload }
+            : trnProfExperience
         ),
       };
 
@@ -183,8 +183,8 @@ const trainees = (state = INIT_STATE, action) => {
       return {
         ...state,
         trnProfExperiences: state.trnProfExperiences.filter(
-          profExperience =>
-            profExperience.Id.toString() !== action.payload.Id.toString()
+          trnProfExperience =>
+            trnProfExperience.Id.toString() !== action.payload.Id.toString()
         ),
         deleted: action.payload.deleted,
       };
