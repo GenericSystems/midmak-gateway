@@ -76,7 +76,7 @@ class RegReqDocumentsTable extends Component {
 
   componentDidMount() {
     const {
-       onfetchSetting,
+      onfetchSetting,
       regReqDocuments,
       user_menu,
       onGetRegReqDocuments,
@@ -91,8 +91,8 @@ class RegReqDocumentsTable extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onfetchSetting();
-     this.setState({ currentSemester });
-/* 
+    this.setState({ currentSemester });
+    /* 
  
 console.log("ddddddddddddddddd", currentSemester.cuYearId) 
 console.log("YEARSSSSSSSSSSS", years) 
@@ -100,8 +100,8 @@ console.log("YEARSSSSSSSSSSS", years)
       year => year.value === currentSemester.cuYearId
     );
 */
-   if (regReqDocuments && !regReqDocuments.length) {
-    /*  let ob = {
+    if (regReqDocuments && !regReqDocuments.length) {
+      /*  let ob = {
         yearId: currentSemester.cuYearId,
         certificateLevelId: 1,
       };*/
@@ -118,8 +118,8 @@ console.log("YEARSSSSSSSSSSS", years)
       //console.log("bbbbbbbbbbbb", ob);
     }
 
-   this.setState({ isCurrentYear: true });
- }
+    this.setState({ isCurrentYear: true });
+  }
   componentDidUpdate(prevProps, prevState) {
     const { years, currentSemester, onGetRegReqDocuments } = this.props;
 
@@ -238,13 +238,15 @@ console.log("YEARSSSSSSSSSSS", years)
     const { onAddNewRegReqDocument, regReqDocuments, currentSemester } =
       this.props;
     const { checkedId } = this.state;
+    console.log("regggggggggggggg", regReqDocuments);
+
     const emptyLevelExists = regReqDocuments.some(
-      row => row.documentTypeId === 0
+      row => row.documentTypeId === null
     );
     if (emptyLevelExists) {
-      const errorMessage = this.props.t("Fill in the empty row");
+      const errorMessage = this.props.t("Fill the empty row");
       this.setState({ duplicateError: errorMessage });
-      return;
+      r;
     } else {
       const newRow = {
         yearId: currentSemester.cuYearId,

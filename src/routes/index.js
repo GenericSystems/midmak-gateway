@@ -165,6 +165,9 @@ import classSchedulingList from "../pages/Addmission/classScheduling/classSchedu
 //ContractsTypes
 import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 
+//Nationalities
+import NationalitiesList from "../pages/Addmission/AdmissionSettings/nationality-list";
+
 //Absence warnings
 import AbsenceWarningsList from "../pages/Rules-and-Regulations/Absence-warnings/absenceWarnings";
 
@@ -344,6 +347,10 @@ const authProtectedRoutes = [
   // warningsTypes
 
   { path: "/warningsTypes", component: WarningsTypesList },
+
+  //nationalities
+
+  { path: "/nationality-list", component: NationalitiesList },
 
   // AbsenceWarnings
   { path: "/absenceWarnings", component: AbsenceWarningsList },

@@ -40,7 +40,7 @@ function* fetchNationalities() {
     source: 'db',
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_nationality"
+    tablename: "Settings_Nationality"
      } 
 
   try {
@@ -65,7 +65,7 @@ function* onAddNewNationality({ payload, nationality }) {
   payload["source"] = 'db';
   payload["procedure"] = 'SisApp_addData';
   payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-  payload["tablename"] = 'settings_nationality';
+  payload["tablename"] = 'Settings_Nationality';
   
   try {
     const response = yield call(addNewNationality, payload)
@@ -83,7 +83,7 @@ function* onImportNationalities({ payload, nationality }) {
   payload["source"] = 'db';
   payload["procedure"] = 'SisApp_importFile';
   payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-  payload["tablename"] = 'settings_nationality';
+  payload["tablename"] = 'Settings_Nationality';
   payload["field"] = "arTitle,enTitle";
 
   
@@ -102,7 +102,7 @@ function* onUpdateNationality({payload}) {
 payload["source"] = 'db';
 payload["procedure"] = 'SisApp_updateData';
 payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-payload["tablename"] = 'settings_nationality';
+payload["tablename"] = 'Settings_Nationality';
 try {
     const response = yield call(updateNationality, payload)
     yield put(updateNationalitySuccess(response[0]))
@@ -115,7 +115,7 @@ function* onDeleteNationality({ payload, nationality }) {
   payload["source"] = 'db';
   payload["procedure"] = 'SisApp_removeData';
   payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-  payload["tablename"] = 'settings_nationality';
+  payload["tablename"] = 'Settings_Nationality';
   try {
     const responsedelete = yield call(deleteNationality, payload)
     yield put(deleteNationalitySuccess(responsedelete[0]))
