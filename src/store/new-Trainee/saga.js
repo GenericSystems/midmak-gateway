@@ -341,16 +341,20 @@ function* fetchTraineesRegisterCertificates() {
   }
 }
 
-function* fetchTraineesReqDocs() {
+function* fetchTraineesReqDocs(obj) {
+  const object = obj.payload;
+  console.log("object", object);
   const get_TraineeReqDocs = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_RequiredRegistrationDocuments",
+    tablename: "_RegReqDocs",
+    filter: `yearId = ${object.yearId} and certificateLevelId = ${object.certificateLevelId} `,
   };
 
   try {
     const response = yield call(getDefaultRegReqDocs, get_TraineeReqDocs);
+    console.log("rereresponse", response);
     yield put(getTraineeDefaultRegReqDocsSuccess(response));
   } catch (error) {
     yield put(getTraineeDefaultRegReqDocsFail(error));

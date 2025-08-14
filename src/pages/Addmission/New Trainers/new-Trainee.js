@@ -166,6 +166,7 @@ class NewTrainee extends Component {
       identityNoError: false,
       selectedRowId: null,
       showAlert: null,
+      isTraineeSaved: false,
     };
     this.toggle = this.toggle.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
@@ -211,7 +212,7 @@ class NewTrainee extends Component {
 
     onGetTrainees(lang);
     onGetTraineesRegCertificates();
-    onGetTraineesDocuments();
+    // onGetTraineesDocuments();
 
     this.setState({ trnProfExperiences, deleted });
     this.setState({ trainees });
@@ -546,6 +547,7 @@ class NewTrainee extends Component {
       const saveTraineeMessage = this.props.t("Trainee saved successfully");
       this.setState({
         successMessage: saveTraineeMessage,
+        isTraineeSaved: true,
       });
     }
   };
@@ -580,6 +582,12 @@ class NewTrainee extends Component {
   };
 
   toggleTab(tab) {
+    if (tab === 5 && !this.state.isTraineeSaved) {
+      return;
+    }
+    if (tab === 4 && !this.state.isTraineeSaved) {
+      return;
+    }
     if (this.state.activeTab !== tab) {
       if (tab >= 1 && tab <= 5) {
         var modifiedSteps = [...this.state.passedSteps, tab];
@@ -597,10 +605,11 @@ class NewTrainee extends Component {
     }
 
     if (tab == 5) {
-      const { traineesDocuments } = this.props;
-      this.setState({
-        stdDocsArray: traineesDocuments,
-      });
+      const { traineesDocuments, onGetTraineesDocuments } = this.props;
+      // this.setState({
+      //   stdDocsArray: traineesDocuments,
+      // });
+      onGetTraineesDocuments(traineesDocuments);
     }
   }
 
@@ -1382,7 +1391,7 @@ class NewTrainee extends Component {
         hidden: true,
       },
       {
-        dataField: "documentTypeId",
+        dataField: "docName",
 
         text: this.props.t("Document Name"),
         editable: false,
@@ -5360,7 +5369,7 @@ const mapDispatchToProps = dispatch => ({
   onGetFilteredAcademicCertificates: academicCer =>
     dispatch(getFilteredAcademicCertificates(academicCer)),
   onGetTraineesRegCertificates: () => dispatch(getRegisterCertificates()),
-  onGetTraineesDocuments: () => dispatch(getTraineeDefaultRegReqDocs()),
+  onGetTraineesDocuments: years => dispatch(getTraineeDefaultRegReqDocs(years)),
   onAddNewProfessionalExperience: profExperience =>
     dispatch(addNewProfessionalExperience(profExperience)),
   onUpdateProfessionalExperience: profExperience =>
