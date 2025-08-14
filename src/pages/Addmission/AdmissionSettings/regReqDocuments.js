@@ -115,21 +115,47 @@ console.log("YEARSSSSSSSSSSS", years)
         years,
         regcertificates,
       });
-     
+      console.log("bbbbbbbbbbbb", ob);
     }
 
     this.setState({  isCurrentYear: true });
   }
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { years, currentSemester } = this.state;
-    if (years && years.length && currentSemester) {
-     /* const defaultYear = years.find(
+  componentDidUpdate(prevProps, prevState) {
+    const { years, currentSemester, onGetRegReqDocuments } = this.props;
+
+    if (
+      years &&
+      years.length &&
+      currentSemester &&
+      currentSemester.cuYearId &&
+      currentSemester.cuYearId !== prevProps.currentSemester?.cuYearId
+    ) {
+      const defaultYear = years.find(
         year => year.value === currentSemester.cuYearId
       );
+
       if (defaultYear) {
-        this.setState({ defaultYear });
-      }*/
+        // Only set state if defaultYear changed to prevent infinite loop
+        if (
+          !this.state.defaultYear ||
+          this.state.defaultYear.value !== defaultYear.value
+        ) {
+          this.setState({ defaultYear, isCurrentYear: true }, () => {
+            onGetRegReqDocuments({
+              yearId: defaultYear.value,
+              certificateLevelId: 1,
+            });
+          });
+        } else {
+          // If defaultYear already set, just fetch data
+          onGetRegReqDocuments({
+            yearId: defaultYear.value,
+            certificateLevelId: 1,
+          });
+        }
+      }
     }
+
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -370,7 +396,8 @@ console.log("YEARSSSSSSSSSSS", years)
 
   handleShowColumn = (fieldName, Id) => {
     console.log("starttttttttttttttttt");
-    const { onGetRegReqDocuments, currentSemester , regReqDocuments} = this.props;
+    const { onGetRegReqDocuments, currentSemester, regReqDocuments } =
+      this.props;
     const { selectedYear, defaultYear } = this.state;
     console.log("select selectedYear", selectedYear);
     console.log("select defaultYear", defaultYear);
@@ -382,7 +409,7 @@ console.log("YEARSSSSSSSSSSS", years)
       console.log("no", defaultYear);
       obj = { yearId: currentSemester.cuYearId, certificateLevelId: Id };
     }
-    
+
     onGetRegReqDocuments(obj);
     console.log("shhhhhhhhhhhhhhhhh", regReqDocuments);
 
