@@ -91,22 +91,29 @@ class RegReqDocumentsTable extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onfetchSetting();
-     this.setState({ currentSemester });
-/* 
+     let curentueardata = localStorage.getItem("authUser");
  
-console.log("ddddddddddddddddd", currentSemester.cuYearId) 
-console.log("YEARSSSSSSSSSSS", years) 
+       if (curentueardata) {
+      try {
+        const parsed = JSON.parse(curentueardata);
+     
+       let ob = {
+        yearId: parsed[0].currentYearId,
+        certificateLevelId: 1,
+      }
+       onGetRegReqDocuments(ob);
+      } catch (error) {
+        console.error("Error parsing authUser:", error);
+      }
+    }
+
+     this.setState({ currentSemester });
    const defaultYear = years.find(
       year => year.value === currentSemester.cuYearId
     );
-*/
+
    if (regReqDocuments && !regReqDocuments.length) {
-    /*  let ob = {
-        yearId: currentSemester.cuYearId,
-        certificateLevelId: 1,
-      };*/
-      // console.log(" certificateLevelId certificateLevelId", certificateLevelId)
-      // onGetRegReqDocuments(ob);
+   
 
       this.setState({ regReqDocuments, deleted });
       this.setState({
@@ -114,12 +121,11 @@ console.log("YEARSSSSSSSSSSS", years)
         currentSemester,
         years,
         regcertificates,
-      });
-      //console.log("bbbbbbbbbbbb", ob);
+      }); 
     }
-
    this.setState({ isCurrentYear: true });
  }
+
   componentDidUpdate(prevProps, prevState) {
     const { years, currentSemester, onGetRegReqDocuments } = this.props;
 

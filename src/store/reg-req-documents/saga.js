@@ -80,7 +80,7 @@ function* fetchRegReqDocSettings() {
     yield put(getDocumentsFail(error));
   }
  //currentSemester
-  /*const get_current_semester = {
+  const get_current_semester = {
       source: 'db',
       procedure: "SisApp_getData",
       apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -94,7 +94,7 @@ function* fetchRegReqDocSettings() {
   yield put(getCurrentSemesterSuccess(response[0]))
   } catch (error) {
   yield put(getCurrentSemesterFail(error))
-  } */
+  } 
 
    //get years
   const get_year_opt = {
