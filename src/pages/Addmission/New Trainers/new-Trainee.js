@@ -59,6 +59,8 @@ import {
   updateProfessionalExperience,
   addNewProfessionalExperience,
   deleteProfessionalExperience,
+  addRequiredDocs,
+  updateRequiredDocs,
 } from "store/new-Trainee/actions";
 import { isEmpty, size, map, values } from "lodash";
 
@@ -562,16 +564,6 @@ class NewTrainee extends Component {
         traineeinfo["Average"] = averageValue;
       }
 
-      const extractedArray = stdDocsArray.map(item => ({
-        regReqDocId: item.regReqDocId,
-        attestated: item.attestated,
-        availableNumber: item.availableNumber,
-      }));
-      console.log("traineeinfo in save", traineeinfo);
-
-      // traineeinfo["stdDocs"] = extractedArray;
-      // traineeinfo["profExperience"] = trnProfExperience;
-      //traineeinfo["siblings"] = siblingsArray;
       const response = onAddNewTrainee(traineeinfo);
       if (response?.Id) {
         this.setState({ traineeId: response.Id });
@@ -1186,27 +1178,21 @@ class NewTrainee extends Component {
   };
 
   handleSubmit = values => {
-    const { lastAddedId, stdDocsArray } = this.props;
+    const { lastAddedId, onAddRequiredDocs } = this.props;
+    const { stdDocsArray } = this.state;
     console.log("values in save", values);
-    //hhhhh
+    values["traineeId"] = lastAddedId;
+    console.log(lastAddedId);
     let traineeinfo = {};
-    Object.keys(values).forEach(function (key) {
-      if (
-        values[key] != undefined &&
-        (values[key].length > 0 || values[key] != "")
-      )
-        traineeinfo[key] = values[key];
-    });
     const extractedArray = stdDocsArray.map(item => ({
-      traineeId: lastAddedId,
-      regReqDocId: item.regReqDocId,
-      attestated: item.attestated,
+      regReqDocId: item.Id,
       availableNumber: item.availableNumber,
     }));
-
+    console.log("extractedArray", extractedArray);
     traineeinfo["stdDocs"] = extractedArray;
-    // traineeinfo["profExperience"] = trnProfExperience;
-    //traineeinfo["siblings"] = siblingsArray;
+    traineeinfo["traineeId"] = lastAddedId;
+    console.log("traineeinfo", traineeinfo);
+    onAddRequiredDocs(traineeinfo);
   };
 
   render() {
@@ -5458,6 +5444,7 @@ const mapStateToProps = ({
   deleted: trainees.deleted,
   highstudytypes: highstudytypes.highstudytypes,
   estimates: estimates.estimates,
+  requiredDocs: trainees.requiredDocs,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -5473,6 +5460,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateProfessionalExperience(profExperience)),
   onDeleteProfessionalExperience: profExperience =>
     dispatch(deleteProfessionalExperience(profExperience)),
+  onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
+  onUpdateRequiredDocs: trainee => dispatch(updateRequiredDocs(trainee)),
 });
 
 export default connect(

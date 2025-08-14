@@ -23,6 +23,10 @@ import {
   UPDATE_PROFESSIONAL_EXPERIENCE_FAIL,
   DELETE_PROFESSIONAL_EXPERIENCE_SUCCESS,
   DELETE_PROFESSIONAL_EXPERIENCE_FAIL,
+  ADD_REQUIRED_DOCS_SUCCESS,
+  ADD_REQUIRED_DOCS_FAIL,
+  UPDATE_REQUIRED_DOCS_SUCCESS,
+  UPDATE_REQUIRED_DOCS_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -35,6 +39,7 @@ const INIT_STATE = {
   tempRelatives: [],
   regcertificates: [],
   trnProfExperiences: [],
+  requiredDocs: [],
   lastAddedId: 0,
   isLoading: false,
 };
@@ -190,6 +195,34 @@ const trainees = (state = INIT_STATE, action) => {
       };
 
     case DELETE_PROFESSIONAL_EXPERIENCE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case ADD_REQUIRED_DOCS_SUCCESS:
+      return {
+        ...state,
+        requiredDocs: [...state.requiredDocs, action.payload],
+      };
+
+    case ADD_REQUIRED_DOCS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case UPDATE_REQUIRED_DOCS_SUCCESS:
+      return {
+        ...state,
+        requiredDocs: state.requiredDocs.map(requiredDoc =>
+          requiredDoc.Id.toString() === action.payload.Id.toString()
+            ? { ...requiredDoc, ...action.payload }
+            : requiredDoc
+        ),
+      };
+
+    case UPDATE_REQUIRED_DOCS_FAIL:
       return {
         ...state,
         error: action.payload,

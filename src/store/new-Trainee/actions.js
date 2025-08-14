@@ -35,6 +35,12 @@ import {
   DELETE_PROFESSIONAL_EXPERIENCE,
   DELETE_PROFESSIONAL_EXPERIENCE_SUCCESS,
   DELETE_PROFESSIONAL_EXPERIENCE_FAIL,
+  ADD_REQUIRED_DOCS,
+  ADD_REQUIRED_DOCS_FAIL,
+  ADD_REQUIRED_DOCS_SUCCESS,
+  UPDATE_REQUIRED_DOCS,
+  UPDATE_REQUIRED_DOCS_FAIL,
+  UPDATE_REQUIRED_DOCS_SUCCESS,
 } from "./actionTypes";
 
 export const getTrainees = trainees => ({
@@ -205,5 +211,35 @@ export const deleteProfessionalExperienceSuccess = profExper => ({
 
 export const deleteProfessionalExperienceFail = error => ({
   type: DELETE_PROFESSIONAL_EXPERIENCE_FAIL,
+  payload: error,
+});
+
+export const addRequiredDocs = trainee => ({
+  type: ADD_REQUIRED_DOCS,
+  payload: trainee,
+});
+
+export const addRequiredDocsSuccess = trainee => ({
+  type: ADD_REQUIRED_DOCS_SUCCESS,
+  payload: trainee,
+});
+
+export const addRequiredDocsFail = error => ({
+  type: ADD_REQUIRED_DOCS_FAIL,
+  payload: error,
+});
+
+export const updateRequiredDocs = trainee => ({
+  type: UPDATE_REQUIRED_DOCS,
+  payload: trainee,
+});
+
+export const updateRequiredDocsSuccess = trainee => ({
+  type: UPDATE_REQUIRED_DOCS_SUCCESS,
+  payload: trainee,
+});
+
+export const updateRequiredDocsFail = error => ({
+  type: UPDATE_REQUIRED_DOCS_FAIL,
   payload: error,
 });

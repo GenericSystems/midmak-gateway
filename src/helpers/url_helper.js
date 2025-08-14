@@ -1107,6 +1107,8 @@ export const UPDATE_TRAINEE = "/update/trainee";
 export const DELETE_TRAINEE = "/delete/trainee";
 export const GET_REGISTER_CERTIFICATES = "/registerCertificates";
 export const GET_TRAINEE_DEFAULT_REGREQDOCS = "/traineeDefaultRegReqDocs";
+export const ADD_REQUIRED_DOCS = "/add/requiredDocs";
+export const UPDATE_REQUIRED_DOCS = "/update/requiredDocs";
 
 //social status
 export const GET_SOCIAL_STATUS = "/socialStatus";

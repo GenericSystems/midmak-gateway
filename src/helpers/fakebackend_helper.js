@@ -269,6 +269,10 @@ export const getDefaultRegReqDocs = data =>
 export const getTraineeDefaultRegReqDocs = data =>
   post(url.GET_TRAINEE_DEFAULT_REGREQDOCS, data);
 
+//add RequiredDocs
+export const addRequiredDocs = data => post(url.ADD_REQUIRED_DOCS, data);
+export const updateRequiredDocs = data => post(url.UPDATE_REQUIRED_DOCS, data);
+
 // get UniversityStudent
 export const getUniversityStudents = data =>
   post(url.GET_UNIVERSITY_STUDENTS, data);

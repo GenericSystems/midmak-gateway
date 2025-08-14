@@ -13,6 +13,8 @@ import {
   ADD_NEW_PROFESSIONAL_EXPERIENCE,
   DELETE_PROFESSIONAL_EXPERIENCE,
   UPDATE_PROFESSIONAL_EXPERIENCE,
+  ADD_REQUIRED_DOCS,
+  UPDATE_REQUIRED_DOCS,
 } from "./actionTypes";
 
 import {
@@ -38,6 +40,10 @@ import {
   updateProfessionalExperienceFail,
   deleteProfessionalExperienceSuccess,
   deleteProfessionalExperienceFail,
+  addRequiredDocsSuccess,
+  addRequiredDocsFail,
+  updateRequiredDocsSuccess,
+  updateRequiredDocsFail,
 } from "./actions";
 
 // Include helper functions
@@ -62,6 +68,8 @@ import {
   addNewProfessionalExperience,
   updateProfessionalExperience,
   deleteProfessionalExperience,
+  addRequiredDocs,
+  updateRequiredDocs,
 } from "../../helpers/fakebackend_helper";
 
 import {
@@ -255,12 +263,12 @@ function* fetchTrainees(selectedpayload) {
     yield put(getHighStudyTypesFail(error));
   }
 
-  /* //get trainees_req
+  //get trainees_req
   const get_trainees_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_TempTrainee",
+    tablename: "_Common_TempTrainee",
   };
 
   try {
@@ -268,7 +276,7 @@ function* fetchTrainees(selectedpayload) {
     yield put(getTraineesSuccess(response));
   } catch (error) {
     yield put(getTraineesFail(error));
-  } */
+  }
 }
 
 function* onAddNewTrainee({ payload }) {
@@ -408,6 +416,73 @@ function* onDeleteProfessionalExperience({ payload }) {
   }
 }
 
+function* onAddRequiredDocs({ payload }) {
+  payload["source"] = "db";
+  payload["procedure"] = "Admission_AddDocsTempTrainee";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_RegReqDocTempTrainee";
+
+  try {
+    const response = yield call(addRequiredDocs, payload);
+    console.log("response", response);
+    yield put(addRequiredDocsSuccess(response[0]));
+  } catch (error) {
+    yield put(addRequiredDocsFail(error));
+  }
+}
+
+function* onUpdateRequiredDocs({ payload }) {
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_updateData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_RegReqDocTempTrainee";
+
+  try {
+    const response = yield call(updateProfessionalExperience, payload);
+    yield put(updateProfessionalExperienceSuccess(response[0]));
+  } catch (error) {
+    yield put(updateProfessionalExperienceFail(error));
+  }
+}
+
+// function* fetchTraineeById(tempTrainee) {
+//   const get_student_byId = {
+//     source: "db",
+//     procedure: "SisApp_getData",
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     tablename: "_TempTraineeDetails",
+//     filter: `Id = ${tempTrainee.payload.Id}`,
+//   };
+//   try {
+//     const response = yield call(getTraineeById, get_student_byId);
+//     response.map(resp => {
+//       resp["TempTraineeBrothers"] = JSON.parse(resp["TempTraineeBrothers"]);
+//       resp["TempTraineeRelatives"] = JSON.parse(resp["TempTraineeRelatives"]);
+//       resp["RegReqDocTempTrainee"] = JSON.parse(resp["RegReqDocTempTrainee"]);
+//     });
+//     yield put(getTraineeByIdSuccess(response[0]));
+//   } catch (error) {
+//     yield put(getTraineeByIdFail(error));
+//   }
+// }
+
+// function* onGenerateTrainee({ payload }) {
+//   const generate_student = {
+//     source: "db",
+//     operation: "execProc",
+//     procedure: "Admission_GenerateSID",
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     parameters: `Id= ${payload}`,
+//   };
+//   try {
+//     const response = yield call(generateTrainee, generate_student);
+
+//     yield put(generateTraineeSuccess(response[0]));
+//   } catch (error) {
+//     yield put(generateTraineeFail(error));
+//   }
+// }
+
 function* traineesSaga() {
   yield takeEvery(GET_TRAINEES, fetchTrainees);
   yield takeEvery(GET_REGISTER_CERTIFICATES, fetchTraineesRegisterCertificates);
@@ -428,6 +503,8 @@ function* traineesSaga() {
     DELETE_PROFESSIONAL_EXPERIENCE,
     onDeleteProfessionalExperience
   );
+  yield takeEvery(ADD_REQUIRED_DOCS, onAddRequiredDocs);
+  yield takeEvery(UPDATE_REQUIRED_DOCS, onUpdateRequiredDocs);
 }
 
 export default traineesSaga;
