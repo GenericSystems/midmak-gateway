@@ -18,7 +18,7 @@ import Select from "react-select";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
 
-import { getCurrentSemester } from "store/semesters/actions";
+//import { getCurrentSemester } from "store/semesters/actions";
 
 import {
   getRegReqDocuments,
@@ -76,7 +76,7 @@ class RegReqDocumentsTable extends Component {
 
   componentDidMount() {
     const {
-       onfetchSetting,
+      onfetchSetting,
       regReqDocuments,
       user_menu,
       onGetRegReqDocuments,
@@ -90,36 +90,30 @@ class RegReqDocumentsTable extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    onfetchSetting();
-     this.setState({ currentSemester });
-
+       onfetchSetting();     
+     let curentueardata = localStorage.getItem("authUser");
+    if (curentueardata) {
+      try {
+        const parsed = JSON.parse(curentueardata);
+        const firstYear = parsed[0];
+         let ob = { yearId: parsed[0].currentYearId, certificateLevelId: 1 };
+         onGetRegReqDocuments(ob);
+      } catch (error) {
+        console.error("Error parsing authUser:", error);
+      }
+    }
+       if (regReqDocuments && !regReqDocuments.length) {
  
-/*console.log("ddddddddddddddddd", currentSemester.cuYearId) 
-console.log("YEARSSSSSSSSSSS", years) 
-   const defaultYear = years.find(
-      year => year.value === currentSemester.cuYearId
-    );
-*/
-    if (regReqDocuments && !regReqDocuments.length) {
-      let ob = {
-        yearId: currentSemester.cuYearId,
-        certificateLevelId: 1,
-      };
-      // console.log(" certificateLevelId certificateLevelId", certificateLevelId)
-      onGetRegReqDocuments(ob);
-
       this.setState({ regReqDocuments, deleted });
       this.setState({
         documents,
         currentSemester,
         years,
         regcertificates,
-      });
-      console.log("bbbbbbbbbbbb", ob);
+      }); 
     }
-
-    this.setState({  isCurrentYear: true });
-  }
+     this.setState({ isCurrentYear: true });  
+ }
   componentDidUpdate(prevProps, prevState) {
     const { years, currentSemester, onGetRegReqDocuments } = this.props;
 
@@ -238,13 +232,15 @@ console.log("YEARSSSSSSSSSSS", years)
     const { onAddNewRegReqDocument, regReqDocuments, currentSemester } =
       this.props;
     const { checkedId } = this.state;
+    console.log("regggggggggggggg", regReqDocuments);
+
     const emptyLevelExists = regReqDocuments.some(
-      row => row.documentTypeId === 0
+      row => row.documentTypeId === null
     );
     if (emptyLevelExists) {
-      const errorMessage = this.props.t("Fill in the empty row");
+      const errorMessage = this.props.t("Fill the empty row");
       this.setState({ duplicateError: errorMessage });
-      return;
+      r;
     } else {
       const newRow = {
         yearId: currentSemester.cuYearId,
@@ -901,7 +897,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteRegReqDocument(regReqDocument)),
   onGetRegReqDocumentDeletedValue: () =>
     dispatch(getRegReqDocumentDeletedValue()),
-  onGetCurrentSemester: () => dispatch(getCurrentSemester()),
+  //onGetCurrentSemester: () => dispatch(getCurrentSemester()),
 });
 
 export default connect(

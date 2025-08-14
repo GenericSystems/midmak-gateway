@@ -98,6 +98,9 @@ export * from "./Rules-and-Regulations/Absence-warnings/actions";
 //DocumentTypes
 export * from "./documents-types/actions";
 
+//Nationalities
+export * from "./nationality/actions"
+
 //ExamRooms
 export * from "./Exam/ExamRooms/actions";
 
