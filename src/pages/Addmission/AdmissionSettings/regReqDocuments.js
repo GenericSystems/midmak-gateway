@@ -91,7 +91,17 @@ class RegReqDocumentsTable extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
        onfetchSetting();     
-    this.setState({ currentSemester });
+     let curentueardata = localStorage.getItem("authUser");
+    if (curentueardata) {
+      try {
+        const parsed = JSON.parse(curentueardata);
+        const firstYear = parsed[0];
+         let ob = { yearId: parsed[0].currentYearId, certificateLevelId: 1 };
+         onGetRegReqDocuments(ob);
+      } catch (error) {
+        console.error("Error parsing authUser:", error);
+      }
+    }
        if (regReqDocuments && !regReqDocuments.length) {
  
       this.setState({ regReqDocuments, deleted });
