@@ -301,10 +301,11 @@ class NewTrainee extends Component {
       values.diplomaId === "" ||
       values.BirthLocation === "" ||
       values.birthdate === "" ||
-      values.plan_study === "" ||
+      // values.plan_study === "" ||
       (values.NationalityId === "" && selectedNationalityId === "") ||
-      (values.GenderId === "" && selectedGender === "") ||
-      (values.FacultyId === "" && selectedFacultyId === "")
+      (values.GenderId === "" && selectedGender === "")
+      // ||
+      // (values.FacultyId === "" && selectedFacultyId === "")
     ) {
       if (values.FirstName.trim() === "") {
         this.setState({ firstNameError: true, saveError: true });
@@ -332,9 +333,9 @@ class NewTrainee extends Component {
         this.setState({ birthLocError: true, saveError: true });
       }
 
-      if (values.plan_study.trim() === "") {
-        this.setState({ plan_studyError: true, saveError: true });
-      }
+      // if (values.plan_study.trim() === "") {
+      //   this.setState({ plan_studyError: true, saveError: true });
+      // }
 
       if (values.birthdate === "" && selectedBirthDate === "") {
         this.setState({ birthdateError: true, saveError: true });
@@ -347,9 +348,9 @@ class NewTrainee extends Component {
         this.setState({ genderError: true, saveError: true });
       }
 
-      if (values.FacultyId === "" && selectedFacultyId === "") {
-        this.setState({ facultyError: true, saveError: true });
-      }
+      // if (values.FacultyId === "" && selectedFacultyId === "") {
+      //   this.setState({ facultyError: true, saveError: true });
+      // }
 
       if (values.nationalNo === "") {
         this.setState({ nationalNoError: true, saveError: true });
@@ -372,7 +373,7 @@ class NewTrainee extends Component {
       this.setState({ birthdateError: false, saveError: false });
       this.setState({ nationalityError: false, saveError: false });
       this.setState({ genderError: false, saveError: false });
-      this.setState({ facultyError: false, saveError: false });
+      // this.setState({ facultyError: false, saveError: false });
       this.setState({ grandFatherNameError: false, saveError: false });
       this.setState({ diplomaIdError: false, saveError: false });
       this.setState({ stdTotalGradeError: false, saveError: false });
@@ -606,10 +607,9 @@ class NewTrainee extends Component {
 
     if (tab == 5) {
       const { traineesDocuments, onGetTraineesDocuments } = this.props;
-      // this.setState({
-      //   stdDocsArray: traineesDocuments,
-      // });
-      onGetTraineesDocuments(traineesDocuments);
+      this.setState({
+        stdDocsArray: traineesDocuments,
+      });
     }
   }
 
@@ -631,9 +631,8 @@ class NewTrainee extends Component {
   }
 
   handleButtonClick = (fieldName, option) => {
-    const { currentSemester } = this.props;
-    let obj = { yearId: currentSemester.cuYearId, certificateLevelId: option };
-    // onGetDefaultRegReqDocs(obj);
+    let obj = { certificateLevelId: option };
+    onGetDefaultRegReqDocs(obj);
     if (fieldName == "ExaminationSession") {
       this.setState({ selectedExaminationSession: option });
     }
@@ -646,6 +645,10 @@ class NewTrainee extends Component {
   };
 
   handleButtonClick2 = (fieldName, option, values) => {
+    const { onGetTraineesDocuments } = this.props;
+    let obj = { certificateLevelId: option };
+    console.log("objobjobj", obj);
+    onGetTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
       this.setState({ selectedregistrationCertLevelId: option });
       this.setState({ trainee: values });

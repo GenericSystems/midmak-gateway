@@ -110,8 +110,9 @@ export const deleteTraineeFail = error => ({
   type: DELETE_TRAINEE_FAIL,
   payload: error,
 });
-export const getTraineeDefaultRegReqDocs = () => ({
+export const getTraineeDefaultRegReqDocs = docs => ({
   type: GET_TRAINEE_DEFAULT_REGREQDOCS,
+  payload: docs,
 });
 
 export const getTraineeDefaultRegReqDocsSuccess = docs => ({

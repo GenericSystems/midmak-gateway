@@ -264,6 +264,11 @@ export const getAcademicCertificateDeletedValue = () =>
 export const getDefaultRegReqDocs = data =>
   post(url.GET_DEFAULT_REGREQDOCS, data);
 
+// get trainee_regReqDocs
+
+export const getTraineeDefaultRegReqDocs = data =>
+  post(url.GET_TRAINEE_DEFAULT_REGREQDOCS, data);
+
 // get UniversityStudent
 export const getUniversityStudents = data =>
   post(url.GET_UNIVERSITY_STUDENTS, data);

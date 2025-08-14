@@ -47,7 +47,7 @@ import {
   addNewTrainee,
   updateTrainee,
   deleteTrainee,
-  getDefaultRegReqDocs,
+  getTraineeDefaultRegReqDocs,
   getNationalities,
   getCities,
   getCountries,
@@ -342,18 +342,21 @@ function* fetchTraineesRegisterCertificates() {
 }
 
 function* fetchTraineesReqDocs(obj) {
-  const object = obj.payload;
-  console.log("object", object);
+  const { certificateLevelId } = obj.payload;
+  console.log("{ certificateLevelId } ", obj.payload);
   const get_TraineeReqDocs = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_RegReqDocs",
-    filter: `yearId = ${object.yearId} and certificateLevelId = ${object.certificateLevelId} `,
+    filter: `certificateLevelId = ${certificateLevelId}`,
   };
 
   try {
-    const response = yield call(getDefaultRegReqDocs, get_TraineeReqDocs);
+    const response = yield call(
+      getTraineeDefaultRegReqDocs,
+      get_TraineeReqDocs
+    );
     console.log("rereresponse", response);
     yield put(getTraineeDefaultRegReqDocsSuccess(response));
   } catch (error) {
