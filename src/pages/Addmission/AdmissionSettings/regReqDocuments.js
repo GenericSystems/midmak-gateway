@@ -27,6 +27,7 @@ import {
   deleteRegReqDocument,
   getRegReqDocumentDeletedValue,
   copyRegReqDoc,
+  fetchRegReqDocSettings,
 } from "store/reg-req-documents/actions";
 import DeleteModal from "components/Common/DeleteModal";
 import { isEmpty, size, map } from "lodash";
@@ -75,6 +76,7 @@ class RegReqDocumentsTable extends Component {
 
   componentDidMount() {
     const {
+       onfetchSetting,
       regReqDocuments,
       user_menu,
       onGetRegReqDocuments,
@@ -88,11 +90,16 @@ class RegReqDocumentsTable extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
+    onfetchSetting();
+     this.setState({ currentSemester });
 
-    const defaultYear = years.find(
+ 
+/*console.log("ddddddddddddddddd", currentSemester.cuYearId) 
+console.log("YEARSSSSSSSSSSS", years) 
+   const defaultYear = years.find(
       year => year.value === currentSemester.cuYearId
     );
-
+*/
     if (regReqDocuments && !regReqDocuments.length) {
       let ob = {
         yearId: currentSemester.cuYearId,
@@ -108,21 +115,47 @@ class RegReqDocumentsTable extends Component {
         years,
         regcertificates,
       });
-     
+      console.log("bbbbbbbbbbbb", ob);
     }
 
-    this.setState({ defaultYear: defaultYear, isCurrentYear: true });
+    this.setState({  isCurrentYear: true });
   }
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { years, currentSemester } = this.state;
-    if (years && years.length && currentSemester) {
+  componentDidUpdate(prevProps, prevState) {
+    const { years, currentSemester, onGetRegReqDocuments } = this.props;
+
+    if (
+      years &&
+      years.length &&
+      currentSemester &&
+      currentSemester.cuYearId &&
+      currentSemester.cuYearId !== prevProps.currentSemester?.cuYearId
+    ) {
       const defaultYear = years.find(
         year => year.value === currentSemester.cuYearId
       );
+
       if (defaultYear) {
-        this.setState({ defaultYear });
+        // Only set state if defaultYear changed to prevent infinite loop
+        if (
+          !this.state.defaultYear ||
+          this.state.defaultYear.value !== defaultYear.value
+        ) {
+          this.setState({ defaultYear, isCurrentYear: true }, () => {
+            onGetRegReqDocuments({
+              yearId: defaultYear.value,
+              certificateLevelId: 1,
+            });
+          });
+        } else {
+          // If defaultYear already set, just fetch data
+          onGetRegReqDocuments({
+            yearId: defaultYear.value,
+            certificateLevelId: 1,
+          });
+        }
       }
     }
+
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -363,7 +396,8 @@ class RegReqDocumentsTable extends Component {
 
   handleShowColumn = (fieldName, Id) => {
     console.log("starttttttttttttttttt");
-    const { onGetRegReqDocuments, currentSemester , regReqDocuments} = this.props;
+    const { onGetRegReqDocuments, currentSemester, regReqDocuments } =
+      this.props;
     const { selectedYear, defaultYear } = this.state;
     console.log("select selectedYear", selectedYear);
     console.log("select defaultYear", defaultYear);
@@ -375,7 +409,7 @@ class RegReqDocumentsTable extends Component {
       console.log("no", defaultYear);
       obj = { yearId: currentSemester.cuYearId, certificateLevelId: Id };
     }
-    
+
     onGetRegReqDocuments(obj);
     console.log("shhhhhhhhhhhhhhhhh", regReqDocuments);
 
@@ -856,6 +890,7 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  onfetchSetting: () => dispatch(fetchRegReqDocSettings()),
   onGetRegReqDocuments: regReqDocs => dispatch(getRegReqDocuments(regReqDocs)),
   onCopyRegReqDoc: () => dispatch(copyRegReqDoc()),
   onAddNewRegReqDocument: regReqDocument =>

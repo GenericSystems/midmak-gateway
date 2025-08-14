@@ -550,6 +550,7 @@ export const ADD_NEW_REG_REQ_DOCUMENT = "/add/regReqdocument";
 export const UPDATE_REG_REQ_DOCUMENT = "/update/regReqdocument";
 export const DELETE_REG_REQ_DOCUMENT = "/delete/regReqdocument";
 export const COPY_REG_REQ_DOC = "/copy/regReqdocument";
+export const GET_REG_REQ_DOC_SETTINGS  = "/RegReqDocSettings";
 
 //DOCUMENT
 export const GET_DOCUMENTS = "/documents";

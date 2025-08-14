@@ -29,6 +29,7 @@ import {
   DELETE_REG_REQ_DOCUMENT,
   UPDATE_REG_REQ_DOCUMENT,
   COPY_REG_REQ_DOC,
+  GET_REG_REQ_DOC_SETTINGS,
 } from "./actionTypes";
 
 import {
@@ -62,8 +63,8 @@ import {
   getTraineeRegCertificate,
 } from "../../helpers/fakebackend_helper";
 
-function* fetchRegReqDocuments(obj) {
-  // get Documents Types
+function* fetchRegReqDocSettings() {
+   // get Documents Types
   const get_settings_req_doctype = {
     source: "db",
     procedure: "Generic_getOptions",
@@ -78,24 +79,24 @@ function* fetchRegReqDocuments(obj) {
   } catch (error) {
     yield put(getDocumentsFail(error));
   }
-
-  let regReqDoc = obj.payload;
-    console.log("regReqDocccccccccccccc", regReqDoc);
-  const get_settings_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_RequiredRegistrationDocuments",
-    filter: ` yearId = ${regReqDoc.yearId} and certificateLevelId = ${regReqDoc.certificateLevelId} `,
-  };
+ //currentSemester
+  const get_current_semester = {
+      source: 'db',
+      procedure: "SisApp_getData",
+      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+      tablename: "Settings_SystemCurrentYear",
+   
+       }  
   try {
-    const response = yield call(getRegReqDocuments, get_settings_req);
-    yield put(getRegReqDocumentsSuccess(response));
+  const response = yield call(
+    getCurrentSemester,
+    get_current_semester)
+  yield put(getCurrentSemesterSuccess(response[0]))
   } catch (error) {
-    yield put(getRegReqDocumentsFail(error));
-  }
+  yield put(getCurrentSemesterFail(error))
+  } 
 
-  //get years
+   //get years
   const get_year_opt = {
     source: "db",
     procedure: "Generic_getOptions",
@@ -142,30 +143,32 @@ function* fetchRegReqDocuments(obj) {
       getTraineeRegCertificate,
       get_TraineeReg_Certificate
     );
-    console.log("responsee", response);
     yield put(getRegisterCertificatesSuccess(response));
   } catch (error) {
     yield put(getRegisterCertificatesFail(error));
   }
-  //currentSemester
-  const get_current_semester = {
-      source: 'db',
-      procedure: "SisApp_getData",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "Settings_SystemCurrentYear",
-   
-       }  
+ 
+}
+
+function* fetchRegReqDocuments(obj) {
+ 
+
+  let regReqDoc = obj.payload;
+  const get_settings_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_RequiredRegistrationDocuments",
+    filter: ` yearId = ${regReqDoc.yearId} and certificateLevelId = ${regReqDoc.certificateLevelId} `,
+  };
   try {
-  const response = yield call(
-    getCurrentSemester,
-    get_current_semester)
-   console.log("responsesssssssss",response)
-  yield put(getCurrentSemesterSuccess(response[0]))
+    const response = yield call(getRegReqDocuments, get_settings_req);
+    yield put(getRegReqDocumentsSuccess(response));
   } catch (error) {
-  yield put(getCurrentSemesterFail(error))
+    yield put(getRegReqDocumentsFail(error));
   }
 
-
+ 
 
 }
 
@@ -237,6 +240,7 @@ function* onCopyRegReqDoc() {
 }
 
 function* regReqDocumentsSaga() {
+ yield takeEvery(GET_REG_REQ_DOC_SETTINGS, fetchRegReqDocSettings);
   yield takeEvery(GET_REG_REQ_DOCUMENTS, fetchRegReqDocuments);
   yield takeEvery(
     GET_REG_REQ_DOCUMENT_DELETED_VALUE,
