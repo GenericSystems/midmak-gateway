@@ -869,7 +869,7 @@ class NewTrainee extends Component {
     );
     console.log(diplomaObject, "ollllllll");
     let obj = { certificateLevelId: diplomaObject.key };
-    console.log("objobjobj", obj);
+    // console.log("objobjobj", obj);
     onGetTraineesDocuments(obj);
     setFieldValue("diplomaId", selectedValue);
 
@@ -4132,16 +4132,16 @@ class NewTrainee extends Component {
                                                                   id="diploma-Id"
                                                                   list="certificateDatalistOptions"
                                                                   placeholder="Type to search..."
-                                                                  onBlur={() =>
-                                                                    this.handleInputBlur(
-                                                                      "diplomaId"
-                                                                    )
-                                                                  }
-                                                                  onFocus={() =>
-                                                                    this.handleInputFocus(
-                                                                      "diplomaId"
-                                                                    )
-                                                                  }
+                                                                  // onBlur={() =>
+                                                                  //   this.handleInputBlur(
+                                                                  //     "diplomaId"
+                                                                  //   )
+                                                                  // }
+                                                                  // onFocus={() =>
+                                                                  //   this.handleInputFocus(
+                                                                  //     "diplomaId"
+                                                                  //   )
+                                                                  // }
                                                                   onChange={event =>
                                                                     this.handleDiplomaSelect(
                                                                       event,

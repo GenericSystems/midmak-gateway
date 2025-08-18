@@ -398,7 +398,7 @@ class ApplicantsList extends Component {
   }
   handleSelectYear = (name, value) => {
     document.getElementById("square-switch1").checked = false;
-    const { onGetTrainees } = this.props;
+    // const { onGetTrainees } = this.props;
     this.setState({
       selectedYear: value,
       currentYearObj: {
@@ -406,7 +406,7 @@ class ApplicantsList extends Component {
         currentYearName: value.label,
       },
     });
-    onGetTrainees();
+    // onGetTrainees();
   };
   handleTraineeClicks = () => {
     const { trainees } = this.props;
@@ -433,8 +433,6 @@ class ApplicantsList extends Component {
       selectedExaminationSession: "",
       selectedBirthDate: "",
       selectedRegistrationDiplomaDate: "",
-      stdDocsArray: [],
-      trnProfExperiences: [],
     });
 
     this.setState({
@@ -481,32 +479,6 @@ class ApplicantsList extends Component {
       (values.registrationCertLevelId === "" &&
         selectedregistrationCertLevelId === "")
     ) {
-      if (selectedregistrationCertLevelId === 1) {
-        if (values.FacultyId === "" && selectedFacultyId === "") {
-          this.setState({ facultyError: true, saveError: true });
-        }
-        if (values.plan_study.trim() === "") {
-          this.setState({ plan_studyError: true, saveError: true });
-        }
-      } else if (selectedregistrationCertLevelId === 2) {
-        if (values.plan_study.trim() === "") {
-          this.setState({ plan_studyError: true, saveError: true });
-        }
-      } else if (selectedregistrationCertLevelId === 4) {
-        if (values.FacultyId === "" && selectedFacultyId === "") {
-          this.setState({ facultyError: true, saveError: true });
-        }
-        if (values.plan_study.trim() === "") {
-          this.setState({ plan_studyError: true, saveError: true });
-        }
-      } else if (selectedregistrationCertLevelId === 5) {
-        if (values.FacultyId === "" && selectedFacultyId === "") {
-          this.setState({ facultyError: true, saveError: true });
-        }
-        if (values.plan_study.trim() === "") {
-          this.setState({ plan_studyError: true, saveError: true });
-        }
-      }
       if (values.FirstName.trim() === "") {
         this.setState({ firstNameError: true, saveError: true });
       }
@@ -793,16 +765,15 @@ class ApplicantsList extends Component {
     onGetTraineeById(trainee);
 
     console.log("aFTER Btrainee", tempTrainee.Id);
+    console.log("aFTER Btrainee", tempTrainee.ProfessionalExperiences);
 
     this.setState({
       isEdit: true,
       showGenerateButton: true,
-      trainee: tempTrainee.Id,
+      trainee: trainee.Id,
       nationalityName: tempTrainee.nationality || "",
       selectedNationalityId: tempTrainee.NationalityId || null,
-      selectedRegistrationDate:
-        new Date(tempTrainee.RegistrationDate).toISOString().split("T")[0] ||
-        "",
+      selectedRegistrationDate: tempTrainee.RegistrationDate || null,
       selectedGender: tempTrainee.GenderId || null,
       genderName: tempTrainee.gender || "",
       selectedDiploma: tempTrainee.diplomaId || null,
@@ -816,11 +787,9 @@ class ApplicantsList extends Component {
       selectedregistrationCertLevelId:
         tempTrainee.registrationCertLevelId || "",
       selectedSocialStatus: tempTrainee.socialStatusId || "",
-      selectedRegistrationDiplomaDate: tempTrainee.registrationDiplomaDate
-        ? new Date(tempTrainee.registrationDiplomaDate)
-            .toISOString()
-            .split("T")[0]
-        : "",
+      selectedRegistrationDiplomaDate:
+        tempTrainee.registrationDiplomaDate || "",
+
       profExperiencesArray: tempTrainee.ProfessionalExperiences || [],
     });
 
