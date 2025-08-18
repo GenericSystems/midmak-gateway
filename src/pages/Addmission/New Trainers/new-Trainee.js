@@ -305,32 +305,32 @@ class NewTrainee extends Component {
       (values.registrationCertLevelId === "" &&
         selectedregistrationCertLevelId === "")
     ) {
-      if (selectedregistrationCertLevelId === 1) {
-        if (values.FacultyId === "" && selectedFacultyId === "") {
-          this.setState({ facultyError: true, saveError: true });
-        }
-        if (values.plan_study.trim() === "") {
-          this.setState({ plan_studyError: true, saveError: true });
-        }
-      } else if (selectedregistrationCertLevelId === 2) {
-        if (values.plan_study.trim() === "") {
-          this.setState({ plan_studyError: true, saveError: true });
-        }
-      } else if (selectedregistrationCertLevelId === 4) {
-        if (values.FacultyId === "" && selectedFacultyId === "") {
-          this.setState({ facultyError: true, saveError: true });
-        }
-        if (values.plan_study.trim() === "") {
-          this.setState({ plan_studyError: true, saveError: true });
-        }
-      } else if (selectedregistrationCertLevelId === 5) {
-        if (values.FacultyId === "" && selectedFacultyId === "") {
-          this.setState({ facultyError: true, saveError: true });
-        }
-        if (values.plan_study.trim() === "") {
-          this.setState({ plan_studyError: true, saveError: true });
-        }
-      }
+      // if (selectedregistrationCertLevelId === 1) {
+      //   if (values.FacultyId === "" && selectedFacultyId === "") {
+      //     this.setState({ facultyError: true, saveError: true });
+      //   }
+      //   if (values.plan_study.trim() === "") {
+      //     this.setState({ plan_studyError: true, saveError: true });
+      //   }
+      // } else if (selectedregistrationCertLevelId === 2) {
+      //   if (values.plan_study.trim() === "") {
+      //     this.setState({ plan_studyError: true, saveError: true });
+      //   }
+      // } else if (selectedregistrationCertLevelId === 4) {
+      //   if (values.FacultyId === "" && selectedFacultyId === "") {
+      //     this.setState({ facultyError: true, saveError: true });
+      //   }
+      //   if (values.plan_study.trim() === "") {
+      //     this.setState({ plan_studyError: true, saveError: true });
+      //   }
+      // } else if (selectedregistrationCertLevelId === 5) {
+      //   if (values.FacultyId === "" && selectedFacultyId === "") {
+      //     this.setState({ facultyError: true, saveError: true });
+      //   }
+      //   if (values.plan_study.trim() === "") {
+      //     this.setState({ plan_studyError: true, saveError: true });
+      //   }
+      // }
       if (values.FirstName.trim() === "") {
         this.setState({ firstNameError: true, saveError: true });
       }
