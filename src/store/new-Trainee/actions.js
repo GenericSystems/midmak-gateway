@@ -38,9 +38,12 @@ import {
   ADD_REQUIRED_DOCS,
   ADD_REQUIRED_DOCS_FAIL,
   ADD_REQUIRED_DOCS_SUCCESS,
-  UPDATE_REQUIRED_DOCS,
-  UPDATE_REQUIRED_DOCS_FAIL,
-  UPDATE_REQUIRED_DOCS_SUCCESS,
+  GENERATE_TRAINEE,
+  GENERATE_TRAINEE_SUCCESS,
+  GENERATE_TRAINEE_FAIL,
+  GET_TRAINEE_BY_ID,
+  GET_TRAINEE_BY_ID_SUCCESS,
+  GET_TRAINEE_BY_ID_FAIL,
 } from "./actionTypes";
 
 export const getTrainees = trainees => ({
@@ -229,17 +232,32 @@ export const addRequiredDocsFail = error => ({
   payload: error,
 });
 
-export const updateRequiredDocs = trainee => ({
-  type: UPDATE_REQUIRED_DOCS,
-  payload: trainee,
+export const getTraineeById = tempTrainee => ({
+  type: GET_TRAINEE_BY_ID,
+  payload: tempTrainee,
 });
 
-export const updateRequiredDocsSuccess = trainee => ({
-  type: UPDATE_REQUIRED_DOCS_SUCCESS,
-  payload: trainee,
+export const getTraineeByIdSuccess = tempTrainee => ({
+  type: GET_TRAINEE_BY_ID_SUCCESS,
+  payload: tempTrainee,
 });
 
-export const updateRequiredDocsFail = error => ({
-  type: UPDATE_REQUIRED_DOCS_FAIL,
+export const getTraineeByIdFail = error => ({
+  type: GET_TRAINEE_BY_ID_FAIL,
+  payload: error,
+});
+
+export const generateTrainee = Trainee => ({
+  type: GENERATE_TRAINEE,
+  payload: Trainee,
+});
+
+export const generateTraineeSuccess = Trainee => ({
+  type: GENERATE_TRAINEE_SUCCESS,
+  payload: Trainee,
+});
+
+export const generateTraineeFail = error => ({
+  type: GENERATE_TRAINEE_FAIL,
   payload: error,
 });

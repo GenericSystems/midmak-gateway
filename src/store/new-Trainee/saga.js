@@ -14,7 +14,8 @@ import {
   DELETE_PROFESSIONAL_EXPERIENCE,
   UPDATE_PROFESSIONAL_EXPERIENCE,
   ADD_REQUIRED_DOCS,
-  UPDATE_REQUIRED_DOCS,
+  GENERATE_TRAINEE,
+  GET_TRAINEE_BY_ID,
 } from "./actionTypes";
 
 import {
@@ -42,8 +43,10 @@ import {
   deleteProfessionalExperienceFail,
   addRequiredDocsSuccess,
   addRequiredDocsFail,
-  updateRequiredDocsSuccess,
-  updateRequiredDocsFail,
+  getTraineeByIdSuccess,
+  getTraineeByIdFail,
+  generateTraineeSuccess,
+  generateTraineeFail,
 } from "./actions";
 
 // Include helper functions
@@ -69,13 +72,17 @@ import {
   updateProfessionalExperience,
   deleteProfessionalExperience,
   addRequiredDocs,
-  updateRequiredDocs,
+  getYears,
+  getTraineeById,
+  generateTrainee,
 } from "../../helpers/fakebackend_helper";
 
 import {
   getNationalitiesSuccess,
   getNationalitiesFail,
 } from "../nationality/actions";
+
+import { getYearsSuccess, getYearsFail } from "../years/actions";
 
 import { getCitiesSuccess, getCitiesFail } from "../cities/actions";
 
@@ -138,6 +145,22 @@ function* fetchTrainees(selectedpayload) {
     yield put(getDiplomaLevelsSuccess(response));
   } catch (error) {
     yield put(getDiplomaLevelsFail(error));
+  }
+
+  //years
+  const get_years_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Years",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getYears, get_years_req);
+    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", response);
+    yield put(getYearsSuccess(response));
+  } catch (error) {
+    yield put(getYearsFail(error));
   }
 
   //get nationality
@@ -431,40 +454,29 @@ function* onAddRequiredDocs({ payload }) {
   }
 }
 
-function* onUpdateRequiredDocs({ payload }) {
-  payload["source"] = "db";
-  payload["procedure"] = "SisApp_updateData";
-  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_RegReqDocTempTrainee";
-
+function* fetchTraineeById(tempTrainee) {
+  console.log("tempTraineetempTraineetempTrainee", tempTrainee);
+  const get_trainee_byId = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_TempTraineeDetails",
+    filter: `Id = ${tempTrainee.payload.Id}`,
+  };
   try {
-    const response = yield call(updateProfessionalExperience, payload);
-    yield put(updateProfessionalExperienceSuccess(response[0]));
+    const response = yield call(getTraineeById, get_trainee_byId);
+    // console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr", response);
+    // response.map(resp => {
+    //   resp["ProfessionalExperiences"] = JSON.parse(
+    //     resp["ProfessionalExperiences"]
+    //   );
+    // });
+    console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr", response);
+    yield put(getTraineeByIdSuccess(response[0]));
   } catch (error) {
-    yield put(updateProfessionalExperienceFail(error));
+    yield put(getTraineeByIdFail(error));
   }
 }
-
-// function* fetchTraineeById(tempTrainee) {
-//   const get_student_byId = {
-//     source: "db",
-//     procedure: "SisApp_getData",
-//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-//     tablename: "_TempTraineeDetails",
-//     filter: `Id = ${tempTrainee.payload.Id}`,
-//   };
-//   try {
-//     const response = yield call(getTraineeById, get_student_byId);
-//     response.map(resp => {
-//       resp["TempTraineeBrothers"] = JSON.parse(resp["TempTraineeBrothers"]);
-//       resp["TempTraineeRelatives"] = JSON.parse(resp["TempTraineeRelatives"]);
-//       resp["RegReqDocTempTrainee"] = JSON.parse(resp["RegReqDocTempTrainee"]);
-//     });
-//     yield put(getTraineeByIdSuccess(response[0]));
-//   } catch (error) {
-//     yield put(getTraineeByIdFail(error));
-//   }
-// }
 
 // function* onGenerateTrainee({ payload }) {
 //   const generate_student = {
@@ -504,7 +516,8 @@ function* traineesSaga() {
     onDeleteProfessionalExperience
   );
   yield takeEvery(ADD_REQUIRED_DOCS, onAddRequiredDocs);
-  yield takeEvery(UPDATE_REQUIRED_DOCS, onUpdateRequiredDocs);
+  // yield takeEvery(GENERATE_TRAINEE, onGenerateTrainee);
+  yield takeEvery(GET_TRAINEE_BY_ID, fetchTraineeById);
 }
 
 export default traineesSaga;

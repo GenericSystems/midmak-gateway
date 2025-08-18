@@ -187,24 +187,10 @@ export const getInvoices = () => get(url.GET_INVOICES);
 export const getInvoiceDetail = id =>
   get(`${url.GET_INVOICE_DETAIL}/${id}`, { params: { id } });
 
-// get student
-export const getStudents = data => post(url.GET_STUDENTS, data);
+// get TraineeById
+export const getTraineeById = data => post(url.GET_TRAINEE_BY_ID, data);
 
-// add student
-export const addNewStudent = data => post(url.ADD_NEW_STUDENT, data);
-
-// update student
-export const updateStudent = data => post(url.UPDATE_STUDENT, data);
-
-// delete student
-export const deleteStudent = data => post(url.DELETE_STUDENT, data);
-
-export const getStudentDeletedValue = () => get(url.GET_STUDENT_DELETED_VALUE);
-
-// get studentById
-export const getStudentById = data => post(url.GET_STUDENT_BY_ID, data);
-
-export const generateStudent = data => post(url.GENERATE_STUDENT, data);
+export const generateTrainee = data => post(url.GENERATE_TRAINEE, data);
 
 // get TempStudentsStatistics
 export const getTempStudentsStatistics = data =>
@@ -259,11 +245,6 @@ export const getFilteredAcademicCertificates = data =>
 export const getAcademicCertificateDeletedValue = () =>
   get(url.GET_ACADEMICCERTIFICATE_DELETED_VALUE);
 
-// get student_regReqDocs
-
-export const getDefaultRegReqDocs = data =>
-  post(url.GET_DEFAULT_REGREQDOCS, data);
-
 // get trainee_regReqDocs
 
 export const getTraineeDefaultRegReqDocs = data =>
@@ -271,7 +252,6 @@ export const getTraineeDefaultRegReqDocs = data =>
 
 //add RequiredDocs
 export const addRequiredDocs = data => post(url.ADD_REQUIRED_DOCS, data);
-export const updateRequiredDocs = data => post(url.UPDATE_REQUIRED_DOCS, data);
 
 // get UniversityStudent
 export const getUniversityStudents = data =>

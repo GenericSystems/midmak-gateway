@@ -99,7 +99,7 @@ export * from "./Rules-and-Regulations/Absence-warnings/actions";
 export * from "./documents-types/actions";
 
 //Nationalities
-export * from "./nationality/actions"
+export * from "./nationality/actions";
 
 //ExamRooms
 export * from "./Exam/ExamRooms/actions";
@@ -281,10 +281,6 @@ export * from "./students-requests/actions";
 //Contract
 
 export * from "./HR/contracts/actions";
-
-//Applicants
-
-export * from "./Admission/Applicants/actions";
 
 //Trainees
 export * from "./new-Trainee/actions";

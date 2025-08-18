@@ -27,6 +27,10 @@ import {
   ADD_REQUIRED_DOCS_FAIL,
   UPDATE_REQUIRED_DOCS_SUCCESS,
   UPDATE_REQUIRED_DOCS_FAIL,
+  GENERATE_TRAINEE_SUCCESS,
+  GENERATE_TRAINEE_FAIL,
+  GET_TRAINEE_BY_ID_SUCCESS,
+  GET_TRAINEE_BY_ID_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -42,6 +46,8 @@ const INIT_STATE = {
   requiredDocs: [],
   lastAddedId: 0,
   isLoading: false,
+  tempTrainee: {},
+  generated_trainee: {},
 };
 
 const trainees = (state = INIT_STATE, action) => {
@@ -223,6 +229,32 @@ const trainees = (state = INIT_STATE, action) => {
       };
 
     case UPDATE_REQUIRED_DOCS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GENERATE_TRAINEE_SUCCESS: {
+      return {
+        ...state,
+        trainees: [...state.trainees, action.payload],
+        generated_trainee: action.payload,
+      };
+    }
+
+    case GENERATE_TRAINEE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_TRAINEE_BY_ID_SUCCESS:
+      return {
+        ...state,
+        tempTrainee: action.payload,
+      };
+
+    case GET_TRAINEE_BY_ID_FAIL:
       return {
         ...state,
         error: action.payload,

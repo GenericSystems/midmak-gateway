@@ -101,7 +101,6 @@ import DefineExamDatesSaga from "./Exam/DefineExamDates/saga";
 import WarningsTypesSaga from "./HR/warningsTypes/saga";
 import RewardsTypesSaga from "./HR/rewardsTypes/saga";
 import DecisionsTypesSaga from "./HR/decisionsTypes/saga";
-import ApplicantsSaga from "./Admission/Applicants/saga";
 import AbsenceWarningsSaga from "./Rules-and-Regulations/Absence-warnings/saga";
 
 import DocumentTypesSaga from "./documents-types/saga";
@@ -242,7 +241,6 @@ export default function* rootSaga() {
     fork(archiveGradesSaga),
     fork(DiplomaLevelSaga),
     fork(HighStudyTypeSaga),
-    fork(ApplicantsSaga),
     fork(AbsenceWarningsSaga),
     fork(DocumentTypesSaga),
   ]);

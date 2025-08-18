@@ -245,8 +245,6 @@ import documentsTypes from "./documents-types/reducer";
 //AbsenceWarnings
 import absenceWarnings from "./Rules-and-Regulations/Absence-warnings/reducer";
 
-
-
 // ExamRooms
 import examRooms from "./Exam/ExamRooms/reducer";
 
@@ -291,9 +289,6 @@ import studentsRequests from "./students-requests/reducer";
 
 //contract
 import contracts from "./HR/contracts/reducer";
-
-//Applicants
-import applicants from "./Admission/Applicants/reducer";
 
 //Trainees
 import trainees from "./new-Trainee/reducer";
@@ -356,7 +351,7 @@ const rootReducer = combineReducers({
   projects,
   tasks,
   contacts,
-  
+
   certificateTypes,
   studentManagements,
   nationalities,
@@ -448,9 +443,7 @@ const rootReducer = combineReducers({
   unarchiveCourseRequests,
   diplomalevels,
   highstudytypes,
-  applicants,
   absenceWarnings,
- 
 });
 
 export default rootReducer;

@@ -55,11 +55,12 @@ import {
   addNewTrainee,
   updateTrainee,
   deleteTrainee,
-  // getTraineeById,
+  getTraineeById,
   generateTrainee,
   getDefaultRegReqDocs,
   getTraineeDeletedValue,
   getTempRelativeDeletedValue,
+  getRegisterCertificates,
 } from "store/new-Trainee/actions";
 
 // import { getFilteredFaculties } from "store/admissionConditions/actions";
@@ -163,7 +164,6 @@ class ApplicantsList extends Component {
       bloodTypeName: "",
       examinationSessionError: false,
       duplicateRelativeError: null,
-      relativesArray: [],
       lastUsedId: 0,
       stdDocsArray: [],
       showSiblingsSelect: false,
@@ -191,7 +191,6 @@ class ApplicantsList extends Component {
       selectedStudyPlanId: 0,
       facultyName: "",
       studyPlanName: "",
-      selectedregistrationCertLevelId: "",
       selectedStudyPattern: "",
       selectedExaminationSession: "",
       IsTransferTraineeCheck: false,
@@ -237,7 +236,6 @@ class ApplicantsList extends Component {
       averageError: false,
       diplomaNumberError: false,
       selectedParentNationality: null,
-      relativesArray: [],
       lastUsedId: 0,
       duplicateRelativeError: null,
       grantCond: 0,
@@ -249,8 +247,8 @@ class ApplicantsList extends Component {
       stdDocsArray: [],
       showSiblingsSelect: false,
       siblingsArray: [],
+      profExperiencesArray: [],
       duplicateErrorSibling: null,
-      trnProfExperiences: [],
       gradeError: false,
       selectedInstituteCountry: "",
       languageState: "",
@@ -288,7 +286,6 @@ class ApplicantsList extends Component {
       onGetTrainees,
       tempTrainee,
       generated_trainee,
-
       diplomalevels,
       nationalities,
       relatives,
@@ -297,7 +294,6 @@ class ApplicantsList extends Component {
       cities,
       yearSemesters,
       currentSemester,
-      certificates,
       governorates,
       regReqDocuments,
       genders,
@@ -312,6 +308,7 @@ class ApplicantsList extends Component {
       studentsOpt,
       tempTraineeBrothers,
       user_menu,
+      onGetTraineesRegCertificates,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -320,6 +317,7 @@ class ApplicantsList extends Component {
     this.getAllObject(this.props.user_menu, this.props.location.pathname);
     const { trainee } = this.state;
     onGetTrainees();
+    onGetTraineesRegCertificates();
     this.setState({ last_created_trainee, diplomalevels });
     this.setState({ trainees });
     this.setState({ tempTrainee_regReqDocs });
@@ -330,7 +328,7 @@ class ApplicantsList extends Component {
     this.setState({ yearSemesters });
     this.setState({ currentSemester });
     this.setState({ cities });
-    this.setState({ certificates });
+    this.setState({ diplomalevels });
     this.setState({ governorates });
     this.setState({ regReqDocuments });
     this.setState({ genders });
@@ -451,38 +449,24 @@ class ApplicantsList extends Component {
     const { currentSemester } = this.props;
 
     const { selectedBirthDate } = this.state;
-    // this.setState({
-    //   selectedNationalityId: "",
-    //   nationalityName: "",
-    //   grantName: "",
-    //   bloodTypeName: "",
-    //   selectedGender: "",
-    //   selectedDiploma: "",
-    //   averageValue: "",
-    //   selectedFacultyId: "",
-    //   facultyName: "",
-    //   selectedStudyPlanId: "",
-    //   studyPlanName: "",
-    //   selectedCountry: "",
-    //   selectedGovernorate: "",
-    //   selectedCity: "",
-    //   selectedBrother: "",
-    //   selectedExaminationSession: "",
-    //   selectedregistrationCertLevelId: "",
-    //   selectedStudyPattern: "",
-    //   IsTransferTraineeCheck: "",
-    //   selectedTransferUnivCountry: "",
-    //   selectedSemester: currentSemester.cuYearSemesterId,
-    //   selectedBirthDate: "",
-    //   selectedRegistrationDiplomaDate: "",
-    //   selectedHasDisability: null,
-    //   selectedHealthProblems: null,
-    //   totalGradeValue: "",
-    //   traineeGrade: "",
-    //   stdDocsArray: [],
-    //   siblingsArray: [],
-    //   relativesArray: [],
-    // });
+    this.setState({
+      selectedNationalityId: "",
+      nationalityName: "",
+      selectedGender: "",
+      selectedDiploma: "",
+      averageValue: "",
+      selectedFacultyId: "",
+      facultyName: "",
+      selectedStudyPlanId: "",
+      studyPlanName: "",
+      selectedCountry: "",
+      selectedGovernorate: "",
+      selectedExaminationSession: "",
+      selectedBirthDate: "",
+      selectedRegistrationDiplomaDate: "",
+      stdDocsArray: [],
+      trnProfExperiences: [],
+    });
 
     this.setState({
       emptyTrainee,
@@ -497,30 +481,63 @@ class ApplicantsList extends Component {
   handleSave = values => {
     const {
       selectedBirthDate,
+      selectedRegistrationDiplomaDate,
       selectedNationalityId,
+      selectedregistrationCertLevelId,
       selectedFacultyId,
-      selectedDiplomaId,
-      averageValue,
-      traineeGrade,
+      selectedGender,
       selectedStudyPlanId,
-      selectedExaminationSession,
       isEdit,
+      selectedExaminationSession,
+      selectedSocialStatus,
+      selectedDiplomaId,
+      selectedHightStudyTypeId,
+      selectedEstimateId,
+      selectedRegUniDate,
     } = this.state;
-
+    console.log("values in save", values);
+    values["socialStatusId"] = selectedSocialStatus;
     if (
       values.FirstName === "" ||
       values.LastName === "" ||
       values.FatherName === "" ||
       values.grandFatherName === "" ||
       values.MotherName === "" ||
+      values.diplomaId === "" ||
       values.BirthLocation === "" ||
-      selectedExaminationSession === "" ||
-      (values.birthdate === "" && selectedBirthDate === "") ||
+      values.birthdate === "" ||
+      // values.plan_study === "" ||
       (values.NationalityId === "" && selectedNationalityId === "") ||
-      (values.FacultyId === "" && selectedFacultyId === "") ||
-      (values.diplomaId === "" && selectedDiplomaId === "") ||
-      (values.stdTotalGrade === "" && traineeGrade === "")
+      (values.GenderId === "" && selectedGender === "") ||
+      (values.registrationCertLevelId === "" &&
+        selectedregistrationCertLevelId === "")
     ) {
+      if (selectedregistrationCertLevelId === 1) {
+        if (values.FacultyId === "" && selectedFacultyId === "") {
+          this.setState({ facultyError: true, saveError: true });
+        }
+        if (values.plan_study.trim() === "") {
+          this.setState({ plan_studyError: true, saveError: true });
+        }
+      } else if (selectedregistrationCertLevelId === 2) {
+        if (values.plan_study.trim() === "") {
+          this.setState({ plan_studyError: true, saveError: true });
+        }
+      } else if (selectedregistrationCertLevelId === 4) {
+        if (values.FacultyId === "" && selectedFacultyId === "") {
+          this.setState({ facultyError: true, saveError: true });
+        }
+        if (values.plan_study.trim() === "") {
+          this.setState({ plan_studyError: true, saveError: true });
+        }
+      } else if (selectedregistrationCertLevelId === 5) {
+        if (values.FacultyId === "" && selectedFacultyId === "") {
+          this.setState({ facultyError: true, saveError: true });
+        }
+        if (values.plan_study.trim() === "") {
+          this.setState({ plan_studyError: true, saveError: true });
+        }
+      }
       if (values.FirstName.trim() === "") {
         this.setState({ firstNameError: true, saveError: true });
       }
@@ -532,6 +549,10 @@ class ApplicantsList extends Component {
       if (values.FatherName.trim() === "") {
         this.setState({ fatherNameError: true, saveError: true });
       }
+      if (values.diplomaId.trim() === "") {
+        this.setState({ diplomaIdError: true, saveError: true });
+      }
+
       if (values.grandFatherName.trim() === "") {
         this.setState({ grandFatherNameError: true, saveError: true });
       }
@@ -543,6 +564,10 @@ class ApplicantsList extends Component {
         this.setState({ birthLocError: true, saveError: true });
       }
 
+      // if (values.plan_study.trim() === "") {
+      //   this.setState({ plan_studyError: true, saveError: true });
+      // }
+
       if (values.birthdate === "" && selectedBirthDate === "") {
         this.setState({ birthdateError: true, saveError: true });
       }
@@ -550,42 +575,39 @@ class ApplicantsList extends Component {
       if (values.NationalityId === "" && selectedNationalityId === "") {
         this.setState({ nationalityError: true, saveError: true });
       }
-
-      if (values.FacultyId === "" && selectedFacultyId === "") {
-        this.setState({ facultyError: true, saveError: true });
+      if (values.GenderId === "" && selectedGender === "") {
+        this.setState({ genderError: true, saveError: true });
       }
 
-      if (values.diplomaId === "" && selectedDiplomaId === "") {
-        this.setState({ diplomaError: true, saveError: true });
+      // if (values.FacultyId === "" && selectedFacultyId === "") {
+      //   this.setState({ facultyError: true, saveError: true });
+      // }
+
+      if (values.nationalNo === "") {
+        this.setState({ nationalNoError: true, saveError: true });
       }
-      if (selectedExaminationSession === "") {
-        this.setState({ examinationSessionError: true, saveError: true });
+      if (values.identityNo === "") {
+        this.setState({ identityNoError: true, saveError: true });
       }
-      if (isEdit) {
-        const errorUpdateTraineeMessage = this.props.t(
-          "Fill the Required Fields to Update Trainee"
-        );
-        this.setState({ errorMessage: errorUpdateTraineeMessage });
-      } else {
-        const errorSaveTraineeMessage = this.props.t(
-          "Fill the Required Fields to Save Trainee"
-        );
-        this.setState({ errorMessage: errorSaveTraineeMessage });
-      }
+      const errorSaveTraineeMessage = this.props.t(
+        "Fill the Required Fields to Save Trainee"
+      );
+      this.setState({ errorMessage: errorSaveTraineeMessage }, () => {
+        window.scrollTo(0, 0);
+      });
     } else {
       this.setState({ firstNameError: false, saveError: false });
       this.setState({ lastNameError: false, saveError: false });
       this.setState({ fatherNameError: false, saveError: false });
       this.setState({ motherNameError: false, saveError: false });
-      this.setState({ examinationSessionError: false, saveError: false });
       this.setState({ birthLocError: false, saveError: false });
       this.setState({ birthdateError: false, saveError: false });
       this.setState({ nationalityError: false, saveError: false });
-      this.setState({ facultyError: false, saveError: false });
-      this.setState({ diplomaError: false, saveError: false });
-      this.setState({ averageError: false, saveError: false });
+      this.setState({ genderError: false, saveError: false });
+      // this.setState({ facultyError: false, saveError: false });
       this.setState({ grandFatherNameError: false, saveError: false });
-
+      this.setState({ diplomaIdError: false, saveError: false });
+      this.setState({ stdTotalGradeError: false, saveError: false });
       let traineeinfo = {};
       Object.keys(values).forEach(function (key) {
         if (
@@ -594,50 +616,88 @@ class ApplicantsList extends Component {
         )
           traineeinfo[key] = values[key];
       });
-
       const {
         trainee,
         selectedExaminationSession,
         selectedStudyPattern,
-        selectedregistrationCertLevelId,
         selectedBirthDate,
-        selectedRegistrationDiplomaDate,
-        selectedEmissionDate,
-        selectedPassportGrantDate,
-        selectedPassportExpirationDate,
+        selectedIdentityIssueDate,
+        selectedPassportIssueDate,
+        selectedPassportExpiryDate,
         selectedDiplomaDate,
         selectedDiplomaVerificationDate,
         selectedRegistrationDate,
         selectedGender,
-        selectedNationalityId,
-        selectedFacultyId,
-        selectedStudyPlanId,
-        IsTransferTraineeCheck,
-        selectedDiploma,
-        selectedCountry,
-        selectedGovernorate,
-        selectedCity,
-        selectedTransferUnivCountry,
-        selectedSemester,
-        HasBrotherCheck,
-        selectedHasDisability,
-        selectedHealthProblems,
-        stdDocsArray,
+        selectedSocialStatus,
         relativesArray,
+        averageValue,
+        stdDocsArray,
         siblingsArray,
+        trnProfExperiences,
+        selectedDiplomaId,
+        isEdit,
       } = this.state;
 
       const { onUpdateTrainee, onAddNewTrainee, tempTrainee } = this.props;
       const {
         cities,
-        faculties,
         countries,
-        certificates,
-        yearSemesters,
+        diplomalevels,
         currentSemester,
         governorates,
-        genders,
       } = this.props;
+
+      if (values.diplomaId) {
+        const diplomaObject = diplomalevels.find(
+          certificate => certificate.value === values.diplomaId
+        );
+        traineeinfo["diplomaId"] = diplomaObject.key;
+      }
+
+      // if (values.diplomaId) {
+      //   const diplomaObject = diplomalevels.find(
+      //     certificate => certificate.value === values.diplomaId
+      //   );
+      //   traineeinfo["diplomaId"] = diplomaObject.key;
+      // }
+
+      if (values.DiplomaCountryId) {
+        const countryObject = countries.find(
+          country => country.value === values.DiplomaCountryId
+        );
+        traineeinfo["DiplomaCountryId"] = countryObject.key;
+      }
+      console.log(
+        "DiplomaGovernorateIdDiplomaGovernorateId",
+        values.DiplomaGovernorateId
+      );
+      if (values.DiplomaGovernorateId) {
+        const governorateObject = governorates.find(
+          governorate => governorate.value === values.DiplomaGovernorateId
+        );
+        traineeinfo["DiplomaGovernorateId"] = governorateObject.key;
+      }
+
+      /*  if (values.DiplomaCityId) {
+        const cityObject = cities.find(
+          city => city.value === values.DiplomaCityId
+        );
+        traineeinfo["DiplomaCityId"] = cityObject.key;
+      } */
+
+      if (values.UnivCountryId) {
+        const univCountryObject = countries.find(
+          country => country.value === values.UnivCountryId
+        );
+        traineeinfo["UnivCountryId"] = univCountryObject.key;
+      }
+
+      if (values.InstituteCountryId) {
+        const InstirCountryObject = countries.find(
+          country => country.value === values.InstituteCountryId
+        );
+        traineeinfo["InstituteCountryId"] = InstirCountryObject.key;
+      }
 
       if (selectedGender) {
         traineeinfo["GenderId"] = parseInt(selectedGender);
@@ -645,102 +705,17 @@ class ApplicantsList extends Component {
 
       if (selectedNationalityId) {
         traineeinfo["NationalityId"] = selectedNationalityId;
-        if (selectedNationalityId != 2) {
-          traineeinfo["Mobilization"] = "";
-        }
       } else {
         traineeinfo["NationalityId"] = tempTrainee.NationalityId;
-        traineeinfo["Mobilization"] = tempTrainee.Mobilization;
-        traineeinfo["MobilizationNum"] = tempTrainee.MobilizationNum;
-      }
-
-      if (traineeinfo.FacultyId != selectedFacultyId) {
-        traineeinfo["FacultyId"] = selectedFacultyId;
-      } else {
-        traineeinfo["FacultyId"] = tempTrainee.FacultyId;
-      }
-
-      if (tempTrainee.plan_study != selectedStudyPlanId) {
-        traineeinfo["plan_study"] = selectedStudyPlanId;
-        if (!selectedStudyPlanId) {
-          traineeinfo["plan_study"] = null;
-        }
-      } else {
-        traineeinfo["plan_study"] = tempTrainee.plan_study;
-      }
-
-      if (selectedDiploma) {
-        const diplomaObject = certificates.find(
-          certificate => certificate.value === selectedDiploma
-        );
-
-        if (diplomaObject != undefined) {
-          traineeinfo["diplomaId"] = diplomaObject.key;
-        } else {
-          traineeinfo["diplomaId"] = tempTrainee.diplomaId;
-        }
-      }
-
-      if (selectedCountry) {
-        const countryObject = countries.find(
-          country => country.value === selectedCountry
-        );
-
-        if (countryObject != undefined) {
-          traineeinfo["DiplomaCountryId"] = countryObject.key;
-        } else {
-          traineeinfo["DiplomaCountryId"] = tempTrainee.DiplomaCountryId;
-        }
-      }
-
-      if (selectedGovernorate) {
-        const governorateObject = governorates.find(
-          governorate => governorate.value === selectedGovernorate
-        );
-
-        if (governorateObject != undefined) {
-          traineeinfo["DiplomaGovernorateId"] = governorateObject.key;
-        } else {
-          traineeinfo["DiplomaGovernorateId"] =
-            tempTrainee.DiplomaGovernorateId;
-        }
-      }
-
-      if (selectedCity) {
-        const cityObject = cities.find(city => city.value === selectedCity);
-
-        if (cityObject != undefined) {
-          traineeinfo["DiplomaCityId"] = cityObject.key;
-        } else {
-          traineeinfo["DiplomaCityId"] = tempTrainee.DiplomaCityId;
-        }
-      }
-
-      if (selectedSemester) {
-        const semesterObject = yearSemesters.find(
-          yearSemester => yearSemester.value === selectedSemester
-        );
-
-        if (semesterObject != undefined) {
-          traineeinfo["registerYearSemesterId"] = semesterObject.key;
-        } else {
-          traineeinfo["registerYearSemesterId"] =
-            currentSemester.cuYearSemesterId;
-        }
-      } else {
-        traineeinfo["registerYearSemesterId"] =
-          tempTrainee.registerYearSemesterId;
       }
 
       if (selectedExaminationSession) {
         traineeinfo["ExaminationSession"] = selectedExaminationSession;
       }
-      if (selectedHasDisability) {
-        traineeinfo["hasDisability"] = selectedHasDisability;
+      if (selectedSocialStatus) {
+        traineeinfo["socialStatusId"] = selectedSocialStatus;
       }
-      if (selectedHealthProblems) {
-        traineeinfo["healthProblems"] = selectedHealthProblems;
-      }
+
       if (selectedStudyPattern) {
         traineeinfo["studyPattern"] = selectedStudyPattern;
       }
@@ -748,161 +723,63 @@ class ApplicantsList extends Component {
       if (selectedregistrationCertLevelId) {
         traineeinfo["registrationCertLevelId"] =
           selectedregistrationCertLevelId;
-        if (selectedregistrationCertLevelId == 3) {
-          traineeinfo["registrationDiplomaName"] = "";
-          traineeinfo["registrationDiplomaDepartment"] = "";
-          traineeinfo["registrationDiplomaAverage"] = "";
-        }
       }
 
-      if (values.birthdate) {
-        traineeinfo["birthdate"] =
-          values && values.birthdate
-            ? new Date(values.birthdate).toISOString().split("T")[0]
-            : selectedBirthDate;
+      if (selectedBirthDate != "") {
+        traineeinfo["birthdate"] = selectedBirthDate;
       }
 
-      if (selectedRegistrationDiplomaDate) {
-        traineeinfo["registrationDiplomaDate"] =
-          selectedRegistrationDiplomaDate;
-      } else if (tempTrainee.registrationDiplomaDate) {
-        traineeinfo["registrationDiplomaDate"] =
-          tempTrainee && tempTrainee.registrationDiplomaDate
-            ? new Date(tempTrainee.registrationDiplomaDate)
-                .toISOString()
-                .split("T")[0]
-            : selectedRegistrationDiplomaDate;
+      if (selectedIdentityIssueDate) {
+        traineeinfo["identityIssueDate"] = selectedIdentityIssueDate;
       }
 
-      if (selectedEmissionDate) {
-        traineeinfo["EmissionDate"] = selectedEmissionDate;
-      } else if (tempTrainee.EmissionDate) {
-        traineeinfo["EmissionDate"] =
-          tempTrainee && tempTrainee.EmissionDate
-            ? new Date(tempTrainee.EmissionDate).toISOString().split("T")[0]
-            : selectedEmissionDate;
+      if (selectedPassportIssueDate) {
+        traineeinfo["passportIssueDate"] = selectedPassportIssueDate;
       }
 
-      if (selectedPassportGrantDate) {
-        traineeinfo["passportGrantDate"] = selectedPassportGrantDate;
-      } else if (tempTrainee.passportGrantDate) {
-        traineeinfo["passportGrantDate"] =
-          tempTrainee && tempTrainee.passportGrantDate
-            ? new Date(tempTrainee.passportGrantDate)
-                .toISOString()
-                .split("T")[0]
-            : selectedPassportGrantDate;
-      }
-
-      if (selectedPassportExpirationDate) {
-        traineeinfo["passportExpirationDate"] = selectedPassportExpirationDate;
-      } else if (tempTrainee.passportExpirationDate) {
-        traineeinfo["passportExpirationDate"] =
-          tempTrainee && tempTrainee.passportExpirationDate
-            ? new Date(tempTrainee.passportExpirationDate)
-                .toISOString()
-                .split("T")[0]
-            : selectedPassportExpirationDate;
+      if (selectedPassportExpiryDate) {
+        traineeinfo["passportExpiryDate"] = selectedPassportExpiryDate;
       }
 
       if (selectedDiplomaDate) {
         traineeinfo["diplomaDate"] = selectedDiplomaDate;
-      } else if (tempTrainee.diplomaDate) {
-        traineeinfo["diplomaDate"] =
-          tempTrainee && tempTrainee.diplomaDate
-            ? new Date(tempTrainee.diplomaDate).toISOString().split("T")[0]
-            : selectedDiplomaDate;
       }
 
       if (selectedDiplomaVerificationDate) {
         traineeinfo["diplomaVerificationDate"] =
           selectedDiplomaVerificationDate;
-      } else if (tempTrainee.diplomaVerificationDate) {
-        traineeinfo["diplomaVerificationDate"] =
-          tempTrainee && tempTrainee.diplomaVerificationDate
-            ? new Date(tempTrainee.diplomaVerificationDate)
-                .toISOString()
-                .split("T")[0]
-            : selectedDiplomaVerificationDate;
       }
 
       if (selectedRegistrationDate) {
         traineeinfo["RegistrationDate"] = selectedRegistrationDate;
       }
 
-      if (IsTransferTraineeCheck) {
-        const isChecked = IsTransferTraineeCheck;
-
-        const newStatus = isChecked ? 1 : 0;
-
-        if (newStatus == 1) {
-          traineeinfo["IsTransferTrainee"] = newStatus;
-          if (traineeinfo.TransferUnivCountryId != undefined) {
-            const transferUnivCountryObject = countries.find(
-              country => country.value === selectedTransferUnivCountry
-            );
-
-            if (transferUnivCountryObject != undefined) {
-              traineeinfo["TransferUnivCountryId"] =
-                transferUnivCountryObject.key;
-            } else {
-              traineeinfo["TransferUnivCountryId"] =
-                tempTrainee.TransferUnivCountryId;
-            }
-          }
-        }
+      if (selectedRegistrationDiplomaDate != "") {
+        traineeinfo["registrationDiplomaDate"] =
+          selectedRegistrationDiplomaDate;
       }
 
-      if (HasBrotherCheck) {
-        traineeinfo["haveBrother"] = 1;
-      } else {
-        traineeinfo["haveBrother"] = 0;
+      //hhhhh
+
+      if (selectedRegUniDate != "") {
+        traineeinfo["RegUniDate"] = selectedRegUniDate;
       }
 
       if (averageValue) {
         traineeinfo["Average"] = averageValue;
       }
 
-      traineeinfo["parentContact"] = relativesArray;
-      traineeinfo["siblings"] = siblingsArray;
-
-      if (isEdit) {
-        traineeinfo["Id"] = tempTrainee.Id;
-        const extractedArray = stdDocsArray.map(item => ({
-          Id: item.Id,
-          regReqDocId: item.regReqDocId,
-          attestated: parseInt(item.attestated),
-          availableNumber: item.availableNumber,
-        }));
-
-        traineeinfo["stdDocs"] = extractedArray;
-        onUpdateTrainee(traineeinfo);
-        const updateTraineeMessage = this.props.t(
-          "Trainee updated successfully"
-        );
-        this.setState({ successMessage: updateTraineeMessage });
-      } else {
-        const extractedArray = stdDocsArray.map(item => ({
-          regReqDocId: item.Id,
-          attestated: parseInt(item.attestated),
-          availableNumber: item.availableNumber,
-        }));
-
-        traineeinfo["stdDocs"] = extractedArray;
-
-        console.log("traineeInfo in save", traineeinfo);
-        //        onAddNewTrainee(traineeinfo);
-        const saveTraineeMessage = this.props.t(
-          "Trainee saved successfully, You can Generate the trainee"
-        );
-        this.setState({
-          successMessage: saveTraineeMessage,
-          showGenerateButton: true,
-        });
+      const response = onAddNewTrainee(traineeinfo);
+      if (response?.Id) {
+        this.setState({ traineeId: response.Id });
       }
+      const saveTraineeMessage = this.props.t("Trainee saved successfully");
+      this.setState({
+        successMessage: saveTraineeMessage,
+        isTraineeSaved: true,
+      });
     }
   };
-
   toggleDeleteModal = () => {
     this.setState(prevState => ({
       deleteModal: !prevState.deleteModal,
@@ -925,92 +802,73 @@ class ApplicantsList extends Component {
   };
 
   handleEditTrainee = arg => {
+    console.log(arg);
     const {
       tempTrainee,
       onGetTraineeById,
-      onGetTrainees,
-      certificates,
+      diplomalevels,
+      trnProfExperiences,
       currentSemester,
     } = this.props;
-    const { stdDocsArray, siblingsArray, relativesArray } = this.state;
-    // const trainee = arg;
-
-    // onGetTraineeById(trainee);
-    onGetTrainees();
-    this.setState({ trainee: arg, isEdit: true, showGenerateButton: true });
-    // this.setState({
-    //   selectedBirthDate:
-    //     new Date(trainee.birthdate).toISOString().split("T")[0] || "",
-    //   nationalityName: trainee.nationality || "",
-    //   grantName: trainee.grantId || "",
-    //   bloodTypeName: trainee.bloodType || "",
-    //   selectedNationalityId: trainee.nationalityId || null,
-    //   selectedGender: trainee.GenderId || null,
-    //   selectedDiploma: trainee.diplomaId || null,
-    //   averageValue: trainee.Average || null,
-    //   traineeGrade: trainee.stdTotalGrade || null,
-    //   selectedCountry: trainee.DiplomaCountryId || null,
-    //   facultyName: trainee.Faculty || "",
-    //   studyPlanName: trainee.plan_study || "",
-    //   selectedFacultyId: trainee.FacultyId || null,
-    //   selectedGovernorate: trainee.DiplomaGovernorateId || null,
-    //   selectedCity: trainee.DiplomaCityId || null,
-    //   selectedExaminationSession: trainee.ExaminationSession || "",
-    //   selectedHasDisability: trainee.hasDisability || "",
-    //   selectedHealthProblems: trainee.healthProblems || "",
-    //   selectedregistrationCertLevelId: trainee.registrationCertLevelId || "",
-    //   selectedStudyPattern: trainee.studyPattern || "",
-    //   IsTransferTraineeCheck: trainee.IsTransferTrainee || null,
-    //   HasBrotherCheck: trainee.haveBrother || null,
-    //   selectedTransferUnivCountry: trainee.TransferUnivCountryId || null,
-    //   selectedSemester:
-    //     trainee.registerYearSemesterId || currentSemester.cuYearSemesterId,
-    //   trainee: trainee.Id,
-    //   //selectedRegistrationDiplomaDate:
-    //   //new Date(trainee.registrationDiplomaDate).toISOString().split("T")[0] || "",
-    //   stdDocsArray:
-    //     tempTrainee &&
-    //     tempTrainee.RegReqDocTempTrainee !== undefined &&
-    //     tempTrainee.RegReqDocTempTrainee !== null
-    //       ? tempTrainee.RegReqDocTempTrainee
-    //       : stdDocsArray,
-    //   siblingsArray:
-    //     tempTrainee &&
-    //     tempTrainee.TempTraineeBrothers !== undefined &&
-    //     tempTrainee.TempTraineeBrothers !== null
-    //       ? tempTrainee.TempTraineeBrothers
-    //       : siblingsArray,
-    //   relativesArray:
-    //     tempTrainee &&
-    //     tempTrainee.TempTraineeRelatives !== undefined &&
-    //     tempTrainee.TempTraineeRelatives !== null
-    //       ? tempTrainee.TempTraineeRelatives
-    //       : relativesArray,
-    // });
+    const { stdDocsArray, profExperiencesArray } = this.state;
+    const trainee = arg;
+    onGetTraineeById(trainee);
+    this.setState({
+      trainee: arg,
+      isEdit: true,
+      showGenerateButton: true,
+      selectedBirthDate:
+        new Date(trainee.birthdate).toISOString().split("T")[0] || "",
+      nationalityName: trainee.Nationality || "",
+      selectedNationalityId: trainee.NationalityId || null,
+      selectedGender: trainee.GenderId || null,
+      selectedDiploma: trainee.diplomaId || null,
+      averageValue: trainee.Average || null,
+      selectedCountry: trainee.DiplomaCountryId || null,
+      facultyName: trainee.Faculty || "",
+      studyPlanName: trainee.plan_study || "",
+      selectedFacultyId: trainee.FacultyId || null,
+      selectedGovernorate: trainee.DiplomaGovernorateId || null,
+      selectedExaminationSession: trainee.ExaminationSession || "",
+      selectedregistrationCertLevelId: trainee.registrationCertLevelId || "",
+      selectedSocialStatus: trainee.socialStatusId || "",
+      //   IsTransferTraineeCheck: trainee.IsTransferTrainee || null,
+      //   HasBrotherCheck: trainee.haveBrother || null,
+      //   selectedTransferUnivCountry: trainee.TransferUnivCountryId || null,
+      trainee: trainee.Id,
+      selectedRegistrationDiplomaDate:
+        new Date(trainee.registrationDiplomaDate).toISOString().split("T")[0] ||
+        "",
+      // stdDocsArray:
+      //   tempTrainee &&
+      //   tempTrainee.traineesDocuments !== undefined &&
+      //   tempTrainee.traineesDocuments !== null
+      //     ? tempTrainee.traineesDocuments
+      //     : stdDocsArray,
+      //   siblingsArray:
+      //     tempTrainee &&
+      //     tempTrainee.TempTraineeBrothers !== undefined &&
+      //     tempTrainee.TempTraineeBrothers !== null
+      //       ? tempTrainee.TempTraineeBrothers
+      //       : siblingsArray,
+      profExperiencesArray: trainee.professionalExperiences,
+    });
 
     // this.setState({
     //   showSiblingsSelect: trainee.haveBrother == 1 ? true : false,
     // });
 
-    // if (trainee.diplomaId) {
-    //   const totalGrade = (
-    //     certificates.find(
-    //       certificate => certificate.key === trainee.diplomaId
-    //     ) || ""
-    //   ).totalGrades;
+    if (trainee.diplomaId) {
+      const totalGrade = (
+        diplomalevels.find(
+          certificate => certificate.key === trainee.diplomaId
+        ) || ""
+      ).totalGrades;
 
-    //   this.setState({
-    //     totalGradeValue: totalGrade,
-    //   });
-    // }
-
-    // const { grantCond } = this.state;
-    // let obj = {
-    //   diplomaId: trainee.diplomaId,
-    //   Average: parseInt(trainee.Average),
-    //   isGrantCond: grantCond,
-    //   YearId: currentSemester.cuYearId,
-    // };
+      this.setState({
+        totalGradeValue: totalGrade,
+      });
+    }
 
     // const { onGetFilteredFaculties } = this.props;
     // onGetFilteredFaculties(obj);
@@ -1041,7 +899,8 @@ class ApplicantsList extends Component {
   };
 
   toggleTab(tab) {
-    const { isEdit, siblingsArray, relativesArray, stdDocsArray } = this.state;
+    const { isEdit, siblingsArray, trnProfExperiences, stdDocsArray } =
+      this.state;
     const { tempTrainee } = this.props;
     if (this.state.activeTab !== tab) {
       if (tab >= 1 && tab <= 5) {
@@ -1054,22 +913,16 @@ class ApplicantsList extends Component {
           this.setState({
             stdDocsArray:
               tempTrainee &&
-              tempTrainee.RegReqDocTempTrainee !== undefined &&
-              tempTrainee.RegReqDocTempTrainee !== null
-                ? tempTrainee.RegReqDocTempTrainee
+              tempTrainee.traineesDocuments !== undefined &&
+              tempTrainee.traineesDocuments !== null
+                ? tempTrainee.traineesDocuments
                 : stdDocsArray,
-            siblingsArray:
+            trnProfExperiences:
               tempTrainee &&
-              tempTrainee.TempTraineeBrothers !== undefined &&
-              tempTrainee.TempTraineeBrothers !== null
-                ? tempTrainee.TempTraineeBrothers
-                : siblingsArray,
-            relativesArray:
-              tempTrainee &&
-              tempTrainee.TempTraineeRelatives !== undefined &&
-              tempTrainee.TempTraineeRelatives !== null
-                ? tempTrainee.TempTraineeRelatives
-                : relativesArray,
+              tempTrainee.TempTrnProfExperiences !== undefined &&
+              tempTrainee.TempTrnProfExperiences !== null
+                ? tempTrainee.TempTrnProfExperiences
+                : trnProfExperiences,
           });
         }
       }
@@ -1248,52 +1101,6 @@ class ApplicantsList extends Component {
     }
   };
 
-  handleDiplomaSelect = (event, fieldName) => {
-    const { certificates, currentSemester, onGetFilteredFaculties } =
-      this.props;
-
-    const selectedValue = event.target.value;
-
-    if (fieldName === "diplomaId") {
-      this.setState({ selectedDiploma: selectedValue, diplomaError: false });
-
-      const diplomaObject = certificates.find(
-        certificate => certificate.value === event.target.value
-      );
-
-      if (diplomaObject) {
-        const { averageValue, grantCond, traineeGrade } = this.state;
-
-        this.setState({ selectedDiplomaId: diplomaObject.key });
-
-        const totalGrade = (
-          certificates.find(
-            certificate => certificate.value === selectedValue
-          ) || ""
-        ).totalGrades;
-
-        this.setState({
-          totalGradeValue: totalGrade,
-        });
-
-        if (averageValue != "") {
-          const average = (traineeGrade / totalGrade) * 100;
-          let obj = {
-            diplomaId: diplomaObject.key,
-            Average: average,
-            isGrantCond: grantCond,
-            YearId: currentSemester.cuYearId,
-          };
-
-          onGetFilteredFaculties(obj);
-          this.setState({
-            averageValue: average,
-          });
-        }
-      }
-    }
-  };
-
   handleDataListChange = (event, fieldName) => {
     const { IsTransferTraineeCheck, HasBrotherCheck } = this.state;
 
@@ -1408,30 +1215,33 @@ class ApplicantsList extends Component {
     }
   };
 
-  handleSelectChange = (fieldName, selectedValue) => {
-    const { onGetFilteredAcademicCertificates, nationalities } = this.props;
-    if (fieldName == "FacultyId") {
-      this.setState({
-        selectedFacultyId: selectedValue,
-      });
-      onGetFilteredAcademicCertificates(selectedValue);
-    }
-    if (fieldName == "NationalityId") {
-      const nationality = nationalities.find(
-        nationality => nationality.value == selectedValue
-      );
+  handleSelectChange = (fieldName, selectedValue, values) => {
+    const { nationalities } = this.props;
+    console.log("values before setState", values);
 
+    if (fieldName == "NationalityId") {
+      const name = nationalities.find(
+        nationality => nationality.value === selectedValue
+      );
       this.setState({
         selectedNationalityId: selectedValue,
-        nationalityName: nationality.label,
+        nationalityName: name.label,
+        trainee: values,
       });
     }
+
+    console.log("values after setState", values);
   };
 
-  handleSelectStudyPlan = (fieldName, selectedValue) => {
-    if (fieldName == "plan_study") {
+  handleGenderChange = (fieldName, selectedValue, values) => {
+    const { genders } = this.props;
+
+    if (fieldName === "GenderId") {
+      const gender = genders.find(gender => gender.value == selectedValue);
       this.setState({
-        selectedStudyPlanId: selectedValue,
+        selectedGender: selectedValue,
+        genderName: gender.label,
+        trainee: values,
       });
     }
   };
@@ -1460,15 +1270,20 @@ class ApplicantsList extends Component {
     this.setState({ generateModal: false });
     onGetTrainees();
   };
-
   handleSuccessClose = () => {
     this.setState({ successMessage: null });
+  };
+  handleExpSuccessClose = () => {
+    this.setState({ successMessage1: null, showAlert: null });
   };
 
   handleErrorClose = () => {
     this.setState({ errorMessage: null });
   };
 
+  handleExpErrorClose = () => {
+    this.setState({ errorMessage1: null, showAlert: null });
+  };
   handleDeletedSuccessClose = () => {
     const { onGetTraineeDeletedValue } = this.props;
     this.setState({ showAlert: null });
@@ -1696,6 +1511,296 @@ class ApplicantsList extends Component {
     return moment(date).format("DD-MM-YYYY");
   };
 
+  handleButtonClick = (fieldName, option) => {
+    let obj = { certificateLevelId: option };
+    onGetDefaultRegReqDocs(obj);
+    if (fieldName == "ExaminationSession") {
+      this.setState({ selectedExaminationSession: option });
+    }
+    if (fieldName == "registrationCertLevelId") {
+      this.setState({ selectedregistrationCertLevelId: option });
+    }
+    if (fieldName == "studyPattern") {
+      this.setState({ selectedStudyPattern: option });
+    }
+  };
+
+  handleButtonClick2 = (fieldName, option, values) => {
+    if (fieldName == "registrationCertLevelId") {
+      this.setState({ selectedregistrationCertLevelId: option });
+      this.setState({ trainee: values });
+    }
+  };
+
+  handleCheckboxEdit = (Id, fieldName) => {
+    this.setState(prevState => ({
+      reqDocuments: prevState.reqDocuments.map(document =>
+        document.Id === Id
+          ? { ...document, [fieldName]: document[fieldName] ? 0 : 1 }
+          : document
+      ),
+    }));
+  };
+
+  handelAddExperience = () => {
+    const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
+      this.props;
+    const newExperience = {
+      traineeId: lastAddedId,
+      workType: "",
+      companyName: "",
+      workPlace: "",
+      workField: "",
+      duaration: "",
+    };
+    const emptyRowsExist = trnProfExperiences.some(
+      trnProfExperiences => trnProfExperiences.workType.trim() === ""
+    );
+    console.log("emptyRowsExist", emptyRowsExist);
+    if (emptyRowsExist) {
+      const errorMessage = this.props.t("Fill in the empty row");
+      this.setState({ duplicateErrorProfExperiences: errorMessage });
+    } else {
+      onAddNewProfessionalExperience(newExperience);
+      this.setState({
+        duplicateErrorProfExperiences: null,
+        trnProfExperiences: [...trnProfExperiences, newExperience],
+      });
+    }
+  };
+
+  handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
+    const { onUpdateProfessionalExperience, trnProfExperiences } = this.props;
+    const isDuplicate = trnProfExperiences.some(trnProfExperience => {
+      return (
+        trnProfExperience.Id !== rowId &&
+        trnProfExperience.workType.trim() === fieldValue.trim()
+      );
+    });
+
+    if (isDuplicate) {
+      const errorMessage = this.props.t("Value already exists");
+      this.setState({ duplicateErrorProfExperiences: errorMessage });
+    } else {
+      this.setState({ duplicateErrorProfExperiences: null });
+      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+      onUpdateProfessionalExperience(onUpdate);
+    }
+  };
+
+  handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
+    const { onGetTraineesDocuments } = this.props;
+    const { diplomalevels } = this.props;
+    const selectedValue = event.target.value;
+    console.log("selectedValue", selectedValue);
+
+    this.setState({
+      trainee: values,
+    });
+
+    const diplomaObject = diplomalevels.find(
+      certificate => certificate.value === event.target.value
+    );
+    console.log(diplomaObject, "ollllllll");
+    let obj = { certificateLevelId: diplomaObject.key };
+    console.log("objobjobj", obj);
+    onGetTraineesDocuments(obj);
+    setFieldValue("diplomaId", selectedValue);
+
+    if (diplomaObject) {
+      this.setState({
+        selectedDiplomaId: diplomaObject.key,
+        selectedDiploma: selectedValue,
+        diplomaError: false,
+        trainee: values,
+      });
+    }
+  };
+
+  handleDataListChange = (event, fieldName) => {
+    const { HasBrotherCheck } = this.state;
+
+    const selectedValue = event.target.value;
+
+    if (fieldName == "DiplomaCountryId") {
+      this.setState({ selectedCountry: selectedValue });
+    }
+
+    if (fieldName == "DiplomaGovernorateId") {
+      this.setState({ selectedGovernorate: selectedValue });
+    }
+
+    /*  if (fieldName == "DiplomaCityId") {
+      this.setState({ selectedCity: selectedValue });
+    } */
+
+    if (fieldName === "UnivCountryId") {
+      this.setState({ selectedUnivCountry: selectedValue });
+    }
+
+    if (HasBrotherCheck) {
+      if (fieldName === "studentSID") {
+        this.setState({ selectedBrother: selectedValue });
+      }
+    }
+  };
+
+  handleInputFocus = fieldName => {
+    const {
+      selectedDiploma,
+      selectedCountry,
+      selectedGovernorate,
+      selectedCity,
+      selectedBrother,
+      selectedUnivCountry,
+      selectedSemester,
+    } = this.state;
+
+    if (fieldName == "diplomaId") {
+      this.setState({ selectedDiploma });
+    }
+
+    if (fieldName == "DiplomaCountryId") {
+      this.setState({ selectedCountry });
+    }
+
+    if (fieldName == "DiplomaGovernorateId") {
+      this.setState({ selectedGovernorate });
+    }
+
+    /* if (fieldName == "DiplomaCityId") {
+      this.setState({ selectedCity });
+    } */
+
+    if (fieldName == "UnivCountryId") {
+      this.setState({ selectedUnivCountry });
+    }
+
+    if (fieldName == "studentSID") {
+      this.setState({ selectedBrother });
+    }
+
+    if (fieldName == "studentSID") {
+    }
+  };
+
+  handleInputBlur = fieldName => {
+    const {
+      selectedDiploma,
+      selectedCountry,
+      selectedGovernorate,
+      selectedCity,
+      selectedUnivCountry,
+      selectedSemester,
+      selectedBrother,
+    } = this.state;
+
+    if (fieldName == "diplomaId") {
+      this.setState({ selectedDiploma });
+    }
+
+    if (fieldName == "DiplomaCountryId") {
+      this.setState({ selectedCountry });
+    }
+
+    if (fieldName == "DiplomaGovernorateId") {
+      this.setState({ selectedGovernorate });
+    }
+
+    /*    if (fieldName == "DiplomaCityId") {
+      this.setState({ selectedCity });
+    } */
+
+    if (fieldName == "UnivCountryId") {
+      this.setState({ selectedUnivCountry });
+    }
+
+    if (fieldName == "studentSID") {
+      this.setState({ selectedBrother });
+    }
+  };
+
+  handleAlertClose = () => {
+    this.setState({ duplicateErrorProfExperiences: null });
+  };
+
+  handleMulti = (fieldName, selectedMulti) => {
+    if (fieldName === "tempSiblings") {
+      this.setState({ siblingsArray: selectedMulti });
+    }
+    console.log("selectedMulti", selectedMulti);
+  };
+
+  handleRegReqDocDataChange = (rowId, fieldName, fieldValue) => {
+    this.setState(prevState => {
+      const updatedRegReqDocs = prevState.stdDocsArray.map(document => {
+        if (document.Id === rowId) {
+          return {
+            ...document,
+            [fieldName]: fieldValue,
+          };
+        }
+        return document;
+      });
+
+      return {
+        stdDocsArray: updatedRegReqDocs,
+      };
+    });
+  };
+
+  handleSelect = (fieldName, selectedValue, values) => {
+    if (fieldName == "socialStatusId") {
+      this.setState({
+        selectedSocialStatus: selectedValue,
+        trainee: values,
+      });
+    }
+  };
+
+  handleCheckboxEdit = (Id, fieldName) => {
+    this.setState(prevState => ({
+      reqDocuments: prevState.reqDocuments.map(document =>
+        document.Id === Id
+          ? { ...document, [fieldName]: document[fieldName] ? 0 : 1 }
+          : document
+      ),
+    }));
+  };
+
+  handleDeleteRow = () => {
+    const { onDeleteProfessionalExperience } = this.props;
+    const { selectedRowId } = this.state;
+    console.log("ssssssssssssssssssssssselectedrow", selectedRowId);
+    if (selectedRowId !== null) {
+      onDeleteProfessionalExperience(selectedRowId);
+
+      this.setState({
+        selectedRowId: null,
+        deleteModal: false,
+        showAlert: true,
+      });
+    }
+  };
+
+  handleSubmit = values => {
+    const { lastAddedId, onAddRequiredDocs } = this.props;
+    const { stdDocsArray } = this.state;
+    console.log("values in save", values);
+    values["traineeId"] = lastAddedId;
+    console.log(lastAddedId);
+    let traineeinfo = {};
+    const extractedArray = stdDocsArray.map(item => ({
+      regReqDocId: item.Id,
+      availableNumber: item.availableNumber,
+    }));
+    console.log("extractedArray", extractedArray);
+    traineeinfo["stdDocs"] = extractedArray;
+    traineeinfo["traineeId"] = lastAddedId;
+    console.log("traineeinfo", traineeinfo);
+    onAddRequiredDocs(traineeinfo);
+  };
+
   render() {
     //meta title
     document.title =
@@ -1703,7 +1808,6 @@ class ApplicantsList extends Component {
 
     const {
       selectedYear,
-      relativesArray,
       selectedHealthProblems,
       selectedHasDisability,
       selectedRegistrationDate,
@@ -1760,6 +1864,7 @@ class ApplicantsList extends Component {
       stdDocsArray,
       showSiblingsSelect,
       siblingsArray,
+      profExperiencesArray,
       duplicateErrorSibling,
       showAddButton,
       showDeleteButton,
@@ -1935,8 +2040,8 @@ class ApplicantsList extends Component {
         }),
       },
       {
-        dataField: "applicationProcess",
-        text: this.props.t("Application Process"),
+        dataField: "applyMethod",
+        text: this.props.t("Apply Method"),
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -2381,25 +2486,23 @@ class ApplicantsList extends Component {
                                 </Col>
                                 <Col sm="4"></Col>
 
-                                {menuObject && menuObject.isAdd == 1 && (
-                                  <Col sm="1">
-                                    <div className="text-sm-end">
-                                      <Tooltip
-                                        title={this.props.t(
-                                          "Create New Trainee"
-                                        )}
-                                        placement="top"
+                                {/* {menuObject && menuObject.isAdd == 1 && ( */}
+                                <Col sm="1">
+                                  <div className="text-sm-end">
+                                    <Tooltip
+                                      title={this.props.t("Create New Trainee")}
+                                      placement="top"
+                                    >
+                                      <IconButton
+                                        color="primary"
+                                        onClick={this.handleTraineeClicks}
                                       >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleTraineeClicks}
-                                        >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </div>
-                                  </Col>
-                                )}
+                                        <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </div>
+                                </Col>
+                                {/* )} */}
                               </Row>
                               <Row>
                                 <div>
@@ -2555,266 +2658,271 @@ class ApplicantsList extends Component {
                                           enableReinitialize={true}
                                           initialValues={
                                             (isEdit && {
-                                              Id: trainee.Id,
+                                              Id: tempTrainee.Id,
                                               FirstName:
-                                                (trainee &&
-                                                  trainee.FirstName) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.FirstName) ||
                                                 "",
                                               LastName:
-                                                (trainee && trainee.LastName) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.LastName) ||
                                                 "",
                                               FatherName:
-                                                (trainee &&
-                                                  trainee.FatherName) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.FatherName) ||
                                                 "",
                                               grandFatherName:
-                                                (trainee &&
-                                                  trainee.grandFatherName) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.grandFatherName) ||
                                                 "",
                                               MotherName:
-                                                (trainee &&
-                                                  trainee.MotherName) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.MotherName) ||
                                                 "",
                                               BirthLocation:
-                                                (trainee &&
-                                                  trainee.BirthLocation) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.BirthLocation) ||
                                                 "",
                                               FirstNameE:
-                                                (trainee &&
-                                                  trainee.FirstNameE) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.FirstNameE) ||
                                                 "",
                                               LastNameE:
-                                                (trainee &&
-                                                  trainee.LastNameE) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.LastNameE) ||
                                                 "",
                                               FatherNameE:
-                                                (trainee &&
-                                                  trainee.FatherNameE) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.FatherNameE) ||
                                                 "",
                                               grandFatherNameE:
-                                                (trainee &&
-                                                  trainee.grandFatherNameE) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.grandFatherNameE) ||
                                                 "",
                                               MotherNameE:
-                                                (trainee &&
-                                                  trainee.MotherNameE) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.MotherNameE) ||
                                                 "",
                                               BirthLocationE:
-                                                (trainee &&
-                                                  trainee.BirthLocationE) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.BirthLocationE) ||
                                                 "",
                                               birthdate:
-                                                (trainee &&
-                                                  trainee.birthdate) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.birthdate) ||
                                                 selectedBirthDate,
                                               NationalityId:
-                                                (trainee &&
-                                                  trainee.NationalityId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.NationalityId) ||
                                                 selectedNationalityId,
                                               GenderId:
-                                                (trainee && trainee.GenderId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.GenderId) ||
                                                 selectedGender ||
                                                 "",
 
                                               nationalNo:
-                                                (trainee &&
-                                                  trainee.nationalNo) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.nationalNo) ||
                                                 "",
                                               identityNo:
-                                                (trainee &&
-                                                  trainee.identityNo) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.identityNo) ||
                                                 "",
                                               identityIssueDate:
-                                                (trainee &&
-                                                  trainee.identityIssueDate) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.identityIssueDate) ||
                                                 selectedIdentityIssueDate ||
                                                 "",
                                               civicZone:
-                                                (trainee &&
-                                                  trainee.civicZone) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.civicZone) ||
                                                 "",
                                               registerZone:
-                                                (trainee &&
-                                                  trainee.registerZone) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.registerZone) ||
                                                 "",
                                               registerNo:
-                                                (trainee &&
-                                                  trainee.registerNo) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.registerNo) ||
                                                 "",
                                               PassNumber:
-                                                (trainee &&
-                                                  trainee.PassNumber) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.PassNumber) ||
                                                 "",
                                               passportIssueDate:
-                                                (trainee &&
-                                                  trainee.passportIssueDate) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.passportIssueDate) ||
                                                 selectedPassportIssueDate,
                                               passportExpiryDate:
-                                                (trainee &&
-                                                  trainee.passportExpiryDate) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.passportExpiryDate) ||
                                                 selectedPassportExpiryDate,
                                               diplomaId:
-                                                (trainee &&
-                                                  trainee.diplomaId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.diplomaId) ||
                                                 selectedDiploma,
                                               DiplomaCountryId:
-                                                (trainee &&
-                                                  trainee.DiplomaCountryId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.DiplomaCountryId) ||
                                                 selectedCountry,
 
                                               DiplomaNumber:
-                                                (trainee &&
-                                                  trainee.DiplomaNumber) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.DiplomaNumber) ||
                                                 "",
                                               DiplomaGovernorateId:
-                                                (trainee &&
-                                                  trainee.DiplomaGovernorateId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.DiplomaGovernorateId) ||
                                                 selectedGovernorate,
 
                                               /* DiplomaCityId:
-                                  (trainee && trainee.DiplomaCityId) ||
+                                  (tempTrainee && tempTrainee.DiplomaCityId) ||
                                   selectedCity, */
 
                                               DiplomaYear:
-                                                (trainee &&
-                                                  trainee.DiplomaYear) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.DiplomaYear) ||
                                                 "",
                                               ExaminationSession:
-                                                (trainee &&
-                                                  trainee.ExaminationSession) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.ExaminationSession) ||
                                                 "",
                                               Average:
-                                                (trainee && trainee.Average) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.Average) ||
                                                 "",
                                               diplomaDate:
-                                                (trainee &&
-                                                  trainee.diplomaDate) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.diplomaDate) ||
                                                 selectedDiplomaDate,
                                               diplomaVerificationNum:
-                                                (trainee &&
-                                                  trainee.diplomaVerificationNum) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.diplomaVerificationNum) ||
                                                 "",
                                               diplomaVerificationDate:
-                                                (trainee &&
-                                                  trainee.diplomaVerificationDate) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.diplomaVerificationDate) ||
                                                 selectedDiplomaVerificationDate,
                                               socialStatusId:
-                                                (trainee &&
-                                                  trainee.socialStatusId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.socialStatusId) ||
                                                 selectedSocialStatus,
                                               registrationCertLevelId:
-                                                (trainee &&
-                                                  trainee.registrationCertLevelId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.registrationCertLevelId) ||
                                                 selectedregistrationCertLevelId,
                                               registrationDiplomaName:
-                                                (trainee &&
-                                                  trainee.registrationDiplomaName) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.registrationDiplomaName) ||
                                                 "",
                                               registrationDiplomaDepartment:
-                                                (trainee &&
-                                                  trainee.registrationDiplomaDepartment) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.registrationDiplomaDepartment) ||
                                                 "",
                                               diplomaName:
-                                                (trainee &&
-                                                  trainee.diplomaName) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.diplomaName) ||
                                                 "",
 
                                               registrationDiplomaAverage:
-                                                (trainee &&
-                                                  trainee.registrationDiplomaAverage) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.registrationDiplomaAverage) ||
                                                 "",
                                               uniAverage:
-                                                (trainee &&
-                                                  trainee.uniAverage) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.uniAverage) ||
                                                 "",
                                               registrationDiplomaDate:
-                                                (trainee &&
-                                                  trainee.registrationDiplomaDate) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.registrationDiplomaDate) ||
                                                 selectedRegistrationDiplomaDate,
 
                                               uniName:
-                                                (trainee && trainee.uniName) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.uniName) ||
                                                 "",
                                               UnivCountryId:
-                                                (trainee &&
-                                                  trainee.UnivCountryId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.UnivCountryId) ||
                                                 selectedUnivCountry,
 
                                               /* TransferUnivAverage:
-                                  (trainee && trainee.TransferUnivAverage) ||
+                                  (tempTrainee && tempTrainee.TransferUnivAverage) ||
                                   "", */
                                               studyPattern:
-                                                (trainee &&
-                                                  trainee.studyPattern) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.studyPattern) ||
                                                 "",
                                               /*  selectedSemester:
-                                  (trainee && trainee.selectedSemester) ||
+                                  (tempTrainee && tempTrainee.selectedSemester) ||
                                   selectedSemester ||
                                   null, */
                                               RegistrationDate:
-                                                (trainee &&
-                                                  trainee.RegistrationDate) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.RegistrationDate) ||
                                                 selectedRegistrationDate, //""
                                               FacultyId:
-                                                (trainee &&
-                                                  trainee.FacultyId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.FacultyId) ||
                                                 selectedFacultyId,
                                               plan_study:
-                                                (trainee &&
-                                                  trainee.plan_study) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.plan_study) ||
                                                 "",
                                               CurrentAddress:
-                                                (trainee &&
-                                                  trainee.CurrentAddress) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.CurrentAddress) ||
                                                 "",
                                               CurrentAddrPhone:
-                                                (trainee &&
-                                                  trainee.CurrentAddrPhone) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.CurrentAddrPhone) ||
                                                 "",
                                               CurrentAddrCell:
-                                                (trainee &&
-                                                  trainee.CurrentAddrCell) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.CurrentAddrCell) ||
                                                 "",
                                               PermanentAddress:
-                                                (trainee &&
-                                                  trainee.PermanentAddress) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.PermanentAddress) ||
                                                 "",
                                               ParentAddrPhone:
-                                                (trainee &&
-                                                  trainee.ParentAddrPhone) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.ParentAddrPhone) ||
                                                 "",
                                               WhatsappMobileNum:
-                                                (trainee &&
-                                                  trainee.WhatsappMobileNum) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.WhatsappMobileNum) ||
                                                 "",
                                               Email:
-                                                (trainee && trainee.Email) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.Email) ||
                                                 "",
                                               GeneralNote:
-                                                (trainee &&
-                                                  trainee.GeneralNote) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.GeneralNote) ||
                                                 "",
                                               academicYear:
-                                                (trainee &&
-                                                  trainee.academicYear) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.academicYear) ||
                                                 "",
 
                                               InstituteCountryId:
-                                                (trainee &&
-                                                  trainee.InstituteCountryId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.InstituteCountryId) ||
                                                 selectedInstituteCountry,
                                               HighStudyTypeId:
-                                                (trainee &&
-                                                  trainee.HighStudyTypeId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.HighStudyTypeId) ||
                                                 selectedHightStudyTypeId,
                                               EstimateId:
-                                                (trainee &&
-                                                  trainee.EstimateId) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.EstimateId) ||
                                                 selectedEstimateId,
 
                                               RegUniDate:
-                                                (trainee &&
-                                                  trainee.RegUniDate) ||
+                                                (tempTrainee &&
+                                                  tempTrainee.RegUniDate) ||
                                                 selectedRegUniDate,
                                             }) ||
                                             (!isEdit && {
@@ -2861,26 +2969,6 @@ class ApplicantsList extends Component {
                                               FacultyId:
                                                 (emptyTrainee &&
                                                   emptyTrainee.FacultyId) ||
-                                                "",
-                                              grantId:
-                                                (emptyTrainee &&
-                                                  emptyTrainee.grantId) ||
-                                                "",
-                                              bloodType:
-                                                (emptyTrainee &&
-                                                  emptyTrainee.bloodType) ||
-                                                "",
-                                              hasDisability:
-                                                (emptyTrainee &&
-                                                  emptyTrainee.hasDisability) ||
-                                                "",
-                                              healthProblems:
-                                                (emptyTrainee &&
-                                                  emptyTrainee.healthProblems) ||
-                                                "",
-                                              OtherHealthDetails:
-                                                (emptyTrainee &&
-                                                  emptyTrainee.OtherHealthDetails) ||
                                                 "",
                                             })
                                           }
@@ -6516,8 +6604,7 @@ const mapStateToProps = ({
   highstudytypes: highstudytypes.highstudytypes,
   estimates: estimates.estimates,
   requiredDocs: trainees.requiredDocs,
-  // generated_trainee: trainees.generated_trainee,
-  // tempTrainee: trainees.tempTrainee,
+  tempTrainee: trainees.tempTrainee,
   // generatedTrainee: trainees.generatedTrainee,
   // last_created_trainee: trainees.last_created_trainee,
   // tempTrainee_regReqDocs: trainees.tempTrainee_regReqDocs,
@@ -6527,7 +6614,7 @@ const mapStateToProps = ({
   // faculties: mobAppFacultyAccs.faculties,
   // countries: countries.countries,
   // yearSemesters: generalManagements.yearSemesters,
-  //  currentSemester: semesters.currentSemester,
+  // currentSemester: semesters.currentSemester,
   // cities: cities.cities,
   // certificates: certificates.certificates,
   // governorates: governorates.governorates,
@@ -6550,7 +6637,16 @@ const mapDispatchToProps = dispatch => ({
   onAddNewTrainee: trainee => dispatch(addNewTrainee(trainee)),
   onUpdateTrainee: trainee => dispatch(updateTrainee(trainee)),
   onDeleteTrainee: trainee => dispatch(deleteTrainee(trainee)),
-  // onGetTraineeById: tempTrainee => dispatch(getTraineeById(tempTrainee)),
+  onGetTraineesRegCertificates: () => dispatch(getRegisterCertificates()),
+  onGetTraineeById: tempTrainee => dispatch(getTraineeById(tempTrainee)),
+  onGetTraineesDocuments: years => dispatch(getTraineeDefaultRegReqDocs(years)),
+  onAddNewProfessionalExperience: profExperience =>
+    dispatch(addNewProfessionalExperience(profExperience)),
+  onUpdateProfessionalExperience: profExperience =>
+    dispatch(updateProfessionalExperience(profExperience)),
+  onDeleteProfessionalExperience: profExperience =>
+    dispatch(deleteProfessionalExperience(profExperience)),
+  onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
   // onGenerateTrainee: trainee => dispatch(generateTrainee(trainee)),
   // onGetDefaultRegReqDocs: years => dispatch(getDefaultRegReqDocs(years)),
   // onGetFilteredFaculties: admissionCond =>

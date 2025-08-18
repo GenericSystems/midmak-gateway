@@ -63,17 +63,6 @@ export const GET_CRYPTO_ORDERS = "/crypto/orders";
 export const GET_INVOICES = "/invoices";
 export const GET_INVOICE_DETAIL = "/invoice";
 
-//STUDENTS
-export const GET_STUDENTS = "/students";
-export const GET_STUDENT_DETAIL = "/student";
-export const ADD_NEW_STUDENT = "/add/student";
-export const UPDATE_STUDENT = "/update/student";
-export const DELETE_STUDENT = "/delete/student";
-export const GET_STUDENT_BY_ID = "/students";
-export const GENERATE_STUDENT = "/student";
-export const GET_DEFAULT_REGREQDOCS = "/student_regReqDocs";
-export const GET_STUDENT_DELETED_VALUE = "/deleted";
-
 //STUDENTS STATISTICS
 export const GET_STUDENTS_STATISTICS = "/studentsStatistics";
 
@@ -1109,6 +1098,8 @@ export const GET_REGISTER_CERTIFICATES = "/registerCertificates";
 export const GET_TRAINEE_DEFAULT_REGREQDOCS = "/traineeDefaultRegReqDocs";
 export const ADD_REQUIRED_DOCS = "/add/requiredDocs";
 export const UPDATE_REQUIRED_DOCS = "/update/requiredDocs";
+export const GET_TRAINEE_BY_ID = "/trainees";
+export const GENERATE_TRAINEE = "/trainee";
 
 //social status
 export const GET_SOCIAL_STATUS = "/socialStatus";

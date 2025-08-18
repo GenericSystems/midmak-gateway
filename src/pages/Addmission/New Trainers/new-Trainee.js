@@ -60,7 +60,6 @@ import {
   addNewProfessionalExperience,
   deleteProfessionalExperience,
   addRequiredDocs,
-  updateRequiredDocs,
 } from "store/new-Trainee/actions";
 import { isEmpty, size, map, values } from "lodash";
 
@@ -100,7 +99,6 @@ class NewTrainee extends Component {
       selectedregistrationCertLevelId: "",
       selectedStudyPattern: "",
       selectedExaminationSession: "",
-      IsTransferTraineeCheck: false,
       transferUniName: "",
       selectedUnivCountry: "",
       selectedRegistrationDate: new Date().toISOString().split("T")[0],
@@ -449,12 +447,12 @@ class NewTrainee extends Component {
         traineeinfo["diplomaId"] = diplomaObject.key;
       }
 
-      if (values.diplomaId) {
-        const diplomaObject = diplomalevels.find(
-          certificate => certificate.value === values.diplomaId
-        );
-        traineeinfo["diplomaId"] = diplomaObject.key;
-      }
+      // if (values.diplomaId) {
+      //   const diplomaObject = diplomalevels.find(
+      //     certificate => certificate.value === values.diplomaId
+      //   );
+      //   traineeinfo["diplomaId"] = diplomaObject.key;
+      // }
 
       if (values.DiplomaCountryId) {
         const countryObject = countries.find(
@@ -674,13 +672,6 @@ class NewTrainee extends Component {
     }
   };
 
-  handleIsTransferTraineeChange = event => {
-    const { name, checked } = event.target;
-    this.setState({
-      IsTransferTraineeCheck: checked,
-    });
-  };
-
   handleCheckboxEdit = (Id, fieldName) => {
     this.setState(prevState => ({
       reqDocuments: prevState.reqDocuments.map(document =>
@@ -726,39 +717,39 @@ class NewTrainee extends Component {
     this.setState({ errorMessage1: null, showAlert: null });
   };
 
-  handleSelectNationalityDetails = (rowId, fieldName, selectedValue) => {
-    const { onUpdateRegReqDocument } = this.props;
-    const { regReqDocuments } = this.state;
+  // handleSelectNationalityDetails = (rowId, fieldName, selectedValue) => {
+  //   const { onUpdateRegReqDocument } = this.props;
+  //   const { regReqDocuments } = this.state;
 
-    const isValueExists = regReqDocuments.some(
-      row => row.documentTypeId === selectedValue
-    );
+  //   const isValueExists = regReqDocuments.some(
+  //     row => row.documentTypeId === selectedValue
+  //   );
 
-    this.setState({
-      selectedParentNationality: selectedValue,
-    });
+  //   this.setState({
+  //     selectedParentNationality: selectedValue,
+  //   });
 
-    let onUpdate = { Id: rowId, [fieldName]: selectedValue };
-    onUpdateRegReqDocument(onUpdate);
-  };
+  //   let onUpdate = { Id: rowId, [fieldName]: selectedValue };
+  //   onUpdateRegReqDocument(onUpdate);
+  // };
 
-  handleParentsDataChange = (id, fieldName, newValue) => {
-    this.setState(prevState => {
-      const updatedRelatives = prevState.relativesArray.map(relative => {
-        if (relative.Id === id) {
-          return {
-            ...relative,
-            [fieldName]: newValue,
-          };
-        }
-        return relative;
-      });
+  // handleParentsDataChange = (id, fieldName, newValue) => {
+  //   this.setState(prevState => {
+  //     const updatedRelatives = prevState.relativesArray.map(relative => {
+  //       if (relative.Id === id) {
+  //         return {
+  //           ...relative,
+  //           [fieldName]: newValue,
+  //         };
+  //       }
+  //       return relative;
+  //     });
 
-      return {
-        relativesArray: updatedRelatives,
-      };
-    });
-  };
+  //     return {
+  //       relativesArray: updatedRelatives,
+  //     };
+  //   });
+  // };
 
   handelAddExperience = () => {
     const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
@@ -806,63 +797,63 @@ class NewTrainee extends Component {
     }
   };
 
-  handleAddRowRelative = () => {
-    const { relativesArray, lastUsedId } = this.state;
-    const emptyRowsExist = relativesArray.some(
-      relative => relative.arName.trim() === ""
-    );
-    if (emptyRowsExist) {
-      const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateErrorRelative: errorMessage });
-    } else {
-      const newRelative = {
-        Id: lastUsedId,
-        arName: "",
-        enName: "",
-        relativeId: null,
-        nationalityId: null,
-        phone: "",
-        cellular: "",
-      };
-      this.setState({
-        relativesArray: [...relativesArray, newRelative],
-        lastUsedId: lastUsedId + 1,
-      });
-      this.setState({ duplicateErrorRelative: null });
-    }
-  };
+  // handleAddRowRelative = () => {
+  //   const { relativesArray, lastUsedId } = this.state;
+  //   const emptyRowsExist = relativesArray.some(
+  //     relative => relative.arName.trim() === ""
+  //   );
+  //   if (emptyRowsExist) {
+  //     const errorMessage = this.props.t("Fill in the empty row");
+  //     this.setState({ duplicateErrorRelative: errorMessage });
+  //   } else {
+  //     const newRelative = {
+  //       Id: lastUsedId,
+  //       arName: "",
+  //       enName: "",
+  //       relativeId: null,
+  //       nationalityId: null,
+  //       phone: "",
+  //       cellular: "",
+  //     };
+  //     this.setState({
+  //       relativesArray: [...relativesArray, newRelative],
+  //       lastUsedId: lastUsedId + 1,
+  //     });
+  //     this.setState({ duplicateErrorRelative: null });
+  //   }
+  // };
 
-  handleSelectChangeDetails = (rowId, fieldName, selectedValue) => {
-    this.setState(prevState => {
-      const updatedRelatives = prevState.relativesArray.map(relative => {
-        if (relative.Id === rowId) {
-          return {
-            ...relative,
-            [fieldName]: selectedValue,
-          };
-        }
-        return relative;
-      });
+  // handleSelectChangeDetails = (rowId, fieldName, selectedValue) => {
+  //   this.setState(prevState => {
+  //     const updatedRelatives = prevState.relativesArray.map(relative => {
+  //       if (relative.Id === rowId) {
+  //         return {
+  //           ...relative,
+  //           [fieldName]: selectedValue,
+  //         };
+  //       }
+  //       return relative;
+  //     });
 
-      return {
-        relativesArray: updatedRelatives,
-      };
-    });
-  };
-  deleteRelative = relative => {
-    this.setState(prevState => {
-      const updatedRelatives = prevState.relativesArray.filter(
-        item => item.Id !== relative.Id
-      );
+  //     return {
+  //       relativesArray: updatedRelatives,
+  //     };
+  //   });
+  // };
+  // deleteRelative = relative => {
+  //   this.setState(prevState => {
+  //     const updatedRelatives = prevState.relativesArray.filter(
+  //       item => item.Id !== relative.Id
+  //     );
 
-      return {
-        relativesArray: updatedRelatives,
-      };
-    });
-  };
-  handleAlertCloseRelative = () => {
-    this.setState({ duplicateErrorRelative: null });
-  };
+  //     return {
+  //       relativesArray: updatedRelatives,
+  //     };
+  //   });
+  // };
+  // handleAlertCloseRelative = () => {
+  //   this.setState({ duplicateErrorRelative: null });
+  // };
 
   handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
     const { onGetTraineesDocuments } = this.props;
@@ -894,7 +885,7 @@ class NewTrainee extends Component {
   };
 
   handleDataListChange = (event, fieldName) => {
-    const { IsTransferTraineeCheck, HasBrotherCheck } = this.state;
+    const { HasBrotherCheck } = this.state;
 
     const selectedValue = event.target.value;
 
@@ -996,14 +987,14 @@ class NewTrainee extends Component {
     }
   };
 
-  handleHasBrotherChange = event => {
-    const { name, checked } = event.target;
-    const value = checked ? 1 : 0;
-    this.setState({
-      HasBrotherCheck: value,
-      showSiblingsSelect: checked,
-    });
-  };
+  // handleHasBrotherChange = event => {
+  //   const { name, checked } = event.target;
+  //   const value = checked ? 1 : 0;
+  //   this.setState({
+  //     HasBrotherCheck: value,
+  //     showSiblingsSelect: checked,
+  //   });
+  // };
 
   handleSelectChange = (fieldName, selectedValue, values) => {
     const { nationalities } = this.props;
@@ -1036,83 +1027,83 @@ class NewTrainee extends Component {
     }
   };
 
-  handleAddRowSiblings = () => {
-    const { siblingsArray, lastUsedId } = this.state;
-    const emptyRowsExist = siblingsArray.some(
-      sibling => sibling.brotherSID.trim() === ""
-    );
-    if (emptyRowsExist) {
-      const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateErrorSibling: errorMessage });
-    } else {
-      const newSibling = {
-        Id: lastUsedId,
-        brotherSID: null,
-      };
-      this.setState({
-        siblingsArray: [...siblingsArray, newSibling],
-        lastUsedId: lastUsedId + 1,
-      });
-      this.setState({ duplicateErrorSibling: null });
-    }
-  };
+  // handleAddRowSiblings = () => {
+  //   const { siblingsArray, lastUsedId } = this.state;
+  //   const emptyRowsExist = siblingsArray.some(
+  //     sibling => sibling.brotherSID.trim() === ""
+  //   );
+  //   if (emptyRowsExist) {
+  //     const errorMessage = this.props.t("Fill in the empty row");
+  //     this.setState({ duplicateErrorSibling: errorMessage });
+  //   } else {
+  //     const newSibling = {
+  //       Id: lastUsedId,
+  //       brotherSID: null,
+  //     };
+  //     this.setState({
+  //       siblingsArray: [...siblingsArray, newSibling],
+  //       lastUsedId: lastUsedId + 1,
+  //     });
+  //     this.setState({ duplicateErrorSibling: null });
+  //   }
+  // };
 
-  handleDeleteSibling = sibling => {
-    this.setState(prevState => {
-      const updatedSiblings = prevState.siblingsArray.filter(
-        item => item.Id !== sibling.Id
-      );
+  // handleDeleteSibling = sibling => {
+  //   this.setState(prevState => {
+  //     const updatedSiblings = prevState.siblingsArray.filter(
+  //       item => item.Id !== sibling.Id
+  //     );
 
-      return {
-        siblingsArray: updatedSiblings,
-      };
-    });
-  };
+  //     return {
+  //       siblingsArray: updatedSiblings,
+  //     };
+  //   });
+  // };
 
-  handleSelectBrother = (rowId, fieldName, selectedValue, oldValue) => {
-    const { studentsOpt, onUpdateBrother } = this.props;
-    const { siblingsArray } = this.state;
+  // handleSelectBrother = (rowId, fieldName, selectedValue, oldValue) => {
+  //   const { studentsOpt, onUpdateBrother } = this.props;
+  //   const { siblingsArray } = this.state;
 
-    const selectBro = studentsOpt.find(
-      studentOpt => studentOpt.value + " " + studentOpt.key == oldValue
-    );
-    this.setState({ oldBrother: selectBro });
+  //   const selectBro = studentsOpt.find(
+  //     studentOpt => studentOpt.value + " " + studentOpt.key == oldValue
+  //   );
+  //   this.setState({ oldBrother: selectBro });
 
-    const brotherObj = studentsOpt.find(
-      studentOpt => studentOpt.value + " " + studentOpt.key === selectedValue
-    );
+  //   const brotherObj = studentsOpt.find(
+  //     studentOpt => studentOpt.value + " " + studentOpt.key === selectedValue
+  //   );
 
-    if (brotherObj) {
-      this.setState({ oldBrother: {} });
-      const isDuplicate = siblingsArray.some(
-        studentBrother =>
-          studentBrother.Id !== rowId &&
-          studentBrother.brotherSID === brotherObj.key
-      );
-      if (isDuplicate) {
-        const errorMessage = this.props.t("Sibling already exists");
-        this.setState({ duplicateErrorSibling: errorMessage });
-        console.error("value exist");
-      } else {
-        this.setState({ duplicateErrorSibling: null });
-        this.setState(prevState => {
-          const updatedSiblings = prevState.siblingsArray.map(sibling => {
-            if (sibling.Id === rowId) {
-              return {
-                ...sibling,
-                [fieldName]: brotherObj.key,
-              };
-            }
-            return sibling;
-          });
+  //   if (brotherObj) {
+  //     this.setState({ oldBrother: {} });
+  //     const isDuplicate = siblingsArray.some(
+  //       studentBrother =>
+  //         studentBrother.Id !== rowId &&
+  //         studentBrother.brotherSID === brotherObj.key
+  //     );
+  //     if (isDuplicate) {
+  //       const errorMessage = this.props.t("Sibling already exists");
+  //       this.setState({ duplicateErrorSibling: errorMessage });
+  //       console.error("value exist");
+  //     } else {
+  //       this.setState({ duplicateErrorSibling: null });
+  //       this.setState(prevState => {
+  //         const updatedSiblings = prevState.siblingsArray.map(sibling => {
+  //           if (sibling.Id === rowId) {
+  //             return {
+  //               ...sibling,
+  //               [fieldName]: brotherObj.key,
+  //             };
+  //           }
+  //           return sibling;
+  //         });
 
-          return {
-            siblingsArray: updatedSiblings,
-          };
-        });
-      }
-    }
-  };
+  //         return {
+  //           siblingsArray: updatedSiblings,
+  //         };
+  //       });
+  //     }
+  //   }
+  // };
 
   handleAlertClose = () => {
     this.setState({ duplicateErrorProfExperiences: null });
@@ -1234,7 +1225,6 @@ class NewTrainee extends Component {
       selectedGovernorate,
       selectedSocialStatus,
       selectedGender,
-      IsTransferTraineeCheck,
       emptyTrainee,
       firstNameError,
       lastNameError,
@@ -4659,7 +4649,7 @@ class NewTrainee extends Component {
                                                     </CardBody>
                                                   </Card>
 
-                                                  <Row>
+                                                  {/* <Row>
                                                     {showSiblingsSelect && (
                                                       <Col lg="4">
                                                         <div className="mb-3">
@@ -4688,7 +4678,7 @@ class NewTrainee extends Component {
                                                         </div>
                                                       </Col>
                                                     )}
-                                                  </Row>
+                                                  </Row> */}
                                                 </Row>
                                               </TabPane>
                                               <TabPane key={3} tabId={3}>
@@ -5461,7 +5451,6 @@ const mapDispatchToProps = dispatch => ({
   onDeleteProfessionalExperience: profExperience =>
     dispatch(deleteProfessionalExperience(profExperience)),
   onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
-  onUpdateRequiredDocs: trainee => dispatch(updateRequiredDocs(trainee)),
 });
 
 export default connect(
