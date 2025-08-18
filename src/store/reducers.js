@@ -239,10 +239,8 @@ import academyBuildingStructures from "./academyBuildingStructure/reducer";
 // contractsTypes
 import contractsTypes from "./HR/contractsTypes/reducer";
 
-
 // gradesVersions
 import gradesVersions from "./gradesVersions/reducer";
-
 
 // documentTypes
 import documentsTypes from "./documents-types/reducer";
@@ -448,7 +446,6 @@ const rootReducer = combineReducers({
   unarchiveCourseRequests,
   diplomalevels,
   highstudytypes,
-  applicants,
   gradesVersions,
   absenceWarnings,
 });
