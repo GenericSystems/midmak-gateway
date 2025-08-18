@@ -23,6 +23,7 @@ export const getDocuments = () => ({
 export const getDocumentsSuccess = documents => ({
   type: GET_DOCUMENTS_SUCCESS,
   payload: documents,
+  
 });
 
 export const getDocumentsFail = error => ({

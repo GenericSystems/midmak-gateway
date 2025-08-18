@@ -165,6 +165,9 @@ import classSchedulingList from "../pages/Addmission/classScheduling/classSchedu
 //ContractsTypes
 import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 
+//GradesVersions
+import GradesVersionsList from "../pages/GradeSettings/gradesVersions";
+
 //Nationalities
 import NationalitiesList from "../pages/Addmission/AdmissionSettings/nationality-list";
 
@@ -324,6 +327,10 @@ const authProtectedRoutes = [
   // contractsTypes
 
   { path: "/contractsTypes", component: ContractsTypesList },
+
+  // gradesVersions
+
+  { path: "/gradesVersions", component: GradesVersionsList },
 
   // documentsTypes
 
