@@ -229,11 +229,12 @@ function* fetchTrainees(selectedpayload) {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Gender",
+    tablename: "Settings_SocialStatus",
     fields: `Id,${titleField}`,
   };
   try {
     const response = yield call(getSocialStatus, get_SocialStatus);
+    console.log("ewsssssssssssssssss", response);
     yield put(getSocialStatusSuccess(response));
   } catch (error) {
     yield put(getSocialStatusFail(error));

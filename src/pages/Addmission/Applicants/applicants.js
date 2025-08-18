@@ -789,33 +789,37 @@ class ApplicantsList extends Component {
     const { tempTrainee, onGetTraineeById, diplomalevels } = this.props;
     const { stdDocsArray, profExperiencesArray } = this.state;
     const trainee = arg;
-
+    console.log("BEFORE trainee", trainee);
     onGetTraineeById(trainee);
 
-    console.log("tempTrainee", tempTrainee);
+    console.log("aFTER Btrainee", tempTrainee.Id);
 
     this.setState({
       isEdit: true,
       showGenerateButton: true,
-      trainee: trainee.Id,
-      nationalityName: trainee.nationality || "",
-      selectedNationalityId: trainee.NationalityId || null,
+      trainee: tempTrainee.Id,
+      nationalityName: tempTrainee.nationality || "",
+      selectedNationalityId: tempTrainee.NationalityId || null,
       selectedRegistrationDate:
-        new Date(trainee.RegistrationDate).toISOString().split("T")[0] || "",
-      selectedGender: trainee.GenderId || null,
-      genderName: trainee.gender || "",
-      selectedDiploma: trainee.diplomaId || null,
-      averageValue: trainee.Average || null,
-      selectedCountry: trainee.DiplomaCountryId || null,
-      facultyName: trainee.Faculty || "",
-      selectedFacultyId: trainee.FacultyId || null,
-      studyPlanName: trainee.plan_study || "",
-      selectedGovernorate: trainee.DiplomaGovernorateId || null,
-      selectedExaminationSession: trainee.ExaminationSession || "",
-      selectedregistrationCertLevelId: trainee.registrationCertLevelId || "",
-      selectedSocialStatus: trainee.socialStatusId || "",
-      selectedRegistrationDiplomaDate: trainee.registrationDiplomaDate
-        ? new Date(trainee.registrationDiplomaDate).toISOString().split("T")[0]
+        new Date(tempTrainee.RegistrationDate).toISOString().split("T")[0] ||
+        "",
+      selectedGender: tempTrainee.GenderId || null,
+      genderName: tempTrainee.gender || "",
+      selectedDiploma: tempTrainee.diplomaId || null,
+      averageValue: tempTrainee.Average || null,
+      selectedCountry: tempTrainee.DiplomaCountryId || null,
+      facultyName: tempTrainee.Faculty || "",
+      selectedFacultyId: tempTrainee.FacultyId || null,
+      studyPlanName: tempTrainee.plan_study || "",
+      selectedGovernorate: tempTrainee.DiplomaGovernorateId || null,
+      selectedExaminationSession: tempTrainee.ExaminationSession || "",
+      selectedregistrationCertLevelId:
+        tempTrainee.registrationCertLevelId || "",
+      selectedSocialStatus: tempTrainee.socialStatusId || "",
+      selectedRegistrationDiplomaDate: tempTrainee.registrationDiplomaDate
+        ? new Date(tempTrainee.registrationDiplomaDate)
+            .toISOString()
+            .split("T")[0]
         : "",
       profExperiencesArray: tempTrainee.ProfessionalExperiences || [],
     });
@@ -857,7 +861,7 @@ class ApplicantsList extends Component {
     //     tempTrainee &&
     //     tempTrainee.ProfessionalExperiences !== undefined &&
     //     tempTrainee.ProfessionalExperiences !== null
-    //       ? tempTrainee.ProfessionalExperiences
+    //  --      ? tempTrainee.ProfessionalExperiences
     //       : profExperiencesArray,
     // });
 
@@ -6614,7 +6618,7 @@ const mapDispatchToProps = dispatch => ({
   onUpdateTrainee: trainee => dispatch(updateTrainee(trainee)),
   onDeleteTrainee: trainee => dispatch(deleteTrainee(trainee)),
   onGetTraineesRegCertificates: () => dispatch(getRegisterCertificates()),
-  onGetTraineeById: tempTrainee => dispatch(getTraineeById(tempTrainee)),
+  onGetTraineeById: trainee => dispatch(getTraineeById(trainee)),
   onGetTraineesDocuments: years => dispatch(getTraineeDefaultRegReqDocs(years)),
   onAddNewProfessionalExperience: profExperience =>
     dispatch(addNewProfessionalExperience(profExperience)),
