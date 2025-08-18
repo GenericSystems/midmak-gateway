@@ -92,6 +92,9 @@ export * from "./academyBuildingStructure/actions";
 //contractsTypes
 export * from "./HR/contractsTypes/actions";
 
+//gradesVersions
+export * from "./gradesVersions/actions";
+
 //AbsenceWarnings
 export * from "./Rules-and-Regulations/Absence-warnings/actions";
 

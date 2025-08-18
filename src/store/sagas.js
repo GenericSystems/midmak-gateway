@@ -88,6 +88,8 @@ import academicLoadSaga from "./academicloads/saga";
 import certificateGradesSaga from "./certificateGrades/saga";
 import academyBuildingStructureSaga from "./academyBuildingStructure/saga";
 import contractsTypesSaga from "./HR/contractsTypes/saga";
+import gradesVersionsSaga from "./gradesVersions/saga";
+
 import ExamRoomsSaga from "./Exam/ExamRooms/saga";
 import employmentCasesSaga from "./HR/employmentCases/saga";
 import workClassificationsSaga from "./HR/workClassifications/saga";
@@ -243,5 +245,6 @@ export default function* rootSaga() {
     fork(HighStudyTypeSaga),
     fork(AbsenceWarningsSaga),
     fork(DocumentTypesSaga),
+    fork(gradesVersionsSaga),
   ]);
 }

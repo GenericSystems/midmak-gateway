@@ -992,6 +992,13 @@ export const ADD_NEW_CONTRACT_TYPE = "/add/contractType";
 export const UPDATE_CONTRACT_TYPE = "/update/contractType";
 export const DELETE_CONTRACT_TYPE = "/delete/contractType";
 
+//GRADES_VERSIONS
+export const GET_GRADES_VERSIONS = "/gradesVersions";
+export const GET_GRADE_VERSION_DELETED_VALUE = "/deleted";
+export const ADD_NEW_GRADE_VERSION= "/add/gradeVersion";
+export const UPDATE_GRADE_VERSION= "/update/gradeVersion";
+export const DELETE_GRADE_VERSION= "/delete/gradeVersion";
+
 // DOCUMENTS_TYPES
 export const GET_DOCUMENTS_TYPES = "/documentsTypes";
 export const GET_DOCUMENT_TYPE_DELETED_VALUE = "/deleted";

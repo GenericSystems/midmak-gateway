@@ -2008,6 +2008,28 @@ export const updateContractType = data => post(url.UPDATE_CONTRACT_TYPE, data);
 //delete contractType
 export const deleteContractType = data => post(url.DELETE_CONTRACT_TYPE, data);
 
+
+
+
+
+//GRADE_VERSION
+export const getGradesVersions = data => post(url.GET_GRADES_VERSIONS , data);
+
+// add
+export const addNewGradeVersion = data => post(url.ADD_NEW_GRADE_VERSION, data);
+
+//GRADE_VERSION
+export const getGradeVersionDeletedValue = () =>
+  get(url.GET_GRADE_VERSION_DELETED_VALUE);
+
+//update 
+export const updateGradeVersion= data => post(url.UPDATE_GRADE_VERSION, data);
+
+//delete 
+export const deleteGradeVersion= data => post(url.DELETE_GRADE_VERSION, data);
+
+
+
 //ABSENCE WARNINGS
 export const getAbsenceWarnings = data => post(url.GET_ABSENCE_WARNINGS, data);
 
