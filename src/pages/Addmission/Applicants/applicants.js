@@ -57,10 +57,12 @@ import {
   deleteTrainee,
   getTraineeById,
   generateTrainee,
-  getDefaultRegReqDocs,
-  getTraineeDeletedValue,
-  getTempRelativeDeletedValue,
   getRegisterCertificates,
+  getTraineeDefaultRegReqDocs,
+  updateProfessionalExperience,
+  addNewProfessionalExperience,
+  deleteProfessionalExperience,
+  addRequiredDocs,
 } from "store/new-Trainee/actions";
 
 // import { getFilteredFaculties } from "store/admissionConditions/actions";
@@ -123,6 +125,7 @@ class ApplicantsList extends Component {
       IsTransferTraineeCheck: false,
       transferUniName: "",
       selectedTransferUnivCountry: "",
+      selectedUnivCountry: "",
       selectedRegistrationDate: new Date().toISOString().split("T")[0],
       selectedNationalityId: 0,
       nationalityName: "",
@@ -130,14 +133,16 @@ class ApplicantsList extends Component {
       selectedCountry: "",
       selectedSemester: "",
       selectedGovernorate: "",
-      selectedCity: "",
-      selectedGender: "",
       genderName: "",
+      selectedSocialStatus: "",
       selectedBirthDate: "",
       selectedRegistrationDiplomaDate: "",
       selectedEmissionDate: "",
+      selectedIdentityIssueDate: "",
       selectedPassportGrantDate: "",
       selectedPassportExpirationDate: "",
+      selectedPassportIssueDate: "",
+      selectedPassportExpiryDate: "",
       selectedDiplomaDate: "",
       selectedDiplomaVerificationDate: "",
       values: "",
@@ -145,120 +150,58 @@ class ApplicantsList extends Component {
       lastNameError: false,
       fatherNameError: false,
       grandFatherNameError: false,
-      motherNameError: false,
-      birthLocError: false,
-      birthdateError: false,
-      nationalityError: false,
-      facultyError: false,
-      diplomaError: false,
-      averageError: false,
-      errorMessage: null,
-      successMessage: null,
-      averageValue: "",
-      showAlert: null,
-      HasBrotherCheck: false,
-      showGenerateButton: false,
-      totalGradeValue: "",
-      traineeGrade: "",
-      rows: [],
-      bloodTypeName: "",
-      examinationSessionError: false,
-      duplicateRelativeError: null,
-      lastUsedId: 0,
-      stdDocsArray: [],
-      showSiblingsSelect: false,
-      siblingsArray: [],
-      duplicateErrorSibling: null,
-      deleteBroModal: false,
-      showAddButton: false,
-      showDeleteButton: false,
-      showEditButton: false,
-      showSearchButton: false,
-      trainees: {},
-      trnProfExperiences: {},
-      trnProfExperience: "",
-      activeTab: 1,
-      activeTabVartical: 1,
-      passedSteps: [1],
-      passedStepsVertical: [1],
-      isOpen: false,
-      modal: false,
-      deleteModal: false,
-      averageValue: "",
-      selectedDiploma: "",
-      selecetdDiplomaId: "",
-      selectedFacultyId: 0,
-      selectedStudyPlanId: 0,
-      facultyName: "",
-      studyPlanName: "",
-      selectedStudyPattern: "",
-      selectedExaminationSession: "",
-      IsTransferTraineeCheck: false,
-      transferUniName: "",
-      selectedUnivCountry: "",
-      selectedRegistrationDate: new Date().toISOString().split("T")[0],
-      selectedNationalityId: 0,
-      nationalityName: "",
-      selectedCountry: "",
-      selectedSemester: "",
-      selectedGovernorate: "",
-      selectedSocialStatus: "",
-      selectedCity: "",
-      selectedGender: "",
-      genderName: "",
-      selectedBirthDate: "",
-      selectedRegistrationDiplomaDate: "",
-      selectedIdentityIssueDate: "",
-      selectedPassportIssueDate: "",
-      selectedPassportExpiryDate: "",
-      selectedDiplomaDate: "",
-      selectedDiplomaVerificationDate: "",
-      values: "",
-      plan_studyError: false,
-      lastNameError: false,
-      firstNameError: false,
-      fatherNameError: false,
       motherNameError: false,
       birthLocError: false,
       birthdateError: false,
       nationalityError: false,
       genderError: false,
       facultyError: false,
+      diplomaError: false,
+      diplomaIdError: false,
+      diplomaNumberError: false,
+      averageError: false,
+      stdTotalGradeError: false,
+      gradeError: false,
+      nationalNoError: false,
+      identityNoError: false,
+      examinationSessionError: false,
+      plan_studyError: false,
       errorMessage: null,
       errorMessage1: null,
       successMessage: null,
       successMessage1: null,
-      averageValue: "",
-      grandFatherNameError: false,
-      diplomaIdError: false,
+      showAlert: null,
       HasBrotherCheck: false,
-      duplicateError: null,
-      averageError: false,
-      diplomaNumberError: false,
-      selectedParentNationality: null,
-      lastUsedId: 0,
-      duplicateRelativeError: null,
-      grantCond: 0,
-      totalGradeValue: "",
-      studentGrade: "",
-      stdTotalGradeError: false,
       showGenerateButton: false,
+      totalGradeValue: "",
+      traineeGrade: "",
+      studentGrade: "",
       attestatedValue: 0,
+      rows: [],
+      bloodTypeName: "",
+      duplicateRelativeError: null,
+      duplicateError: null,
+      duplicateErrorSibling: null,
+      lastUsedId: 0,
       stdDocsArray: [],
+      profExperiencesArray: [],
+      trnProfExperiences: {},
+      trnProfExperience: "",
       showSiblingsSelect: false,
       siblingsArray: [],
-      profExperiencesArray: [],
-      duplicateErrorSibling: null,
-      gradeError: false,
+      deleteBroModal: false,
+      showAddButton: false,
+      showDeleteButton: false,
+      showEditButton: false,
+      showSearchButton: false,
+      trainees: {},
+      selectedParentNationality: null,
       selectedInstituteCountry: "",
       languageState: "",
       selectedHightStudyTypeId: "",
       selectedEstimateId: "",
       selectedRegUniDate: "",
-      nationalNoError: false,
-      identityNoError: false,
       selectedRowId: null,
-      showAlert: null,
       isTraineeSaved: false,
     };
 
@@ -279,6 +222,7 @@ class ApplicantsList extends Component {
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
       last_created_trainee,
       trainees,
@@ -309,6 +253,12 @@ class ApplicantsList extends Component {
       tempTraineeBrothers,
       user_menu,
       onGetTraineesRegCertificates,
+      trnProfExperiences,
+      traineesDocuments,
+      generated_student,
+      //onGetTempRelatives,
+      regcertificates,
+      i18n,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -316,8 +266,11 @@ class ApplicantsList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     this.getAllObject(this.props.user_menu, this.props.location.pathname);
     const { trainee } = this.state;
-    onGetTrainees();
+    onGetTrainees(lang);
     onGetTraineesRegCertificates();
+    this.setState({ trnProfExperiences });
+    this.setState({ traineesDocuments });
+    this.setState({ nationalities, regcertificates });
     this.setState({ last_created_trainee, diplomalevels });
     this.setState({ trainees });
     this.setState({ tempTrainee_regReqDocs });
@@ -343,6 +296,7 @@ class ApplicantsList extends Component {
     this.setState({ universityStudents, studentsOpt });
     this.setState({ grants });
     this.setState({ tempTraineeBrothers });
+
     let curentueardata = localStorage.getItem("authUser");
     if (curentueardata) {
       try {
@@ -363,9 +317,24 @@ class ApplicantsList extends Component {
         console.error("Error parsing authUser:", error);
       }
     }
+    this.setState({ languageState: lang });
 
+    i18n.on("languageChanged", this.handleLanguageChange);
     console.log(this.state.currentYearObj, "gggg");
   }
+  handleLanguageChange = lng => {
+    const {
+      onGetTrainees,
+      onGetTraineesRegCertificates,
+      onGetTraineesDocuments,
+    } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    if (lang != lng) {
+      this.setState({ languageState: lng });
+      onGetTrainees(lng);
+    }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -769,15 +738,30 @@ class ApplicantsList extends Component {
         traineeinfo["Average"] = averageValue;
       }
 
-      const response = onAddNewTrainee(traineeinfo);
-      if (response?.Id) {
-        this.setState({ traineeId: response.Id });
+      if (isEdit) {
+        traineeinfo["Id"] = tempStudent.Id;
+        const extractedArray = stdDocsArray.map(item => ({
+          regReqDocId: item.Id,
+          availableNumber: item.availableNumber,
+        }));
+        trnProfExperiences: [...trnProfExperiences, newExperience],
+          (traineeinfo["trnProfExperiences"] = trnProfExperiences);
+
+        traineeinfo["stdDocs"] = extractedArray;
+        onUpdateTrainee(traineeinfo);
+        const updateTraineMessage = this.props.t("Traine updated successfully");
+        this.setState({ successMessage: updateTraineMessage });
+      } else {
+        const response = onAddNewTrainee(traineeinfo);
+        if (response?.Id) {
+          this.setState({ traineeId: response.Id });
+        }
+        const saveTraineeMessage = this.props.t("Trainee saved successfully");
+        this.setState({
+          successMessage: saveTraineeMessage,
+          isTraineeSaved: true,
+        });
       }
-      const saveTraineeMessage = this.props.t("Trainee saved successfully");
-      this.setState({
-        successMessage: saveTraineeMessage,
-        isTraineeSaved: true,
-      });
     }
   };
   toggleDeleteModal = () => {
@@ -802,73 +786,96 @@ class ApplicantsList extends Component {
   };
 
   handleEditTrainee = arg => {
-    console.log(arg);
-    const {
-      tempTrainee,
-      onGetTraineeById,
-      diplomalevels,
-      trnProfExperiences,
-      currentSemester,
-    } = this.props;
+    const { tempTrainee, onGetTraineeById, diplomalevels } = this.props;
     const { stdDocsArray, profExperiencesArray } = this.state;
     const trainee = arg;
+
     onGetTraineeById(trainee);
+
+    console.log("tempTrainee", tempTrainee);
+
     this.setState({
-      trainee: arg,
       isEdit: true,
       showGenerateButton: true,
-      selectedBirthDate:
-        new Date(trainee.birthdate).toISOString().split("T")[0] || "",
-      nationalityName: trainee.Nationality || "",
+      trainee: trainee.Id,
+      nationalityName: trainee.nationality || "",
       selectedNationalityId: trainee.NationalityId || null,
+      selectedRegistrationDate:
+        new Date(trainee.RegistrationDate).toISOString().split("T")[0] || "",
       selectedGender: trainee.GenderId || null,
+      genderName: trainee.gender || "",
       selectedDiploma: trainee.diplomaId || null,
       averageValue: trainee.Average || null,
       selectedCountry: trainee.DiplomaCountryId || null,
       facultyName: trainee.Faculty || "",
-      studyPlanName: trainee.plan_study || "",
       selectedFacultyId: trainee.FacultyId || null,
+      studyPlanName: trainee.plan_study || "",
       selectedGovernorate: trainee.DiplomaGovernorateId || null,
       selectedExaminationSession: trainee.ExaminationSession || "",
       selectedregistrationCertLevelId: trainee.registrationCertLevelId || "",
       selectedSocialStatus: trainee.socialStatusId || "",
-      //   IsTransferTraineeCheck: trainee.IsTransferTrainee || null,
-      //   HasBrotherCheck: trainee.haveBrother || null,
-      //   selectedTransferUnivCountry: trainee.TransferUnivCountryId || null,
-      trainee: trainee.Id,
-      selectedRegistrationDiplomaDate:
-        new Date(trainee.registrationDiplomaDate).toISOString().split("T")[0] ||
-        "",
-      // stdDocsArray:
-      //   tempTrainee &&
-      //   tempTrainee.traineesDocuments !== undefined &&
-      //   tempTrainee.traineesDocuments !== null
-      //     ? tempTrainee.traineesDocuments
-      //     : stdDocsArray,
-      //   siblingsArray:
-      //     tempTrainee &&
-      //     tempTrainee.TempTraineeBrothers !== undefined &&
-      //     tempTrainee.TempTraineeBrothers !== null
-      //       ? tempTrainee.TempTraineeBrothers
-      //       : siblingsArray,
-      profExperiencesArray: trainee.professionalExperiences,
+      selectedRegistrationDiplomaDate: trainee.registrationDiplomaDate
+        ? new Date(trainee.registrationDiplomaDate).toISOString().split("T")[0]
+        : "",
+      profExperiencesArray: tempTrainee.ProfessionalExperiences || [],
     });
+
+    // this.setState({
+    //   // selectedBirthDate:
+    //   //   new Date(trainee.birthdate).toISOString().split("T")[0] || "",
+    //   nationalityName: trainee.Nationality || "",
+    //   selectedNationalityId: trainee.NationalityId || null,
+    //   selectedGender: trainee.GenderId || null,
+    //   selectedDiploma: trainee.diplomaId || null,
+    //   averageValue: trainee.Average || null,
+    //   selectedCountry: trainee.DiplomaCountryId || null,
+    //   facultyName: trainee.Faculty || "",
+    //   studyPlanName: trainee.plan_study || "",
+    //   selectedFacultyId: trainee.FacultyId || null,
+    //   selectedGovernorate: trainee.DiplomaGovernorateId || null,
+    //   selectedExaminationSession: trainee.ExaminationSession || "",
+    //   selectedregistrationCertLevelId: trainee.registrationCertLevelId || "",
+    //   selectedSocialStatus: trainee.socialStatusId || "",
+    //   //   IsTransferTraineeCheck: trainee.IsTransferTrainee || null,
+    //   //   HasBrotherCheck: trainee.haveBrother || null,
+    //   //   selectedTransferUnivCountry: trainee.TransferUnivCountryId || null,
+    //   trainee: trainee.Id,
+
+    //   // stdDocsArray:
+    //   //   tempTrainee &&
+    //   //   tempTrainee.traineesDocuments !== undefined &&
+    //   //   tempTrainee.traineesDocuments !== null
+    //   //     ? tempTrainee.traineesDocuments
+    //   //     : stdDocsArray,
+    //   //   siblingsArray:
+    //   //     tempTrainee &&
+    //   //     tempTrainee.TempTraineeBrothers !== undefined &&
+    //   //     tempTrainee.TempTraineeBrothers !== null
+    //   //       ? tempTrainee.TempTraineeBrothers
+    //   //       : siblingsArray,
+    //   profExperiencesArray:
+    //     tempTrainee &&
+    //     tempTrainee.ProfessionalExperiences !== undefined &&
+    //     tempTrainee.ProfessionalExperiences !== null
+    //       ? tempTrainee.ProfessionalExperiences
+    //       : profExperiencesArray,
+    // });
 
     // this.setState({
     //   showSiblingsSelect: trainee.haveBrother == 1 ? true : false,
     // });
 
-    if (trainee.diplomaId) {
-      const totalGrade = (
-        diplomalevels.find(
-          certificate => certificate.key === trainee.diplomaId
-        ) || ""
-      ).totalGrades;
+    // if (trainee.diplomaId) {
+    //   const totalGrade = (
+    //     diplomalevels.find(
+    //       certificate => certificate.key === trainee.diplomaId
+    //     ) || ""
+    //   ).totalGrades;
 
-      this.setState({
-        totalGradeValue: totalGrade,
-      });
-    }
+    //   this.setState({
+    //     totalGradeValue: totalGrade,
+    //   });
+    // }
 
     // const { onGetFilteredFaculties } = this.props;
     // onGetFilteredFaculties(obj);
@@ -1058,9 +1065,6 @@ class ApplicantsList extends Component {
   };
 
   handleRegReqDocDataChange = (rowId, fieldName, fieldValue) => {
-    console.log("rowId", rowId);
-    console.log("fieldName", fieldName);
-    console.log("fieldValue", fieldValue);
     this.setState(prevState => {
       const updatedRegReqDocs = prevState.stdDocsArray.map(document => {
         if (document.Id === rowId) {
@@ -1078,28 +1082,28 @@ class ApplicantsList extends Component {
     });
   };
 
-  handleIsSpecial = event => {
-    const { averageValue, selectedDiplomaId } = this.state;
-    const { currentSemester, onGetFilteredFaculties } = this.props;
-    const { name, checked } = event.target;
+  // handleIsSpecial = event => {
+  //   const { averageValue, selectedDiplomaId } = this.state;
+  //   const { currentSemester, onGetFilteredFaculties } = this.props;
+  //   const { name, checked } = event.target;
 
-    this.setState({
-      IsSpecial: checked,
-      grantCond: checked ? 1 : 0,
-    });
-    const grantValue = checked ? 1 : 0;
+  //   this.setState({
+  //     IsSpecial: checked,
+  //     grantCond: checked ? 1 : 0,
+  //   });
+  //   const grantValue = checked ? 1 : 0;
 
-    if (averageValue != "" && selectedDiplomaId != undefined) {
-      let obj = {
-        diplomaId: selectedDiplomaId,
-        Average: averageValue,
-        isGrantCond: grantValue,
-        YearId: currentSemester.cuYearId,
-      };
+  //   if (averageValue != "" && selectedDiplomaId != undefined) {
+  //     let obj = {
+  //       diplomaId: selectedDiplomaId,
+  //       Average: averageValue,
+  //       isGrantCond: grantValue,
+  //       YearId: currentSemester.cuYearId,
+  //     };
 
-      onGetFilteredFaculties(obj);
-    }
-  };
+  //     onGetFilteredFaculties(obj);
+  //   }
+  // };
 
   handleDataListChange = (event, fieldName) => {
     const { IsTransferTraineeCheck, HasBrotherCheck } = this.state;
@@ -1532,16 +1536,6 @@ class ApplicantsList extends Component {
     }
   };
 
-  handleCheckboxEdit = (Id, fieldName) => {
-    this.setState(prevState => ({
-      reqDocuments: prevState.reqDocuments.map(document =>
-        document.Id === Id
-          ? { ...document, [fieldName]: document[fieldName] ? 0 : 1 }
-          : document
-      ),
-    }));
-  };
-
   handelAddExperience = () => {
     const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
       this.props;
@@ -1729,24 +1723,6 @@ class ApplicantsList extends Component {
       this.setState({ siblingsArray: selectedMulti });
     }
     console.log("selectedMulti", selectedMulti);
-  };
-
-  handleRegReqDocDataChange = (rowId, fieldName, fieldValue) => {
-    this.setState(prevState => {
-      const updatedRegReqDocs = prevState.stdDocsArray.map(document => {
-        if (document.Id === rowId) {
-          return {
-            ...document,
-            [fieldName]: fieldValue,
-          };
-        }
-        return document;
-      });
-
-      return {
-        stdDocsArray: updatedRegReqDocs,
-      };
-    });
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
@@ -2175,7 +2151,7 @@ class ApplicantsList extends Component {
               );
             }}
             defaultValue={nationalities.find(
-              opt => opt.value == row.nationalityId
+              opt => opt.value == row.ationalityId
             )}
           />
         ),
@@ -6300,7 +6276,7 @@ class ApplicantsList extends Component {
                                                                       <BootstrapTable
                                                                         keyField="Id"
                                                                         data={
-                                                                          trnProfExperiences
+                                                                          profExperiencesArray
                                                                         }
                                                                         columns={
                                                                           trnProfExperienceColumns

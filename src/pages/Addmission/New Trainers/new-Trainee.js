@@ -154,7 +154,6 @@ class NewTrainee extends Component {
       showSiblingsSelect: false,
       siblingsArray: [],
       duplicateErrorSibling: null,
-      trnProfExperiences: [],
       gradeError: false,
       selectedInstituteCountry: "",
       languageState: "",

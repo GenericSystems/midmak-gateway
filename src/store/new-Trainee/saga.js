@@ -173,6 +173,7 @@ function* fetchTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getNationalities, get_nationality_opt);
+    console.log("responsenationality", response);
     yield put(getNationalitiesSuccess(response));
   } catch (error) {
     yield put(getNationalitiesFail(error));
