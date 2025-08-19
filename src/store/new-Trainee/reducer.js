@@ -31,6 +31,7 @@ import {
   GENERATE_TRAINEE_FAIL,
   GET_TRAINEE_BY_ID_SUCCESS,
   GET_TRAINEE_BY_ID_FAIL,
+  GET_TRAINEE_BY_ID,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -52,6 +53,11 @@ const INIT_STATE = {
 
 const trainees = (state = INIT_STATE, action) => {
   switch (action.type) {
+    case GET_TRAINEE_BY_ID:
+      return {
+        ...state,
+        isLoading: true,
+      };
     case GET_TRAINEES_SUCCESS:
       return {
         ...state,
@@ -252,12 +258,14 @@ const trainees = (state = INIT_STATE, action) => {
       return {
         ...state,
         tempTrainee: action.payload,
+        isLoading: false,
       };
 
     case GET_TRAINEE_BY_ID_FAIL:
       return {
         ...state,
         error: action.payload,
+        isLoading: false,
       };
 
     default:

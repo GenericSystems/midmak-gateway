@@ -473,6 +473,7 @@ function* fetchTraineeById(tempTrainee) {
     //     resp["ProfessionalExperiences"]
     //   );
     // });
+    response[0]["flag"] = 1;
     console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr", response);
     yield put(getTraineeByIdSuccess(response[0]));
   } catch (error) {
