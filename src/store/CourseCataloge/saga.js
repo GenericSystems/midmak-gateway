@@ -175,6 +175,7 @@ function* fetchCoursesCatalogs(selectedpayload) {
   payload["tablename"] = "_Common_CoursesCatalog";
   try {
     const response = yield call(getCoursesCatalogs, payload);
+    console.log("responseresponseresponse", response);
     yield put(getCoursesCatalogsSuccess(response));
   } catch (error) {
     yield put(getCoursesCatalogsFail(error));

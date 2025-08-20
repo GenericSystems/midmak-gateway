@@ -46,18 +46,12 @@ const INIT_STATE = {
   trnProfExperiences: [],
   requiredDocs: [],
   lastAddedId: 0,
-  isLoading: false,
   tempTrainee: {},
   generated_trainee: {},
 };
 
 const trainees = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_TRAINEE_BY_ID:
-      return {
-        ...state,
-        isLoading: true,
-      };
     case GET_TRAINEES_SUCCESS:
       return {
         ...state,
@@ -258,14 +252,12 @@ const trainees = (state = INIT_STATE, action) => {
       return {
         ...state,
         tempTrainee: action.payload,
-        isLoading: false,
       };
 
     case GET_TRAINEE_BY_ID_FAIL:
       return {
         ...state,
         error: action.payload,
-        isLoading: false,
       };
 
     default:

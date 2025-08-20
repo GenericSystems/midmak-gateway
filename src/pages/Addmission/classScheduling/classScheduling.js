@@ -179,6 +179,7 @@ class ClassSchedulingList extends Component {
     const {
       i18n,
       coursesOffering,
+      offeringCourses,
       returnMessage,
       sectionLabs,
       onGetCoursesOffering,
@@ -204,6 +205,7 @@ class ClassSchedulingList extends Component {
     this.setState({
       coursesOffering,
       allCoursesOffering,
+      offeringCourses,
       methodsOffering,
       deleted,
       sectionLabs,
@@ -1174,6 +1176,7 @@ class ClassSchedulingList extends Component {
     const { courseOffering } = this.state;
     const {
       coursesOffering,
+      offeringCourses,
       sectionLabs,
       sectionLabDetails,
       halls,
@@ -1593,7 +1596,7 @@ class ClassSchedulingList extends Component {
     };
     const pageOptions2 = {
       sizePerPage: 20,
-      totalSize: sectionLabs.length,
+      totalSize: offeringCourses.length,
       custom: true,
     };
     return (
@@ -3763,15 +3766,15 @@ class ClassSchedulingList extends Component {
                             />
                             <PaginationProvider
                               pagination={paginationFactory(pageOptions2)}
-                              keyField="id"
+                              keyField="Id"
                               columns={columns2}
-                              data={coursesOffering}
+                              data={offeringCourses}
                             >
                               {({ paginationProps, paginationTableProps }) => (
                                 <ToolkitProvider
-                                  keyField="id"
+                                  keyField="Id"
                                   columns={columns2}
-                                  data={coursesOffering}
+                                  data={offeringCourses}
                                   search
                                 >
                                   {toolkitprops => (
@@ -3799,7 +3802,7 @@ class ClassSchedulingList extends Component {
                                           {...toolkitprops.baseProps}
                                           {...paginationTableProps}
                                           keyField="Id"
-                                          data={coursesOffering}
+                                          data={offeringCourses}
                                           columns={columns2}
                                           cellEdit={cellEditFactory({
                                             mode: "click",
@@ -3848,6 +3851,7 @@ const mapStateToProps = ({
   menu_items,
 }) => ({
   coursesOffering: classScheduling.coursesOffering,
+  offeringCourses: classScheduling.offeringCourses,
   sectionLabDetails: classScheduling.sectionLabDetails,
   sectionLabs: classScheduling.sectionLabs,
   years: years.years,

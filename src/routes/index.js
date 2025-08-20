@@ -211,6 +211,9 @@ import EmploymentCasesList from "../pages/HR/employmentCases/employmentCases";
 //Work Classifications
 import WorkClassificationsList from "../pages/HR/workClassifications/workClassifications";
 
+//CoursesPassPercentsList
+import CoursesPassPercentsList from "../pages/ExamReports/CoursesPassPercents/coursesPassPercents";
+
 //Employees
 import EmployeesList from "../pages/HR/employees/employees";
 
@@ -384,6 +387,9 @@ const authProtectedRoutes = [
   // employees
 
   { path: "/employees", component: EmployeesList },
+  // CoursesPassPercentsList
+
+  { path: "/coursesPassPercents", component: CoursesPassPercentsList },
 
   // Grades
   { path: "/certificateGrades", component: CertificateGradesList },

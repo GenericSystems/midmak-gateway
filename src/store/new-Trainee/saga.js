@@ -283,6 +283,7 @@ function* fetchTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getHighStudyTypes, requestPayload);
+    console.log("Settings_HighStudyType", response);
     yield put(getHighStudyTypesSuccess(response));
   } catch (error) {
     yield put(getHighStudyTypesFail(error));
@@ -298,6 +299,7 @@ function* fetchTrainees(selectedpayload) {
 
   try {
     const response = yield call(getTrainees, get_trainees_req);
+    console.log("experresponse", response);
     yield put(getTraineesSuccess(response));
   } catch (error) {
     yield put(getTraineesFail(error));
@@ -457,13 +459,14 @@ function* onAddRequiredDocs({ payload }) {
 }
 
 function* fetchTraineeById(tempTrainee) {
-  console.log("tempTraineetempTraineetempTrainee", tempTrainee);
+  // console.log("tempTraineetempTraineetempTrainee", tempTrainee);
+  const tempTraineeId = tempTrainee.payload;
   const get_trainee_byId = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_TempTraineeDetails",
-    filter: `Id = ${tempTrainee.payload.Id}`,
+    tablename: "Common_ProfessionalExperiences",
+    filter: `Id = ${tempTraineeId}`,
   };
   try {
     const response = yield call(getTraineeById, get_trainee_byId);
@@ -473,7 +476,7 @@ function* fetchTraineeById(tempTrainee) {
     //     resp["ProfessionalExperiences"]
     //   );
     // });
-    response[0]["flag"] = 1;
+    // response[0]["flag"] = 1;
     console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr", response);
     yield put(getTraineeByIdSuccess(response[0]));
   } catch (error) {

@@ -61,6 +61,7 @@ const INIT_STATE = {
   classProfile: {},
   offeringLectures: [],
   coursesOffering: [],
+  offeringCourses: [],
   departments: [],
   scheduleTimings: [],
   scheduleTimingDescs: [],
@@ -90,7 +91,7 @@ const classScheduling = (state = INIT_STATE, action) => {
     case GET_COURSES_OFFERING_SUCCESS:
       return {
         ...state,
-        offeringLectures: action.payload,
+        offeringCourses: action.payload,
         coursesOffering: action.payload,
       };
     case GET_COURSES_OFFERING_FAIL:

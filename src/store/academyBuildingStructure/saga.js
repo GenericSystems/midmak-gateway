@@ -58,7 +58,7 @@ function* fetchAcademyBuildingStructure() {
 function* fetchHallTypes() {
   const get_hallTypes_req = {
     source: "db",
-    procedure: "Generic_getOptions",
+    procedure: "Settings_HallType",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_Gender",
     fields: "Id,arTitle",
