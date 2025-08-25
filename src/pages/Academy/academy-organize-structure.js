@@ -1477,7 +1477,7 @@ class AcademyTree extends Component {
                           htmlFor="DirectorateName"
                           className="col-form-label"
                         >
-                          {"Directorate Name"}:
+                          {t("Directorate Name(en)")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1794,7 +1794,7 @@ class AcademyTree extends Component {
                           htmlFor="DirectorateName"
                           className="col-form-label"
                         >
-                          {"Directorate Name"}:
+                          {t("Directorate Name(en)")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -2389,7 +2389,7 @@ class AcademyTree extends Component {
                           htmlFor="DirectorateName"
                           className="col-form-label"
                         >
-                          {"Directorate Name"}:
+                          {t("Directorate Name(en)")}:
                         </label>
                       </Col>
                       <Col md="4">
