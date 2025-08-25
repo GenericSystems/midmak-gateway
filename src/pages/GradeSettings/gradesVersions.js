@@ -287,13 +287,12 @@ class GradesVersionsList extends Component {
     }
   };
 
-  handleSelectRank= (rowId, fieldName, value) => {
-    this.setState((prevState) => {
-      const updatedRows = prevState.rows.map((row) =>
-        row.id === rowId ? { ...row, [fieldName]: value } : row
-      );
-      return { rows: updatedRows };
-    });
+  handleSelectRank = (rowId, fieldName, value) => {
+    const updatedItem = {
+      Id: rowId,
+      [fieldName]: value,
+    };
+    this.props.onUpdateVersGrade(updatedItem);
   };
 
   handleGradesVersionsDataChange = (rowId, fieldName, fieldValue) => {
@@ -544,13 +543,11 @@ class GradesVersionsList extends Component {
           <Select
             key={`rank_grade_${row.Id}`}
             options={gradeRanks}
-            // onChange={newValue => {
-            //   this.handleSelectRank(row.Id, "estimateId", newValue.value);
-            // }}
-            onChange={(e) =>
-                  handleSelectChange(row.id, "estimateId", e.target.value)
-                }
             value={gradeRanks.find(opt => opt.value == row.estimateId)}
+            onChange={selectedOption => {
+              const rankId = selectedOption?.value || "";
+              this.handleSelectRank(row.Id, "estimateId", rankId);
+            }}
           />
         ),
         editable: false,
