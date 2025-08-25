@@ -31,13 +31,15 @@ import {
   GENERATE_TRAINEE_FAIL,
   GET_TRAINEE_BY_ID_SUCCESS,
   GET_TRAINEE_BY_ID_FAIL,
-  GET_TRAINEE_BY_ID,
+  GET_TRAINEE_STATUS_SUCCESS,
+  GET_TRAINEE_STATUS_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   last_created_trainee: { Id: 0 },
   trainees: [],
   socialStatus: [],
+  traineeStatus: [],
   deleted: {},
   error: {},
   traineesDocuments: [],
@@ -255,6 +257,18 @@ const trainees = (state = INIT_STATE, action) => {
       };
 
     case GET_TRAINEE_BY_ID_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_TRAINEE_STATUS_SUCCESS:
+      return {
+        ...state,
+        traineeStatus: action.payload,
+      };
+
+    case GET_TRAINEE_STATUS_FAIL:
       return {
         ...state,
         error: action.payload,

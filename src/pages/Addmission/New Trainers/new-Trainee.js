@@ -165,6 +165,8 @@ class NewTrainee extends Component {
       selectedRowId: null,
       showAlert: null,
       isTraineeSaved: false,
+      lastUsedExperienceId: 0,
+      profExperiencesArray: [],
     };
     this.toggle = this.toggle.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
@@ -290,6 +292,7 @@ class NewTrainee extends Component {
     } = this.state;
     console.log("values in save", values);
     values["socialStatusId"] = selectedSocialStatus;
+    values["statusId"] = 1;
     if (
       values.FirstName === "" ||
       values.LastName === "" ||
@@ -753,47 +756,77 @@ class NewTrainee extends Component {
   handelAddExperience = () => {
     const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
       this.props;
-    const newExperience = {
-      traineeId: lastAddedId,
-      workType: "",
-      companyName: "",
-      workPlace: "",
-      workField: "",
-      duaration: "",
-    };
-    const emptyRowsExist = trnProfExperiences.some(
-      trnProfExperiences => trnProfExperiences.workType.trim() === ""
+    const {
+      profExperiencesArray,
+      lastUsedExperienceId,
+      isEdit,
+      selectedTraineeId,
+    } = this.state;
+    const emptyRowsExist = profExperiencesArray.some(
+      profExperiences => profExperiences.workType.trim() === ""
     );
     console.log("emptyRowsExist", emptyRowsExist);
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
       this.setState({ duplicateErrorProfExperiences: errorMessage });
     } else {
-      onAddNewProfessionalExperience(newExperience);
+      const newExperience = {
+        Id: lastUsedExperienceId,
+        traineeId: lastAddedId,
+        workType: "",
+        companyName: "",
+        workPlace: "",
+        workField: "",
+        duaration: "",
+      };
+      //onAddNewProfessionalExperience(newExperience);
       this.setState({
         duplicateErrorProfExperiences: null,
-        trnProfExperiences: [...trnProfExperiences, newExperience],
+        profExperiencesArray: [...profExperiencesArray, newExperience],
+        lastUsedExperienceId: lastUsedExperienceId + 1,
       });
     }
   };
 
-  handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
-    const { onUpdateProfessionalExperience, trnProfExperiences } = this.props;
-    const isDuplicate = trnProfExperiences.some(trnProfExperience => {
-      return (
-        trnProfExperience.Id !== rowId &&
-        trnProfExperience.workType.trim() === fieldValue.trim()
-      );
-    });
+  // handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
+  //   const { onUpdateProfessionalExperience, trnProfExperiences } = this.props;
+  //   const isDuplicate = trnProfExperiences.some(trnProfExperience => {
+  //     return (
+  //       trnProfExperience.Id !== rowId &&
+  //       trnProfExperience.workType.trim() === fieldValue.trim()
+  //     );
+  //   });
 
-    if (isDuplicate) {
-      const errorMessage = this.props.t("Value already exists");
-      this.setState({ duplicateErrorProfExperiences: errorMessage });
-    } else {
-      this.setState({ duplicateErrorProfExperiences: null });
-      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateProfessionalExperience(onUpdate);
-    }
+  //   if (isDuplicate) {
+  //     const errorMessage = this.props.t("Value already exists");
+  //     this.setState({ duplicateErrorProfExperiences: errorMessage });
+  //   } else {
+  //     this.setState({ duplicateErrorProfExperiences: null });
+  //     let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+  //     onUpdateProfessionalExperience(onUpdate);
+  //   }
+  // };
+
+  handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
+    const { isEdit } = this.state;
+    // if (isEdit == true) {
+    this.setState(prevState => {
+      const updatedProfExperience = prevState.profExperiencesArray.map(
+        exper => {
+          if (exper.Id === rowId) {
+            return {
+              ...exper,
+              [fieldName]: fieldValue,
+            };
+          }
+          return exper;
+        }
+      );
+
+      return {
+        profExperiencesArray: updatedProfExperience,
+      };
+    });
   };
 
   // handleAddRowRelative = () => {
@@ -1172,6 +1205,7 @@ class NewTrainee extends Component {
     const { stdDocsArray } = this.state;
     console.log("values in save", values);
     values["traineeId"] = lastAddedId;
+    values["isAdd"] = 1;
     console.log(lastAddedId);
     let traineeinfo = {};
     const extractedArray = stdDocsArray.map(item => ({
@@ -1181,8 +1215,31 @@ class NewTrainee extends Component {
     console.log("extractedArray", extractedArray);
     traineeinfo["stdDocs"] = extractedArray;
     traineeinfo["traineeId"] = lastAddedId;
+    traineeinfo["isAdd"] = 1;
     console.log("traineeinfo", traineeinfo);
     onAddRequiredDocs(traineeinfo);
+  };
+
+  handleExperienceSubmit = values => {
+    const { lastAddedId, onAddNewProfessionalExperience } = this.props;
+    const { profExperiencesArray, lastUsedExperienceId, isEdit } = this.state;
+    console.log("values in save", values);
+    values["traineeId"] = lastAddedId;
+    console.log(values["traineeId"]);
+    let traineeinfo = {};
+    const extractedArray = profExperiencesArray.map(item => ({
+      Id: item.Id,
+      workType: item.workType,
+      companyName: item.companyName,
+      workPlace: item.workPlace,
+      workField: item.workField,
+      duaration: item.duaration,
+    }));
+    console.log("extractedArray", extractedArray);
+    traineeinfo["ProfessionalExperiences"] = extractedArray;
+    traineeinfo["traineeId"] = lastAddedId;
+    console.log("traineeinfo", traineeinfo);
+    onAddNewProfessionalExperience(traineeinfo);
   };
 
   render() {
@@ -1193,6 +1250,7 @@ class NewTrainee extends Component {
     // const { trainees } = this.state
 
     const {
+      profExperiencesArray,
       duplicateError,
       duplicateErrorRelative,
       diplomaIdError,
@@ -5184,7 +5242,7 @@ class NewTrainee extends Component {
                                                           <BootstrapTable
                                                             keyField="Id"
                                                             data={
-                                                              trnProfExperiences
+                                                              profExperiencesArray
                                                             }
                                                             columns={
                                                               trnProfExperienceColumns
@@ -5271,6 +5329,36 @@ class NewTrainee extends Component {
                                                     }}
                                                   >
                                                     {this.props.t("Generate")}
+                                                  </Link>
+                                                </li>
+                                              )}
+
+                                              {!isEdit &&
+                                                this.state.activeTab === 4 && (
+                                                  <li>
+                                                    <Link
+                                                      to="#"
+                                                      onClick={() => {
+                                                        this.handleExperienceSubmit(
+                                                          values
+                                                        );
+                                                      }}
+                                                    >
+                                                      save
+                                                    </Link>
+                                                  </li>
+                                                )}
+                                              {isEdit && (
+                                                <li>
+                                                  <Link
+                                                    to="#"
+                                                    onClick={() => {
+                                                      this.handleExperienceSubmit(
+                                                        values
+                                                      );
+                                                    }}
+                                                  >
+                                                    save
                                                   </Link>
                                                 </li>
                                               )}
