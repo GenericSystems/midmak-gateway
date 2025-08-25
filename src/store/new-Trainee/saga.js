@@ -138,9 +138,8 @@ function* fetchTrainees(selectedpayload) {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "AdmissionSettings_RegisterUnderCertificates",
+    tablename: "Settings_DiplomaType",
     fields: `Id,${titleField}`,
-    filter: `checkLevel = 1`,
   };
 
   try {
