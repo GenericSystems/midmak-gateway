@@ -1138,12 +1138,12 @@ class ApplicantsList extends Component {
           activeTab: tab,
           passedSteps: modifiedSteps,
         });
-        if (isEdit) {
-          this.setState({
-            stdDocsArray: tTrainee.RegReqDocTempTrainee || [],
-            profExperiencesArray: tTrainee.ProfessionalExperiences || [],
-          });
-        }
+        //   if (isEdit) {
+        //     this.setState({
+        //       stdDocsArray: tTrainee.RegReqDocTempTrainee || [],
+        //       profExperiencesArray: tTrainee.ProfessionalExperiences || [],
+        //     });
+        //   }
       }
       if (tab == 4 && isEdit == false) {
         const { trnProfExperiences } = this.props;
@@ -1714,7 +1714,7 @@ class ApplicantsList extends Component {
         workField: "",
         duaration: "",
       };
-      onAddNewProfessionalExperience(newExperience);
+      // onAddNewProfessionalExperience(newExperience);
       this.setState({
         duplicateErrorProfExperiences: null,
         profExperiencesArray: [...profExperiencesArray, newExperience],
