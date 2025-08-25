@@ -3525,7 +3525,7 @@ class NewTrainee extends Component {
                                                                   className="form-label"
                                                                 >
                                                                   {this.props.t(
-                                                                    "Reg University Date"
+                                                                     "Diploma Date"
                                                                   )}
                                                                 </Label>
                                                               </Col>
