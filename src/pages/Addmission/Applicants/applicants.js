@@ -89,7 +89,7 @@ import {
   checkIsSearchForPage,
   getPageFromMenu,
 } from "../../../utils/menuUtils";
-import { ConsoleIcon } from "@icons/material";
+import { ChevronDoubleLeftIcon, ConsoleIcon } from "@icons/material";
 import { is } from "date-fns/locale";
 // import { departments } from "common/data";
 // import certificateLevel from "pages/Certificateslevels/certificate-level";
@@ -122,7 +122,7 @@ class ApplicantsList extends Component {
       facultyName: "",
       studyPlanName: "",
       socialStatusName: "",
-      selectedregistrationCertLevelId: "",
+      selectedRegistrationCertLevelId: "",
       selectedStudyPattern: "",
       selectedExaminationSession: "",
       IsTransferTraineeCheck: false,
@@ -289,7 +289,6 @@ class ApplicantsList extends Component {
     this.setState({ yearSemesters });
     this.setState({ currentSemester });
     this.setState({ cities });
-    this.setState({ diplomalevels });
     this.setState({ governorates });
     this.setState({ regReqDocuments });
     this.setState({ genders });
@@ -455,7 +454,7 @@ class ApplicantsList extends Component {
   //     selectedBirthDate,
   //     selectedRegistrationDiplomaDate,
   //     selectedNationalityId,
-  //     selectedregistrationCertLevelId,
+  //     selectedRegistrationCertLevelId,
   //     selectedFacultyId,
   //     selectedGender,
   //     selectedStudyPlanId,
@@ -482,7 +481,7 @@ class ApplicantsList extends Component {
   //     (values.NationalityId === "" && selectedNationalityId === "") ||
   //     (values.GenderId === "" && selectedGender === "") ||
   //     (values.registrationCertLevelId === "" &&
-  //       selectedregistrationCertLevelId === "")
+  //       selectedRegistrationCertLevelId === "")
   //   ) {
   //     if (values.FirstName.trim() === "") {
   //       this.setState({ firstNameError: true, saveError: true });
@@ -666,9 +665,9 @@ class ApplicantsList extends Component {
   //       traineeinfo["studyPattern"] = selectedStudyPattern;
   //     }
 
-  //     if (selectedregistrationCertLevelId) {
+  //     if (selectedRegistrationCertLevelId) {
   //       traineeinfo["registrationCertLevelId"] =
-  //         selectedregistrationCertLevelId;
+  //         selectedRegistrationCertLevelId;
   //     }
 
   //     if (selectedBirthDate != "") {
@@ -738,7 +737,7 @@ class ApplicantsList extends Component {
       selectedBirthDate,
       selectedRegistrationDiplomaDate,
       selectedNationalityId,
-      selectedregistrationCertLevelId,
+      selectedRegistrationCertLevelId,
       selectedFacultyId,
       selectedGender,
       selectedStudyPlanId,
@@ -768,7 +767,7 @@ class ApplicantsList extends Component {
       (values.NationalityId === "" && selectedNationalityId === "") ||
       (values.GenderId === "" && selectedGender === "") ||
       (values.registrationCertLevelId === "" &&
-        selectedregistrationCertLevelId === "")
+        selectedRegistrationCertLevelId === "")
     ) {
       if (values.FirstName.trim() === "") {
         this.setState({ firstNameError: true, saveError: true });
@@ -949,9 +948,9 @@ class ApplicantsList extends Component {
         traineeinfo["studyPattern"] = selectedStudyPattern;
       }
 
-      if (selectedregistrationCertLevelId) {
+      if (selectedRegistrationCertLevelId) {
         traineeinfo["registrationCertLevelId"] =
-          selectedregistrationCertLevelId;
+          selectedRegistrationCertLevelId;
       }
 
       if (selectedBirthDate != "") {
@@ -1006,6 +1005,10 @@ class ApplicantsList extends Component {
       } else if (isAdd) {
         onAddNewTrainee(traineeinfo);
       }
+      const saveTraineeMessage = this.props.t("Trainee saved successfully");
+      this.setState({
+        successMessage: saveTraineeMessage,
+      });
     }
   };
   toggleDeleteModal = () => {
@@ -1018,12 +1021,12 @@ class ApplicantsList extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
-  handleDeleteTrainee = () => {
-    const { onDeleteTrainee } = this.props;
+  handleDelete = () => {
+    const { onDeleteProfessionalExperience } = this.props;
     const { selectedRowId } = this.state;
     console.log("deeeeeeeeeeeelete222222222", selectedRowId);
     if (selectedRowId !== null) {
-      onDeleteTrainee({ Id: selectedRowId.Id });
+      onDeleteProfessionalExperience({ Id: selectedRowId.Id });
 
       this.setState({
         selectedRowId: null,
@@ -1069,7 +1072,7 @@ class ApplicantsList extends Component {
       studyPlanName: trainee.plan_study || "",
       selectedGovernorate: trainee.DiplomaGovernorateId || null,
       selectedExaminationSession: trainee.ExaminationSession || "",
-      selectedregistrationCertLevelId: trainee.registrationCertLevelId || "",
+      selectedRegistrationCertLevelId: trainee.registrationCertLevelId || "",
       // selectedSocialStatus: trainee.socialStatusId || "",
       socialStatusName: trainee.socialStatusName || null,
       selectedRegistrationDiplomaDate: trainee.registrationDiplomaDate || "",
@@ -1169,31 +1172,6 @@ class ApplicantsList extends Component {
       }
     }
   }
-
-  handleButtonClick = (fieldName, option) => {
-    console.log("fieldName", fieldName);
-    console.log("option", option);
-    const { onGetDefaultRegReqDocs, currentSemester } = this.props;
-    let obj = { yearId: currentSemester.cuYearId, certificateLevelId: option };
-    onGetDefaultRegReqDocs(obj);
-
-    if (fieldName == "ExaminationSession") {
-      this.setState({ selectedExaminationSession: option });
-    }
-    if (fieldName == "registrationCertLevelId") {
-      this.setState({ selectedregistrationCertLevelId: option });
-    }
-    if (fieldName == "studyPattern") {
-      this.setState({ selectedStudyPattern: option });
-    }
-    if (fieldName === "hasDisability") {
-      this.setState({ selectedHasDisability: option });
-    }
-
-    if (fieldName === "healthProblems") {
-      this.setState({ selectedHealthProblems: option });
-    }
-  };
 
   handleIsTransferTraineeChange = event => {
     const { name, checked } = event.target;
@@ -1691,20 +1669,18 @@ class ApplicantsList extends Component {
   };
 
   handleButtonClick = (fieldName, option) => {
-    let obj = { certificateLevelId: option };
-    onGetDefaultRegReqDocs(obj);
     if (fieldName == "ExaminationSession") {
       this.setState({ selectedExaminationSession: option });
-    }
-    if (fieldName == "registrationCertLevelId") {
-      this.setState({ selectedregistrationCertLevelId: option });
-    }
-    if (fieldName == "studyPattern") {
-      this.setState({ selectedStudyPattern: option });
     }
   };
 
   handleButtonClick2 = (fieldName, option, values) => {
+    console.log("fieldName", fieldName);
+    console.log("option", option);
+    const { onGetTraineesDocuments } = this.props;
+    let obj = { certificateLevelId: option };
+    console.log("objobjobj", obj);
+    onGetTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
       this.setState({ selectedregistrationCertLevelId: option });
       this.setState({ trainee: values });
@@ -1788,7 +1764,7 @@ class ApplicantsList extends Component {
   };
 
   handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
-    const { onGetTraineesDocuments } = this.props;
+    // const { onGetTraineesDocuments } = this.props;
     const { diplomalevels } = this.props;
     const selectedValue = event.target.value;
     console.log("selectedValue", selectedValue);
@@ -1801,9 +1777,9 @@ class ApplicantsList extends Component {
       certificate => certificate.value === event.target.value
     );
     console.log(diplomaObject, "ollllllll");
-    let obj = { certificateLevelId: diplomaObject.key };
-    console.log("objobjobj", obj);
-    onGetTraineesDocuments(obj);
+    // let obj = { certificateLevelId: diplomaObject.key };
+    // console.log("objobjobj", obj);
+    // onGetTraineesDocuments(obj);
     setFieldValue("diplomaId", selectedValue);
 
     if (diplomaObject) {
@@ -2005,6 +1981,10 @@ class ApplicantsList extends Component {
     traineeinfo["isAdd"] = 0;
     console.log("traineeinfo", traineeinfo);
     onAddRequiredDocs(traineeinfo);
+    // const saveDocsMessage = this.props.t("Documents requiered saved successfully");
+    //     this.setState({
+    //       successMessage: saveTraineeMessage,
+    //     });
   };
 
   // handleExperienceSubmit = values => {
@@ -2068,6 +2048,12 @@ class ApplicantsList extends Component {
     traineeinfo["traineeId"] = values.Id;
     console.log("traineeinfo", traineeinfo);
     onAddNewProfessionalExperience(traineeinfo);
+    const saveProfExperienceMessage = this.props.t(
+      "Professional Experience saved successfully"
+    );
+    this.setState({
+      successMessage1: saveProfExperienceMessage,
+    });
   };
 
   render() {
@@ -2081,7 +2067,7 @@ class ApplicantsList extends Component {
       selectedHealthProblems,
       selectedHasDisability,
       selectedRegistrationDate,
-      selectedregistrationCertLevelId,
+      selectedRegistrationCertLevelId,
       selectedStudyPattern,
       selectedExaminationSession,
       selectedBirthDate,
@@ -2121,6 +2107,8 @@ class ApplicantsList extends Component {
       averageError,
       errorMessage,
       successMessage,
+      errorMessage1,
+      successMessage1,
       averageValue,
       showAlert,
       grantCond,
@@ -2170,15 +2158,15 @@ class ApplicantsList extends Component {
     } = this.state;
 
     const showNewInput =
-      selectedregistrationCertLevelId === 1 ||
-      selectedregistrationCertLevelId === 2;
-    const isShowInstituteinfo = selectedregistrationCertLevelId === 2;
+      selectedRegistrationCertLevelId === 1 ||
+      selectedRegistrationCertLevelId === 2;
+    const isShowInstituteinfo = selectedRegistrationCertLevelId === 2;
 
-    const isShowUlterStudy = selectedregistrationCertLevelId === 5;
+    const isShowUlterStudy = selectedRegistrationCertLevelId === 5;
 
-    const isHightSchooll = selectedregistrationCertLevelId === 3;
+    const isHightSchooll = selectedRegistrationCertLevelId === 3;
 
-    const showUniForm = selectedregistrationCertLevelId === 79;
+    const showUniForm = selectedRegistrationCertLevelId === 79;
 
     const {
       traineeStatus,
@@ -2336,13 +2324,13 @@ class ApplicantsList extends Component {
             </Link>
             {/* )} */}
             {/* {menuObject && menuObject.isDelete == 1 && ( */}
-            <Link className="text-danger" to="#">
+            {/* <Link className="text-danger" to="#">
               <i
                 className="mdi mdi-delete font-size-18"
                 id="deletetooltip"
                 onClick={() => this.onClickDelete(trainee)}
               ></i>
-            </Link>
+            </Link> */}
             {/* )} */}
           </div>
         ),
@@ -2705,7 +2693,7 @@ class ApplicantsList extends Component {
             <i
               className="mdi mdi-delete font-size-18"
               id="deletetooltip"
-              onClick={() => this.onClickDelete1(trnProfExperience)}
+              onClick={() => this.onClickDelete(trnProfExperience)}
             ></i>
           </Link>
         ),
@@ -3096,7 +3084,7 @@ class ApplicantsList extends Component {
                                               registrationCertLevelId:
                                                 (tTrainee &&
                                                   tTrainee.registrationCertLevelId) ||
-                                                selectedregistrationCertLevelId,
+                                                selectedRegistrationCertLevelId,
                                               registrationDiplomaName:
                                                 (tTrainee &&
                                                   tTrainee.registrationDiplomaName) ||
@@ -4651,13 +4639,13 @@ class ApplicantsList extends Component {
                                                                                   type="button"
                                                                                   name="registrationCertLevelId"
                                                                                   value={
-                                                                                    selectedregistrationCertLevelId ==
+                                                                                    selectedRegistrationCertLevelId ==
                                                                                     level.arTitle //arcertificatelevel
                                                                                       ? "active"
                                                                                       : ""
                                                                                   }
                                                                                   className={`btn btn-outline-primary w-sm ${
-                                                                                    selectedregistrationCertLevelId ===
+                                                                                    selectedRegistrationCertLevelId ===
                                                                                     level.Id
                                                                                       ? "active"
                                                                                       : ""
@@ -6529,6 +6517,52 @@ class ApplicantsList extends Component {
                                                                                                           ></button>
                                                                                                         </Alert>
                                                                                                       )} */}
+                                                                      <Row>
+                                                                        <div>
+                                                                          {errorMessage1 && (
+                                                                            <Alert
+                                                                              color="danger"
+                                                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                              role="alert"
+                                                                            >
+                                                                              {
+                                                                                errorMessage1
+                                                                              }
+                                                                              <button
+                                                                                type="button"
+                                                                                className="btn-close"
+                                                                                aria-label="Close"
+                                                                                onClick={
+                                                                                  this
+                                                                                    .handleExpErrorClose
+                                                                                }
+                                                                              ></button>
+                                                                            </Alert>
+                                                                          )}
+                                                                        </div>
+                                                                        <div>
+                                                                          {successMessage1 && (
+                                                                            <Alert
+                                                                              color="success"
+                                                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                              role="alert"
+                                                                            >
+                                                                              {
+                                                                                successMessage1
+                                                                              }
+                                                                              <button
+                                                                                type="button"
+                                                                                className="btn-close"
+                                                                                aria-label="Close"
+                                                                                onClick={
+                                                                                  this
+                                                                                    .handleExpSuccessClose
+                                                                                }
+                                                                              ></button>
+                                                                            </Alert>
+                                                                          )}
+                                                                        </div>
+                                                                      </Row>
                                                                       <div>
                                                                         {duplicateErrorProfExperiences && (
                                                                           <Alert
@@ -6627,7 +6661,7 @@ class ApplicantsList extends Component {
                                                                         }
                                                                         onDeleteClick={
                                                                           this
-                                                                            .handleDeleteRow
+                                                                            .handleDelete
                                                                         }
                                                                         onCloseClick={() =>
                                                                           this.setState(
@@ -7023,7 +7057,7 @@ const mapDispatchToProps = dispatch => ({
   onDeleteTrainee: trainee => dispatch(deleteTrainee(trainee)),
   onGetTraineesRegCertificates: () => dispatch(getRegisterCertificates()),
   onGetTraineeById: trainee => dispatch(getTraineeById(trainee)),
-  onGetTraineesDocuments: years => dispatch(getTraineeDefaultRegReqDocs(years)),
+  onGetTraineesDocuments: obj => dispatch(getTraineeDefaultRegReqDocs(obj)),
   onAddNewProfessionalExperience: profExperience =>
     dispatch(addNewProfessionalExperience(profExperience)),
   onUpdateProfessionalExperience: profExperience =>

@@ -191,6 +191,7 @@ function* fetchTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getCountries, get_country_opt);
+    console.log("response country", response);
     yield put(getCountriesSuccess(response));
   } catch (error) {
     yield put(getCountriesFail(error));

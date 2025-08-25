@@ -449,13 +449,6 @@ class NewTrainee extends Component {
         traineeinfo["diplomaId"] = diplomaObject.key;
       }
 
-      // if (values.diplomaId) {
-      //   const diplomaObject = diplomalevels.find(
-      //     certificate => certificate.value === values.diplomaId
-      //   );
-      //   traineeinfo["diplomaId"] = diplomaObject.key;
-      // }
-
       if (values.DiplomaCountryId) {
         const countryObject = countries.find(
           country => country.value === values.DiplomaCountryId
@@ -668,6 +661,10 @@ class NewTrainee extends Component {
   };
 
   handleButtonClick2 = (fieldName, option, values) => {
+    const { onGetTraineesDocuments } = this.props;
+    let obj = { certificateLevelId: option };
+    console.log("objobjobj", obj);
+    onGetTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
       this.setState({ selectedregistrationCertLevelId: option });
       this.setState({ trainee: values });
@@ -901,9 +898,9 @@ class NewTrainee extends Component {
       certificate => certificate.value === event.target.value
     );
     console.log(diplomaObject, "ollllllll");
-    let obj = { certificateLevelId: diplomaObject.key };
-    console.log("objobjobj", obj);
-    onGetTraineesDocuments(obj);
+    // let obj = { certificateLevelId: diplomaObject.key };
+    // console.log("objobjobj", obj);
+    // onGetTraineesDocuments(obj);
     setFieldValue("diplomaId", selectedValue);
 
     if (diplomaObject) {
@@ -3525,7 +3522,7 @@ class NewTrainee extends Component {
                                                                   className="form-label"
                                                                 >
                                                                   {this.props.t(
-                                                                     "Diploma Date"
+                                                                    "Diploma Date"
                                                                   )}
                                                                 </Label>
                                                               </Col>
@@ -4270,14 +4267,22 @@ class NewTrainee extends Component {
                                                                   value={
                                                                     values.DiplomaCountryId
                                                                   }
+                                                                  // onChange={event => {
+                                                                  //   const selectedCountry =
+                                                                  //     event
+                                                                  //       .target
+                                                                  //       .value;
+                                                                  //   setFieldValue(
+                                                                  //     "DiplomaCountryId",
+                                                                  //     selectedCountry
+                                                                  //   );
+                                                                  // }}
                                                                   onChange={event => {
-                                                                    const selectedCountry =
-                                                                      event
-                                                                        .target
-                                                                        .value;
                                                                     setFieldValue(
                                                                       "DiplomaCountryId",
-                                                                      selectedCountry
+                                                                      event
+                                                                        .target
+                                                                        .value
                                                                     );
                                                                   }}
                                                                   onBlur={
