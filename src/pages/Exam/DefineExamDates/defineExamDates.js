@@ -1493,6 +1493,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getDefineExamDateDeletedValue()),
   onGetDefinePeriods: defineExamDateId =>
     dispatch(getDefinePeriods(defineExamDateId)),
+  
   onAddNewDefinePeriod: definePeriod =>
     dispatch(addNewDefinePeriod(definePeriod)),
   onUpdateDefinePeriod: definePeriod =>

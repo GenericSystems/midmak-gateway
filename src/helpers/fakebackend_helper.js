@@ -2024,6 +2024,45 @@ export const updateGradeVersion = data => post(url.UPDATE_GRADE_VERSION, data);
 //delete
 export const deleteGradeVersion = data => post(url.DELETE_GRADE_VERSION, data);
 
+
+// //Grade
+
+
+export const getVersGrades = data => post(url. GET_VERS_GRADES, data);
+
+// add
+export const addNewVersGrade = data => post(url.ADD_NEW_VERS_GRADE, data);
+
+//GRADE_VERSION
+export const getVersGradeDeletedValue = () =>
+  get(url.GET_VERS_GRADE_DELETED_VALUE);
+
+//update 
+export const updateVersGrade= data => post(url.UPDATE_VERS_GRADE, data);
+
+//delete 
+export const deleteVersGrade= data => post(url.DELETE_VERS_GRADE, data);
+//ranks
+export const  getRanks= data => post(url.GET_RANKS,data);
+//statuses
+export const getFinishStatus= data => post(url.GET_FINISH_STATUS,data);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //ABSENCE WARNINGS
 export const getAbsenceWarnings = data => post(url.GET_ABSENCE_WARNINGS, data);
 

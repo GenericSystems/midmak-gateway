@@ -999,6 +999,19 @@ export const ADD_NEW_GRADE_VERSION = "/add/gradeVersion";
 export const UPDATE_GRADE_VERSION = "/update/gradeVersion";
 export const DELETE_GRADE_VERSION = "/delete/gradeVersion";
 
+//ranks
+export const GET_RANKS = "/ranks";
+//finish status
+export const GET_FINISH_STATUS= "/finishStatus";
+
+//VERS_GRADES
+export const GET_VERS_GRADES = "/versGrades";
+export const GET_VERS_GRADE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_VERS_GRADE = "/add/versGrade";
+export const UPDATE_VERS_GRADE = "/update/versGrade";
+export const DELETE_VERS_GRADE = "/delete/versGrade";
+
+
 // DOCUMENTS_TYPES
 export const GET_DOCUMENTS_TYPES = "/documentsTypes";
 export const GET_DOCUMENT_TYPE_DELETED_VALUE = "/deleted";

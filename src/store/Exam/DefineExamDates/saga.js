@@ -196,7 +196,7 @@ function* onGetDefineExamDateDeletedValue() {
 
 function* fetchDefinePeriods(obj) {
   let ExamId = obj.payload;
-  console.log("objaaaaaaaaaaaaaaaaaaaaaaaaaaaa", obj);
+  console.log("objaaaaaaaaaaaaaaaaaaaaaaaa", obj);
   const get_definePeriods_req = {
     source: "db",
     procedure: "SisApp_getData",

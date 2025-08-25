@@ -54,6 +54,9 @@ import {
   GET_EMPLOYEES_NAMES,
   GET_EMPLOYEES_NAMES_SUCCESS,
   GET_EMPLOYEES_NAMES_FAIL,
+  GET_STATUSES_SUCCESS,
+  GET_STATUSES_FAIL
+
 } from "./actionTypes";
 
 export const getGendersch = () => ({
