@@ -449,13 +449,6 @@ class NewTrainee extends Component {
         traineeinfo["diplomaId"] = diplomaObject.key;
       }
 
-      // if (values.diplomaId) {
-      //   const diplomaObject = diplomalevels.find(
-      //     certificate => certificate.value === values.diplomaId
-      //   );
-      //   traineeinfo["diplomaId"] = diplomaObject.key;
-      // }
-
       if (values.DiplomaCountryId) {
         const countryObject = countries.find(
           country => country.value === values.DiplomaCountryId
@@ -908,7 +901,7 @@ class NewTrainee extends Component {
     // let obj = { certificateLevelId: diplomaObject.key };
     // console.log("objobjobj", obj);
     // onGetTraineesDocuments(obj);
-    // setFieldValue("diplomaId", selectedValue);
+    setFieldValue("diplomaId", selectedValue);
 
     if (diplomaObject) {
       this.setState({

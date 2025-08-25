@@ -289,7 +289,6 @@ class ApplicantsList extends Component {
     this.setState({ yearSemesters });
     this.setState({ currentSemester });
     this.setState({ cities });
-    this.setState({ diplomalevels });
     this.setState({ governorates });
     this.setState({ regReqDocuments });
     this.setState({ genders });
