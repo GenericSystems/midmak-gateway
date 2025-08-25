@@ -287,7 +287,7 @@ class GradesVersionsList extends Component {
     }
   };
 
-  handleSelectRank = (rowId, fieldName, value) => {
+  handleSelect = (rowId, fieldName, value) => {
     const updatedItem = {
       Id: rowId,
       [fieldName]: value,
@@ -417,6 +417,15 @@ class GradesVersionsList extends Component {
         dataField: "versionDate",
         text: this.props.t("Version Date"),
         sort: true,
+        formatter: cell => {
+          if (!cell) return "";
+          const date = new Date(cell);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`; // 2025-08-11
+        },
+
         editable: true,
         editorRenderer: (
           editorProps,
@@ -546,7 +555,7 @@ class GradesVersionsList extends Component {
             value={gradeRanks.find(opt => opt.value == row.estimateId)}
             onChange={selectedOption => {
               const rankId = selectedOption?.value || "";
-              this.handleSelectRank(row.Id, "estimateId", rankId);
+              this.handleSelect(row.Id, "estimateId", rankId);
             }}
           />
         ),
@@ -560,7 +569,7 @@ class GradesVersionsList extends Component {
             key={`status_grade_${row.Id}`}
             options={gradeStatus}
             onChange={newValue => {
-              this.handleSelectData(row.Id, "finishStatusId", newValue.value);
+              this.handleSelect(row.Id, "finishStatusId", newValue.value);
             }}
             value={gradeStatus.find(opt => opt.value == row.finishStatusId)}
           />

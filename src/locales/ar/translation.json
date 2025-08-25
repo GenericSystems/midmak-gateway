@@ -453,6 +453,22 @@
   "Prevent Registration":"يمنع التسجيل",
   "Prevent Graduation":"يمنع التخرج",
   "Hight School Diploma Info ":"معلومات الثانوية العامة",
-   "Nationality(ar)":"  الجنسيه (عربي)"
- 
+   "Nationality(ar)":"  الجنسيه (عربي)",
+   "Version Title (ar)":"عنوان الاصدار",
+   "Version Number":"رقم الاصدار" ,
+   "Version Date":"تاريخ الاصدار",
+   "From Year":"من سنة",
+   "To Year":"الى سنة",
+   "Minimum Pass Mark":"علامة النجاح الدنيا",
+   "Upload Experience Certificate File":"تحميل ملف شهادة الخبرة",
+   "From Percent":"من نسبة",
+   "To Percent":"الى نسبة",
+   "Points":"النقاط",
+   "Rank":"التقدير",
+   "Finish Status":"الحالة النهاية"
+
+
+
+
+
 }
