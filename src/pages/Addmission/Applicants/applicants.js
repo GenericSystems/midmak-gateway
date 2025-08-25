@@ -89,6 +89,8 @@ import {
   checkIsSearchForPage,
   getPageFromMenu,
 } from "../../../utils/menuUtils";
+import { ConsoleIcon } from "@icons/material";
+import { is } from "date-fns/locale";
 // import { departments } from "common/data";
 // import certificateLevel from "pages/Certificateslevels/certificate-level";
 class ApplicantsList extends Component {
@@ -187,6 +189,7 @@ class ApplicantsList extends Component {
       lastUsedId: 0,
       stdDocsArray: [],
       profExperiencesArray: [],
+      lastUsedExperienceId: 0,
       trnProfExperiences: {},
       trnProfExperience: "",
       showSiblingsSelect: false,
@@ -199,17 +202,20 @@ class ApplicantsList extends Component {
       trainees: {},
       selectedParentNationality: null,
       selectedInstituteCountry: "",
+      selectedTraineeStatus: "",
       languageState: "",
       selectedHightStudyTypeId: "",
       selectedEstimateId: "",
       selectedRegUniDate: "",
       selectedRowId: null,
       isTraineeSaved: false,
+      selectedTraineeId: 0,
+      isAdd: false,
     };
 
     this.handleEditTrainee = this.handleEditTrainee.bind(this);
     this.toggle = this.toggle.bind(this);
-    this.handleTraineeClicks = this.handleTraineeClicks.bind(this);
+    // this.handleTraineeClicks = this.handleTraineeClicks.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
     this.toggleTabVertical = this.toggleTabVertical.bind(this);
@@ -226,6 +232,7 @@ class ApplicantsList extends Component {
   componentDidMount() {
     const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      traineeStatus,
       last_created_trainee,
       trainees,
       tempTrainee_regReqDocs,
@@ -267,10 +274,9 @@ class ApplicantsList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     this.getAllObject(this.props.user_menu, this.props.location.pathname);
-    const { trainee } = this.state;
     onGetTrainees(lang);
     onGetTraineesRegCertificates();
-    this.setState({ trnProfExperiences });
+    this.setState({ trnProfExperiences, traineeStatus });
     this.setState({ traineesDocuments });
     this.setState({ nationalities, regcertificates });
     this.setState({ last_created_trainee, diplomalevels });
@@ -325,11 +331,7 @@ class ApplicantsList extends Component {
     console.log(this.state.currentYearObj, "gggg");
   }
   handleLanguageChange = lng => {
-    const {
-      onGetTrainees,
-      onGetTraineesRegCertificates,
-      onGetTraineesDocuments,
-    } = this.props;
+    const { onGetTrainees } = this.props;
     const lang = localStorage.getItem("I18N_LANGUAGE");
 
     if (lang != lng) {
@@ -410,44 +412,327 @@ class ApplicantsList extends Component {
     });
     // onGetTrainees();
   };
-  handleTraineeClicks = () => {
-    const { trainees } = this.props;
-    const emptyTrainee = {};
-    Object.keys(trainees).forEach(key => {
-      emptyTrainee[key] = "";
-    });
+  // handleTraineeClicks = () => {
+  //   const { trainees } = this.props;
+  //   const emptyTrainee = {};
+  //   Object.keys(trainees).forEach(key => {
+  //     emptyTrainee[key] = "";
+  //   });
 
-    const { currentSemester } = this.props;
+  //   const { currentSemester } = this.props;
 
-    const { selectedBirthDate } = this.state;
-    this.setState({
-      selectedNationalityId: "",
-      nationalityName: "",
-      selectedGender: "",
-      selectedDiploma: "",
-      averageValue: "",
-      selectedFacultyId: "",
-      facultyName: "",
-      socialStatusName: "",
-      selectedStudyPlanId: "",
-      studyPlanName: "",
-      selectedCountry: "",
-      selectedGovernorate: "",
-      selectedExaminationSession: "",
-      selectedBirthDate: "",
-      selectedRegistrationDiplomaDate: "",
-    });
+  //   const { selectedBirthDate } = this.state;
+  //   this.setState({
+  //     selectedNationalityId: "",
+  //     nationalityName: "",
+  //     selectedGender: "",
+  //     selectedDiploma: "",
+  //     averageValue: "",
+  //     selectedFacultyId: "",
+  //     facultyName: "",
+  //     socialStatusName: "",
+  //     selectedStudyPlanId: "",
+  //     studyPlanName: "",
+  //     selectedCountry: "",
+  //     selectedGovernorate: "",
+  //     selectedExaminationSession: "",
+  //     selectedBirthDate: "",
+  //     selectedRegistrationDiplomaDate: "",
+  //   });
 
-    this.setState({
-      emptyTrainee,
-      isEdit: false,
-      showGenerateButton: false,
-      errorMessage: null,
-      successMessage: null,
-    });
-    this.toggle();
-  };
+  //   this.setState({
+  //     emptyTrainee,
+  //     isEdit: false,
+  //     showGenerateButton: false,
+  //     errorMessage: null,
+  //     successMessage: null,
+  //   });
+  //   this.toggle();
+  // };
 
+  // handleSave = values => {
+  //   const {
+  //     selectedBirthDate,
+  //     selectedRegistrationDiplomaDate,
+  //     selectedNationalityId,
+  //     selectedregistrationCertLevelId,
+  //     selectedFacultyId,
+  //     selectedGender,
+  //     selectedStudyPlanId,
+  //     isEdit,
+  //     selectedExaminationSession,
+  //     selectedSocialStatus,
+  //     selectedDiplomaId,
+  //     selectedHightStudyTypeId,
+  //     selectedEstimateId,
+  //     selectedRegUniDate,
+  //   } = this.state;
+  //   console.log("values in save", values);
+  //   values["socialStatusId"] = selectedSocialStatus;
+  //   if (
+  //     values.FirstName === "" ||
+  //     values.LastName === "" ||
+  //     values.FatherName === "" ||
+  //     values.grandFatherName === "" ||
+  //     values.MotherName === "" ||
+  //     values.diplomaId === "" ||
+  //     values.BirthLocation === "" ||
+  //     values.birthdate === "" ||
+  //     // values.plan_study === "" ||
+  //     (values.NationalityId === "" && selectedNationalityId === "") ||
+  //     (values.GenderId === "" && selectedGender === "") ||
+  //     (values.registrationCertLevelId === "" &&
+  //       selectedregistrationCertLevelId === "")
+  //   ) {
+  //     if (values.FirstName.trim() === "") {
+  //       this.setState({ firstNameError: true, saveError: true });
+  //     }
+
+  //     if (values.LastName.trim() === "") {
+  //       this.setState({ lastNameError: true, saveError: true });
+  //     }
+
+  //     if (values.FatherName.trim() === "") {
+  //       this.setState({ fatherNameError: true, saveError: true });
+  //     }
+  //     if (values.diplomaId.trim() === "") {
+  //       this.setState({ diplomaIdError: true, saveError: true });
+  //     }
+
+  //     if (values.grandFatherName.trim() === "") {
+  //       this.setState({ grandFatherNameError: true, saveError: true });
+  //     }
+  //     if (values.MotherName.trim() === "") {
+  //       this.setState({ motherNameError: true, saveError: true });
+  //     }
+
+  //     if (values.BirthLocation.trim() === "") {
+  //       this.setState({ birthLocError: true, saveError: true });
+  //     }
+
+  //     // if (values.plan_study.trim() === "") {
+  //     //   this.setState({ plan_studyError: true, saveError: true });
+  //     // }
+
+  //     if (values.birthdate === "" && selectedBirthDate === "") {
+  //       this.setState({ birthdateError: true, saveError: true });
+  //     }
+
+  //     if (values.NationalityId === "" && selectedNationalityId === "") {
+  //       this.setState({ nationalityError: true, saveError: true });
+  //     }
+  //     if (values.GenderId === "" && selectedGender === "") {
+  //       this.setState({ genderError: true, saveError: true });
+  //     }
+
+  //     // if (values.FacultyId === "" && selectedFacultyId === "") {
+  //     //   this.setState({ facultyError: true, saveError: true });
+  //     // }
+
+  //     if (values.nationalNo === "") {
+  //       this.setState({ nationalNoError: true, saveError: true });
+  //     }
+  //     if (values.identityNo === "") {
+  //       this.setState({ identityNoError: true, saveError: true });
+  //     }
+  //     const errorSaveTraineeMessage = this.props.t(
+  //       "Fill the Required Fields to Save Trainee"
+  //     );
+  //     this.setState({ errorMessage: errorSaveTraineeMessage }, () => {
+  //       window.scrollTo(0, 0);
+  //     });
+  //   } else {
+  //     this.setState({ firstNameError: false, saveError: false });
+  //     this.setState({ lastNameError: false, saveError: false });
+  //     this.setState({ fatherNameError: false, saveError: false });
+  //     this.setState({ motherNameError: false, saveError: false });
+  //     this.setState({ birthLocError: false, saveError: false });
+  //     this.setState({ birthdateError: false, saveError: false });
+  //     this.setState({ nationalityError: false, saveError: false });
+  //     this.setState({ genderError: false, saveError: false });
+  //     // this.setState({ facultyError: false, saveError: false });
+  //     this.setState({ grandFatherNameError: false, saveError: false });
+  //     this.setState({ diplomaIdError: false, saveError: false });
+  //     this.setState({ stdTotalGradeError: false, saveError: false });
+  //     let traineeinfo = {};
+  //     Object.keys(values).forEach(function (key) {
+  //       if (
+  //         values[key] != undefined &&
+  //         (values[key].length > 0 || values[key] != "")
+  //       )
+  //         traineeinfo[key] = values[key];
+  //     });
+  //     const {
+  //       trainee,
+  //       selectedExaminationSession,
+  //       selectedStudyPattern,
+  //       selectedBirthDate,
+  //       selectedIdentityIssueDate,
+  //       selectedPassportIssueDate,
+  //       selectedPassportExpiryDate,
+  //       selectedDiplomaDate,
+  //       selectedDiplomaVerificationDate,
+  //       selectedRegistrationDate,
+  //       selectedGender,
+  //       selectedSocialStatus,
+  //       relativesArray,
+  //       averageValue,
+  //       stdDocsArray,
+  //       siblingsArray,
+  //       trnProfExperiences,
+  //       selectedDiplomaId,
+  //       isEdit,
+  //     } = this.state;
+
+  //     const { onUpdateTrainee, onAddNewTrainee, tTrainee } = this.props;
+  //     const {
+  //       cities,
+  //       countries,
+  //       diplomalevels,
+  //       currentSemester,
+  //       governorates,
+  //     } = this.props;
+
+  //     if (values.diplomaId) {
+  //       const diplomaObject = diplomalevels.find(
+  //         certificate => certificate.value === values.diplomaId
+  //       );
+  //       traineeinfo["diplomaId"] = diplomaObject.key;
+  //     }
+
+  //     // if (values.diplomaId) {
+  //     //   const diplomaObject = diplomalevels.find(
+  //     //     certificate => certificate.value === values.diplomaId
+  //     //   );
+  //     //   traineeinfo["diplomaId"] = diplomaObject.key;
+  //     // }
+
+  //     if (values.DiplomaCountryId) {
+  //       const countryObject = countries.find(
+  //         country => country.value === values.DiplomaCountryId
+  //       );
+  //       traineeinfo["DiplomaCountryId"] = countryObject.key;
+  //     }
+  //     console.log(
+  //       "DiplomaGovernorateIdDiplomaGovernorateId",
+  //       values.DiplomaGovernorateId
+  //     );
+  //     if (values.DiplomaGovernorateId) {
+  //       const governorateObject = governorates.find(
+  //         governorate => governorate.value === values.DiplomaGovernorateId
+  //       );
+  //       traineeinfo["DiplomaGovernorateId"] = governorateObject.key;
+  //     }
+
+  //     /*  if (values.DiplomaCityId) {
+  //       const cityObject = cities.find(
+  //         city => city.value === values.DiplomaCityId
+  //       );
+  //       traineeinfo["DiplomaCityId"] = cityObject.key;
+  //     } */
+
+  //     if (values.UnivCountryId) {
+  //       const univCountryObject = countries.find(
+  //         country => country.value === values.UnivCountryId
+  //       );
+  //       traineeinfo["UnivCountryId"] = univCountryObject.key;
+  //     }
+
+  //     if (values.InstituteCountryId) {
+  //       const InstirCountryObject = countries.find(
+  //         country => country.value === values.InstituteCountryId
+  //       );
+  //       traineeinfo["InstituteCountryId"] = InstirCountryObject.key;
+  //     }
+
+  //     if (selectedGender) {
+  //       traineeinfo["GenderId"] = parseInt(selectedGender);
+  //     }
+
+  //     if (selectedNationalityId) {
+  //       traineeinfo["NationalityId"] = selectedNationalityId;
+  //     } else {
+  //       traineeinfo["NationalityId"] = tTrainee.NationalityId;
+  //     }
+
+  //     if (selectedExaminationSession) {
+  //       traineeinfo["ExaminationSession"] = selectedExaminationSession;
+  //     }
+  //     if (selectedSocialStatus) {
+  //       traineeinfo["socialStatusId"] = selectedSocialStatus;
+  //     }
+
+  //     if (selectedStudyPattern) {
+  //       traineeinfo["studyPattern"] = selectedStudyPattern;
+  //     }
+
+  //     if (selectedregistrationCertLevelId) {
+  //       traineeinfo["registrationCertLevelId"] =
+  //         selectedregistrationCertLevelId;
+  //     }
+
+  //     if (selectedBirthDate != "") {
+  //       traineeinfo["birthdate"] = selectedBirthDate;
+  //     }
+
+  //     if (selectedIdentityIssueDate) {
+  //       traineeinfo["identityIssueDate"] = selectedIdentityIssueDate;
+  //     }
+
+  //     if (selectedPassportIssueDate) {
+  //       traineeinfo["passportIssueDate"] = selectedPassportIssueDate;
+  //     }
+
+  //     if (selectedPassportExpiryDate) {
+  //       traineeinfo["passportExpiryDate"] = selectedPassportExpiryDate;
+  //     }
+
+  //     if (selectedDiplomaDate) {
+  //       traineeinfo["diplomaDate"] = selectedDiplomaDate;
+  //     }
+
+  //     if (selectedDiplomaVerificationDate) {
+  //       traineeinfo["diplomaVerificationDate"] =
+  //         selectedDiplomaVerificationDate;
+  //     }
+
+  //     if (selectedRegistrationDate) {
+  //       traineeinfo["RegistrationDate"] = selectedRegistrationDate;
+  //     }
+
+  //     if (selectedRegistrationDiplomaDate != "") {
+  //       traineeinfo["registrationDiplomaDate"] =
+  //         selectedRegistrationDiplomaDate;
+  //     }
+
+  //     //hhhhh
+
+  //     if (selectedRegUniDate != "") {
+  //       traineeinfo["RegUniDate"] = selectedRegUniDate;
+  //     }
+
+  //     if (averageValue) {
+  //       traineeinfo["Average"] = averageValue;
+  //     }
+
+  //     if (isEdit) {
+  //       traineeinfo["Id"] = tTrainee.Id;
+  //       onUpdateTrainee(traineeinfo);
+  //       const updateTraineMessage = this.props.t("Traine updated successfully");
+  //       this.setState({ successMessage: updateTraineMessage });
+  //     } else {
+  //       const response = onAddNewTrainee(traineeinfo);
+  //       if (response?.Id) {
+  //         this.setState({ traineeId: response.Id });
+  //       }
+  //       const saveTraineeMessage = this.props.t("Trainee saved successfully");
+  //       this.setState({
+  //         successMessage: saveTraineeMessage,
+  //         isTraineeSaved: true,
+  //       });
+  //     }
+  //   }
+  // };
   handleSave = values => {
     const {
       selectedBirthDate,
@@ -464,9 +749,12 @@ class ApplicantsList extends Component {
       selectedHightStudyTypeId,
       selectedEstimateId,
       selectedRegUniDate,
+      selectedTraineeStatus,
     } = this.state;
     console.log("values in save", values);
     values["socialStatusId"] = selectedSocialStatus;
+    values.statusId = isEdit ? selectedTraineeStatus : 1;
+
     if (
       values.FirstName === "" ||
       values.LastName === "" ||
@@ -561,7 +849,7 @@ class ApplicantsList extends Component {
           traineeinfo[key] = values[key];
       });
       const {
-        trainee,
+        tTrainee,
         selectedExaminationSession,
         selectedStudyPattern,
         selectedBirthDate,
@@ -582,7 +870,7 @@ class ApplicantsList extends Component {
         isEdit,
       } = this.state;
 
-      const { onUpdateTrainee, onAddNewTrainee, tempTrainee } = this.props;
+      const { onUpdateTrainee, onAddNewTrainee } = this.props;
       const {
         cities,
         countries,
@@ -595,52 +883,51 @@ class ApplicantsList extends Component {
         const diplomaObject = diplomalevels.find(
           certificate => certificate.value === values.diplomaId
         );
-        traineeinfo["diplomaId"] = diplomaObject.key;
+        if (diplomaObject === undefined) {
+          traineeinfo["diplomaId"] = tTrainee.diplomaId;
+        }
       }
-
-      // if (values.diplomaId) {
-      //   const diplomaObject = diplomalevels.find(
-      //     certificate => certificate.value === values.diplomaId
-      //   );
-      //   traineeinfo["diplomaId"] = diplomaObject.key;
-      // }
 
       if (values.DiplomaCountryId) {
         const countryObject = countries.find(
           country => country.value === values.DiplomaCountryId
         );
-        traineeinfo["DiplomaCountryId"] = countryObject.key;
+        if (countryObject === undefined) {
+          traineeinfo["DiplomaCountryId"] = tTrainee.DiplomaCountryId;
+        }
       }
-      console.log(
-        "DiplomaGovernorateIdDiplomaGovernorateId",
-        values.DiplomaGovernorateId
-      );
+
       if (values.DiplomaGovernorateId) {
         const governorateObject = governorates.find(
           governorate => governorate.value === values.DiplomaGovernorateId
         );
-        traineeinfo["DiplomaGovernorateId"] = governorateObject.key;
+        if (governorateObject === undefined) {
+          traineeinfo["DiplomaGovernorateId"] = tTrainee.DiplomaGovernorateId;
+        }
       }
-
-      /*  if (values.DiplomaCityId) {
-        const cityObject = cities.find(
-          city => city.value === values.DiplomaCityId
-        );
-        traineeinfo["DiplomaCityId"] = cityObject.key;
-      } */
 
       if (values.UnivCountryId) {
         const univCountryObject = countries.find(
           country => country.value === values.UnivCountryId
         );
-        traineeinfo["UnivCountryId"] = univCountryObject.key;
+        if (univCountryObject === undefined) {
+          traineeinfo["UnivCountryId"] = tTrainee.UnivCountryId;
+        }
       }
 
       if (values.InstituteCountryId) {
-        const InstirCountryObject = countries.find(
+        const instCountryObject = countries.find(
           country => country.value === values.InstituteCountryId
         );
-        traineeinfo["InstituteCountryId"] = InstirCountryObject.key;
+        if (instCountryObject === undefined) {
+          traineeinfo["InstituteCountryId"] = tTrainee.InstituteCountryId;
+        }
+      }
+      if (values.birthdate) {
+        traineeinfo["birthdate"] =
+          values && values.birthdate
+            ? new Date(values.birthdate).toISOString().split("T")[0]
+            : selectedBirthDate;
       }
 
       if (selectedGender) {
@@ -648,13 +935,11 @@ class ApplicantsList extends Component {
       }
 
       if (selectedNationalityId) {
-        traineeinfo["NationalityId"] = selectedNationalityId;
-      } else {
-        traineeinfo["NationalityId"] = tempTrainee.NationalityId;
+        traineeinfo["NationalityId"] = tTrainee.NationalityId;
       }
 
       if (selectedExaminationSession) {
-        traineeinfo["ExaminationSession"] = selectedExaminationSession;
+        traineeinfo["ExaminationSession"] = tTrainee.ExaminationSession;
       }
       if (selectedSocialStatus) {
         traineeinfo["socialStatusId"] = selectedSocialStatus;
@@ -713,29 +998,13 @@ class ApplicantsList extends Component {
         traineeinfo["Average"] = averageValue;
       }
 
+      // traineeinfo["Id"] = values.Id;
+      // console.log("traineeinfotraineeinfo", traineeinfo["Id"]);
       if (isEdit) {
-        traineeinfo["Id"] = tempStudent.Id;
-        const extractedArray = stdDocsArray.map(item => ({
-          regReqDocId: item.Id,
-          availableNumber: item.availableNumber,
-        }));
-
-        traineeinfo["trnProfExperiences"] = trnProfExperiences;
-
-        traineeinfo["stdDocs"] = extractedArray;
+        console.log("rrrrrrrrrrrrrrr", traineeinfo);
         onUpdateTrainee(traineeinfo);
-        const updateTraineMessage = this.props.t("Traine updated successfully");
-        this.setState({ successMessage: updateTraineMessage });
-      } else {
-        const response = onAddNewTrainee(traineeinfo);
-        if (response?.Id) {
-          this.setState({ traineeId: response.Id });
-        }
-        const saveTraineeMessage = this.props.t("Trainee saved successfully");
-        this.setState({
-          successMessage: saveTraineeMessage,
-          isTraineeSaved: true,
-        });
+      } else if (isAdd) {
+        onAddNewTrainee(traineeinfo);
       }
     }
   };
@@ -745,45 +1014,50 @@ class ApplicantsList extends Component {
     }));
   };
 
-  onClickDelete = trainee => {
-    this.setState({ trainee: trainee });
-    this.setState({ deleteModal: true });
+  onClickDelete = rowId => {
+    this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
   handleDeleteTrainee = () => {
     const { onDeleteTrainee } = this.props;
-    const { trainee } = this.state;
-    if (trainee.Id !== undefined) {
-      let onDelete = { Id: trainee.Id };
-      onDeleteTrainee(onDelete);
-      this.setState({ deleteModal: false, showAlert: true });
+    const { selectedRowId } = this.state;
+    console.log("deeeeeeeeeeeelete222222222", selectedRowId);
+    if (selectedRowId !== null) {
+      onDeleteTrainee({ Id: selectedRowId.Id });
+
+      this.setState({
+        selectedRowId: null,
+        deleteModal: false,
+        showAlert: true,
+      });
     }
   };
 
   handleEditTrainee = arg => {
     console.log("arg", arg);
-    const {
-      trainees,
-      onGetTraineeById,
-      diplomalevels,
-      onGetTraineesDocuments,
-    } = this.props;
-    const { stdDocsArray, profExperiencesArray } = this.state;
+    // const {
+    //   trainees,
+    //   onGetTraineeById,
+    //   diplomalevels,
+    //   onGetTraineesDocuments,
+    // } = this.props;
+    // const { stdDocsArray, profExperiencesArray } = this.state;
     const trainee = arg;
-    const filteredTrainee = trainees.filter(trainee => trainee.key != arg.Id);
-    console.log("BEFORE trainee", trainee);
+    // const filteredTrainee = trainees.filter(trainee => trainee.key != arg.Id);
+    // console.log("BEFORE trainee", trainee);
     // console.log("BEFORE trainee", trainee);
     // onGetTraineeById(trainee);
     // console.log("aFTER Btrainee", tempTrainee.Id);
     // console.log("aFTER Btrainee", tempTrainee.ProfessionalExperiences);
     this.setState({
+      //   showGenerateButton: true,
+      //   // tTrainee: {
+      //   // Id: trainee.Id,
       tTrainee: trainee,
-      showGenerateButton: true,
-      filteredTrainee: filteredTrainee,
-      traineeId: trainee.Id,
+      selectedTraineeId: arg.Id,
       nationalityName: trainee.nationality || "",
       selectedNationalityId: trainee.NationalityId || null,
-      //selectedRegistrationDate: trainee.RegistrationDate || null,
+      //   //selectedRegistrationDate: trainee.RegistrationDate || null,
       selectedGender: trainee.GenderId || null,
       genderName: trainee.gender || "",
       selectedDiploma: trainee.diplomaId || null,
@@ -796,88 +1070,26 @@ class ApplicantsList extends Component {
       selectedGovernorate: trainee.DiplomaGovernorateId || null,
       selectedExaminationSession: trainee.ExaminationSession || "",
       selectedregistrationCertLevelId: trainee.registrationCertLevelId || "",
-      selectedSocialStatus: trainee.socialStatusId || "",
+      // selectedSocialStatus: trainee.socialStatusId || "",
       socialStatusName: trainee.socialStatusName || null,
       selectedRegistrationDiplomaDate: trainee.registrationDiplomaDate || "",
-
-      profExperiencesArray: trainee.ProfessionalExperiences || [],
-      stdDocsArray: trainee.RegReqDocTempTrainee || [],
-      // trainee &&
-      // trainee.RegReqDocTempTrainee !== undefined &&
-      // trainee.RegReqDocTempTrainee !== null
-      //  -- ? trainee.RegReqDocTempTrainee
-      //   : stdDocsArray,
+      //   // },
+      //   traineeId: trainee.Id,
+      profExperiencesArray:
+        trainee &&
+        trainee.ProfessionalExperiences !== undefined &&
+        trainee.ProfessionalExperiences !== null
+          ? trainee.ProfessionalExperiences
+          : [],
+      stdDocsArray:
+        trainee &&
+        trainee.RegReqDocTempTrainee !== undefined &&
+        trainee.RegReqDocTempTrainee !== null
+          ? trainee.RegReqDocTempTrainee
+          : [],
       isEdit: true,
     });
-    // const diplomaObject = diplomalevels.find(
-    //   certificate => certificate.value === event.target.value
-    // );
-    // console.log(diplomaObject, "ollllllll");
-    // let obj = { certificateLevelId: diplomaObject.key };
-    // onGetTraineesDocuments(obj);
-    // this.setState({
-    //   // selectedBirthDate:
-    //   //   new Date(trainee.birthdate).toISOString().split("T")[0] || "",
-    //   nationalityName: trainee.Nationality || "",
-    //   selectedNationalityId: trainee.NationalityId || null,
-    //   selectedGender: trainee.GenderId || null,
-    //   selectedDiploma: trainee.diplomaId || null,
-    //   averageValue: trainee.Average || null,
-    //   selectedCountry: trainee.DiplomaCountryId || null,
-    //   facultyName: trainee.Faculty || "",
-    //   studyPlanName: trainee.plan_study || "",
-    //   selectedFacultyId: trainee.FacultyId || null,
-    //   selectedGovernorate: trainee.DiplomaGovernorateId || null,
-    //   selectedExaminationSession: trainee.ExaminationSession || "",
-    //   selectedregistrationCertLevelId: trainee.registrationCertLevelId || "",
-    //   selectedSocialStatus: trainee.socialStatusId || "",
-    //   //   IsTransferTraineeCheck: trainee.IsTransferTrainee || null,
-    //   //   HasBrotherCheck: trainee.haveBrother || null,
-    //   //   selectedTransferUnivCountry: trainee.TransferUnivCountryId || null,
-    //   trainee: trainee.Id,
-
-    //   // stdDocsArray:
-    //   //   tempTrainee &&
-    //   //   tempTrainee.traineesDocuments !== undefined &&
-    //   //   tempTrainee.traineesDocuments !== null
-    //   //     ? tempTrainee.traineesDocuments
-    //   //     : stdDocsArray,
-    //   //   siblingsArray:
-    //   //     tempTrainee &&
-    //   //     tempTrainee.TempTraineeBrothers !== undefined &&
-    //   //     tempTrainee.TempTraineeBrothers !== null
-    //   //       ? tempTrainee.TempTraineeBrothers
-    //   //       : siblingsArray,
-    //   profExperiencesArray:
-    //     tempTrainee &&
-    //     tempTrainee.ProfessionalExperiences !== undefined &&
-    //     tempTrainee.ProfessionalExperiences !== null
-    //  --      ? tempTrainee.ProfessionalExperiences
-    //       : profExperiencesArray,
-    // });
-
-    // this.setState({
-    //   showSiblingsSelect: trainee.haveBrother == 1 ? true : false,
-    // });
-
-    // if (trainee.diplomaId) {
-    //   const totalGrade = (
-    //     diplomalevels.find(
-    //       certificate => certificate.key === trainee.diplomaId
-    //     ) || ""
-    //   ).totalGrades;
-
-    //   this.setState({
-    //     totalGradeValue: totalGrade,
-    //   });
-    // }
-
-    // const { onGetFilteredFaculties } = this.props;
-    // onGetFilteredFaculties(obj);
-
-    // const { onGetFilteredAcademicCertificates } = this.props;
-    // onGetFilteredAcademicCertificates(trainee.FacultyId);
-
+    // console.log("traaaaaaaaaaaineeeerrrrr", traineeId);
     this.toggle();
   };
 
@@ -1231,14 +1443,14 @@ class ApplicantsList extends Component {
     //   });
     // }
     if (fieldName == "NationalityId") {
-      const name = nationalities.find(
-        nationality => nationality.value === selectedValue
-      );
+      // const name = nationalities.find(
+      //   nationality => nationality.value === selectedValue
+      // );
       console.log("naaaaamenac", name);
 
       this.setState({
         selectedNationalityId: selectedValue,
-        nationalityName: name.label,
+        // nationalityName: name.label,
         trainee: values,
       });
     }
@@ -1260,7 +1472,7 @@ class ApplicantsList extends Component {
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
-    const { socialStatus } = this.props;
+    const { socialStatus, traineeStatus } = this.props;
     if (fieldName == "socialStatusId") {
       const name = socialStatus.find(
         socialStat => socialStat.value === selectedValue
@@ -1269,36 +1481,48 @@ class ApplicantsList extends Component {
 
       this.setState({
         selectedSocialStatus: selectedValue,
-        socialStatusName: name.Label,
+        socialStatusName: name.label,
+        trainee: values,
+      });
+    }
+    if (fieldName == "statusId") {
+      const name = traineeStatus.find(
+        traineeStatu => traineeStatu.value === selectedValue
+      );
+      console.log("naaaaamesooo", name);
+
+      this.setState({
+        selectedTraineeStatus: selectedValue,
+        socialStatusName: name.label,
         trainee: values,
       });
     }
   };
 
-  handleGenerateTrainee = traineeId => {
-    const { onGenerateTrainee, last_created_trainee } = this.props;
+  // handleGenerateTrainee = traineeId => {
+  //   const { onGenerateTrainee, last_created_trainee } = this.props;
 
-    const { isEdit } = this.state;
-    if (isEdit) {
-      onGenerateTrainee(traineeId);
-    } else if (!isEdit) {
-      onGenerateTrainee(last_created_trainee);
-    }
+  //   const { isEdit } = this.state;
+  //   if (isEdit) {
+  //     onGenerateTrainee(traineeId);
+  //   } else if (!isEdit) {
+  //     onGenerateTrainee(last_created_trainee);
+  //   }
 
-    this.setState({ generateModal: true });
-  };
+  //   this.setState({ generateModal: true });
+  // };
 
-  toggleGenerateModal = () => {
-    this.setState(prevState => ({
-      generate: !prevState.generate,
-    }));
-  };
+  // toggleGenerateModal = () => {
+  //   this.setState(prevState => ({
+  //     generate: !prevState.generate,
+  //   }));
+  // };
 
-  onCloseGenerateModal = () => {
-    const { onGetTrainees } = this.props;
-    this.setState({ generateModal: false });
-    onGetTrainees();
-  };
+  // onCloseGenerateModal = () => {
+  //   const { onGetTrainees } = this.props;
+  //   this.setState({ generateModal: false });
+  //   onGetTrainees();
+  // };
   handleSuccessClose = () => {
     this.setState({ successMessage: null });
   };
@@ -1314,15 +1538,17 @@ class ApplicantsList extends Component {
     this.setState({ errorMessage1: null, showAlert: null });
   };
   handleDeletedSuccessClose = () => {
-    const { onGetTraineeDeletedValue } = this.props;
-    this.setState({ showAlert: null });
-    onGetTraineeDeletedValue();
+    this.setState({ successMessage: null, showAlert: null });
+    // const { onGetTraineeDeletedValue } = this.props;
+    // this.setState({ showAlert: null });
+    // onGetTraineeDeletedValue();
   };
 
   handleDeletedErrorClose = () => {
-    const { onGetTraineeDeletedValue } = this.props;
-    this.setState({ showAlert: null });
-    onGetTraineeDeletedValue();
+    this.setState({ errorMessage: null, showAlert: null });
+    // const { onGetTraineeDeletedValue } = this.props;
+    // this.setState({ showAlert: null });
+    // onGetTraineeDeletedValue();
   };
 
   handleHasBrotherChange = event => {
@@ -1366,82 +1592,6 @@ class ApplicantsList extends Component {
     this.setState({ duplicateErrorRelative: null });
   };
 
-  handleAddRowRelative = () => {
-    const { relativesArray, lastUsedId, isEdit, trainee } = this.state;
-    const { tempRelatives } = this.props;
-    const emptyRowsExist = relativesArray.some(
-      relative => relative.arName.trim() === ""
-    );
-    if (emptyRowsExist) {
-      const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateErrorRelative: errorMessage });
-    } else {
-      const newRelative = {
-        Id: lastUsedId,
-        arName: "",
-        enName: "",
-        relativeId: null,
-        nationalityId: null,
-        phone: "",
-        cellular: "",
-      };
-      this.setState({
-        relativesArray: [...relativesArray, newRelative],
-        lastUsedId: lastUsedId + 1,
-      });
-      this.setState({ duplicateErrorRelative: null });
-    }
-  };
-
-  handleParentsDataChange = (id, fieldName, newValue) => {
-    const { isEdit } = this.state;
-    this.setState(prevState => {
-      const updatedRelatives = prevState.relativesArray.map(relative => {
-        if (relative.Id === id) {
-          return {
-            ...relative,
-            [fieldName]: newValue,
-          };
-        }
-        return relative;
-      });
-
-      return {
-        relativesArray: updatedRelatives,
-      };
-    });
-  };
-
-  handleSelectChangeDetails = (rowId, fieldName, selectedValue) => {
-    const { isEdit } = this.state;
-    this.setState(prevState => {
-      const updatedRelatives = prevState.relativesArray.map(relative => {
-        if (relative.Id === rowId) {
-          return {
-            ...relative,
-            [fieldName]: selectedValue,
-          };
-        }
-        return relative;
-      });
-
-      return {
-        relativesArray: updatedRelatives,
-      };
-    });
-  };
-
-  deleteRelative = relative => {
-    const { isEdit } = this.state;
-    this.setState(prevState => {
-      const updatedRelatives = prevState.relativesArray.filter(
-        item => item.Id !== relative.Id
-      );
-      return {
-        relativesArray: updatedRelatives,
-      };
-    });
-  };
   handleAlertCloseRelative = () => {
     this.setState({ duplicateErrorRelative: null });
   };
@@ -1469,50 +1619,50 @@ class ApplicantsList extends Component {
     }
   };
 
-  handleSelectBrother = (rowId, fieldName, selectedValue, oldValue) => {
-    const { studentsOpt, onUpdateBrother } = this.props;
-    const { siblingsArray } = this.state;
+  // handleSelectBrother = (rowId, fieldName, selectedValue, oldValue) => {
+  //   const { studentsOpt, onUpdateBrother } = this.props;
+  //   const { siblingsArray } = this.state;
 
-    const selectBro = studentsOpt.find(
-      traineeOpt => traineeOpt.value + " " + traineeOpt.key == oldValue
-    );
-    this.setState({ oldBrother: selectBro });
+  //   const selectBro = studentsOpt.find(
+  //     traineeOpt => traineeOpt.value + " " + traineeOpt.key == oldValue
+  //   );
+  //   this.setState({ oldBrother: selectBro });
 
-    const brotherObj = studentsOpt.find(
-      traineeOpt => traineeOpt.value + " " + traineeOpt.key === selectedValue
-    );
+  //   const brotherObj = studentsOpt.find(
+  //     traineeOpt => traineeOpt.value + " " + traineeOpt.key === selectedValue
+  //   );
 
-    if (brotherObj) {
-      this.setState({ oldBrother: {} });
-      const isDuplicate = siblingsArray.some(
-        traineeBrother =>
-          traineeBrother.Id !== rowId &&
-          traineeBrother.brotherSID === brotherObj.key
-      );
-      if (isDuplicate) {
-        const errorMessage = this.props.t("Sibling already exists");
-        this.setState({ duplicateErrorSibling: errorMessage });
-        console.error("value exist");
-      } else {
-        this.setState({ duplicateErrorSibling: null });
-        this.setState(prevState => {
-          const updatedSiblings = prevState.siblingsArray.map(sibling => {
-            if (sibling.Id === rowId) {
-              return {
-                ...sibling,
-                [fieldName]: brotherObj.key,
-              };
-            }
-            return sibling;
-          });
+  //   if (brotherObj) {
+  //     this.setState({ oldBrother: {} });
+  //     const isDuplicate = siblingsArray.some(
+  //       traineeBrother =>
+  //         traineeBrother.Id !== rowId &&
+  //         traineeBrother.brotherSID === brotherObj.key
+  //     );
+  //     if (isDuplicate) {
+  //       const errorMessage = this.props.t("Sibling already exists");
+  //       this.setState({ duplicateErrorSibling: errorMessage });
+  //       console.error("value exist");
+  //     } else {
+  //       this.setState({ duplicateErrorSibling: null });
+  //       this.setState(prevState => {
+  //         const updatedSiblings = prevState.siblingsArray.map(sibling => {
+  //           if (sibling.Id === rowId) {
+  //             return {
+  //               ...sibling,
+  //               [fieldName]: brotherObj.key,
+  //             };
+  //           }
+  //           return sibling;
+  //         });
 
-          return {
-            siblingsArray: updatedSiblings,
-          };
-        });
-      }
-    }
-  };
+  //         return {
+  //           siblingsArray: updatedSiblings,
+  //         };
+  //       });
+  //     }
+  //   }
+  // };
 
   handleAlertClose = () => {
     this.setState({ duplicateErrorSibling: null });
@@ -1564,68 +1714,77 @@ class ApplicantsList extends Component {
   handelAddExperience = () => {
     const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
       this.props;
-    const newExperience = {
-      traineeId: lastAddedId,
-      workType: "",
-      companyName: "",
-      workPlace: "",
-      workField: "",
-      duaration: "",
-    };
-    const emptyRowsExist = trnProfExperiences.some(
-      trnProfExperiences => trnProfExperiences.workType.trim() === ""
+    const {
+      profExperiencesArray,
+      lastUsedExperienceId,
+      isAdd,
+      selectedTraineeId,
+    } = this.state;
+    const emptyRowsExist = profExperiencesArray.some(
+      profExperiences => profExperiences.workType.trim() === ""
     );
     console.log("emptyRowsExist", emptyRowsExist);
+    console.log("selectedTraineeId", selectedTraineeId);
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
       this.setState({ duplicateErrorProfExperiences: errorMessage });
     } else {
+      const newExperience = {
+        Id: lastUsedExperienceId,
+        traineeId: isAdd ? lastAddedId : selectedTraineeId,
+        workType: "",
+        companyName: "",
+        workPlace: "",
+        workField: "",
+        duaration: "",
+      };
       onAddNewProfessionalExperience(newExperience);
       this.setState({
         duplicateErrorProfExperiences: null,
-        trnProfExperiences: [...trnProfExperiences, newExperience],
+        profExperiencesArray: [...profExperiencesArray, newExperience],
+        lastUsedExperienceId: lastUsedExperienceId + 1,
       });
     }
   };
 
   handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
     const { isEdit } = this.state;
-    if (isEdit == true) {
-      this.setState(prevState => {
-        const updatedProfExperience = prevState.profExperiencesArray.map(
-          exper => {
-            if (exper.Id === rowId) {
-              return {
-                ...exper,
-                [fieldName]: fieldValue,
-              };
-            }
-            return exper;
+    // if (isEdit == true) {
+    this.setState(prevState => {
+      const updatedProfExperience = prevState.profExperiencesArray.map(
+        exper => {
+          if (exper.Id === rowId) {
+            return {
+              ...exper,
+              [fieldName]: fieldValue,
+            };
           }
-        );
+          return exper;
+        }
+      );
 
-        return {
-          profExperiencesArray: updatedProfExperience,
-        };
-      });
-    } else {
-      const { onUpdateProfessionalExperience, trnProfExperiences } = this.props;
-      const isDuplicate = trnProfExperiences.some(trnProfExperience => {
-        return (
-          trnProfExperience.Id !== rowId &&
-          trnProfExperience.workType.trim() === fieldValue.trim()
-        );
-      });
+      return {
+        profExperiencesArray: updatedProfExperience,
+      };
+    });
+    // } else {
+    //   const { onUpdateProfessionalExperience, trnProfExperiences } = this.props;
+    //   const isDuplicate = trnProfExperiences.some(trnProfExperience => {
+    //     return (
+    //       trnProfExperience.Id !== rowId &&
+    //       trnProfExperience.workType.trim() === fieldValue.trim()
+    //     );
+    //   });
 
-      if (isDuplicate) {
-        const errorMessage = this.props.t("Value already exists");
-        this.setState({ duplicateErrorProfExperiences: errorMessage });
-      } else {
-        this.setState({ duplicateErrorProfExperiences: null });
-        let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-        onUpdateProfessionalExperience(onUpdate);
-      }
-    }
+    //   if (isDuplicate) {
+    //     const errorMessage = this.props.t("Value already exists");
+    //     this.setState({ duplicateErrorProfExperiences: errorMessage });
+    //   } else {
+    //     this.setState({ duplicateErrorProfExperiences: null });
+    //     let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+    //     onUpdateProfessionalExperience(onUpdate);
+    //   }
+    // }
   };
 
   handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
@@ -1782,37 +1941,133 @@ class ApplicantsList extends Component {
     }));
   };
 
-  handleDeleteRow = () => {
-    const { onDeleteProfessionalExperience } = this.props;
-    const { selectedRowId } = this.state;
-    console.log("ssssssssssssssssssssssselectedrow", selectedRowId);
-    if (selectedRowId !== null) {
-      onDeleteProfessionalExperience(selectedRowId);
+  // handleDeleteRow = () => {
+  //   const { onDeleteProfessionalExperience } = this.props;
+  //   const { selectedRowId } = this.state;
+  //   console.log("ssssssssssssssssssssssselectedrow", selectedRowId);
+  //   if (selectedRowId !== null) {
+  //     onDeleteProfessionalExperience(selectedRowId);
 
-      this.setState({
-        selectedRowId: null,
-        deleteModal: false,
-        showAlert: true,
-      });
-    }
+  //     this.setState({
+  //       selectedRowId: null,
+  //       deleteModal: false,
+  //       showAlert: true,
+  //     });
+  //   }
+  // };
+
+  deleteProfExperience = profExperience => {
+    const { isEdit } = this.state;
+    this.setState(prevState => {
+      const updatedProfExperiences = prevState.profExperiencesArray.filter(
+        item => item.Id !== profExperience.Id
+      );
+      return {
+        profExperiencesArray: updatedProfExperiences,
+      };
+    });
   };
 
+  // handleSubmit = values => {
+  //   const { lastAddedId, onAddRequiredDocs } = this.props;
+  //   const { stdDocsArray } = this.state;
+  //   console.log("values in save", values);
+  //   values["traineeId"] = lastAddedId;
+  //   console.log(lastAddedId);
+  //   let traineeinfo = {};
+  //   const extractedArray = stdDocsArray.map(item => ({
+  //     regReqDocId: item.Id,
+  //     availableNumber: item.availableNumber,
+  //   }));
+  //   console.log("extractedArray", extractedArray);
+  //   traineeinfo["stdDocs"] = extractedArray;
+  //   traineeinfo["traineeId"] = lastAddedId;
+  //   console.log("traineeinfo", traineeinfo);
+  //   onAddRequiredDocs(traineeinfo);
+  // };
+
   handleSubmit = values => {
-    const { lastAddedId, onAddRequiredDocs } = this.props;
+    const { onAddRequiredDocs } = this.props;
     const { stdDocsArray } = this.state;
     console.log("values in save", values);
-    values["traineeId"] = lastAddedId;
-    console.log(lastAddedId);
+    values["traineeId"] = values.Id;
+    values["isAdd"] = 0;
+    console.log(values["traineeId"]);
     let traineeinfo = {};
     const extractedArray = stdDocsArray.map(item => ({
-      regReqDocId: item.Id,
+      Id: item.Id,
+      regReqDocId: item.regReqDocId,
       availableNumber: item.availableNumber,
     }));
     console.log("extractedArray", extractedArray);
     traineeinfo["stdDocs"] = extractedArray;
-    traineeinfo["traineeId"] = lastAddedId;
+    traineeinfo["traineeId"] = values.Id;
+    traineeinfo["isAdd"] = 0;
     console.log("traineeinfo", traineeinfo);
     onAddRequiredDocs(traineeinfo);
+  };
+
+  // handleExperienceSubmit = values => {
+  //   const { lastAddedId, onAddNewProfessionalExperience } = this.props;
+  //   const { profExperiencesArray, isEdit } = this.state;
+  //   console.log("values in save", values);
+  //   if (isEdit) {
+  //     values["traineeId"] = values.Id;
+  //     console.log(values["traineeId"]);
+  //     let traineeinfo = {};
+  //     const extractedArray = profExperiencesArray.map(item => ({
+  //       Id: item.Id,
+  //       workType: item.workType,
+  //       companyName: item.companyName,
+  //       workPlace: item.workPlace,
+  //       workField: item.workField,
+  //       duaration: item.duaration,
+  //     }));
+  //     console.log("extractedArray", extractedArray);
+  //     traineeinfo["ProfessionalExperiences"] = extractedArray;
+  //     traineeinfo["traineeId"] = values.Id;
+  //     console.log("traineeinfo", traineeinfo);
+  //     onAddNewProfessionalExperience(traineeinfo);
+  //   } else {
+  //     values["traineeId"] = lastAddedId;
+  //     console.log(values["traineeId"]);
+  //     let traineeinfo = {};
+  //     const extractedArray = profExperiencesArray.map(item => ({
+  //       Id: item.Id,
+  //       workType: item.workType,
+  //       companyName: item.companyName,
+  //       workPlace: item.workPlace,
+  //       workField: item.workField,
+  //       duaration: item.duaration,
+  //     }));
+  //     console.log("extractedArray", extractedArray);
+  //     traineeinfo["ProfessionalExperiences"] = extractedArray;
+  //     traineeinfo["traineeId"] = lastAddedId;
+  //     console.log("traineeinfo", traineeinfo);
+  //     onAddNewProfessionalExperience(traineeinfo);
+  //   }
+  // };
+
+  handleExperienceSubmit = values => {
+    const { lastAddedId, onAddNewProfessionalExperience } = this.props;
+    const { profExperiencesArray, lastUsedExperienceId, isEdit } = this.state;
+    console.log("values in save", values);
+    values["traineeId"] = values.Id;
+    console.log(values["traineeId"]);
+    let traineeinfo = {};
+    const extractedArray = profExperiencesArray.map(item => ({
+      Id: item.Id,
+      workType: item.workType,
+      companyName: item.companyName,
+      workPlace: item.workPlace,
+      workField: item.workField,
+      duaration: item.duaration,
+    }));
+    console.log("extractedArray", extractedArray);
+    traineeinfo["ProfessionalExperiences"] = extractedArray;
+    traineeinfo["traineeId"] = values.Id;
+    console.log("traineeinfo", traineeinfo);
+    onAddNewProfessionalExperience(traineeinfo);
   };
 
   render() {
@@ -1926,6 +2181,7 @@ class ApplicantsList extends Component {
     const showUniForm = selectedregistrationCertLevelId === 79;
 
     const {
+      traineeStatus,
       isLoading,
       years,
       tempRelatives,
@@ -2047,7 +2303,7 @@ class ApplicantsList extends Component {
         }),
       },
       {
-        dataField: "traineeStatus",
+        dataField: "statusId",
         text: this.props.t("Trainee Status"),
         sort: true,
         filter: textFilter({
@@ -2079,15 +2335,15 @@ class ApplicantsList extends Component {
               ></i>
             </Link>
             {/* )} */}
-            {menuObject && menuObject.isDelete == 1 && (
-              <Link className="text-danger" to="#">
-                <i
-                  className="mdi mdi-delete font-size-18"
-                  id="deletetooltip"
-                  onClick={() => this.onClickDelete(trainee)}
-                ></i>
-              </Link>
-            )}
+            {/* {menuObject && menuObject.isDelete == 1 && ( */}
+            <Link className="text-danger" to="#">
+              <i
+                className="mdi mdi-delete font-size-18"
+                id="deletetooltip"
+                onClick={() => this.onClickDelete(trainee)}
+              ></i>
+            </Link>
+            {/* )} */}
           </div>
         ),
       },
@@ -2449,7 +2705,7 @@ class ApplicantsList extends Component {
             <i
               className="mdi mdi-delete font-size-18"
               id="deletetooltip"
-              onClick={() => this.onClickDelete(trnProfExperience)}
+              onClick={() => this.onClickDelete1(trnProfExperience)}
             ></i>
           </Link>
         ),
@@ -2516,7 +2772,7 @@ class ApplicantsList extends Component {
                                 </Col>
                                 <Col sm="4"></Col>
 
-                                {/* {menuObject && menuObject.isAdd == 1 && ( */}
+                                {/* {menuObject && menuObject.isAdd == 1 && ( 
                                 <Col sm="1">
                                   <div className="text-sm-end">
                                     <Tooltip
@@ -2532,7 +2788,7 @@ class ApplicantsList extends Component {
                                     </Tooltip>
                                   </div>
                                 </Col>
-                                {/* )} */}
+                                 )} */}
                               </Row>
                               <Row>
                                 <div>
@@ -2835,9 +3091,8 @@ class ApplicantsList extends Component {
                                                   tTrainee.diplomaVerificationDate) ||
                                                 selectedDiplomaVerificationDate,
                                               socialStatusId:
-                                                (tTrainee &&
-                                                  tTrainee.socialStatusId) ||
-                                                selectedSocialStatus,
+                                                tTrainee &&
+                                                tTrainee.socialStatusId,
                                               registrationCertLevelId:
                                                 (tTrainee &&
                                                   tTrainee.registrationCertLevelId) ||
@@ -2953,6 +3208,8 @@ class ApplicantsList extends Component {
                                                 (tTrainee &&
                                                   tTrainee.RegUniDate) ||
                                                 selectedRegUniDate,
+                                              statusId:
+                                                tTrainee && tTrainee.statusId,
                                             }) ||
                                             (!isEdit && {
                                               FirstName:
@@ -3983,7 +4240,7 @@ class ApplicantsList extends Component {
                                                                                       defaultValue={socialStatus.find(
                                                                                         opt =>
                                                                                           opt.value ===
-                                                                                          trainee?.socialStatusId
+                                                                                          tTrainee?.socialStatusId
                                                                                       )}
                                                                                     />
                                                                                   </Col>
@@ -5787,42 +6044,81 @@ class ApplicantsList extends Component {
                                                                         </Row>
                                                                       </div>
                                                                     </Col>
+                                                                    <Col lg="4">
+                                                                      <div className="mb-3">
+                                                                        <Row>
+                                                                          <Col lg="4">
+                                                                            <Label
+                                                                              for="traineeStatus-Id"
+                                                                              className="form-label d-flex"
+                                                                            >
+                                                                              {this.props.t(
+                                                                                "Trainee Status"
+                                                                              )}
+                                                                            </Label>
+                                                                          </Col>
+                                                                          <Col className="col-8">
+                                                                            <Select
+                                                                              id="traineeStatus-Id"
+                                                                              name="statusId"
+                                                                              options={
+                                                                                traineeStatus
+                                                                              }
+                                                                              className={
+                                                                                "form-control"
+                                                                              }
+                                                                              onChange={newValue =>
+                                                                                this.handleSelect(
+                                                                                  "statusId",
+                                                                                  newValue.value,
+                                                                                  values
+                                                                                )
+                                                                              }
+                                                                              defaultValue={traineeStatus.find(
+                                                                                opt =>
+                                                                                  opt.value ===
+                                                                                  tTrainee?.statusId
+                                                                              )}
+                                                                            />
+                                                                          </Col>
+                                                                        </Row>
+                                                                      </div>
+                                                                    </Col>
+                                                                  </Row>
+                                                                  <Row>
+                                                                    {showSiblingsSelect && (
+                                                                      <Col lg="4">
+                                                                        <div className="mb-3">
+                                                                          <Row>
+                                                                            <Col className="col-4"></Col>
+                                                                            <Col className="col-8">
+                                                                              <Select
+                                                                                value={
+                                                                                  siblingsArray
+                                                                                }
+                                                                                name="tempSiblings"
+                                                                                isMulti={
+                                                                                  true
+                                                                                }
+                                                                                onChange={selectedOption =>
+                                                                                  this.handleMulti(
+                                                                                    "tempSiblings",
+                                                                                    selectedOption
+                                                                                  )
+                                                                                }
+                                                                                options={
+                                                                                  universityStudents
+                                                                                }
+                                                                                classNamePrefix="select2-selection"
+                                                                              />
+                                                                            </Col>
+                                                                          </Row>
+                                                                        </div>
+                                                                      </Col>
+                                                                    )}
                                                                   </Row>
                                                                 </CardBody>
                                                               </Card>
-
-                                                              <Row>
-                                                                {showSiblingsSelect && (
-                                                                  <Col lg="4">
-                                                                    <div className="mb-3">
-                                                                      <Row>
-                                                                        <Col className="col-4"></Col>
-                                                                        <Col className="col-8">
-                                                                          <Select
-                                                                            value={
-                                                                              siblingsArray
-                                                                            }
-                                                                            name="tempSiblings"
-                                                                            isMulti={
-                                                                              true
-                                                                            }
-                                                                            onChange={selectedOption =>
-                                                                              this.handleMulti(
-                                                                                "tempSiblings",
-                                                                                selectedOption
-                                                                              )
-                                                                            }
-                                                                            options={
-                                                                              universityStudents
-                                                                            }
-                                                                            classNamePrefix="select2-selection"
-                                                                          />
-                                                                        </Col>
-                                                                      </Row>
-                                                                    </div>
-                                                                  </Col>
-                                                                )}
-                                                              </Row>
                                                             </Row>
                                                           </TabPane>
                                                           <TabPane
@@ -6427,7 +6723,7 @@ class ApplicantsList extends Component {
                                                       </div>
                                                       <div className="actions clearfix">
                                                         <ul>
-                                                          {(isEdit ||
+                                                          {/* {(isEdit ||
                                                             (showGenerateButton &&
                                                               this.state
                                                                 .activeTab ===
@@ -6447,39 +6743,7 @@ class ApplicantsList extends Component {
                                                                 )}
                                                               </Link>
                                                             </li>
-                                                          )}
-
-                                                          {!isEdit &&
-                                                            this.state
-                                                              .activeTab ===
-                                                              5 && (
-                                                              <li>
-                                                                <Link
-                                                                  to="#"
-                                                                  onClick={() => {
-                                                                    this.handleSubmit(
-                                                                      values
-                                                                    );
-                                                                  }}
-                                                                >
-                                                                  save
-                                                                </Link>
-                                                              </li>
-                                                            )}
-                                                          {isEdit && (
-                                                            <li>
-                                                              <Link
-                                                                to="#"
-                                                                onClick={() => {
-                                                                  this.handleSubmit(
-                                                                    values
-                                                                  );
-                                                                }}
-                                                              >
-                                                                save
-                                                              </Link>
-                                                            </li>
-                                                          )}
+                                                          )} */}
 
                                                           {!isEdit &&
                                                             this.state
@@ -6512,6 +6776,70 @@ class ApplicantsList extends Component {
                                                               </Link>
                                                             </li>
                                                           )}
+
+                                                          {!isEdit &&
+                                                            this.state
+                                                              .activeTab ===
+                                                              4 && (
+                                                              <li>
+                                                                <Link
+                                                                  to="#"
+                                                                  onClick={() => {
+                                                                    this.handleExperienceSubmit(
+                                                                      values
+                                                                    );
+                                                                  }}
+                                                                >
+                                                                  save
+                                                                </Link>
+                                                              </li>
+                                                            )}
+                                                          {isEdit && (
+                                                            <li>
+                                                              <Link
+                                                                to="#"
+                                                                onClick={() => {
+                                                                  this.handleExperienceSubmit(
+                                                                    values
+                                                                  );
+                                                                }}
+                                                              >
+                                                                save
+                                                              </Link>
+                                                            </li>
+                                                          )}
+                                                          {!isEdit &&
+                                                            this.state
+                                                              .activeTab ===
+                                                              5 && (
+                                                              <li>
+                                                                <Link
+                                                                  to="#"
+                                                                  onClick={() => {
+                                                                    this.handleSubmit(
+                                                                      values
+                                                                    );
+                                                                  }}
+                                                                >
+                                                                  save
+                                                                </Link>
+                                                              </li>
+                                                            )}
+                                                          {isEdit && (
+                                                            <li>
+                                                              <Link
+                                                                to="#"
+                                                                onClick={() => {
+                                                                  this.handleSubmit(
+                                                                    values
+                                                                  );
+                                                                }}
+                                                              >
+                                                                save
+                                                              </Link>
+                                                            </li>
+                                                          )}
+
                                                           <li
                                                             className={
                                                               this.state
@@ -6651,6 +6979,7 @@ const mapStateToProps = ({
   estimates: estimates.estimates,
   requiredDocs: trainees.requiredDocs,
   tempTrainee: trainees.tempTrainee,
+  traineeStatus: trainees.traineeStatus,
   // generatedTrainee: trainees.generatedTrainee,
   // last_created_trainee: trainees.last_created_trainee,
   // tempTrainee_regReqDocs: trainees.tempTrainee_regReqDocs,

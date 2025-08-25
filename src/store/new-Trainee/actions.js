@@ -44,6 +44,9 @@ import {
   GET_TRAINEE_BY_ID,
   GET_TRAINEE_BY_ID_SUCCESS,
   GET_TRAINEE_BY_ID_FAIL,
+  GET_TRAINEE_STATUS,
+  GET_TRAINEE_STATUS_FAIL,
+  GET_TRAINEE_STATUS_SUCCESS,
 } from "./actionTypes";
 
 export const getTrainees = trainees => ({
@@ -247,17 +250,32 @@ export const getTraineeByIdFail = error => ({
   payload: error,
 });
 
-export const generateTrainee = Trainee => ({
+export const generateTrainee = trainee => ({
   type: GENERATE_TRAINEE,
-  payload: Trainee,
+  payload: trainee,
 });
 
-export const generateTraineeSuccess = Trainee => ({
+export const generateTraineeSuccess = trainee => ({
   type: GENERATE_TRAINEE_SUCCESS,
-  payload: Trainee,
+  payload: trainee,
 });
 
 export const generateTraineeFail = error => ({
   type: GENERATE_TRAINEE_FAIL,
+  payload: error,
+});
+
+export const getTraieeStatus = traineeStatus => ({
+  type: GET_TRAINEE_STATUS,
+  payload: traineeStatus,
+});
+
+export const getTraieeStatusSuccess = traineeStatus => ({
+  type: GET_TRAINEE_STATUS_SUCCESS,
+  payload: traineeStatus,
+});
+
+export const getTraieeStatusFail = error => ({
+  type: GET_TRAINEE_STATUS_FAIL,
   payload: error,
 });

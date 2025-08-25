@@ -995,9 +995,9 @@ export const DELETE_CONTRACT_TYPE = "/delete/contractType";
 //GRADES_VERSIONS
 export const GET_GRADES_VERSIONS = "/gradesVersions";
 export const GET_GRADE_VERSION_DELETED_VALUE = "/deleted";
-export const ADD_NEW_GRADE_VERSION= "/add/gradeVersion";
-export const UPDATE_GRADE_VERSION= "/update/gradeVersion";
-export const DELETE_GRADE_VERSION= "/delete/gradeVersion";
+export const ADD_NEW_GRADE_VERSION = "/add/gradeVersion";
+export const UPDATE_GRADE_VERSION = "/update/gradeVersion";
+export const DELETE_GRADE_VERSION = "/delete/gradeVersion";
 
 // DOCUMENTS_TYPES
 export const GET_DOCUMENTS_TYPES = "/documentsTypes";
@@ -1110,6 +1110,9 @@ export const GENERATE_TRAINEE = "/trainee";
 
 //social status
 export const GET_SOCIAL_STATUS = "/socialStatus";
+
+//trainee status
+export const GET_TRAINEE_STATUS = "/traineeStatus";
 
 //professionalExperience
 export const ADD_NEW_PROFESSIONAL_EXPERIENCE = "/add/professionalExperience";

@@ -68,12 +68,14 @@ class CoursesPassPercentsList extends Component {
       isEdit: false,
       showStudentName: true,
       showYearSemester: true,
+      showStartDate: true,
       showActivationSemester: true,
       showStudentID: true,
       showStateId: true,
       showRequestOrganizer: true,
       showRequestOrgNotes: true,
       requestDate: true,
+      startDate: true,
       showRequestNum: true,
       showRequestId: true,
       showDecreeOrganizer: false,
@@ -122,7 +124,7 @@ class CoursesPassPercentsList extends Component {
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (studentsRequests && !studentsRequests.length) {
-      onGetStudentsRequests({ yearSemesterId: 78 });
+      // onGetStudentsRequests({ yearSemesterId: 78 });
 
       this.setState({ studentsRequests, stdWarningTestOpt });
       this.setState({ studentStates });
@@ -349,6 +351,11 @@ class CoursesPassPercentsList extends Component {
     if (fieldName == "requestDate") {
       this.setState(prevState => ({
         requestDate: !prevState.requestDate,
+      }));
+    }
+    if (fieldName == "startDate") {
+      this.setState(prevState => ({
+        startDate: !prevState.startDate,
       }));
     }
 
@@ -814,6 +821,7 @@ class CoursesPassPercentsList extends Component {
       showRequestOrganizer,
       showRequestOrgNotes,
       requestDate,
+      startDate,
       showToRegSemester,
       showRequestNum,
       showRequestId,
@@ -876,7 +884,7 @@ class CoursesPassPercentsList extends Component {
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "requestNum",
-        text: this.props.t("Request Number"),
+        text: this.props.t("Course Name"),
         sort: true,
         editable: false,
         hidden: !showRequestNum,
@@ -886,7 +894,7 @@ class CoursesPassPercentsList extends Component {
       },
       {
         dataField: "requestId",
-        text: this.props.t("Request Type"),
+        text: this.props.t("Course Code"),
         sort: true,
         editable: false,
         hidden: !showRequestId,
@@ -897,7 +905,7 @@ class CoursesPassPercentsList extends Component {
 
       {
         dataField: "yearSemester",
-        text: this.props.t("Request Semester"),
+        text: this.props.t("Credits"),
         sort: true,
         editable: false,
         hidden: !showYearSemester,
@@ -905,10 +913,20 @@ class CoursesPassPercentsList extends Component {
           placeholder: this.props.t("Search..."),
         }),
       },
+      {
+        dataField: "startDate",
+        text: this.props.t("Start Date"),
+        sort: true,
+        editable: false,
+        hidden: !startDate,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
+      },
 
       {
         dataField: "activationSemester",
-        text: this.props.t("Activation Semester"),
+        text: this.props.t("Total Registered(Exclude W)"),
         sort: true,
         editable: false,
         hidden: !showActivationSemester,
@@ -918,7 +936,7 @@ class CoursesPassPercentsList extends Component {
       },
       {
         dataField: "stateId",
-        text: this.props.t("Request Status"),
+        text: this.props.t("Passed Count"),
         sort: true,
         editable: false,
         hidden: !showStateId,
@@ -929,7 +947,7 @@ class CoursesPassPercentsList extends Component {
 
       {
         dataField: "requestDate",
-        text: this.props.t("Request Date"),
+        text: this.props.t("Withdrawn Count"),
         sort: true,
         editable: false,
         hidden: !requestDate,
@@ -941,7 +959,7 @@ class CoursesPassPercentsList extends Component {
       {
         dataField: "requestOrganizer",
 
-        text: this.props.t("Request Organizer"),
+        text: this.props.t("Fails Count"),
         sort: true,
         editable: false,
         hidden: !showRequestOrganizer,
@@ -952,7 +970,7 @@ class CoursesPassPercentsList extends Component {
       {
         dataField: "requestOrgNotes",
 
-        text: this.props.t("Requesting Notes"),
+        text: this.props.t("Archived Trainee Marks"),
         sort: true,
         editable: false,
         hidden: !showRequestOrgNotes,
@@ -962,7 +980,7 @@ class CoursesPassPercentsList extends Component {
       },
       {
         dataField: "decreeDate",
-        text: this.props.t("Permanent State"),
+        text: this.props.t("Un-archived Students"),
         sort: true,
         editable: false,
         hidden: !showDecreeDate,
@@ -972,7 +990,7 @@ class CoursesPassPercentsList extends Component {
       },
       {
         dataField: "decreeOrganizer",
-        text: this.props.t("Decree Organizer"),
+        text: this.props.t("Pass Percent(Exclude W)"),
         sort: true,
         formatter: (cell, row) =>
           cell && Array.isArray(cell)
@@ -987,7 +1005,7 @@ class CoursesPassPercentsList extends Component {
 
       {
         dataField: "decreeOrgNotes",
-        text: this.props.t("Decree Notes"),
+        text: this.props.t("Fail Percent(Exclude W)"),
         editable: false,
         hidden: !showDecreeOrgNotes,
         filter: textFilter({
@@ -996,7 +1014,7 @@ class CoursesPassPercentsList extends Component {
       },
       {
         dataField: "foldingDate",
-        text: this.props.t("Folding Date"),
+        text: this.props.t("Withdraw Percent"),
         editable: false,
         hidden: !showFoldingDate,
         filter: textFilter({
@@ -1005,42 +1023,42 @@ class CoursesPassPercentsList extends Component {
       },
       {
         dataField: "foldingOrganizer",
-        text: this.props.t("Folding Organizer"),
+        text: this.props.t("Archiving Percent"),
         editable: false,
         hidden: !showFoldingOrganizer,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
-      {
-        dataField: "foldingOrgNotes",
-        text: this.props.t("Folding Notes"),
-        editable: false,
-        hidden: !showFoldingOrgNotes,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-        }),
-      },
-      {
-        dataField: "studentId",
-        text: this.props.t("Student ID"),
-        sort: true,
-        editable: false,
-        hidden: !showStudentID,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-        }),
-      },
-      {
-        dataField: "studentName",
-        text: this.props.t("Student Name"),
-        sort: true,
-        editable: false,
-        hidden: !showStudentName,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-        }),
-      },
+      // {
+      //   dataField: "foldingOrgNotes",
+      //   text: this.props.t("Folding Notes"),
+      //   editable: false,
+      //   hidden: !showFoldingOrgNotes,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "studentId",
+      //   text: this.props.t("Student ID"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showStudentID,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "studentName",
+      //   text: this.props.t("Student Name"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showStudentName,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
 
       {
         dataField: "action",
@@ -1118,7 +1136,7 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck4"
+                                  id="btncheck15"
                                   autoComplete="off"
                                   defaultChecked={showRequestNum}
                                   onClick={() =>
@@ -1127,9 +1145,9 @@ class CoursesPassPercentsList extends Component {
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck4"
+                                  htmlFor="btncheck15"
                                 >
-                                  {this.props.t("Request Number")}
+                                  {this.props.t("Course Name")}
                                 </label>
                               </Col>
                             </Row>
@@ -1151,7 +1169,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck4"
                                 >
-                                  {this.props.t("Request Type")}
+                                  {this.props.t("Course Code")}
                                 </label>
                               </Col>
                             </Row>
@@ -1162,7 +1180,7 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck3"
+                                  id="btncheck16"
                                   autoComplete="off"
                                   defaultChecked={showYearSemester}
                                   onClick={() =>
@@ -1171,9 +1189,31 @@ class CoursesPassPercentsList extends Component {
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check big-width-check"
-                                  htmlFor="btncheck3"
+                                  htmlFor="btncheck16"
                                 >
-                                  {this.props.t("Request Semester")}
+                                  {this.props.t("Credits")}
+                                </label>
+                              </Col>
+                            </Row>
+                          </div>
+                          <div className="mb-1">
+                            <Row>
+                              <Col>
+                                <input
+                                  type="checkbox"
+                                  className="btn-check"
+                                  id="btncheck17"
+                                  autoComplete="off"
+                                  defaultChecked={startDate}
+                                  onClick={() =>
+                                    this.handleShowColumn("startDate")
+                                  }
+                                />
+                                <label
+                                  className="btn btn-outline-primary big-width-check big-width-check"
+                                  htmlFor="btncheck17"
+                                >
+                                  {this.props.t("Start Date")}
                                 </label>
                               </Col>
                             </Row>
@@ -1195,7 +1235,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check big-width-check"
                                   htmlFor="btncheck3"
                                 >
-                                  {this.props.t("Activation Semester")}
+                                  {this.props.t("Total Registered(Exclude W)")}
                                 </label>
                               </Col>
                             </Row>
@@ -1217,7 +1257,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck6"
                                 >
-                                  {this.props.t("Request State")}
+                                  {this.props.t("Passed Count")}
                                 </label>
                               </Col>
                             </Row>
@@ -1239,7 +1279,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck5"
                                 >
-                                  {this.props.t("Request Date")}
+                                  {this.props.t("Withdrawn Count")}
                                 </label>
                               </Col>
                             </Row>
@@ -1262,7 +1302,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck7"
                                 >
-                                  {this.props.t("Request Organizer")}
+                                  {this.props.t("Fails Count")}
                                 </label>
                               </Col>
                             </Row>
@@ -1284,7 +1324,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck8"
                                 >
-                                  {this.props.t("Requesting Notes")}
+                                  {this.props.t("Archived Trainee Marks")}
                                 </label>
                               </Col>
                             </Row>
@@ -1307,7 +1347,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck9"
                                 >
-                                  {this.props.t("Decree Date")}
+                                  {this.props.t("Un-archived Students")}
                                 </label>
                               </Col>
                             </Row>
@@ -1330,7 +1370,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck10"
                                 >
-                                  {this.props.t("Decree Organizer")}
+                                  {this.props.t("Pass Percent(Exclude W)")}
                                 </label>
                               </Col>
                             </Row>
@@ -1353,7 +1393,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck11"
                                 >
-                                  {this.props.t("Decree Notes")}
+                                  {this.props.t("Fail Percent(Exclude W)")}
                                 </label>
                               </Col>
                             </Row>
@@ -1376,7 +1416,7 @@ class CoursesPassPercentsList extends Component {
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck12"
                                 >
-                                  {this.props.t("Folding Date")}
+                                  {this.props.t("Withdraw Percent")}
                                 </label>
                               </Col>
                             </Row>
@@ -1388,7 +1428,7 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck13"
+                                  id="btncheck14"
                                   autoComplete="off"
                                   defaultChecked={showFoldingOrganizer}
                                   onClick={() =>
@@ -1397,9 +1437,9 @@ class CoursesPassPercentsList extends Component {
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck13"
+                                  htmlFor="btncheck14"
                                 >
-                                  {this.props.t("Folding Organizer")}
+                                  {this.props.t("Archiving Percent")}
                                 </label>
                               </Col>
                             </Row>
@@ -2708,9 +2748,9 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetStudentsRequests: regReqDocs =>
-    dispatch(getStudentsRequests(regReqDocs)),
-  onGetCurrentSemester: () => dispatch(getCurrentSemester()),
+  // onGetStudentsRequests: regReqDocs =>
+  //   dispatch(getStudentsRequests(regReqDocs)),
+  // onGetCurrentSemester: () => dispatch(getCurrentSemester()),
 });
 
 export default connect(
