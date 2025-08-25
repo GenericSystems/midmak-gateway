@@ -4267,14 +4267,22 @@ class NewTrainee extends Component {
                                                                   value={
                                                                     values.DiplomaCountryId
                                                                   }
+                                                                  // onChange={event => {
+                                                                  //   const selectedCountry =
+                                                                  //     event
+                                                                  //       .target
+                                                                  //       .value;
+                                                                  //   setFieldValue(
+                                                                  //     "DiplomaCountryId",
+                                                                  //     selectedCountry
+                                                                  //   );
+                                                                  // }}
                                                                   onChange={event => {
-                                                                    const selectedCountry =
-                                                                      event
-                                                                        .target
-                                                                        .value;
                                                                     setFieldValue(
                                                                       "DiplomaCountryId",
-                                                                      selectedCountry
+                                                                      event
+                                                                        .target
+                                                                        .value
                                                                     );
                                                                   }}
                                                                   onBlur={
