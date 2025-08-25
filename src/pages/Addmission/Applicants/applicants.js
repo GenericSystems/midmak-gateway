@@ -6762,20 +6762,23 @@ class ApplicantsList extends Component {
                                                                 </Link>
                                                               </li>
                                                             )}
-                                                          {isEdit && (
-                                                            <li>
-                                                              <Link
-                                                                to="#"
-                                                                onClick={() => {
-                                                                  this.handleSave(
-                                                                    values
-                                                                  );
-                                                                }}
-                                                              >
-                                                                save
-                                                              </Link>
-                                                            </li>
-                                                          )}
+                                                          {isEdit &&
+                                                            this.state
+                                                              .activeTab ===
+                                                              3 && (
+                                                              <li>
+                                                                <Link
+                                                                  to="#"
+                                                                  onClick={() => {
+                                                                    this.handleSave(
+                                                                      values
+                                                                    );
+                                                                  }}
+                                                                >
+                                                                  save
+                                                                </Link>
+                                                              </li>
+                                                            )}
 
                                                           {!isEdit &&
                                                             this.state
@@ -6794,20 +6797,23 @@ class ApplicantsList extends Component {
                                                                 </Link>
                                                               </li>
                                                             )}
-                                                          {isEdit && (
-                                                            <li>
-                                                              <Link
-                                                                to="#"
-                                                                onClick={() => {
-                                                                  this.handleExperienceSubmit(
-                                                                    values
-                                                                  );
-                                                                }}
-                                                              >
-                                                                save
-                                                              </Link>
-                                                            </li>
-                                                          )}
+                                                          {isEdit &&
+                                                            this.state
+                                                              .activeTab ===
+                                                              4 && (
+                                                              <li>
+                                                                <Link
+                                                                  to="#"
+                                                                  onClick={() => {
+                                                                    this.handleExperienceSubmit(
+                                                                      values
+                                                                    );
+                                                                  }}
+                                                                >
+                                                                  save
+                                                                </Link>
+                                                              </li>
+                                                            )}
                                                           {!isEdit &&
                                                             this.state
                                                               .activeTab ===
@@ -6825,20 +6831,23 @@ class ApplicantsList extends Component {
                                                                 </Link>
                                                               </li>
                                                             )}
-                                                          {isEdit && (
-                                                            <li>
-                                                              <Link
-                                                                to="#"
-                                                                onClick={() => {
-                                                                  this.handleSubmit(
-                                                                    values
-                                                                  );
-                                                                }}
-                                                              >
-                                                                save
-                                                              </Link>
-                                                            </li>
-                                                          )}
+                                                          {isEdit &&
+                                                            this.state
+                                                              .activeTab ===
+                                                              5 && (
+                                                              <li>
+                                                                <Link
+                                                                  to="#"
+                                                                  onClick={() => {
+                                                                    this.handleSubmit(
+                                                                      values
+                                                                    );
+                                                                  }}
+                                                                >
+                                                                  save
+                                                                </Link>
+                                                              </li>
+                                                            )}
 
                                                           <li
                                                             className={
