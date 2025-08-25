@@ -668,6 +668,10 @@ class NewTrainee extends Component {
   };
 
   handleButtonClick2 = (fieldName, option, values) => {
+    const { onGetTraineesDocuments } = this.props;
+    let obj = { certificateLevelId: option };
+    console.log("objobjobj", obj);
+    onGetTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
       this.setState({ selectedregistrationCertLevelId: option });
       this.setState({ trainee: values });
@@ -901,10 +905,10 @@ class NewTrainee extends Component {
       certificate => certificate.value === event.target.value
     );
     console.log(diplomaObject, "ollllllll");
-    let obj = { certificateLevelId: diplomaObject.key };
-    console.log("objobjobj", obj);
-    onGetTraineesDocuments(obj);
-    setFieldValue("diplomaId", selectedValue);
+    // let obj = { certificateLevelId: diplomaObject.key };
+    // console.log("objobjobj", obj);
+    // onGetTraineesDocuments(obj);
+    // setFieldValue("diplomaId", selectedValue);
 
     if (diplomaObject) {
       this.setState({
@@ -3525,7 +3529,7 @@ class NewTrainee extends Component {
                                                                   className="form-label"
                                                                 >
                                                                   {this.props.t(
-                                                                     "Diploma Date"
+                                                                    "Diploma Date"
                                                                   )}
                                                                 </Label>
                                                               </Col>
