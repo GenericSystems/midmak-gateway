@@ -2,15 +2,17 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import Breadcrumbs from "components/Common/Breadcrumb";
 import {
+  Button,
   Card,
   CardBody,
   Col,
   Container,
+  FormGroup,
   Row,
-  Input,
   Label,
   Alert,
   Form,
+  Input,
   CardTitle,
 } from "reactstrap";
 import { withRouter } from "react-router-dom";
@@ -26,23 +28,20 @@ class AcademyInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      academyInfo: [],
       academyName: "",
-      academyEventDecision: null,
-      contactNumber: "",
-      faxNumber: "",
-      academyWebsite: "",
+      contactEmail: "",
+      website: "",
       logo: null,
-      link1: "",
-      link2: "",
-      link3: "",
-      links: ["", "", ""],
-      academyNameError: false,
-      saveError: false,
-      linkErrors: [false, false, false],
-      academyWebsiteError: false,
-      setErrormessage: false,
-      successMessage: null,
+      countries: [
+        {
+          country: "",
+          contactNumber: "",
+          whatsappNumber: "",
+          phoneNumber: "",
+          phoneAndWhatsappNumber: "",
+          faxNumber: "",
+        },
+      ],
     };
   }
 
@@ -71,29 +70,18 @@ class AcademyInfo extends Component {
             ? academyInfo[0].contactNumber
             : "",
         faxNumber:
-          academyInfo && academyInfo.length > 0
-            ? academyInfo[0].faxNumber
-            : "",
+          academyInfo && academyInfo.length > 0 ? academyInfo[0].faxNumber : "",
         academyWebsite:
           academyInfo && academyInfo.length > 0
             ? academyInfo[0].academyWebsite
             : "",
-        logo:
-          academyInfo && academyInfo.length > 0
-            ? academyInfo[0].logo
-            : "",
+        logo: academyInfo && academyInfo.length > 0 ? academyInfo[0].logo : "",
         link1:
-          academyInfo && academyInfo.length > 0
-            ? academyInfo[0].link1
-            : "",
+          academyInfo && academyInfo.length > 0 ? academyInfo[0].link1 : "",
         link2:
-          academyInfo && academyInfo.length > 0
-            ? academyInfo[0].link2
-            : "",
+          academyInfo && academyInfo.length > 0 ? academyInfo[0].link2 : "",
         link3:
-          academyInfo && academyInfo.length > 0
-            ? academyInfo[0].link3
-            : "",
+          academyInfo && academyInfo.length > 0 ? academyInfo[0].link3 : "",
         academyInfo: academyInfo,
       });
     }
@@ -212,9 +200,7 @@ class AcademyInfo extends Component {
       if (this.state.academyName.trim() === "") {
         this.setState({ academyNameError: true, saveError: true });
       } else {
-        const savedUniMessage = this.props.t(
-          "Academy info added successfully"
-        );
+        const savedUniMessage = this.props.t("Academy info added successfully");
         this.setState({
           setErrormessage: null,
           saveError: false,
@@ -224,6 +210,70 @@ class AcademyInfo extends Component {
         this.props.onAddAcademyInfo(formData);
       }
     }
+  };
+
+  handleAddRow = () => {
+    this.setState(prev => ({
+      academyInfo: [
+        ...prev.academyInfo,
+        {
+          academyName: "",
+          contactNumber: "",
+          academyWebsite: "",
+          faxNumber: "",
+          academyEventDecision: null,
+          logo: null,
+          links: ["", "", ""],
+        },
+      ],
+    }));
+  };
+  handleRemoveRow = index => {
+    const academyInfo = [...this.state.academyInfo];
+    academyInfo.splice(index, 1);
+    this.setState({ academyInfo });
+  };
+  handleChange = e => {
+    const { name, value, files } = e.target;
+    this.setState({ [name]: files ? files[0] : value });
+  };
+  handleCountryChange = (idx, e) => {
+    const { name, value } = e.target;
+    const countries = [...this.state.countries];
+    countries[idx][name] = value;
+    this.setState({ countries });
+  };
+  handleAddCountry = () => {
+    this.setState(prevState => ({
+      countries: [
+        ...prevState.countries,
+        {
+          country: "",
+          contactNumber: "",
+          whatsappNumber: "",
+          phoneNumber: "",
+          phoneAndWhatsappNumber: "",
+          faxNumber: "",
+        },
+      ],
+    }));
+  };
+  handleRemoveCountry = idx => {
+    const countries = [...this.state.countries];
+    countries.splice(idx, 1);
+    this.setState({ countries });
+  };
+
+  handleFileUpload = (idx, field, file) => {
+    const academyInfo = [...this.state.academyInfo];
+    academyInfo[idx][field] = file;
+    this.setState({ academyInfo });
+  };
+
+  handleLinkChange = (academyIdx, linkIdx, value) => {
+    const academyInfo = [...this.state.academyInfo];
+    academyInfo[academyIdx].links[linkIdx] = value;
+    this.setState({ academyInfo });
   };
 
   handleReset = () => {
@@ -261,337 +311,254 @@ class AcademyInfo extends Component {
   handleSuccessClose = () => {
     this.setState({ successMessage: null });
   };
+render() {
+  const { academyName, website, contactEmail, logo, countries } = this.state;
 
-  render() {
-    const {
-      academyName,
-      academyEventDecision,
-      contactNumber,
-      faxNumber,
-      academyWebsite,
-      logo,
-
-      link1,
-      link2,
-      link3,
-      links,
-      academyNameError,
-      successMessage,
-      setErrormessage,
-    } = this.state;
-
-    document.title =
-      "Form Elements | keyInHands - React Admin & Dashboard Template";
-
-    const { t } = this.props; // Access the t function for translation
-
-    return (
-      <React.Fragment>
-        <div className="page-content">
-          <Breadcrumbs
-            title={this.props.t("Academy System")}
-            breadcrumbItem={this.props.t("Academy Definition")}
-          />
-          <div>
-            {successMessage && (
-              <Alert
-                color="success"
-                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                role="alert"
-              >
-                {successMessage}
-                <button
-                  type="button"
-                  className="btn-close"
-                  aria-label="Close"
-                  onClick={this.handleSuccessClose}
-                ></button>
-              </Alert>
-            )}
-            {setErrormessage && (
-              <Alert
-                color="danger"
-                className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                role="alert"
-              >
-                {setErrormessage}
-                <button
-                  type="button"
-                  className="btn-close"
-                  aria-label="Close"
-                  onClick={this.handleAlertClose}
-                ></button>
-              </Alert>
-            )}
-          </div>
-
-          <Form>
-            <Card>
-              <CardBody>
-                <Row>
-                  <Col className="col-12">
-                    <Card>
-                      <CardTitle id="add_header">
-                        {this.props.t("Academy information")}
-                      </CardTitle>
-
-                      <CardBody>
+  return (
+    <Form onSubmit={this.handleSubmit}>
+      <Card>
+        <CardBody>
+          <Row>
+            <Col className="col-12">
+              <Card>
+                <CardTitle id="add_header">Academy Information</CardTitle>
+                <CardBody>
+                  <Row>
+                    <Col lg="6">
+                      <div className="mb-3">
                         <Row>
-                          <Col lg="6">
-                            <div className="mb-3">
-                              <Row>
-                                <Col lg="4" className="mt-2">
-                                  <Label className="form-label">
-                                    {this.props.t("Academy Name")}
-                                  </Label>
-                                  <span className="text-danger">*</span>
-                                </Col>
-
-                                <Col lg="8" className="mt-3">
-                                  <input
-                                    type="text"
-                                    id="academyName"
-                                    name="academyName"
-                                    autoComplete="off"
-                                    className={`form-control ${
-                                      academyNameError ? "is-invalid" : ""
-                                    }`}
-                                    placeholder={t("Academy Name")}
-                                    value={academyName}
-                                    onChange={this.handleInputChange}
-                                  />
-
-                                  {academyNameError && (
-                                    <div className="invalid-feedback">
-                                      {t("Academy Name is required")}
-                                    </div>
-                                  )}
-                                </Col>
-                              </Row>
-                            </div>
-
-                            <div className="mb-3">
-                              <Row>
-                                <Col lg="4" className="mt-2">
-                                  <label
-                                    htmlFor="contactNumber"
-                                    className="col-form-label"
-                                  >
-                                    {t("Contact Number")}:
-                                  </label>
-                                </Col>
-
-                                <Col lg="8" className="mt-3">
-                                  <input
-                                    type="text"
-                                    id="contactNumber"
-                                    name="contactNumber"
-                                    className="form-control"
-                                    placeholder={t("1-(555)-555-5555")}
-                                    value={contactNumber || ""}
-                                    onChange={this.handleInputChange}
-                                  />
-                                </Col>
-                              </Row>
-                            </div>
-
-                            <div className="mb-3">
-                              <Row>
-                                <Col lg="4" className="mt-2">
-                                  <label
-                                    htmlFor="academyWebsite"
-                                    className="col-form-label"
-                                  >
-                                    {this.props.t("Academy Website")}:
-                                  </label>
-                                </Col>
-
-                                <Col lg="8" className="mt-3">
-                                  <input
-                                    type="text"
-                                    id="academyWebsite"
-                                    name="academyWebsite"
-                                    className="form-control"
-                                    placeholder="www.AcademyName.com"
-                                    value={academyWebsite}
-                                    onChange={this.handleInputChange}
-                                  />
-                                </Col>
-                              </Row>
-                            </div>
-
-                            <div className="mb-3">
-                              <Row>
-                                <Col lg="4" className="mt-2">
-                                  <label
-                                    htmlFor="faxNumber"
-                                    className="col-form-label"
-                                  >
-                                    {t("Fax Number")}:
-                                  </label>
-                                </Col>
-
-                                <Col lg="8" className="mt-3">
-                                  <input
-                                    type="number"
-                                    id="faxNumber"
-                                    name="faxNumber"
-                                    className="form-control"
-                                    value={faxNumber || ""}
-                                    onChange={this.handleInputChange}
-                                  />
-                                </Col>
-                              </Row>
-                            </div>
-                            <div className="mb-3">
-                              <Row>
-                                <Col lg="4" className="mt-2">
-                                  <label
-                                    htmlFor="academyEventDecision"
-                                    className="col-form-label"
-                                  >
-                                    {this.props.t("Academy Event Decision")}:
-                                  </label>
-                                </Col>
-
-                                <Col lg="8" className="mt-3">
-                                  <input
-                                    type="file" // Change the input type to "file"
-                                    id="academyEventDecision"
-                                    name="academyEventDecision"
-                                    accept="image/*" // Allow only image files to be uploaded
-                                    onChange={this.handleLogoUpload} // Use the same handler for logo and academy event decision
-                                  />
-                                </Col>
-                              </Row>
-                            </div>
+                          <Col lg="4" className="mt-2">
+                            <Label>Academy Name</Label>
+                            <span className="text-danger">*</span>
                           </Col>
-
-                          <Col lg="6">
-                            <div className="mb-3">
-                              <Row>
-                                <Col lg="4" className="mt-2">
-                                  <div className="logo">
-                                    <Label
-                                      htmlFor="logoUpload"
-                                      className="btn btn-primary"
-                                    >
-                                      {this.props.t("academy logo")}
-
-                                      <Input
-                                        name="logo"
-                                        type="file"
-                                        id="logoUpload"
-                                        accept="image/*"
-                                        style={{
-                                          display: "none",
-                                        }}
-                                        onChange={this.handleLogoUpload}
-                                      />
-                                    </Label>
-                                  </div>
-                                </Col>
-
-                                <Col lg="8" className="mt-4">
-                                  {logo && (
-                                    <img
-                                      src={URL.createObjectURL(logo)}
-                                      alt="Academy Logo"
-                                      className="academy-logo"
-                                    />
-                                  )}
-                                </Col>
-                              </Row>
-                            </div>
-                            <div className="mb-3">
-                              <Row>
-                                <Col lg="3" className="mt-2">
-                                  <label className="col-form-label">
-                                    {t("Important Links")}
-                                  </label>
-                                </Col>
-
-                                <Col lg="7" className="mt-3">
-                                  <ul className="list-unstyled">
-                                    <li className="py-2">
-                                      <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Link1"
-                                        value={link1}
-                                        onChange={event =>
-                                          this.handleLinkChange(event, 0)
-                                        }
-                                      />
-                                    </li>
-                                    <li className="py-2">
-                                      <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Link2"
-                                        value={link2}
-                                        onChange={event =>
-                                          this.handleLinkChange(event, 1)
-                                        }
-                                      />
-                                    </li>
-                                    <li className="py-2">
-                                      <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Link3"
-                                        value={link3}
-                                        onChange={event =>
-                                          this.handleLinkChange(event, 2)
-                                        }
-                                      />
-                                    </li>
-                                  </ul>
-                                </Col>
-                              </Row>
-                            </div>
+                          <Col lg="8" className="mt-3">
+                            <input
+                              type="text"
+                              id="academyName"
+                              name="academyName"
+                              autoComplete="off"
+                              className="form-control"
+                              placeholder="Academy Name"
+                              value={academyName}
+                              onChange={this.handleChange}
+                            />
                           </Col>
                         </Row>
-                      </CardBody>
-                    </Card>
-                  </Col>
-                </Row>
+                      </div>
 
-                <div className="d-flex justify-content-end mt-4">
-                  <button
-                    type="button"
-                    className="btn btn-primary me-2"
-                    onClick={this.handleSave}
-                  >
-                    {t("Save")}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-warning"
-                    onClick={this.handleReset}
-                  >
-                    {t("Reset")}
-                  </button>
-                </div>
-              </CardBody>
-            </Card>
-          </Form>
-        </div>
-      </React.Fragment>
-    );
-  }
-}
+                      {countries.map((row, idx) => (
+                        <div key={idx} className="mb-3 border p-2 rounded">
+                          <Row>
+                            <Col lg="4" className="mt-2">
+                              <label className="col-form-label">Country:</label>
+                            </Col>
+                            <Col lg="8" className="mt-3">
+                              <input
+                                type="text"
+                                name="country"
+                                className="form-control"
+                                value={row.country}
+                                onChange={(e) => this.handleCountryChange(idx, e)}
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="mt-2">
+                            <Col lg="4" className="mt-2">
+                              <label className="col-form-label">Contact Number:</label>
+                            </Col>
+                            <Col lg="8" className="mt-3">
+                              <input
+                                type="text"
+                                name="contactNumber"
+                                className="form-control"
+                                value={row.contactNumber}
+                                onChange={(e) => this.handleCountryChange(idx, e)}
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="mt-2">
+                            <Col lg="4" className="mt-2">
+                              <label className="col-form-label">Only WhatsApp Number:</label>
+                            </Col>
+                            <Col lg="8" className="mt-3">
+                              <input
+                                type="text"
+                                name="whatsappNumber"
+                                className="form-control"
+                                value={row.whatsappNumber}
+                                onChange={(e) => this.handleCountryChange(idx, e)}
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="mt-2">
+                            <Col lg="4" className="mt-2">
+                              <label className="col-form-label">Only Phone:</label>
+                            </Col>
+                            <Col lg="8" className="mt-3">
+                              <input
+                                type="text"
+                                name="phoneNumber"
+                                className="form-control"
+                                value={row.phoneNumber}
+                                onChange={(e) => this.handleCountryChange(idx, e)}
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="mt-2">
+                            <Col lg="4" className="mt-2">
+                              <label className="col-form-label">Phone & WhatsApp:</label>
+                            </Col>
+                            <Col lg="8" className="mt-3">
+                              <input
+                                type="text"
+                                name="phoneAndWhatsappNumber"
+                                className="form-control"
+                                value={row.phoneAndWhatsappNumber}
+                                onChange={(e) => this.handleCountryChange(idx, e)}
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="mt-2">
+                            <Col lg="4" className="mt-2">
+                              <label className="col-form-label">Fax:</label>
+                            </Col>
+                            <Col lg="8" className="mt-3">
+                              <input
+                                type="text"
+                                name="faxNumber"
+                                className="form-control"
+                                value={row.faxNumber}
+                                onChange={(e) => this.handleCountryChange(idx, e)}
+                              />
+                            </Col>
+                          </Row>
+                          <Button
+                            type="button"
+                            color="danger"
+                            className="mt-2"
+                            onClick={() => this.handleRemoveCountry(idx)}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      ))}
+
+                      <Row className="mt-3">
+                        <Col lg="12">
+                          <Button
+                            type="button"
+                            color="success"
+                            onClick={this.handleAddCountry}
+                          >
+                            Add Country Info
+                          </Button>
+                        </Col>
+                      </Row>
+
+                      <Row className="mt-3">
+                        <Col lg="4" className="mt-2">
+                          <label htmlFor="contactEmail" className="col-form-label">Email:</label>
+                        </Col>
+                        <Col lg="8" className="mt-3">
+                          <input
+                            type="email"
+                            id="contactEmail"
+                            name="contactEmail"
+                            className="form-control"
+                            placeholder="Enter Email"
+                            value={contactEmail}
+                            onChange={this.handleChange}
+                          />
+                        </Col>
+                      </Row>
+
+                      <Row className="mt-3">
+                        <Col lg="4" className="mt-2">
+                          <label htmlFor="website" className="col-form-label">Website:</label>
+                        </Col>
+                        <Col lg="8" className="mt-3">
+                          <input
+                            type="text"
+                            id="website"
+                            name="website"
+                            className="form-control"
+                            placeholder="Enter Website"
+                            value={website}
+                            onChange={this.handleChange}
+                          />
+                        </Col>
+                      </Row>
+
+                      <Row className="mt-3">
+                        <Col lg="4" className="mt-2">
+                          <label htmlFor="academyEventDecision" className="col-form-label">
+                            Academy Event Decision:
+                          </label>
+                        </Col>
+                        <Col lg="8" className="mt-3">
+                          <Input
+                            type="file"
+                            id="academyEventDecision"
+                            name="academyEventDecision"
+                            accept="image/*"
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+
+                    <Col lg="6">
+                      <div className="mb-3">
+                        <Row>
+                          <Col lg="4" className="mt-2">
+                            <Label htmlFor="logoUpload" className="btn btn-primary">
+                              Academy Logo
+                              <Input
+                                name="logo"
+                                type="file"
+                                id="logoUpload"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={this.handleChange}
+                              />
+                            </Label>
+                          </Col>
+                          <Col lg="8" className="mt-4">
+                            {logo && (
+                              <img
+                                src={URL.createObjectURL(logo)}
+                                alt="Academy Logo"
+                                className="academy-logo"
+                              />
+                            )}
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+                  </Row>
+
+                  <div className="d-flex justify-content-end mt-4">
+                    <Button type="submit" color="primary" className="me-2">
+                      Submit
+                    </Button>
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </CardBody>
+      </Card>
+    </Form>
+  );
+}}
 const mapStateToProps = ({ academyInfo }) => ({
   academyInfo: academyInfo.academyInfo,
 });
 const mapDispatchToProps = dispatch => ({
   onGetacademyinfo: () => dispatch(getAcademyInfo()),
 
-  onUpdateAcademyInfo: academyInfo =>
-    dispatch(updateAcademyInfo(academyInfo)),
+  onUpdateAcademyInfo: academyInfo => dispatch(updateAcademyInfo(academyInfo)),
 
-  onAddAcademyInfo: academyInfo =>
-    dispatch(addAcademyInfo(academyInfo)),
+  onAddAcademyInfo: academyInfo => dispatch(addAcademyInfo(academyInfo)),
 });
 
 export default connect(
