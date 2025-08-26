@@ -47,6 +47,7 @@ import {
   GET_TRAINEE_STATUS,
   GET_TRAINEE_STATUS_FAIL,
   GET_TRAINEE_STATUS_SUCCESS,
+  UPLOAD_FILE
 } from "./actionTypes";
 
 export const getTrainees = trainees => ({
@@ -250,6 +251,11 @@ export const getTraineeByIdFail = error => ({
   payload: error,
 });
 
+export const uploadFile = fileData =>({
+    type: UPLOAD_FILE,
+    payload: fileData,
+});
+  
 export const generateTrainee = trainee => ({
   type: GENERATE_TRAINEE,
   payload: trainee,

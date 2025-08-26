@@ -16,6 +16,7 @@ import {
   ADD_REQUIRED_DOCS,
   GENERATE_TRAINEE,
   GET_TRAINEE_BY_ID,
+  UPLOAD_FILE,
 } from "./actionTypes";
 
 import {
@@ -78,6 +79,7 @@ import {
   getTraineeById,
   generateTrainee,
   getTraieeStatus,
+  uploadFileToStorage,
 } from "../../helpers/fakebackend_helper";
 
 import {
@@ -114,6 +116,7 @@ import {
   getHighStudyTypesSuccess,
   getHighStudyTypesFail,
 } from "../high-study-types/actions";
+import { uploadFile } from "helpers/api_helper";
 
 function* fetchTrainees(selectedpayload) {
   let lang = selectedpayload.payload;
@@ -489,6 +492,24 @@ function* onAddRequiredDocs({ payload }) {
   }
 }
 
+// GEN
+function* onUploadFile({ payload }) {
+  console.log("uploading file", payload);
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_UpdateTraineeInfo";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_ProfessionalExperiences";
+  payload["queryname"] = "Common_ProfessionalExperiences";
+
+  try {
+    const response = yield call(uploadFile, payload);
+    console.log("response", response);
+    yield put(addProfessionalExperienceSuccess(response[0]));
+  } catch (error) {
+    yield put(addProfessionalExperienceFail(error));
+  }
+}
+
 // function* fetchTraineeById(tempTrainee) {
 //   // console.log("tempTraineetempTraineetempTrainee", tempTrainee);
 //   // const tempTraineeId = tempTrainee.payload;
@@ -555,6 +576,8 @@ function* traineesSaga() {
   yield takeEvery(ADD_REQUIRED_DOCS, onAddRequiredDocs);
   // yield takeEvery(GENERATE_TRAINEE, onGenerateTrainee);
   // yield takeEvery(GET_TRAINEE_BY_ID, fetchTraineeById);
+  yield takeEvery(UPLOAD_FILE, onUploadFile);
+  
 }
 
 export default traineesSaga;

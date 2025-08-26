@@ -1127,6 +1127,9 @@ export const GET_SOCIAL_STATUS = "/socialStatus";
 //trainee status
 export const GET_TRAINEE_STATUS = "/traineeStatus";
 
+// Upload File
+export const uploadFileToStorage = "/uploadFile";
+
 //professionalExperience
 export const ADD_NEW_PROFESSIONAL_EXPERIENCE = "/add/professionalExperience";
 export const UPDATE_PROFESSIONAL_EXPERIENCE = "/update/professionalExperience";

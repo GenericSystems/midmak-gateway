@@ -2307,6 +2307,9 @@ export const updateProfessionalExperience = data =>
   post(url.UPDATE_PROFESSIONAL_EXPERIENCE, data);
 export const deleteProfessionalExperience = data =>
   post(url.DELETE_PROFESSIONAL_EXPERIENCE, data);
+// Upload File
+export const uploadFile = data =>
+  post(url.uploadFileToStorage, data);
 
 //trainingFormat
 export const getTrainingFormats = data => post(url.GET_TRAINING_FORMATS, data);
@@ -2450,5 +2453,5 @@ export {
   postJwtRegister,
   postJwtLogin,
   postJwtForgetPwd,
-  postJwtProfile,
+  postJwtProfile
 };
