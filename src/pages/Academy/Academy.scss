@@ -5,7 +5,7 @@
 
 }
 
-.university-info {
+.academy-info {
 
   padding: 20px;
   font-family: var(--bs-body-font-family);
@@ -16,19 +16,19 @@
   
   
 }
-.university-info .form-row {
+.academy-info .form-row {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.university-info .form-row .col-form-label {
+.academy-info .form-row .col-form-label {
   white-space: nowrap;
   margin-right: 10px;
   width: 180px; /* Adjust the width of the labels as needed */
 }
 
-.university-info .form-row .form-control {
+.academy-info .form-row .form-control {
   flex: 1;
   width: 100%; /* Adjust the width of the input spaces as needed */
   margin-left: 10px;
@@ -41,7 +41,7 @@
   margin-bottom: 20px;
 }
 
-.university-logo {
+.academy-logo {
   width: 150px;
   height: 150px;
   font-size: 24px;
@@ -49,7 +49,7 @@
 
 }
 
-.university-info .col-3 {
+.academy-info .col-3 {
   margin-bottom: 10px;
   font-size: 10px 
 }
@@ -84,20 +84,20 @@
   text-decoration: underline;
 }
 
-/* UniversityInfo.css */
+/* AcademyInfo.css */
 
-.university-name-container {
+.academy-name-container {
 
   
   border-radius: 4px;
 }
 
-.university-name {
+.academy-name {
   cursor: pointer;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.university-name-border {
+.academy-name-border {
   //border: 2px solid #545a6d;
   background-color:#00C4CA ; // #ffdb78;
   color:white;

@@ -238,11 +238,11 @@ export * from "./roles/actions";
 export * from "./user-mngs/actions";
 //unversityinfo
 
-export * from "./universitydef/actions";
+export * from "./academydef/actions";
 
 //unversityorgstructures
 
-export * from "./universityOrgStructure/actions";
+// export * from "./universityOrgStructure/actions";
 
 //Sidbarcontent
 export * from "./sidebarcontent/actions";

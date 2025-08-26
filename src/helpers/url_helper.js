@@ -254,10 +254,10 @@ export const UPDATE_PLAN_HOUR = "/update/planHour";
 export const GET_FILTERED_COURSES = "/filteredCourses";
 //FILTERED_COURSES_PLANS
 export const GET_FILTERED_COURSES_PLANS = "/filteredCoursesPlans";
-//UNIVERSITYINFO
-export const GET_UNIVERSITYINFO = "/universityInfo";
-export const UPDATE_UNIVERSITYINFO = "/update/universityInfo";
-export const ADD_UNIVERSITYINFO = "/add/universityInfo";
+//ACADEMYINFO
+export const GET_ACADEMYINFO = "/academyInfo";
+export const UPDATE_ACADEMYINFO = "/update/academyInfo";
+export const ADD_ACADEMYINFO = "/add/academyInfo";
 
 //CERTIFICATES
 export const GET_CERTIFICATES = "/certificates";
