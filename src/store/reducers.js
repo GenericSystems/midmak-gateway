@@ -201,7 +201,7 @@ import genders from "./genders/reducer";
 import studentsDecrees from "./student-decrees/reducer";
 //decisions
 import decisions from "./decisions/reducer";
-import universityInfo from "./universitydef/reducer";
+import academyInfo from "./academydef/reducer";
 //grants
 import grants from "./grants/reducer";
 //userMngs
@@ -209,7 +209,7 @@ import userMngs from "./user-mngs/reducer";
 
 //roles
 import roles from "./roles/reducer";
-import universityOrgStructures from "./universityOrgStructure/reducer";
+// import universityOrgStructures from "./universityOrgStructure/reducer";
 
 //sidbarcontent
 import menu_items from "./sidebarcontent/reducer";
@@ -407,8 +407,8 @@ const rootReducer = combineReducers({
   cities,
   certificates,
   studentsInfo,
-  universityInfo,
-  universityOrgStructures,
+  academyInfo,
+ 
   menu_items,
   trainingMembers,
   warningRules,

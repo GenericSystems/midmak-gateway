@@ -16,6 +16,9 @@ import {
   ADD_REQUIRED_DOCS,
   GENERATE_TEMP_TRAINEE,
   GET_TEMP_TRAINEE_BY_ID,
+  GENERATE_TRAINEE,
+  GET_TRAINEE_BY_ID,
+  UPLOAD_FILE,
 } from "./actionTypes";
 
 import {
@@ -49,6 +52,8 @@ import {
   generateTempTraineeFail,
   getTempTraineeStatusSuccess,
   getTempTraineeStatusFail,
+  uploadFileSuccess,
+  uploadFileFail,
 } from "./actions";
 
 // Include helper functions
@@ -75,6 +80,7 @@ import {
   deleteProfessionalExperience,
   addRequiredDocs,
   getYears,
+  uploadFileToStorage,
   getTempTraineeById,
   generateTempTrainee,
   getTempTraineeStatus,
@@ -114,6 +120,7 @@ import {
   getHighStudyTypesSuccess,
   getHighStudyTypesFail,
 } from "../high-study-types/actions";
+import { uploadFile } from "helpers/api_helper";
 
 function* fetchTempTrainees(selectedpayload) {
   let lang = selectedpayload.payload;
@@ -490,6 +497,24 @@ function* onAddRequiredDocs({ payload }) {
   }
 }
 
+// GEN
+function* onUploadFile({ payload }) {
+  console.log("uploading file", payload);
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_UpdateTraineeInfo";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_ProfessionalExperiences";
+  payload["queryname"] = "Common_ProfessionalExperiences";
+
+  try {
+    const response = yield call(uploadFile, payload);
+    console.log("response", response);
+    yield put(uploadFileSuccess(response[0]));
+  } catch (error) {
+    yield put(uploadFileFail(error));
+  }
+}
+
 // function* fetchTempTraineeById(tempTempTrainee) {
 //   // console.log("tempTempTraineetempTempTraineetempTempTrainee", tempTempTrainee);
 //   // const tempTempTraineeId = tempTempTrainee.payload;
@@ -562,6 +587,9 @@ function* tempTraineesSaga() {
   yield takeEvery(ADD_REQUIRED_DOCS, onAddRequiredDocs);
   // yield takeEvery(GENERATE_TEMP_TRAINEE, onGenerateTempTrainee);
   // yield takeEvery(GET_TEMP_TRAINEE_BY_ID, fetchTempTraineeById);
+  // yield takeEvery(GENERATE_TRAINEE, onGenerateTrainee);
+  // yield takeEvery(GET_TRAINEE_BY_ID, fetchTraineeById);
+  yield takeEvery(UPLOAD_FILE, onUploadFile);
 }
 
 export default tempTraineesSaga;

@@ -506,13 +506,13 @@ export const updateAcademyBuildingStructure = data =>
 export const deleteAcademyBuildingStructure = data =>
   post(url.DELETE_ACADEMY_BUILDING_STRUCTURE, data);
 
-// GET UNIVERSITYINFO
-export const getUniversityInfo = data => post(url.GET_UNIVERSITYINFO, data);
+// GET ACADEMYINFO
+export const getAcademyInfo = data => post(url.GET_ACADEMYINFO, data);
 
-export const addUniversityInfo = data => post(url.ADD_UNIVERSITYINFO, data);
+export const addAcademyInfo = data => post(url.ADD_ACADEMYINFO, data);
 
-export const updateUniversityInfo = data =>
-  post(url.UPDATE_UNIVERSITYINFO, data);
+export const updateAcademyInfo = data =>
+  post(url.UPDATE_ACADEMYINFO, data);
 
 // UNIVERSITY_ORG_STRUCTURE
 export const getUniversityOrgStructure = data =>
@@ -2288,6 +2288,9 @@ export const updateProfessionalExperience = data =>
   post(url.UPDATE_PROFESSIONAL_EXPERIENCE, data);
 export const deleteProfessionalExperience = data =>
   post(url.DELETE_PROFESSIONAL_EXPERIENCE, data);
+// Upload File
+export const uploadFile = data =>
+  post(url.uploadFileToStorage, data);
 
 //trainingFormat
 export const getTrainingFormats = data => post(url.GET_TRAINING_FORMATS, data);
@@ -2431,5 +2434,5 @@ export {
   postJwtRegister,
   postJwtLogin,
   postJwtForgetPwd,
-  postJwtProfile,
+  postJwtProfile
 };

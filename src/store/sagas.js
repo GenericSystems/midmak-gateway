@@ -77,8 +77,8 @@ import DecisionsSaga from "./decisions/saga";
 import grantsSaga from "./grants/saga";
 import rolesSaga from "./roles/saga";
 import userMngsSaga from "./user-mngs/saga";
-import universityInfoSaga from "./universitydef/saga";
-import universityOrgStructure from "./universityOrgStructure/saga";
+import academyInfoSaga from "./academydef/saga";
+// import universityOrgStructure from "./universityOrgStructure/saga";
 import sidbarcontentsSaga from "./sidebarcontent/saga";
 import trainingMembersSaga from "./trainingMembers/saga";
 import warningRulesSaga from "./warningRules/saga";
@@ -207,8 +207,8 @@ export default function* rootSaga() {
     fork(DecisionsSaga),
     fork(rolesSaga),
     fork(userMngsSaga),
-    fork(universityInfoSaga),
-    fork(universityOrgStructure),
+    fork(academyInfoSaga),
+ 
     fork(sidbarcontentsSaga),
     fork(trainingMembersSaga),
     fork(warningRulesSaga),

@@ -138,6 +138,9 @@ import RolesList from "../pages/PriveledgeManagement/UserManagement/roles";
 //Sector
 import SectorsList from "../pages/Sectors/sectors";
 
+//universityDef
+import AcademyInfo from "../pages/Academy/academy-def"
+
 //Warning
 import warningsList from "../pages/TrainingMembers/training-members";
 
@@ -320,7 +323,8 @@ const authProtectedRoutes = [
 
   //sectors
   { path: "/sectors", component: SectorsList },
-
+  //university-def
+  { path: "/academy-def", component: AcademyInfo },
   //UserTypes
   { path: "/user-types", component: UserTypesList },
 

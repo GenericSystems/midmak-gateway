@@ -253,10 +253,10 @@ export const UPDATE_PLAN_HOUR = "/update/planHour";
 export const GET_FILTERED_COURSES = "/filteredCourses";
 //FILTERED_COURSES_PLANS
 export const GET_FILTERED_COURSES_PLANS = "/filteredCoursesPlans";
-//UNIVERSITYINFO
-export const GET_UNIVERSITYINFO = "/universityInfo";
-export const UPDATE_UNIVERSITYINFO = "/update/universityInfo";
-export const ADD_UNIVERSITYINFO = "/add/universityInfo";
+//ACADEMYINFO
+export const GET_ACADEMYINFO = "/academyInfo";
+export const UPDATE_ACADEMYINFO = "/update/academyInfo";
+export const ADD_ACADEMYINFO = "/add/academyInfo";
 
 //CERTIFICATES
 export const GET_CERTIFICATES = "/certificates";
@@ -1125,6 +1125,9 @@ export const GET_SOCIAL_STATUS = "/socialStatus";
 
 //trainee status
 export const GET_TEMP_TRAINEE_STATUS = "/tempTraineeStatus";
+
+// Upload File
+export const uploadFileToStorage = "/uploadFile";
 
 //professionalExperience
 export const ADD_NEW_PROFESSIONAL_EXPERIENCE = "/add/professionalExperience";

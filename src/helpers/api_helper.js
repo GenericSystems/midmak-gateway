@@ -1,7 +1,7 @@
 import axios from "axios";
 import accessToken from "./jwt-token-access/accessToken";
 import { FormName } from "redux-form";
-import { GET_DATA_ITEMS } from "./url_helper";
+import { GET_DATA_ITEMS, uploadFileToStorage } from "./url_helper";
 
 //pass new generated access token here
 const token = accessToken;
@@ -58,6 +58,24 @@ async function getDataFromProcedure(url, dataconf, config = {}) {
   return fromNet;
 }
 
+export async function uploadFile(imageFile){
+  try {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    formData.append('upload_preset', 'your_upload_preset'); // if needed by your API
+    const response = await axiosApi_2.post('/uploadFile', formData, { 
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log(response.data)
+    return response.data.imageUrl; // Assuming your API returns the URL of the uploaded image
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error; // Re-throw the error to be handled by the calling component
+  }
+};
+
 export async function get(url, config = {}) {
   console.log(url);
   if (url == "/orders1") {
@@ -90,15 +108,19 @@ export async function get(url, config = {}) {
 
 export async function post(url, data, config = {}) {
   console.log("getting post ", url, data, config);
-  if (data)
-    if (data.source == "db") {
-      const resp = getDataFromProcedure(url, data);
-      console.log(resp);
-      return resp;
-    }
-  return axiosApi
+  if (url == uploadFileToStorage)
+    return uploadFile(data);
+  else {
+    if (data)
+        if (data.source == "db") {
+          const resp = getDataFromProcedure(url, data);
+          console.log(resp);
+          return resp;
+        }
+    return axiosApi
     .post(url, { ...data }, { ...config })
     .then(response => response.data);
+  }
 }
 
 export async function put(url, data, config = {}) {

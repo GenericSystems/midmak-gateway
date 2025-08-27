@@ -60,6 +60,7 @@ import {
   addNewProfessionalExperience,
   deleteProfessionalExperience,
   addRequiredDocs,
+  uploadFile,
 } from "store/new-Trainee/actions";
 import { isEmpty, size, map, values } from "lodash";
 
@@ -166,6 +167,7 @@ class NewTrainee extends Component {
       isTempTraineeSaved: false,
       lastUsedExperienceId: 0,
       profExperiencesArray: [],
+      photo: null,
     };
     this.toggle = this.toggle.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
@@ -582,9 +584,10 @@ class NewTrainee extends Component {
   };
 
   handlePhotoChange = event => {
+    const { onUploadFile } = this.props;
     const file = event.target.files[0];
     const reader = new FileReader();
-
+    onUploadFile(file);
     reader.onloadend = () => {
       this.setState({
         photoURL: reader.result,
@@ -5482,6 +5485,7 @@ const mapDispatchToProps = dispatch => ({
   onDeleteProfessionalExperience: profExperience =>
     dispatch(deleteProfessionalExperience(profExperience)),
   onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
+  onUploadFile: fileData => dispatch(uploadFile(fileData)),
 });
 
 export default connect(

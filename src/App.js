@@ -70,7 +70,7 @@ class App extends Component {
     if (this.timer) clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.handleLogout();
-    }, 120000);
+    }, 720000);
   };
 
   // add funtion
