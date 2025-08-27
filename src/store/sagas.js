@@ -32,7 +32,7 @@ import relativesSaga from "./relatives/saga";
 import CertificatesSaga from "./certificates/saga";
 import CertificatelevelSaga from "./certificateTypes/saga";
 import StudentManagementSaga from "./studentManagements/saga";
-import universityStudentsSaga from "./university-students/saga";
+import traineesSaga from "./trainees/saga";
 import contactsSaga from "./contacts/saga";
 import dashboardSaga from "./dashboard/saga";
 import dashboardSaasSaga from "./dashboard-saas/saga";
@@ -107,7 +107,7 @@ import AbsenceWarningsSaga from "./Rules-and-Regulations/Absence-warnings/saga";
 
 import DocumentTypesSaga from "./documents-types/saga";
 
-import traineesSaga from "./new-Trainee/saga";
+import tempTraineesSaga from "./new-Trainee/saga";
 
 import trainingFormatsSaga from "./trainingFormat/saga";
 
@@ -159,7 +159,7 @@ export default function* rootSaga() {
     fork(MobAppFacultyAccsSaga),
     fork(CertificatesSaga),
     fork(CertificatelevelSaga),
-    fork(universityStudentsSaga),
+    fork(traineesSaga),
     fork(StudentManagementSaga),
     fork(nationalitiesSaga),
     fork(relativesSaga),
@@ -232,7 +232,7 @@ export default function* rootSaga() {
     fork(WarningsTypesSaga),
     fork(RewardsTypesSaga),
     fork(DecisionsTypesSaga),
-    fork(traineesSaga),
+    fork(tempTraineesSaga),
     fork(trainingFormatsSaga),
     fork(coursesCatalogsSaga),
     fork(academyOrgStructureSaga),

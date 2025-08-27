@@ -1,28 +1,22 @@
 import {
-  GET_TRAINEE_DELETED_VALUE,
-  GET_TRAINEE_DELETED_VALUE_FAIL,
-  GET_TRAINEE_DELETED_VALUE_SUCCESS,
-  GET_TRAINEES,
-  GET_TRAINEES_FAIL,
-  GET_TRAINEES_SUCCESS,
-  ADD_NEW_TRAINEE,
-  ADD_TRAINEE_SUCCESS,
-  ADD_TRAINEE_FAIL,
-  UPDATE_TRAINEE,
-  UPDATE_TRAINEE_SUCCESS,
-  UPDATE_TRAINEE_FAIL,
-  DELETE_TRAINEE,
-  DELETE_TRAINEE_SUCCESS,
-  DELETE_TRAINEE_FAIL,
-  GET_TEMP_RELATIVES,
-  GET_TEMP_RELATIVES_SUCCESS,
-  GET_TEMP_RELATIVES_FAIL,
+  GET_TEMP_TRAINEE_DELETED_VALUE,
+  GET_TEMP_TRAINEE_DELETED_VALUE_FAIL,
+  GET_TEMP_TRAINEE_DELETED_VALUE_SUCCESS,
+  GET_TEMP_TRAINEES,
+  GET_TEMP_TRAINEES_FAIL,
+  GET_TEMP_TRAINEES_SUCCESS,
+  ADD_NEW_TEMP_TRAINEE,
+  ADD_TEMP_TRAINEE_SUCCESS,
+  ADD_TEMP_TRAINEE_FAIL,
+  UPDATE_TEMP_TRAINEE,
+  UPDATE_TEMP_TRAINEE_SUCCESS,
+  UPDATE_TEMP_TRAINEE_FAIL,
+  DELETE_TEMP_TRAINEE,
+  DELETE_TEMP_TRAINEE_SUCCESS,
+  DELETE_TEMP_TRAINEE_FAIL,
   GET_REGISTER_CERTIFICATES,
   GET_REGISTER_CERTIFICATES_SUCCESS,
   GET_REGISTER_CERTIFICATES_FAIL,
-  GET_TRAINEE_DEFAULT_REGREQDOCS,
-  GET_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
-  GET_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
   GET_SOCIAL_STATUS,
   GET_SOCIAL_STATUS_FAIL,
   GET_SOCIAL_STATUS_SUCCESS,
@@ -38,113 +32,91 @@ import {
   ADD_REQUIRED_DOCS,
   ADD_REQUIRED_DOCS_FAIL,
   ADD_REQUIRED_DOCS_SUCCESS,
-  GENERATE_TRAINEE,
-  GENERATE_TRAINEE_SUCCESS,
-  GENERATE_TRAINEE_FAIL,
-  GET_TRAINEE_BY_ID,
-  GET_TRAINEE_BY_ID_SUCCESS,
-  GET_TRAINEE_BY_ID_FAIL,
-  GET_TRAINEE_STATUS,
-  GET_TRAINEE_STATUS_FAIL,
-  GET_TRAINEE_STATUS_SUCCESS,
+  GENERATE_TEMP_TRAINEE,
+  GENERATE_TEMP_TRAINEE_SUCCESS,
+  GENERATE_TEMP_TRAINEE_FAIL,
+  GET_TEMP_TRAINEE_BY_ID,
+  GET_TEMP_TRAINEE_BY_ID_SUCCESS,
+  GET_TEMP_TRAINEE_BY_ID_FAIL,
+  GET_TEMP_TRAINEE_STATUS,
+  GET_TEMP_TRAINEE_STATUS_FAIL,
+  GET_TEMP_TRAINEE_STATUS_SUCCESS,
+  GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS,
+  GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
+  GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
 } from "./actionTypes";
 
-export const getTrainees = trainees => ({
-  type: GET_TRAINEES,
-  payload: trainees,
+export const getTempTrainees = tempTrainees => ({
+  type: GET_TEMP_TRAINEES,
+  payload: tempTrainees,
 });
 
-export const getTraineesSuccess = trainees => ({
-  type: GET_TRAINEES_SUCCESS,
-  payload: trainees,
+export const getTempTraineesSuccess = tempTrainees => ({
+  type: GET_TEMP_TRAINEES_SUCCESS,
+  payload: tempTrainees,
 });
 
-export const getTraineesFail = error => ({
-  type: GET_TRAINEES_FAIL,
+export const getTempTraineesFail = error => ({
+  type: GET_TEMP_TRAINEES_FAIL,
   payload: error,
 });
 
-export const getTraineeDeletedValue = () => ({
-  type: GET_TRAINEE_DELETED_VALUE,
+export const getTempTraineeDeletedValue = () => ({
+  type: GET_TEMP_TRAINEE_DELETED_VALUE,
 });
 
-export const getTraineeDeletedValueSuccess = traineeProfile => ({
-  type: GET_TRAINEE_DELETED_VALUE_SUCCESS,
-  payload: traineeProfile,
+export const getTempTraineeDeletedValueSuccess = tempTraineeProfile => ({
+  type: GET_TEMP_TRAINEE_DELETED_VALUE_SUCCESS,
+  payload: tempTraineeProfile,
 });
 
-export const getTraineeDeletedValueFail = error => ({
-  type: GET_TRAINEE_DELETED_VALUE_FAIL,
+export const getTempTraineeDeletedValueFail = error => ({
+  type: GET_TEMP_TRAINEE_DELETED_VALUE_FAIL,
   payload: error,
 });
 
-export const addNewTrainee = trainee => ({
-  type: ADD_NEW_TRAINEE,
-  payload: trainee,
+export const addNewTempTrainee = tempTrainee => ({
+  type: ADD_NEW_TEMP_TRAINEE,
+  payload: tempTrainee,
 });
 
-export const addTraineeSuccess = trainee => ({
-  type: ADD_TRAINEE_SUCCESS,
-  payload: trainee,
+export const addTempTraineeSuccess = tempTrainee => ({
+  type: ADD_TEMP_TRAINEE_SUCCESS,
+  payload: tempTrainee,
 });
 
-export const addTraineeFail = error => ({
-  type: ADD_TRAINEE_FAIL,
+export const addTempTraineeFail = error => ({
+  type: ADD_TEMP_TRAINEE_FAIL,
   payload: error,
 });
 
-export const updateTrainee = trainee => ({
-  type: UPDATE_TRAINEE,
-  payload: trainee,
+export const updateTempTrainee = tempTrainee => ({
+  type: UPDATE_TEMP_TRAINEE,
+  payload: tempTrainee,
 });
 
-export const updateTraineeSuccess = trainee => ({
-  type: UPDATE_TRAINEE_SUCCESS,
-  payload: trainee,
+export const updateTempTraineeSuccess = tempTrainee => ({
+  type: UPDATE_TEMP_TRAINEE_SUCCESS,
+  payload: tempTrainee,
 });
 
-export const updateTraineeFail = error => ({
-  type: UPDATE_TRAINEE_FAIL,
+export const updateTempTraineeFail = error => ({
+  type: UPDATE_TEMP_TRAINEE_FAIL,
   payload: error,
 });
 
-export const deleteTrainee = trainee => ({
-  type: DELETE_TRAINEE,
-  payload: trainee,
+export const deleteTempTrainee = tempTrainee => ({
+  type: DELETE_TEMP_TRAINEE,
+  payload: tempTrainee,
 });
 
-export const deleteTraineeSuccess = trainee => ({
-  type: DELETE_TRAINEE_SUCCESS,
-  payload: trainee,
+export const deleteTempTraineeSuccess = tempTrainee => ({
+  type: DELETE_TEMP_TRAINEE_SUCCESS,
+  payload: tempTrainee,
 });
 
-export const deleteTraineeFail = error => ({
-  type: DELETE_TRAINEE_FAIL,
-  payload: error,
-});
-export const getTraineeDefaultRegReqDocs = docs => ({
-  type: GET_TRAINEE_DEFAULT_REGREQDOCS,
-  payload: docs,
-});
-
-export const getTraineeDefaultRegReqDocsSuccess = docs => ({
-  type: GET_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
-  payload: docs,
-});
-
-export const getTraineeDefaultRegReqDocsFail = error => ({
-  type: GET_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
-  payload: error,
-});
-export const getTraineeTempRelatives = () => ({
-  type: GET_TEMP_RELATIVES,
-});
-export const getTraineeTempRelativesSuccess = relatives => ({
-  type: GET_TEMP_RELATIVES_SUCCESS,
-  payload: relatives,
-});
-export const getTraineeTempRelativesFail = error => ({
-  type: GET_TEMP_RELATIVES_FAIL,
+export const deleteTempTraineeFail = error => ({
+  type: DELETE_TEMP_TRAINEE_FAIL,
   payload: error,
 });
 
@@ -220,14 +192,14 @@ export const deleteProfessionalExperienceFail = error => ({
   payload: error,
 });
 
-export const addRequiredDocs = trainee => ({
+export const addRequiredDocs = tempTrainee => ({
   type: ADD_REQUIRED_DOCS,
-  payload: trainee,
+  payload: tempTrainee,
 });
 
-export const addRequiredDocsSuccess = trainee => ({
+export const addRequiredDocsSuccess = tempTrainee => ({
   type: ADD_REQUIRED_DOCS_SUCCESS,
-  payload: trainee,
+  payload: tempTrainee,
 });
 
 export const addRequiredDocsFail = error => ({
@@ -235,47 +207,62 @@ export const addRequiredDocsFail = error => ({
   payload: error,
 });
 
-export const getTraineeById = tempTrainee => ({
-  type: GET_TRAINEE_BY_ID,
+export const getTempTraineeById = tempTrainee => ({
+  type: GET_TEMP_TRAINEE_BY_ID,
   payload: tempTrainee,
 });
 
-export const getTraineeByIdSuccess = tempTrainee => ({
-  type: GET_TRAINEE_BY_ID_SUCCESS,
+export const getTempTraineeByIdSuccess = tempTrainee => ({
+  type: GET_TEMP_TRAINEE_BY_ID_SUCCESS,
   payload: tempTrainee,
 });
 
-export const getTraineeByIdFail = error => ({
-  type: GET_TRAINEE_BY_ID_FAIL,
+export const getTempTraineeByIdFail = error => ({
+  type: GET_TEMP_TRAINEE_BY_ID_FAIL,
   payload: error,
 });
 
-export const generateTrainee = trainee => ({
-  type: GENERATE_TRAINEE,
-  payload: trainee,
+export const generateTempTrainee = tempTrainee => ({
+  type: GENERATE_TEMP_TRAINEE,
+  payload: tempTrainee,
 });
 
-export const generateTraineeSuccess = trainee => ({
-  type: GENERATE_TRAINEE_SUCCESS,
-  payload: trainee,
+export const generateTempTraineeSuccess = tempTrainee => ({
+  type: GENERATE_TEMP_TRAINEE_SUCCESS,
+  payload: tempTrainee,
 });
 
-export const generateTraineeFail = error => ({
-  type: GENERATE_TRAINEE_FAIL,
+export const generateTempTraineeFail = error => ({
+  type: GENERATE_TEMP_TRAINEE_FAIL,
   payload: error,
 });
 
-export const getTraieeStatus = traineeStatus => ({
-  type: GET_TRAINEE_STATUS,
-  payload: traineeStatus,
+export const getTempTraieeStatus = tempTraineeStatus => ({
+  type: GET_TEMP_TRAINEE_STATUS,
+  payload: tempTraineeStatus,
 });
 
-export const getTraieeStatusSuccess = traineeStatus => ({
-  type: GET_TRAINEE_STATUS_SUCCESS,
-  payload: traineeStatus,
+export const getTempTraineeStatusSuccess = tempTraineeStatus => ({
+  type: GET_TEMP_TRAINEE_STATUS_SUCCESS,
+  payload: tempTraineeStatus,
 });
 
-export const getTraieeStatusFail = error => ({
-  type: GET_TRAINEE_STATUS_FAIL,
+export const getTempTraineeStatusFail = error => ({
+  type: GET_TEMP_TRAINEE_STATUS_FAIL,
+  payload: error,
+});
+
+export const getTempTraineeDefaultRegReqDocs = docs => ({
+  type: GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS,
+  payload: docs,
+});
+
+export const getTempTraineeDefaultRegReqDocsSuccess = docs => ({
+  type: GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
+  payload: docs,
+});
+
+export const getTempTraineeDefaultRegReqDocsFail = error => ({
+  type: GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
   payload: error,
 });

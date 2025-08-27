@@ -51,14 +51,14 @@ import DeleteModal from "components/Common/DeleteModal";
 import { withTranslation } from "react-i18next";
 
 import {
-  getTempTrainees,
-  addNewTempTrainee,
-  updateTempTrainee,
-  deleteTempTrainee,
-  getTempTraineeById,
-  generateTempTrainee,
+  getTrainees,
+  addNewTrainee,
+  updateTrainee,
+  deleteTrainee,
+  getTraineeById,
+  generateTrainee,
   getRegisterCertificates,
-  getTempTraineeDefaultRegReqDocs,
+  getTraineeDefaultRegReqDocs,
   updateProfessionalExperience,
   addNewProfessionalExperience,
   deleteProfessionalExperience,
@@ -98,7 +98,7 @@ class ApplicantsList extends Component {
     super(props);
     this.node = React.createRef();
     this.state = {
-      tempTrainee: "",
+      trainee: "",
       years: [],
       tempTraineeLocal: "",
       activeTab: 1,
@@ -125,7 +125,7 @@ class ApplicantsList extends Component {
       selectedRegistrationCertLevelId: "",
       selectedStudyPattern: "",
       selectedExaminationSession: "",
-      IsTransferTempTraineeCheck: false,
+      IsTransferTraineeCheck: false,
       transferUniName: "",
       selectedTransferUnivCountry: "",
       selectedUnivCountry: "",
@@ -199,31 +199,31 @@ class ApplicantsList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
-      tempTrainees: {},
+      trainees: {},
       selectedParentNationality: null,
       selectedInstituteCountry: "",
-      selectedTempTraineeStatus: "",
+      selectedTraineeStatus: "",
       languageState: "",
       selectedHightStudyTypeId: "",
       selectedEstimateId: "",
       selectedRegUniDate: "",
       selectedRowId: null,
-      isTempTraineeSaved: false,
+      isTraineeSaved: false,
       selectedTempTraineeId: 0,
       isAdd: false,
     };
 
-    this.handleEditempTrainee = this.handleEditempTrainee.bind(this);
+    this.handleEditTrainee = this.handleEditTrainee.bind(this);
     this.toggle = this.toggle.bind(this);
-    // this.handleTempTraineeClicks = this.handleTempTraineeClicks.bind(this);
+    // this.handleTraineeClicks = this.handleTraineeClicks.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
     this.toggleTabVertical = this.toggleTabVertical.bind(this);
     this.handleGenderChange = this.handleGenderChange.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleButtonClick = this.handleButtonClick.bind(this);
-    this.handleIsTransferTempTraineeChange =
-      this.handleIsTransferTempTraineeChange.bind(this);
+    this.handleIsTransferTraineeChange =
+      this.handleIsTransferTraineeChange.bind(this);
     this.handleCheckboxEdit = this.handleCheckboxEdit.bind(this);
     this.handleButtonEdit = this.handleButtonEdit.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -232,11 +232,12 @@ class ApplicantsList extends Component {
   componentDidMount() {
     const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
-      tempTraineeStatus,
+      traineeStatus,
       last_created_trainee,
-      tempTrainees,
+      trainees,
       tempTrainee_regReqDocs,
-      onGetTempTrainees,
+      onGetTrainees,
+      tempTrainee,
       generated_trainee,
       diplomalevels,
       nationalities,
@@ -255,12 +256,14 @@ class ApplicantsList extends Component {
       filteredFaculties,
       filteredAcademicCertificates,
       deleted,
+      universityStudents,
       grants,
+      studentsOpt,
       tempTraineeBrothers,
       user_menu,
-      onGetTempTraineesRegCertificates,
+      onGetTraineesRegCertificates,
       trnProfExperiences,
-      tempTraineesDocuments,
+      traineesDocuments,
       generated_student,
       //onGetTempRelatives,
       regcertificates,
@@ -271,13 +274,13 @@ class ApplicantsList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     this.getAllObject(this.props.user_menu, this.props.location.pathname);
-    onGetTempTrainees(lang);
-    onGetTempTraineesRegCertificates();
-    this.setState({ trnProfExperiences, tempTraineeStatus });
-    this.setState({ tempTraineesDocuments });
+    onGetTrainees(lang);
+    onGetTraineesRegCertificates();
+    this.setState({ trnProfExperiences, traineeStatus });
+    this.setState({ traineesDocuments });
     this.setState({ nationalities, regcertificates });
     this.setState({ last_created_trainee, diplomalevels });
-    this.setState({ tempTrainees });
+    this.setState({ trainees });
     this.setState({ tempTrainee_regReqDocs });
     this.setState({ nationalities });
     this.setState({ relatives });
@@ -294,8 +297,10 @@ class ApplicantsList extends Component {
     this.setState({ academiccertificates });
     this.setState({ filteredFaculties });
     this.setState({ filteredAcademicCertificates });
+    this.setState({ tempTrainee });
     this.setState({ generated_trainee });
     this.setState({ deleted });
+    this.setState({ universityStudents, studentsOpt });
     this.setState({ grants });
     this.setState({ tempTraineeBrothers });
 
@@ -325,12 +330,12 @@ class ApplicantsList extends Component {
     console.log(this.state.currentYearObj, "gggg");
   }
   handleLanguageChange = lng => {
-    const { onGetTempTrainees } = this.props;
+    const { onGetTrainees } = this.props;
     const lang = localStorage.getItem("I18N_LANGUAGE");
 
     if (lang != lng) {
       this.setState({ languageState: lng });
-      onGetTempTrainees(lng);
+      onGetTrainees(lng);
     }
   };
 
@@ -396,7 +401,7 @@ class ApplicantsList extends Component {
   }
   handleSelectYear = (name, value) => {
     document.getElementById("square-switch1").checked = false;
-    // const { onGetTempTrainees  } = this.props;
+    // const { onGetTrainees } = this.props;
     this.setState({
       selectedYear: value,
       currentYearObj: {
@@ -404,13 +409,13 @@ class ApplicantsList extends Component {
         currentYearName: value.label,
       },
     });
-    // onGetTempTrainees ();
+    // onGetTrainees();
   };
-  // handleTempTraineeClicks = () => {
-  //   const { tempTrainees } = this.props;
-  //   const emptyTempTrainee = {};
-  //   Object.keys(tempTrainees).forEach(key => {
-  //     emptyTempTrainee[key] = "";
+  // handleTraineeClicks = () => {
+  //   const { trainees } = this.props;
+  //   const emptyTrainee = {};
+  //   Object.keys(trainees).forEach(key => {
+  //     emptyTrainee[key] = "";
   //   });
 
   //   const { currentSemester } = this.props;
@@ -435,7 +440,7 @@ class ApplicantsList extends Component {
   //   });
 
   //   this.setState({
-  //     emptyTempTrainee,
+  //     emptyTrainee,
   //     isEdit: false,
   //     showGenerateButton: false,
   //     errorMessage: null,
@@ -529,10 +534,10 @@ class ApplicantsList extends Component {
   //     if (values.identityNo === "") {
   //       this.setState({ identityNoError: true, saveError: true });
   //     }
-  //     const errorSaveTempTraineeMessage = this.props.t(
-  //       "Fill the Required Fields to Save TempTrainee"
+  //     const errorSaveTraineeMessage = this.props.t(
+  //       "Fill the Required Fields to Save Trainee"
   //     );
-  //     this.setState({ errorMessage: errorSaveTempTraineeMessage }, () => {
+  //     this.setState({ errorMessage: errorSaveTraineeMessage }, () => {
   //       window.scrollTo(0, 0);
   //     });
   //   } else {
@@ -557,7 +562,7 @@ class ApplicantsList extends Component {
   //         traineeinfo[key] = values[key];
   //     });
   //     const {
-  //       tempTrainee,
+  //       trainee,
   //       selectedExaminationSession,
   //       selectedStudyPattern,
   //       selectedBirthDate,
@@ -578,7 +583,7 @@ class ApplicantsList extends Component {
   //       isEdit,
   //     } = this.state;
 
-  //     const { onUpdateTempTrainee, onAddNewTempTrainee, tempTrainee } = this.props;
+  //     const { onUpdateTrainee, onAddNewTrainee, tTrainee } = this.props;
   //     const {
   //       cities,
   //       countries,
@@ -646,7 +651,7 @@ class ApplicantsList extends Component {
   //     if (selectedNationalityId) {
   //       traineeinfo["NationalityId"] = selectedNationalityId;
   //     } else {
-  //       traineeinfo["NationalityId"] = tempTrainee.NationalityId;
+  //       traineeinfo["NationalityId"] = tTrainee.NationalityId;
   //     }
 
   //     if (selectedExaminationSession) {
@@ -710,19 +715,19 @@ class ApplicantsList extends Component {
   //     }
 
   //     if (isEdit) {
-  //       traineeinfo["Id"] = tempTrainee.Id;
-  //       onUpdateTempTrainee(traineeinfo);
+  //       traineeinfo["Id"] = tTrainee.Id;
+  //       onUpdateTrainee(traineeinfo);
   //       const updateTraineMessage = this.props.t("Traine updated successfully");
   //       this.setState({ successMessage: updateTraineMessage });
   //     } else {
-  //       const response = onAddNewTempTrainee(traineeinfo);
+  //       const response = onAddNewTrainee(traineeinfo);
   //       if (response?.Id) {
   //         this.setState({ tempTraineeId: response.Id });
   //       }
-  //       const saveTempTraineeMessage = this.props.t("TempTrainee saved successfully");
+  //       const saveTraineeMessage = this.props.t("Trainee saved successfully");
   //       this.setState({
-  //         successMessage: saveTempTraineeMessage,
-  //         isTempTraineeSaved: true,
+  //         successMessage: saveTraineeMessage,
+  //         isTraineeSaved: true,
   //       });
   //     }
   //   }
@@ -743,11 +748,11 @@ class ApplicantsList extends Component {
       selectedHightStudyTypeId,
       selectedEstimateId,
       selectedRegUniDate,
-      selectedTempTraineeStatus,
+      selectedTraineeStatus,
     } = this.state;
     console.log("values in save", values);
     values["socialStatusId"] = selectedSocialStatus;
-    values.statusId = isEdit ? selectedTempTraineeStatus : 1;
+    values.statusId = isEdit ? selectedTraineeStatus : 1;
 
     if (
       values.FirstName === "" ||
@@ -815,10 +820,10 @@ class ApplicantsList extends Component {
       if (values.identityNo === "") {
         this.setState({ identityNoError: true, saveError: true });
       }
-      const errorSaveTempTraineeMessage = this.props.t(
-        "Fill the Required Fields to Save TempTrainee"
+      const errorSaveTraineeMessage = this.props.t(
+        "Fill the Required Fields to Save Trainee"
       );
-      this.setState({ errorMessage: errorSaveTempTraineeMessage }, () => {
+      this.setState({ errorMessage: errorSaveTraineeMessage }, () => {
         window.scrollTo(0, 0);
       });
     } else {
@@ -843,7 +848,7 @@ class ApplicantsList extends Component {
           traineeinfo[key] = values[key];
       });
       const {
-        tempTrainee,
+        tTrainee,
         selectedExaminationSession,
         selectedStudyPattern,
         selectedBirthDate,
@@ -864,7 +869,7 @@ class ApplicantsList extends Component {
         isEdit,
       } = this.state;
 
-      const { onUpdateTempTrainee, onAddNewTempTrainee } = this.props;
+      const { onUpdateTrainee, onAddNewTrainee } = this.props;
       const {
         cities,
         countries,
@@ -878,7 +883,7 @@ class ApplicantsList extends Component {
           certificate => certificate.value === values.diplomaId
         );
         if (diplomaObject === undefined) {
-          traineeinfo["diplomaId"] = tempTrainee.diplomaId;
+          traineeinfo["diplomaId"] = tTrainee.diplomaId;
         }
       }
 
@@ -887,7 +892,7 @@ class ApplicantsList extends Component {
           country => country.value === values.DiplomaCountryId
         );
         if (countryObject === undefined) {
-          traineeinfo["DiplomaCountryId"] = tempTrainee.DiplomaCountryId;
+          traineeinfo["DiplomaCountryId"] = tTrainee.DiplomaCountryId;
         }
       }
 
@@ -896,8 +901,7 @@ class ApplicantsList extends Component {
           governorate => governorate.value === values.DiplomaGovernorateId
         );
         if (governorateObject === undefined) {
-          traineeinfo["DiplomaGovernorateId"] =
-            tempTrainee.DiplomaGovernorateId;
+          traineeinfo["DiplomaGovernorateId"] = tTrainee.DiplomaGovernorateId;
         }
       }
 
@@ -906,7 +910,7 @@ class ApplicantsList extends Component {
           country => country.value === values.UnivCountryId
         );
         if (univCountryObject === undefined) {
-          traineeinfo["UnivCountryId"] = tempTrainee.UnivCountryId;
+          traineeinfo["UnivCountryId"] = tTrainee.UnivCountryId;
         }
       }
 
@@ -915,7 +919,7 @@ class ApplicantsList extends Component {
           country => country.value === values.InstituteCountryId
         );
         if (instCountryObject === undefined) {
-          traineeinfo["InstituteCountryId"] = tempTrainee.InstituteCountryId;
+          traineeinfo["InstituteCountryId"] = tTrainee.InstituteCountryId;
         }
       }
       if (values.birthdate) {
@@ -930,11 +934,11 @@ class ApplicantsList extends Component {
       }
 
       if (selectedNationalityId) {
-        traineeinfo["NationalityId"] = tempTrainee.NationalityId;
+        traineeinfo["NationalityId"] = tTrainee.NationalityId;
       }
 
       if (selectedExaminationSession) {
-        traineeinfo["ExaminationSession"] = tempTrainee.ExaminationSession;
+        traineeinfo["ExaminationSession"] = tTrainee.ExaminationSession;
       }
       if (selectedSocialStatus) {
         traineeinfo["socialStatusId"] = selectedSocialStatus;
@@ -997,15 +1001,13 @@ class ApplicantsList extends Component {
       // console.log("traineeinfotraineeinfo", traineeinfo["Id"]);
       if (isEdit) {
         console.log("rrrrrrrrrrrrrrr", traineeinfo);
-        onUpdateTempTrainee(traineeinfo);
+        onUpdateTrainee(traineeinfo);
       } else if (isAdd) {
-        onAddNewTempTrainee(traineeinfo);
+        onAddNewTrainee(traineeinfo);
       }
-      const saveTempTraineeMessage = this.props.t(
-        "TempTrainee saved successfully"
-      );
+      const saveTraineeMessage = this.props.t("Trainee saved successfully");
       this.setState({
-        successMessage: saveTempTraineeMessage,
+        successMessage: saveTraineeMessage,
       });
     }
   };
@@ -1034,59 +1036,59 @@ class ApplicantsList extends Component {
     }
   };
 
-  handleEditempTrainee = arg => {
+  handleEditTrainee = arg => {
     console.log("arg", arg);
     // const {
-    //   tempTrainees,
-    //   onGetempTraineeById,
+    //   trainees,
+    //   onGetTraineeById,
     //   diplomalevels,
-    //   onGetempTraineesDocuments,
+    //   onGetTraineesDocuments,
     // } = this.props;
     // const { stdDocsArray, profExperiencesArray } = this.state;
-
-    // const filteredTempTrainee = tempTrainees.filter(tempTrainee => tempTrainee.key != arg.Id);
-    // console.log("BEFORE tempTrainee", tempTrainee);
-    // console.log("BEFORE tempTrainee", tempTrainee);
-    // onGetempTraineeById(tempTrainee);
+    const trainee = arg;
+    // const filteredTrainee = trainees.filter(trainee => trainee.key != arg.Id);
+    // console.log("BEFORE trainee", trainee);
+    // console.log("BEFORE trainee", trainee);
+    // onGetTraineeById(trainee);
     // console.log("aFTER Btrainee", tempTrainee.Id);
     // console.log("aFTER Btrainee", tempTrainee.ProfessionalExperiences);
     this.setState({
       //   showGenerateButton: true,
-      //   // tempTrainee: {
-      //   // Id: tempTrainee.Id,
-      tempTrainee: arg,
+      //   // tTrainee: {
+      //   // Id: trainee.Id,
+      tTrainee: trainee,
       selectedTempTraineeId: arg.Id,
-      nationalityName: arg.nationality || "",
-      selectedNationalityId: arg.NationalityId || null,
-      //   //selectedRegistrationDate: arg.RegistrationDate || null,
-      selectedGender: arg.GenderId || null,
-      genderName: arg.gender || "",
-      selectedDiploma: arg.diplomaId || null,
-      diplomaTypeName: arg.diplomaTypeName || null,
-      averageValue: arg.Average || null,
-      selectedCountry: arg.DiplomaCountryId || null,
-      facultyName: arg.facultyName || "",
-      selectedFacultyId: arg.FacultyId || null,
-      studyPlanName: arg.plan_study || "",
-      selectedGovernorate: arg.DiplomaGovernorateId || null,
-      selectedExaminationSession: arg.ExaminationSession || "",
-      selectedRegistrationCertLevelId: arg.registrationCertLevelId || "",
-      // selectedSocialStatus: arg.socialStatusId || "",
-      socialStatusName: arg.socialStatusName || null,
-      selectedRegistrationDiplomaDate: arg.registrationDiplomaDate || "",
+      nationalityName: trainee.nationality || "",
+      selectedNationalityId: trainee.NationalityId || null,
+      //   //selectedRegistrationDate: trainee.RegistrationDate || null,
+      selectedGender: trainee.GenderId || null,
+      genderName: trainee.gender || "",
+      selectedDiploma: trainee.diplomaId || null,
+      diplomaTypeName: trainee.diplomaTypeName || null,
+      averageValue: trainee.Average || null,
+      selectedCountry: trainee.DiplomaCountryId || null,
+      facultyName: trainee.facultyName || "",
+      selectedFacultyId: trainee.FacultyId || null,
+      studyPlanName: trainee.plan_study || "",
+      selectedGovernorate: trainee.DiplomaGovernorateId || null,
+      selectedExaminationSession: trainee.ExaminationSession || "",
+      selectedRegistrationCertLevelId: trainee.registrationCertLevelId || "",
+      // selectedSocialStatus: trainee.socialStatusId || "",
+      socialStatusName: trainee.socialStatusName || null,
+      selectedRegistrationDiplomaDate: trainee.registrationDiplomaDate || "",
       //   // },
-      //   tempTraineeId: arg.Id,
+      //   tempTraineeId: trainee.Id,
       profExperiencesArray:
-        arg &&
-        arg.ProfessionalExperiences !== undefined &&
-        arg.ProfessionalExperiences !== null
-          ? arg.ProfessionalExperiences
+        trainee &&
+        trainee.ProfessionalExperiences !== undefined &&
+        trainee.ProfessionalExperiences !== null
+          ? trainee.ProfessionalExperiences
           : [],
       stdDocsArray:
-        arg &&
-        arg.RegReqDocTempTrainee !== undefined &&
-        arg.RegReqDocTempTrainee !== null
-          ? arg.RegReqDocTempTrainee
+        trainee &&
+        trainee.RegReqDocTempTrainee !== undefined &&
+        trainee.RegReqDocTempTrainee !== null
+          ? trainee.RegReqDocTempTrainee
           : [],
       isEdit: true,
     });
@@ -1114,20 +1116,21 @@ class ApplicantsList extends Component {
   };
 
   toggleTab(tab) {
-    if (tab === 5 && !this.state.isTempTraineeSaved && !this.state.isEdit) {
+    if (tab === 5 && !this.state.isTraineeSaved && !this.state.isEdit) {
       return;
     }
-    if (tab === 4 && !this.state.isTempTraineeSaved && !this.state.isEdit) {
+    if (tab === 4 && !this.state.isTraineeSaved && !this.state.isEdit) {
       return;
     }
     const {
-      tempTrainee,
       isEdit,
       siblingsArray,
       trnProfExperiences,
       stdDocsArray,
       profExperiencesArray,
+      tTrainee,
     } = this.state;
+    const { tempTrainee } = this.props;
     if (this.state.activeTab !== tab) {
       if (tab >= 1 && tab <= 5) {
         var modifiedSteps = [...this.state.passedSteps, tab];
@@ -1137,8 +1140,8 @@ class ApplicantsList extends Component {
         });
         if (isEdit) {
           this.setState({
-            stdDocsArray: tempTrainee.RegReqDocTempTrainee || [],
-            profExperiencesArray: tempTrainee.ProfessionalExperiences || [],
+            stdDocsArray: tTrainee.RegReqDocTempTrainee || [],
+            profExperiencesArray: tTrainee.ProfessionalExperiences || [],
           });
         }
       }
@@ -1150,9 +1153,9 @@ class ApplicantsList extends Component {
       }
 
       if (tab == 5 && isEdit == false) {
-        const { tempTraineesDocuments } = this.props;
+        const { traineesDocuments } = this.props;
         this.setState({
-          stdDocsArray: tempTraineesDocuments,
+          stdDocsArray: traineesDocuments,
         });
       }
     }
@@ -1170,10 +1173,10 @@ class ApplicantsList extends Component {
     }
   }
 
-  handleIsTransferTempTraineeChange = event => {
+  handleIsTransferTraineeChange = event => {
     const { name, checked } = event.target;
     this.setState({
-      IsTransferTempTraineeCheck: checked,
+      IsTransferTraineeCheck: checked,
     });
   };
 
@@ -1293,7 +1296,7 @@ class ApplicantsList extends Component {
   // };
 
   handleDataListChange = (event, fieldName) => {
-    const { IsTransferTempTraineeCheck, HasBrotherCheck } = this.state;
+    const { IsTransferTraineeCheck, HasBrotherCheck } = this.state;
 
     const selectedValue = event.target.value;
 
@@ -1309,7 +1312,7 @@ class ApplicantsList extends Component {
       this.setState({ selectedCity: selectedValue });
     }
 
-    if (IsTransferTempTraineeCheck) {
+    if (IsTransferTraineeCheck) {
       if (fieldName === "TransferUnivCountryId") {
         this.setState({ selectedTransferUnivCountry: selectedValue });
       }
@@ -1426,7 +1429,7 @@ class ApplicantsList extends Component {
       this.setState({
         selectedNationalityId: selectedValue,
         // nationalityName: name.label,
-        tempTrainee: values,
+        trainee: values,
       });
     }
 
@@ -1441,13 +1444,13 @@ class ApplicantsList extends Component {
       this.setState({
         selectedGender: selectedValue,
         genderName: gender.label,
-        tempTrainee: values,
+        trainee: values,
       });
     }
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
-    const { socialStatus, tempTraineeStatus } = this.props;
+    const { socialStatus, traineeStatus } = this.props;
     if (fieldName == "socialStatusId") {
       const name = socialStatus.find(
         socialStat => socialStat.value === selectedValue
@@ -1457,31 +1460,31 @@ class ApplicantsList extends Component {
       this.setState({
         selectedSocialStatus: selectedValue,
         socialStatusName: name.label,
-        tempTrainee: values,
+        trainee: values,
       });
     }
     if (fieldName == "statusId") {
-      const name = tempTraineeStatus.find(
+      const name = traineeStatus.find(
         traineeStatu => traineeStatu.value === selectedValue
       );
       console.log("naaaaamesooo", name);
 
       this.setState({
-        selectedTempTraineeStatus: selectedValue,
+        selectedTraineeStatus: selectedValue,
         socialStatusName: name.label,
-        tempTrainee: values,
+        trainee: values,
       });
     }
   };
 
-  // handleGenerateTempTrainee = tempTraineeId => {
-  //   const { onGenerateTempTrainee, last_created_trainee } = this.props;
+  // handleGenerateTrainee = tempTraineeId => {
+  //   const { onGenerateTrainee, last_created_trainee } = this.props;
 
   //   const { isEdit } = this.state;
   //   if (isEdit) {
-  //     onGenerateTempTrainee(tempTraineeId);
+  //     onGenerateTrainee(tempTraineeId);
   //   } else if (!isEdit) {
-  //     onGenerateTempTrainee(last_created_trainee);
+  //     onGenerateTrainee(last_created_trainee);
   //   }
 
   //   this.setState({ generateModal: true });
@@ -1494,9 +1497,9 @@ class ApplicantsList extends Component {
   // };
 
   // onCloseGenerateModal = () => {
-  //   const { onGetTempTrainees  } = this.props;
+  //   const { onGetTrainees } = this.props;
   //   this.setState({ generateModal: false });
-  //   onGetTempTrainees ();
+  //   onGetTrainees();
   // };
   handleSuccessClose = () => {
     this.setState({ successMessage: null });
@@ -1514,16 +1517,16 @@ class ApplicantsList extends Component {
   };
   handleDeletedSuccessClose = () => {
     this.setState({ successMessage: null, showAlert: null });
-    // const { onGetempTraineeDeletedValue } = this.props;
+    // const { onGetTraineeDeletedValue } = this.props;
     // this.setState({ showAlert: null });
-    // onGetempTraineeDeletedValue();
+    // onGetTraineeDeletedValue();
   };
 
   handleDeletedErrorClose = () => {
     this.setState({ errorMessage: null, showAlert: null });
-    // const { onGetempTraineeDeletedValue } = this.props;
+    // const { onGetTraineeDeletedValue } = this.props;
     // this.setState({ showAlert: null });
-    // onGetempTraineeDeletedValue();
+    // onGetTraineeDeletedValue();
   };
 
   handleHasBrotherChange = event => {
@@ -1543,7 +1546,7 @@ class ApplicantsList extends Component {
     }
   };
 
-  handleChangeTempTraineeGrade = (fieldName, value) => {
+  handleChangeTraineeGrade = (fieldName, value) => {
     const { onGetFilteredFaculties, certificates, currentSemester } =
       this.props;
     const { totalGradeValue, selectedDiplomaId, grantCond } = this.state;
@@ -1674,13 +1677,13 @@ class ApplicantsList extends Component {
   handleButtonClick2 = (fieldName, option, values) => {
     console.log("fieldName", fieldName);
     console.log("option", option);
-    const { onGetempTraineesDocuments } = this.props;
+    const { onGetTraineesDocuments } = this.props;
     let obj = { certificateLevelId: option };
     console.log("objobjobj", obj);
-    onGetempTraineesDocuments(obj);
+    onGetTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
       this.setState({ selectedregistrationCertLevelId: option });
-      this.setState({ tempTrainee: values });
+      this.setState({ trainee: values });
     }
   };
 
@@ -1761,13 +1764,13 @@ class ApplicantsList extends Component {
   };
 
   handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
-    // const { onGetempTraineesDocuments } = this.props;
+    // const { onGetTraineesDocuments } = this.props;
     const { diplomalevels } = this.props;
     const selectedValue = event.target.value;
     console.log("selectedValue", selectedValue);
 
     this.setState({
-      tempTrainee: values,
+      trainee: values,
     });
 
     const diplomaObject = diplomalevels.find(
@@ -1776,7 +1779,7 @@ class ApplicantsList extends Component {
     console.log(diplomaObject, "ollllllll");
     // let obj = { certificateLevelId: diplomaObject.key };
     // console.log("objobjobj", obj);
-    // onGetempTraineesDocuments(obj);
+    // onGetTraineesDocuments(obj);
     setFieldValue("diplomaId", selectedValue);
 
     if (diplomaObject) {
@@ -1785,7 +1788,7 @@ class ApplicantsList extends Component {
         selectedDiploma: selectedValue,
         diplomaTypeName: diplomaObject.value,
         diplomaError: false,
-        tempTrainee: values,
+        trainee: values,
       });
     }
   };
@@ -1980,7 +1983,7 @@ class ApplicantsList extends Component {
     onAddRequiredDocs(traineeinfo);
     // const saveDocsMessage = this.props.t("Documents requiered saved successfully");
     //     this.setState({
-    //       successMessage: saveTempTraineeMessage,
+    //       successMessage: saveTraineeMessage,
     //     });
   };
 
@@ -2080,9 +2083,10 @@ class ApplicantsList extends Component {
   render() {
     //meta title
     document.title =
-      "TempTrainee List | keyInHands - React Admin & Dashboard Template";
+      "Trainee List | keyInHands - React Admin & Dashboard Template";
 
     const {
+      tTrainee,
       selectedYear,
       selectedHealthProblems,
       selectedHasDisability,
@@ -2112,8 +2116,8 @@ class ApplicantsList extends Component {
       selectedGovernorate,
       selectedGender,
       genderName,
-      IsTransferTempTraineeCheck,
-      emptyTempTrainee,
+      IsTransferTraineeCheck,
+      emptyTrainee,
       firstNameError,
       lastNameError,
       fatherNameError,
@@ -2175,7 +2179,6 @@ class ApplicantsList extends Component {
       nationalNoError,
       identityNoError,
       plan_studyError,
-      tempTrainee,
     } = this.state;
 
     const showNewInput =
@@ -2190,11 +2193,12 @@ class ApplicantsList extends Component {
     const showUniForm = selectedRegistrationCertLevelId === 79;
 
     const {
-      tempTraineeStatus,
+      traineeStatus,
       isLoading,
       years,
       tempRelatives,
-      tempTrainees,
+      trainees,
+      tempTrainee,
       tempTrainee_regReqDocs,
       nationalities,
       relatives,
@@ -2213,14 +2217,16 @@ class ApplicantsList extends Component {
       filteredAcademicCertificates,
       generated_trainee,
       deleted,
+      universityStudents,
       grants,
       t,
       regReqDocuments,
+      studentsOpt,
       tempTraineeBrothers,
       lastAddedId,
       trnProfExperiences,
       socialStatus,
-      tempTraineesDocuments,
+      traineesDocuments,
       diplomalevels,
       onGetFilteredAcademicCertificates,
       getFilteredFaculties,
@@ -2229,6 +2235,9 @@ class ApplicantsList extends Component {
       highstudytypes,
       estimates,
     } = this.props;
+
+    console.log("universityStudents", universityStudents);
+    console.log("studentsOpt", studentsOpt);
 
     const { isEdit, deleteModal, generateModal } = this.state;
 
@@ -2246,7 +2255,7 @@ class ApplicantsList extends Component {
         dataField: "Id",
         sort: true,
         hidden: true,
-        formatter: (cellContent, tempTrainee) => <>{tempTrainee.Id}</>,
+        formatter: (cellContent, trainee) => <>{trainee.Id}</>,
       },
       {
         dataField: "img",
@@ -2307,7 +2316,7 @@ class ApplicantsList extends Component {
       },
       {
         dataField: "statusId",
-        text: this.props.t("TempTrainee Status"),
+        text: this.props.t("Trainee Status"),
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -2327,14 +2336,14 @@ class ApplicantsList extends Component {
         dataField: "menu",
         isDummyField: true,
         editable: false,
-        formatter: (cellContent, tempTrainee) => (
+        formatter: (cellContent, trainee) => (
           <div className="d-flex gap-3">
             {/* {menuObject && menuObject.isEdit == 1 && ( */}
             <Link className="text-secondary" to="#">
               <i
                 className="mdi mdi-pencil font-size-18"
                 id="edittooltip"
-                onClick={() => this.handleEditempTrainee(tempTrainee)}
+                onClick={() => this.handleEditTrainee(trainee)}
               ></i>
             </Link>
             {/* )} */}
@@ -2343,7 +2352,7 @@ class ApplicantsList extends Component {
               <i
                 className="mdi mdi-delete font-size-18"
                 id="deletetooltip"
-                onClick={() => this.onClickDelete(tempTrainee)}
+                onClick={() => this.onClickDelete(trainee)}
               ></i>
             </Link> */}
             {/* )} */}
@@ -2391,9 +2400,11 @@ class ApplicantsList extends Component {
             .split("T")[0]
         : selectedDiplomaVerificationDate;
 
+    const trainee = this.state.trainee;
+
     const pageOptions = {
       sizePerPage: 10,
-      TotalGradeSize: tempTrainees.length, // replace later with size(tempTrainees),
+      TotalGradeSize: trainees.length, // replace later with size(trainees),
       custom: true,
     };
 
@@ -2727,7 +2738,7 @@ class ApplicantsList extends Component {
       <React.Fragment>
         <DeleteModal
           show={deleteModal}
-          onDeleteClick={this.handleDeleteTempTrainee}
+          onDeleteClick={this.handleDeleteTrainee}
           onCloseClick={() => this.setState({ deleteModal: false })}
         />
 
@@ -2745,14 +2756,14 @@ class ApplicantsList extends Component {
                       key="unique-pagination-key"
                       keyField="Pagination-Provider"
                       columns={traineeListColumns}
-                      data={tempTrainees}
+                      data={trainees}
                     >
                       {({ paginationProps, paginationTableProps }) => (
                         <ToolkitProvider
                           key="unique-toolkit-key"
                           keyField="Toolkit-Provider"
                           columns={traineeListColumns}
-                          data={tempTrainees}
+                          data={trainees}
                           search
                         >
                           {toolkitprops => (
@@ -2777,12 +2788,12 @@ class ApplicantsList extends Component {
                                 <Col sm="1">
                                   <div className="text-sm-end">
                                     <Tooltip
-                                      title={this.props.t("Create New TempTrainee")}
+                                      title={this.props.t("Create New Trainee")}
                                       placement="top"
                                     >
                                       <IconButton
                                         color="primary"
-                                        onClick={this.handleTempTraineeClicks}
+                                        onClick={this.handleTraineeClicks}
                                       >
                                         <i className="mdi mdi-plus-circle blue-noti-icon" />
                                       </IconButton>
@@ -2853,8 +2864,8 @@ class ApplicantsList extends Component {
                                         tag="h4"
                                       >
                                         {!!isEdit
-                                          ? this.props.t("Edit TempTrainee")
-                                          : this.props.t("Add New TempTrainee")}
+                                          ? this.props.t("Edit Trainee")
+                                          : this.props.t("Add New Trainee")}
                                       </ModalHeader>
                                       <Row>
                                         <div>
@@ -2914,7 +2925,7 @@ class ApplicantsList extends Component {
 
                                                   <h2>
                                                     {this.props.t(
-                                                      "TempTrainee Generated Successfully"
+                                                      "Trainee Generated Successfully"
                                                     )}
                                                   </h2>
                                                   <h4>
@@ -2945,319 +2956,317 @@ class ApplicantsList extends Component {
                                           enableReinitialize={true}
                                           initialValues={
                                             (isEdit && {
-                                              Id: tempTrainee.Id,
+                                              Id: tTrainee.Id,
                                               FirstName:
-                                                (tempTrainee &&
-                                                  tempTrainee.FirstName) ||
+                                                (tTrainee &&
+                                                  tTrainee.FirstName) ||
                                                 "",
                                               LastName:
-                                                (tempTrainee &&
-                                                  tempTrainee.LastName) ||
+                                                (tTrainee &&
+                                                  tTrainee.LastName) ||
                                                 "",
                                               FatherName:
-                                                (tempTrainee &&
-                                                  tempTrainee.FatherName) ||
+                                                (tTrainee &&
+                                                  tTrainee.FatherName) ||
                                                 "",
                                               grandFatherName:
-                                                (tempTrainee &&
-                                                  tempTrainee.grandFatherName) ||
+                                                (tTrainee &&
+                                                  tTrainee.grandFatherName) ||
                                                 "",
                                               MotherName:
-                                                (tempTrainee &&
-                                                  tempTrainee.MotherName) ||
+                                                (tTrainee &&
+                                                  tTrainee.MotherName) ||
                                                 "",
                                               BirthLocation:
-                                                (tempTrainee &&
-                                                  tempTrainee.BirthLocation) ||
+                                                (tTrainee &&
+                                                  tTrainee.BirthLocation) ||
                                                 "",
                                               FirstNameE:
-                                                (tempTrainee &&
-                                                  tempTrainee.FirstNameE) ||
+                                                (tTrainee &&
+                                                  tTrainee.FirstNameE) ||
                                                 "",
                                               LastNameE:
-                                                (tempTrainee &&
-                                                  tempTrainee.LastNameE) ||
+                                                (tTrainee &&
+                                                  tTrainee.LastNameE) ||
                                                 "",
                                               FatherNameE:
-                                                (tempTrainee &&
-                                                  tempTrainee.FatherNameE) ||
+                                                (tTrainee &&
+                                                  tTrainee.FatherNameE) ||
                                                 "",
                                               grandFatherNameE:
-                                                (tempTrainee &&
-                                                  tempTrainee.grandFatherNameE) ||
+                                                (tTrainee &&
+                                                  tTrainee.grandFatherNameE) ||
                                                 "",
                                               MotherNameE:
-                                                (tempTrainee &&
-                                                  tempTrainee.MotherNameE) ||
+                                                (tTrainee &&
+                                                  tTrainee.MotherNameE) ||
                                                 "",
                                               BirthLocationE:
-                                                (tempTrainee &&
-                                                  tempTrainee.BirthLocationE) ||
+                                                (tTrainee &&
+                                                  tTrainee.BirthLocationE) ||
                                                 "",
                                               birthdate:
-                                                (tempTrainee &&
-                                                  tempTrainee.birthdate) ||
+                                                (tTrainee &&
+                                                  tTrainee.birthdate) ||
                                                 selectedBirthDate,
                                               NationalityId:
-                                                (tempTrainee &&
-                                                  tempTrainee.NationalityId) ||
+                                                (tTrainee &&
+                                                  tTrainee.NationalityId) ||
                                                 selectedNationalityId,
                                               GenderId:
-                                                (tempTrainee &&
-                                                  tempTrainee.GenderId) ||
+                                                (tTrainee &&
+                                                  tTrainee.GenderId) ||
                                                 selectedGender ||
                                                 "",
 
                                               nationalNo:
-                                                (tempTrainee &&
-                                                  tempTrainee.nationalNo) ||
+                                                (tTrainee &&
+                                                  tTrainee.nationalNo) ||
                                                 "",
                                               identityNo:
-                                                (tempTrainee &&
-                                                  tempTrainee.identityNo) ||
+                                                (tTrainee &&
+                                                  tTrainee.identityNo) ||
                                                 "",
                                               identityIssueDate:
-                                                (tempTrainee &&
-                                                  tempTrainee.identityIssueDate) ||
+                                                (tTrainee &&
+                                                  tTrainee.identityIssueDate) ||
                                                 selectedIdentityIssueDate ||
                                                 "",
                                               civicZone:
-                                                (tempTrainee &&
-                                                  tempTrainee.civicZone) ||
+                                                (tTrainee &&
+                                                  tTrainee.civicZone) ||
                                                 "",
                                               registerZone:
-                                                (tempTrainee &&
-                                                  tempTrainee.registerZone) ||
+                                                (tTrainee &&
+                                                  tTrainee.registerZone) ||
                                                 "",
                                               registerNo:
-                                                (tempTrainee &&
-                                                  tempTrainee.registerNo) ||
+                                                (tTrainee &&
+                                                  tTrainee.registerNo) ||
                                                 "",
                                               PassNumber:
-                                                (tempTrainee &&
-                                                  tempTrainee.PassNumber) ||
+                                                (tTrainee &&
+                                                  tTrainee.PassNumber) ||
                                                 "",
                                               passportIssueDate:
-                                                (tempTrainee &&
-                                                  tempTrainee.passportIssueDate) ||
+                                                (tTrainee &&
+                                                  tTrainee.passportIssueDate) ||
                                                 selectedPassportIssueDate,
                                               passportExpiryDate:
-                                                (tempTrainee &&
-                                                  tempTrainee.passportExpiryDate) ||
+                                                (tTrainee &&
+                                                  tTrainee.passportExpiryDate) ||
                                                 selectedPassportExpiryDate,
                                               diplomaId:
-                                                (tempTrainee &&
-                                                  tempTrainee.diplomaId) ||
+                                                (tTrainee &&
+                                                  tTrainee.diplomaId) ||
                                                 selectedDiploma,
                                               DiplomaCountryId:
-                                                (tempTrainee &&
-                                                  tempTrainee.DiplomaCountryId) ||
+                                                (tTrainee &&
+                                                  tTrainee.DiplomaCountryId) ||
                                                 selectedCountry,
 
                                               DiplomaNumber:
-                                                (tempTrainee &&
-                                                  tempTrainee.DiplomaNumber) ||
+                                                (tTrainee &&
+                                                  tTrainee.DiplomaNumber) ||
                                                 "",
                                               DiplomaGovernorateId:
-                                                (tempTrainee &&
-                                                  tempTrainee.DiplomaGovernorateId) ||
+                                                (tTrainee &&
+                                                  tTrainee.DiplomaGovernorateId) ||
                                                 selectedGovernorate,
 
                                               /* DiplomaCityId:
-                                  (tempTrainee && tempTrainee.DiplomaCityId) ||
+                                  (tTrainee && tTrainee.DiplomaCityId) ||
                                   selectedCity, */
 
                                               DiplomaYear:
-                                                (tempTrainee &&
-                                                  tempTrainee.DiplomaYear) ||
+                                                (tTrainee &&
+                                                  tTrainee.DiplomaYear) ||
                                                 "",
                                               ExaminationSession:
-                                                (tempTrainee &&
-                                                  tempTrainee.ExaminationSession) ||
+                                                (tTrainee &&
+                                                  tTrainee.ExaminationSession) ||
                                                 "",
                                               Average:
-                                                (tempTrainee &&
-                                                  tempTrainee.Average) ||
+                                                (tTrainee &&
+                                                  tTrainee.Average) ||
                                                 "",
                                               diplomaDate:
-                                                (tempTrainee &&
-                                                  tempTrainee.diplomaDate) ||
+                                                (tTrainee &&
+                                                  tTrainee.diplomaDate) ||
                                                 selectedDiplomaDate,
                                               diplomaVerificationNum:
-                                                (tempTrainee &&
-                                                  tempTrainee.diplomaVerificationNum) ||
+                                                (tTrainee &&
+                                                  tTrainee.diplomaVerificationNum) ||
                                                 "",
                                               diplomaVerificationDate:
-                                                (tempTrainee &&
-                                                  tempTrainee.diplomaVerificationDate) ||
+                                                (tTrainee &&
+                                                  tTrainee.diplomaVerificationDate) ||
                                                 selectedDiplomaVerificationDate,
                                               socialStatusId:
-                                                tempTrainee &&
-                                                tempTrainee.socialStatusId,
+                                                tTrainee &&
+                                                tTrainee.socialStatusId,
                                               registrationCertLevelId:
-                                                (tempTrainee &&
-                                                  tempTrainee.registrationCertLevelId) ||
+                                                (tTrainee &&
+                                                  tTrainee.registrationCertLevelId) ||
                                                 selectedRegistrationCertLevelId,
                                               registrationDiplomaName:
-                                                (tempTrainee &&
-                                                  tempTrainee.registrationDiplomaName) ||
+                                                (tTrainee &&
+                                                  tTrainee.registrationDiplomaName) ||
                                                 "",
                                               registrationDiplomaDepartment:
-                                                (tempTrainee &&
-                                                  tempTrainee.registrationDiplomaDepartment) ||
+                                                (tTrainee &&
+                                                  tTrainee.registrationDiplomaDepartment) ||
                                                 "",
                                               diplomaName:
-                                                (tempTrainee &&
-                                                  tempTrainee.diplomaName) ||
+                                                (tTrainee &&
+                                                  tTrainee.diplomaName) ||
                                                 "",
 
                                               registrationDiplomaAverage:
-                                                (tempTrainee &&
-                                                  tempTrainee.registrationDiplomaAverage) ||
+                                                (tTrainee &&
+                                                  tTrainee.registrationDiplomaAverage) ||
                                                 "",
                                               uniAverage:
-                                                (tempTrainee &&
-                                                  tempTrainee.uniAverage) ||
+                                                (tTrainee &&
+                                                  tTrainee.uniAverage) ||
                                                 "",
                                               registrationDiplomaDate:
-                                                (tempTrainee &&
-                                                  tempTrainee.registrationDiplomaDate) ||
+                                                (tTrainee &&
+                                                  tTrainee.registrationDiplomaDate) ||
                                                 selectedRegistrationDiplomaDate,
 
                                               uniName:
-                                                (tempTrainee &&
-                                                  tempTrainee.uniName) ||
+                                                (tTrainee &&
+                                                  tTrainee.uniName) ||
                                                 "",
                                               UnivCountryId:
-                                                (tempTrainee &&
-                                                  tempTrainee.UnivCountryId) ||
+                                                (tTrainee &&
+                                                  tTrainee.UnivCountryId) ||
                                                 selectedUnivCountry,
 
                                               /* TransferUnivAverage:
-                                  (tempTrainee && tempTrainee.TransferUnivAverage) ||
+                                  (tTrainee && tTrainee.TransferUnivAverage) ||
                                   "", */
                                               studyPattern:
-                                                (tempTrainee &&
-                                                  tempTrainee.studyPattern) ||
+                                                (tTrainee &&
+                                                  tTrainee.studyPattern) ||
                                                 "",
                                               /*  selectedSemester:
-                                  (tempTrainee && tempTrainee.selectedSemester) ||
+                                  (tTrainee && tTrainee.selectedSemester) ||
                                   selectedSemester ||
                                   null, */
                                               RegistrationDate:
-                                                (tempTrainee &&
-                                                  tempTrainee.RegistrationDate) ||
+                                                (tTrainee &&
+                                                  tTrainee.RegistrationDate) ||
                                                 selectedRegistrationDate, //""
                                               FacultyId:
-                                                (tempTrainee &&
-                                                  tempTrainee.FacultyId) ||
+                                                (tTrainee &&
+                                                  tTrainee.FacultyId) ||
                                                 selectedFacultyId,
                                               plan_study:
-                                                (tempTrainee &&
-                                                  tempTrainee.plan_study) ||
+                                                (tTrainee &&
+                                                  tTrainee.plan_study) ||
                                                 "",
                                               CurrentAddress:
-                                                (tempTrainee &&
-                                                  tempTrainee.CurrentAddress) ||
+                                                (tTrainee &&
+                                                  tTrainee.CurrentAddress) ||
                                                 "",
                                               CurrentAddrPhone:
-                                                (tempTrainee &&
-                                                  tempTrainee.CurrentAddrPhone) ||
+                                                (tTrainee &&
+                                                  tTrainee.CurrentAddrPhone) ||
                                                 "",
                                               CurrentAddrCell:
-                                                (tempTrainee &&
-                                                  tempTrainee.CurrentAddrCell) ||
+                                                (tTrainee &&
+                                                  tTrainee.CurrentAddrCell) ||
                                                 "",
                                               PermanentAddress:
-                                                (tempTrainee &&
-                                                  tempTrainee.PermanentAddress) ||
+                                                (tTrainee &&
+                                                  tTrainee.PermanentAddress) ||
                                                 "",
                                               ParentAddrPhone:
-                                                (tempTrainee &&
-                                                  tempTrainee.ParentAddrPhone) ||
+                                                (tTrainee &&
+                                                  tTrainee.ParentAddrPhone) ||
                                                 "",
                                               WhatsappMobileNum:
-                                                (tempTrainee &&
-                                                  tempTrainee.WhatsappMobileNum) ||
+                                                (tTrainee &&
+                                                  tTrainee.WhatsappMobileNum) ||
                                                 "",
                                               Email:
-                                                (tempTrainee &&
-                                                  tempTrainee.Email) ||
+                                                (tTrainee && tTrainee.Email) ||
                                                 "",
                                               GeneralNote:
-                                                (tempTrainee &&
-                                                  tempTrainee.GeneralNote) ||
+                                                (tTrainee &&
+                                                  tTrainee.GeneralNote) ||
                                                 "",
                                               academicYear:
-                                                (tempTrainee &&
-                                                  tempTrainee.academicYear) ||
+                                                (tTrainee &&
+                                                  tTrainee.academicYear) ||
                                                 "",
 
                                               InstituteCountryId:
-                                                (tempTrainee &&
-                                                  tempTrainee.InstituteCountryId) ||
+                                                (tTrainee &&
+                                                  tTrainee.InstituteCountryId) ||
                                                 selectedInstituteCountry,
                                               HighStudyTypeId:
-                                                (tempTrainee &&
-                                                  tempTrainee.HighStudyTypeId) ||
+                                                (tTrainee &&
+                                                  tTrainee.HighStudyTypeId) ||
                                                 selectedHightStudyTypeId,
                                               EstimateId:
-                                                (tempTrainee &&
-                                                  tempTrainee.EstimateId) ||
+                                                (tTrainee &&
+                                                  tTrainee.EstimateId) ||
                                                 selectedEstimateId,
 
                                               RegUniDate:
-                                                (tempTrainee &&
-                                                  tempTrainee.RegUniDate) ||
+                                                (tTrainee &&
+                                                  tTrainee.RegUniDate) ||
                                                 selectedRegUniDate,
                                               statusId:
-                                                tempTrainee &&
-                                                tempTrainee.statusId,
+                                                tTrainee && tTrainee.statusId,
                                             }) ||
                                             (!isEdit && {
                                               FirstName:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.FirstName) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.FirstName) ||
                                                 "",
                                               LastName:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.LastName) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.LastName) ||
                                                 "",
                                               FatherName:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.FatherName) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.FatherName) ||
                                                 "",
                                               grandFatherName:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.grandFatherName) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.grandFatherName) ||
                                                 "",
                                               MotherName:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.MotherName) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.MotherName) ||
                                                 "",
                                               BirthLocation:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.BirthLocation) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.BirthLocation) ||
                                                 "",
                                               birthdate:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.birthdate) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.birthdate) ||
                                                 selectedBirthDate,
                                               NationalityId:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.NationalityId) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.NationalityId) ||
                                                 "",
                                               diplomaId:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.diplomaId) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.diplomaId) ||
                                                 "",
                                               Average:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.Average) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.Average) ||
                                                 "",
                                               FacultyId:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.FacultyId) ||
+                                                (emptyTrainee &&
+                                                  emptyTrainee.FacultyId) ||
                                                 "",
                                             })
                                           }
@@ -3547,7 +3556,7 @@ class ApplicantsList extends Component {
                                                             tabId={1}
                                                           >
                                                             <Row>
-                                                              <Card id="tempTrainee-card">
+                                                              <Card id="trainee-card">
                                                                 <CardBody className="cardBody">
                                                                   <Row>
                                                                     <div className="bordered">
@@ -4243,7 +4252,7 @@ class ApplicantsList extends Component {
                                                                                       defaultValue={socialStatus.find(
                                                                                         opt =>
                                                                                           opt.value ===
-                                                                                          tempTrainee?.socialStatusId
+                                                                                          tTrainee?.socialStatusId
                                                                                       )}
                                                                                     />
                                                                                   </Col>
@@ -6052,20 +6061,20 @@ class ApplicantsList extends Component {
                                                                         <Row>
                                                                           <Col lg="4">
                                                                             <Label
-                                                                              for="tempTraineeStatus-Id"
+                                                                              for="traineeStatus-Id"
                                                                               className="form-label d-flex"
                                                                             >
                                                                               {this.props.t(
-                                                                                "TempTrainee Status"
+                                                                                "Trainee Status"
                                                                               )}
                                                                             </Label>
                                                                           </Col>
                                                                           <Col className="col-8">
                                                                             <Select
-                                                                              id="tempTraineeStatus-Id"
+                                                                              id="traineeStatus-Id"
                                                                               name="statusId"
                                                                               options={
-                                                                                tempTraineeStatus
+                                                                                traineeStatus
                                                                               }
                                                                               className={
                                                                                 "form-control"
@@ -6077,10 +6086,10 @@ class ApplicantsList extends Component {
                                                                                   values
                                                                                 )
                                                                               }
-                                                                              defaultValue={tempTraineeStatus.find(
+                                                                              defaultValue={traineeStatus.find(
                                                                                 opt =>
                                                                                   opt.value ===
-                                                                                  tempTrainee?.statusId
+                                                                                  tTrainee?.statusId
                                                                               )}
                                                                             />
                                                                           </Col>
@@ -6088,7 +6097,7 @@ class ApplicantsList extends Component {
                                                                       </div>
                                                                     </Col>
                                                                   </Row>
-                                                                  {/* <Row>
+                                                                  <Row>
                                                                     {showSiblingsSelect && (
                                                                       <Col lg="4">
                                                                         <div className="mb-3">
@@ -6119,7 +6128,7 @@ class ApplicantsList extends Component {
                                                                         </div>
                                                                       </Col>
                                                                     )}
-                                                                  </Row> */}
+                                                                  </Row>
                                                                 </CardBody>
                                                               </Card>
                                                             </Row>
@@ -6739,9 +6748,9 @@ class ApplicantsList extends Component {
                                                                         columns={
                                                                           preReqColumns
                                                                         }
-                                                                        key={
-                                                                          document.Id
-                                                                        }
+                                                                        // key={
+                                                                        //   document.Id
+                                                                        // }
                                                                         cellEdit={cellEditFactory(
                                                                           {
                                                                             mode: "click",
@@ -6782,7 +6791,7 @@ class ApplicantsList extends Component {
                                                                 to="#"
                                                                 className="generate-button"
                                                                 onClick={() => {
-                                                                  this.handleGenerateTempTrainee(
+                                                                  this.handleGenerateTrainee(
                                                                     values.Id
                                                                   );
                                                                 }}
@@ -6982,7 +6991,7 @@ class ApplicantsList extends Component {
 }
 
 const mapStateToProps = ({
-  tempTrainees,
+  trainees,
   nationalities,
   mobAppFacultyAccs,
   countries,
@@ -6997,6 +7006,7 @@ const mapStateToProps = ({
   admissionConditions,
   semesters,
   academiccertificates,
+  universityStudents,
   highstudytypes,
   grants,
   years,
@@ -7004,13 +7014,15 @@ const mapStateToProps = ({
   relatives,
   estimates,
 }) => ({
-  tempTrainees: tempTrainees.tempTrainees,
+  trainees: trainees.trainees,
   years: years.years,
-  deleted: tempTrainees.deleted,
-  tempTrainees: tempTrainees.tempTrainees,
-  lastAddedId: tempTrainees.lastAddedId,
-  trnProfExperiences: tempTrainees.trnProfExperiences,
-  tempTraineesDocuments: tempTrainees.tempTraineesDocuments,
+  universityStudents: universityStudents.universityStudents,
+  deleted: trainees.deleted,
+  trainees: trainees.trainees,
+  last_created_trainee: trainees.last_created_trainee,
+  lastAddedId: trainees.lastAddedId,
+  trnProfExperiences: trainees.trnProfExperiences,
+  traineesDocuments: trainees.traineesDocuments,
   nationalities: nationalities.nationalities,
   faculties: mobAppFacultyAccs.faculties,
   countries: countries.countries,
@@ -7023,19 +7035,22 @@ const mapStateToProps = ({
   academiccertificates: academiccertificates.academiccertificates,
   filteredAcademicCertificates:
     academiccertificates.filteredAcademicCertificates,
-  tempRelatives: tempTrainees.tempRelatives,
-  socialStatus: tempTrainees.socialStatus,
+  tempRelatives: trainees.tempRelatives,
+  socialStatus: trainees.socialStatus,
   relatives: relatives.relatives,
-  regcertificates: tempTrainees.regcertificates,
-  deleted: tempTrainees.deleted,
+  studentsOpt: universityStudents.studentsOpt,
+  universityStudents: universityStudents.universityStudents,
+  regcertificates: trainees.regcertificates,
+  deleted: trainees.deleted,
   highstudytypes: highstudytypes.highstudytypes,
   estimates: estimates.estimates,
-  requiredDocs: tempTrainees.requiredDocs,
-  tempTraineeStatus: tempTrainees.tempTraineeStatus,
-  // generatedTempTrainee: tempTrainees.generatedTempTrainee,
-  // last_created_trainee: tempTrainees.last_created_trainee,
-  // tempTrainee_regReqDocs: tempTrainees.tempTrainee_regReqDocs,
-  // tempTraineeBrothers: tempTrainees.tempTraineeBrothers,
+  requiredDocs: trainees.requiredDocs,
+  tempTrainee: trainees.tempTrainee,
+  traineeStatus: trainees.traineeStatus,
+  // generatedTrainee: trainees.generatedTrainee,
+  // last_created_trainee: trainees.last_created_trainee,
+  // tempTrainee_regReqDocs: trainees.tempTrainee_regReqDocs,
+  // tempTraineeBrothers: trainees.tempTraineeBrothers,
   // nationalities: nationalities.nationalities,
   // relatives: relatives.relatives,
   // faculties: mobAppFacultyAccs.faculties,
@@ -7054,27 +7069,34 @@ const mapStateToProps = ({
   // filteredAcademicCertificates:
   //  academiccertificates.filteredAcademicCertificates,
   // grants: grants.grants,
-  // tempRelatives: tempTrainees.tempRelatives,
+  // tempRelatives: trainees.tempRelatives,
+  studentsOpt: universityStudents.studentsOpt,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetTempTrainees: () => dispatch(getTempTrainees()),
-  onAddNewTempTrainee: tempTrainee => dispatch(addNewTempTrainee(tempTrainee)),
-  onUpdateTempTrainee: tempTrainee => dispatch(updateTempTrainee(tempTrainee)),
-  onDeleteTempTrainee: tempTrainee => dispatch(deleteTempTrainee(tempTrainee)),
-  onGetTempTraineesRegCertificates: () => dispatch(getRegisterCertificates()),
-  onGetTempTraineeById: tempTrainee =>
-    dispatch(getTempTraineeById(tempTrainee)),
-  onGetTempTraineesDocuments: obj =>
-    dispatch(getTempTraineeDefaultRegReqDocs(obj)),
+  onGetTrainees: () => dispatch(getTrainees()),
+  onAddNewTrainee: trainee => dispatch(addNewTrainee(trainee)),
+  onUpdateTrainee: trainee => dispatch(updateTrainee(trainee)),
+  onDeleteTrainee: trainee => dispatch(deleteTrainee(trainee)),
+  onGetTraineesRegCertificates: () => dispatch(getRegisterCertificates()),
+  onGetTraineeById: trainee => dispatch(getTraineeById(trainee)),
+  onGetTraineesDocuments: obj => dispatch(getTraineeDefaultRegReqDocs(obj)),
   onAddNewProfessionalExperience: profExperience =>
     dispatch(addNewProfessionalExperience(profExperience)),
   onUpdateProfessionalExperience: profExperience =>
     dispatch(updateProfessionalExperience(profExperience)),
   onDeleteProfessionalExperience: profExperience =>
     dispatch(deleteProfessionalExperience(profExperience)),
-  onAddRequiredDocs: tTrainee => dispatch(addRequiredDocs(tTrainee)),
+  onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
+  // onGenerateTrainee: trainee => dispatch(generateTrainee(trainee)),
+  // onGetDefaultRegReqDocs: years => dispatch(getDefaultRegReqDocs(years)),
+  // onGetFilteredFaculties: admissionCond =>
+  //   dispatch(getFilteredFaculties(admissionCond)),
+  // onGetFilteredAcademicCertificates: academicCer =>
+  //   dispatch(getFilteredAcademicCertificates(academicCer)),
+  // onGetTraineeDeletedValue: () => dispatch(getTraineeDeletedValue()),
+  // onGetTempRelativeDeletedValue: () => dispatch(getTempRelativeDeletedValue()),
 });
 
 export default connect(

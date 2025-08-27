@@ -27,8 +27,8 @@ export * from "./invoices/actions";
 // students history
 export * from "./students-history/actions";
 
-//university-students
-export * from "./university-students/actions";
+//trainees
+export * from "./trainees/actions";
 
 // admissionConditions
 export * from "./admissionConditions/actions";

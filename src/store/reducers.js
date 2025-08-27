@@ -27,8 +27,8 @@ import invoices from "./invoices/reducer";
 // //students
 // import students from "./students/reducer";
 
-//universityStudents
-import universityStudents from "./university-students/reducer";
+//trainees
+import trainees from "./trainees/reducer";
 
 //admissionConditions
 import admissionConditions from "./admissionConditions/reducer";
@@ -293,8 +293,8 @@ import studentsRequests from "./students-requests/reducer";
 //contract
 import contracts from "./HR/contracts/reducer";
 
-//Trainees
-import trainees from "./new-Trainee/reducer";
+//tempTrainees
+import tempTrainees from "./new-Trainee/reducer";
 
 //TrainingFormats
 import trainingFormats from "./trainingFormat/reducer";
@@ -399,7 +399,7 @@ const rootReducer = combineReducers({
   classScheduling,
   grantSponsors,
   years,
-  universityStudents,
+  trainees,
   semesters,
   weekDays,
   timeLines,
@@ -434,7 +434,7 @@ const rootReducer = combineReducers({
   warningsTypes,
   rewardsTypes,
   decisionsTypes,
-  trainees,
+  tempTrainees,
   trainingFormats,
   coursesCatalogs,
   academyOrgStructures,

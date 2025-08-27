@@ -53,7 +53,7 @@ import DeleteModal from "components/Common/DeleteModal";
 // import OtherChart from "pages/generate-SIDs/OtherChart";
 
 // import { getCurrentSemester } from "store/semesters/actions";
-import { getTrainees } from "store/trainees/actions";
+// import { getStudentsRequests } from "store/students-requests/actions";
 import { BackburgerIcon } from "@icons/material";
 import {
   checkIsAddForPage,
@@ -65,7 +65,6 @@ class TraineesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      trainees: {},
       selectedView: "",
       errorMessage: null,
       sidebarOpen: true,
@@ -73,15 +72,15 @@ class TraineesList extends Component {
       selectedRowId: null,
       isEdit: false,
       showStudentName: true,
-      showFatherName: true,
+      showYearSemester: true,
       showActivationSemester: true,
       showStudentID: true,
       showStateId: true,
       showRequestOrganizer: true,
       showRequestOrgNotes: true,
       requestDate: true,
-      showFirstName: true,
-      showLastName: true,
+      showRequestNum: true,
+      showRequestId: true,
       showDecreeOrganizer: false,
       showDecreeDate: false,
       showDecreeOrgNotes: false,
@@ -114,69 +113,43 @@ class TraineesList extends Component {
   }
 
   componentDidMount() {
-    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
-      trainees,
-      traineeStates,
+      studentsRequests,
+      studentStates,
       stdWarningTestOpt,
       currencies,
       yearSemesters,
       currentSemester,
       semesters,
       faculties,
-      onGetTrainees,
+      onGetStudentsRequests,
       deleted,
       user_menu,
-      i18n,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (trainees && !trainees.length) {
-      onGetTrainees(lang);
+    if (studentsRequests && !studentsRequests.length) {
+      // onGetStudentsRequests({ yearSemesterId: 78 });
 
-      this.setState({ trainees, stdWarningTestOpt });
-      this.setState({ traineeStates });
+      this.setState({ studentsRequests, stdWarningTestOpt });
+      this.setState({ studentStates });
       this.setState({ currencies });
       this.setState({ faculties });
+      this.setState({ yearSemesters });
+      this.setState({ currentSemester, semesters });
       this.setState({ deleted });
     }
-
-    let curentueardata = localStorage.getItem("authUser");
-    if (curentueardata) {
-      try {
-        const parsed = JSON.parse(curentueardata);
-        const firstYear = parsed[0];
-        const selectedYear = {
-          value: firstYear.currentYearId,
-          label: firstYear.currentYearName,
-        };
-        this.setState({
-          selectedYear,
-          currentYearObj: {
-            currentYearId: firstYear.currentYearId,
-            currentYearName: firstYear.currentYearName,
-          },
-        });
-      } catch (error) {
-        console.error("Error parsing authUser:", error);
-      }
-    }
-    this.setState({ languageState: lang });
-
-    i18n.on("languageChanged", this.handleLanguageChange);
-    console.log(this.state.currentYearObj, "gggg");
   }
-  handleLanguageChange = lng => {
-    const { onGetTrainees } = this.props;
-    const lang = localStorage.getItem("I18N_LANGUAGE");
-
-    if (lang != lng) {
-      this.setState({ languageState: lng });
-      onGetTrainees(lng);
-    }
-  };
-
   componentDidUpdate(prevProps) {
+    const { currentSemester, yearSemesters } = this.props;
+    if (
+      (currentSemester &&
+        currentSemester.cuYearSemesterId !==
+          prevProps.currentSemester.cuYearSemesterId) ||
+      yearSemesters !== prevProps.yearSemesters
+    ) {
+      this.initializeState();
+    }
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -210,6 +183,16 @@ class TraineesList extends Component {
     this.setState({ showSearchButton });
   };
 
+  initializeState() {
+    const { currentSemester, yearSemesters, onGetSchedulingLectures } =
+      this.props;
+    const defaultSemester =
+      yearSemesters.find(
+        opt => opt.value === currentSemester.cuYearSemesterId
+      ) || "";
+    this.setState({ defaultSemester: defaultSemester });
+  }
+
   toggle = () => {
     this.setState(prevState => ({
       modal: !prevState.modal,
@@ -229,7 +212,7 @@ class TraineesList extends Component {
   };
 
   handleStdWarningTestDataChange = (rowId, fieldName, fieldValue) => {
-    const { onUpdateStdWarningTest, trainees } = this.props;
+    const { onUpdateStdWarningTest, studentsRequests } = this.props;
 
     if (fieldName == "percentage") {
       const numericValue = parseFloat(fieldValue);
@@ -276,7 +259,7 @@ class TraineesList extends Component {
 
   handleSelectFine = (rowId, fieldName, selectedValue) => {
     const { onUpdateStdWarningTest } = this.props;
-    const { trainees } = this.state;
+    const { studentsRequests } = this.state;
 
     this.setState({
       selectedFine: selectedValue,
@@ -322,13 +305,13 @@ class TraineesList extends Component {
   };
 
   handleShowColumn = fieldName => {
-    if (fieldName == "traineeId") {
+    if (fieldName == "studentId") {
       this.setState(prevState => ({
         showStudentID: !prevState.showStudentID,
       }));
     }
 
-    if (fieldName == "traineeName") {
+    if (fieldName == "studentName") {
       this.setState(prevState => ({
         showStudentName: !prevState.showStudentName,
       }));
@@ -336,7 +319,7 @@ class TraineesList extends Component {
 
     if (fieldName == "yearSemester") {
       this.setState(prevState => ({
-        showFatherName: !prevState.showFatherName,
+        showYearSemester: !prevState.showYearSemester,
       }));
     }
 
@@ -378,13 +361,13 @@ class TraineesList extends Component {
 
     if (fieldName == "requestNum") {
       this.setState(prevState => ({
-        showFirstName: !prevState.showFirstName,
+        showRequestNum: !prevState.showRequestNum,
       }));
     }
 
     if (fieldName == "requestId") {
       this.setState(prevState => ({
-        showLastName: !prevState.showLastName,
+        showRequestId: !prevState.showRequestId,
       }));
     }
 
@@ -624,7 +607,7 @@ class TraineesList extends Component {
     const obj = {
       SID: values["SID"],
       enWarningStatus: values["enWarningStatus"],
-      traineeName: values["traineeName"],
+      studentName: values["studentName"],
       enTransStatement: values["enTransStatement"],
       priority: values["priority"],
       warningColor: selectedColor,
@@ -654,76 +637,76 @@ class TraineesList extends Component {
   };
 
   handleEditStdWarningTest = arg => {
-    const trainees = arg;
+    const studentsRequests = arg;
 
     this.setState({
-      warningId: trainees.Id,
-      arWarning: trainees.SID,
-      enWarning: trainees.enWarningStatus,
-      arTransStatementWarning: trainees.traineeName,
-      enTransStatementWarning: trainees.enTransStatement,
-      priorityWarning: trainees.priority,
-      selectedColor: trainees.warningColor,
-      selectedRuleType: trainees.ruleType,
-      selectedFromAdmSemesId: trainees.stateId,
-      selectedToAdmSemesId: trainees.academicStatus,
-      selectedFromRegSemesId: trainees.requestOrgNotes,
-      selectedToRegSemesId: trainees.toRegSemesId,
-      stdFromGPAWarning: trainees.stdFromGPA,
-      stdTillGPAWarning: trainees.stdTillGPA,
-      stdFromCreditsWarning: trainees.stdFromCredits,
-      stdTillCreditsWarning: trainees.stdTillCredits,
+      warningId: studentsRequests.Id,
+      arWarning: studentsRequests.SID,
+      enWarning: studentsRequests.enWarningStatus,
+      arTransStatementWarning: studentsRequests.studentName,
+      enTransStatementWarning: studentsRequests.enTransStatement,
+      priorityWarning: studentsRequests.priority,
+      selectedColor: studentsRequests.warningColor,
+      selectedRuleType: studentsRequests.ruleType,
+      selectedFromAdmSemesId: studentsRequests.stateId,
+      selectedToAdmSemesId: studentsRequests.academicStatus,
+      selectedFromRegSemesId: studentsRequests.requestOrgNotes,
+      selectedToRegSemesId: studentsRequests.toRegSemesId,
+      stdFromGPAWarning: studentsRequests.stdFromGPA,
+      stdTillGPAWarning: studentsRequests.stdTillGPA,
+      stdFromCreditsWarning: studentsRequests.stdFromCredits,
+      stdTillCreditsWarning: studentsRequests.stdTillCredits,
       selectedCalculatedTransferCred:
-        trainees.calculatedTransferCred == 1 ? "yes" : "no",
+        studentsRequests.calculatedTransferCred == 1 ? "yes" : "no",
       selectedActiveAdditionalPeriod:
-        trainees.activeAdditionalPeriod == 1 ? "yes" : "no",
-      stdSemestersNumber: trainees.stdSemestersNb,
-      prevFromGPAWarning: trainees.prevFromGPA,
-      prevTillGPAWarning: trainees.prevTillGPA,
-      prevFromCreditsWarning: trainees.prevFromCredits,
-      prevTillCreditsWarning: trainees.prevTillCredits,
-      applyForSemesterArray: trainees.applyForSemester,
-      applyStatusArray: trainees.decreeOrgNotes,
-      prevAcademicWarningArray: trainees.decreeOrganizer,
-      prevStatusSemesArray: trainees.decreeDate,
+        studentsRequests.activeAdditionalPeriod == 1 ? "yes" : "no",
+      stdSemestersNumber: studentsRequests.stdSemestersNb,
+      prevFromGPAWarning: studentsRequests.prevFromGPA,
+      prevTillGPAWarning: studentsRequests.prevTillGPA,
+      prevFromCreditsWarning: studentsRequests.prevFromCredits,
+      prevTillCreditsWarning: studentsRequests.prevTillCredits,
+      applyForSemesterArray: studentsRequests.applyForSemester,
+      applyStatusArray: studentsRequests.decreeOrgNotes,
+      prevAcademicWarningArray: studentsRequests.decreeOrganizer,
+      prevStatusSemesArray: studentsRequests.decreeDate,
       isEdit: true,
     });
 
     this.toggle();
     const { fiscalYears, yearSemesters, onGetFeesConditions, currencies } =
       this.props;
-    let obj = { Id: trainees.Id };
+    let obj = { Id: studentsRequests.Id };
 
-    if (trainees.stateId) {
+    if (studentsRequests.stateId) {
       const fromAdmSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === trainees.stateId
+        yearSemester => yearSemester.key === studentsRequests.stateId
       );
       this.setState({
         selectedFromAdmSemes: fromAdmSemes.value,
       });
     }
 
-    if (trainees.academicStatus) {
+    if (studentsRequests.academicStatus) {
       const toAdmSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === trainees.academicStatus
+        yearSemester => yearSemester.key === studentsRequests.academicStatus
       );
       this.setState({
         selectedToAdmSemes: toAdmSemes.value,
       });
     }
 
-    if (trainees.requestOrgNotes) {
+    if (studentsRequests.requestOrgNotes) {
       const fromRegSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === trainees.requestOrgNotes
+        yearSemester => yearSemester.key === studentsRequests.requestOrgNotes
       );
       this.setState({
         selectedFromRegSemes: fromRegSemes.value,
       });
     }
 
-    if (trainees.toRegSemesId) {
+    if (studentsRequests.toRegSemesId) {
       const toRegSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === trainees.toRegSemesId
+        yearSemester => yearSemester.key === studentsRequests.toRegSemesId
       );
       this.setState({
         selectedToRegSemes: toRegSemes.value,
@@ -769,7 +752,7 @@ class TraineesList extends Component {
       Id: warningId,
       SID: values["SID"],
       enWarningStatus: values["enWarningStatus"],
-      traineeName: values["traineeName"],
+      studentName: values["studentName"],
       enTransStatement: values["enTransStatement"],
       priority: values["priority"],
       warningColor: selectedColor,
@@ -816,17 +799,16 @@ class TraineesList extends Component {
 
   render() {
     const {
-      trainees,
+      studentsRequests,
       stdWarningTestOpt,
       yearSemesters,
       currencies,
       semesters,
-      traineeStates,
+      studentStates,
       deleted,
       t,
     } = this.props;
     const {
-      languageState,
       duplicateError,
       errorMessage,
       sidebarOpen,
@@ -834,15 +816,15 @@ class TraineesList extends Component {
       isEdit,
       showStudentID,
       showStudentName,
-      showFatherName,
+      showYearSemester,
       showActivationSemester,
       showStateId,
       showRequestOrganizer,
       showRequestOrgNotes,
       requestDate,
       showToRegSemester,
-      showFirstName,
-      showLastName,
+      showRequestNum,
+      showRequestId,
       showDecreeOrganizer,
       showDecreeDate,
       showDecreeOrgNotes,
@@ -885,7 +867,7 @@ class TraineesList extends Component {
     } = this.state;
     const { SearchBar } = Search;
 
-    console.log("trainees", trainees);
+    console.log("studentsRequests", studentsRequests);
     const alertMessage =
       deleted == 0
         ? this.props.t("Can't Delete")
@@ -900,33 +882,252 @@ class TraineesList extends Component {
 
     const MainInfoColumns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
+      // {
+      //   dataField: "FirstName",
+      //   text: this.props.t("First Name"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showRequestNum,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "LastName",
+      //   text: this.props.t("Last Name"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showRequestId,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+
+      // {
+      //   dataField: "FatherName",
+      //   text: this.props.t("Father Name"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showYearSemester,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+
+      // {
+      //   dataField: "MotherName",
+      //   text: this.props.t("Mother Name"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showActivationSemester,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "grandFatherName",
+      //   text: this.props.t("grand Father Name"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showStateId,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+
+      // {
+      //   dataField: "BirthLocation",
+      //   text: this.props.t("Birth Location"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !requestDate,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+
+      // {
+      //   dataField: "birthdate",
+
+      //   text: this.props.t("Birth Date"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showRequestOrganizer,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "IdNumber",
+
+      //   text: this.props.t("Id Number"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showRequestOrgNotes,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "perosonalCardNum",
+      //   text: this.props.t("perosonal Card Number"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showDecreeDate,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "EmissionDate",
+      //   text: this.props.t("Emission Date"),
+      //   sort: true,
+      //   formatter: (cell, row) =>
+      //     cell && Array.isArray(cell)
+      //       ? cell.map(option => option.label).join(" , ")
+      //       : "",
+      //   editable: false,
+      //   hidden: !showDecreeOrganizer,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+
+      // {
+      //   dataField: "PassNumber",
+      //   text: this.props.t("Passport Number"),
+      //   editable: false,
+      //   hidden: !showDecreeOrgNotes,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "passportGrantDate",
+      //   text: this.props.t("Passport Grant Date"),
+      //   editable: false,
+      //   hidden: !showFoldingDate,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "passportExpirationDate",
+      //   text: this.props.t("Passport Expiration Date"),
+      //   editable: false,
+      //   hidden: !showFoldingOrganizer,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "Gender",
+      //   text: this.props.t("Gender"),
+      //   editable: false,
+      //   hidden: !showFoldingOrgNotes,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "Nationality",
+      //   text: this.props.t("Nationality"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showStudentID,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "perCardCaza",
+      //   text: this.props.t("Amana"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showStudentName,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "perCardPlaceRegistration",
+      //   text: this.props.t("Place Registration"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showStudentName,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "perCardRegNum",
+      //   text: this.props.t("Registration Number"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showStudentName,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+
+      // {
+      //   dataField: "action",
+      //   text: "",
+      //   isDummyField: true,
+      //   editable: false,
+      //   formatter: (cellContent, warning) => (
+      //     <div className="d-flex justify-content-center gap-3">
+      //       {showDeleteButton && (
+      //         <Tooltip title={this.props.t("Delete")} placement="top">
+      //           <IconButton color="danger">
+      //             <i
+      //               className="mdi mdi-delete font-size-18 text-danger"
+      //               id="deletetooltip"
+      //               onClick={() => this.onClickDelete(warning)}
+      //             ></i>
+      //           </IconButton>
+      //         </Tooltip>
+      //       )}
+
+      //       <Tooltip title={this.props.t("Student Status")} placement="top">
+      //         <IconButton>
+      //           <i
+      //             className="bx bxs-user font-size-18 text-secondary"
+      //             id="deletetooltip"
+      //             onClick={() => this.onClickStdStatus(warning)}
+      //           ></i>
+      //         </IconButton>
+      //       </Tooltip>
+      //     </div>
+      //   ),
+      // },
       {
-        dataField: "FirstName",
-        text: this.props.t("First Name"),
+        dataField: "requestNum",
+        text: this.props.t("Course Name"),
         sort: true,
         editable: false,
-        hidden: !showFirstName,
+        hidden: !showRequestNum,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
       {
-        dataField: "LastName",
-        text: this.props.t("Last Name"),
+        dataField: "requestId",
+        text: this.props.t("Course Code"),
         sort: true,
         editable: false,
-        hidden: !showLastName,
+        hidden: !showRequestId,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
 
       {
-        dataField: "FatherName",
-        text: this.props.t("Father Name"),
+        dataField: "yearSemester",
+        text: this.props.t("Credits"),
         sort: true,
         editable: false,
-        hidden: !showFatherName,
+        hidden: !showYearSemester,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
@@ -1046,26 +1247,26 @@ class TraineesList extends Component {
       //     placeholder: this.props.t("Search..."),
       //   }),
       // },
-      {
-        dataField: "traineeId",
-        text: this.props.t("Student ID"),
-        sort: true,
-        editable: false,
-        hidden: !showStudentID,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
-      },
-      {
-        dataField: "traineeName",
-        text: this.props.t("Student Name"),
-        sort: true,
-        editable: false,
-        hidden: !showStudentName,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
-      },
+      // {
+      //   dataField: "studentId",
+      //   text: this.props.t("Student ID"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showStudentID,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
+      // {
+      //   dataField: "studentName",
+      //   text: this.props.t("Student Name"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showStudentName,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
 
       {
         dataField: "action",
@@ -1101,7 +1302,7 @@ class TraineesList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: trainees.length,
+      totalSize: studentsRequests.length,
       custom: true,
     };
 
@@ -1119,7 +1320,7 @@ class TraineesList extends Component {
             <Row>
               {sidebarOpen && (
                 <Row>
-                  <Col lg={2} key={1}>
+                  <Col lg={3} key={1}>
                     <div
                       style={{
                         marginLeft: "220px",
@@ -1144,7 +1345,7 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck15"
                                           autoComplete="off"
-                                          defaultChecked={showFirstName}
+                                          defaultChecked={showRequestNum}
                                           onClick={() =>
                                             this.handleShowColumn("requestNum")
                                           }
@@ -1166,7 +1367,7 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck4"
                                           autoComplete="off"
-                                          defaultChecked={showLastName}
+                                          defaultChecked={showRequestId}
                                           onClick={() =>
                                             this.handleShowColumn("requestId")
                                           }
@@ -1188,7 +1389,7 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck16"
                                           autoComplete="off"
-                                          defaultChecked={showFatherName}
+                                          defaultChecked={showYearSemester}
                                           onClick={() =>
                                             this.handleShowColumn(
                                               "yearSemester"
@@ -1477,7 +1678,7 @@ class TraineesList extends Component {
                                       </Col>
                                     </Row>
                                   </div>
-                                  {/* <div className="mb-1">
+                                  <div className="mb-1">
                                     <Row>
                                       <Col>
                                         <input
@@ -1487,7 +1688,7 @@ class TraineesList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showStudentID}
                                           onClick={() =>
-                                            this.handleShowColumn("traineeId")
+                                            this.handleShowColumn("studentId")
                                           }
                                         />
                                         <label
@@ -1509,7 +1710,7 @@ class TraineesList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showStudentName}
                                           onClick={() =>
-                                            this.handleShowColumn("traineeName")
+                                            this.handleShowColumn("studentName")
                                           }
                                         />
                                         <label
@@ -1520,7 +1721,7 @@ class TraineesList extends Component {
                                         </label>
                                       </Col>
                                     </Row>
-                                  </div> */}
+                                  </div>
                                 </Col>
                               </Accordion.Body>
                             </Accordion.Item>
@@ -1591,12 +1792,12 @@ class TraineesList extends Component {
                             pagination={paginationFactory(pageOptions)}
                             keyField="Id"
                             columns={MainInfoColumns}
-                            data={trainees}
+                            data={studentsRequests}
                           >
                             {({ paginationProps, paginationTableProps }) => (
                               <ToolkitProvider
                                 keyField="Id"
-                                data={trainees}
+                                data={studentsRequests}
                                 columns={MainInfoColumns}
                                 search
                               >
@@ -1636,7 +1837,7 @@ class TraineesList extends Component {
                                       keyField="Id"
                                       {...toolkitprops.baseProps}
                                       {...paginationTableProps}
-                                      data={trainees}
+                                      data={studentsRequests}
                                       columns={MainInfoColumns}
                                       cellEdit={cellEditFactory({
                                         mode: "dbclick",
@@ -1684,15 +1885,15 @@ class TraineesList extends Component {
 }
 
 const mapStateToProps = ({
-  trainees,
+  studentsRequests,
   currencies,
   mobAppFacultyAccs,
   generalManagements,
   semesters,
   menu_items,
 }) => ({
-  trainees: trainees.trainees,
-  deleted: trainees.deleted,
+  studentsRequests: studentsRequests.studentsRequests,
+  deleted: studentsRequests.deleted,
   faculties: mobAppFacultyAccs.faculties,
   currencies: currencies.currencies,
   yearSemesters: generalManagements.yearSemesters,
@@ -1702,7 +1903,8 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetTrainees: () => dispatch(getTrainees()),
+  // onGetStudentsRequests: regReqDocs =>
+  //   dispatch(getStudentsRequests(regReqDocs)),
   // onGetCurrentSemester: () => dispatch(getCurrentSemester()),
 });
 
