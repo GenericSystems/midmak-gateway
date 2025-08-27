@@ -7,6 +7,16 @@ import {
   ADD_ACADEMYINFO,
 } from "./actionTypes";
 
+// import{
+//   GET_COUNTRIES_OPT,
+//   GET_COUNTRIES_OPT_FAIL,
+//   GET_CITIES_OPT_SUCCES
+// } from "../HR/employees/actionTypes"
+
+import {
+  getCountriesOptSuccess,
+  getCountriesOptFail,
+} from "../HR/employees/actions";
 import {
   getAcademyInfoSuccess,
   getAcademyInfoFail,
@@ -21,6 +31,7 @@ import {
   getAcademyInfo,
   addAcademyInfo,
   updateAcademyInfo,
+  getCountriesOpt,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchAcademyInfo() {
@@ -28,14 +39,30 @@ function* fetchAcademyInfo() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_AcademyInfo",
+    tablename: "AcademyInfo",
   };
 
   try {
     const response = yield call(getAcademyInfo, get_academyInfo_req);
+    console.log("RESPONSEEEEEE", response);
     yield put(getAcademyInfoSuccess(response));
   } catch (error) {
     yield put(getAcademyInfoFail(error));
+  }
+
+  const get_Countries_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Country",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getCountriesOpt, get_Countries_req);
+    console.log("mmmmmmmmmmmmmmmmmm", response);
+    yield put(getCountriesOptSuccess(response));
+  } catch (error) {
+    yield put(getCountriesOptFail(error));
   }
 }
 
@@ -60,6 +87,7 @@ function* onAddAcademyInfo({ payload }) {
   payload["tablename"] = "Common_AcademyInfo";
   try {
     const response = yield call(addAcademyInfo, payload);
+    console.log("PAYLOADDDDD",payload)
     yield put(addAcademyInfoSuccess(response[0]));
   } catch (error) {
     yield put(addAcademyInfoFail(error));

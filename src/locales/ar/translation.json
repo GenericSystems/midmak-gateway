@@ -468,8 +468,16 @@
    "Points":"النقاط",
    "Rank":"التقدير",
    "Finish Status":"الحالة النهاية",
-   "Academy Name":"اسم الاكاديمية"
-
+   "Academy Name":"اسم الاكاديمية",
+   "Location":"  الموقع الجغرافي",
+   "Only WhatsApp Number":"واتس اب (فقط)",
+   "Only Phone":"رقم التواصل (فقط)",
+   "Phone & WhatsApp":"رقم النواصل & واتس اب",
+   "Fax":"فاكس",
+   "Website":"الموقع الالكتروني",
+   "Academy Event Decision":"قرار احداث الأكاديمية",
+   "Remove":"ازالة",
+   "Add Country Info":"اضافة معلومات بلد جديد"
 
 
 
