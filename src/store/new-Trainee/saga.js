@@ -50,6 +50,8 @@ import {
   generateTraineeFail,
   getTraieeStatusSuccess,
   getTraieeStatusFail,
+  uploadFileSuccess,
+  uploadFileFail
 } from "./actions";
 
 // Include helper functions
@@ -504,9 +506,9 @@ function* onUploadFile({ payload }) {
   try {
     const response = yield call(uploadFile, payload);
     console.log("response", response);
-    yield put(addProfessionalExperienceSuccess(response[0]));
+    yield put(uploadFileSuccess(response[0]));
   } catch (error) {
-    yield put(addProfessionalExperienceFail(error));
+    yield put(uploadFileFail(error));
   }
 }
 
