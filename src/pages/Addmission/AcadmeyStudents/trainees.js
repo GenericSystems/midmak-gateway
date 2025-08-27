@@ -72,22 +72,36 @@ class TraineesList extends Component {
       deleteModal: false,
       selectedRowId: null,
       isEdit: false,
-      showStudentName: true,
-      showFatherName: true,
-      showActivationSemester: true,
-      showStudentID: true,
-      showStateId: true,
-      showRequestOrganizer: true,
-      showRequestOrgNotes: true,
-      requestDate: true,
-      showFirstName: true,
-      showLastName: true,
-      showDecreeOrganizer: false,
-      showDecreeDate: false,
-      showDecreeOrgNotes: false,
-      showFoldingDate: false,
-      showFoldingOrganizer: false,
-      showFoldingOrgNotes: false,
+      showTraineeName: true,
+      showFatherName: false,
+      showTraineeStatus: false,
+      showYear: false,
+      showFatherName: false,
+      showGrandFatherName: false,
+      showTraineeNum: true,
+      showMotherName: false,
+      showBirthDate: false,
+      showNationalityId: false,
+      BirthLocation: false,
+      showFirstName: false,
+      showLastName: false,
+      showIdentityNo: false,
+      showNationalNo: false,
+      showIdentityIssueDate: false,
+      showPassNumber: false,
+      showPassportIssueDate: false,
+      showGender: false,
+      showCivicZone: false,
+      showRegisterZone: false,
+      showRegisterNo: false,
+      showPassportExpiryDate: false,
+      showCurrentAddress: false,
+      showCurrentAddrPhone: false,
+      showCurrentAddrCell: false,
+      showPermanentAddress: false,
+      showParentAddrPhone: false,
+      showWhatsappMobileNum: false,
+      showEmail: false,
       modal: false,
       selectedMulti: null,
       selectedFromAdmSemes: "",
@@ -120,7 +134,7 @@ class TraineesList extends Component {
       traineeStates,
       stdWarningTestOpt,
       currencies,
-      yearSemesters,
+      FatherNames,
       currentSemester,
       semesters,
       faculties,
@@ -322,105 +336,177 @@ class TraineesList extends Component {
   };
 
   handleShowColumn = fieldName => {
-    if (fieldName == "traineeId") {
+    if (fieldName == "TraineeNum") {
       this.setState(prevState => ({
-        showStudentID: !prevState.showStudentID,
+        showTraineeNum: !prevState.showTraineeNum,
       }));
     }
 
-    if (fieldName == "traineeName") {
+    if (fieldName == "fullName") {
       this.setState(prevState => ({
-        showStudentName: !prevState.showStudentName,
+        showTraineeName: !prevState.showTraineeName,
       }));
     }
 
-    if (fieldName == "yearSemester") {
+    if (fieldName == "FatherName") {
       this.setState(prevState => ({
         showFatherName: !prevState.showFatherName,
       }));
     }
 
-    if (fieldName == "activationSemester") {
+    if (fieldName == "grandFatherName") {
       this.setState(prevState => ({
-        showActivationSemester: !prevState.showActivationSemester,
+        showGrandFatherName: !prevState.showGrandFatherName,
       }));
     }
 
-    if (fieldName == "stateId") {
+    if (fieldName == "MotherName") {
       this.setState(prevState => ({
-        showStateId: !prevState.showStateId,
+        showMotherName: !prevState.showMotherName,
       }));
     }
 
-    if (fieldName == "requestOrganizer") {
+    if (fieldName == "birthdate") {
       this.setState(prevState => ({
-        showRequestOrganizer: !prevState.showRequestOrganizer,
+        showBirthDate: !prevState.showBirthDate,
       }));
     }
 
-    if (fieldName == "requestOrgNotes") {
+    if (fieldName == "NationalityId") {
       this.setState(prevState => ({
-        showRequestOrgNotes: !prevState.showRequestOrgNotes,
+        showNationalityId: !prevState.showNationalityId,
       }));
     }
 
-    if (fieldName == "requestOrgNotes") {
+    if (fieldName == "BirthLocation") {
       this.setState(prevState => ({
-        showToRegSemester: !prevState.showToRegSemester,
+        BirthLocation: !prevState.BirthLocation,
       }));
     }
 
-    if (fieldName == "requestDate") {
-      this.setState(prevState => ({
-        requestDate: !prevState.requestDate,
-      }));
-    }
-
-    if (fieldName == "requestNum") {
+    if (fieldName == "FirstName") {
       this.setState(prevState => ({
         showFirstName: !prevState.showFirstName,
       }));
     }
 
-    if (fieldName == "requestId") {
+    if (fieldName == "LastName") {
       this.setState(prevState => ({
         showLastName: !prevState.showLastName,
       }));
     }
 
-    if (fieldName == "decreeOrganizer") {
+    if (fieldName == "identityNo") {
       this.setState(prevState => ({
-        showDecreeOrganizer: !prevState.showDecreeOrganizer,
+        showIdentityNo: !prevState.showIdentityNo,
       }));
     }
 
-    if (fieldName == "decreeDate") {
+    if (fieldName == "nationalNo") {
       this.setState(prevState => ({
-        showDecreeDate: !prevState.showDecreeDate,
+        showNationalNo: !prevState.showNationalNo,
       }));
     }
 
-    if (fieldName == "decreeOrgNotes") {
+    if (fieldName == "identityIssueDate") {
       this.setState(prevState => ({
-        showDecreeOrgNotes: !prevState.showDecreeOrgNotes,
+        showIdentityIssueDate: !prevState.showIdentityIssueDate,
       }));
     }
 
-    if (fieldName == "foldingDate") {
+    if (fieldName == "PassNumber") {
       this.setState(prevState => ({
-        showFoldingDate: !prevState.showFoldingDate,
+        showPassNumber: !prevState.showPassNumber,
       }));
     }
 
-    if (fieldName == "foldingOrganizer") {
+    if (fieldName == "passportIssueDate") {
       this.setState(prevState => ({
-        showFoldingOrganizer: !prevState.showFoldingOrganizer,
+        showPassportIssueDate: !prevState.showPassportIssueDate,
       }));
     }
 
-    if (fieldName == "foldingOrgNotes") {
+    if (fieldName == "passportExpiryDate") {
       this.setState(prevState => ({
-        showFoldingOrgNotes: !prevState.showFoldingOrgNotes,
+        showPassportExpiryDate: !prevState.showPassportExpiryDate,
+      }));
+    }
+
+    if (fieldName == "GenderId") {
+      this.setState(prevState => ({
+        showGender: !prevState.showGender,
+      }));
+    }
+
+    if (fieldName == "civicZone") {
+      this.setState(prevState => ({
+        showCivicZone: !prevState.showCivicZone,
+      }));
+    }
+
+    if (fieldName == "registerZone") {
+      this.setState(prevState => ({
+        showRegisterZone: !prevState.showRegisterZone,
+      }));
+    }
+
+    if (fieldName == "registerNo") {
+      this.setState(prevState => ({
+        showRegisterNo: !prevState.showRegisterNo,
+      }));
+    }
+
+    if (fieldName == "yearId") {
+      this.setState(prevState => ({
+        showYear: !prevState.showYear,
+      }));
+    }
+
+    if (fieldName == "traineeStatusId") {
+      this.setState(prevState => ({
+        showTraineeStatus: !prevState.showTraineeStatus,
+      }));
+    }
+
+    if (fieldName == "CurrentAddress") {
+      this.setState(prevState => ({
+        showCurrentAddress: !prevState.showCurrentAddress,
+      }));
+    }
+
+    if (fieldName == "CurrentAddrPhone") {
+      this.setState(prevState => ({
+        showCurrentAddrPhone: !prevState.showCurrentAddrPhone,
+      }));
+    }
+
+    if (fieldName == "CurrentAddrCell") {
+      this.setState(prevState => ({
+        showCurrentAddrCell: !prevState.showCurrentAddrCell,
+      }));
+    }
+
+    if (fieldName == "PermanentAddress") {
+      this.setState(prevState => ({
+        showPermanentAddress: !prevState.showPermanentAddress,
+      }));
+    }
+
+    if (fieldName == "ParentAddrPhone") {
+      this.setState(prevState => ({
+        showParentAddrPhone: !prevState.showParentAddrPhone,
+      }));
+    }
+
+    if (fieldName == "WhatsappMobileNum") {
+      this.setState(prevState => ({
+        showWhatsappMobileNum: !prevState.showWhatsappMobileNum,
+      }));
+    }
+
+    if (fieldName == "Email") {
+      this.setState(prevState => ({
+        showEmail: !prevState.showEmail,
       }));
     }
   };
@@ -481,15 +567,15 @@ class TraineesList extends Component {
       this.setState({ applyForSemesterArray: selectedMulti });
     }
 
-    if (fieldName === "decreeDate") {
+    if (fieldName === "nationalNo") {
       this.setState({ prevStatusSemesArray: selectedMulti });
     }
 
-    if (fieldName === "decreeOrganizer") {
+    if (fieldName === "identityNo") {
       this.setState({ prevAcademicWarningArray: selectedMulti });
     }
 
-    if (fieldName === "decreeOrgNotes") {
+    if (fieldName === "identityIssueDate") {
       this.setState({ applyStatusArray: selectedMulti });
     }
   };
@@ -504,7 +590,7 @@ class TraineesList extends Component {
       selectedColor,
     } = this.state;
 
-    if (fieldName == "stateId") {
+    if (fieldName == "MotherName") {
       this.setState({ selectedFromAdmSemes });
     }
 
@@ -512,7 +598,7 @@ class TraineesList extends Component {
       this.setState({ selectedToAdmSemes });
     }
 
-    if (fieldName == "requestOrgNotes ") {
+    if (fieldName == "NationalityId ") {
       this.setState({ selectedFromRegSemes });
     }
 
@@ -538,7 +624,7 @@ class TraineesList extends Component {
       selectedOldWarningStatus,
     } = this.state;
 
-    if (fieldName == "stateId") {
+    if (fieldName == "MotherName") {
       this.setState({ selectedFromAdmSemes });
     }
 
@@ -546,7 +632,7 @@ class TraineesList extends Component {
       this.setState({ selectedToAdmSemes });
     }
 
-    if (fieldName == "requestOrgNotes ") {
+    if (fieldName == "NationalityId ") {
       this.setState({ selectedFromRegSemes });
     }
 
@@ -562,7 +648,7 @@ class TraineesList extends Component {
   handleDataListChange = (event, fieldName) => {
     const selectedValue = event.target.value;
 
-    if (fieldName == "stateId") {
+    if (fieldName == "MotherName") {
       this.setState({ selectedFromAdmSemes: selectedValue });
     }
 
@@ -570,7 +656,7 @@ class TraineesList extends Component {
       this.setState({ selectedToAdmSemes: selectedValue });
     }
 
-    if (fieldName == "requestOrgNotes ") {
+    if (fieldName == "NationalityId ") {
       this.setState({ selectedFromRegSemes: selectedValue });
     }
 
@@ -589,7 +675,7 @@ class TraineesList extends Component {
   }
 
   handleSave = values => {
-    const { onAddNewStdWarningTest, yearSemesters } = this.props;
+    const { onAddNewStdWarningTest, FatherNames } = this.props;
     const {
       selectedColor,
       selectedFromAdmSemes,
@@ -605,33 +691,33 @@ class TraineesList extends Component {
       prevAcademicWarningArray,
     } = this.state;
 
-    const fromAdmSemesterObj = yearSemesters.find(
+    const fromAdmSemesterObj = FatherNames.find(
       semes => semes.value === selectedFromAdmSemes
     );
 
-    const toAdmSemesterObj = yearSemesters.find(
+    const toAdmSemesterObj = FatherNames.find(
       semes => semes.value === selectedToAdmSemes
     );
 
-    const fromRegSemesterObj = yearSemesters.find(
+    const fromRegSemesterObj = FatherNames.find(
       semes => semes.value === selectedFromRegSemes
     );
 
-    const toRegSemesterObj = yearSemesters.find(
+    const toRegSemesterObj = FatherNames.find(
       semes => semes.value === selectedToRegSemes
     );
 
     const obj = {
       SID: values["SID"],
       enWarningStatus: values["enWarningStatus"],
-      traineeName: values["traineeName"],
+      fullName: values["fullName"],
       enTransStatement: values["enTransStatement"],
       priority: values["priority"],
       warningColor: selectedColor,
       ruleType: selectedRuleType,
-      stateId: fromAdmSemesterObj.key,
+      MotherName: fromAdmSemesterObj.key,
       academicStatus: toAdmSemesterObj.key,
-      requestOrgNotes: fromRegSemesterObj.key,
+      NationalityId: fromRegSemesterObj.key,
       toRegSemesId: toRegSemesterObj.key,
       stdFromGPA: values["stdFromGPA"],
       stdTillGPA: values["stdTillGPA"],
@@ -644,10 +730,10 @@ class TraineesList extends Component {
       prevTillGPA: values["prevTillGPA"],
       prevFromCredits: values["prevFromCredits"],
       prevTillCredits: values["prevTillCredits"],
-      decreeOrgNotes: applyStatusArray,
+      identityIssueDate: applyStatusArray,
       applyForSemester: applyForSemesterArray,
-      decreeDate: prevStatusSemesArray,
-      decreeOrganizer: prevAcademicWarningArray,
+      nationalNo: prevStatusSemesArray,
+      identityNo: prevAcademicWarningArray,
     };
 
     onAddNewStdWarningTest(obj);
@@ -660,14 +746,14 @@ class TraineesList extends Component {
       warningId: trainees.Id,
       arWarning: trainees.SID,
       enWarning: trainees.enWarningStatus,
-      arTransStatementWarning: trainees.traineeName,
+      arTransStatementWarning: trainees.fullName,
       enTransStatementWarning: trainees.enTransStatement,
       priorityWarning: trainees.priority,
       selectedColor: trainees.warningColor,
       selectedRuleType: trainees.ruleType,
-      selectedFromAdmSemesId: trainees.stateId,
+      selectedFromAdmSemesId: trainees.MotherName,
       selectedToAdmSemesId: trainees.academicStatus,
-      selectedFromRegSemesId: trainees.requestOrgNotes,
+      selectedFromRegSemesId: trainees.NationalityId,
       selectedToRegSemesId: trainees.toRegSemesId,
       stdFromGPAWarning: trainees.stdFromGPA,
       stdTillGPAWarning: trainees.stdTillGPA,
@@ -683,20 +769,20 @@ class TraineesList extends Component {
       prevFromCreditsWarning: trainees.prevFromCredits,
       prevTillCreditsWarning: trainees.prevTillCredits,
       applyForSemesterArray: trainees.applyForSemester,
-      applyStatusArray: trainees.decreeOrgNotes,
-      prevAcademicWarningArray: trainees.decreeOrganizer,
-      prevStatusSemesArray: trainees.decreeDate,
+      applyStatusArray: trainees.identityIssueDate,
+      prevAcademicWarningArray: trainees.identityNo,
+      prevStatusSemesArray: trainees.nationalNo,
       isEdit: true,
     });
 
     this.toggle();
-    const { fiscalYears, yearSemesters, onGetFeesConditions, currencies } =
+    const { fiscalYears, FatherNames, onGetFeesConditions, currencies } =
       this.props;
     let obj = { Id: trainees.Id };
 
-    if (trainees.stateId) {
-      const fromAdmSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === trainees.stateId
+    if (trainees.MotherName) {
+      const fromAdmSemes = FatherNames.find(
+        FatherName => FatherName.key === trainees.MotherName
       );
       this.setState({
         selectedFromAdmSemes: fromAdmSemes.value,
@@ -704,17 +790,17 @@ class TraineesList extends Component {
     }
 
     if (trainees.academicStatus) {
-      const toAdmSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === trainees.academicStatus
+      const toAdmSemes = FatherNames.find(
+        FatherName => FatherName.key === trainees.academicStatus
       );
       this.setState({
         selectedToAdmSemes: toAdmSemes.value,
       });
     }
 
-    if (trainees.requestOrgNotes) {
-      const fromRegSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === trainees.requestOrgNotes
+    if (trainees.NationalityId) {
+      const fromRegSemes = FatherNames.find(
+        FatherName => FatherName.key === trainees.NationalityId
       );
       this.setState({
         selectedFromRegSemes: fromRegSemes.value,
@@ -722,8 +808,8 @@ class TraineesList extends Component {
     }
 
     if (trainees.toRegSemesId) {
-      const toRegSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === trainees.toRegSemesId
+      const toRegSemes = FatherNames.find(
+        FatherName => FatherName.key === trainees.toRegSemesId
       );
       this.setState({
         selectedToRegSemes: toRegSemes.value,
@@ -732,7 +818,7 @@ class TraineesList extends Component {
   };
 
   handleUpdate = values => {
-    const { onUpdateStdWarningTest, yearSemesters } = this.props;
+    const { onUpdateStdWarningTest, FatherNames } = this.props;
     const {
       warningId,
       selectedColor,
@@ -749,19 +835,19 @@ class TraineesList extends Component {
       prevAcademicWarningArray,
     } = this.state;
 
-    const fromAdmSemesterObj = yearSemesters.find(
+    const fromAdmSemesterObj = FatherNames.find(
       semes => semes.value === selectedFromAdmSemes
     );
 
-    const toAdmSemesterObj = yearSemesters.find(
+    const toAdmSemesterObj = FatherNames.find(
       semes => semes.value === selectedToAdmSemes
     );
 
-    const fromRegSemesterObj = yearSemesters.find(
+    const fromRegSemesterObj = FatherNames.find(
       semes => semes.value === selectedFromRegSemes
     );
 
-    const toRegSemesterObj = yearSemesters.find(
+    const toRegSemesterObj = FatherNames.find(
       semes => semes.value === selectedToRegSemes
     );
 
@@ -769,14 +855,14 @@ class TraineesList extends Component {
       Id: warningId,
       SID: values["SID"],
       enWarningStatus: values["enWarningStatus"],
-      traineeName: values["traineeName"],
+      fullName: values["fullName"],
       enTransStatement: values["enTransStatement"],
       priority: values["priority"],
       warningColor: selectedColor,
       ruleType: values["ruleType"],
-      stateId: fromAdmSemesterObj.key,
+      MotherName: fromAdmSemesterObj.key,
       academicStatus: toAdmSemesterObj.key,
-      requestOrgNotes: fromRegSemesterObj.key,
+      NationalityId: fromRegSemesterObj.key,
       toRegSemesId: toRegSemesterObj.key,
       stdFromGPA: values["stdFromGPA"],
       stdTillGPA: values["stdTillGPA"],
@@ -799,10 +885,10 @@ class TraineesList extends Component {
       prevTillGPA: values["prevTillGPA"],
       prevFromCredits: values["prevFromCredits"],
       prevTillCredits: values["prevTillCredits"],
-      decreeOrgNotes: applyStatusArray,
+      identityIssueDate: applyStatusArray,
       applyForSemester: applyForSemesterArray,
-      decreeDate: prevStatusSemesArray,
-      decreeOrganizer: prevAcademicWarningArray,
+      nationalNo: prevStatusSemesArray,
+      identityNo: prevAcademicWarningArray,
     };
 
     onUpdateStdWarningTest(obj);
@@ -818,7 +904,7 @@ class TraineesList extends Component {
     const {
       trainees,
       stdWarningTestOpt,
-      yearSemesters,
+      FatherNames,
       currencies,
       semesters,
       traineeStates,
@@ -832,23 +918,35 @@ class TraineesList extends Component {
       sidebarOpen,
       deleteModal,
       isEdit,
-      showStudentID,
-      showStudentName,
+      showTraineeStatus,
+      showYear,
+      showTraineeNum,
+      showTraineeName,
       showFatherName,
-      showActivationSemester,
-      showStateId,
-      showRequestOrganizer,
-      showRequestOrgNotes,
-      requestDate,
-      showToRegSemester,
+      showGrandFatherName,
+      showMotherName,
+      showBirthDate,
+      showNationalityId,
+      BirthLocation,
       showFirstName,
       showLastName,
-      showDecreeOrganizer,
-      showDecreeDate,
-      showDecreeOrgNotes,
-      showFoldingDate,
-      showFoldingOrganizer,
-      showFoldingOrgNotes,
+      showIdentityNo,
+      showNationalNo,
+      showIdentityIssueDate,
+      showPassNumber,
+      showPassportIssueDate,
+      showPassportExpiryDate,
+      showGender,
+      showCivicZone,
+      showRegisterNo,
+      showRegisterZone,
+      showCurrentAddress,
+      showCurrentAddrCell,
+      showCurrentAddrPhone,
+      showEmail,
+      showWhatsappMobileNum,
+      showParentAddrPhone,
+      showPermanentAddress,
       modal,
       warningId,
       arWarning,
@@ -901,6 +999,57 @@ class TraineesList extends Component {
     const MainInfoColumns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
+        dataField: "TraineeNum",
+        text: this.props.t("Trainee Number"),
+        sort: true,
+        editable: false,
+        hidden: !showTraineeNum,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "fullName",
+        text: this.props.t("Traine Name"),
+        sort: true,
+        editable: false,
+        hidden: !showTraineeName,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "yearId",
+        text: this.props.t("year"),
+        sort: true,
+        editable: false,
+        hidden: !showYear,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "traineeStatusId",
+        text: this.props.t("Trainee Status"),
+        sort: true,
+        editable: false,
+        hidden: !showTraineeStatus,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      // {
+      //   dataField: "tempStatusId",
+      //   text: this.props.t("tempStatus"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showTraineeName,
+      //   // filter: textFilter({
+      //   //   placeholder: this.props.t("Search..."),
+      //   // }),
+      // },
+
+      {
         dataField: "FirstName",
         text: this.props.t("First Name"),
         sort: true,
@@ -932,141 +1081,233 @@ class TraineesList extends Component {
         // }),
       },
       {
-        dataField: "activationSemester",
-        text: this.props.t("Total Registered(Exclude W)"),
+        dataField: "grandFatherName",
+        text: this.props.t("Grand Father Name"),
         sort: true,
         editable: false,
-        hidden: !showActivationSemester,
+        hidden: !showGrandFatherName,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
       {
-        dataField: "stateId",
-        text: this.props.t("Passed Count"),
+        dataField: "MotherName",
+        text: this.props.t("Mother Name"),
         sort: true,
         editable: false,
-        hidden: !showStateId,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
-      },
-
-      {
-        dataField: "requestDate",
-        text: this.props.t("Withdrawn Count"),
-        sort: true,
-        editable: false,
-        hidden: !requestDate,
+        hidden: !showMotherName,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
 
       {
-        dataField: "requestOrganizer",
+        dataField: "BirthLocation",
+        text: this.props.t("Birth Location"),
+        sort: true,
+        editable: false,
+        hidden: !BirthLocation,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
 
-        text: this.props.t("Fails Count"),
-        sort: true,
-        editable: false,
-        hidden: !showRequestOrganizer,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
-      },
       {
-        dataField: "requestOrgNotes",
+        dataField: "birthdate",
 
-        text: this.props.t("Archived Trainee Marks"),
+        text: this.props.t("Birth Date"),
         sort: true,
         editable: false,
-        hidden: !showRequestOrgNotes,
+        hidden: !showBirthDate,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+
+      {
+        dataField: "nationalNo",
+        text: this.props.t("National No"),
+        sort: true,
+        editable: false,
+        hidden: !showNationalNo,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
       {
-        dataField: "decreeDate",
-        text: this.props.t("Un-archived Students"),
-        sort: true,
-        editable: false,
-        hidden: !showDecreeDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
-      },
-      {
-        dataField: "decreeOrganizer",
-        text: this.props.t("Pass Percent(Exclude W)"),
+        dataField: "identityNo",
+        text: this.props.t("Identity No"),
         sort: true,
         // formatter: (cell, row) =>
         //   cell && Array.isArray(cell)
         //     ? cell.map(option => option.label).join(" , ")
         //     : "",
         editable: false,
-        hidden: !showDecreeOrganizer,
+        hidden: !showIdentityNo,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
 
       {
-        dataField: "decreeOrgNotes",
-        text: this.props.t("Fail Percent(Exclude W)"),
+        dataField: "identityIssueDate",
+        text: this.props.t("Identity Issue Date"),
         editable: false,
-        hidden: !showDecreeOrgNotes,
+        hidden: !showIdentityIssueDate,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
       {
-        dataField: "foldingDate",
-        text: this.props.t("Withdraw Percent"),
+        dataField: "PassNumber",
+        text: this.props.t("Passport Number"),
         editable: false,
-        hidden: !showFoldingDate,
+        hidden: !showPassNumber,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
       {
-        dataField: "foldingOrganizer",
-        text: this.props.t("Archiving Percent"),
+        dataField: "passportIssueDate",
+        text: this.props.t("passport Issue Date"),
         editable: false,
-        hidden: !showFoldingOrganizer,
+        hidden: !showPassportIssueDate,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
+      {
+        dataField: "passportExpiryDate",
+        text: this.props.t("Passport Expiry Date"),
+        editable: false,
+        hidden: !showPassportExpiryDate,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "GenderId",
+        text: this.props.t("Gender"),
+        editable: false,
+        hidden: !showGender,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "NationalityId",
+
+        text: this.props.t("Nationality"),
+        sort: true,
+        editable: false,
+        hidden: !showNationalityId,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "civicZone",
+        text: this.props.t("Civic Zone"),
+        editable: false,
+        hidden: !showCivicZone,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "registerZone",
+        text: this.props.t("Register Zone"),
+        editable: false,
+        hidden: !showRegisterZone,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "registerNo",
+        text: this.props.t("Register No"),
+        editable: false,
+        hidden: !showRegisterNo,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      ,
       // {
-      //   dataField: "foldingOrgNotes",
-      //   text: this.props.t("Folding Notes"),
+      //   dataField: "passportExpiryDate",
+      //   text: this.props.t("Passport Expiry Date"),
       //   editable: false,
-      //   hidden: !showFoldingOrgNotes,
-      //   filter: textFilter({
-      //     placeholder: this.props.t("Search..."),
-      //   }),
-      // },
+      //   hidden: !showPassportExpiryDate,
+      //   // filter: textFilter({
+      //   //   placeholder: this.props.t("Search..."),
+      //   // }),
+      // }
       {
-        dataField: "traineeId",
-        text: this.props.t("Student ID"),
-        sort: true,
+        dataField: "CurrentAddress",
+        text: this.props.t("Current Address"),
         editable: false,
-        hidden: !showStudentID,
+        hidden: !showCurrentAddress,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      ,
+      {
+        dataField: "CurrentAddrPhone",
+        text: this.props.t("Current Phone"),
+        editable: false,
+        hidden: !showCurrentAddrPhone,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      ,
+      {
+        dataField: "CurrentAddrCell",
+        text: this.props.t("Current Mobile"),
+        editable: false,
+        hidden: !showCurrentAddrCell,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      ,
+      {
+        dataField: "PermanentAddress",
+        text: this.props.t("Permanent Address"),
+        editable: false,
+        hidden: !showPermanentAddress,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
       {
-        dataField: "traineeName",
-        text: this.props.t("Student Name"),
-        sort: true,
+        dataField: "ParentAddrPhone",
+        text: this.props.t("Parent Phone"),
         editable: false,
-        hidden: !showStudentName,
+        hidden: !showParentAddrPhone,
         // filter: textFilter({
         //   placeholder: this.props.t("Search..."),
         // }),
       },
-
+      {
+        dataField: "WhatsappMobileNum",
+        text: this.props.t("Whatsapp Mobile"),
+        editable: false,
+        hidden: !showWhatsappMobileNum,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "Email",
+        text: this.props.t("Email"),
+        editable: false,
+        hidden: !showEmail,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
       {
         dataField: "action",
         text: "",
@@ -1132,6 +1373,103 @@ class TraineesList extends Component {
                           <Accordion defaultActiveKey="0" flush>
                             <Accordion.Item eventKey="0">
                               <Accordion.Header>
+                                {t("Main Info")}
+                              </Accordion.Header>
+                              <Accordion.Body>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck1"
+                                        autoComplete="off"
+                                        defaultChecked={showTraineeNum}
+                                        onClick={() =>
+                                          this.handleShowColumn("TraineeNum")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck1"
+                                      >
+                                        {this.props.t("Trainee ID")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck2"
+                                        autoComplete="off"
+                                        defaultChecked={showTraineeName}
+                                        onClick={() =>
+                                          this.handleShowColumn("fullName")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck2"
+                                      >
+                                        {this.props.t("Trainee Name")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck17"
+                                        autoComplete="off"
+                                        defaultChecked={showYear}
+                                        onClick={() =>
+                                          this.handleShowColumn("yearId")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck17"
+                                      >
+                                        {this.props.t("Year")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck18"
+                                        autoComplete="off"
+                                        defaultChecked={showTraineeStatus}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "traineeStatusId"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck18"
+                                      >
+                                        {this.props.t("Trainee Status")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                              </Accordion.Body>{" "}
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="1">
+                              <Accordion.Header>
                                 {t("Personal Information")}
                               </Accordion.Header>
                               <Accordion.Body>
@@ -1146,14 +1484,14 @@ class TraineesList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showFirstName}
                                           onClick={() =>
-                                            this.handleShowColumn("requestNum")
+                                            this.handleShowColumn("FirstName")
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck15"
                                         >
-                                          {this.props.t("Course Name")}
+                                          {this.props.t("First Name")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1168,14 +1506,14 @@ class TraineesList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showLastName}
                                           onClick={() =>
-                                            this.handleShowColumn("requestId")
+                                            this.handleShowColumn("LastName")
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck4"
                                         >
-                                          {this.props.t("Course Code")}
+                                          {this.props.t("Last Name")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1190,16 +1528,14 @@ class TraineesList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showFatherName}
                                           onClick={() =>
-                                            this.handleShowColumn(
-                                              "yearSemester"
-                                            )
+                                            this.handleShowColumn("FatherName")
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check big-width-check"
                                           htmlFor="btncheck16"
                                         >
-                                          {this.props.t("Credits")}
+                                          {this.props.t("Father Name")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1212,12 +1548,10 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck3"
                                           autoComplete="off"
-                                          defaultChecked={
-                                            showActivationSemester
-                                          }
+                                          defaultChecked={showGrandFatherName}
                                           onClick={() =>
                                             this.handleShowColumn(
-                                              "activationSemester"
+                                              "grandFatherName"
                                             )
                                           }
                                         />
@@ -1225,9 +1559,7 @@ class TraineesList extends Component {
                                           className="btn btn-outline-primary big-width-check big-width-check"
                                           htmlFor="btncheck3"
                                         >
-                                          {this.props.t(
-                                            "Total Registered(Exclude W)"
-                                          )}
+                                          {this.props.t("Grand Father Name")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1240,16 +1572,16 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck6"
                                           autoComplete="off"
-                                          defaultChecked={showStateId}
+                                          defaultChecked={showMotherName}
                                           onClick={() =>
-                                            this.handleShowColumn("stateId")
+                                            this.handleShowColumn("MotherName")
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck6"
                                         >
-                                          {this.props.t("Passed Count")}
+                                          {this.props.t("Mother Name")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1262,16 +1594,18 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck5"
                                           autoComplete="off"
-                                          defaultChecked={requestDate}
+                                          defaultChecked={BirthLocation}
                                           onClick={() =>
-                                            this.handleShowColumn("requestDate")
+                                            this.handleShowColumn(
+                                              "BirthLocation"
+                                            )
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck5"
                                         >
-                                          {this.props.t("Withdrawn Count")}
+                                          {this.props.t("Birth Location")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1285,18 +1619,16 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck7"
                                           autoComplete="off"
-                                          defaultChecked={showRequestOrganizer}
+                                          defaultChecked={showBirthDate}
                                           onClick={() =>
-                                            this.handleShowColumn(
-                                              "requestOrganizer"
-                                            )
+                                            this.handleShowColumn("birthdate")
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck7"
                                         >
-                                          {this.props.t("Fails Count")}
+                                          {this.props.t("Birth Date")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1309,10 +1641,10 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck8"
                                           autoComplete="off"
-                                          defaultChecked={showRequestOrgNotes}
+                                          defaultChecked={showNationalityId}
                                           onClick={() =>
                                             this.handleShowColumn(
-                                              "requestOrgNotes"
+                                              "NationalityId"
                                             )
                                           }
                                         />
@@ -1320,9 +1652,7 @@ class TraineesList extends Component {
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck8"
                                         >
-                                          {this.props.t(
-                                            "Archived Trainee Marks"
-                                          )}
+                                          {this.props.t("Nationality")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1336,16 +1666,16 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck9"
                                           autoComplete="off"
-                                          defaultChecked={showDecreeDate}
+                                          defaultChecked={showNationalNo}
                                           onClick={() =>
-                                            this.handleShowColumn("decreeDate")
+                                            this.handleShowColumn("nationalNo")
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck9"
                                         >
-                                          {this.props.t("Un-archived Students")}
+                                          {this.props.t("National No")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1359,20 +1689,16 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck10"
                                           autoComplete="off"
-                                          defaultChecked={showDecreeOrganizer}
+                                          defaultChecked={showIdentityNo}
                                           onClick={() =>
-                                            this.handleShowColumn(
-                                              "decreeOrganizer"
-                                            )
+                                            this.handleShowColumn("identityNo")
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck10"
                                         >
-                                          {this.props.t(
-                                            "Pass Percent(Exclude W)"
-                                          )}
+                                          {this.props.t("Identity No")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1386,10 +1712,10 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck11"
                                           autoComplete="off"
-                                          defaultChecked={showDecreeOrgNotes}
+                                          defaultChecked={showIdentityIssueDate}
                                           onClick={() =>
                                             this.handleShowColumn(
-                                              "decreeOrgNotes"
+                                              "identityIssueDate"
                                             )
                                           }
                                         />
@@ -1397,9 +1723,7 @@ class TraineesList extends Component {
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck11"
                                         >
-                                          {this.props.t(
-                                            "Fail Percent(Exclude W)"
-                                          )}
+                                          {this.props.t("Identity Issue Date")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1413,16 +1737,16 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck12"
                                           autoComplete="off"
-                                          defaultChecked={showFoldingDate}
+                                          defaultChecked={showPassNumber}
                                           onClick={() =>
-                                            this.handleShowColumn("foldingDate")
+                                            this.handleShowColumn("PassNumber")
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck12"
                                         >
-                                          {this.props.t("Withdraw Percent")}
+                                          {this.props.t("Passport Number")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1436,10 +1760,10 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck14"
                                           autoComplete="off"
-                                          defaultChecked={showFoldingOrganizer}
+                                          defaultChecked={showPassportIssueDate}
                                           onClick={() =>
                                             this.handleShowColumn(
-                                              "foldingOrganizer"
+                                              "passportIssueDate"
                                             )
                                           }
                                         />
@@ -1447,7 +1771,7 @@ class TraineesList extends Component {
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck14"
                                         >
-                                          {this.props.t("Archiving Percent")}
+                                          {this.props.t("Passport Issue Date")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1461,10 +1785,12 @@ class TraineesList extends Component {
                                           className="btn-check"
                                           id="btncheck13"
                                           autoComplete="off"
-                                          defaultChecked={showFoldingOrgNotes}
+                                          defaultChecked={
+                                            showPassportExpiryDate
+                                          }
                                           onClick={() =>
                                             this.handleShowColumn(
-                                              "foldingOrgNotes"
+                                              "passportExpiryDate"
                                             )
                                           }
                                         />
@@ -1472,29 +1798,7 @@ class TraineesList extends Component {
                                           className="btn btn-outline-primary big-width-check"
                                           htmlFor="btncheck13"
                                         >
-                                          {this.props.t("Folding Notes")}
-                                        </label>
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                  {/* <div className="mb-1">
-                                    <Row>
-                                      <Col>
-                                        <input
-                                          type="checkbox"
-                                          className="btn-check"
-                                          id="btncheck1"
-                                          autoComplete="off"
-                                          defaultChecked={showStudentID}
-                                          onClick={() =>
-                                            this.handleShowColumn("traineeId")
-                                          }
-                                        />
-                                        <label
-                                          className="btn btn-outline-primary big-width-check"
-                                          htmlFor="btncheck1"
-                                        >
-                                          {this.props.t("Student ID")}
+                                          {this.props.t("Passport Expiry Date")}
                                         </label>
                                       </Col>
                                     </Row>
@@ -1505,28 +1809,305 @@ class TraineesList extends Component {
                                         <input
                                           type="checkbox"
                                           className="btn-check"
-                                          id="btncheck2"
+                                          id="btncheck21"
                                           autoComplete="off"
-                                          defaultChecked={showStudentName}
+                                          defaultChecked={showGender}
                                           onClick={() =>
-                                            this.handleShowColumn("traineeName")
+                                            this.handleShowColumn("GenderId")
+                                          }
+                                        />
+                                        <label
+                                          className="btn btn-outline-primary big-width-check"
+                                          htmlFor="btncheck21"
+                                        >
+                                          {this.props.t("Gender")}
+                                        </label>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                  <div className="mb-1">
+                                    <Row>
+                                      <Col>
+                                        <input
+                                          type="checkbox"
+                                          className="btn-check"
+                                          id="btncheck22"
+                                          autoComplete="off"
+                                          defaultChecked={showCivicZone}
+                                          onClick={() =>
+                                            this.handleShowColumn("civicZone")
                                           }
                                         />
                                         <label
                                           className="btn btn-outline-primary big-width-check big-width-check"
-                                          htmlFor="btncheck2"
+                                          htmlFor="btncheck22"
                                         >
-                                          {this.props.t("Student Name")}
+                                          {this.props.t("Civic Zone")}
                                         </label>
                                       </Col>
                                     </Row>
-                                  </div> */}
+                                  </div>
+                                  <div className="mb-1">
+                                    <Row>
+                                      <Col>
+                                        <input
+                                          type="checkbox"
+                                          className="btn-check"
+                                          id="btncheck19"
+                                          autoComplete="off"
+                                          defaultChecked={showRegisterZone}
+                                          onClick={() =>
+                                            this.handleShowColumn(
+                                              "registerZone"
+                                            )
+                                          }
+                                        />
+                                        <label
+                                          className="btn btn-outline-primary big-width-check big-width-check"
+                                          htmlFor="btncheck19"
+                                        >
+                                          {this.props.t("Register Zone")}
+                                        </label>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                  <div className="mb-1">
+                                    <Row>
+                                      <Col>
+                                        <input
+                                          type="checkbox"
+                                          className="btn-check"
+                                          id="btncheck20"
+                                          autoComplete="off"
+                                          defaultChecked={showRegisterNo}
+                                          onClick={() =>
+                                            this.handleShowColumn("registerNo")
+                                          }
+                                        />
+                                        <label
+                                          className="btn btn-outline-primary big-width-check big-width-check"
+                                          htmlFor="btncheck20"
+                                        >
+                                          {this.props.t("Register No")}
+                                        </label>
+                                      </Col>
+                                    </Row>
+                                  </div>
                                 </Col>
                               </Accordion.Body>
                             </Accordion.Item>
-                            <Accordion.Item eventKey="1">
+                            <Accordion.Item eventKey="2">
                               <Accordion.Header>
-                                {t("Basic Information")}
+                                {t("Academic Info")}
+                              </Accordion.Header>
+                              <Accordion.Body>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck23"
+                                        autoComplete="off"
+                                        defaultChecked={showCurrentAddress}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "CurrentAddress"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck23"
+                                      >
+                                        {this.props.t("CurrentAddress")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck24"
+                                        autoComplete="off"
+                                        defaultChecked={showCurrentAddrPhone}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "CurrentAddrPhone"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck24"
+                                      >
+                                        {this.props.t("Current Phone")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck25"
+                                        autoComplete="off"
+                                        defaultChecked={showCurrentAddrCell}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "CurrentAddrCell"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck25"
+                                      >
+                                        {this.props.t("Current Cell")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck26"
+                                        autoComplete="off"
+                                        defaultChecked={showPermanentAddress}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "PermanentAddress"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck26"
+                                      >
+                                        {this.props.t("Permanent Address")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck26"
+                                        autoComplete="off"
+                                        defaultChecked={showPermanentAddress}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "PermanentAddress"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck26"
+                                      >
+                                        {this.props.t("Permanent Address")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck27"
+                                        autoComplete="off"
+                                        defaultChecked={showParentAddrPhone}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "ParentAddrPhone"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck27"
+                                      >
+                                        {this.props.t("Parent Phone")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck28"
+                                        autoComplete="off"
+                                        defaultChecked={showWhatsappMobileNum}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "WhatsappMobileNum"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck28"
+                                      >
+                                        {this.props.t("Whatsapp Mobile")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck29"
+                                        autoComplete="off"
+                                        defaultChecked={showEmail}
+                                        onClick={() =>
+                                          this.handleShowColumn("Email")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck29"
+                                      >
+                                        {this.props.t("Email")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                              </Accordion.Body>{" "}
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="3">
+                              <Accordion.Header>
+                                {t("Contact Info")}
+                              </Accordion.Header>
+                              <Accordion.Body></Accordion.Body>{" "}
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="4">
+                              <Accordion.Header>
+                                {t("Professional experiences")}
+                              </Accordion.Header>
+                              <Accordion.Body></Accordion.Body>{" "}
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="5">
+                              <Accordion.Header>
+                                {t("Required Docs")}
                               </Accordion.Header>
                               <Accordion.Body></Accordion.Body>{" "}
                             </Accordion.Item>
@@ -1695,7 +2276,7 @@ const mapStateToProps = ({
   deleted: trainees.deleted,
   faculties: mobAppFacultyAccs.faculties,
   currencies: currencies.currencies,
-  yearSemesters: generalManagements.yearSemesters,
+  FatherNames: generalManagements.FatherNames,
   semesters: semesters.semesters,
   currentSemester: semesters.currentSemester,
   user_menu: menu_items.user_menu || [],

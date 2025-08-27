@@ -393,6 +393,7 @@ class ApplicantsList extends Component {
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
+    this.props.onGetTempTrainees();
   }
   handleSelectYear = (name, value) => {
     document.getElementById("square-switch1").checked = false;
@@ -7059,7 +7060,7 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetTempTrainees: () => dispatch(getTempTrainees()),
+  onGetTempTrainees: lang => dispatch(getTempTrainees(lang)),
   onAddNewTempTrainee: tempTrainee => dispatch(addNewTempTrainee(tempTrainee)),
   onUpdateTempTrainee: tempTrainee => dispatch(updateTempTrainee(tempTrainee)),
   onDeleteTempTrainee: tempTrainee => dispatch(deleteTempTrainee(tempTrainee)),

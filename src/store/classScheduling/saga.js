@@ -477,27 +477,27 @@ function* fetchScheduleTimings(obj) {
   }
 }
 
-function* fetchHallTimings(obj) {
-  let hallTimingSL = obj.payload;
-  let filter;
-  if (hallTimingSL.check == 0) {
-    filter = `hallId = ${hallTimingSL.hallId} `;
-  }
-  const get_hall_timings = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_scheduleTimingsDescriptionDetails",
-    filter: filter,
-  };
-  try {
-    const response = yield call(getHallTimings, get_hall_timings);
-    console.log("haaaaaal", response);
-    yield put(getHallTimingsSuccess(response));
-  } catch (error) {
-    yield put(getHallTimingsFail(error));
-  }
-}
+// function* fetchHallTimings(obj) {
+//   let hallTimingSL = obj.payload;
+//   let filter;
+//   if (hallTimingSL.check == 0) {
+//     filter = `hallId = ${hallTimingSL.hallId} `;
+//   }
+//   const get_hall_timings = {
+//     source: "db",
+//     procedure: "SisApp_getData",
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     tablename: "_scheduleTimingsDescriptionDetails",
+//     filter: filter,
+//   };
+//   try {
+//     const response = yield call(getHallTimings, get_hall_timings);
+//     console.log("haaaaaal", response);
+//     yield put(getHallTimingsSuccess(response));
+//   } catch (error) {
+//     yield put(getHallTimingsFail(error));
+//   }
+// }
 
 function* fetchScheduleTimingProfile() {
   try {
@@ -587,7 +587,6 @@ function* onDeleteSectionLabDetail({ payload, scheduleTiming }) {
 
   try {
     const respdelete = yield call(deleteSectionLabDetail, payload);
-    
 
     yield put(deleteSectionLabDetailSuccess(respdelete[0]));
   } catch (error) {
@@ -596,11 +595,11 @@ function* onDeleteSectionLabDetail({ payload, scheduleTiming }) {
 }
 
 function* onAddNewScheduleTiming({ payload }) {
- // Yara Important
- const obj = { ...payload }; 
+  // Yara Important
+  const obj = { ...payload };
   delete payload["id"];
-delete payload["sectionLabId"];
-delete payload["type"];
+  delete payload["sectionLabId"];
+  delete payload["type"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
@@ -608,13 +607,13 @@ delete payload["type"];
   try {
     const response = yield call(addNewScheduleTiming, payload);
     yield put(addScheduleTimingSuccess(response[0]));
-    yield (fetchSectionLabDetails({
-        type: GET_SECTION_LAB_DETAILS,
-        payload: {
-          Id: obj["sectionLabId"],
-          type: obj["type"],
-        },
-      }));
+    yield fetchSectionLabDetails({
+      type: GET_SECTION_LAB_DETAILS,
+      payload: {
+        Id: obj["sectionLabId"],
+        type: obj["type"],
+      },
+    });
   } catch (error) {
     yield put(addScheduleTimingFail(error));
   }
@@ -669,7 +668,7 @@ function* classSchedulingSaga() {
   yield takeEvery(GET_SECTION_LAB_DETAILS, fetchSectionLabDetails);
 
   yield takeEvery(GET_SCHEDULE_MSG_VALUE, onGetScheduleMsgValue);
-  yield takeEvery(GET_HALL_TIMINGS, fetchHallTimings);
+  // yield takeEvery(GET_HALL_TIMINGS, fetchHallTimings);
 }
 
 export default classSchedulingSaga;

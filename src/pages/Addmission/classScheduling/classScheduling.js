@@ -490,36 +490,36 @@ class ClassSchedulingList extends Component {
     });
   };
 
-  hasMatchingTimings = (hallTimings1, hallTimings2) => {
-    console.log("hallTimings1", hallTimings1, hallTimings2);
+  // hasMatchingTimings = (hallTimings1, hallTimings2) => {
+  //   console.log("hallTimings1", hallTimings1, hallTimings2);
 
-    for (const timing1 of hallTimings1) {
-      for (const timing2 of hallTimings2) {
-        if (
-          timing1.dayId === timing2.dayId &&
-          timing1.lecturePeriodId === timing2.lecturePeriodId
-        ) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
+  //   for (const timing1 of hallTimings1) {
+  //     for (const timing2 of hallTimings2) {
+  //       if (
+  //         timing1.dayId === timing2.dayId &&
+  //         timing1.lecturePeriodId === timing2.lecturePeriodId
+  //       ) {
+  //         return true;
+  //       }
+  //     }
+  //   }
+  //   return false;
+  // };
 
-  joinMatchingTimings = (hallTimings1, hallTimings2) => {
-    const matchingTimings = [];
-    for (const timing1 of hallTimings1) {
-      for (const timing2 of hallTimings2) {
-        if (
-          timing1.dayId === timing2.dayId &&
-          timing1.lecturePeriodId === timing2.lecturePeriodId
-        ) {
-          matchingTimings.push(timing1);
-        }
-      }
-    }
-    return matchingTimings;
-  };
+  // joinMatchingTimings = (hallTimings1, hallTimings2) => {
+  //   const matchingTimings = [];
+  //   for (const timing1 of hallTimings1) {
+  //     for (const timing2 of hallTimings2) {
+  //       if (
+  //         timing1.dayId === timing2.dayId &&
+  //         timing1.lecturePeriodId === timing2.lecturePeriodId
+  //       ) {
+  //         matchingTimings.push(timing1);
+  //       }
+  //     }
+  //   }
+  //   return matchingTimings;
+  // };
 
   onClickDelete = sectionLabData => {
     this.setState({ sectionLabData: sectionLabData });
@@ -624,24 +624,24 @@ class ClassSchedulingList extends Component {
     onGetSectionLabs(newdata);
   };
 
-  handleViewHallSchedule = SLD => {
-    console.log("SLD", SLD);
-    const { onGetHallTimings } = this.props;
+  // handleViewHallSchedule = SLD => {
+  //   console.log("SLD", SLD);
+  //   const { onGetHallTimings } = this.props;
 
-    const findingHallId = SLD.hallId;
-    if (!findingHallId) {
-      console.error("❌ Missing hallId in SLD");
-      return;
-    }
+  //   const findingHallId = SLD.hallId;
+  //   if (!findingHallId) {
+  //     console.error("❌ Missing hallId in SLD");
+  //     return;
+  //   }
 
-    const OB = {
-      hallId: findingHallId,
-      check: 0,
-    };
+  //   const OB = {
+  //     hallId: findingHallId,
+  //     check: 0,
+  //   };
 
-    onGetHallTimings(OB);
-    this.toggleHallModal();
-  };
+  //   onGetHallTimings(OB);
+  //   this.toggleHallModal();
+  // };
 
   handleAlertClose = alertName => {
     this.setState({ [alertName]: null });
