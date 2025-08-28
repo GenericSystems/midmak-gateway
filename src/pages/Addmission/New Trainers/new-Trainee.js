@@ -3238,7 +3238,7 @@ class NewTrainee extends Component {
                                                           <Col className="col-4">
                                                             <Label for="regDiploma">
                                                               {this.props.t(
-                                                                "Registered under"
+                                                                "Registered Under"
                                                               )}
                                                             </Label>
                                                           </Col>

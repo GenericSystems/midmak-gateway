@@ -116,6 +116,16 @@ class TraineesList extends Component {
       showJobTitle: false,
       showAdmissionDate: false,
       showRegisterYear: false,
+      showLastRegCourse: false,
+      showGrade: false,
+      showCourseStatus: false,
+      showDecisionCode: false,
+      showDecisionType: false,
+      showDecisionDate: false,
+      showApplyingDate: false,
+      showAcademyCouncilNo: false,
+      showAcademyCouncilDate: false,
+      showDecisionNote: false,
       modal: false,
       selectedMulti: null,
       selectedFromAdmSemes: "",
@@ -607,6 +617,59 @@ class TraineesList extends Component {
         showAdmissionDate: !prevState.showAdmissionDate,
       }));
     }
+
+    if (fieldName == "lastRegCourse") {
+      this.setState(prevState => ({
+        showLastRegCourse: !prevState.showLastRegCourse,
+      }));
+    }
+
+    if (fieldName == "grade") {
+      this.setState(prevState => ({
+        showGrade: !prevState.showGrade,
+      }));
+    }
+
+    if (fieldName == "courseStatus") {
+      this.setState(prevState => ({
+        showCourseStatus: !prevState.showCourseStatus,
+      }));
+    }
+    if (fieldName == "decisionCode") {
+      this.setState(prevState => ({
+        showDecisionCode: !prevState.showDecisionCode,
+      }));
+    }
+    if (fieldName == "decisionType") {
+      this.setState(prevState => ({
+        showDecisionType: !prevState.showDecisionType,
+      }));
+    }
+    if (fieldName == "decisionDate") {
+      this.setState(prevState => ({
+        showDecisionDate: !prevState.showDecisionDate,
+      }));
+    }
+    if (fieldName == "applyingDate") {
+      this.setState(prevState => ({
+        showApplyingDate: !prevState.showApplyingDate,
+      }));
+    }
+    if (fieldName == "academyCouncilNo") {
+      this.setState(prevState => ({
+        showAcademyCouncilNo: !prevState.showAcademyCouncilNo,
+      }));
+    }
+    if (fieldName == "academyCouncilDate") {
+      this.setState(prevState => ({
+        showAcademyCouncilDate: !prevState.showAcademyCouncilDate,
+      }));
+    }
+    if (fieldName == "decisionNote") {
+      this.setState(prevState => ({
+        showDecisionNote: !prevState.showDecisionNote,
+      }));
+    }
   };
 
   handleAddWarning = () => {
@@ -1059,6 +1122,16 @@ class TraineesList extends Component {
       showWorkAddress,
       showAdmissionDate,
       showRegisterYear,
+      showLastRegCourse,
+      showGrade,
+      showCourseStatus,
+      showDecisionCode,
+      showDecisionNote,
+      showDecisionType,
+      showDecisionDate,
+      showApplyingDate,
+      showAcademyCouncilDate,
+      showAcademyCouncilNo,
       modal,
       warningId,
       arWarning,
@@ -1556,6 +1629,105 @@ class TraineesList extends Component {
         // }),
       },
       {
+        dataField: "lastRegCourse",
+        text: this.props.t("Last Reg.Course"),
+        editable: false,
+        hidden: !showLastRegCourse,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "grade",
+        text: this.props.t("Grade"),
+        editable: false,
+        hidden: !showGrade,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      // {
+      //   dataField: "LastRegCourse",
+      //   text: this.props.t("Last Reg.Course"),
+      //   editable: false,
+      //   hidden: !showLastRegCourse,
+      //   // filter: textFilter({
+      //   //   placeholder: this.props.t("Search..."),
+      //   // }),
+      // },
+      {
+        dataField: "courseStatus",
+        text: this.props.t("Course Status"),
+        editable: false,
+        hidden: !showCourseStatus,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "decisionCode",
+        text: this.props.t("Decision Code"),
+        editable: false,
+        hidden: !showDecisionCode,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "decisionType",
+        text: this.props.t("Decision Type"),
+        editable: false,
+        hidden: !showDecisionType,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "decisionDate",
+        text: this.props.t("Decision Date"),
+        editable: false,
+        hidden: !showDecisionDate,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "applyingDate",
+        text: this.props.t("Applying Date"),
+        editable: false,
+        hidden: !showApplyingDate,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "academyCouncilNo",
+        text: this.props.t("Academy Council No"),
+        editable: false,
+        hidden: !showAcademyCouncilNo,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "academyCouncilDate",
+        text: this.props.t("Academy Council Date"),
+        editable: false,
+        hidden: !showAcademyCouncilDate,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
+        dataField: "decisionNote",
+        text: this.props.t("Decision Note"),
+        editable: false,
+        hidden: !showDecisionNote,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        // }),
+      },
+      {
         dataField: "action",
         text: "",
         isDummyField: true,
@@ -1602,7 +1774,7 @@ class TraineesList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={t("Acadmey Students")} />
+            <Breadcrumbs breadcrumbItem={t("Academy Trainees")} />
 
             <Row>
               {sidebarOpen && (
@@ -2581,7 +2753,7 @@ class TraineesList extends Component {
                                         className="btn btn-outline-primary big-width-check"
                                         htmlFor="btncheck40"
                                       >
-                                        {this.props.t("Job title")}
+                                        {this.props.t("Job Title")}
                                       </label>
                                     </Col>
                                   </Row>
@@ -2625,7 +2797,7 @@ class TraineesList extends Component {
                                         className="btn btn-outline-primary big-width-check"
                                         htmlFor="btncheck42"
                                       >
-                                        {this.props.t("Work address")}
+                                        {this.props.t("Work Address")}
                                       </label>
                                     </Col>
                                   </Row>
@@ -2680,7 +2852,239 @@ class TraineesList extends Component {
                               <Accordion.Header>
                                 {t("Register Info")}
                               </Accordion.Header>
-                              <Accordion.Body></Accordion.Body>{" "}
+                              <Accordion.Body>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck45"
+                                        autoComplete="off"
+                                        defaultChecked={showLastRegCourse}
+                                        onClick={() =>
+                                          this.handleShowColumn("lastRegCourse")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck45"
+                                      >
+                                        {this.props.t("Last Reg.Course")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck46"
+                                        autoComplete="off"
+                                        defaultChecked={showGrade}
+                                        onClick={() =>
+                                          this.handleShowColumn("grade")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck46"
+                                      >
+                                        {this.props.t("Grade")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck47"
+                                        autoComplete="off"
+                                        defaultChecked={showCourseStatus}
+                                        onClick={() =>
+                                          this.handleShowColumn("courseStatus")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck47"
+                                      >
+                                        {this.props.t("Course Status")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                              </Accordion.Body>{" "}
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="6">
+                              <Accordion.Header>
+                                {t("Trainee Decisions")}
+                              </Accordion.Header>
+                              <Accordion.Body>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck48"
+                                        autoComplete="off"
+                                        defaultChecked={showDecisionCode}
+                                        onClick={() =>
+                                          this.handleShowColumn("decisionCode")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck48"
+                                      >
+                                        {this.props.t("Decision Code")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck49"
+                                        autoComplete="off"
+                                        defaultChecked={showDecisionType}
+                                        onClick={() =>
+                                          this.handleShowColumn("decisionType")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck49"
+                                      >
+                                        {this.props.t("Decision Type")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck50"
+                                        autoComplete="off"
+                                        defaultChecked={showDecisionDate}
+                                        onClick={() =>
+                                          this.handleShowColumn("decisionDate")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck50"
+                                      >
+                                        {this.props.t("Decision Date")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck51"
+                                        autoComplete="off"
+                                        defaultChecked={showApplyingDate}
+                                        onClick={() =>
+                                          this.handleShowColumn("applyingDate")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck51"
+                                      >
+                                        {this.props.t("Applying Date")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck52"
+                                        autoComplete="off"
+                                        defaultChecked={showAcademyCouncilNo}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "academyCouncilNo"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck52"
+                                      >
+                                        {this.props.t("Academy Council No")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck53"
+                                        autoComplete="off"
+                                        defaultChecked={showAcademyCouncilDate}
+                                        onClick={() =>
+                                          this.handleShowColumn(
+                                            "academyCouncilDate"
+                                          )
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck53"
+                                      >
+                                        {this.props.t("Academy Council Date")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck54"
+                                        autoComplete="off"
+                                        defaultChecked={showDecisionNote}
+                                        onClick={() =>
+                                          this.handleShowColumn("decisionNote")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck54"
+                                      >
+                                        {this.props.t("Decision Note")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                              </Accordion.Body>{" "}
                             </Accordion.Item>
                           </Accordion>
                         </CardBody>

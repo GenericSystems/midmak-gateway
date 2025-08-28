@@ -2277,7 +2277,7 @@ class ApplicantsList extends Component {
       {
         dataField: "nationalNo",
         key: "idNum",
-        text: this.props.t("National Number"),
+        text: this.props.t("National No"),
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -2286,7 +2286,7 @@ class ApplicantsList extends Component {
       },
       {
         dataField: "RegistrationDate",
-        text: this.props.t("Registration date"),
+        text: this.props.t("Registration Date"),
         sort: true,
         formatter: (cellContent, row) =>
           this.handleValidDate(row.RegistrationDate),
@@ -2306,7 +2306,7 @@ class ApplicantsList extends Component {
       },
       {
         dataField: "statusId",
-        text: this.props.t("TempTrainee Status"),
+        text: this.props.t("Trainee Status"),
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -6057,7 +6057,7 @@ class ApplicantsList extends Component {
                                                                               className="form-label d-flex"
                                                                             >
                                                                               {this.props.t(
-                                                                                "TempTrainee Status"
+                                                                                "Trainee Status"
                                                                               )}
                                                                             </Label>
                                                                           </Col>

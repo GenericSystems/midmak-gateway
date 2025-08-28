@@ -1315,7 +1315,7 @@ class EmployeesList extends Component {
                                           Yup.string().matches(/^[a-zA-Z]+$/),
                                         motherNameE:
                                           Yup.string().matches(/^[a-zA-Z]+$/),
-                                        emailAddress: Yup.string().email(
+                                        email: Yup.string().email(
                                           "Must be a valid Email"
                                         ),
                                         phoneNumber: Yup.string()
