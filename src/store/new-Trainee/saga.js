@@ -541,22 +541,22 @@ function* onUploadFile({ payload }) {
 //   }
 // }
 
-// function* onGenerateTempTrainee({ payload }) {
-//   const generate_student = {
-//     source: "db",
-//     operation: "execProc",
-//     procedure: "Admission_GenerateSID",
-//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-//     parameters: `Id= ${payload}`,
-//   };
-//   try {
-//     const response = yield call(generateTempTrainee, generate_student);
+function* onGenerateTempTrainee({ payload }) {
+  const generate_trainee = {
+    source: "db",
+    operation: "execProc",
+    procedure: "Admission_GenerateTraineeID",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    parameters: `Id= ${payload}`,
+  };
+  try {
+    const response = yield call(generateTempTrainee, generate_trainee);
 
-//     yield put(generateTempTraineeSuccess(response[0]));
-//   } catch (error) {
-//     yield put(generateTempTraineeFail(error));
-//   }
-// }
+    yield put(generateTempTraineeSuccess(response[0]));
+  } catch (error) {
+    yield put(generateTempTraineeFail(error));
+  }
+}
 
 function* tempTraineesSaga() {
   yield takeEvery(GET_TEMP_TRAINEES, fetchTempTrainees);
@@ -585,7 +585,7 @@ function* tempTraineesSaga() {
     onDeleteProfessionalExperience
   );
   yield takeEvery(ADD_REQUIRED_DOCS, onAddRequiredDocs);
-  // yield takeEvery(GENERATE_TEMP_TRAINEE, onGenerateTempTrainee);
+  yield takeEvery(GENERATE_TEMP_TRAINEE, onGenerateTempTrainee);
   // yield takeEvery(GET_TEMP_TRAINEE_BY_ID, fetchTempTraineeById);
   // yield takeEvery(GENERATE_TRAINEE, onGenerateTrainee);
   // yield takeEvery(GET_TRAINEE_BY_ID, fetchTraineeById);

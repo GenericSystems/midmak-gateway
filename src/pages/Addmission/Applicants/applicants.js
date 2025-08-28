@@ -237,7 +237,7 @@ class ApplicantsList extends Component {
       tempTrainees,
       tempTrainee_regReqDocs,
       onGetTempTrainees,
-      generated_trainee,
+      generated_tempTrainee,
       diplomalevels,
       nationalities,
       relatives,
@@ -294,7 +294,7 @@ class ApplicantsList extends Component {
     this.setState({ academiccertificates });
     this.setState({ filteredFaculties });
     this.setState({ filteredAcademicCertificates });
-    this.setState({ generated_trainee });
+    this.setState({ generated_tempTrainee });
     this.setState({ deleted });
     this.setState({ grants });
     this.setState({ tempTraineeBrothers });
@@ -1475,30 +1475,28 @@ class ApplicantsList extends Component {
     }
   };
 
-  // handleGenerateTempTrainee = tempTraineeId => {
-  //   const { onGenerateTempTrainee, last_created_trainee } = this.props;
+  handleGenerateTempTrainee = tempId => {
+    const { onGenerateTempTrainee } = this.props;
 
-  //   const { isEdit } = this.state;
-  //   if (isEdit) {
-  //     onGenerateTempTrainee(tempTraineeId);
-  //   } else if (!isEdit) {
-  //     onGenerateTempTrainee(last_created_trainee);
-  //   }
+    const { isEdit } = this.state;
+    if (isEdit) {
+      onGenerateTempTrainee(tempId);
+    }
 
-  //   this.setState({ generateModal: true });
-  // };
+    this.setState({ generateModal: true });
+  };
 
-  // toggleGenerateModal = () => {
-  //   this.setState(prevState => ({
-  //     generate: !prevState.generate,
-  //   }));
-  // };
+  toggleGenerateModal = () => {
+    this.setState(prevState => ({
+      generate: !prevState.generate,
+    }));
+  };
 
-  // onCloseGenerateModal = () => {
-  //   const { onGetTempTrainees  } = this.props;
-  //   this.setState({ generateModal: false });
-  //   onGetTempTrainees ();
-  // };
+  onCloseGenerateModal = () => {
+    const { onGetTempTrainees } = this.props;
+    this.setState({ generateModal: false });
+    onGetTempTrainees();
+  };
   handleSuccessClose = () => {
     this.setState({ successMessage: null });
   };
@@ -2212,7 +2210,7 @@ class ApplicantsList extends Component {
       academiccertificates,
       filteredFaculties,
       filteredAcademicCertificates,
-      generated_trainee,
+      generated_tempTrainee,
       deleted,
       grants,
       t,
@@ -2901,7 +2899,7 @@ class ApplicantsList extends Component {
                                           toggle={this.props.onCloseClick}
                                           centered={true}
                                         >
-                                          {/* <ModalBody className="py-3 px-5">
+                                          <ModalBody className="py-3 px-5">
                                             <Row>
                                               <Col lg={12}>
                                                 <div className="text-center">
@@ -2915,12 +2913,14 @@ class ApplicantsList extends Component {
 
                                                   <h2>
                                                     {this.props.t(
-                                                      "TempTrainee Generated Successfully"
+                                                      "Trainee Generated Successfully"
                                                     )}
                                                   </h2>
                                                   <h4>
                                                     {this.props.t("Id :")}
-                                                    {generated_trainee.newSId}
+                                                    {
+                                                      generated_tempTrainee.newTId
+                                                    }
                                                   </h4>
                                                 </div>
                                               </Col>
@@ -2940,7 +2940,7 @@ class ApplicantsList extends Component {
                                                 </div>
                                               </Col>
                                             </Row>
-                                          </ModalBody> */}
+                                          </ModalBody>
                                         </Modal>
                                         <Formik
                                           enableReinitialize={true}
@@ -6773,7 +6773,7 @@ class ApplicantsList extends Component {
                                                       </div>
                                                       <div className="actions clearfix">
                                                         <ul>
-                                                          {/* {(isEdit ||
+                                                          {(isEdit ||
                                                             (showGenerateButton &&
                                                               this.state
                                                                 .activeTab ===
@@ -6793,7 +6793,7 @@ class ApplicantsList extends Component {
                                                                 )}
                                                               </Link>
                                                             </li>
-                                                          )} */}
+                                                          )}
 
                                                           {!isEdit &&
                                                             this.state
@@ -7033,7 +7033,7 @@ const mapStateToProps = ({
   estimates: estimates.estimates,
   requiredDocs: tempTrainees.requiredDocs,
   tempTraineeStatus: tempTrainees.tempTraineeStatus,
-  // generatedTempTrainee: tempTrainees.generatedTempTrainee,
+  generated_tempTrainee: tempTrainees.generated_tempTrainee,
   // last_created_trainee: tempTrainees.last_created_trainee,
   // tempTrainee_regReqDocs: tempTrainees.tempTrainee_regReqDocs,
   // tempTraineeBrothers: tempTrainees.tempTraineeBrothers,
@@ -7076,6 +7076,7 @@ const mapDispatchToProps = dispatch => ({
   onDeleteProfessionalExperience: profExperience =>
     dispatch(deleteProfessionalExperience(profExperience)),
   onAddRequiredDocs: tTrainee => dispatch(addRequiredDocs(tTrainee)),
+  onGenerateTempTrainee: tTrainee => dispatch(generateTempTrainee(tTrainee)),
 });
 
 export default connect(
