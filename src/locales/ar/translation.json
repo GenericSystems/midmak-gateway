@@ -482,14 +482,14 @@
   "Diploma Country": "بلد الشهادة الثانوية",
   "Diploma Governorate": " محافظة الشهادة الثانوية",
   "Diploma Year": " سنة الشهادة الثانوية",
-  "Diploma Number": " رقم الشهادة الثانوية"
-  "Location":"  الموقع الجغرافي",
-   "Only WhatsApp Number":"واتس اب (فقط)",
-   "Only Phone":"رقم التواصل (فقط)",
-   "Phone & WhatsApp":"رقم النواصل & واتس اب",
-   "Fax":"فاكس",
-   "Website":"الموقع الالكتروني",
-   "Academy Event Decision":"قرار احداث الأكاديمية",
-   "Remove":"ازالة",
-   "Add Country Info":"اضافة معلومات بلد جديد"
+  "Diploma Number": " رقم الشهادة الثانوية",
+  "Location": "  الموقع الجغرافي",
+  "Only WhatsApp Number": "واتس اب (فقط)",
+  "Only Phone": "رقم التواصل (فقط)",
+  "Phone & WhatsApp": "رقم النواصل & واتس اب",
+  "Fax": "فاكس",
+  "Website": "الموقع الالكتروني",
+  "Academy Event Decision": "قرار احداث الأكاديمية",
+  "Remove": "ازالة",
+  "Add Country Info": "اضافة معلومات بلد جديد"
 }
