@@ -70,9 +70,11 @@ function* onUpdateAcademyInfo({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_AcademyInfo";
+  payload["tablename"] = "AcademyInfo";
   try {
     const response = yield call(updateAcademyInfo, payload);
+    console.log("UPDATEPAYLOADDDDD", payload);
+
     yield put(updateAcademyInfoSuccess(response[0]));
   } catch (error) {
     yield put(updateAcademyInfoFail(error));
@@ -84,10 +86,10 @@ function* onAddAcademyInfo({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_AcademyInfo";
+  payload["tablename"] = "AcademyInfo";
   try {
     const response = yield call(addAcademyInfo, payload);
-    console.log("PAYLOADDDDD",payload)
+    console.log("ADDPAYLOADDDDD", payload);
     yield put(addAcademyInfoSuccess(response[0]));
   } catch (error) {
     yield put(addAcademyInfoFail(error));

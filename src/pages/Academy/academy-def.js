@@ -24,24 +24,27 @@ import {
   updateAcademyInfo,
   addAcademyInfo,
 } from "store/academydef/actions";
+import { Email } from "@mui/icons-material";
 
 class AcademyInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      academyName: "",
-      contactEmail: "",
-      website: "",
+      AcademyName: "",
+      AcademyNameEn: "",
+      Email: "",
+      Website: "",
       // logo: null,
       countries: [
         {
           country: "",
-          contactNumber: "",
+          location: "",
           whatsappNumber: "",
           phoneNumber: "",
           phoneAndWhatsappNumber: "",
           faxNumber: "",
-          academyNameError:"",
+          AcademyNameError: "",
+          AcademyNameEnError: "",
         },
       ],
     };
@@ -61,26 +64,27 @@ class AcademyInfo extends Component {
     const { academyInfo } = this.props;
     if (prevProps.academyInfo !== this.props.academyInfo) {
       this.setState({
-        academyName:
+        AcademyName:
           academyInfo && academyInfo.length > 0
-            ? academyInfo[0].academyName
+            ? academyInfo[0].AcademyName
+            : "",
+        AcademyNameEn:
+          academyInfo && academyInfo.length > 0
+            ? academyInfo[0].AcademyNameEn
             : "",
         // academyEventDecision:
         //   academyInfo && academyInfo.length > 0
         //     ? academyInfo[0].academyEventDecision
         //     : "",
-        contactNumber:
-          academyInfo && academyInfo.length > 0
-            ? academyInfo[0].contactNumber
-            : "",
+        location:
+          academyInfo && academyInfo.length > 0 ? academyInfo[0].location : "",
         faxNumber:
           academyInfo && academyInfo.length > 0 ? academyInfo[0].faxNumber : "",
-        academyWebsite:
-          academyInfo && academyInfo.length > 0
-            ? academyInfo[0].academyWebsite
-            : "",
+        Website:
+          academyInfo && academyInfo.length > 0 ? academyInfo[0].Website : "",
         // logo: academyInfo && academyInfo.length > 0 ? academyInfo[0].logo : "",
-        
+        Email:
+          academyInfo && academyInfo.length > 0 ? academyInfo[0].Email : "",
       });
     }
   }
@@ -93,8 +97,8 @@ class AcademyInfo extends Component {
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
-    if (name === "academyName") {
-      this.setState({ academyNameError: value.trim() === "" });
+    if (name === "AcademyName") {
+      this.setState({ AcademyNameError: value.trim() === "" });
     }
   };
   handleSelectChange = (fieldName, value) => {
@@ -105,15 +109,45 @@ class AcademyInfo extends Component {
       },
     }));
   };
+  handleSubmit = () => {
+    const {
+      AcademyName,
+      AcademyNameEn,
+      Email,
+      // EventDecision,
+      // location,
+      // faxNumber,
+      Website,
+      // logo,
+    } = this.state;
 
-  handleSubmit = e => {
-    e.preventDefault();
-    const { academyInfo, onAddAcademyInfo, onUpdateAcademyInfo } = this.props;
+    const { academyInfo } = this.props;
 
-    if (academyInfo?.id) {
-      onUpdateAcademyInfo(academyInfo);
-    } else {
-      onAddAcademyInfo(academyInfo);
+    if (academyInfo && academyInfo.length > 0) {
+      const formData = {
+        Id: academyInfo[0].Id, // always use Id from DB
+        AcademyName,
+        AcademyNameEn,
+        Email,
+
+        // location,
+        // faxNumber,
+        Website,
+        // logo,
+      };
+
+      if (AcademyName.trim() === "") {
+        this.setState({ AcademyNameError: true, saveError: true });
+      } else {
+        const updateMessage = this.props.t("Academy info updated successfully");
+        this.setState({
+          setErrormessage: null,
+          saveError: false,
+          successMessage: updateMessage,
+        });
+
+        this.props.onUpdateAcademyInfo(formData);
+      }
     }
   };
 
@@ -146,88 +180,28 @@ class AcademyInfo extends Component {
   };
 
   testAcademyWebsite = () => {
-    const academyWebsite = this.state.academyWebsite;
+    const Website = this.state.Website;
 
-    if (!academyWebsite.trim()) {
+    if (!Website.trim()) {
       return "";
     }
 
     const isUrlValid = /^(https?:\/\/|www\.)[^\s/$.?#].[^\s]*$/i.test(
-      academyWebsite
+      Website
     );
 
-    return isUrlValid ? "" : academyWebsite;
+    return isUrlValid ? "" : Website;
   };
 
-  handleSubmit = () => {
-    const {
-      academyName,
-      // academyEventDecision,
-      location,
-      faxNumber,
-      academyWebsite,
-      // logo,
-    } = this.state;
-    const { academyInfo } = this.props;
-    if (academyInfo && academyInfo.length > 0) {
-      const formData = {
-        Id: 1,
-        academyName,
-        academyNameEn,
-        // academyEventDecision,
-        academyWebsite,
-        location,
-        // logo,
-      };
-      if (
-        this.state.academyName.trim() === "" &&
-        academyInfo[0].academyName.trim() === ""
-      ) {
-        this.setState({ academyNameError: true, saveError: true });
-      } else {
-        const updateUniMessage = this.props.t(
-          "Academy info updated successfully"
-        );
-        this.setState({
-          setErrormessage: null,
-          saveError: false,
-          successMessage: updateUniMessage,
-        });
-
-        this.props.onUpdateAcademyInfo(formData);
-      }
-    } else if (academyInfo && academyInfo.length == 0) {
-      const formData = {
-        academyName,
-        // academyEventDecision,
-        location,
-        faxNumber,
-        academyWebsite,
-        // logo,
-      };
-      if (this.state.academyName.trim() === "") {
-        this.setState({ academyNameError: true, saveError: true });
-      } else {
-        const savedUniMessage = this.props.t("Academy info added successfully");
-        this.setState({
-          setErrormessage: null,
-          saveError: false,
-          successMessage: savedUniMessage,
-        });
-
-        this.props.onAddAcademyInfo(formData);
-      }
-    }
-  };
-
+ 
   handleAddRow = () => {
     this.setState(prev => ({
       academyInfo: [
         ...prev.academyInfo,
         {
-          academyName: "",
-          contactNumber: "",
-          academyWebsite: "",
+          AcademyName: "",
+          location: "",
+          Website: "",
           faxNumber: "",
           // academyEventDecision: null,
           // logo: null,
@@ -290,27 +264,29 @@ class AcademyInfo extends Component {
     this.setState({ academyInfo });
   };
 
-  handleReset = () => {
-    const restedata = {
-      Id: 1,
-      academyName: "",
-      // academyEventDecision: null,
-      contactNumber: 0,
-      faxNumber: 0,
-      academyWebsite: "",
-      // logo: null,
-    };
-    const { onUpdateAcademyInfo } = this.props;
-    onUpdateAcademyInfo(restedata);
-    this.setState({
-      academyName: "",
-      // academyEventDecision: null,
-      contactNumber: null,
-      faxNumber: null,
-      academyWebsite: "",
-      // logo: null,
-    });
-  };
+  // handleReset = () => {
+  //   const restedata = {
+  //     Id: 1,
+  //     AcademyName: "",
+  //     AcademyNameEn: "",
+  //     // academyEventDecision: null,
+  //     location: 0,
+  //     faxNumber: 0,
+  //     Website: "",
+  //     // logo: null,
+  //   };
+  //   const { onUpdateAcademyInfo } = this.props;
+  //   onUpdateAcademyInfo(restedata);
+  //   this.setState({
+  //     AcademyName: "",
+  //     AcademyNameEn: "",
+  //     // academyEventDecision: null,
+  //     location: null,
+  //     faxNumber: null,
+  //     Website: "",
+  //     // logo: null,
+  //   });
+  // };
 
   handleAlertClose = () => {
     this.setState({ setErrormessage: null });
@@ -320,8 +296,19 @@ class AcademyInfo extends Component {
     this.setState({ successMessage: null });
   };
   render() {
-    const { academyName, website, contactEmail, logo, countries ,academyNameError} = this.state;
-    const { countriesOpt } = this.props;
+    const {
+      AcademyName,
+      AcademyNameEn,
+      location,
+      Website,
+      Email,
+      logo,
+      countries,
+      AcademyNameError,
+    } = this.state;
+    const { countriesOpt} = this.props;
+
+
     const { t } = this.props;
 
     return (
@@ -345,53 +332,52 @@ class AcademyInfo extends Component {
                               <span className="text-danger">*</span>
                             </Col>
                             <Col lg="8" className="mt-3">
-                                  <input
-                                    type="text"
-                                    id="academyName"
-                                    name="academyName"
-                                    autoComplete="off"
-                                    className={`form-control ${
-                                      academyNameError ? "is-invalid" : ""
-                                    }`}
-                                    placeholder={t("Academy Name")}
-                                    value={academyName}
-                                    onChange={this.handleInputChange}
-                                  />
+                              <input
+                                type="text"
+                                id="AcademyName"
+                                name="AcademyName"
+                                autoComplete="off"
+                                className={`form-control ${
+                                  AcademyNameError ? "is-invalid" : ""
+                                }`}
+                                placeholder={t("Academy Name")}
+                                value={AcademyName}
+                                onChange={this.handleInputChange}
+                              />
 
-                                  {academyNameError && (
-                                    <div className="invalid-feedback">
-                                      {t("Academy Name is required")}
-                                    </div>
-                                  )}
-                                </Col>
+                              {AcademyNameError && (
+                                <div className="invalid-feedback">
+                                  {t("Academy Name is required")}
+                                </div>
+                              )}
+                            </Col>
                           </Row>
 
-                          
-                           <Row>
+                          <Row>
                             <Col lg="4" className="mt-2">
                               <Label>{t("Academy Name (en)")}</Label>
                               <span className="text-danger">*</span>
                             </Col>
                             <Col lg="8" className="mt-3">
-                                  <input
-                                    type="text"
-                                    id="academyNameEn"
-                                    name="academyNameEn"
-                                    autoComplete="off"
-                                    className={`form-control ${
-                                      academyNameError ? "is-invalid" : ""
-                                    }`}
-                                    placeholder={t("Academy Name (en)")}
-                                    value={academyName}
-                                    onChange={this.handleInputChange}
-                                  />
+                              <input
+                                type="text"
+                                id="AcademyNameEn"
+                                name="AcademyNameEn"
+                                autoComplete="off"
+                                className={`form-control ${
+                                  AcademyNameError ? "is-invalid" : ""
+                                }`}
+                                placeholder={t("Academy Name (en)")}
+                                value={AcademyNameEn}
+                                onChange={this.handleInputChange}
+                              />
 
-                                  {academyNameError && (
-                                    <div className="invalid-feedback">
-                                      {t("Academy Name in English is required")}
-                                    </div>
-                                  )}
-                                </Col>
+                              {/* {AcademyNameError && (
+                                <div className="invalid-feedback">
+                                  {t("Academy Name in English is required")}
+                                </div>
+                              )} */}
+                            </Col>
                           </Row>
                         </div>
 
@@ -549,7 +535,7 @@ class AcademyInfo extends Component {
                         <Row className="mt-3">
                           <Col lg="4" className="mt-2">
                             <label
-                              htmlFor="contactEmail"
+                              htmlFor="Email"
                               className="col-form-label"
                             >
                               {t("Email")}:
@@ -557,36 +543,36 @@ class AcademyInfo extends Component {
                           </Col>
                           <Col lg="8" className="mt-3">
                             <input
-                              type="email"
-                              id="contactEmail"
-                              name="contactEmail"
+                              type="text"
+                              id="Email"
+                              name="Email"
                               className="form-control"
                               placeholder="Enter Email"
-                              value={contactEmail}
-                              onChange={this.handleChange}
+                              value={Email}
+                              onChange={this.handleInputChange}
                             />
                           </Col>
                         </Row>
 
                         <Row className="mt-3">
                           <Col lg="4" className="mt-2">
-                            <label htmlFor="website" className="col-form-label">
+                            <label htmlFor="Website" className="col-form-label">
                               {t("Website")}:
                             </label>
                           </Col>
                           <Col lg="8" className="mt-3">
                             <input
-                              type="text"
-                              id="website"
-                              name="website"
+                              type="email"
+                              id="Website"
+                              name="Website"
                               className="form-control"
                               placeholder="Enter Website"
-                              value={website}
-                              onChange={this.handleChange}
+                              value={Website}
+                              onChange={this.handleInputChange}
                             />
                           </Col>
                         </Row>
-{/* 
+                        {/* 
                         <Row className="mt-3">
                           <Col lg="4" className="mt-2">
                             <label
@@ -626,7 +612,7 @@ class AcademyInfo extends Component {
                                 />
                               </Label>
                             </Col> */}
-                            {/* <Col lg="8" className="mt-4">
+                      {/* <Col lg="8" className="mt-4">
                               {logo && (
                                 <img
                                   src={URL.createObjectURL(logo)}
@@ -641,7 +627,12 @@ class AcademyInfo extends Component {
                     </Row>
 
                     <div className="d-flex justify-content-end mt-4">
-                      <Button type="submit" color="primary" className="me-2">
+                      <Button
+                        type="button" 
+                        color="primary"
+                        className="me-2"
+                        onClick={this.handleSubmit} 
+                      >
                         Submit
                       </Button>
                     </div>
