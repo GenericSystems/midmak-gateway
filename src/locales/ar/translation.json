@@ -463,33 +463,20 @@
   "Version Title (ar)": " (عربي)عنوان الاصدار",
   "Version Title (en)": "عنوان الاصدار (انكليزي)",
 
-  "Version Number": "رقم الاصدار",
-  "Version Date": "تاريخ الاصدار",
-  "From Year": "من العام",
-  "To Year": "الى العام",
-  "Minimum Pass Mark": "علامة النجاح الدنيا",
-  "Upload Experience Certificate File": "تحميل ملف شهادة الخبرة",
-  "From Percent": "من العلامة",
-  "To Percent": "الى العلامة",
-  "Points": "النقاط",
-  "Rank": "التقدير",
-  "Finish Status": "الحالة النهاية",
-  "Academy Name": "اسم الاكاديمية",
-  "Trainee Number": "رقم المتدرب",
-  "Admission Date": "تاريخ القبول",
-  "Register Year": "عام التسجيل",
-  "Certificate Level": " التسجيل على اساس",
-  "Diploma Country": "بلد الشهادة الثانوية",
-  "Diploma Governorate": " محافظة الشهادة الثانوية",
-  "Diploma Year": " سنة الشهادة الثانوية",
-  "Diploma Number": " رقم الشهادة الثانوية",
-  "Location": "  الموقع الجغرافي",
-  "Only WhatsApp Number": "واتس اب (فقط)",
-  "Only Phone": "رقم التواصل (فقط)",
-  "Phone & WhatsApp": "رقم النواصل & واتس اب",
-  "Fax": "فاكس",
-  "Website": "الموقع الالكتروني",
-  "Academy Event Decision": "قرار احداث الأكاديمية",
-  "Remove": "ازالة",
-  "Add Country Info": "اضافة معلومات بلد جديد"
+   
+   "Location":"  الموقع الجغرافي",
+   "Only WhatsApp Number":"واتس اب (فقط)",
+   "Only Phone":"رقم التواصل (فقط)",
+   "Phone & WhatsApp":"رقم النواصل & واتس اب",
+   "Fax":"فاكس",
+   "Website":"الموقع الالكتروني",
+   "Academy Event Decision":"قرار احداث الأكاديمية",
+   "Remove":"ازالة",
+   "Add Country Info":"اضافة معلومات بلد جديد"
+
+
+
+
+
+
 }
