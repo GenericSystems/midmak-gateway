@@ -27,8 +27,8 @@ import invoices from "./invoices/reducer";
 // //students
 // import students from "./students/reducer";
 
-//universityStudents
-import universityStudents from "./university-students/reducer";
+//trainees
+import trainees from "./trainees/reducer";
 
 //admissionConditions
 import admissionConditions from "./admissionConditions/reducer";
@@ -201,7 +201,7 @@ import genders from "./genders/reducer";
 import studentsDecrees from "./student-decrees/reducer";
 //decisions
 import decisions from "./decisions/reducer";
-import universityInfo from "./universitydef/reducer";
+import academyInfo from "./academydef/reducer";
 //grants
 import grants from "./grants/reducer";
 //userMngs
@@ -209,7 +209,7 @@ import userMngs from "./user-mngs/reducer";
 
 //roles
 import roles from "./roles/reducer";
-import universityOrgStructures from "./universityOrgStructure/reducer";
+// import universityOrgStructures from "./universityOrgStructure/reducer";
 
 //sidbarcontent
 import menu_items from "./sidebarcontent/reducer";
@@ -293,8 +293,8 @@ import studentsRequests from "./students-requests/reducer";
 //contract
 import contracts from "./HR/contracts/reducer";
 
-//Trainees
-import trainees from "./new-Trainee/reducer";
+//tempTrainees
+import tempTrainees from "./new-Trainee/reducer";
 
 //TrainingFormats
 import trainingFormats from "./trainingFormat/reducer";
@@ -399,7 +399,7 @@ const rootReducer = combineReducers({
   classScheduling,
   grantSponsors,
   years,
-  universityStudents,
+  trainees,
   semesters,
   weekDays,
   timeLines,
@@ -407,8 +407,8 @@ const rootReducer = combineReducers({
   cities,
   certificates,
   studentsInfo,
-  universityInfo,
-  universityOrgStructures,
+  academyInfo,
+ 
   menu_items,
   trainingMembers,
   warningRules,
@@ -434,7 +434,7 @@ const rootReducer = combineReducers({
   warningsTypes,
   rewardsTypes,
   decisionsTypes,
-  trainees,
+  tempTrainees,
   trainingFormats,
   coursesCatalogs,
   academyOrgStructures,

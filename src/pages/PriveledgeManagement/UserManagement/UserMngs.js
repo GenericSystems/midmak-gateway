@@ -43,7 +43,7 @@ import {
 } from "store/user-mngs/actions";
 import { fetchSetting } from "store/mob-app-faculty-accs/actions";
 import { getRoles } from "store/roles/actions";
-import { getUniversityOrgStructure } from "store/universityOrgStructure/actions";
+// import { getUniversityOrgStructure } from "store/universityOrgStructure/actions";
 import * as Yup from "yup";
 import paginationFactory, {
   PaginationProvider,

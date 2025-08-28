@@ -402,7 +402,7 @@ class GradesVersionsList extends Component {
       },
       {
         dataField: "enTitle",
-        text: "Version Title (en)",
+        text: this.props.t("Version Title (en)"),
         sort: true,
         //  editable: showEditButton,
       },

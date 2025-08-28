@@ -27,8 +27,8 @@ export * from "./invoices/actions";
 // students history
 export * from "./students-history/actions";
 
-//university-students
-export * from "./university-students/actions";
+//trainees
+export * from "./trainees/actions";
 
 // admissionConditions
 export * from "./admissionConditions/actions";
@@ -238,11 +238,11 @@ export * from "./roles/actions";
 export * from "./user-mngs/actions";
 //unversityinfo
 
-export * from "./universitydef/actions";
+export * from "./academydef/actions";
 
 //unversityorgstructures
 
-export * from "./universityOrgStructure/actions";
+// export * from "./universityOrgStructure/actions";
 
 //Sidbarcontent
 export * from "./sidebarcontent/actions";

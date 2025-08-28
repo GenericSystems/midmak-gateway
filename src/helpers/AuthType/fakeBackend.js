@@ -2529,53 +2529,53 @@ const fakeBackend = () => {
     });
   });
 
-  // UniversityStudents
-  mock.onGet(url.GET_UNIVERSITY_STUDENTS).reply(() => {
-    console.log("Calling mock get UniversityStudent");
+  // trainees
+  mock.onGet(url.GET_TRAINEES).reply(() => {
+    console.log("Calling mock get Trainee");
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (universityStudents) {
+        if (trainees) {
           // Passing fake JSON data as response
-          resolve([200, universityStudents]);
+          resolve([200, trainees]);
         } else {
-          reject([400, "Cannot get UniversityStudent"]);
+          reject([400, "Cannot get trainee"]);
         }
       });
     });
   });
 
-  mock.onPut(url.UPDATE_UNIVERSITY_STUDENT).reply(universityStudent => {
-    console.log("in mock onPut reply updating ...", universityStudent);
+  mock.onPut(url.UPDATE_TRAINEE).reply(trainee => {
+    console.log("in mock onPut reply updating ...", trainee);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("updated universityStudent");
-        if (universityStudent && universityStudent.data) {
+        console.log("updated trainee");
+        if (trainee && trainee.data) {
           // Passing fake JSON data as response
-          resolve([200, universityStudent.data]);
+          resolve([200, trainee.data]);
         } else {
-          reject([400, "Cannot update universityStudent"]);
+          reject([400, "Cannot update trainee"]);
         }
       });
     });
   });
-  mock.onDelete(url.DELETE_UNIVERSITY_STUDENT).reply(config => {
+  mock.onDelete(url.DELETE_TRAINEE).reply(config => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("deleted universityStudent");
+        console.log("deleted trainee");
         if (config && config.headers) {
           // Passing fake JSON data as response
-          resolve([200, config.headers.universityStudent]);
+          resolve([200, config.headers.trainee]);
         } else {
-          reject([400, "Cannot delete universityStudent"]);
+          reject([400, "Cannot delete trainee"]);
         }
       });
     });
   });
 
-  mock.onPost(url.ADD_NEW_UNIVERSITY_STUDENT).reply(order => {
+  mock.onPost(url.ADD_NEW_TRAINEE).reply(order => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log("added universityStudent");
+        console.log("added trainee");
         if (order && order.data) {
           // Passing fake JSON data as response
           resolve([200, order.data]);

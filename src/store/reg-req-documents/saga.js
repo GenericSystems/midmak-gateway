@@ -15,7 +15,7 @@ import {
 import {
   getCurrentSemesterSuccess,
   getCurrentSemesterFail,
-} from "../semesters/actions"
+} from "../semesters/actions";
 
 import {
   getRegisterCertificatesSuccess,
@@ -60,11 +60,11 @@ import {
   getCertificates,
   getCertificateTypes,
   getYears,
-  getTraineeRegCertificate,
+  getTempTraineeRegCertificate,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchRegReqDocSettings() {
-   // get Documents Types
+  // get Documents Types
   const get_settings_req_doctype = {
     source: "db",
     procedure: "Generic_getOptions",
@@ -79,24 +79,21 @@ function* fetchRegReqDocSettings() {
   } catch (error) {
     yield put(getDocumentsFail(error));
   }
- //currentSemester
+  //currentSemester
   const get_current_semester = {
-      source: 'db',
-      procedure: "SisApp_getData",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "Settings_SystemCurrentYear",
-   
-       }  
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_SystemCurrentYear",
+  };
   try {
-  const response = yield call(
-    getCurrentSemester,
-    get_current_semester)
-  yield put(getCurrentSemesterSuccess(response[0]))
+    const response = yield call(getCurrentSemester, get_current_semester);
+    yield put(getCurrentSemesterSuccess(response[0]));
   } catch (error) {
-  yield put(getCurrentSemesterFail(error))
-  } 
+    yield put(getCurrentSemesterFail(error));
+  }
 
-   //get years
+  //get years
   const get_year_opt = {
     source: "db",
     procedure: "Generic_getOptions",
@@ -126,8 +123,7 @@ function* fetchRegReqDocSettings() {
   } catch (error) {
     yield put(getCertificateTypesFail(error));
   }
-  
-  
+
   //certificatelevels
   const get_TraineeReg_Certificate = {
     source: "db",
@@ -140,19 +136,16 @@ function* fetchRegReqDocSettings() {
 
   try {
     const response = yield call(
-      getTraineeRegCertificate,
+      getTempTraineeRegCertificate,
       get_TraineeReg_Certificate
     );
     yield put(getRegisterCertificatesSuccess(response));
   } catch (error) {
     yield put(getRegisterCertificatesFail(error));
   }
- 
 }
 
 function* fetchRegReqDocuments(obj) {
- 
-
   let regReqDoc = obj.payload;
   const get_settings_req = {
     source: "db",
@@ -167,9 +160,6 @@ function* fetchRegReqDocuments(obj) {
   } catch (error) {
     yield put(getRegReqDocumentsFail(error));
   }
-
- 
-
 }
 
 function* onGetRegReqDocumentDeletedValue() {
@@ -240,7 +230,7 @@ function* onCopyRegReqDoc() {
 }
 
 function* regReqDocumentsSaga() {
- yield takeEvery(GET_REG_REQ_DOC_SETTINGS, fetchRegReqDocSettings);
+  yield takeEvery(GET_REG_REQ_DOC_SETTINGS, fetchRegReqDocSettings);
   yield takeEvery(GET_REG_REQ_DOCUMENTS, fetchRegReqDocuments);
   yield takeEvery(
     GET_REG_REQ_DOCUMENT_DELETED_VALUE,

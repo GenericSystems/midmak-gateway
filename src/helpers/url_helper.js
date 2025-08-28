@@ -87,16 +87,15 @@ export const GET_FILTERED_ACADEMIC_CERTIFICATES = "/academicCertificates";
 export const GET_ADMISSION_CONDITION_DELETED_VALUE = "/deleted";
 export const COPY_ADMISSION_COND = "/copy/regReqdocument";
 
-//UniversityStudents
-export const GET_UNIVERSITY_STUDENTS = "/universityStudents";
-export const ADD_NEW_UNIVERSITY_STUDENT = "/add/universityStudent";
-export const UPDATE_UNIVERSITY_STUDENT = "/update/universityStudent";
-export const DELETE_UNIVERSITY_STUDENT = "/delete/universityStudent";
-export const GET_UNIVERSITY_STUDENT_BY_ID = "/tempuniversityStudent";
-export const GET_UNIVERSITY_STUDENT_REGREQDOCS =
-  "/universityStudent_regReqDocs";
-export const UPDATE_UNIVERSITY_STUDENT_REGREQDOC =
-  "/update/universityStudent_regReqDoc";
+//trainees
+export const GET_TRAINEES = "/trainees";
+export const GET_TRAINEE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TRAINEE = "/add/trainee";
+export const UPDATE_TRAINEE = "/update/trainee";
+export const DELETE_TRAINEE = "/delete/trainee";
+export const GET_TRAINEE_BY_ID = "/temptrainee";
+export const GET_TRAINEE_REGREQDOCS = "/trainee_regReqDocs";
+export const UPDATE_TRAINEE_REGREQDOC = "/update/trainee_regReqDoc";
 export const GET_STUDENTS_OPT = "/studentsOpt";
 export const ADD_BROTHER = "/add/Brother";
 export const DELETE_BROTHER = "/delete/Brother";
@@ -254,10 +253,10 @@ export const UPDATE_PLAN_HOUR = "/update/planHour";
 export const GET_FILTERED_COURSES = "/filteredCourses";
 //FILTERED_COURSES_PLANS
 export const GET_FILTERED_COURSES_PLANS = "/filteredCoursesPlans";
-//UNIVERSITYINFO
-export const GET_UNIVERSITYINFO = "/universityInfo";
-export const UPDATE_UNIVERSITYINFO = "/update/universityInfo";
-export const ADD_UNIVERSITYINFO = "/add/universityInfo";
+//ACADEMYINFO
+export const GET_ACADEMYINFO = "/academyInfo";
+export const UPDATE_ACADEMYINFO = "/update/academyInfo";
+export const ADD_ACADEMYINFO = "/add/academyInfo";
 
 //CERTIFICATES
 export const GET_CERTIFICATES = "/certificates";
@@ -1002,7 +1001,7 @@ export const DELETE_GRADE_VERSION = "/delete/gradeVersion";
 //ranks
 export const GET_RANKS = "/ranks";
 //finish status
-export const GET_FINISH_STATUS= "/finishStatus";
+export const GET_FINISH_STATUS = "/finishStatus";
 
 //VERS_GRADES
 export const GET_VERS_GRADES = "/versGrades";
@@ -1010,7 +1009,6 @@ export const GET_VERS_GRADE_DELETED_VALUE = "/deleted";
 export const ADD_NEW_VERS_GRADE = "/add/versGrade";
 export const UPDATE_VERS_GRADE = "/update/versGrade";
 export const DELETE_VERS_GRADE = "/delete/versGrade";
-
 
 // DOCUMENTS_TYPES
 export const GET_DOCUMENTS_TYPES = "/documentsTypes";
@@ -1109,23 +1107,27 @@ export const UPDATE_DECISION_TYPE = "/update/decisionType";
 export const DELETE_DECISION_TYPE = "/delete/decisionType";
 
 //Trainee
-export const GET_TRAINEES = "/trainees";
-export const GET_TRAINEE_DELETED_VALUE = "/deleted";
-export const ADD_NEW_TRAINEE = "/add/trainee";
-export const UPDATE_TRAINEE = "/update/trainee";
-export const DELETE_TRAINEE = "/delete/trainee";
+export const GET_TEMP_TRAINEES = "/tempTrainees";
+export const GET_TEMP_TRAINEE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TEMP_TRAINEE = "/add/tempTrainee";
+export const UPDATE_TEMP_TRAINEE = "/update/tempTrainee";
+export const DELETE_TEMP_TRAINEE = "/delete/tempTrainee";
 export const GET_REGISTER_CERTIFICATES = "/registerCertificates";
-export const GET_TRAINEE_DEFAULT_REGREQDOCS = "/traineeDefaultRegReqDocs";
+export const GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS =
+  "/tempTraineeDefaultRegReqDocs";
 export const ADD_REQUIRED_DOCS = "/add/requiredDocs";
 export const UPDATE_REQUIRED_DOCS = "/update/requiredDocs";
-export const GET_TRAINEE_BY_ID = "/trainees";
-export const GENERATE_TRAINEE = "/trainee";
+export const GET_TEMP_TRAINEE_BY_ID = "/tempTrainees";
+export const GENERATE_TEMP_TRAINEE = "/tempTrainee";
 
 //social status
 export const GET_SOCIAL_STATUS = "/socialStatus";
 
 //trainee status
-export const GET_TRAINEE_STATUS = "/traineeStatus";
+export const GET_TEMP_TRAINEE_STATUS = "/tempTraineeStatus";
+
+// Upload File
+export const uploadFileToStorage = "/uploadFile";
 
 //professionalExperience
 export const ADD_NEW_PROFESSIONAL_EXPERIENCE = "/add/professionalExperience";

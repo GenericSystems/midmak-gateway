@@ -1,20 +1,18 @@
 import {
-  GET_TRAINEES_SUCCESS,
-  GET_TRAINEES_FAIL,
-  ADD_TRAINEE_SUCCESS,
-  ADD_TRAINEE_FAIL,
-  UPDATE_TRAINEE_SUCCESS,
-  UPDATE_TRAINEE_FAIL,
-  DELETE_TRAINEE_SUCCESS,
-  DELETE_TRAINEE_FAIL,
-  GET_TRAINEE_DELETED_VALUE_SUCCESS,
-  GET_TRAINEE_DELETED_VALUE_FAIL,
-  GET_TEMP_RELATIVES_SUCCESS,
-  GET_TEMP_RELATIVES_FAIL,
+  GET_TEMP_TRAINEES_SUCCESS,
+  GET_TEMP_TRAINEES_FAIL,
+  ADD_TEMP_TRAINEE_SUCCESS,
+  ADD_TEMP_TRAINEE_FAIL,
+  UPDATE_TEMP_TRAINEE_SUCCESS,
+  UPDATE_TEMP_TRAINEE_FAIL,
+  DELETE_TEMP_TRAINEE_SUCCESS,
+  DELETE_TEMP_TRAINEE_FAIL,
+  GET_TEMP_TRAINEE_DELETED_VALUE_SUCCESS,
+  GET_TEMP_TRAINEE_DELETED_VALUE_FAIL,
   GET_REGISTER_CERTIFICATES_SUCCESS,
   GET_REGISTER_CERTIFICATES_FAIL,
-  GET_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
-  GET_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
+  GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
+  GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
   GET_SOCIAL_STATUS_SUCCESS,
   GET_SOCIAL_STATUS_FAIL,
   ADD_PROFESSIONAL_EXPERIENCE_SUCCESS,
@@ -27,116 +25,108 @@ import {
   ADD_REQUIRED_DOCS_FAIL,
   UPDATE_REQUIRED_DOCS_SUCCESS,
   UPDATE_REQUIRED_DOCS_FAIL,
-  GENERATE_TRAINEE_SUCCESS,
-  GENERATE_TRAINEE_FAIL,
-  GET_TRAINEE_BY_ID_SUCCESS,
-  GET_TRAINEE_BY_ID_FAIL,
-  GET_TRAINEE_STATUS_SUCCESS,
-  GET_TRAINEE_STATUS_FAIL,
+  GENERATE_TEMP_TRAINEE_SUCCESS,
+  GENERATE_TEMP_TRAINEE_FAIL,
+  GET_TEMP_TRAINEE_BY_ID_SUCCESS,
+  GET_TEMP_TRAINEE_BY_ID_FAIL,
+  GET_TEMP_TRAINEE_STATUS_SUCCESS,
+  GET_TEMP_TRAINEE_STATUS_FAIL,
+  UPLOAD_FILE_SUCCESS,
+  UPLOAD_FILE_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
-  last_created_trainee: { Id: 0 },
-  trainees: [],
+  tempTrainees: [],
   socialStatus: [],
-  traineeStatus: [],
+  tempTraineeStatus: [],
   deleted: {},
   error: {},
-  traineesDocuments: [],
+  tempTraineesDocuments: [],
   tempRelatives: [],
   regcertificates: [],
   trnProfExperiences: [],
   requiredDocs: [],
   lastAddedId: 0,
   tempTrainee: {},
-  generated_trainee: {},
+  generated_tempTrainee: {},
 };
 
-const trainees = (state = INIT_STATE, action) => {
+const tempTrainees = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case GET_TRAINEES_SUCCESS:
+    case GET_TEMP_TRAINEES_SUCCESS:
       return {
         ...state,
-        trainees: action.payload,
+        tempTrainees: action.payload,
       };
 
-    case GET_TRAINEES_FAIL:
+    case GET_TEMP_TRAINEES_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case ADD_TRAINEE_SUCCESS:
+    case ADD_TEMP_TRAINEE_SUCCESS:
       return {
         ...state,
-        trainees: [...state.trainees, action.payload],
+        tempTrainees: [...state.tempTrainees, action.payload],
         lastAddedId: action.payload.Id,
       };
 
-    case ADD_TRAINEE_FAIL:
+    case ADD_TEMP_TRAINEE_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case UPDATE_TRAINEE_SUCCESS:
+    case UPDATE_TEMP_TRAINEE_SUCCESS:
       return {
         ...state,
-        trainees: state.trainees.map(trainee =>
-          trainee.Id.toString() === action.payload.Id.toString()
-            ? { ...trainee, ...action.payload }
-            : trainee
+        tempTrainees: state.tempTrainees.map(tempTrainee =>
+          tempTrainee.Id.toString() === action.payload.Id.toString()
+            ? { ...tempTrainee, ...action.payload }
+            : tempTrainee
         ),
       };
 
-    case UPDATE_TRAINEE_FAIL:
+    case UPDATE_TEMP_TRAINEE_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case DELETE_TRAINEE_SUCCESS:
+    case DELETE_TEMP_TRAINEE_SUCCESS:
       return {
         ...state,
-        trainees: state.trainees.filter(
-          trainee => trainee.Id.toString() !== action.payload.Id.toString()
+        tempTrainees: state.tempTrainees.filter(
+          tempTrainee =>
+            tempTrainee.Id.toString() !== action.payload.Id.toString()
         ),
         deleted: action.payload.deleted,
       };
 
-    case DELETE_TRAINEE_FAIL:
+    case DELETE_TEMP_TRAINEE_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case GET_TRAINEE_DELETED_VALUE_SUCCESS:
+    case GET_TEMP_TRAINEE_DELETED_VALUE_SUCCESS:
       return {
         ...state,
         deleted: action.payload.deleted,
       };
 
-    case GET_TRAINEE_DELETED_VALUE_FAIL:
+    case GET_TEMP_TRAINEE_DELETED_VALUE_FAIL:
       return {
         ...state,
         error: action.payload,
       };
-    case GET_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS:
+    case GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS:
       return {
         ...state,
-        traineesDocuments: action.payload,
+        tempTraineesDocuments: action.payload,
       };
-    case GET_TRAINEE_DEFAULT_REGREQDOCS_FAIL:
-      return {
-        ...state,
-        error: action.payload,
-      };
-    case GET_TEMP_RELATIVES_SUCCESS:
-      return {
-        ...state,
-        tempRelatives: action.payload,
-      };
-    case GET_TEMP_RELATIVES_FAIL:
+    case GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -236,39 +226,39 @@ const trainees = (state = INIT_STATE, action) => {
         error: action.payload,
       };
 
-    case GENERATE_TRAINEE_SUCCESS: {
+    case GENERATE_TEMP_TRAINEE_SUCCESS: {
       return {
         ...state,
-        trainees: [...state.trainees, action.payload],
-        generated_trainee: action.payload,
+        tempTrainees: [...state.tempTrainees, action.payload],
+        generated_TEMP_TRAINEE: action.payload,
       };
     }
 
-    case GENERATE_TRAINEE_FAIL:
+    case GENERATE_TEMP_TRAINEE_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case GET_TRAINEE_BY_ID_SUCCESS:
+    case GET_TEMP_TRAINEE_BY_ID_SUCCESS:
       return {
         ...state,
         tempTrainee: action.payload,
       };
 
-    case GET_TRAINEE_BY_ID_FAIL:
+    case GET_TEMP_TRAINEE_BY_ID_FAIL:
       return {
         ...state,
         error: action.payload,
       };
 
-    case GET_TRAINEE_STATUS_SUCCESS:
+    case GET_TEMP_TRAINEE_STATUS_SUCCESS:
       return {
         ...state,
-        traineeStatus: action.payload,
+        tempTraineeStatus: action.payload,
       };
 
-    case GET_TRAINEE_STATUS_FAIL:
+    case GET_TEMP_TRAINEE_STATUS_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -279,4 +269,4 @@ const trainees = (state = INIT_STATE, action) => {
   }
 };
 
-export default trainees;
+export default tempTrainees;
