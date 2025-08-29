@@ -35,14 +35,14 @@ class AcademyInfo extends Component {
       Email: "",
       Website: "",
       // logo: null,
-      countries: [
+      AcademyCountryInfo: [
         {
-          country: "",
-          location: "",
-          whatsappNumber: "",
-          phoneNumber: "",
+          CountryId: "",
+          Location: "",
+          WhatsAppNumber: "",
+          PhoneNumber: "",
           phoneAndWhatsappNumber: "",
-          faxNumber: "",
+          FaxNumber: "",
         },
       ],
       AcademyNameError: "",
@@ -63,29 +63,24 @@ class AcademyInfo extends Component {
 
   componentDidUpdate(prevProps) {
     const { academyInfo } = this.props;
-    if (prevProps.academyInfo !== this.props.academyInfo) {
+
+    if (
+      prevProps.academyInfo !== academyInfo &&
+      academyInfo &&
+      academyInfo.length > 0
+    ) {
+      const academy = academyInfo[0];
+      const countryInfo =
+        academy.AcademyCountryInfo && academy.AcademyCountryInfo.length > 0
+          ? academy.AcademyCountryInfo
+          : [];
+
       this.setState({
-        AcademyName:
-          academyInfo && academyInfo.length > 0
-            ? academyInfo[0].AcademyName
-            : "",
-        AcademyNameEn:
-          academyInfo && academyInfo.length > 0
-            ? academyInfo[0].AcademyNameEn
-            : "",
-        // academyEventDecision:
-        //   academyInfo && academyInfo.length > 0
-        //     ? academyInfo[0].academyEventDecision
-        //     : "",
-        location:
-          academyInfo && academyInfo.length > 0 ? academyInfo[0].location : "",
-        faxNumber:
-          academyInfo && academyInfo.length > 0 ? academyInfo[0].faxNumber : "",
-        Website:
-          academyInfo && academyInfo.length > 0 ? academyInfo[0].Website : "",
-        // logo: academyInfo && academyInfo.length > 0 ? academyInfo[0].logo : "",
-        Email:
-          academyInfo && academyInfo.length > 0 ? academyInfo[0].Email : "",
+        AcademyName: academy.AcademyName || "",
+        AcademyNameEn: academy.AcademyNameEn || "",
+        Website: academy.Website || "",
+        Email: academy.Email || "",
+        AcademyCountryInfo: countryInfo, 
       });
     }
   }
@@ -116,13 +111,13 @@ class AcademyInfo extends Component {
       AcademyNameEn,
       Email,
       // EventDecision,
-      // location,
-      // faxNumber,
+      // Location,
+      // FaxNumber,
       Website,
-      countries,
+      AcademyCountryInfo,
       // logo,
     } = this.state;
-    console.log("COUNTRIEEEEEESSSSSSSSSSSS", countries);
+    console.log("COUNTRIEEEEEESSSSSSSSSSSS", AcademyCountryInfo);
     const { academyInfo } = this.props;
 
     if (academyInfo && academyInfo.length > 0) {
@@ -131,10 +126,10 @@ class AcademyInfo extends Component {
         AcademyName,
         AcademyNameEn,
         Email,
-        countries,
+        AcademyCountryInfo,
 
-        // location,
-        // faxNumber,
+        // Location,
+        // FaxNumber,
         Website,
         // logo,
       };
@@ -154,7 +149,7 @@ class AcademyInfo extends Component {
           successMessage: updateMessage,
         });
 
-        // this.props.onUpdateAcademyInfo(formData);
+        this.props.onUpdateAcademyInfo(formData);
       }
     }
   };
@@ -186,9 +181,9 @@ class AcademyInfo extends Component {
   //       ...prev.academyInfo,
   //       {
   //         AcademyName: "",
-  //         location: "",
+  //         Location: "",
   //         Website: "",
-  //         faxNumber: "",
+  //         FaxNumber: "",
   //         // academyEventDecision: null,
   //         // logo: null,
   //         links: ["", "", ""],
@@ -208,34 +203,34 @@ class AcademyInfo extends Component {
   handleCountryChange = (idx, e) => {
     const { name, value } = e.target;
     this.setState(prevState => {
-      const updatedCountries = [...prevState.countries];
+      const updatedCountries = [...prevState.AcademyCountryInfo];
       updatedCountries[idx] = {
         ...updatedCountries[idx],
         [name]: value,
       };
-      return { countries: updatedCountries };
+      return { AcademyCountryInfo: updatedCountries };
     });
   };
 
   handleAddCountry = () => {
     this.setState(prevState => ({
-      countries: [
-        ...prevState.countries,
+      AcademyCountryInfo: [
+        ...prevState.AcademyCountryInfo,
         {
-          country: "",
-          location: "",
-          whatsappNumber: "",
-          phoneNumber: "",
+          CountryId: "",
+          Location: "",
+          WhatsAppNumber: "",
+          PhoneNumber: "",
           phoneAndWhatsappNumber: "",
-          faxNumber: "",
+          FaxNumber: "",
         },
       ],
     }));
   };
   handleRemoveCountry = idx => {
-    const countries = [...this.state.countries];
-    countries.splice(idx, 1);
-    this.setState({ countries });
+    const AcademyCountryInfo = [...this.state.AcademyCountryInfo];
+    AcademyCountryInfo.splice(idx, 1);
+    this.setState({ AcademyCountryInfo });
   };
 
   handleFileUpload = (idx, field, file) => {
@@ -250,8 +245,8 @@ class AcademyInfo extends Component {
   //     AcademyName: "",
   //     AcademyNameEn: "",
   //     // academyEventDecision: null,
-  //     location: 0,
-  //     faxNumber: 0,
+  //     Location: 0,
+  //     FaxNumber: 0,
   //     Website: "",
   //     // logo: null,
   //   };
@@ -261,8 +256,8 @@ class AcademyInfo extends Component {
   //     AcademyName: "",
   //     AcademyNameEn: "",
   //     // academyEventDecision: null,
-  //     location: null,
-  //     faxNumber: null,
+  //     Location: null,
+  //     FaxNumber: null,
   //     Website: "",
   //     // logo: null,
   //   });
@@ -283,7 +278,7 @@ class AcademyInfo extends Component {
       Website,
       Email,
       logo,
-      countries,
+      AcademyCountryInfo,
       AcademyNameError,
       successMessage,
       setErrormessage,
@@ -347,7 +342,7 @@ class AcademyInfo extends Component {
                           <Col lg="12">
                             <div className="mb-3">
                               <Row>
-                                <Col lg="6" className="mt-2">
+                                <Col lg="4" className="mt-2">
                                   <Label>{t("Academy Name (ar)")}</Label>
                                   <span className="text-danger">*</span>
 
@@ -370,7 +365,7 @@ class AcademyInfo extends Component {
                                     </div>
                                   )}
                                 </Col>
-                                <Col lg="6" className="mt-2">
+                                <Col lg="4" className="mt-2">
                                   <label
                                     htmlFor="Email"
                                     className="col-form-label"
@@ -388,9 +383,25 @@ class AcademyInfo extends Component {
                                     onChange={this.handleInputChange}
                                   />
                                 </Col>
+                                
+                                 <Col lg="4" className="mt-2">
+                                <label
+                                  htmlFor="logo"
+                                  className="col-form-label"
+                                >
+                                  {t("Academy Logo")}:
+                                </label>
+
+                                <Input
+                                  type="file"
+                                  id="logo"
+                                  name="logo"
+                                  accept="image/*"
+                                />
+                              </Col>
                               </Row>
                               <Row className="mt-3">
-                                <Col lg="6" className="mt-2">
+                                <Col lg="4" className="mt-2">
                                   <Label>{t("Academy Name (en)")}</Label>
                                   <span className="text-danger">*</span>
 
@@ -413,7 +424,7 @@ class AcademyInfo extends Component {
                                 </div>
                               )} */}
                                 </Col>
-                                <Col lg="6" className="mt-2">
+                                <Col lg="4" className="mt-2">
                                   <label
                                     htmlFor="Website"
                                     className="col-form-label"
@@ -431,10 +442,26 @@ class AcademyInfo extends Component {
                                     onChange={this.handleInputChange}
                                   />
                                 </Col>
+
+                                 <Col lg="4" className="mt-2">
+                                <label
+                                  htmlFor="academyEventDecision"
+                                  className="col-form-label"
+                                >
+                                  {t("Academy Event Decision")}:
+                                </label>
+
+                                <Input
+                                  type="file"
+                                  id="academyEventDecision"
+                                  name="academyEventDecision"
+                                  accept="image/*"
+                                />
+                              </Col>
                               </Row>
                             </div>
 
-                            {countries.map((row, idx) => (
+                            {AcademyCountryInfo.map((row, idx) => (
                               <div
                                 key={idx}
                                 className="mb-3 border p-3 rounded"
@@ -446,9 +473,9 @@ class AcademyInfo extends Component {
                                     </label>
                                     <Select
                                       className="form-control"
-                                      name="country"
-                                      id={`country_${idx}`}
-                                      key={`country_select_${idx}`}
+                                      name="CountryId"
+                                      id={`CountryId_${idx}`}
+                                      key={`CountryId_select_${idx}`}
                                       options={
                                         Array.isArray(countriesOpt)
                                           ? countriesOpt
@@ -457,7 +484,7 @@ class AcademyInfo extends Component {
                                       onChange={newValue =>
                                         this.handleCountryChange(idx, {
                                           target: {
-                                            name: "country",
+                                            name: "CountryId",
                                             value: newValue
                                               ? newValue.value
                                               : "",
@@ -467,7 +494,7 @@ class AcademyInfo extends Component {
                                       value={
                                         Array.isArray(countriesOpt)
                                           ? countriesOpt.find(
-                                              opt => opt.value === row.country
+                                              opt => opt.value === row.CountryId
                                             ) || null
                                           : null
                                       }
@@ -481,9 +508,9 @@ class AcademyInfo extends Component {
 
                                     <input
                                       type="text"
-                                      name="location"
+                                      name="Location"
                                       className="form-control"
-                                      value={row.location}
+                                      value={row.Location}
                                       onChange={e =>
                                         this.handleCountryChange(idx, e)
                                       }
@@ -496,9 +523,9 @@ class AcademyInfo extends Component {
 
                                     <input
                                       type="text"
-                                      name="whatsappNumber"
+                                      name="WhatsAppNumber"
                                       className="form-control"
-                                      value={row.whatsappNumber}
+                                      value={row.WhatsAppNumber}
                                       onChange={e =>
                                         this.handleCountryChange(idx, e)
                                       }
@@ -531,9 +558,9 @@ class AcademyInfo extends Component {
 
                                     <input
                                       type="text"
-                                      name="phoneNumber"
+                                      name="PhoneNumber"
                                       className="form-control"
-                                      value={row.phoneNumber}
+                                      value={row.PhoneNumber}
                                       onChange={e =>
                                         this.handleCountryChange(idx, e)
                                       }
@@ -546,9 +573,9 @@ class AcademyInfo extends Component {
 
                                     <input
                                       type="text"
-                                      name="faxNumber"
+                                      name="FaxNumber"
                                       className="form-control"
-                                      value={row.faxNumber}
+                                      value={row.FaxNumber}
                                       onChange={e =>
                                         this.handleCountryChange(idx, e)
                                       }
@@ -579,44 +606,14 @@ class AcademyInfo extends Component {
                               </Col>
                             </Row>
 
-                            <Row className="mt-3">
-                              <Col lg="6" className="mt-2">
-                                <label
-                                  htmlFor="academyEventDecision"
-                                  className="col-form-label"
-                                >
-                                  {t("Academy Event Decision")}:
-                                </label>
-
-                                <Input
-                                  type="file"
-                                  id="academyEventDecision"
-                                  name="academyEventDecision"
-                                  accept="image/*"
-                                />
-                              </Col>
-                            </Row>
+                             
+                          
                           </Col>
 
-                          <Col lg="6">
+                         
                             <div className="mb-3">
-                              <Row>
-                                <Col lg="4" className="mt-2">
-                                  <Label
-                                    htmlFor="logoUpload"
-                                    className="btn btn-primary"
-                                  >
-                                    {t("Academy Logo")}
-                                    <Input
-                                      name="logo"
-                                      type="file"
-                                      id="logoUpload"
-                                      accept="image/*"
-                                      style={{ display: "none" }}
-                                      onChange={this.handleChange}
-                                    />
-                                  </Label>
-                                </Col>
+                             
+                                
                                 <Col lg="8" className="mt-4">
                                   {logo && (
                                     <img
@@ -626,9 +623,9 @@ class AcademyInfo extends Component {
                                     />
                                   )}
                                 </Col>
-                              </Row>
+                              
                             </div>
-                          </Col>
+                        
                         </Row>
                         {/* {this.state.successMessage && (
                       <div className="text-success mb-3">

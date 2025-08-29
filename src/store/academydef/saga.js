@@ -39,11 +39,14 @@ function* fetchAcademyInfo() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "AcademyInfo",
+    tablename: "_AcademyInfo",
   };
 
   try {
     const response = yield call(getAcademyInfo, get_academyInfo_req);
+    response.map(resp => {
+      resp["AcademyCountryInfo"] = JSON.parse(resp["AcademyCountryInfo"]);
+    });
     console.log("RESPONSEEEEEE", response);
     yield put(getAcademyInfoSuccess(response));
   } catch (error) {
@@ -68,11 +71,16 @@ function* fetchAcademyInfo() {
 
 function* onUpdateAcademyInfo({ payload }) {
   payload["source"] = "db";
-  payload["procedure"] = "SisApp_updateData";
+  payload["procedure"] = "updateAcademyInfo";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "AcademyInfo";
   try {
     const response = yield call(updateAcademyInfo, payload);
+     response.map(resp => {
+      resp["AcademyCountryInfo"] = JSON.parse(resp["AcademyCountryInfo"]);
+    });
+    console.log("UPDATEEEEERESPONSEEEEEEE", response);
+
     console.log("UPDATEPAYLOADDDDD", payload);
 
     yield put(updateAcademyInfoSuccess(response[0]));
