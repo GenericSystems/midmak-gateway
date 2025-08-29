@@ -247,14 +247,14 @@ class QualificationsTracksList extends Component {
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "arTitle",
-        text: this.props.t("QualificationTrack(ar)"),
+        text: this.props.t("Qualification Track(ar)"),
         sort: true,
         // editable: showEditButton,
       },
 
       {
         dataField: "enTitle",
-        text: "QualificationTrack",
+        text: this.props.t("Qualification Track (en)"),
         sort: true,
         // editable: showEditButton,
       },
