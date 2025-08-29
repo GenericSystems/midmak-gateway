@@ -36,7 +36,7 @@ import {
   addNewTrainee,
   updateTrainee,
   deleteTrainee,
-  getTraineeDefaultRegReqDocs,
+  getTraineeRegReqDocs,
   getNationalities,
   getCities,
   getCountries,
@@ -109,6 +109,12 @@ import {
   uploadFileSuccess,
   uploadFileFail,
 } from "../new-Trainee/actions";
+import {
+  ADD_NEW_PROFESSIONAL_EXPERIENCE,
+  DELETE_PROFESSIONAL_EXPERIENCE,
+  UPDATE_PROFESSIONAL_EXPERIENCE,
+  ADD_REQUIRED_DOCS,
+} from "../new-Trainee/actionTypes";
 
 function* fetchTrainees(selectedpayload) {
   let lang = selectedpayload.payload;
@@ -394,6 +400,123 @@ function* fetchTraineeById(tempTrainee) {
   }
 }
 
+function* fetchTraineesRegisterCertificates() {
+  const get_Reg_Certificate = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "AdmissionSettings_RegisterUnderCertificates",
+  };
+
+  try {
+    const response = yield call(
+      getTempTraineeRegCertificate,
+      get_Reg_Certificate
+    );
+    yield put(getRegisterCertificatesSuccess(response));
+  } catch (error) {
+    yield put(getRegisterCertificatesFail(error));
+  }
+}
+
+function* fetchTraineesReqDocs(obj) {
+  const { certificateLevelId } = obj.payload;
+  console.log("{ certificateLevelId } ", obj.payload);
+  const get_TraineeReqDocs = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_RegReqDocs",
+    filter: `certificateLevelId = ${certificateLevelId}`,
+  };
+
+  try {
+    const response = yield call(getTraineeRegReqDocs, get_TraineeReqDocs);
+    console.log("rereresponse", response);
+    yield put(getTraineeRegReqDocsSuccess(response));
+  } catch (error) {
+    yield put(getTraineeRegReqDocsFail(error));
+  }
+}
+
+function* onAddNewProfessionalExperience({ payload }) {
+  console.log("payloadADDDDDDDDDDDDDDDDDDDDDDD", payload);
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_UpdateTempTraineeInfo";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_TraineesProfessionalExperiences";
+  payload["queryname"] = "Common_TraineesProfessionalExperiences";
+
+  try {
+    const response = yield call(addNewProfessionalExperience, payload);
+    console.log("response", response);
+    yield put(addProfessionalExperienceSuccess(response[0]));
+  } catch (error) {
+    yield put(addProfessionalExperienceFail(error));
+  }
+}
+
+function* onUpdateProfessionalExperience({ payload }) {
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_UpdateTempTraineeInfo";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_TraineesProfessionalExperiences";
+
+  try {
+    const response = yield call(updateProfessionalExperience, payload);
+    yield put(updateProfessionalExperienceSuccess(response[0]));
+  } catch (error) {
+    yield put(updateProfessionalExperienceFail(error));
+  }
+}
+
+function* onDeleteProfessionalExperience({ payload }) {
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_removeData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_TraineesProfessionalExperiences";
+
+  try {
+    const response = yield call(deleteProfessionalExperience, payload);
+    yield put(deleteProfessionalExperienceSuccess(response[0]));
+  } catch (error) {
+    yield put(deleteProfessionalExperienceFail(error));
+  }
+}
+
+function* onAddRequiredDocs({ payload }) {
+  payload["source"] = "db";
+  payload["procedure"] = "Admission_AddDocsTempTrainee";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_RegReqDocTempTrainee";
+
+  try {
+    const response = yield call(addRequiredDocs, payload);
+    console.log("response", response);
+    yield put(addRequiredDocsSuccess(response[0]));
+  } catch (error) {
+    yield put(addRequiredDocsFail(error));
+  }
+}
+
+// GEN
+// function* onUploadFile({ payload }) {
+//   console.log("uploading file", payload);
+//   payload["source"] = "db";
+//   payload["procedure"] = "SisApp_UpdateTraineeInfo";
+//   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+//   payload["tablename"] = "Common_ProfessionalExperiences";
+//   payload["queryname"] = "Common_ProfessionalExperiences";
+
+//   try {
+//     const response = yield call(uploadFile, payload);
+//     console.log("response", response);
+//     yield put(uploadFileSuccess(response[0]));
+//   } catch (error) {
+//     yield put(uploadFileFail(error));
+//   }
+// }
+
 // function* onGenerateTrainee({ payload }) {
 //   const generate_student = {
 //     source: "db",
@@ -417,7 +540,19 @@ function* traineesSaga() {
   yield takeEvery(UPDATE_TRAINEE, onUpdateTrainee);
   yield takeEvery(DELETE_TRAINEE, onDeleteTrainee);
   yield takeEvery(GET_TRAINEE_DELETED_VALUE, onGetTraineeDeletedValue);
-
+  yield takeEvery(
+    ADD_NEW_PROFESSIONAL_EXPERIENCE,
+    onAddNewProfessionalExperience
+  );
+  yield takeEvery(
+    UPDATE_PROFESSIONAL_EXPERIENCE,
+    onUpdateProfessionalExperience
+  );
+  yield takeEvery(
+    DELETE_PROFESSIONAL_EXPERIENCE,
+    onDeleteProfessionalExperience
+  );
+  yield takeEvery(ADD_REQUIRED_DOCS, onAddRequiredDocs);
   // yield takeEvery(GENERATE_TRAINEE, onGenerateTrainee);
   yield takeEvery(GET_TRAINEE_BY_ID, fetchTraineeById);
 }
