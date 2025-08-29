@@ -50,6 +50,12 @@ import {
   getYears,
   getTraineeById,
   generateTrainee,
+  getSocialStatus,
+  addNewProfessionalExperience,
+  updateProfessionalExperience,
+  deleteProfessionalExperience,
+  addRequiredDocs,
+  uploadFileToStorage,
 } from "../../helpers/fakebackend_helper";
 
 import {
@@ -87,197 +93,199 @@ import {
   getHighStudyTypesFail,
 } from "../high-study-types/actions";
 
+import {
+  getSocialStatusSuccess,
+  getSocialStatusFail,
+  getRegisterCertificatesSuccess,
+  getRegisterCertificatesFail,
+  addProfessionalExperienceSuccess,
+  addProfessionalExperienceFail,
+  updateProfessionalExperienceSuccess,
+  updateProfessionalExperienceFail,
+  deleteProfessionalExperienceSuccess,
+  deleteProfessionalExperienceFail,
+  addRequiredDocsSuccess,
+  addRequiredDocsFail,
+  uploadFileSuccess,
+  uploadFileFail,
+} from "../new-Trainee/actions";
+
 function* fetchTrainees(selectedpayload) {
   let lang = selectedpayload.payload;
 
   const titleField = lang === "en" ? "enTitle" : "arTitle";
 
-  // const get_faculty_opt = {
-  //   source: "db",
-  //   procedure: "Generic_getOptions",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Common_Faculty",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getFaculties, get_faculty_opt);
-  //   yield put(getFacultiesSuccess(response));
-  // } catch (error) {
-  //   yield put(getFacultiesFail(error));
-  // }
+  const get_faculty_opt = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Faculty",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getFaculties, get_faculty_opt);
+    yield put(getFacultiesSuccess(response));
+  } catch (error) {
+    yield put(getFacultiesFail(error));
+  }
 
-  // const getDiploma_opt = {
-  //   source: "db",
-  //   procedure: "Generic_Optiondatalist",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_DiplomaType",
-  //   fields: `Id,${titleField}`,
-  // };
+  const getDiploma_opt = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_DiplomaType",
+    fields: `Id,${titleField}`,
+  };
 
-  // try {
-  //   const response = yield call(getDiplomaLevels, getDiploma_opt);
-  //   yield put(getDiplomaLevelsSuccess(response));
-  // } catch (error) {
-  //   yield put(getDiplomaLevelsFail(error));
-  // }
+  try {
+    const response = yield call(getDiplomaLevels, getDiploma_opt);
+    yield put(getDiplomaLevelsSuccess(response));
+  } catch (error) {
+    yield put(getDiplomaLevelsFail(error));
+  }
 
-  // //years
-  // const get_years_req = {
-  //   source: "db",
-  //   procedure: "Generic_getOptions",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_Years",
-  //   fields: "Id,arTitle",
-  // };
-  // try {
-  //   const response = yield call(getYears, get_years_req);
-  //   console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", response);
-  //   yield put(getYearsSuccess(response));
-  // } catch (error) {
-  //   yield put(getYearsFail(error));
-  // }
+  //years
+  const get_years_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Years",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getYears, get_years_req);
+    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", response);
+    yield put(getYearsSuccess(response));
+  } catch (error) {
+    yield put(getYearsFail(error));
+  }
 
-  // //get nationality
-  // const get_nationality_opt = {
-  //   source: "db",
-  //   procedure: "Generic_getOptions",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "AdmissionSettings_Nationality",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getNationalities, get_nationality_opt);
-  //   console.log("responsenationality", response);
-  //   yield put(getNationalitiesSuccess(response));
-  // } catch (error) {
-  //   yield put(getNationalitiesFail(error));
-  // }
+  //get nationality
+  const get_nationality_opt = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "AdmissionSettings_Nationality",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getNationalities, get_nationality_opt);
+    console.log("responsenationality", response);
+    yield put(getNationalitiesSuccess(response));
+  } catch (error) {
+    yield put(getNationalitiesFail(error));
+  }
 
-  // //get country
-  // const get_country_opt = {
-  //   source: "db",
-  //   procedure: "Generic_Optiondatalist",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_Country",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getCountries, get_country_opt);
-  //   console.log("response country", response);
-  //   yield put(getCountriesSuccess(response));
-  // } catch (error) {
-  //   yield put(getCountriesFail(error));
-  // }
+  //get country
+  const get_country_opt = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Country",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getCountries, get_country_opt);
+    console.log("response country", response);
+    yield put(getCountriesSuccess(response));
+  } catch (error) {
+    yield put(getCountriesFail(error));
+  }
 
-  // //get city
-  // const get_city_opt = {
-  //   source: "db",
-  //   procedure: "Generic_Optiondatalist",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_City",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getCities, get_city_opt);
-  //   yield put(getCitiesSuccess(response));
-  // } catch (error) {
-  //   yield put(getCitiesFail(error));
-  // }
+  //get city
+  const get_city_opt = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_City",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getCities, get_city_opt);
+    yield put(getCitiesSuccess(response));
+  } catch (error) {
+    yield put(getCitiesFail(error));
+  }
 
-  // //get gender
-  // const get_gender = {
-  //   source: "db",
-  //   procedure: "Generic_getOptions",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_Gender",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getGenders, get_gender);
-  //   yield put(getGendersSuccess(response));
-  // } catch (error) {
-  //   yield put(getGendersFail(error));
-  // }
+  //get gender
+  const get_gender = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Gender",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getGenders, get_gender);
+    yield put(getGendersSuccess(response));
+  } catch (error) {
+    yield put(getGendersFail(error));
+  }
 
-  // //get SocialStatus
-  // const get_SocialStatus = {
-  //   source: "db",
-  //   procedure: "Generic_getOptions",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_SocialStatus",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getSocialStatus, get_SocialStatus);
-  //   console.log("ewsssssssssssssssss", response);
-  //   yield put(getSocialStatusSuccess(response));
-  // } catch (error) {
-  //   yield put(getSocialStatusFail(error));
-  // }
+  //get SocialStatus
+  const get_SocialStatus = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_SocialStatus",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getSocialStatus, get_SocialStatus);
+    console.log("ewsssssssssssssssss", response);
+    yield put(getSocialStatusSuccess(response));
+  } catch (error) {
+    yield put(getSocialStatusFail(error));
+  }
 
-  // // get estimates
-  // const get_estimates_req = {
-  //   source: "db",
-  //   procedure: "Generic_getOptions",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_Estimate",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getEstimates, get_estimates_req);
-  //   yield put(getEstimatesSuccess(response));
-  // } catch (error) {
-  //   yield put(getEstimatesFail(error));
-  // }
+  // get estimates
+  const get_estimates_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Estimate",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getEstimates, get_estimates_req);
+    yield put(getEstimatesSuccess(response));
+  } catch (error) {
+    yield put(getEstimatesFail(error));
+  }
 
-  // //get governorate
-  // const get_governorate_opt = {
-  //   source: "db",
-  //   procedure: "Generic_Optiondatalist",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_Governorate",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getGovernorates, get_governorate_opt);
+  //get governorate
+  const get_governorate_opt = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Governorate",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getGovernorates, get_governorate_opt);
 
-  //   console.log("responseresponseresponse", response);
-  //   yield put(getGovernoratesSuccess(response));
-  // } catch (error) {
-  //   yield put(getGovernoratesFail(error));
-  // }
+    console.log("responseresponseresponse", response);
+    yield put(getGovernoratesSuccess(response));
+  } catch (error) {
+    yield put(getGovernoratesFail(error));
+  }
 
-  // //get Settings_HighStudyType
+  //get Settings_HighStudyType
 
-  // const requestPayload = {
-  //   source: "db",
-  //   procedure: "Generic_getOptions",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_HighStudyType",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getHighStudyTypes, requestPayload);
-  //   console.log("Settings_HighStudyType", response);
-  //   yield put(getHighStudyTypesSuccess(response));
-  // } catch (error) {
-  //   yield put(getHighStudyTypesFail(error));
-  // }
-
-  // const traineeStatus = {
-  //   source: "db",
-  //   procedure: "Generic_getOptions",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Settings_Status",
-  //   fields: `Id,${titleField}`,
-  // };
-  // try {
-  //   const response = yield call(getTraineeStatus, traineeStatus);
-  //   console.log("Settings_Status", response);
-  //   yield put(getTraineeStatusSuccess(response));
-  // } catch (error) {
-  //   yield put(getTraineeStatusFail(error));
-  // }
+  const requestPayload = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_HighStudyType",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getHighStudyTypes, requestPayload);
+    console.log("Settings_HighStudyType", response);
+    yield put(getHighStudyTypesSuccess(response));
+  } catch (error) {
+    yield put(getHighStudyTypesFail(error));
+  }
 
   //get trainees_req
   const get_trainees_req = {
@@ -309,7 +317,7 @@ function* onAddNewTrainee({ payload }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "_Common_Trainees";
-  // payload["queryname"] = "_Common_TempTrainee";
+  // payload["queryname"] = "_Common_Trainees";
 
   try {
     const response = yield call(addNewTrainee, payload);
@@ -324,8 +332,8 @@ function* onUpdateTrainee({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_TempTrainee";
-  payload["queryname"] = "_Common_TempTrainee";
+  payload["tablename"] = "_Common_Trainees";
+  payload["queryname"] = "_Common_Trainees";
 
   try {
     const response = yield call(updateTrainee, payload);
@@ -336,12 +344,10 @@ function* onUpdateTrainee({ payload }) {
 }
 
 function* onDeleteTrainee({ payload }) {
-  console.log("payloadDeleeete", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_TempTrainee";
-  payload["queryname"] = "_Common_TempTrainee";
+  payload["tablename"] = "_Common_Trainees";
   try {
     const response = yield call(deleteTrainee, payload);
     yield put(deleteTraineeSuccess(response[0]));
@@ -359,31 +365,34 @@ function* onGetTraineeDeletedValue() {
   }
 }
 
-// function* fetchTraineeById(tempTrainee) {
-//   // console.log("tempTraineetempTraineetempTrainee", tempTrainee);
-//   // const tempTraineeId = tempTrainee.payload;
-//   const get_trainee_byId = {
-//     source: "db",
-//     procedure: "SisApp_addData",
-//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-//     tablename: "Common_TempTraineesProfessionalExperiences",
-//     // filter: `Id = ${tempTraineeId}`,
-//   };
-//   try {
-//     const response = yield call(getTraineeById, get_trainee_byId);
-//     // console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr", response);
-// response.map(resp => {
-//   resp["ProfessionalExperiences"] = JSON.parse(
-//     resp["ProfessionalExperiences"]
-//   );
-// });
-//     // response[0]["flag"] = 1;
-//     console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr", response);
-//     yield put(getTraineeByIdSuccess(response[0]));
-//   } catch (error) {
-//     yield put(getTraineeByIdFail(error));
-//   }
-// }
+function* fetchTraineeById(tempTrainee) {
+  // console.log("tempTraineetempTraineetempTrainee", tempTrainee);
+  const tempTraineeId = tempTrainee.payload.Id;
+  const get_trainee_byId = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_Trainees",
+    filter: `Id = ${tempTraineeId}`,
+  };
+  try {
+    const response = yield call(getTraineeById, get_trainee_byId);
+    console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr", response);
+    response.map(resp => {
+      resp["ProfessionalExperiences"] = JSON.parse(
+        resp["ProfessionalExperiences"]
+      );
+    });
+    response.map(resp => {
+      resp["RegReqDocTempTrainee"] = JSON.parse(resp["RegReqDocTempTrainee"]);
+    });
+    // response[0]["flag"] = 1;
+    console.log("rrrrrrrrrrrrrrrrrrrrrrrrrr", response);
+    yield put(getTraineeByIdSuccess(response[0]));
+  } catch (error) {
+    yield put(getTraineeByIdFail(error));
+  }
+}
 
 // function* onGenerateTrainee({ payload }) {
 //   const generate_student = {
@@ -410,7 +419,7 @@ function* traineesSaga() {
   yield takeEvery(GET_TRAINEE_DELETED_VALUE, onGetTraineeDeletedValue);
 
   // yield takeEvery(GENERATE_TRAINEE, onGenerateTrainee);
-  // yield takeEvery(GET_TRAINEE_BY_ID, fetchTraineeById);
+  yield takeEvery(GET_TRAINEE_BY_ID, fetchTraineeById);
 }
 
 export default traineesSaga;

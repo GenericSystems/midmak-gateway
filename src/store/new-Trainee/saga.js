@@ -9,7 +9,6 @@ import {
   UPDATE_TEMP_TRAINEE,
   GET_REGISTER_CERTIFICATES,
   GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS,
-  GET_SOCIAL_STATUS,
   ADD_NEW_PROFESSIONAL_EXPERIENCE,
   DELETE_PROFESSIONAL_EXPERIENCE,
   UPDATE_PROFESSIONAL_EXPERIENCE,
@@ -396,7 +395,7 @@ function* onGetTempTraineeDeletedValue() {
 }
 
 function* fetchTempTraineesRegisterCertificates() {
-  const get_TEMP_TRAINEEReg_Certificate = {
+  const get_Reg_Certificate = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -406,7 +405,7 @@ function* fetchTempTraineesRegisterCertificates() {
   try {
     const response = yield call(
       getTempTraineeRegCertificate,
-      get_TEMP_TRAINEEReg_Certificate
+      get_Reg_Certificate
     );
     yield put(getRegisterCertificatesSuccess(response));
   } catch (error) {

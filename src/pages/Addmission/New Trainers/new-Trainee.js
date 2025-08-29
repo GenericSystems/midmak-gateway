@@ -648,16 +648,8 @@ class NewTrainee extends Component {
   }
 
   handleButtonClick = (fieldName, option) => {
-    let obj = { certificateLevelId: option };
-    onGetDefaultRegReqDocs(obj);
     if (fieldName == "ExaminationSession") {
       this.setState({ selectedExaminationSession: option });
-    }
-    if (fieldName == "registrationCertLevelId") {
-      this.setState({ selectedregistrationCertLevelId: option });
-    }
-    if (fieldName == "studyPattern") {
-      this.setState({ selectedStudyPattern: option });
     }
   };
 
@@ -886,7 +878,6 @@ class NewTrainee extends Component {
   // };
 
   handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
-    const { onGetTempTraineesDocuments } = this.props;
     const { diplomalevels } = this.props;
     const selectedValue = event.target.value;
     console.log("selectedValue", selectedValue);
@@ -899,9 +890,6 @@ class NewTrainee extends Component {
       certificate => certificate.value === event.target.value
     );
     console.log(diplomaObject, "ollllllll");
-    // let obj = { certificateLevelId: diplomaObject.key };
-    // console.log("objobjobj", obj);
-    // onGetTempTraineesDocuments(obj);
     setFieldValue("diplomaId", selectedValue);
 
     if (diplomaObject) {
@@ -4232,7 +4220,7 @@ class NewTrainee extends Component {
                                                                   onBlur={
                                                                     handleBlur
                                                                   }
-                                                                  id="diploma-Id"
+                                                                  id="diplomaCountry"
                                                                 />
 
                                                                 <datalist id="CountrydatalistOptions">

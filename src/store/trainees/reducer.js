@@ -36,20 +36,16 @@ import {
 } from "./actionTypes";
 
 const INIT_STATE = {
-  last_created_trainee: { Id: 0 },
   trainees: [],
-  socialStatus: [],
-  traineeStatus: [],
   deleted: {},
   error: {},
   traineesDocuments: [],
+  studentsOpt: [],
   tempRelatives: [],
-  regcertificates: [],
   trnProfExperiences: [],
   requiredDocs: [],
   lastAddedId: 0,
   tempTrainee: {},
-  generated_trainee: {},
 };
 
 const trainees = (state = INIT_STATE, action) => {

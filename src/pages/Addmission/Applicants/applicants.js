@@ -122,6 +122,7 @@ class ApplicantsList extends Component {
       facultyName: "",
       studyPlanName: "",
       socialStatusName: "",
+      estimateName: "",
       selectedRegistrationCertLevelId: "",
       selectedStudyPattern: "",
       selectedExaminationSession: "",
@@ -138,6 +139,7 @@ class ApplicantsList extends Component {
       selectedGovernorate: "",
       genderName: "",
       diplomaTypeName: "",
+      governorateName: "",
       selectedSocialStatus: "",
       selectedBirthDate: "",
       selectedRegistrationDiplomaDate: "",
@@ -279,7 +281,6 @@ class ApplicantsList extends Component {
     this.setState({ last_created_trainee, diplomalevels });
     this.setState({ tempTrainees });
     this.setState({ tempTrainee_regReqDocs });
-    this.setState({ nationalities });
     this.setState({ relatives });
     this.setState({ faculties });
     this.setState({ countries });
@@ -1473,6 +1474,16 @@ class ApplicantsList extends Component {
         tempTrainee: values,
       });
     }
+    if (fieldName == "EstimateId") {
+      const name = estimates.find(estimate => estimate.value === selectedValue);
+      console.log("naaaaamesooo", name);
+
+      this.setState({
+        selectedEstimateId: selectedValue,
+        estimateNamee: name.label,
+        tempTrainee: values,
+      });
+    }
   };
 
   handleGenerateTempTrainee = tempId => {
@@ -1539,26 +1550,6 @@ class ApplicantsList extends Component {
       document.getElementById("addr" + idx).style.display = "block";
     } else if (typeof idx != "undefined") {
       document.getElementById("addr" + idx).style.display = "none";
-    }
-  };
-
-  handleChangeTempTraineeGrade = (fieldName, value) => {
-    const { onGetFilteredFaculties, certificates, currentSemester } =
-      this.props;
-    const { totalGradeValue, selectedDiplomaId, grantCond } = this.state;
-    const average = (value / totalGradeValue) * 100;
-
-    this.setState({ averageValue: average, traineeGrade: value });
-
-    if (selectedDiplomaId != undefined) {
-      let obj = {
-        diplomaId: selectedDiplomaId,
-        Average: average,
-        isGrantCond: grantCond,
-        YearId: currentSemester.cuYearId,
-      };
-
-      onGetFilteredFaculties(obj);
     }
   };
 
@@ -1673,12 +1664,12 @@ class ApplicantsList extends Component {
   handleButtonClick2 = (fieldName, option, values) => {
     console.log("fieldName", fieldName);
     console.log("option", option);
-    const { onGetempTraineesDocuments } = this.props;
+    const { onGetTempTraineesDocuments } = this.props;
     let obj = { certificateLevelId: option };
     console.log("objobjobj", obj);
-    onGetempTraineesDocuments(obj);
+    onGetTempTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
-      this.setState({ selectedregistrationCertLevelId: option });
+      this.setState({ selectedRegistrationCertLevelId: option });
       this.setState({ tempTrainee: values });
     }
   };
@@ -1788,32 +1779,29 @@ class ApplicantsList extends Component {
       });
     }
   };
-
-  handleDataListChange = (event, fieldName) => {
-    const { HasBrotherCheck } = this.state;
-
+  handleGovernorateSelect = (event, fieldName, setFieldValue, values) => {
+    const { governorates } = this.props;
     const selectedValue = event.target.value;
+    console.log("selectedValue", selectedValue);
 
-    if (fieldName == "DiplomaCountryId") {
-      this.setState({ selectedCountry: selectedValue });
-    }
+    this.setState({
+      tempTrainee: values,
+    });
 
-    if (fieldName == "DiplomaGovernorateId") {
-      this.setState({ selectedGovernorate: selectedValue });
-    }
+    const governorateObject = governorates.find(
+      governorate => governorate.value === event.target.value
+    );
+    console.log(governorateObject, "governorateObjectgovernorateObject");
+    setFieldValue("DiplomaGovernorateId", selectedValue);
 
-    /*  if (fieldName == "DiplomaCityId") {
-      this.setState({ selectedCity: selectedValue });
-    } */
-
-    if (fieldName === "UnivCountryId") {
-      this.setState({ selectedUnivCountry: selectedValue });
-    }
-
-    if (HasBrotherCheck) {
-      if (fieldName === "studentSID") {
-        this.setState({ selectedBrother: selectedValue });
-      }
+    if (diplomaObject) {
+      this.setState({
+        selectedGovernorateiD: governorateObject.key,
+        selectedGovernorate: selectedValue,
+        governorateName: governorateObject.value,
+        diplomaError: false,
+        tempTrainee: values,
+      });
     }
   };
 
@@ -2082,6 +2070,7 @@ class ApplicantsList extends Component {
       "TempTrainee List | keyInHands - React Admin & Dashboard Template";
 
     const {
+      estimateName,
       selectedYear,
       selectedHealthProblems,
       selectedHasDisability,
@@ -3255,10 +3244,6 @@ class ApplicantsList extends Component {
                                               Average:
                                                 (emptyTempTrainee &&
                                                   emptyTempTrainee.Average) ||
-                                                "",
-                                              FacultyId:
-                                                (emptyTempTrainee &&
-                                                  emptyTempTrainee.FacultyId) ||
                                                 "",
                                             })
                                           }
@@ -4915,12 +4900,18 @@ class ApplicantsList extends Component {
                                                                               options={
                                                                                 estimates
                                                                               }
-                                                                              onChange={estimate => {
-                                                                                setFieldValue(
+                                                                              onChange={newValue => {
+                                                                                this.handleSelect(
                                                                                   "EstimateId",
-                                                                                  estimate.value
+                                                                                  newValue.value,
+                                                                                  values
                                                                                 );
                                                                               }}
+                                                                              defaultValue={estimates.find(
+                                                                                opt =>
+                                                                                  opt.value ===
+                                                                                  tempTrainee?.EstimateId
+                                                                              )}
                                                                             />
                                                                           </Col>
                                                                           {gradeError && (
@@ -5210,12 +5201,18 @@ class ApplicantsList extends Component {
                                                                               options={
                                                                                 estimates
                                                                               }
-                                                                              onChange={estimate => {
-                                                                                setFieldValue(
+                                                                              onChange={newValue => {
+                                                                                this.handleSelect(
                                                                                   "EstimateId",
-                                                                                  estimate.value
+                                                                                  newValue.value,
+                                                                                  values
                                                                                 );
                                                                               }}
+                                                                              defaultValue={estimates.find(
+                                                                                opt =>
+                                                                                  opt.value ===
+                                                                                  tempTrainee?.EstimateId
+                                                                              )}
                                                                             />
                                                                           </Col>
                                                                           {gradeError && (
@@ -5629,11 +5626,11 @@ class ApplicantsList extends Component {
                                                                               onBlur={
                                                                                 handleBlur
                                                                               }
-                                                                              id="diploma-Id"
+                                                                              id="diplomaCountry"
                                                                             />
 
                                                                             <datalist id="CountrydatalistOptions">
-                                                                              {countries.map(
+                                                                              {/* {countries.map(
                                                                                 country => (
                                                                                   <option
                                                                                     key={
@@ -5643,6 +5640,22 @@ class ApplicantsList extends Component {
                                                                                       country.value
                                                                                     }
                                                                                   />
+                                                                                )
+                                                                              )} */}
+                                                                              {countries.map(
+                                                                                country => (
+                                                                                  <option
+                                                                                    key={
+                                                                                      country.key
+                                                                                    }
+                                                                                    value={
+                                                                                      country.value
+                                                                                    }
+                                                                                  >
+                                                                                    {
+                                                                                      country.value
+                                                                                    }
+                                                                                  </option>
                                                                                 )
                                                                               )}
                                                                             </datalist>
@@ -5669,16 +5682,31 @@ class ApplicantsList extends Component {
                                                                               value={
                                                                                 values.DiplomaGovernorateId
                                                                               }
-                                                                              onChange={event => {
-                                                                                setFieldValue(
+                                                                              // onChange={event => {
+                                                                              //   setFieldValue(
+                                                                              //     "DiplomaGovernorateId",
+                                                                              //     event
+                                                                              //       .target
+                                                                              //       .value
+                                                                              //   );
+                                                                              // }}
+                                                                              onChange={event =>
+                                                                                this.handleGovernorateSelect(
+                                                                                  event,
                                                                                   "DiplomaGovernorateId",
-                                                                                  event
-                                                                                    .target
-                                                                                    .value
-                                                                                );
-                                                                              }}
-                                                                              onBlur={
-                                                                                handleBlur
+                                                                                  setFieldValue,
+                                                                                  values
+                                                                                )
+                                                                              }
+                                                                              onBlur={() =>
+                                                                                this.handleInputBlur(
+                                                                                  "DiplomaGovernorateId"
+                                                                                )
+                                                                              }
+                                                                              onFocus={() =>
+                                                                                this.handleInputFocus(
+                                                                                  "DiplomaGovernorateId"
+                                                                                )
                                                                               }
                                                                               id="diplomaGovernorate-Id"
                                                                             />
@@ -7034,28 +7062,6 @@ const mapStateToProps = ({
   requiredDocs: tempTrainees.requiredDocs,
   tempTraineeStatus: tempTrainees.tempTraineeStatus,
   generated_tempTrainee: tempTrainees.generated_tempTrainee,
-  // last_created_trainee: tempTrainees.last_created_trainee,
-  // tempTrainee_regReqDocs: tempTrainees.tempTrainee_regReqDocs,
-  // tempTraineeBrothers: tempTrainees.tempTraineeBrothers,
-  // nationalities: nationalities.nationalities,
-  // relatives: relatives.relatives,
-  // faculties: mobAppFacultyAccs.faculties,
-  // countries: countries.countries,
-  // yearSemesters: generalManagements.yearSemesters,
-  // currentSemester: semesters.currentSemester,
-  // cities: cities.cities,
-  // certificates: certificates.certificates,
-  // governorates: governorates.governorates,
-  // regReqDocuments: regReqDocuments.regReqDocuments,
-  // genders: genders.genders,
-  //certificatelevels: certificatelevels.certificatelevels,
-  // admissionConditions: admissionConditions.admissionConditions,
-  //filteredFaculties: admissionConditions.filteredFaculties,
-  // academiccertificates: academiccertificates.academiccertificates,
-  // filteredAcademicCertificates:
-  //  academiccertificates.filteredAcademicCertificates,
-  // grants: grants.grants,
-  // tempRelatives: tempTrainees.tempRelatives,
   user_menu: menu_items.user_menu || [],
 });
 
