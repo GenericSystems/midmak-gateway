@@ -43,10 +43,10 @@ class AcademyInfo extends Component {
           phoneNumber: "",
           phoneAndWhatsappNumber: "",
           faxNumber: "",
-          AcademyNameError: "",
-          AcademyNameEnError: "",
         },
       ],
+      AcademyNameError: "",
+      AcademyNameEnError: "",
       successMessage: null,
     };
   }
@@ -119,9 +119,10 @@ class AcademyInfo extends Component {
       // location,
       // faxNumber,
       Website,
+      countries,
       // logo,
     } = this.state;
-
+    console.log("COUNTRIEEEEEESSSSSSSSSSSS", countries);
     const { academyInfo } = this.props;
 
     if (academyInfo && academyInfo.length > 0) {
@@ -130,12 +131,14 @@ class AcademyInfo extends Component {
         AcademyName,
         AcademyNameEn,
         Email,
+        countries,
 
         // location,
         // faxNumber,
         Website,
         // logo,
       };
+      console.log("FORMDATTTTAAAAAA", formData);
 
       if (
         this.state.AcademyName.trim() === "" &&
@@ -151,7 +154,7 @@ class AcademyInfo extends Component {
           successMessage: updateMessage,
         });
 
-        this.props.onUpdateAcademyInfo(formData);
+        // this.props.onUpdateAcademyInfo(formData);
       }
     }
   };
@@ -164,25 +167,6 @@ class AcademyInfo extends Component {
   //     this.setState({ academyEventDecision: files[0] });
   //   }
   // };
-  handleLinkChange = (event, index) => {
-    const { value } = event.target;
-
-    if (index === 0) {
-      this.setState({
-        link1: value,
-      });
-    }
-    if (index === 1) {
-      this.setState({
-        link2: value,
-      });
-    }
-    if (index === 2) {
-      this.setState({
-        link3: value,
-      });
-    }
-  };
 
   testAcademyWebsite = () => {
     const Website = this.state.Website;
@@ -196,22 +180,22 @@ class AcademyInfo extends Component {
     return isUrlValid ? "" : Website;
   };
 
-  handleAddRow = () => {
-    this.setState(prev => ({
-      academyInfo: [
-        ...prev.academyInfo,
-        {
-          AcademyName: "",
-          location: "",
-          Website: "",
-          faxNumber: "",
-          // academyEventDecision: null,
-          // logo: null,
-          links: ["", "", ""],
-        },
-      ],
-    }));
-  };
+  // handleAddRow = () => {
+  //   this.setState(prev => ({
+  //     academyInfo: [
+  //       ...prev.academyInfo,
+  //       {
+  //         AcademyName: "",
+  //         location: "",
+  //         Website: "",
+  //         faxNumber: "",
+  //         // academyEventDecision: null,
+  //         // logo: null,
+  //         links: ["", "", ""],
+  //       },
+  //     ],
+  //   }));
+  // };
   handleRemoveRow = index => {
     const academyInfo = [...this.state.academyInfo];
     academyInfo.splice(index, 1);
@@ -260,12 +244,6 @@ class AcademyInfo extends Component {
     this.setState({ academyInfo });
   };
 
-  handleLinkChange = (academyIdx, linkIdx, value) => {
-    const academyInfo = [...this.state.academyInfo];
-    academyInfo[academyIdx].links[linkIdx] = value;
-    this.setState({ academyInfo });
-  };
-
   // handleReset = () => {
   //   const restedata = {
   //     Id: 1,
@@ -301,7 +279,7 @@ class AcademyInfo extends Component {
     const {
       AcademyName,
       AcademyNameEn,
-      location,
+
       Website,
       Email,
       logo,
@@ -503,9 +481,9 @@ class AcademyInfo extends Component {
 
                                     <input
                                       type="text"
-                                      name="Location"
+                                      name="location"
                                       className="form-control"
-                                      value={row.whatsappNumber}
+                                      value={row.location}
                                       onChange={e =>
                                         this.handleCountryChange(idx, e)
                                       }
