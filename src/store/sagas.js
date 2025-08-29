@@ -129,6 +129,8 @@ import DiplomaLevelSaga from "./diploma-level/saga";
 
 import HighStudyTypeSaga from "./high-study-types/saga";
 
+import qualificationTracksSaga from "./qualification-tracks/saga";
+
 export default function* rootSaga() {
   yield all([
     //public
@@ -208,7 +210,8 @@ export default function* rootSaga() {
     fork(rolesSaga),
     fork(userMngsSaga),
     fork(academyInfoSaga),
- 
+    fork(qualificationTracksSaga),
+
     fork(sidbarcontentsSaga),
     fork(trainingMembersSaga),
     fork(warningRulesSaga),

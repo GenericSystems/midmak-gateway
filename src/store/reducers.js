@@ -77,6 +77,10 @@ import userTypes from "./user-types/reducer";
 //certificates
 import certificates from "./certificates/reducer";
 
+//qualificationTypes
+import qualificationTracks from "./qualification-tracks/reducer"
+
+
 //certificateTypes
 import certificateTypes from "./certificateTypes/reducer";
 
@@ -408,6 +412,7 @@ const rootReducer = combineReducers({
   certificates,
   studentsInfo,
   academyInfo,
+  qualificationTracks,
  
   menu_items,
   trainingMembers,

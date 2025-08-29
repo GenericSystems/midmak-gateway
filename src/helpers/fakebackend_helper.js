@@ -2005,6 +2005,39 @@ export const updateContractType = data => post(url.UPDATE_CONTRACT_TYPE, data);
 //delete contractType
 export const deleteContractType = data => post(url.DELETE_CONTRACT_TYPE, data);
 
+//QUALIFICATION_TRACK
+export const getQualificationsTracks = data => post(url.GET_QUALIFICATIONS_TRACKS, data);
+// ADD
+export const addNewQualificationTrack = data => post(url.ADD_NEW_QUALIFICATION_TRACK, data);
+//
+export const getQualificationTrackDeletedValue = () =>
+  get(url.GET_QUALIFICATION_TRACK_DELETED_VALUE);
+//UPDATE
+export const updateQualificationTrack = data => post(url.UPDATE_QUALIFICATION_TRACK, data);
+//DELETE
+export const deleteQualificationTrack = data => post(url.DELETE_QUALIFICATION_TRACK, data);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //GRADE_VERSION
 export const getGradesVersions = data => post(url.GET_GRADES_VERSIONS, data);
 
