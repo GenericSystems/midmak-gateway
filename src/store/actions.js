@@ -322,3 +322,6 @@ export * from "./diploma-level/actions";
 //HighStudyType
 
 export * from "./high-study-types/actions";
+ 
+//qualification-track
+export * from "./qualification-tracks/actions"

@@ -137,6 +137,8 @@ import RolesList from "../pages/PriveledgeManagement/UserManagement/roles";
 
 //Sector
 import SectorsList from "../pages/Sectors/sectors";
+//QUALIFICATION TRACKS
+import QualificationsTracksList from "../pages/Certificates/qualification-tracks"
 
 //universityDef
 import AcademyInfo from "../pages/Academy/academy-def"
@@ -325,6 +327,10 @@ const authProtectedRoutes = [
   { path: "/sectors", component: SectorsList },
   //university-def
   { path: "/academy-def", component: AcademyInfo },
+
+  //qualification_track
+  {path:"/qualification-tracks",component:QualificationsTracksList},
+
   //UserTypes
   { path: "/user-types", component: UserTypesList },
 

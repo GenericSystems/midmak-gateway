@@ -991,6 +991,23 @@ export const ADD_NEW_CONTRACT_TYPE = "/add/contractType";
 export const UPDATE_CONTRACT_TYPE = "/update/contractType";
 export const DELETE_CONTRACT_TYPE = "/delete/contractType";
 
+
+//qualificaqtion_track
+export const GET_QUALIFICATIONS_TRACKS = "/qualificationTracks";
+export const GET_QUALIFICATION_TRACK_DELETED_VALUE = "/deleted";
+export const ADD_NEW_QUALIFICATION_TRACK = "/add/qualificationTrack";
+export const UPDATE_QUALIFICATION_TRACK = "/update/qualificationTrack";
+export const DELETE_QUALIFICATION_TRACK = "/delete/qualificationTrack";
+
+
+
+
+
+
+
+
+
+
 //GRADES_VERSIONS
 export const GET_GRADES_VERSIONS = "/gradesVersions";
 export const GET_GRADE_VERSION_DELETED_VALUE = "/deleted";
