@@ -44,7 +44,7 @@ import ToolkitProvider, {
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 import Accordion from "react-bootstrap/Accordion";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-
+import * as moment from "moment";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -61,6 +61,14 @@ import {
   getTraineeById,
   // getTraineeRegReqDocs,
 } from "store/trainees/actions";
+import {
+  getRegisterCertificates,
+  getTempTraineeDefaultRegReqDocs,
+  updateProfessionalExperience,
+  addNewProfessionalExperience,
+  deleteProfessionalExperience,
+  addRequiredDocs,
+} from "store/new-Trainee/actions";
 import { BackburgerIcon } from "@icons/material";
 import {
   checkIsAddForPage,
@@ -432,6 +440,14 @@ class TraineesList extends Component {
 
   handleSuccessClose = () => {
     this.setState({ successMessage: null });
+  };
+
+  handleExpSuccessClose = () => {
+    this.setState({ successMessage1: null, showAlert: null });
+  };
+
+  handleExpErrorClose = () => {
+    this.setState({ errorMessage1: null, showAlert: null });
   };
 
   handleErrorClose = () => {
@@ -1021,6 +1037,470 @@ class TraineesList extends Component {
     sidebar.classList.toggle("collapse-sidebar");
   };
 
+  handleSubmit = values => {
+    const { onAddRequiredDocs } = this.props;
+    const { stdDocsArray } = this.state;
+    console.log("values in save", values);
+    values["traineeId"] = values.Id;
+    values["isAdd"] = 0;
+    console.log(values["traineeId"]);
+    let traineeinfo = {};
+    const extractedArray = stdDocsArray.map(item => ({
+      Id: item.Id,
+      regReqDocId: item.regReqDocId,
+      availableNumber: item.availableNumber,
+    }));
+    console.log("extractedArray", extractedArray);
+    traineeinfo["stdDocs"] = extractedArray;
+    traineeinfo["traineeId"] = values.Id;
+    traineeinfo["isAdd"] = 0;
+    console.log("traineeinfo", traineeinfo);
+    onAddRequiredDocs(traineeinfo);
+    // const saveDocsMessage = this.props.t("Documents requiered saved successfully");
+    //     this.setState({
+    //       successMessage: saveTempTraineeMessage,
+    //     });
+  };
+
+  handleExperienceSubmit = values => {
+    const { lastAddedId, onAddNewProfessionalExperience } = this.props;
+    const { profExperiencesArray, lastUsedExperienceId, isEdit } = this.state;
+    console.log("values in save", values);
+    values["traineeId"] = values.Id;
+    console.log(values["traineeId"]);
+    // let traineeinfo = {};
+    // const extractedArray = profExperiencesArray.map(item => ({
+    //   Id: item.Id,
+    //   workType: item.workType,
+    //   companyName: item.companyName,
+    //   workPlace: item.workPlace,
+    //   workField: item.workField,
+    //   duaration: item.duaration,
+    // }));
+    // console.log("extractedArray", extractedArray);
+    // traineeinfo["ProfessionalExperiences"] = extractedArray;
+    // traineeinfo["tempTraineeId"] = values.Id;
+    // let experiencesObject = {};
+    // profExperiencesArray.forEach((item, i) => {
+    //   experiencesObject[`${i}`] = {
+    //     Id: item.Id,
+    //     workType: item.workType,
+    //     companyName: item.companyName,
+    //     workPlace: item.workPlace,
+    //     workField: item.workField,
+    //     duaration: item.duaration,
+    //   };
+    // });
+
+    const traineeinfo = {
+      traineeId: values.Id,
+      ProfessionalExperiences: profExperiencesArray.map(item => ({
+        Id: item.Id,
+        workType: item.workType,
+        companyName: item.companyName,
+        workPlace: item.workPlace,
+        workField: item.workField,
+        duaration: item.duaration,
+      })),
+    };
+
+    console.log("traineeinfo", traineeinfo);
+    onAddNewProfessionalExperience(traineeinfo);
+    const saveProfExperienceMessage = this.props.t(
+      "Professional Experience saved successfully"
+    );
+    this.setState({
+      successMessage1: saveProfExperienceMessage,
+    });
+  };
+
+  handleSave = values => {
+    const {
+      selectedBirthDate,
+      selectedRegistrationDiplomaDate,
+      selectedNationalityId,
+      selectedRegistrationCertLevelId,
+      selectedFacultyId,
+      selectedGender,
+      selectedStudyPlanId,
+      isEdit,
+      selectedExaminationSession,
+      selectedSocialStatus,
+      selectedDiplomaId,
+      selectedHightStudyTypeId,
+      selectedEstimateId,
+      selectedRegUniDate,
+      selectedTempTraineeStatus,
+    } = this.state;
+    console.log("values in save", values);
+    values["socialStatusId"] = selectedSocialStatus;
+    // values.statusId = isEdit ? selectedTempTraineeStatus : 1;
+
+    if (
+      values.FirstName === "" ||
+      values.LastName === "" ||
+      values.FatherName === "" ||
+      values.grandFatherName === "" ||
+      values.MotherName === "" ||
+      values.diplomaId === "" ||
+      values.BirthLocation === "" ||
+      values.birthdate === "" ||
+      // values.plan_study === "" ||
+      (values.NationalityId === "" && selectedNationalityId === "") ||
+      (values.GenderId === "" && selectedGender === "") ||
+      (values.registrationCertLevelId === "" &&
+        selectedRegistrationCertLevelId === "")
+    ) {
+      if (values.FirstName.trim() === "") {
+        this.setState({ firstNameError: true, saveError: true });
+      }
+
+      if (values.LastName.trim() === "") {
+        this.setState({ lastNameError: true, saveError: true });
+      }
+
+      if (values.FatherName.trim() === "") {
+        this.setState({ fatherNameError: true, saveError: true });
+      }
+      if (values.diplomaId.trim() === "") {
+        this.setState({ diplomaIdError: true, saveError: true });
+      }
+
+      if (values.grandFatherName.trim() === "") {
+        this.setState({ grandFatherNameError: true, saveError: true });
+      }
+      if (values.MotherName.trim() === "") {
+        this.setState({ motherNameError: true, saveError: true });
+      }
+
+      if (values.BirthLocation.trim() === "") {
+        this.setState({ birthLocError: true, saveError: true });
+      }
+
+      // if (values.plan_study.trim() === "") {
+      //   this.setState({ plan_studyError: true, saveError: true });
+      // }
+
+      if (values.birthdate === "" && selectedBirthDate === "") {
+        this.setState({ birthdateError: true, saveError: true });
+      }
+
+      if (values.NationalityId === "" && selectedNationalityId === "") {
+        this.setState({ nationalityError: true, saveError: true });
+      }
+      if (values.GenderId === "" && selectedGender === "") {
+        this.setState({ genderError: true, saveError: true });
+      }
+
+      // if (values.FacultyId === "" && selectedFacultyId === "") {
+      //   this.setState({ facultyError: true, saveError: true });
+      // }
+
+      if (values.nationalNo === "") {
+        this.setState({ nationalNoError: true, saveError: true });
+      }
+      if (values.identityNo === "") {
+        this.setState({ identityNoError: true, saveError: true });
+      }
+      const errorSaveTempTraineeMessage = this.props.t(
+        "Fill the Required Fields to Save TempTrainee"
+      );
+      this.setState({ errorMessage: errorSaveTempTraineeMessage }, () => {
+        window.scrollTo(0, 0);
+      });
+    } else {
+      this.setState({ firstNameError: false, saveError: false });
+      this.setState({ lastNameError: false, saveError: false });
+      this.setState({ fatherNameError: false, saveError: false });
+      this.setState({ motherNameError: false, saveError: false });
+      this.setState({ birthLocError: false, saveError: false });
+      this.setState({ birthdateError: false, saveError: false });
+      this.setState({ nationalityError: false, saveError: false });
+      this.setState({ genderError: false, saveError: false });
+      // this.setState({ facultyError: false, saveError: false });
+      this.setState({ grandFatherNameError: false, saveError: false });
+      this.setState({ diplomaIdError: false, saveError: false });
+      this.setState({ stdTotalGradeError: false, saveError: false });
+      let traineeinfo = {};
+      Object.keys(values).forEach(function (key) {
+        if (
+          values[key] != undefined &&
+          (values[key].length > 0 || values[key] != "")
+        )
+          traineeinfo[key] = values[key];
+      });
+      const {
+        tempTrainee,
+        selectedExaminationSession,
+        selectedStudyPattern,
+        selectedBirthDate,
+        selectedIdentityIssueDate,
+        selectedPassportIssueDate,
+        selectedPassportExpiryDate,
+        selectedDiplomaDate,
+        selectedDiplomaVerificationDate,
+        selectedRegistrationDate,
+        selectedGender,
+        selectedSocialStatus,
+        relativesArray,
+        averageValue,
+        stdDocsArray,
+        siblingsArray,
+        trnProfExperiences,
+        selectedDiplomaId,
+        isEdit,
+      } = this.state;
+
+      const { onUpdateTrainee, onAddNewTrainee } = this.props;
+      const {
+        cities,
+        countries,
+        diplomalevels,
+        currentSemester,
+        governorates,
+      } = this.props;
+
+      if (values.diplomaId) {
+        const diplomaObject = diplomalevels.find(
+          certificate => certificate.value === values.diplomaId
+        );
+        if (diplomaObject === undefined) {
+          traineeinfo["diplomaId"] = tempTrainee.diplomaId;
+        }
+      }
+
+      if (values.DiplomaCountryId) {
+        const countryObject = countries.find(
+          country => country.value === values.DiplomaCountryId
+        );
+        if (countryObject === undefined) {
+          traineeinfo["DiplomaCountryId"] = tempTrainee.DiplomaCountryId;
+        }
+      }
+
+      if (values.DiplomaGovernorateId) {
+        const governorateObject = governorates.find(
+          governorate => governorate.value === values.DiplomaGovernorateId
+        );
+        if (governorateObject === undefined) {
+          traineeinfo["DiplomaGovernorateId"] =
+            tempTrainee.DiplomaGovernorateId;
+        }
+      }
+
+      if (values.UnivCountryId) {
+        const univCountryObject = countries.find(
+          country => country.value === values.UnivCountryId
+        );
+        if (univCountryObject === undefined) {
+          traineeinfo["UnivCountryId"] = tempTrainee.UnivCountryId;
+        }
+      }
+
+      if (values.InstituteCountryId) {
+        const instCountryObject = countries.find(
+          country => country.value === values.InstituteCountryId
+        );
+        if (instCountryObject === undefined) {
+          traineeinfo["InstituteCountryId"] = tempTrainee.InstituteCountryId;
+        }
+      }
+      if (values.birthdate) {
+        traineeinfo["birthdate"] =
+          values && values.birthdate
+            ? new Date(values.birthdate).toISOString().split("T")[0]
+            : selectedBirthDate;
+      }
+
+      if (selectedGender) {
+        traineeinfo["GenderId"] = parseInt(selectedGender);
+      }
+
+      if (selectedNationalityId) {
+        traineeinfo["NationalityId"] = tempTrainee.NationalityId;
+      }
+
+      if (selectedExaminationSession) {
+        traineeinfo["ExaminationSession"] = tempTrainee.ExaminationSession;
+      }
+      if (selectedSocialStatus) {
+        traineeinfo["socialStatusId"] = selectedSocialStatus;
+      }
+
+      if (selectedStudyPattern) {
+        traineeinfo["studyPattern"] = selectedStudyPattern;
+      }
+
+      if (selectedRegistrationCertLevelId) {
+        traineeinfo["registrationCertLevelId"] =
+          selectedRegistrationCertLevelId;
+      }
+
+      if (selectedBirthDate != "") {
+        traineeinfo["birthdate"] = selectedBirthDate;
+      }
+
+      if (selectedIdentityIssueDate) {
+        traineeinfo["identityIssueDate"] = selectedIdentityIssueDate;
+      }
+
+      if (selectedPassportIssueDate) {
+        traineeinfo["passportIssueDate"] = selectedPassportIssueDate;
+      }
+
+      if (selectedPassportExpiryDate) {
+        traineeinfo["passportExpiryDate"] = selectedPassportExpiryDate;
+      }
+
+      if (selectedDiplomaDate) {
+        traineeinfo["diplomaDate"] = selectedDiplomaDate;
+      }
+
+      if (selectedDiplomaVerificationDate) {
+        traineeinfo["diplomaVerificationDate"] =
+          selectedDiplomaVerificationDate;
+      }
+
+      if (selectedRegistrationDate) {
+        traineeinfo["RegistrationDate"] = selectedRegistrationDate;
+      }
+
+      if (selectedRegistrationDiplomaDate != "") {
+        traineeinfo["registrationDiplomaDate"] =
+          selectedRegistrationDiplomaDate;
+      }
+
+      //hhhhh
+
+      if (selectedRegUniDate != "") {
+        traineeinfo["RegUniDate"] = selectedRegUniDate;
+      }
+
+      if (averageValue) {
+        traineeinfo["Average"] = averageValue;
+      }
+
+      // traineeinfo["Id"] = values.Id;
+      // console.log("traineeinfotraineeinfo", traineeinfo["Id"]);
+      if (isEdit) {
+        console.log("rrrrrrrrrrrrrrr", traineeinfo);
+        onUpdateTrainee(traineeinfo);
+      } else if (isAdd) {
+        onAddNewTrainee(traineeinfo);
+      }
+      const saveTraineeMessage = this.props.t("Trainee saved successfully");
+      this.setState({
+        successMessage: saveTraineeMessage,
+      });
+    }
+  };
+
+  handleValidDate = date => {
+    if (
+      !date ||
+      date === "1970-01-01" ||
+      date === "0000-00-00" ||
+      moment(date).year() === 1970
+    ) {
+      return "";
+    }
+    return moment(date).format("DD-MM-YYYY");
+  };
+
+  handelAddExperience = () => {
+    const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
+      this.props;
+    const {
+      profExperiencesArray,
+      lastUsedExperienceId,
+      isAdd,
+      selectedTempTraineeId,
+    } = this.state;
+    const emptyRowsExist = profExperiencesArray.some(
+      profExperiences => profExperiences.workType.trim() === ""
+    );
+    console.log("emptyRowsExist", emptyRowsExist);
+    console.log("selectedTempTraineeId", selectedTempTraineeId);
+    if (emptyRowsExist) {
+      const errorMessage = this.props.t("Fill in the empty row");
+      this.setState({ duplicateErrorProfExperiences: errorMessage });
+    } else {
+      const newExperience = {
+        Id: lastUsedExperienceId,
+        tempTraineeId: isAdd ? lastAddedId : selectedTempTraineeId,
+        workType: "",
+        companyName: "",
+        workPlace: "",
+        workField: "",
+        duaration: "",
+      };
+      // onAddNewProfessionalExperience(newExperience);
+      this.setState({
+        duplicateErrorProfExperiences: null,
+        profExperiencesArray: [...profExperiencesArray, newExperience],
+        lastUsedExperienceId: lastUsedExperienceId + 1,
+      });
+    }
+  };
+
+  handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
+    const { isEdit } = this.state;
+    // if (isEdit == true) {
+    this.setState(prevState => {
+      const updatedProfExperience = prevState.profExperiencesArray.map(
+        exper => {
+          if (exper.Id === rowId) {
+            return {
+              ...exper,
+              [fieldName]: fieldValue,
+            };
+          }
+          return exper;
+        }
+      );
+
+      return {
+        profExperiencesArray: updatedProfExperience,
+      };
+    });
+    // } else {
+    //   const { onUpdateProfessionalExperience, trnProfExperiences } = this.props;
+    //   const isDuplicate = trnProfExperiences.some(trnProfExperience => {
+    //     return (
+    //       trnProfExperience.Id !== rowId &&
+    //       trnProfExperience.workType.trim() === fieldValue.trim()
+    //     );
+    //   });
+
+    //   if (isDuplicate) {
+    //     const errorMessage = this.props.t("Value already exists");
+    //     this.setState({ duplicateErrorProfExperiences: errorMessage });
+    //   } else {
+    //     this.setState({ duplicateErrorProfExperiences: null });
+    //     let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+    //     onUpdateProfessionalExperience(onUpdate);
+    //   }
+    // }
+  };
+
+  handleRegReqDocDataChange = (rowId, fieldName, fieldValue) => {
+    this.setState(prevState => {
+      const updatedRegReqDocs = prevState.stdDocsArray.map(document => {
+        if (document.Id === rowId) {
+          return {
+            ...document,
+            [fieldName]: fieldValue,
+          };
+        }
+        return document;
+      });
+
+      return {
+        stdDocsArray: updatedRegReqDocs,
+      };
+    });
+  };
+
   render() {
     const {
       trainees,
@@ -1486,18 +1966,18 @@ class TraineesList extends Component {
         text: this.props.t("Trainee Number"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "fullName",
         text: this.props.t("Trainee Name"),
         sort: true,
         editable: false,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "admissionDate",
@@ -1505,9 +1985,11 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showAdmissionDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        formatter: (cellContent, row) =>
+          this.handleValidDate(row.admissionDate),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "yearId",
@@ -1515,9 +1997,9 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showRegisterYear,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "traineeStatusId",
@@ -1525,9 +2007,9 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showTraineeStatus,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       // {
       //   dataField: "tempStatusId",
@@ -1546,9 +2028,9 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showFirstName,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "LastName",
@@ -1556,9 +2038,9 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showLastName,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -1567,9 +2049,9 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showFatherName,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "grandFatherName",
@@ -1577,9 +2059,9 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showGrandFatherName,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "MotherName",
@@ -1587,9 +2069,9 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showMotherName,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -1598,9 +2080,9 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !BirthLocation,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -1610,9 +2092,10 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showBirthDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        formatter: (cellContent, row) => this.handleValidDate(row.birthdate),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -1621,23 +2104,19 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showNationalNo,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "identityNo",
         text: this.props.t("Identity No"),
         sort: true,
-        // formatter: (cell, row) =>
-        //   cell && Array.isArray(cell)
-        //     ? cell.map(option => option.label).join(" , ")
-        //     : "",
         editable: false,
         hidden: !showIdentityNo,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -1646,9 +2125,11 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showIdentityIssueDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        formatter: (cellContent, row) =>
+          this.handleValidDate(row.identityIssueDate),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "PassNumber",
@@ -1656,9 +2137,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showPassNumber,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "passportIssueDate",
@@ -1666,9 +2147,11 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showPassportIssueDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        formatter: (cellContent, row) =>
+          this.handleValidDate(row.passportIssueDate),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "passportExpiryDate",
@@ -1676,9 +2159,11 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showPassportExpiryDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        formatter: (cellContent, row) =>
+          this.handleValidDate(row.passportExpiryDate),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "GenderId",
@@ -1686,9 +2171,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showGender,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "NationalityId",
@@ -1697,9 +2182,9 @@ class TraineesList extends Component {
         sort: true,
         editable: false,
         hidden: !showNationalityId,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "civicZone",
@@ -1707,9 +2192,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showCivicZone,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "registerZone",
@@ -1717,9 +2202,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showRegisterZone,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "registerNo",
@@ -1727,9 +2212,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showRegisterNo,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       ,
       // {
@@ -1747,9 +2232,11 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showRegistrationDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        formatter: (cellContent, row) =>
+          this.handleValidDate(row.RegistrationDate),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "registrationCertLevelId",
@@ -1757,9 +2244,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showCertificateLevel,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "uniName",
@@ -1767,9 +2254,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showUniversityName,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "diplomaName",
@@ -1777,9 +2264,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDiplomaName,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "UnivCountryId",
@@ -1787,9 +2274,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showUniversityCountry,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "InstituteCountryId",
@@ -1797,9 +2284,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showInstituteCountry,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "uniAverage",
@@ -1807,9 +2294,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showUniversityAverage,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "registrationDiplomaAverage",
@@ -1817,9 +2304,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDiplomaAverage,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "EstimateId",
@@ -1837,6 +2324,7 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDiplomaDate,
+        formatter: (cellContent, row) => this.handleValidDate(row.RegUniDate),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
@@ -1857,9 +2345,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showCertificateType,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "diplomaId",
@@ -1867,9 +2355,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDiplomaId,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "DiplomaCountryId",
@@ -1877,9 +2365,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDiplomaCountryId,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "DiplomaGovernorateId",
@@ -1887,9 +2375,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDiplomaGovernorateId,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "DiplomaYear",
@@ -1897,9 +2385,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDiplomaYear,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "ExaminationSession",
@@ -1907,9 +2395,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showExaminationSession,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "DiplomaNumber",
@@ -1917,9 +2405,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDiplomaNumber,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "Average",
@@ -1927,9 +2415,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showAverage,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
 
       {
@@ -1938,9 +2426,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showCurrentAddress,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       ,
       {
@@ -1949,9 +2437,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showCurrentAddrPhone,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       ,
       {
@@ -1960,9 +2448,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showCurrentAddrCell,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       ,
       {
@@ -1971,9 +2459,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showPermanentAddress,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "ParentAddrPhone",
@@ -1981,9 +2469,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showParentAddrPhone,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "WhatsappMobileNum",
@@ -1991,9 +2479,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showWhatsappMobileNum,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "Email",
@@ -2001,9 +2489,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showEmail,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "workType",
@@ -2011,9 +2499,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showJobTitle,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "companyName",
@@ -2021,9 +2509,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showWorkPlace,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "workPlace",
@@ -2031,9 +2519,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showWorkAddress,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "workField",
@@ -2041,9 +2529,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showWorkField,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "duaration",
@@ -2051,9 +2539,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showWorkDuration,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "lastRegCourse",
@@ -2061,9 +2549,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showLastRegCourse,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "grade",
@@ -2071,9 +2559,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showGrade,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       // {
       //   dataField: "LastRegCourse",
@@ -2090,9 +2578,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showCourseStatus,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "decisionCode",
@@ -2100,9 +2588,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDecisionCode,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "decisionType",
@@ -2110,9 +2598,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDecisionType,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "decisionDate",
@@ -2120,9 +2608,10 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDecisionDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
+        formatter: (cellContent, row) => this.handleValidDate(row.decisionDate),
       },
       {
         dataField: "applyingDate",
@@ -2130,9 +2619,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showApplyingDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "academyCouncilNo",
@@ -2140,9 +2629,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showAcademyCouncilNo,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "academyCouncilDate",
@@ -2150,9 +2639,11 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showAcademyCouncilDate,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
+        formatter: (cellContent, row) =>
+          this.handleValidDate(row.academyCouncilDate),
       },
       {
         dataField: "decisionNote",
@@ -2160,9 +2651,9 @@ class TraineesList extends Component {
         editable: false,
         sort: true,
         hidden: !showDecisionNote,
-        // filter: textFilter({
-        //   placeholder: this.props.t("Search..."),
-        // }),
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
       },
       {
         dataField: "action",
@@ -8643,15 +9134,14 @@ const mapDispatchToProps = dispatch => ({
   onUpdateTrainee: trainee => dispatch(updateTrainee(trainee)),
   onDeleteTrainee: trainee => dispatch(deleteTrainee(trainee)),
   onGetTraineeById: tempTrainee => dispatch(getTraineeById(tempTrainee)),
-  // onGetTraineeRegReqDocs: tempTrainees =>
-  //   dispatch(getTraineeRegReqDocs(tempTrainees)),
-  // onUpdateTraineeRegReqDoc: tempTrainee =>
-  //   dispatch(updateTraineeRegReqDoc(tempTrainee)),
-  // onGetFilteredFaculties: admissionCond =>
-  //   dispatch(getFilteredFaculties(admissionCond)),
-  // onGetFilteredAcademicCertificates: academicCer =>
-  //   dispatch(getFilteredAcademicCertificates(academicCer)),
-  // onGetCurrentSemester: () => dispatch(getCurrentSemester()),
+  onGetTraineesDocuments: obj => dispatch(getTempTraineeDefaultRegReqDocs(obj)),
+  onAddNewProfessionalExperience: profExperience =>
+    dispatch(addNewProfessionalExperience(profExperience)),
+  onUpdateProfessionalExperience: profExperience =>
+    dispatch(updateProfessionalExperience(profExperience)),
+  onDeleteProfessionalExperience: profExperience =>
+    dispatch(deleteProfessionalExperience(profExperience)),
+  onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
 });
 
 export default connect(

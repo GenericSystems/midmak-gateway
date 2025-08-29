@@ -322,7 +322,7 @@ function* onAddNewTrainee({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "_Common_Trainees";
+  payload["tablename"] = "Common_Trainees";
   // payload["queryname"] = "_Common_Trainees";
 
   try {
@@ -335,10 +335,11 @@ function* onAddNewTrainee({ payload }) {
 }
 
 function* onUpdateTrainee({ payload }) {
+  console.log("]]]]]]]]]]]]]]]]", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "_Common_Trainees";
+  payload["tablename"] = "Common_Trainees";
   payload["queryname"] = "_Common_Trainees";
 
   try {
