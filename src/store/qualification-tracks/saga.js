@@ -38,7 +38,7 @@ function* fetchQualificationsTracks() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_QualificationTrack",
+    tablename: "Settings_QualificationTracks",
 
   };
 
@@ -56,7 +56,7 @@ function* onAddNewQualificationTrack({ payload, qualificationTrack }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_QualificationTrack";
+  payload["tablename"] = "Settings_QualificationTracks";
 
   try {
     const response = yield call(addNewQualificationTrack, payload);
@@ -70,7 +70,7 @@ function* onUpdateQualificationTrack({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_QualificationTrack";
+  payload["tablename"] = "Settings_QualificationTracks";
   try {
     const response = yield call(updateQualificationTrack, payload);
     yield put(updateQualificationTrackSuccess(response[0]));
@@ -83,7 +83,7 @@ function* onDeleteQualificationTrack({ payload, qualificationTrack }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_QualificationTrack";
+  payload["tablename"] = "Settings_QualificationTracks";
   try {
     const responsedelete = yield call(deleteQualificationTrack, payload);
     yield put(deleteQualificationTrackSuccess(responsedelete[0]));

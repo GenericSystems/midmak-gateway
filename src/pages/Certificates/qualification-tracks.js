@@ -70,7 +70,12 @@ class QualificationsTracksList extends Component {
   }
 
   componentDidMount() {
-    const { qualificationTracks, onGetQualificationsTracks, deleted, user_menu } = this.props;
+    const {
+      qualificationTracks,
+      onGetQualificationsTracks,
+      deleted,
+      user_menu,
+    } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
@@ -186,9 +191,12 @@ class QualificationsTracksList extends Component {
 
     const isDuplicate = qualificationTracks.some(
       qualificationTrack =>
-        qualificationTrack.Id !== rowId && qualificationTrack.arTitle.trim() === fieldValue.trim()
+        qualificationTrack.Id !== rowId &&
+        qualificationTrack.arTitle.trim() === fieldValue.trim()
       // qualificationTrack.facultyId.trim() === fieldValue.trim())
+    
     );
+
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
@@ -247,14 +255,14 @@ class QualificationsTracksList extends Component {
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "arTitle",
-        text: this.props.t("Qualification Track(ar)"),
+        text: this.props.t("Qualification Tracks(ar)"),
         sort: true,
         // editable: showEditButton,
       },
 
       {
         dataField: "enTitle",
-        text: this.props.t("Qualification Track (en)"),
+        text: this.props.t("Qualification Tracks(en)"),
         sort: true,
         // editable: showEditButton,
       },
@@ -300,7 +308,9 @@ class QualificationsTracksList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("QualificationsTracks List")} />
+            <Breadcrumbs
+              breadcrumbItem={this.props.t("QualificationsTracks List")}
+            />
 
             <Row>
               <Col>
@@ -455,10 +465,14 @@ const mapStateToProps = ({ qualificationTracks, menu_items }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onGetQualificationsTracks: () => dispatch(getQualificationsTracks()),
-  onAddNewQualificationTrack: qualificationTrack => dispatch(addNewQualificationTrack(qualificationTrack)),
-  onUpdateQualificationTrack: qualificationTrack => dispatch(updateQualificationTrack(qualificationTrack)),
-  onDeleteQualificationTrack: qualificationTrack => dispatch(deleteQualificationTrack(qualificationTrack)),
-  onGetQualificationTrackDeletedValue: () => dispatch(getQualificationTrackDeletedValue()),
+  onAddNewQualificationTrack: qualificationTrack =>
+    dispatch(addNewQualificationTrack(qualificationTrack)),
+  onUpdateQualificationTrack: qualificationTrack =>
+    dispatch(updateQualificationTrack(qualificationTrack)),
+  onDeleteQualificationTrack: qualificationTrack =>
+    dispatch(deleteQualificationTrack(qualificationTrack)),
+  onGetQualificationTrackDeletedValue: () =>
+    dispatch(getQualificationTrackDeletedValue()),
 });
 
 export default connect(
