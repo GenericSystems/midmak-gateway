@@ -478,22 +478,22 @@ function* fetchTraineesReqDocs(obj) {
   }
 }
 
-function* onAddNewProfessionalExperience({ payload }) {
-  console.log("payloadADDDDDDDDDDDDDDDDDDDDDDD", payload);
-  payload["source"] = "db";
-  // payload["procedure"] = "SisApp_UpdateTraineeInfo";
-  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  // payload["tablename"] = "Common_TraineesProfessionalExperiences";
-  // payload["queryname"] = "Common_TraineesProfessionalExperiences";
+// function* onAddNewProfessionalExperience({ payload }) {
+//   console.log("payloadADDDDDDDDDDDDDDDDDDDDDDD", payload);
+//   payload["source"] = "db";
+//   // payload["procedure"] = "SisApp_UpdateTraineeInfo";
+//   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+//   // payload["tablename"] = "Common_TraineesProfessionalExperiences";
+//   // payload["queryname"] = "Common_TraineesProfessionalExperiences";
 
-  try {
-    const response = yield call(addNewProfessionalExperience, payload);
-    console.log("response", response);
-    yield put(addProfessionalExperienceSuccess(response[0]));
-  } catch (error) {
-    yield put(addProfessionalExperienceFail(error));
-  }
-}
+//   try {
+//     const response = yield call(addNewProfessionalExperience, payload);
+//     console.log("response", response);
+//     yield put(addProfessionalExperienceSuccess(response[0]));
+//   } catch (error) {
+//     yield put(addProfessionalExperienceFail(error));
+//   }
+// }
 
 function* onUpdateProfessionalExperience({ payload }) {
   payload["source"] = "db";
@@ -579,10 +579,10 @@ function* traineesSaga() {
   yield takeEvery(UPDATE_TRAINEE, onUpdateTrainee);
   yield takeEvery(DELETE_TRAINEE, onDeleteTrainee);
   yield takeEvery(GET_TRAINEE_DELETED_VALUE, onGetTraineeDeletedValue);
-  yield takeEvery(
-    ADD_NEW_PROFESSIONAL_EXPERIENCE,
-    onAddNewProfessionalExperience
-  );
+  // yield takeEvery(
+  //   ADD_NEW_PROFESSIONAL_EXPERIENCE,
+  //   onAddNewProfessionalExperience
+  // );
   yield takeEvery(
     UPDATE_PROFESSIONAL_EXPERIENCE,
     onUpdateProfessionalExperience
