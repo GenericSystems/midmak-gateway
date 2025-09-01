@@ -194,7 +194,9 @@ class QualificationsTracksList extends Component {
         qualificationTrack.Id !== rowId &&
         qualificationTrack.arTitle.trim() === fieldValue.trim()
       // qualificationTrack.facultyId.trim() === fieldValue.trim())
+    
     );
+
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
