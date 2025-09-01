@@ -523,20 +523,20 @@ function* onDeleteProfessionalExperience({ payload }) {
   }
 }
 
-function* onAddRequiredDocs({ payload }) {
-  payload["source"] = "db";
-  payload["procedure"] = "Admission_AddDocsTempTrainee";
-  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_RegReqDocTrainee";
+// function* onAddRequiredDocs({ payload }) {
+//   payload["source"] = "db";
+//   payload["procedure"] = "Admission_AddDocsTempTrainee";
+//   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+//   payload["tablename"] = "Common_RegReqDocTrainee";
 
-  try {
-    const response = yield call(addRequiredDocs, payload);
-    console.log("response", response);
-    yield put(addRequiredDocsSuccess(response[0]));
-  } catch (error) {
-    yield put(addRequiredDocsFail(error));
-  }
-}
+//   try {
+//     const response = yield call(addRequiredDocs, payload);
+//     console.log("response", response);
+//     yield put(addRequiredDocsSuccess(response[0]));
+//   } catch (error) {
+//     yield put(addRequiredDocsFail(error));
+//   }
+// }
 
 // GEN
 // function* onUploadFile({ payload }) {
@@ -591,7 +591,7 @@ function* traineesSaga() {
     DELETE_PROFESSIONAL_EXPERIENCE,
     onDeleteProfessionalExperience
   );
-  yield takeEvery(ADD_REQUIRED_DOCS, onAddRequiredDocs);
+  // yield takeEvery(ADD_REQUIRED_DOCS, onAddRequiredDocs);
   // yield takeEvery(GENERATE_TRAINEE, onGenerateTrainee);
   // yield takeEvery(GET_TRAINEE_BY_ID, fetchTraineeById);
 }
