@@ -88,15 +88,17 @@ export const GET_ADMISSION_CONDITION_DELETED_VALUE = "/deleted";
 export const COPY_ADMISSION_COND = "/copy/regReqdocument";
 
 //trainees
+export const GET_TRAINEES_OPTIONS = "/trainees";
 export const GET_TRAINEES = "/trainees";
 export const GET_TRAINEE_DELETED_VALUE = "/deleted";
 export const ADD_NEW_TRAINEE = "/add/trainee";
 export const UPDATE_TRAINEE = "/update/trainee";
 export const DELETE_TRAINEE = "/delete/trainee";
-export const GET_TRAINEE_BY_ID = "/temptrainee";
+export const GET_TRAINEE_BY_ID = "/trainee";
 export const GET_TRAINEE_REGREQDOCS = "/trainee_regReqDocs";
 export const UPDATE_TRAINEE_REGREQDOC = "/update/trainee_regReqDoc";
-export const GET_STUDENTS_OPT = "/studentsOpt";
+export const GET_TRAINEE_STATUS = "/traineeStatus";
+export const GET_TRAINEES_OPT = "/traineesOpt";
 export const ADD_BROTHER = "/add/Brother";
 export const DELETE_BROTHER = "/delete/Brother";
 export const UPDATE_BROTHER = "/update/Brother";
@@ -799,7 +801,6 @@ export const UPDATE_DEPARTMENT = "/update/department";
 export const DELETE_DEPARTMENT = "/delete/department";
 
 //Password
-export const GET_STUDENTS_OPTIONS = "/students";
 export const UPDATE_PASSWORD = "/update/studentInfo";
 
 //GENERALIZE_STUDY_PLANS

@@ -439,10 +439,8 @@ function* fetchTempTraineesReqDocs(obj) {
 function* onAddNewProfessionalExperience({ payload }) {
   console.log("payloadADDDDDDDDDDDDDDDDDDDDDDD", payload);
   payload["source"] = "db";
-  payload["procedure"] = "SisApp_UpdateTempTraineeInfo";
+
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_TempTraineesProfessionalExperiences";
-  payload["queryname"] = "Common_TempTraineesProfessionalExperiences";
 
   try {
     const response = yield call(addNewProfessionalExperience, payload);

@@ -26,6 +26,9 @@ import {
   GET_TRAINEE_STATUS,
   GET_TRAINEE_STATUS_FAIL,
   GET_TRAINEE_STATUS_SUCCESS,
+  GET_TRAINEES_OPT,
+  GET_TRAINEES_OPT_FAIL,
+  GET_TRAINEES_OPT_SUCCESS,
 } from "./actionTypes";
 
 export const getTrainees = trainees => ({
@@ -116,14 +119,14 @@ export const getTraineeDefaultRegReqDocsFail = error => ({
   payload: error,
 });
 
-export const getTraineeById = tempTrainee => ({
+export const getTraineeById = trainee => ({
   type: GET_TRAINEE_BY_ID,
-  payload: tempTrainee,
+  payload: trainee,
 });
 
-export const getTraineeByIdSuccess = tempTrainee => ({
+export const getTraineeByIdSuccess = trainee => ({
   type: GET_TRAINEE_BY_ID_SUCCESS,
-  payload: tempTrainee,
+  payload: trainee,
 });
 
 export const getTraineeByIdFail = error => ({
@@ -146,17 +149,31 @@ export const generateTraineeFail = error => ({
   payload: error,
 });
 
-export const getTraieeStatus = traineeStatus => ({
+export const getTraineeStatus = traineeStatus => ({
   type: GET_TRAINEE_STATUS,
   payload: traineeStatus,
 });
 
-export const getTraieeStatusSuccess = traineeStatus => ({
+export const getTraineeStatusSuccess = traineeStatus => ({
   type: GET_TRAINEE_STATUS_SUCCESS,
   payload: traineeStatus,
 });
 
-export const getTraieeStatusFail = error => ({
+export const getTraineeStatusFail = error => ({
   type: GET_TRAINEE_STATUS_FAIL,
+  payload: error,
+});
+
+export const getTraineesOpt = () => ({
+  type: GET_TRAINEES_OPT,
+});
+
+export const getTraineesOptSuccess = studentOpt => ({
+  type: GET_TRAINEES_OPT_SUCCESS,
+  payload: studentOpt,
+});
+
+export const getTraineesOptFail = error => ({
+  type: GET_TRAINEES_OPT_FAIL,
   payload: error,
 });

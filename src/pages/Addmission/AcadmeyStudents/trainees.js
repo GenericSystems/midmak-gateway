@@ -76,13 +76,13 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-import tempTrainees from "store/new-Trainee/reducer";
 class TraineesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       profExperiencesArray: [],
       trainees: {},
+      trainee: "",
       years: [],
       tempTraineeLocal: "",
       activeTab: 1,
@@ -272,13 +272,13 @@ class TraineesList extends Component {
       tempTrainees: {},
       selectedParentNationality: null,
       selectedInstituteCountry: "",
-      selectedTempTraineeStatus: "",
+      selectedTraineeStatus: "",
       languageState: "",
       selectedHightStudyTypeId: "",
       selectedEstimateId: "",
       selectedRegUniDate: "",
       isTempTraineeSaved: false,
-      selectedTempTraineeId: 0,
+      selectedTraineeId: 0,
       isAdd: false,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
@@ -288,7 +288,6 @@ class TraineesList extends Component {
   componentDidMount() {
     const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
-      tempTraineeStatus,
       last_created_trainee,
       tempTrainees,
       tempTrainee_regReqDocs,
@@ -348,6 +347,7 @@ class TraineesList extends Component {
       nationalities,
       regcertificates,
       diplomalevels,
+      traineeStatus,
     });
     // }
 
@@ -424,6 +424,7 @@ class TraineesList extends Component {
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
+    this.props.onGetTrainees();
   };
 
   onPaginationPageChange = page => {
@@ -901,15 +902,15 @@ class TraineesList extends Component {
     // const filteredTempTrainee = tempTrainees.filter(tempTrainee => tempTrainee.key != arg.Id);
     // console.log("BEFORE tempTrainee", tempTrainee);
     // console.log("BEFORE tempTrainee", tempTrainee);
-    onGetTraineeById(arg);
+    // onGetTraineeById(arg);
     // console.log("aFTER Btrainee", tempTrainee.Id);
     // console.log("aFTER Btrainee", tempTrainee.ProfessionalExperiences);
     this.setState({
       //   showGenerateButton: true,
       //   // tempTrainee: {
       //   // Id: tempTrainee.Id,
-      tempTrainee: arg,
-      selectedTempTraineeId: arg.Id,
+      trainee: arg,
+      selectedTraineeId: arg.Id,
       nationalityName: arg.nationality || "",
       selectedNationalityId: arg.NationalityId || null,
       // //   //selectedRegistrationDate: arg.RegistrationDate || null,
@@ -929,7 +930,7 @@ class TraineesList extends Component {
       socialStatusName: arg.socialStatusName || null,
       selectedRegistrationDiplomaDate: arg.registrationDiplomaDate || "",
       // //   // },
-      // //   tempTraineeId: arg.Id,
+      // //   selectedTraineeId: arg.Id,
       profExperiencesArray:
         arg &&
         arg.ProfessionalExperiences !== undefined &&
@@ -944,7 +945,7 @@ class TraineesList extends Component {
           : [],
       isEdit: true,
     });
-    // console.log("traaaaaaaaaaaineeeerrrrr", tempTraineeId);
+    // console.log("traaaaaaaaaaaineeeerrrrr", selectedTraineeId);
     this.toggle();
   };
 
@@ -995,7 +996,7 @@ class TraineesList extends Component {
       return;
     }
     const {
-      tempTrainee,
+      trainee,
       isEdit,
       siblingsArray,
       trnProfExperiences,
@@ -1011,8 +1012,8 @@ class TraineesList extends Component {
         });
         if (isEdit) {
           this.setState({
-            stdDocsArray: tempTrainee.RegReqDocTempTrainee || [],
-            profExperiencesArray: tempTrainee.ProfessionalExperiences || [],
+            stdDocsArray: trainee.RegReqDocTempTrainee || [],
+            profExperiencesArray: trainee.ProfessionalExperiences || [],
           });
         }
       }
@@ -1079,7 +1080,7 @@ class TraineesList extends Component {
     // }));
     // console.log("extractedArray", extractedArray);
     // traineeinfo["ProfessionalExperiences"] = extractedArray;
-    // traineeinfo["tempTraineeId"] = values.Id;
+    // traineeinfo["selectedTraineeId"] = values.Id;
     // let experiencesObject = {};
     // profExperiencesArray.forEach((item, i) => {
     //   experiencesObject[`${i}`] = {
@@ -1094,6 +1095,9 @@ class TraineesList extends Component {
 
     const traineeinfo = {
       traineeId: values.Id,
+      procedure: "SisApp_UpdateTraineeInfo",
+      tablename: "Common_TraineesProfessionalExperiences",
+      queryname: "Common_TraineesProfessionalExperiences",
       ProfessionalExperiences: profExperiencesArray.map(item => ({
         Id: item.Id,
         workType: item.workType,
@@ -1103,7 +1107,6 @@ class TraineesList extends Component {
         duaration: item.duaration,
       })),
     };
-
     console.log("traineeinfo", traineeinfo);
     onAddNewProfessionalExperience(traineeinfo);
     const saveProfExperienceMessage = this.props.t(
@@ -1130,7 +1133,7 @@ class TraineesList extends Component {
       selectedHightStudyTypeId,
       selectedEstimateId,
       selectedRegUniDate,
-      selectedTempTraineeStatus,
+      selectedTraineeStatus,
     } = this.state;
     console.log("values in save", values);
     values["socialStatusId"] = selectedSocialStatus;
@@ -1230,7 +1233,7 @@ class TraineesList extends Component {
           traineeinfo[key] = values[key];
       });
       const {
-        tempTrainee,
+        trainee,
         selectedExaminationSession,
         selectedStudyPattern,
         selectedBirthDate,
@@ -1265,7 +1268,7 @@ class TraineesList extends Component {
           certificate => certificate.value === values.diplomaId
         );
         if (diplomaObject === undefined) {
-          traineeinfo["diplomaId"] = tempTrainee.diplomaId;
+          traineeinfo["diplomaId"] = trainee.diplomaId;
         }
       }
 
@@ -1274,7 +1277,7 @@ class TraineesList extends Component {
           country => country.value === values.DiplomaCountryId
         );
         if (countryObject === undefined) {
-          traineeinfo["DiplomaCountryId"] = tempTrainee.DiplomaCountryId;
+          traineeinfo["DiplomaCountryId"] = trainee.DiplomaCountryId;
         }
       }
 
@@ -1283,8 +1286,7 @@ class TraineesList extends Component {
           governorate => governorate.value === values.DiplomaGovernorateId
         );
         if (governorateObject === undefined) {
-          traineeinfo["DiplomaGovernorateId"] =
-            tempTrainee.DiplomaGovernorateId;
+          traineeinfo["DiplomaGovernorateId"] = trainee.DiplomaGovernorateId;
         }
       }
 
@@ -1293,7 +1295,7 @@ class TraineesList extends Component {
           country => country.value === values.UnivCountryId
         );
         if (univCountryObject === undefined) {
-          traineeinfo["UnivCountryId"] = tempTrainee.UnivCountryId;
+          traineeinfo["UnivCountryId"] = trainee.UnivCountryId;
         }
       }
 
@@ -1302,7 +1304,7 @@ class TraineesList extends Component {
           country => country.value === values.InstituteCountryId
         );
         if (instCountryObject === undefined) {
-          traineeinfo["InstituteCountryId"] = tempTrainee.InstituteCountryId;
+          traineeinfo["InstituteCountryId"] = trainee.InstituteCountryId;
         }
       }
       if (values.birthdate) {
@@ -1312,16 +1314,35 @@ class TraineesList extends Component {
             : selectedBirthDate;
       }
 
+      if (values.identityIssueDate) {
+        traineeinfo["identityIssueDate"] =
+          values && values.identityIssueDate
+            ? new Date(values.identityIssueDate).toISOString().split("T")[0]
+            : selectedIdentityIssueDate;
+      }
+      if (values.passportExpiryDate) {
+        traineeinfo["passportExpiryDate"] =
+          values && values.passportExpiryDate
+            ? new Date(values.passportExpiryDate).toISOString().split("T")[0]
+            : selectedPassportExpiryDate;
+      }
+      if (values.passportIssueDate) {
+        traineeinfo["passportIssueDate"] =
+          values && values.passportIssueDate
+            ? new Date(values.passportIssueDate).toISOString().split("T")[0]
+            : selectedPassportIssueDate;
+      }
+
       if (selectedGender) {
         traineeinfo["GenderId"] = parseInt(selectedGender);
       }
 
       if (selectedNationalityId) {
-        traineeinfo["NationalityId"] = tempTrainee.NationalityId;
+        traineeinfo["NationalityId"] = trainee.NationalityId;
       }
 
       if (selectedExaminationSession) {
-        traineeinfo["ExaminationSession"] = tempTrainee.ExaminationSession;
+        traineeinfo["ExaminationSession"] = trainee.ExaminationSession;
       }
       if (selectedSocialStatus) {
         traineeinfo["socialStatusId"] = selectedSocialStatus;
@@ -1396,15 +1417,8 @@ class TraineesList extends Component {
   };
 
   handleValidDate = date => {
-    if (
-      !date ||
-      date === "1970-01-01" ||
-      date === "0000-00-00" ||
-      moment(date).year() === 1970
-    ) {
-      return "";
-    }
-    return moment(date).format("DD-MM-YYYY");
+    const date1 = moment(new Date(date)).format("DD /MM/ Y");
+    return date1;
   };
 
   handelAddExperience = () => {
@@ -1414,20 +1428,20 @@ class TraineesList extends Component {
       profExperiencesArray,
       lastUsedExperienceId,
       isAdd,
-      selectedTempTraineeId,
+      selectedTraineeId,
     } = this.state;
     const emptyRowsExist = profExperiencesArray.some(
       profExperiences => profExperiences.workType.trim() === ""
     );
     console.log("emptyRowsExist", emptyRowsExist);
-    console.log("selectedTempTraineeId", selectedTempTraineeId);
+    console.log("selectedTraineeId", selectedTraineeId);
     if (emptyRowsExist) {
       const errorMessage = this.props.t("Fill in the empty row");
       this.setState({ duplicateErrorProfExperiences: errorMessage });
     } else {
       const newExperience = {
         Id: lastUsedExperienceId,
-        tempTraineeId: isAdd ? lastAddedId : selectedTempTraineeId,
+        traineeId: isAdd ? lastAddedId : selectedTraineeId,
         workType: "",
         companyName: "",
         workPlace: "",
@@ -1504,7 +1518,6 @@ class TraineesList extends Component {
   render() {
     const {
       trainees,
-      tempTrainee,
       stdWarningTestOpt,
       FatherNames,
       currencies,
@@ -1542,9 +1555,9 @@ class TraineesList extends Component {
       regcertificates,
       highstudytypes,
       estimates,
-      tempTraineeStatus,
     } = this.props;
     const {
+      trainee,
       profExperiencesArray,
       duplicateErrorProfExperiences,
       selectedRegistrationDate,
@@ -1651,7 +1664,7 @@ class TraineesList extends Component {
       selectedGovernorate,
       selectedSocialStatus,
       selectedGender,
-      emptyTempTrainee,
+      emptyTrainee,
       firstNameError,
       lastNameError,
       fatherNameError,
@@ -1682,7 +1695,6 @@ class TraineesList extends Component {
       diplomaIdError,
     } = this.state;
 
-    console.log("qqqqqqqqqqqqqqqqqqqqq", tempTrainee);
     const showNewInput =
       selectedRegistrationCertLevelId === 1 ||
       selectedRegistrationCertLevelId === 2;
@@ -1696,8 +1708,8 @@ class TraineesList extends Component {
     const showUniForm = selectedRegistrationCertLevelId === 79;
 
     const formattedRegistrationDate =
-      tempTrainee && tempTrainee.RegistrationDate
-        ? new Date(tempTrainee.RegistrationDate).toISOString().split("T")[0]
+      trainee && trainee.RegistrationDate
+        ? new Date(trainee.RegistrationDate).toISOString().split("T")[0]
         : selectedRegistrationDate;
 
     const { SearchBar } = Search;
@@ -4455,21 +4467,21 @@ class TraineesList extends Component {
                                               <div className="sidebar">
                                                 <h2 className="trainee-info">
                                                   {languageState === "ar"
-                                                    ? tempTrainee.FirstName +
+                                                    ? trainee.FirstName +
                                                       " " +
-                                                      tempTrainee.FatherName +
+                                                      trainee.FatherName +
                                                       " " +
-                                                      tempTrainee.LastName +
+                                                      trainee.LastName +
                                                       " "
-                                                    : tempTrainee.FirstNameE +
+                                                    : trainee.FirstNameE +
                                                       " " +
-                                                      tempTrainee.FatherNameE +
+                                                      trainee.FatherNameE +
                                                       " " +
-                                                      tempTrainee.LastNameE +
+                                                      trainee.LastNameE +
                                                       " "}
 
                                                   <span className="trainee-id">
-                                                    {tempTrainee.TraineeNum}
+                                                    {trainee.TraineeNum}
                                                   </span>
                                                 </h2>
                                                 <ul>
@@ -4697,21 +4709,21 @@ class TraineesList extends Component {
                                                           <i className="fas fa-user-circle" />{" "}
                                                           {languageState ===
                                                           "ar"
-                                                            ? tempTrainee.FirstName +
+                                                            ? trainee.FirstName +
                                                               " " +
-                                                              tempTrainee.FatherName +
+                                                              trainee.FatherName +
                                                               " " +
-                                                              tempTrainee.LastName +
+                                                              trainee.LastName +
                                                               " [" +
-                                                              tempTrainee.TraineeNum +
+                                                              trainee.TraineeNum +
                                                               "]"
-                                                            : tempTrainee.FirstNameE +
+                                                            : trainee.FirstNameE +
                                                               " " +
-                                                              tempTrainee.FatherNameE +
+                                                              trainee.FatherNameE +
                                                               " " +
-                                                              tempTrainee.LastNameE +
+                                                              trainee.LastNameE +
                                                               " [" +
-                                                              tempTrainee.TraineeNum +
+                                                              trainee.TraineeNum +
                                                               "]"}
                                                         </h4>
                                                       </CardHeader>
@@ -4731,7 +4743,7 @@ class TraineesList extends Component {
                                                                     faculties.find(
                                                                       opt =>
                                                                         opt.value ===
-                                                                        tempTrainee.FacultyId
+                                                                        trainee.FacultyId
                                                                     ) || ""
                                                                   ).label
                                                                 }
@@ -5011,319 +5023,367 @@ class TraineesList extends Component {
                                                     enableReinitialize={true}
                                                     initialValues={
                                                       (isEdit && {
-                                                        Id: tempTrainee.Id,
+                                                        Id: trainee.Id,
                                                         FirstName:
-                                                          (tempTrainee &&
-                                                            tempTrainee.FirstName) ||
+                                                          (trainee &&
+                                                            trainee.FirstName) ||
                                                           "",
                                                         LastName:
-                                                          (tempTrainee &&
-                                                            tempTrainee.LastName) ||
+                                                          (trainee &&
+                                                            trainee.LastName) ||
                                                           "",
                                                         FatherName:
-                                                          (tempTrainee &&
-                                                            tempTrainee.FatherName) ||
+                                                          (trainee &&
+                                                            trainee.FatherName) ||
                                                           "",
                                                         grandFatherName:
-                                                          (tempTrainee &&
-                                                            tempTrainee.grandFatherName) ||
+                                                          (trainee &&
+                                                            trainee.grandFatherName) ||
                                                           "",
                                                         MotherName:
-                                                          (tempTrainee &&
-                                                            tempTrainee.MotherName) ||
+                                                          (trainee &&
+                                                            trainee.MotherName) ||
                                                           "",
                                                         BirthLocation:
-                                                          (tempTrainee &&
-                                                            tempTrainee.BirthLocation) ||
+                                                          (trainee &&
+                                                            trainee.BirthLocation) ||
                                                           "",
                                                         FirstNameE:
-                                                          (tempTrainee &&
-                                                            tempTrainee.FirstNameE) ||
+                                                          (trainee &&
+                                                            trainee.FirstNameE) ||
                                                           "",
                                                         LastNameE:
-                                                          (tempTrainee &&
-                                                            tempTrainee.LastNameE) ||
+                                                          (trainee &&
+                                                            trainee.LastNameE) ||
                                                           "",
                                                         FatherNameE:
-                                                          (tempTrainee &&
-                                                            tempTrainee.FatherNameE) ||
+                                                          (trainee &&
+                                                            trainee.FatherNameE) ||
                                                           "",
                                                         grandFatherNameE:
-                                                          (tempTrainee &&
-                                                            tempTrainee.grandFatherNameE) ||
+                                                          (trainee &&
+                                                            trainee.grandFatherNameE) ||
                                                           "",
                                                         MotherNameE:
-                                                          (tempTrainee &&
-                                                            tempTrainee.MotherNameE) ||
+                                                          (trainee &&
+                                                            trainee.MotherNameE) ||
                                                           "",
                                                         BirthLocationE:
-                                                          (tempTrainee &&
-                                                            tempTrainee.BirthLocationE) ||
+                                                          (trainee &&
+                                                            trainee.BirthLocationE) ||
                                                           "",
                                                         birthdate:
-                                                          (tempTrainee &&
-                                                            tempTrainee.birthdate) ||
-                                                          selectedBirthDate,
+                                                          trainee?.birthdate
+                                                            ? moment
+                                                                .utc(
+                                                                  trainee.birthdate
+                                                                )
+                                                                .local()
+                                                                .format(
+                                                                  "YYYY-MM-DD"
+                                                                )
+                                                            : "",
                                                         NationalityId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.NationalityId) ||
+                                                          (trainee &&
+                                                            trainee.NationalityId) ||
                                                           selectedNationalityId,
                                                         GenderId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.GenderId) ||
+                                                          (trainee &&
+                                                            trainee.GenderId) ||
                                                           selectedGender ||
                                                           "",
 
                                                         nationalNo:
-                                                          (tempTrainee &&
-                                                            tempTrainee.nationalNo) ||
+                                                          (trainee &&
+                                                            trainee.nationalNo) ||
                                                           "",
                                                         identityNo:
-                                                          (tempTrainee &&
-                                                            tempTrainee.identityNo) ||
+                                                          (trainee &&
+                                                            trainee.identityNo) ||
                                                           "",
                                                         identityIssueDate:
-                                                          (tempTrainee &&
-                                                            tempTrainee.identityIssueDate) ||
-                                                          selectedIdentityIssueDate ||
-                                                          "",
+                                                          trainee?.identityIssueDate
+                                                            ? moment
+                                                                .utc(
+                                                                  trainee.identityIssueDate
+                                                                )
+                                                                .local()
+                                                                .format(
+                                                                  "YYYY-MM-DD"
+                                                                )
+                                                            : "",
                                                         civicZone:
-                                                          (tempTrainee &&
-                                                            tempTrainee.civicZone) ||
+                                                          (trainee &&
+                                                            trainee.civicZone) ||
                                                           "",
                                                         registerZone:
-                                                          (tempTrainee &&
-                                                            tempTrainee.registerZone) ||
+                                                          (trainee &&
+                                                            trainee.registerZone) ||
                                                           "",
                                                         registerNo:
-                                                          (tempTrainee &&
-                                                            tempTrainee.registerNo) ||
+                                                          (trainee &&
+                                                            trainee.registerNo) ||
                                                           "",
                                                         PassNumber:
-                                                          (tempTrainee &&
-                                                            tempTrainee.PassNumber) ||
+                                                          (trainee &&
+                                                            trainee.PassNumber) ||
                                                           "",
                                                         passportIssueDate:
-                                                          (tempTrainee &&
-                                                            tempTrainee.passportIssueDate) ||
-                                                          selectedPassportIssueDate,
+                                                          trainee?.passportIssueDate
+                                                            ? moment
+                                                                .utc(
+                                                                  trainee.passportIssueDate
+                                                                )
+                                                                .local()
+                                                                .format(
+                                                                  "YYYY-MM-DD"
+                                                                )
+                                                            : "",
                                                         passportExpiryDate:
-                                                          (tempTrainee &&
-                                                            tempTrainee.passportExpiryDate) ||
-                                                          selectedPassportExpiryDate,
+                                                          trainee?.passportExpiryDate
+                                                            ? moment
+                                                                .utc(
+                                                                  trainee.passportExpiryDate
+                                                                )
+                                                                .local()
+                                                                .format(
+                                                                  "YYYY-MM-DD"
+                                                                )
+                                                            : "",
                                                         diplomaId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.diplomaId) ||
+                                                          (trainee &&
+                                                            trainee.diplomaId) ||
                                                           selectedDiploma,
                                                         DiplomaCountryId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.DiplomaCountryId) ||
+                                                          (trainee &&
+                                                            trainee.DiplomaCountryId) ||
                                                           selectedCountry,
 
                                                         DiplomaNumber:
-                                                          (tempTrainee &&
-                                                            tempTrainee.DiplomaNumber) ||
+                                                          (trainee &&
+                                                            trainee.DiplomaNumber) ||
                                                           "",
                                                         DiplomaGovernorateId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.DiplomaGovernorateId) ||
+                                                          (trainee &&
+                                                            trainee.DiplomaGovernorateId) ||
                                                           selectedGovernorate,
 
                                                         /* DiplomaCityId:
-                                                                            (tempTrainee && tempTrainee.DiplomaCityId) ||
+                                                                            (trainee && trainee.DiplomaCityId) ||
                                                                             selectedCity, */
 
                                                         DiplomaYear:
-                                                          (tempTrainee &&
-                                                            tempTrainee.DiplomaYear) ||
+                                                          (trainee &&
+                                                            trainee.DiplomaYear) ||
                                                           "",
                                                         ExaminationSession:
-                                                          (tempTrainee &&
-                                                            tempTrainee.ExaminationSession) ||
+                                                          (trainee &&
+                                                            trainee.ExaminationSession) ||
                                                           "",
                                                         Average:
-                                                          (tempTrainee &&
-                                                            tempTrainee.Average) ||
+                                                          (trainee &&
+                                                            trainee.Average) ||
                                                           "",
                                                         diplomaDate:
-                                                          (tempTrainee &&
-                                                            tempTrainee.diplomaDate) ||
-                                                          selectedDiplomaDate,
+                                                          trainee?.diplomaDate
+                                                            ? moment
+                                                                .utc(
+                                                                  trainee.diplomaDate
+                                                                )
+                                                                .local()
+                                                                .format(
+                                                                  "YYYY-MM-DD"
+                                                                )
+                                                            : "",
                                                         diplomaVerificationNum:
-                                                          (tempTrainee &&
-                                                            tempTrainee.diplomaVerificationNum) ||
+                                                          (trainee &&
+                                                            trainee.diplomaVerificationNum) ||
                                                           "",
                                                         diplomaVerificationDate:
-                                                          (tempTrainee &&
-                                                            tempTrainee.diplomaVerificationDate) ||
+                                                          (trainee &&
+                                                            trainee.diplomaVerificationDate) ||
                                                           selectedDiplomaVerificationDate,
                                                         socialStatusId:
-                                                          tempTrainee &&
-                                                          tempTrainee.socialStatusId,
+                                                          trainee &&
+                                                          trainee.socialStatusId,
                                                         registrationCertLevelId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.registrationCertLevelId) ||
+                                                          (trainee &&
+                                                            trainee.registrationCertLevelId) ||
                                                           selectedRegistrationCertLevelId,
                                                         registrationDiplomaName:
-                                                          (tempTrainee &&
-                                                            tempTrainee.registrationDiplomaName) ||
+                                                          (trainee &&
+                                                            trainee.registrationDiplomaName) ||
                                                           "",
                                                         registrationDiplomaDepartment:
-                                                          (tempTrainee &&
-                                                            tempTrainee.registrationDiplomaDepartment) ||
+                                                          (trainee &&
+                                                            trainee.registrationDiplomaDepartment) ||
                                                           "",
                                                         diplomaName:
-                                                          (tempTrainee &&
-                                                            tempTrainee.diplomaName) ||
+                                                          (trainee &&
+                                                            trainee.diplomaName) ||
                                                           "",
 
                                                         registrationDiplomaAverage:
-                                                          (tempTrainee &&
-                                                            tempTrainee.registrationDiplomaAverage) ||
+                                                          (trainee &&
+                                                            trainee.registrationDiplomaAverage) ||
                                                           "",
                                                         uniAverage:
-                                                          (tempTrainee &&
-                                                            tempTrainee.uniAverage) ||
+                                                          (trainee &&
+                                                            trainee.uniAverage) ||
                                                           "",
                                                         registrationDiplomaDate:
-                                                          (tempTrainee &&
-                                                            tempTrainee.registrationDiplomaDate) ||
+                                                          (trainee &&
+                                                            trainee.registrationDiplomaDate) ||
                                                           selectedRegistrationDiplomaDate,
 
                                                         uniName:
-                                                          (tempTrainee &&
-                                                            tempTrainee.uniName) ||
+                                                          (trainee &&
+                                                            trainee.uniName) ||
                                                           "",
                                                         UnivCountryId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.UnivCountryId) ||
+                                                          (trainee &&
+                                                            trainee.UnivCountryId) ||
                                                           selectedUnivCountry,
 
                                                         /* TransferUnivAverage:
-                                                                            (tempTrainee && tempTrainee.TransferUnivAverage) ||
+                                                                            (trainee && trainee.TransferUnivAverage) ||
                                                                             "", */
                                                         studyPattern:
-                                                          (tempTrainee &&
-                                                            tempTrainee.studyPattern) ||
+                                                          (trainee &&
+                                                            trainee.studyPattern) ||
                                                           "",
                                                         /*  selectedSemester:
-                                                                            (tempTrainee && tempTrainee.selectedSemester) ||
+                                                                            (trainee && trainee.selectedSemester) ||
                                                                             selectedSemester ||
                                                                             null, */
+
                                                         RegistrationDate:
-                                                          (tempTrainee &&
-                                                            tempTrainee.RegistrationDate) ||
-                                                          selectedRegistrationDate, //""
+                                                          trainee?.RegistrationDate
+                                                            ? moment
+                                                                .utc(
+                                                                  trainee.RegistrationDate
+                                                                )
+                                                                .local()
+                                                                .format(
+                                                                  "YYYY-MM-DD"
+                                                                )
+                                                            : "",
                                                         FacultyId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.FacultyId) ||
+                                                          (trainee &&
+                                                            trainee.FacultyId) ||
                                                           selectedFacultyId,
                                                         plan_study:
-                                                          (tempTrainee &&
-                                                            tempTrainee.plan_study) ||
+                                                          (trainee &&
+                                                            trainee.plan_study) ||
                                                           "",
                                                         CurrentAddress:
-                                                          (tempTrainee &&
-                                                            tempTrainee.CurrentAddress) ||
+                                                          (trainee &&
+                                                            trainee.CurrentAddress) ||
                                                           "",
                                                         CurrentAddrPhone:
-                                                          (tempTrainee &&
-                                                            tempTrainee.CurrentAddrPhone) ||
+                                                          (trainee &&
+                                                            trainee.CurrentAddrPhone) ||
                                                           "",
                                                         CurrentAddrCell:
-                                                          (tempTrainee &&
-                                                            tempTrainee.CurrentAddrCell) ||
+                                                          (trainee &&
+                                                            trainee.CurrentAddrCell) ||
                                                           "",
                                                         PermanentAddress:
-                                                          (tempTrainee &&
-                                                            tempTrainee.PermanentAddress) ||
+                                                          (trainee &&
+                                                            trainee.PermanentAddress) ||
                                                           "",
                                                         ParentAddrPhone:
-                                                          (tempTrainee &&
-                                                            tempTrainee.ParentAddrPhone) ||
+                                                          (trainee &&
+                                                            trainee.ParentAddrPhone) ||
                                                           "",
                                                         WhatsappMobileNum:
-                                                          (tempTrainee &&
-                                                            tempTrainee.WhatsappMobileNum) ||
+                                                          (trainee &&
+                                                            trainee.WhatsappMobileNum) ||
                                                           "",
                                                         Email:
-                                                          (tempTrainee &&
-                                                            tempTrainee.Email) ||
+                                                          (trainee &&
+                                                            trainee.Email) ||
                                                           "",
                                                         GeneralNote:
-                                                          (tempTrainee &&
-                                                            tempTrainee.GeneralNote) ||
+                                                          (trainee &&
+                                                            trainee.GeneralNote) ||
                                                           "",
                                                         academicYear:
-                                                          (tempTrainee &&
-                                                            tempTrainee.academicYear) ||
+                                                          (trainee &&
+                                                            trainee.academicYear) ||
                                                           "",
 
                                                         InstituteCountryId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.InstituteCountryId) ||
+                                                          (trainee &&
+                                                            trainee.InstituteCountryId) ||
                                                           selectedInstituteCountry,
                                                         HighStudyTypeId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.HighStudyTypeId) ||
+                                                          (trainee &&
+                                                            trainee.HighStudyTypeId) ||
                                                           selectedHightStudyTypeId,
                                                         EstimateId:
-                                                          (tempTrainee &&
-                                                            tempTrainee.EstimateId) ||
+                                                          (trainee &&
+                                                            trainee.EstimateId) ||
                                                           selectedEstimateId,
-
                                                         RegUniDate:
-                                                          (tempTrainee &&
-                                                            tempTrainee.RegUniDate) ||
-                                                          selectedRegUniDate,
+                                                          trainee?.RegUniDate
+                                                            ? moment
+                                                                .utc(
+                                                                  trainee.RegUniDate
+                                                                )
+                                                                .local()
+                                                                .format(
+                                                                  "YYYY-MM-DD"
+                                                                )
+                                                            : "",
                                                         statusId:
-                                                          tempTrainee &&
-                                                          tempTrainee.statusId,
+                                                          trainee &&
+                                                          trainee.statusId,
                                                       }) ||
                                                       (!isEdit && {
                                                         FirstName:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.FirstName) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.FirstName) ||
                                                           "",
                                                         LastName:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.LastName) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.LastName) ||
                                                           "",
                                                         FatherName:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.FatherName) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.FatherName) ||
                                                           "",
                                                         grandFatherName:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.grandFatherName) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.grandFatherName) ||
                                                           "",
                                                         MotherName:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.MotherName) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.MotherName) ||
                                                           "",
                                                         BirthLocation:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.BirthLocation) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.BirthLocation) ||
                                                           "",
                                                         birthdate:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.birthdate) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.birthdate) ||
                                                           selectedBirthDate,
                                                         NationalityId:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.NationalityId) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.NationalityId) ||
                                                           "",
                                                         diplomaId:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.diplomaId) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.diplomaId) ||
                                                           "",
                                                         Average:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.Average) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.Average) ||
                                                           "",
                                                         FacultyId:
-                                                          (emptyTempTrainee &&
-                                                            emptyTempTrainee.FacultyId) ||
+                                                          (emptyTrainee &&
+                                                            emptyTrainee.FacultyId) ||
                                                           "",
                                                       })
                                                     }
@@ -6340,7 +6400,7 @@ class TraineesList extends Component {
                                                                                                   defaultValue={socialStatus.find(
                                                                                                     opt =>
                                                                                                       opt.value ===
-                                                                                                      tempTrainee?.socialStatusId
+                                                                                                      trainee?.socialStatusId
                                                                                                   )}
                                                                                                 />
                                                                                               </Col>
@@ -8151,7 +8211,7 @@ class TraineesList extends Component {
                                                                                     <Row>
                                                                                       <Col lg="4">
                                                                                         <Label
-                                                                                          for="tempTraineeStatus-Id"
+                                                                                          for="traineeStatus-Id"
                                                                                           className="form-label d-flex"
                                                                                         >
                                                                                           {this.props.t(
@@ -8161,10 +8221,10 @@ class TraineesList extends Component {
                                                                                       </Col>
                                                                                       <Col className="col-8">
                                                                                         <Select
-                                                                                          id="tempTraineeStatus-Id"
+                                                                                          id="traineeStatus-Id"
                                                                                           name="statusId"
                                                                                           options={
-                                                                                            tempTraineeStatus
+                                                                                            traineeStatus
                                                                                           }
                                                                                           className={
                                                                                             "form-control"
@@ -8176,10 +8236,10 @@ class TraineesList extends Component {
                                                                                               values
                                                                                             )
                                                                                           }
-                                                                                          defaultValue={tempTraineeStatus.find(
+                                                                                          defaultValue={traineeStatus.find(
                                                                                             opt =>
                                                                                               opt.value ===
-                                                                                              tempTrainee?.statusId
+                                                                                              trainee?.statusId
                                                                                           )}
                                                                                         />
                                                                                       </Col>
@@ -9100,7 +9160,7 @@ const mapStateToProps = ({
   estimates,
 }) => ({
   trainees: trainees.trainees,
-  tempTrainee: trainees.tempTrainee,
+  // trainee: trainees.trainee,
   deleted: trainees.deleted,
   faculties: mobAppFacultyAccs.faculties,
   currencies: currencies.currencies,
@@ -9124,7 +9184,7 @@ const mapStateToProps = ({
   highstudytypes: highstudytypes.highstudytypes,
   estimates: estimates.estimates,
   requiredDocs: tempTrainees.requiredDocs,
-  tempTraineeStatus: tempTrainees.tempTraineeStatus,
+  traineeStatus: trainees.traineeStatus,
   user_menu: menu_items.user_menu || [],
 });
 
@@ -9133,7 +9193,7 @@ const mapDispatchToProps = dispatch => ({
   onAddNewTrainee: trainee => dispatch(addNewTrainee(trainee)),
   onUpdateTrainee: trainee => dispatch(updateTrainee(trainee)),
   onDeleteTrainee: trainee => dispatch(deleteTrainee(trainee)),
-  onGetTraineeById: tempTrainee => dispatch(getTraineeById(tempTrainee)),
+  // onGetTraineeById: trainee => dispatch(getTraineeById(trainee)),
   onGetTraineesDocuments: obj => dispatch(getTempTraineeDefaultRegReqDocs(obj)),
   onAddNewProfessionalExperience: profExperience =>
     dispatch(addNewProfessionalExperience(profExperience)),

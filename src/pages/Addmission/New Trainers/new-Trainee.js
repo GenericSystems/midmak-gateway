@@ -1222,7 +1222,11 @@ class NewTrainee extends Component {
       duaration: item.duaration,
     }));
     console.log("extractedArray", extractedArray);
-    traineeinfo["ProfessionalExperiences"] = extractedArray;
+    (traineeinfo[" procedure"] = "SisApp_UpdateTempTraineeInfo"),
+      (traineeinfo[" tablename"] =
+        "Common_TempTraineesProfessionalExperiences"),
+      (traineeinfo["queryname"] = "Common_TempTraineesProfessionalExperiences"),
+      (traineeinfo["ProfessionalExperiences"] = extractedArray);
     traineeinfo["tempTraineeId"] = lastAddedId;
     console.log("traineeinfo", traineeinfo);
     onAddNewProfessionalExperience(traineeinfo);

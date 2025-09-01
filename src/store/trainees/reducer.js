@@ -33,6 +33,8 @@ import {
   GET_TRAINEE_BY_ID_FAIL,
   GET_TRAINEE_STATUS_SUCCESS,
   GET_TRAINEE_STATUS_FAIL,
+  GET_TRAINEES_OPT_SUCCESS,
+  GET_TRAINEES_OPT_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -40,12 +42,13 @@ const INIT_STATE = {
   deleted: {},
   error: {},
   traineesDocuments: [],
-  studentsOpt: [],
   tempRelatives: [],
   trnProfExperiences: [],
   requiredDocs: [],
   lastAddedId: 0,
-  tempTrainee: {},
+  traineeById: {},
+  traineesOpt: {},
+  traineeStatus: {},
 };
 
 const trainees = (state = INIT_STATE, action) => {
@@ -140,7 +143,7 @@ const trainees = (state = INIT_STATE, action) => {
     case GET_TRAINEE_BY_ID_SUCCESS:
       return {
         ...state,
-        tempTrainee: action.payload,
+        traineeById: action.payload,
       };
 
     case GET_TRAINEE_BY_ID_FAIL:
@@ -156,6 +159,17 @@ const trainees = (state = INIT_STATE, action) => {
       };
 
     case GET_TRAINEE_STATUS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_TRAINEES_OPT_SUCCESS:
+      return {
+        ...state,
+        traineesOpt: action.payload,
+      };
+    case GET_TRAINEES_OPT_FAIL:
       return {
         ...state,
         error: action.payload,

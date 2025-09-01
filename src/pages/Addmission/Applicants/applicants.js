@@ -2052,6 +2052,9 @@ class ApplicantsList extends Component {
         workField: item.workField,
         duaration: item.duaration,
       })),
+      procedure: "SisApp_UpdateTempTraineeInfo",
+      tablename: "Common_TempTraineesProfessionalExperiences",
+      queryname: "Common_TempTraineesProfessionalExperiences",
     };
 
     console.log("traineeinfo", traineeinfo);

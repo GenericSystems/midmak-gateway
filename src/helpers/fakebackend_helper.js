@@ -270,16 +270,16 @@ export const getTraineeDeletedValue = () => get(url.GET_TRAINEE_DELETED_VALUE);
 // get Trainee
 export const getTraineeById = data => post(url.GET_TRAINEE_BY_ID, data);
 
-// get student_regReqDocs
+// get sTrainee_regReqDocs
 export const getTraineeRegReqDocs = data =>
   post(url.GET_TRAINEE_REGREQDOCS, data);
 
-//update student_regReqDoc
+//update Trainee
 export const updateTraineeRegReqDoc = data =>
   post(url.UPDATE_TRAINEE_REGREQDOC, data);
 
-// get Student Opt
-export const getStudentsOpt = data => post(url.GET_STUDENTS_OPT, data);
+// get Trainee Opt
+export const getTraineesOpt = data => post(url.GET_TRAINEES_OPT, data);
 
 // add brother
 export const addBrother = data => post(url.ADD_BROTHER, data);
@@ -511,8 +511,7 @@ export const getAcademyInfo = data => post(url.GET_ACADEMYINFO, data);
 
 export const addAcademyInfo = data => post(url.ADD_ACADEMYINFO, data);
 
-export const updateAcademyInfo = data =>
-  post(url.UPDATE_ACADEMYINFO, data);
+export const updateAcademyInfo = data => post(url.UPDATE_ACADEMYINFO, data);
 
 // UNIVERSITY_ORG_STRUCTURE
 export const getUniversityOrgStructure = data =>
@@ -1727,8 +1726,8 @@ export const updateDepartment = data => post(url.UPDATE_DEPARTMENT, data);
 //delete Department
 export const deleteDepartment = data => post(url.DELETE_DEPARTMENT, data);
 
-// get students options
-export const getStudentsOptions = data => post(url.GET_STUDENTS_OPTIONS, data);
+// get Trainee options
+export const getTraineesOptions = data => post(url.GET_TRAINEES_OPTIONS, data);
 
 // update password
 export const updatePassword = data => post(url.UPDATE_PASSWORD, data);
@@ -2006,37 +2005,20 @@ export const updateContractType = data => post(url.UPDATE_CONTRACT_TYPE, data);
 export const deleteContractType = data => post(url.DELETE_CONTRACT_TYPE, data);
 
 //QUALIFICATION_TRACK
-export const getQualificationsTracks = data => post(url.GET_QUALIFICATIONS_TRACKS, data);
+export const getQualificationsTracks = data =>
+  post(url.GET_QUALIFICATIONS_TRACKS, data);
 // ADD
-export const addNewQualificationTrack = data => post(url.ADD_NEW_QUALIFICATION_TRACK, data);
+export const addNewQualificationTrack = data =>
+  post(url.ADD_NEW_QUALIFICATION_TRACK, data);
 //
 export const getQualificationTrackDeletedValue = () =>
   get(url.GET_QUALIFICATION_TRACK_DELETED_VALUE);
 //UPDATE
-export const updateQualificationTrack = data => post(url.UPDATE_QUALIFICATION_TRACK, data);
+export const updateQualificationTrack = data =>
+  post(url.UPDATE_QUALIFICATION_TRACK, data);
 //DELETE
-export const deleteQualificationTrack = data => post(url.DELETE_QUALIFICATION_TRACK, data);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export const deleteQualificationTrack = data =>
+  post(url.DELETE_QUALIFICATION_TRACK, data);
 
 //GRADE_VERSION
 export const getGradesVersions = data => post(url.GET_GRADES_VERSIONS, data);
@@ -2314,6 +2296,9 @@ export const getSocialStatus = data => post(url.GET_SOCIAL_STATUS, data);
 export const getTempTraineeStatus = data =>
   post(url.GET_TEMP_TRAINEE_STATUS, data);
 
+//trainee status
+export const getTraineeStatus = data => post(url.GET_TRAINEE_STATUS, data);
+
 //ProfessionalExperience
 export const addNewProfessionalExperience = data =>
   post(url.ADD_NEW_PROFESSIONAL_EXPERIENCE, data);
@@ -2321,9 +2306,9 @@ export const updateProfessionalExperience = data =>
   post(url.UPDATE_PROFESSIONAL_EXPERIENCE, data);
 export const deleteProfessionalExperience = data =>
   post(url.DELETE_PROFESSIONAL_EXPERIENCE, data);
+
 // Upload File
-export const uploadFile = data =>
-  post(url.uploadFileToStorage, data);
+export const uploadFile = data => post(url.uploadFileToStorage, data);
 
 //trainingFormat
 export const getTrainingFormats = data => post(url.GET_TRAINING_FORMATS, data);
@@ -2467,5 +2452,5 @@ export {
   postJwtRegister,
   postJwtLogin,
   postJwtForgetPwd,
-  postJwtProfile
+  postJwtProfile,
 };

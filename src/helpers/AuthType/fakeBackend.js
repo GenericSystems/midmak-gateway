@@ -3731,14 +3731,14 @@ const fakeBackend = () => {
     });
   });
 
-  mock.onPut(url.GET_STUDENTS_OPTIONS).reply(student => {
+  mock.onPut(url.GET_TRAINEES_OPTIONS).reply(trainee => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (student && student.data) {
+        if (trainee && trainee.data) {
           // Passing fake JSON data as response
-          resolve([200, student.data]);
+          resolve([200, trainee.data]);
         } else {
-          reject([400, "Cannot update student"]);
+          reject([400, "Cannot update trainee"]);
         }
       });
     });
