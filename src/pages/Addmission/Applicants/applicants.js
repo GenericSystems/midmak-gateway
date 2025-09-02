@@ -1960,7 +1960,9 @@ class ApplicantsList extends Component {
       availableNumber: item.availableNumber,
     }));
     console.log("extractedArray", extractedArray);
-    traineeinfo["stdDocs"] = extractedArray;
+    (traineeinfo[" procedure"] = "Admission_AddDocsTempTrainee"),
+      (traineeinfo[" tablename"] = "Common_RegReqDocTempTrainee"),
+      (traineeinfo["stdDocs"] = extractedArray);
     traineeinfo["tempTraineeId"] = values.Id;
     traineeinfo["isAdd"] = 0;
     console.log("traineeinfo", traineeinfo);

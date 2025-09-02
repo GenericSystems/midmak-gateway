@@ -348,7 +348,9 @@ function* onAddNewTempTrainee({ payload }) {
 
   try {
     const response = yield call(addNewTempTrainee, payload);
-    console.log("adddresssss123", response);
+    response.map(resp => {
+      resp["RegReqDocTempTrainee"] = JSON.parse(resp["RegReqDocTempTrainee"]);
+    });
     yield put(addTempTraineeSuccess(response[0]));
   } catch (error) {
     yield put(addTempTraineeFail(error));
@@ -444,6 +446,12 @@ function* onAddNewProfessionalExperience({ payload }) {
 
   try {
     const response = yield call(addNewProfessionalExperience, payload);
+
+    response.map(resp => {
+      resp["ProfessionalExperiences"] = JSON.parse(
+        resp["ProfessionalExperiences"]
+      );
+    });
     console.log("response", response);
     yield put(addProfessionalExperienceSuccess(response[0]));
   } catch (error) {
@@ -481,12 +489,15 @@ function* onDeleteProfessionalExperience({ payload }) {
 
 function* onAddRequiredDocs({ payload }) {
   payload["source"] = "db";
-  payload["procedure"] = "Admission_AddDocsTempTrainee";
+  // payload["procedure"] = "Admission_AddDocsTempTrainee";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_RegReqDocTempTrainee";
+  // payload["tablename"] = "Common_RegReqDocTempTrainee";
 
   try {
     const response = yield call(addRequiredDocs, payload);
+    response.map(resp => {
+      resp["RegReqDocTempTrainee"] = JSON.parse(resp["RegReqDocTempTrainee"]);
+    });
     console.log("response", response);
     yield put(addRequiredDocsSuccess(response[0]));
   } catch (error) {

@@ -258,6 +258,25 @@ class NewTrainee extends Component {
     }
   };
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (
+      prevProps.tempTrainees !== this.props.tempTrainees &&
+      this.props.tempTrainees.length > 0
+    ) {
+      const lastItem =
+        this.props.tempTrainees[this.props.tempTrainees.length - 1];
+      if (lastItem.RegReqDocTempTrainee) {
+        try {
+          // const stdDocsArray = JSON.parse(lastItem.RegReqDocTempTrainee);
+          const stdDocsArray = lastItem.RegReqDocTempTrainee;
+          this.setState({ stdDocsArray });
+        } catch (e) {
+          console.error("Error parsing RegReqDocTempTrainee JSON", e);
+        }
+      }
+    }
+  }
+
   collapse = () => {
     this.setState(prevState => ({
       isOpen: !prevState.isOpen,
@@ -559,6 +578,10 @@ class NewTrainee extends Component {
       if (response?.Id) {
         this.setState({ tempTraineeId: response.Id });
       }
+      if (response?.RegReqDocTempTrainee) {
+        const parsedDoc = JSON.parse(response.RegReqDocTempTrainee);
+        this.setState({ stdDocsArray: parsedDoc });
+      }
       const saveTempTraineeMessage = this.props.t(
         "TempTrainee saved successfully"
       );
@@ -622,12 +645,12 @@ class NewTrainee extends Component {
       });
     }
 
-    if (tab == 5) {
-      const { tempTraineesDocuments, onGetTempTraineesDocuments } = this.props;
-      this.setState({
-        stdDocsArray: tempTraineesDocuments,
-      });
-    }
+    // if (tab == 5) {
+    //   const { tempTraineesDocuments, onGetTempTraineesDocuments } = this.props;
+    //   this.setState({
+    //     stdDocsArray: tempTraineesDocuments,
+    //   });
+    // }
   }
 
   toggleTabVertical(tab) {
@@ -657,7 +680,7 @@ class NewTrainee extends Component {
     const { onGetTempTraineesDocuments } = this.props;
     let obj = { certificateLevelId: option };
     console.log("objobjobj", obj);
-    onGetTempTraineesDocuments(obj);
+    // onGetTempTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
       this.setState({ selectedregistrationCertLevelId: option });
       this.setState({ trainee: values });
@@ -1199,7 +1222,9 @@ class NewTrainee extends Component {
       availableNumber: item.availableNumber,
     }));
     console.log("extractedArray", extractedArray);
-    traineeinfo["stdDocs"] = extractedArray;
+    (traineeinfo[" procedure"] = "Admission_AddDocsTempTrainee"),
+      (traineeinfo[" tablename"] = "Common_RegReqDocTempTrainee"),
+      (traineeinfo["stdDocs"] = extractedArray);
     traineeinfo["tempTraineeId"] = lastAddedId;
     traineeinfo["isAdd"] = 1;
     console.log("traineeinfo", traineeinfo);
@@ -1369,6 +1394,7 @@ class NewTrainee extends Component {
     const { isEdit, deleteModal, generateModal } = this.state;
 
     const trainee = this.state.trainee;
+    console.log("std", stdDocsArray);
     const alertMessage =
       deleted == 0
         ? this.props.t("Can't Delete")

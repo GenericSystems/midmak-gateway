@@ -1052,7 +1052,9 @@ class TraineesList extends Component {
       availableNumber: item.availableNumber,
     }));
     console.log("extractedArray", extractedArray);
-    traineeinfo["stdDocs"] = extractedArray;
+    (traineeinfo[" procedure"] = "Admission_AddDocsTempTrainee"),
+      (traineeinfo[" tablename"] = "Common_RegReqDocTrainee"),
+      (traineeinfo["stdDocs"] = extractedArray);
     traineeinfo["traineeId"] = values.Id;
     traineeinfo["isAdd"] = 0;
     console.log("traineeinfo", traineeinfo);
