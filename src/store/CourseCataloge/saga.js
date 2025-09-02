@@ -252,24 +252,6 @@ function* onDeleteCoursesCatalog({ payload }) {
     yield put(deleteCoursesCatalogFail(error));
   }
 }
-function* onGetSectorCode(obj) {
-  const { selectedSector } = obj.payload;
-  const get_sector_code_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Ranks",
-    fields: "code",
-    filter: `sectorId = ${selectedSector}`,
-  };
-  try {
-    const response = yield call(getSectors, get_sector_code_req);
-    console.log("CODDEEresponseeeeeeeee", response);
-    yield put(getSectorsSuccess(response));
-  } catch (error) {
-    yield put(getSectorsFail(error));
-  }
-}
 
 function* onGetCoursesCatalogDeletedValue() {
   try {
@@ -379,7 +361,8 @@ function* coursesCatalogsSaga() {
     onGetCoursesCatalogDeletedValue
   );
   yield takeEvery(GET_COURSES_CATALOGS_DATALIST, fetchCoursesCatalogsDatalist);
-  yield takeEvery(GET_SECTORS, onGetSectorCode);
+  
+  
 
   //preeereqqq
   yield takeEvery(

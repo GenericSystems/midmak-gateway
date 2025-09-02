@@ -78,6 +78,7 @@ class CourseCatalogeList extends Component {
       showEditButton: false,
       showSearchButton: false,
       trainingSectorOptions: [],
+      sectorCode: [],
       qualificationTrackOptions: [],
       trainingProgramOptions: [],
       trainingModuleOptions: [],
@@ -98,8 +99,8 @@ class CourseCatalogeList extends Component {
       prerequisiteCoursesArray: [],
       duplicateErrorPrerequisite: "",
       lastUsedId: 1,
-      trainingSectorCode: "",
       selectedTrainingSector: "",
+      sectorCode: "",
       selectedQualificationTrack: "",
       selectedTrainingProgram: "",
       selectedTrainingType: "",
@@ -107,6 +108,7 @@ class CourseCatalogeList extends Component {
       arCoursenameError: false,
       enCoursenameError: false,
       trainingProgramError: false,
+      qualificationCodeError: false,
       courseCodeError: false,
       courseTypeError: false,
       traningSectorError: false,
@@ -268,10 +270,12 @@ class CourseCatalogeList extends Component {
   handleAddRow = () => {
     this.setState({
       courseCataloge: "",
+      sectorCode: "",
       isEdit: false,
       isOpen: false,
       isAdd: true,
     });
+    // console.log("courseCatalogeee",courseCataloge)
     this.toggle();
   };
 
@@ -356,6 +360,7 @@ class CourseCatalogeList extends Component {
     } = this.state;
 
     let arCoursenameError = false;
+    let qualificationCodeError = false;
     let enCoursenameError = false;
     let courseCodeError = false;
     let traningSectorError = false;
@@ -387,6 +392,9 @@ class CourseCatalogeList extends Component {
 
     if (values.enTitle === "") {
       enCoursenameError = true;
+    }
+    if (values.qualificationCode === "") {
+      qualificationCodeError = true;
     }
 
     if (!selectedTrainingSector) {
@@ -428,6 +436,7 @@ class CourseCatalogeList extends Component {
 
     if (
       arCoursenameError ||
+      qualificationCodeError ||
       enCoursenameError ||
       traningSectorError ||
       courseCodeError ||
@@ -437,6 +446,7 @@ class CourseCatalogeList extends Component {
     ) {
       this.setState({
         arCoursenameError,
+        qualificationCodeError,
         enCoursenameError,
         traningSectorError,
         courseCodeError,
@@ -469,6 +479,7 @@ class CourseCatalogeList extends Component {
     this.setState({
       errorMessages: {},
       arCoursenameError: false,
+      qualificationCodeError: false,
       enCoursenameError: false,
       emptyError: "",
     });
@@ -481,11 +492,11 @@ class CourseCatalogeList extends Component {
       console.log("selecteddddddd", selectedValue);
       this.setState({
         selectedTrainingSector: selectedValue.value,
-        trainingSectorCode: selectedValue.code,
+        sectorCode: selectedValue.code,
 
         courseCataloge: values,
       });
-      console.log("trainingSectorCode", trainingSectorCode);
+      console.log("sectorCode", sectorCode);
     }
 
     if (fieldName == "qualificationTrackId") {
@@ -533,6 +544,7 @@ class CourseCatalogeList extends Component {
   };
 
   handleEditCourse = arg => {
+    console.log("orgsssssssss", arg);
     const { preReqCourses, onGetCourseCatalogePrerequisites } = this.props;
 
     const filteredPreReqCourses = preReqCourses.filter(
@@ -545,8 +557,9 @@ class CourseCatalogeList extends Component {
       filtredPreReqCourses: filteredPreReqCourses,
       selectedCoursId: arg.Id,
       selectedTrainingFormat: arg.trainingFormatId,
-      selectedTrainingSector: arg.qualificationTrackId,
-      selectedQualificationTrack: arg.sectorId,
+      selectedTrainingSector: arg.sectorId,
+      sectorCode: arg.sectorCode,
+      selectedQualificationTrack: arg.qualificationTrackId,
 
       selectedTrainingProgram: arg.programId,
       selectedTrainingType: arg.courseTypeId,
@@ -620,9 +633,10 @@ class CourseCatalogeList extends Component {
       errorMessage,
       duplicateErrorPrerequisite,
       arCoursenameError,
+      qualificationCodeError,
       enCoursenameError,
       selectedTrainingSector,
-      trainingSectorCode,
+      sectorCode,
       selectedQualificationTrack,
       selectedTrainingFormat,
       selectedTrainingProgram,
@@ -686,6 +700,25 @@ class CourseCatalogeList extends Component {
       {
         dataField: "sectorName",
         text: this.props.t("Sector"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "sectorCode",
+        text: this.props.t("Sector Code"),
+        sort: true,
+        editable: false,
+      },
+
+      {
+        dataField: "qualificationTrackName",
+        text: this.props.t("Qualification Track"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "qualificationCode",
+        text: this.props.t("Qualification Track Code"),
         sort: true,
         editable: false,
       },
@@ -1001,12 +1034,16 @@ class CourseCatalogeList extends Component {
                                             courseCataloge?.arTitle || "",
                                           enTitle:
                                             courseCataloge?.enTitle || "",
+                                          qualificationCode:
+                                            courseCataloge?.qualificationCode ||
+                                            "",
+
                                           sectorId:
                                             courseCataloge?.sectorId ||
                                             selectedTrainingSector,
                                           // sectorCode:
                                           //   courseCataloge?.sectorCode ||
-                                          //   trainingSectorCode,
+                                          //   sectorCode,
 
                                           qualificationTrackId:
                                             courseCataloge?.qualificationTrackId ||
@@ -1047,6 +1084,7 @@ class CourseCatalogeList extends Component {
                                           enTitle: Yup.string().required(
                                             t("Course Name (en) is required")
                                           ),
+
                                           sectorId: Yup.string().required(
                                             t("Training Sector is required")
                                           ),
@@ -1155,44 +1193,12 @@ class CourseCatalogeList extends Component {
                                                                           className="invalid-feedback"
                                                                         />
                                                                       </Col>
-                                                                                                                                            <Col className="col-4">
-                                                                        <Label for="enTitle">
-                                                                          {this.props.t(
-                                                                            "Course Name (en)"
-                                                                          )}
-                                                                        </Label>
-                                                                        <span className="text-danger">
-                                                                          *
-                                                                        </span>
-                                                                      </Col>
-                                                                      <Col className="col-8">
-                                                                        <Field
-                                                                          type="text"
-                                                                          name="enTitle"
-                                                                          id="enTitle"
-                                                                          className={
-                                                                            "form-control" +
-                                                                            ((errors.enTitle &&
-                                                                              touched.enTitle) ||
-                                                                            enCoursenameError
-                                                                              ? " is-invalid"
-                                                                              : "")
-                                                                          }
-                                                                        />
-                                                                        <ErrorMessage
-                                                                          name="enTitle"
-                                                                          component="div"
-                                                                          className="invalid-feedback"
-                                                                        />
-                                                                      </Col>
                                                                     </Row>
                                                                   </div>
 
                                                                   {/* Course Name (EN) */}
                                                                   <div className="mb-3">
-                                                                    <Row>
-
-                                                                    </Row>
+                                                                    <Row></Row>
                                                                   </div>
 
                                                                   {/* Training Sector - SELECT */}
@@ -1243,7 +1249,7 @@ class CourseCatalogeList extends Component {
                                                                   <div className="mb-3">
                                                                     <Row>
                                                                       <Col className="col-4">
-                                                                        <Label for="trainingSectorCode">
+                                                                        <Label for="sectorCode">
                                                                           {this.props.t(
                                                                             "Sector Code"
                                                                           )}
@@ -1252,19 +1258,20 @@ class CourseCatalogeList extends Component {
                                                                       <Col className="col-8">
                                                                         <Field
                                                                           type="text"
-                                                                          name="trainingSectorCode"
-                                                                          id="trainingSectorCode"
+                                                                          name="sectorCode"
+                                                                          id="sectorCode"
                                                                           value={
                                                                             this
                                                                               .state
-                                                                              .trainingSectorCode ||
+                                                                              .sectorCode ||
+                                                                            courseCataloge.sectorCode ||
                                                                             ""
                                                                           }
                                                                           readOnly
                                                                           className="form-control"
                                                                         />
                                                                       </Col>
-                                                                      </Row>
+                                                                    </Row>
                                                                   </div>
 
                                                                   {/* Training Program - SELECT */}
@@ -1336,7 +1343,7 @@ class CourseCatalogeList extends Component {
                                                                               values
                                                                             )
                                                                           }
-                                                                          defaultValue={trainingSectorOptions.find(
+                                                                          defaultValue={qualificationTrackOptions.find(
                                                                             opt =>
                                                                               opt.value ===
                                                                               courseCataloge?.qualificationTrackId
@@ -1364,24 +1371,11 @@ class CourseCatalogeList extends Component {
                                                                           type="text"
                                                                           name="qualificationCode"
                                                                           id="qualificationCode"
-                                                                          className={
-                                                                            "form-control" +
-                                                                            ((errors.qualificationCode &&
-                                                                              touched.qualificationCode) ||
-                                                                            enCoursenameError
-                                                                              ? " is-invalid"
-                                                                              : "")
-                                                                          }
-                                                                        />
-                                                                        <ErrorMessage
-                                                                          name="qualificationCode"
-                                                                          component="div"
-                                                                          className="invalid-feedback"
+                                                                          className="form-control"
                                                                         />
                                                                       </Col>
                                                                     </Row>
                                                                   </div>
-
                                                                   {/* Course Code */}
                                                                   <div className="mb-3">
                                                                     <Row>
