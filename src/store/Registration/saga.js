@@ -75,6 +75,8 @@ import {
   saveAllNonActiveStdCurr,
 } from "../../helpers/fakebackend_helper";
 let theObj;
+
+//first table
 function* fetchAvailableCourses(obj) {
   theObj = obj;
   let userType = obj.payload.userType;
@@ -111,6 +113,7 @@ function* fetchTempStdSchedules(obj) {
     yield put(getTempStdSchedulesFail(error));
   }
 }
+//ruba cacelled that
 // function* fetchAchievedCourses(obj) {
 //   let studentId = obj.payload.studentId;
 
@@ -172,22 +175,22 @@ function* fetchRegistrations() {
     yield put(getWeekDaysFail(error));
   }
 }
-
-function* fetchStudentRegisterInfo(obj) {
-  let studentId = obj.payload;
-  const get_student_info = {
-    source: "db",
-    procedure: "Student_getRegisterInfo",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    StudentId: studentId,
-  };
-  try {
-    const response = yield call(getStudentRegisterInfo, get_student_info);
-    yield put(getStudentRegisterInfoSuccess(response));
-  } catch (error) {
-    yield put(getStudentRegisterInfoFail(error));
-  }
-}
+//ruba cancelled that
+// function* fetchStudentRegisterInfo(obj) {
+//   let studentId = obj.payload;
+//   const get_student_info = {
+//     source: "db",
+//     procedure: "Student_getRegisterInfo",
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     StudentId: studentId,
+//   };
+//   try {
+//     const response = yield call(getStudentRegisterInfo, get_student_info);
+//     yield put(getStudentRegisterInfoSuccess(response));
+//   } catch (error) {
+//     yield put(getStudentRegisterInfoFail(error));
+//   }
+// }
 
 function* onAddNewRegistration({ payload, registration }) {
   delete payload["id"];
@@ -296,6 +299,8 @@ function* onDeleteNonActiveStdCurr({ payload, registrations }) {
     yield put(deleteNonActiveStdCurrFail(error));
   }
 }
+
+//second table
 function* fetchNonActiveStdCurr(obj) {
   let studentId = obj.payload.studentId;
   let active = obj.payload.active;
