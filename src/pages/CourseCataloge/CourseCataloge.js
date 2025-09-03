@@ -72,6 +72,7 @@ class CourseCatalogeList extends Component {
       coursesCatalogs: [],
       courseCataloge: "",
       selectConId: null,
+      sectorArray:[],
       showAlert: null,
       showAddButton: false,
       showDeleteButton: false,
@@ -99,7 +100,7 @@ class CourseCatalogeList extends Component {
       prerequisiteCoursesArray: [],
       duplicateErrorPrerequisite: "",
       lastUsedId: 1,
-      selectedTrainingSector: "",
+      selectedTrainingSector: null,
       sectorCode: "",
       selectedQualificationTrack: "",
       selectedTrainingProgram: "",
@@ -354,6 +355,7 @@ class CourseCatalogeList extends Component {
       selectedTrainingFormat,
       isEdit,
       isAdd,
+      sectorArray,
       prerequisiteCoursesArray,
       selectedIsNeedLabs,
       selectedIsNeedSection,
@@ -368,9 +370,16 @@ class CourseCatalogeList extends Component {
     let courseTypeError = false;
     let isSelectError = false;
 
+    const formattedSector =
+      sectorArray?.map(item=>({
+        label:item.label,
+        value:item.value,
+      }))||[];
+    
+
     values["arTitle"] = values["arTitle"] || "";
     values["enTitle"] = values["enTitle"] || "";
-    values["sectorId"] = selectedTrainingSector;
+    values["sectorId"] = formattedSector;
     values["qualificationTrackId"] = selectedQualificationTrack;
     values["qualificationCode"] = values["qualificationCode"] || "";
 
@@ -559,6 +568,7 @@ class CourseCatalogeList extends Component {
       selectedTrainingFormat: arg.trainingFormatId,
       selectedTrainingSector: arg.sectorId,
       sectorCode: arg.sectorCode,
+      sectorArray:arg.sectorId,
       selectedQualificationTrack: arg.qualificationTrackId,
 
       selectedTrainingProgram: arg.programId,
@@ -1196,10 +1206,7 @@ class CourseCatalogeList extends Component {
                                                                     </Row>
                                                                   </div>
 
-                                                                  {/* Course Name (EN) */}
-                                                                  <div className="mb-3">
-                                                                    <Row></Row>
-                                                                  </div>
+                                                                 
 
                                                                   {/* Training Sector - SELECT */}
                                                                   <div className="mb-3">
@@ -1402,6 +1409,44 @@ class CourseCatalogeList extends Component {
                                                                 </Col>
 
                                                                 <Col lg="6">
+                                                                 {/* Course Name (EN) */}
+                                                                  <div className="mb-3">
+                                                                    <Row>
+                                                                     <Col className="col-4">
+                                                                        <Label for="enTitle">
+                                                                          {this.props.t(
+                                                                            "Course Name (en)"
+                                                                          )}
+                                                                          <span className="text-danger">
+                                                                            *
+                                                                          </span>
+                                                                        </Label>
+                                                                      </Col>
+                                                                      <Col className="col-8">
+                                                                        <Field
+                                                                          type="text"
+                                                                          name="enTitle"
+                                                                          id="enTitle"
+                                                                          className={
+                                                                            "form-control" +
+                                                                            ((errors.enTitle &&
+                                                                              touched.arTitle) ||
+                                                                            enCoursenameError
+                                                                              ? " is-invalid"
+                                                                              : "")
+                                                                          }
+                                                                        />
+                                                                        <ErrorMessage
+                                                                          name="enTitle"
+                                                                          component="div"
+                                                                          className="invalid-feedback"
+                                                                        />
+                                                                      </Col>
+                                                                    
+                                                                    
+                                                                    
+                                                                    </Row>
+                                                                  </div>
                                                                   {/* Course Type - SELECT */}
                                                                   <div className="mb-3">
                                                                     <Row>
