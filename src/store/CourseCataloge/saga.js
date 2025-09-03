@@ -48,6 +48,7 @@ import {
   deleteCoursesCatalog,
   getCoursesCatalogsDeletedValue,
   getSectors,
+  getQualificationsTracks,
   getTrainingFormats,
   getCourseTypes,
   getCertificateTypes,
@@ -61,6 +62,10 @@ import {
 } from "../../helpers/fakebackend_helper";
 
 import { getSectorsSuccess, getSectorsFail } from "store/sectors/actions";
+import {
+  getQualificationsTracksSuccess,
+  getQualificationsTracksFail,
+} from "store/qualification-tracks/actions";
 import {
   getTrainingFormatsSuccess,
   getTrainingFormatsFail,
@@ -80,6 +85,8 @@ import {
   getCertificateTypesSuccess,
   getCertificateTypesFail,
 } from "store/certificateTypes/actions";
+import { getRanks } from "store/actions";
+import { GET_SECTORS } from "helpers/url_helper";
 
 function* fetchCoursesCatalogs(selectedpayload) {
   let lang = selectedpayload.payload;
@@ -94,7 +101,7 @@ function* fetchCoursesCatalogs(selectedpayload) {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_Sector",
-    fields: `Id,${titleField}`,
+    fields: `Id,${titleField},code`,
   };
 
   try {
@@ -102,6 +109,25 @@ function* fetchCoursesCatalogs(selectedpayload) {
     yield put(getSectorsSuccess(response));
   } catch (error) {
     yield put(getSectorsFail(error));
+  }
+
+  //qualificationTracks
+  const get_quallificationTrack_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_QualificationTracks",
+    fields: `Id,${titleField}`,
+  };
+
+  try {
+    const response = yield call(
+      getQualificationsTracks,
+      get_quallificationTrack_req
+    );
+    yield put(getQualificationsTracksSuccess(response));
+  } catch (error) {
+    yield put(getQualificationsTracksFail(error));
   }
 
   //trainingFormats
@@ -335,6 +361,8 @@ function* coursesCatalogsSaga() {
     onGetCoursesCatalogDeletedValue
   );
   yield takeEvery(GET_COURSES_CATALOGS_DATALIST, fetchCoursesCatalogsDatalist);
+  
+  
 
   //preeereqqq
   yield takeEvery(
