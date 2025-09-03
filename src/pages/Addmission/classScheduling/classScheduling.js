@@ -49,6 +49,7 @@ import {
   getAllCoursesOffering,
   addNewCourseOffering,
   updateCourseOffering,
+  deleteCourseOffering,
   getSectionLabs,
   addNewSectionLab,
   addNewSectionLabDetail,
@@ -111,6 +112,7 @@ class ClassSchedulingList extends Component {
       selectedRow: null,
       deleteModal: false,
       deleteModal1: false,
+      deleteModal2: false,
       duplicateError: null,
       startDateError: null,
       endDateError: null,
@@ -148,6 +150,7 @@ class ClassSchedulingList extends Component {
       showAddWarning: false,
       isScheduleEditable: false,
       selectedScheduleRow: null,
+      selectedCourseRow: null,
       showAll: false,
     };
     this.toggle1 = this.toggle1.bind(this);
@@ -160,8 +163,8 @@ class ClassSchedulingList extends Component {
       "000000000000000000111111111111111111111",
       this.props.coursesOffering
     );
-    // const { onGetCoursesOffering } = this.props;
-    // const { ifUpdateCourse, selectedYear } = this.state;
+    const { onGetCoursesOffering } = this.props;
+    const { ifUpdateCourse, selectedYear } = this.state;
     if (this.state.activeTab1 !== tab) {
       this.setState({
         activeTab1: tab,
@@ -169,8 +172,8 @@ class ClassSchedulingList extends Component {
       });
     }
     // if (ifUpdateCourse != 0) {
-    //   onGetCoursesOffering();
-    //   this.setState({ ifUpdateCourse: 0 });
+    onGetCoursesOffering();
+    // this.setState({ ifUpdateCourse: 0 });
     // }
 
     document.getElementById("square-switch1").checked = false;
@@ -330,6 +333,12 @@ class ClassSchedulingList extends Component {
   toggleDeleteModal1 = () => {
     this.setState(prevState => ({
       deleteModal1: !prevState.deleteModal1,
+    }));
+  };
+
+  toggleDeleteModal2 = () => {
+    this.setState(prevState => ({
+      deleteModal2: !prevState.deleteModal2,
     }));
   };
 
@@ -512,6 +521,10 @@ class ClassSchedulingList extends Component {
     this.setState({ deleteModal1: true });
   };
 
+  onClickDelete2 = rowId => {
+    this.setState({ selectedCourseRow: rowId, deleteModal2: true });
+  };
+
   handleDeleteSectionLab = () => {
     const { onDeleteSectionLab, selectedOption } = this.props;
     const { sectionLabData } = this.state;
@@ -529,6 +542,22 @@ class ClassSchedulingList extends Component {
         LabNumber: "",
       },
       isEdit: false,
+    });
+  };
+
+  handleDeleteCourseOffering = () => {
+    const { onDeleteCourseOffering } = this.props;
+    const { selectedCourseRow } = this.state;
+
+    console.log("selectedScheduleRowselectedScheduleRow", selectedCourseRow);
+    // if (selectedCourseRow && selectedCourseRow.Id !== undefined) {
+    let onDelete = { Id: selectedCourseRow.Id };
+    onDeleteCourseOffering(onDelete);
+    // }
+    this.setState({
+      selectedCourseRow: null,
+      deleteModal2: false,
+      // showAlert: true,
     });
   };
 
@@ -1184,6 +1213,7 @@ class ClassSchedulingList extends Component {
       duplicateError,
       deleteModal,
       deleteModal1,
+      deleteModal2,
       modal,
       isOpen,
       emptyError,
@@ -1219,7 +1249,7 @@ class ClassSchedulingList extends Component {
       showAddWarning,
       isScheduleEditable,
     } = this.state;
-    console.log("Render executed! State:", this.state);
+
     const selectRow = {
       mode: "checkbox",
       clickToSelect: false,
@@ -1307,15 +1337,26 @@ class ClassSchedulingList extends Component {
         isDummyField: true,
         editable: false,
         formatter: (cellContent, row) => {
-          if (row.isOffered === 1) return null;
           return (
             <div className="d-flex gap-3">
-              <Tooltip placement="top" title={this.props.t("Add Method")}>
-                <Link className="text-sm-end" to="#">
+              {row.isOffered !== 1 && (
+                <Tooltip placement="top" title={this.props.t("Add Method")}>
+                  <Link className="text-sm-end" to="#">
+                    <i
+                      color="primary"
+                      onClick={() => this.handleCourseOfferingClick(row)}
+                      className="mdi mdi-plus-circle blue-noti-icon"
+                    ></i>
+                  </Link>
+                </Tooltip>
+              )}
+
+              <Tooltip title={this.props.t("Delete")} placement="top">
+                <Link className="text-danger" to="#">
                   <i
-                    color="primary"
-                    onClick={() => this.handleCourseOfferingClick(row)}
-                    className="mdi mdi-plus-circle blue-noti-icon"
+                    className="mdi mdi-delete font-size-18"
+                    id="deletetooltip"
+                    onClick={() => this.onClickDelete2(row)}
                   ></i>
                 </Link>
               </Tooltip>
@@ -1737,6 +1778,18 @@ class ClassSchedulingList extends Component {
                                         <Col className="pagination pagination-rounded justify-content-end mb-2">
                                           <PaginationListStandalone
                                             {...paginationProps}
+                                          />
+                                          <DeleteModal
+                                            show={deleteModal2}
+                                            onDeleteClick={
+                                              this.handleDeleteCourseOffering
+                                            }
+                                            onCloseClick={() =>
+                                              this.setState({
+                                                deleteModal2: false,
+                                                selectedCourseRow: null,
+                                              })
+                                            }
                                           />
                                           <Modal
                                             isOpen={isModalOpen}
@@ -3861,6 +3914,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addNewCourseOffering(CourseOffering)),
   onUpdateCourseOffering: CourseOffering =>
     dispatch(updateCourseOffering(CourseOffering)),
+  onDeleteCourseOffering: CourseOffering =>
+    dispatch(deleteCourseOffering(CourseOffering)),
 
   onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),

@@ -314,29 +314,44 @@ function* onAddNewCourseOffering({ payload, courseOffering }) {
 // }
 
 // function* onDeleteCourseOffering({ payload, courseOffering }) {
-//   payload.delId["source"] = "db";
-//   payload.delId["procedure"] = "SisApp_removeData";
-//   payload.delId["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-//   payload.delId["tablename"] = "Common_CourseOffering";
+//   payload["source"] = "db";
+//   payload["procedure"] = "SisApp_removeData";
+//   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+//   payload["tablename"] = "Common_CourseOffering";
 
 //   try {
-//     const respdelete = yield call(deleteCourseOffering, payload.delId);
+//     const respdelete = yield call(deleteCourseOffering, payload);
 //     yield put(deleteCourseOfferingSuccess(respdelete[0]));
-//     if (payload.showAll == true) {
-//       yield fetchAllCoursesOffering({
-//         type: GET_ALL_COURSES_OFFERING,
-//         payload: payload.semester,
-//       });
-//     } else {
-//       yield fetchCoursesOffering({
-//         type: GET_COURSES_OFFERING,
-//         payload: payload.semester,
-//       });
-//     }
+//     // if (payload.showAll == true) {
+//     //   yield fetchAllCoursesOffering({
+//     //     type: GET_ALL_COURSES_OFFERING,
+//     //     payload: payload.semester,
+//     //   });
+//     // } else {
+//     //   yield fetchCoursesOffering({
+//     //     type: GET_COURSES_OFFERING,
+//     //     payload: payload.semester,
+//     //   });
+//     // }
 //   } catch (error) {
 //     yield put(deleteCourseOfferingFail(error));
 //   }
 // }
+
+function* onDeleteCourseOffering({ payload }) {
+  console.log("payloadpayloadpayload", payload);
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_removeData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_CourseOffering";
+
+  try {
+    const respdelete = yield call(deleteCourseOffering, payload);
+    yield put(deleteCourseOfferingSuccess(respdelete[0]));
+  } catch (error) {
+    yield put(deleteCourseOfferingFail(error));
+  }
+}
 
 function* fetchSectionLabs(obj) {
   let lang = obj.payload.languageState;
@@ -698,7 +713,7 @@ function* classSchedulingSaga() {
   yield takeEvery(GET_METHODS_OF_OFFERING_COURSES, fetchMethodsOffering);
   yield takeEvery(ADD_NEW_COURSE_OFFERING, onAddNewCourseOffering);
   // yield takeEvery(UPDATE_COURSE_OFFERING, onUpdateCourseOffering);
-  // yield takeEvery(DELETE_COURSE_OFFERING, onDeleteCourseOffering);
+  yield takeEvery(DELETE_COURSE_OFFERING, onDeleteCourseOffering);
   yield takeEvery(GET_SECTION_LABS, fetchSectionLabs);
   yield takeEvery(GET_SECTION_LAB_PROFILE, fetchSectionLabProfile);
   yield takeEvery(ADD_NEW_SECTION_LAB, onAddNewSectionLab);

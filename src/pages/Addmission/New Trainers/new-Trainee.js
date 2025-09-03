@@ -3409,6 +3409,7 @@ class NewTrainee extends Component {
                                                                   type="text"
                                                                   name="UnivCountryId"
                                                                   className={`form-control }`}
+                                                                  placeholder="Type to search..."
                                                                   list="univCountryDatalistOptions"
                                                                   value={
                                                                     values.UnivCountryId
@@ -3727,6 +3728,7 @@ class NewTrainee extends Component {
                                                                   type="text"
                                                                   name="InstituteCountryId"
                                                                   className={`form-control }`}
+                                                                  placeholder="Type to search..."
                                                                   list="InstituteCountryIdDatalistOptions"
                                                                   value={
                                                                     values.InstituteCountryId
@@ -3925,6 +3927,7 @@ class NewTrainee extends Component {
                                                                   type="text"
                                                                   name="UnivCountryId"
                                                                   className={`form-control }`}
+                                                                  placeholder="Type to search..."
                                                                   list="univCountryDatalistOptions"
                                                                   value={
                                                                     values.UnivCountryId
@@ -4225,6 +4228,7 @@ class NewTrainee extends Component {
                                                                     "form-control"
                                                                   }
                                                                   list="CountrydatalistOptions"
+                                                                  placeholder="Type to search..."
                                                                   value={
                                                                     values.DiplomaCountryId
                                                                   }
@@ -4283,6 +4287,7 @@ class NewTrainee extends Component {
                                                               <Col className="col-8">
                                                                 <Field
                                                                   type="text"
+                                                                  placeholder="Type to search..."
                                                                   name="DiplomaGovernorateId"
                                                                   className={`form-control }`}
                                                                   list="GovernoratedatalistOptions"

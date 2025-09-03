@@ -157,6 +157,7 @@ const classScheduling = (state = INIT_STATE, action) => {
           courseOffering =>
             courseOffering.Id.toString() !== action.payload.Id.toString()
         ),
+        deleted: action.payload.deleted,
       };
 
     case DELETE_COURSE_OFFERING_FAIL:
