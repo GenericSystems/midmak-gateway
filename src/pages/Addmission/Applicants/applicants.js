@@ -1363,7 +1363,7 @@ class ApplicantsList extends Component {
       this.setState({ selectedSemester });
     }
 
-    if (fieldName == "traineeSID") {
+    if (fieldName == "traineeNum") {
       this.setState({ selectedBrother });
     }
   };
@@ -1662,12 +1662,12 @@ class ApplicantsList extends Component {
   };
 
   handleButtonClick2 = (fieldName, option, values) => {
-    console.log("fieldName", fieldName);
-    console.log("option", option);
-    const { onGetTempTraineesDocuments } = this.props;
-    let obj = { certificateLevelId: option };
-    console.log("objobjobj", obj);
-    onGetTempTraineesDocuments(obj);
+    // console.log("fieldName", fieldName);
+    // console.log("option", option);
+    // const { onGetTempTraineesDocuments } = this.props;
+    // let obj = { certificateLevelId: option };
+    // console.log("objobjobj", obj);
+    // onGetTempTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
       this.setState({ selectedRegistrationCertLevelId: option });
       this.setState({ tempTrainee: values });
@@ -1779,70 +1779,31 @@ class ApplicantsList extends Component {
       });
     }
   };
-  handleGovernorateSelect = (event, fieldName, setFieldValue, values) => {
-    const { governorates } = this.props;
-    const selectedValue = event.target.value;
-    console.log("selectedValue", selectedValue);
+  // handleGovernorateSelect = (event, fieldName, setFieldValue, values) => {
+  //   const { governorates } = this.props;
+  //   const selectedValue = event.target.value;
+  //   console.log("selectedValue", selectedValue);
 
-    this.setState({
-      tempTrainee: values,
-    });
+  //   this.setState({
+  //     tempTrainee: values,
+  //   });
 
-    const governorateObject = governorates.find(
-      governorate => governorate.value === event.target.value
-    );
-    console.log(governorateObject, "governorateObjectgovernorateObject");
-    setFieldValue("DiplomaGovernorateId", selectedValue);
+  //   const governorateObject = governorates.find(
+  //     governorate => governorate.value === event.target.value
+  //   );
+  //   console.log(governorateObject, "governorateObjectgovernorateObject");
+  //   setFieldValue("DiplomaGovernorateId", selectedValue);
 
-    if (diplomaObject) {
-      this.setState({
-        selectedGovernorateiD: governorateObject.key,
-        selectedGovernorate: selectedValue,
-        governorateName: governorateObject.value,
-        diplomaError: false,
-        tempTrainee: values,
-      });
-    }
-  };
-
-  handleInputFocus = fieldName => {
-    const {
-      selectedDiploma,
-      selectedCountry,
-      selectedGovernorate,
-      selectedCity,
-      selectedBrother,
-      selectedUnivCountry,
-      selectedSemester,
-    } = this.state;
-
-    if (fieldName == "diplomaId") {
-      this.setState({ selectedDiploma });
-    }
-
-    if (fieldName == "DiplomaCountryId") {
-      this.setState({ selectedCountry });
-    }
-
-    if (fieldName == "DiplomaGovernorateId") {
-      this.setState({ selectedGovernorate });
-    }
-
-    /* if (fieldName == "DiplomaCityId") {
-      this.setState({ selectedCity });
-    } */
-
-    if (fieldName == "UnivCountryId") {
-      this.setState({ selectedUnivCountry });
-    }
-
-    if (fieldName == "studentSID") {
-      this.setState({ selectedBrother });
-    }
-
-    if (fieldName == "studentSID") {
-    }
-  };
+  //   if (diplomaObject) {
+  //     this.setState({
+  //       selectedGovernorateId: governorateObject.key,
+  //       selectedGovernorate: selectedValue,
+  //       governorateName: governorateObject.value,
+  //       diplomaError: false,
+  //       tempTrainee: values,
+  //     });
+  //   }
+  // };
 
   handleInputBlur = fieldName => {
     const {
@@ -1951,7 +1912,6 @@ class ApplicantsList extends Component {
     const { stdDocsArray } = this.state;
     console.log("values in save", values);
     values["tempTraineeId"] = values.Id;
-    values["isAdd"] = 0;
     console.log(values["tempTraineeId"]);
     let traineeinfo = {};
     const extractedArray = stdDocsArray.map(item => ({
@@ -1960,11 +1920,11 @@ class ApplicantsList extends Component {
       availableNumber: item.availableNumber,
     }));
     console.log("extractedArray", extractedArray);
-    (traineeinfo[" procedure"] = "Admission_AddDocsTempTrainee"),
-      (traineeinfo[" tablename"] = "Common_RegReqDocTempTrainee"),
+    (traineeinfo["procedure"] = "Admission_UpdateDocsTrainee"),
+      (traineeinfo["tablename"] = "Common_RegReqDocTempTrainee"),
+      (traineeinfo["queryname"] = "_Common_TempTrainee"),
       (traineeinfo["stdDocs"] = extractedArray);
     traineeinfo["tempTraineeId"] = values.Id;
-    traineeinfo["isAdd"] = 0;
     console.log("traineeinfo", traineeinfo);
     onAddRequiredDocs(traineeinfo);
     // const saveDocsMessage = this.props.t("Documents requiered saved successfully");
@@ -2056,7 +2016,7 @@ class ApplicantsList extends Component {
       })),
       procedure: "SisApp_UpdateTempTraineeInfo",
       tablename: "Common_TempTraineesProfessionalExperiences",
-      queryname: "Common_TempTraineesProfessionalExperiences",
+      queryname: "_Common_TempTrainee",
     };
 
     console.log("traineeinfo", traineeinfo);
@@ -4768,6 +4728,7 @@ class ApplicantsList extends Component {
                                                                             <Field
                                                                               type="text"
                                                                               name="UnivCountryId"
+                                                                              placeholder="Type to search..."
                                                                               className={`form-control }`}
                                                                               list="univCountryDatalistOptions"
                                                                               value={
@@ -4783,6 +4744,11 @@ class ApplicantsList extends Component {
                                                                               }}
                                                                               onBlur={
                                                                                 handleBlur
+                                                                              }
+                                                                              onFocus={() =>
+                                                                                this.handleInputFocus(
+                                                                                  "UnivCountryId"
+                                                                                )
                                                                               }
                                                                               id="UnivCountryId-Id"
                                                                             />
@@ -5099,6 +5065,7 @@ class ApplicantsList extends Component {
                                                                               type="text"
                                                                               name="InstituteCountryId"
                                                                               className={`form-control }`}
+                                                                              placeholder="Type to search..."
                                                                               list="InstituteCountryIdDatalistOptions"
                                                                               value={
                                                                                 values.InstituteCountryId
@@ -5115,6 +5082,11 @@ class ApplicantsList extends Component {
                                                                               }}
                                                                               onBlur={
                                                                                 handleBlur
+                                                                              }
+                                                                              onFocus={() =>
+                                                                                this.handleInputFocus(
+                                                                                  "InstituteCountryId"
+                                                                                )
                                                                               }
                                                                               id="InstituteCountryId-Id"
                                                                             />
@@ -5303,6 +5275,7 @@ class ApplicantsList extends Component {
                                                                               type="text"
                                                                               name="UnivCountryId"
                                                                               className={`form-control }`}
+                                                                              placeholder="Type to search..."
                                                                               list="univCountryDatalistOptions"
                                                                               value={
                                                                                 values.UnivCountryId
@@ -5317,6 +5290,11 @@ class ApplicantsList extends Component {
                                                                               }}
                                                                               onBlur={
                                                                                 handleBlur
+                                                                              }
+                                                                              onFocus={() =>
+                                                                                this.handleInputFocus(
+                                                                                  "UnivCountryId"
+                                                                                )
                                                                               }
                                                                               id="UnivCountryId-Id"
                                                                             />
@@ -5614,6 +5592,7 @@ class ApplicantsList extends Component {
                                                                               className={
                                                                                 "form-control"
                                                                               }
+                                                                              placeholder="Type to search..."
                                                                               list="CountrydatalistOptions"
                                                                               value={
                                                                                 values.DiplomaCountryId
@@ -5630,6 +5609,11 @@ class ApplicantsList extends Component {
                                                                               }}
                                                                               onBlur={
                                                                                 handleBlur
+                                                                              }
+                                                                              onFocus={() =>
+                                                                                this.handleInputFocus(
+                                                                                  "DiplomaCountryId"
+                                                                                )
                                                                               }
                                                                               id="diplomaCountry"
                                                                             />
@@ -5683,26 +5667,27 @@ class ApplicantsList extends Component {
                                                                               type="text"
                                                                               name="DiplomaGovernorateId"
                                                                               className={`form-control }`}
+                                                                              placeholder="Type to search..."
                                                                               list="GovernoratedatalistOptions"
                                                                               value={
                                                                                 values.DiplomaGovernorateId
                                                                               }
-                                                                              // onChange={event => {
-                                                                              //   setFieldValue(
-                                                                              //     "DiplomaGovernorateId",
-                                                                              //     event
-                                                                              //       .target
-                                                                              //       .value
-                                                                              //   );
-                                                                              // }}
-                                                                              onChange={event =>
-                                                                                this.handleGovernorateSelect(
-                                                                                  event,
+                                                                              onChange={event => {
+                                                                                setFieldValue(
                                                                                   "DiplomaGovernorateId",
-                                                                                  setFieldValue,
-                                                                                  values
-                                                                                )
-                                                                              }
+                                                                                  event
+                                                                                    .target
+                                                                                    .value
+                                                                                );
+                                                                              }}
+                                                                              // onChange={event =>
+                                                                              //   this.handleGovernorateSelect(
+                                                                              //     event,
+                                                                              //     "DiplomaGovernorateId",
+                                                                              //     setFieldValue,
+                                                                              //     values
+                                                                              //   )
+                                                                              // }
                                                                               onBlur={() =>
                                                                                 this.handleInputBlur(
                                                                                   "DiplomaGovernorateId"

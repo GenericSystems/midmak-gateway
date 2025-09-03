@@ -1052,8 +1052,9 @@ class TraineesList extends Component {
       availableNumber: item.availableNumber,
     }));
     console.log("extractedArray", extractedArray);
-    (traineeinfo[" procedure"] = "Admission_AddDocsTempTrainee"),
-      (traineeinfo[" tablename"] = "Common_RegReqDocTrainee"),
+    (traineeinfo["procedure"] = "Admission_UpdateDocsTrainee"),
+      (traineeinfo["tablename"] = "Common_RegReqDocTrainee"),
+      (traineeinfo["queryname"] = "_Common_Trainee"),
       (traineeinfo["stdDocs"] = extractedArray);
     traineeinfo["traineeId"] = values.Id;
     traineeinfo["isAdd"] = 0;
@@ -1099,7 +1100,7 @@ class TraineesList extends Component {
       traineeId: values.Id,
       procedure: "SisApp_UpdateTraineeInfo",
       tablename: "Common_TraineesProfessionalExperiences",
-      queryname: "Common_TraineesProfessionalExperiences",
+      queryname: "_Common_Trainee",
       ProfessionalExperiences: profExperiencesArray.map(item => ({
         Id: item.Id,
         workType: item.workType,
@@ -1139,7 +1140,7 @@ class TraineesList extends Component {
     } = this.state;
     console.log("values in save", values);
     values["socialStatusId"] = selectedSocialStatus;
-    // values.statusId = isEdit ? selectedTempTraineeStatus : 1;
+    values.statusId = isEdit ? selectedTraineeStatus : 1;
 
     if (
       values.FirstName === "" ||
@@ -1515,6 +1516,63 @@ class TraineesList extends Component {
         stdDocsArray: updatedRegReqDocs,
       };
     });
+  };
+
+  handleSelect = (fieldName, selectedValue, values) => {
+    const { socialStatus, tempTraineeStatus } = this.props;
+    if (fieldName == "socialStatusId") {
+      const name = socialStatus.find(
+        socialStat => socialStat.value === selectedValue
+      );
+      console.log("naaaaamesooo", name);
+
+      this.setState({
+        selectedSocialStatus: selectedValue,
+        socialStatusName: name.label,
+        tempTrainee: values,
+      });
+    }
+    if (fieldName == "statusId") {
+      const name = tempTraineeStatus.find(
+        traineeStatu => traineeStatu.value === selectedValue
+      );
+      console.log("naaaaamesooo", name);
+
+      this.setState({
+        selectedTraineeStatus: selectedValue,
+        socialStatusName: name.label,
+        tempTrainee: values,
+      });
+    }
+    if (fieldName == "EstimateId") {
+      const name = estimates.find(estimate => estimate.value === selectedValue);
+      console.log("naaaaamesooo", name);
+
+      this.setState({
+        selectedEstimateId: selectedValue,
+        estimateNamee: name.label,
+        tempTrainee: values,
+      });
+    }
+  };
+
+  handleButtonClick = (fieldName, option) => {
+    if (fieldName == "ExaminationSession") {
+      this.setState({ selectedExaminationSession: option });
+    }
+  };
+
+  handleButtonClick2 = (fieldName, option, values) => {
+    // console.log("fieldName", fieldName);
+    // console.log("option", option);
+    // const { onGetTempTraineesDocuments } = this.props;
+    // let obj = { certificateLevelId: option };
+    // console.log("objobjobj", obj);
+    // onGetTempTraineesDocuments(obj);
+    if (fieldName == "registrationCertLevelId") {
+      this.setState({ selectedRegistrationCertLevelId: option });
+      this.setState({ tempTrainee: values });
+    }
   };
 
   render() {
@@ -6939,6 +6997,7 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="UnivCountryId"
                                                                                           className={`form-control }`}
+                                                                                          placeholder="Type to search..."
                                                                                           list="univCountryDatalistOptions"
                                                                                           value={
                                                                                             values.UnivCountryId
@@ -7263,6 +7322,7 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="InstituteCountryId"
                                                                                           className={`form-control }`}
+                                                                                          placeholder="Type to search..."
                                                                                           list="InstituteCountryIdDatalistOptions"
                                                                                           value={
                                                                                             values.InstituteCountryId
@@ -7461,6 +7521,7 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="UnivCountryId"
                                                                                           className={`form-control }`}
+                                                                                          placeholder="Type to search..."
                                                                                           list="univCountryDatalistOptions"
                                                                                           value={
                                                                                             values.UnivCountryId
@@ -7683,8 +7744,8 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="diplomaId"
                                                                                           id="diploma-Id"
-                                                                                          list="certificateDatalistOptions"
                                                                                           placeholder="Type to search..."
+                                                                                          list="certificateDatalistOptions"
                                                                                           onBlur={() =>
                                                                                             this.handleInputBlur(
                                                                                               "diplomaId"
@@ -7772,6 +7833,7 @@ class TraineesList extends Component {
                                                                                           className={
                                                                                             "form-control"
                                                                                           }
+                                                                                          placeholder="Type to search..."
                                                                                           list="CountrydatalistOptions"
                                                                                           value={
                                                                                             values.DiplomaCountryId
@@ -7825,6 +7887,7 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="DiplomaGovernorateId"
                                                                                           className={`form-control }`}
+                                                                                          placeholder="Type to search..."
                                                                                           list="GovernoratedatalistOptions"
                                                                                           value={
                                                                                             values.DiplomaGovernorateId

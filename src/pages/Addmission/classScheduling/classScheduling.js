@@ -82,7 +82,7 @@ class ClassSchedulingList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      coursesOffering: [],
+      coursesOffering: {},
       sectionLabs: [],
       sectionLabData: [],
       sectionLabDetails: [],
@@ -148,6 +148,7 @@ class ClassSchedulingList extends Component {
       showAddWarning: false,
       isScheduleEditable: false,
       selectedScheduleRow: null,
+      showAll: false,
     };
     this.toggle1 = this.toggle1.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -159,17 +160,18 @@ class ClassSchedulingList extends Component {
       "000000000000000000111111111111111111111",
       this.props.coursesOffering
     );
-    const { onGetCoursesOffering } = this.props;
-    const { ifUpdateCourse, selectedYear } = this.state;
+    // const { onGetCoursesOffering } = this.props;
+    // const { ifUpdateCourse, selectedYear } = this.state;
     if (this.state.activeTab1 !== tab) {
       this.setState({
         activeTab1: tab,
+        showAll: false,
       });
     }
-    if (ifUpdateCourse != 0) {
-      onGetCoursesOffering();
-      this.setState({ ifUpdateCourse: 0 });
-    }
+    // if (ifUpdateCourse != 0) {
+    //   onGetCoursesOffering();
+    //   this.setState({ ifUpdateCourse: 0 });
+    // }
 
     document.getElementById("square-switch1").checked = false;
   }
@@ -200,7 +202,8 @@ class ClassSchedulingList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    onGetCoursesOffering(lang);
+    // onGetCoursesOffering(lang);
+    onGetCoursesOffering();
     onGetMethodsOfOfferingCourses();
     this.setState({
       coursesOffering,
@@ -244,16 +247,16 @@ class ClassSchedulingList extends Component {
 
     console.log(this.state.currentYearObj, "gggg");
   }
+  //mays
+  // handleLanguageChange = lng => {
+  //   const { onGetCoursesOffering } = this.props;
+  //   const lang = localStorage.getItem("I18N_LANGUAGE");
 
-  handleLanguageChange = lng => {
-    const { onGetCoursesOffering } = this.props;
-    const lang = localStorage.getItem("I18N_LANGUAGE");
-
-    if (lang != lng) {
-      onGetCoursesOffering(lng);
-      this.setState({ languageState: lng });
-    }
-  };
+  //   if (lang != lng) {
+  //     onGetCoursesOffering(lng);
+  //     this.setState({ languageState: lng });
+  //   }
+  // };
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       this.props.user_menu !== prevProps.user_menu ||
@@ -276,15 +279,15 @@ class ClassSchedulingList extends Component {
         this.props.location.pathname
       );
     }
-    if (
-      prevProps.coursesOffering !== this.props.coursesOffering &&
-      Array.isArray(this.props.coursesOffering) &&
-      this.props.coursesOffering.length > 0
-    ) {
-      this.setState({
-        selectedCourseId: this.props.coursesOffering[0].courseId,
-      });
-    }
+    // if (
+    //   prevProps.coursesOffering !== this.props.coursesOffering &&
+    //   Array.isArray(this.props.coursesOffering) &&
+    //   this.props.coursesOffering.length > 0
+    // ) {
+    //   this.setState({
+    //     selectedCourseId: this.props.coursesOffering[0].courseId,
+    //   });
+    // }
   }
 
   updateShowAddButton = (menu, pathname) => {
@@ -334,6 +337,7 @@ class ClassSchedulingList extends Component {
     this.setState(prevState => ({
       isModalOpen: !prevState.isModalOpen,
     }));
+    this.props.onGetCoursesOffering(0);
   };
 
   toggle3 = () => {
@@ -368,36 +372,13 @@ class ClassSchedulingList extends Component {
     this.setState({ showAll: isChecked }, () => {
       if (isChecked) {
         onGetAllCoursesOffering();
+        // this.setState({ ifUpdateCourse: 1 });
       } else {
         console.log("noooooooooooo", isChecked);
         onGetCoursesOffering();
+        // this.setState({ ifUpdateCourse: 0 });
       }
     });
-  };
-
-  handleCheckboxAddOfferedCourseOrDelete = (row, currentStatus, fieldName) => {
-    const { onAddNewCourseOffering } = this.props;
-    const { selectedYear } = this.state;
-    const newStatus = currentStatus ? 1 : 0;
-    let ob = {};
-    ob["Id"] = row.Id;
-    ob[fieldName] = newStatus;
-    if (fieldName === "isOffered" && newStatus === 0) {
-      const { onDeleteCourseOffering } = this.props;
-      let onDelete = { Id: row.Id };
-      onDeleteCourseOffering(onDelete);
-    } else if (fieldName === "isOffered" && newStatus === 1) {
-      const newRow = {
-        Id: row.Id,
-        courseId: row.courseId,
-        courseCode: row.courseCode,
-        isOffered: 1,
-        yearId: selectedYear["value"],
-        queryname: "co_courseOffering",
-      };
-
-      onAddNewCourseOffering(newRow);
-    }
   };
 
   handleSelectChange = (fieldName, selectedValue) => {
@@ -767,7 +748,7 @@ class ClassSchedulingList extends Component {
 
   handleSelectYear = (name, value) => {
     document.getElementById("square-switch1").checked = false;
-    const { onGetCoursesOffering } = this.props;
+    // const { onGetCoursesOffering } = this.props;
     this.setState({
       selectedYear: value,
       currentYearObj: {
@@ -775,7 +756,7 @@ class ClassSchedulingList extends Component {
         currentYearName: value.label,
       },
     });
-    onGetCoursesOffering();
+    // onGetCoursesOffering();
   };
 
   onChangeHall(oldValue, newValue) {
@@ -819,6 +800,7 @@ class ClassSchedulingList extends Component {
       selectedEndDate,
       selectedStartDate,
       courseOffering,
+      showAll,
     } = this.state;
     const { onAddNewCourseOffering } = this.props;
 
@@ -838,11 +820,17 @@ class ClassSchedulingList extends Component {
       });
 
       onAddNewCourseOffering(courseOfferingInfo);
-
       this.setState({
         errorMessages: {},
       });
       this.toggle();
+      // if (showAll) {
+      //   this.props.onGetAllCoursesOffering();
+      //   this.setState({ ifUpdateCourse: 1 });
+      // } else {
+      //   this.props.onGetCoursesOffering();
+      //   this.setState({ ifUpdateCourse: 0 });
+      // }
     } else {
       if (selectedMethodOffering === undefined) {
         this.setState({ methodOfferingError: true, saveError: true });
@@ -1231,13 +1219,7 @@ class ClassSchedulingList extends Component {
       showAddWarning,
       isScheduleEditable,
     } = this.state;
-    console.log(
-      "sectionlab scheduletiming",
-      sectionLabDetails,
-      scheduleTimings,
-      scheduleTimingDescs
-    );
-    console.log(isScheduleEditable, "we needddddddd");
+    console.log("Render executed! State:", this.state);
     const selectRow = {
       mode: "checkbox",
       clickToSelect: false,
@@ -2066,7 +2048,7 @@ class ClassSchedulingList extends Component {
                                           </Col>
 
                                           <BootstrapTable
-                                            keyField="Id"
+                                            keyField="rowNumber"
                                             data={sectionLabs}
                                             columns={sectionLabColumns}
                                             cellEdit={cellEditFactory({
@@ -3871,7 +3853,8 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetCoursesOffering: lng => dispatch(getCoursesOffering(lng)),
+  // onGetCoursesOffering: lng => dispatch(getCoursesOffering(lng)),
+  onGetCoursesOffering: () => dispatch(getCoursesOffering()),
   onGetMethodsOfOfferingCourses: () => dispatch(getMethodsOfOfferingCourses()),
   onGetAllCoursesOffering: () => dispatch(getAllCoursesOffering()),
   onAddNewCourseOffering: CourseOffering =>

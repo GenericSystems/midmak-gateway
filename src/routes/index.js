@@ -138,10 +138,10 @@ import RolesList from "../pages/PriveledgeManagement/UserManagement/roles";
 //Sector
 import SectorsList from "../pages/Sectors/sectors";
 //QUALIFICATION TRACKS
-import QualificationsTracksList from "../pages/Certificates/qualification-tracks"
+import QualificationsTracksList from "../pages/Certificates/qualification-tracks";
 
 //universityDef
-import AcademyInfo from "../pages/Academy/academy-def"
+import AcademyInfo from "../pages/Academy/academy-def";
 
 //Warning
 import warningsList from "../pages/TrainingMembers/training-members";
@@ -162,7 +162,7 @@ import RegistrationList from "../pages/Registration/registration";
 import DefineExamDatesList from "../pages/Exam/DefineExamDates/defineExamDates";
 
 //academyBuildingStructure
-import AcademyBuildingStructuresList from "../pages/academyBuildingStructure/academyBuildingStructure";
+import AcademyBuildingStructuresList from "../pages/AcademyBuildingStructure/academyBuildingStructure";
 
 //classScheduling
 import classSchedulingList from "../pages/Addmission/classScheduling/classScheduling";
@@ -190,7 +190,7 @@ import RegReqDocumentsTable from "../pages/Addmission/AdmissionSettings/regReqDo
 import ExamRoomsList from "../pages/Exam/ExamRooms/examRooms";
 
 //trainees
-import TraineesList from "../pages/Addmission/AcadmeyStudents/trainees";
+import TraineesList from "../pages/Addmission/AcadmeyTrainees/trainees";
 
 //WarningsTypes
 import WarningsTypesList from "../pages/HR/warningsTypes/warningsTypes";
@@ -329,7 +329,7 @@ const authProtectedRoutes = [
   { path: "/academy-def", component: AcademyInfo },
 
   //qualification_track
-  {path:"/qualification-tracks",component:QualificationsTracksList},
+  { path: "/qualification-tracks", component: QualificationsTracksList },
 
   //UserTypes
   { path: "/user-types", component: UserTypesList },

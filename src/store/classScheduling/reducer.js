@@ -59,7 +59,6 @@ const INIT_STATE = {
   weekDays: [],
   lecturePeriods: [],
   classProfile: {},
-  offeringLectures: [],
   coursesOffering: [],
   offeringCourses: [],
   departments: [],
@@ -116,6 +115,12 @@ const classScheduling = (state = INIT_STATE, action) => {
         ...state,
         coursesOffering: [...state.coursesOffering, action.payload],
       };
+    // return {
+    //   ...state,
+    //   coursesOffering: state.coursesOffering.map(row =>
+    //     row.Code === action.payload.Code ? { ...row, ...action.payload } : row
+    //   ),
+    // };
 
     case ADD_COURSE_OFFERING_FAIL:
       return {

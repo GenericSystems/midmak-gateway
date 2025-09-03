@@ -1214,19 +1214,19 @@ class NewTrainee extends Component {
     const { stdDocsArray } = this.state;
     console.log("values in save", values);
     values["tempTraineeId"] = lastAddedId;
-    values["isAdd"] = 1;
     console.log(lastAddedId);
     let traineeinfo = {};
     const extractedArray = stdDocsArray.map(item => ({
-      regReqDocId: item.Id,
+      Id: item.Id,
+      regReqDocId: item.regReqDocId,
       availableNumber: item.availableNumber,
     }));
     console.log("extractedArray", extractedArray);
-    (traineeinfo[" procedure"] = "Admission_AddDocsTempTrainee"),
-      (traineeinfo[" tablename"] = "Common_RegReqDocTempTrainee"),
+    (traineeinfo["procedure"] = "Admission_UpdateDocsTrainee"),
+      (traineeinfo["tablename"] = "Common_RegReqDocTempTrainee"),
+      (traineeinfo["queryname"] = "_Common_TempTrainee"),
       (traineeinfo["stdDocs"] = extractedArray);
     traineeinfo["tempTraineeId"] = lastAddedId;
-    traineeinfo["isAdd"] = 1;
     console.log("traineeinfo", traineeinfo);
     onAddRequiredDocs(traineeinfo);
   };
@@ -1247,9 +1247,8 @@ class NewTrainee extends Component {
       duaration: item.duaration,
     }));
     console.log("extractedArray", extractedArray);
-    (traineeinfo[" procedure"] = "SisApp_UpdateTempTraineeInfo"),
-      (traineeinfo[" tablename"] =
-        "Common_TempTraineesProfessionalExperiences"),
+    (traineeinfo["procedure"] = "SisApp_UpdateTempTraineeInfo"),
+      (traineeinfo["tablename"] = "Common_TempTraineesProfessionalExperiences"),
       (traineeinfo["queryname"] = "Common_TempTraineesProfessionalExperiences"),
       (traineeinfo["ProfessionalExperiences"] = extractedArray);
     traineeinfo["tempTraineeId"] = lastAddedId;

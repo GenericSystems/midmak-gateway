@@ -1510,12 +1510,6 @@ class RegistrationList extends Component {
                                             )}  `}
                                           </h5>
                                         </Col>
-                                        <Col lg="4">
-                                          <h5 className="header-hours pt-2 ms-3 ">
-                                            {`${totalHours}`}{" "}
-                                            {this.props.t("hours")}
-                                          </h5>
-                                        </Col>
                                       </Row>
                                     </Col>
                                   </Row>

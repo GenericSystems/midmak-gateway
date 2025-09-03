@@ -73,10 +73,14 @@ import {
   GET_HALL_TIMINGS_SUCCESS,
   GET_HALL_TIMINGS_FAIL,
 } from "./actionTypes";
+//mays
+// export const getCoursesOffering = coursesOffering => ({
+//   type: GET_COURSES_OFFERING,
+//   payload: coursesOffering,
+// });
 
-export const getCoursesOffering = coursesOffering => ({
+export const getCoursesOffering = () => ({
   type: GET_COURSES_OFFERING,
-  payload: coursesOffering,
 });
 
 export const getCoursesOfferingSuccess = coursesOffering => ({
