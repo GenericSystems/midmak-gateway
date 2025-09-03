@@ -327,7 +327,7 @@ class RegistrationList extends Component {
     this.setState({ duplicateError: null, duplicateStudent: null });
   };
 
-  handleEditUniStudent = universityStudent => {
+  handleEditTrainee = trainee => {
     const { traineeEdit } = this.state;
     // const {
     //   onGetNonActiveStdCurr,
@@ -337,9 +337,9 @@ class RegistrationList extends Component {
     //   onGetAvailableCourses,
     //   onGetStudentRegisterInfo,
     // } = this.props;
-    console.log("universityStudent", universityStudent);
+    console.log("trainees", trainee);
     // onGetNonActiveStdCurr(0, universityStudent.SID);
-    this.setState({ traineeEdit: universityStudent });
+    this.setState({ traineeEdit: trainee });
 
     // onGetReqTypes({ facultyId: universityStudent.FacultyId });
     // onGetTempStdSchedules(universityStudent.SID);
@@ -678,11 +678,11 @@ class RegistrationList extends Component {
 
     console.log("labs", labs);
     console.log("timings", timings);
-    const uniStudentListColumns = [
+    const traineeListColumns = [
       {
-        text: "SID",
-        // key: "SID",
-        dataField: "SID",
+        text: "Trainee Num",
+        // key: "TraineeNum",
+        dataField: "TraineeNum",
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -711,8 +711,8 @@ class RegistrationList extends Component {
         }),
       },
       {
-        dataField: "trainerStatus",
-        // key: "trainerStatus",
+        dataField: "traineeStatus",
+        // key: "traineeStatus",
         text: this.props.t("Trainer Status"),
         sort: true,
         filter: textFilter({
@@ -732,7 +732,7 @@ class RegistrationList extends Component {
                 <i
                   className="bx bx-id-card font-size-18"
                   id="edittooltip"
-                  onClick={() => this.handleEditUniStudent(registration)}
+                  onClick={() => this.handleEditTrainee(registration)}
                 ></i>
               </Link>
             </Tooltip>
@@ -1190,9 +1190,9 @@ class RegistrationList extends Component {
                 tag="h4"
                 className="pb-0 d-flex"
               >
-                {traineeEdit.traineeName}
+                {traineeEdit.fullName}
                 {" - "}
-                {traineeEdit.SID}
+                {traineeEdit.TraineeNum}
 
                 {/* <Dropdown
                   className="d-lg-inline-block ms-1"
@@ -1447,9 +1447,7 @@ class RegistrationList extends Component {
                                     to="#"
                                     color="primary"
                                     onClick={() =>
-                                      this.handleEditUniStudent(
-                                        universityStudent
-                                      )
+                                      this.handleEditTrainee(universityStudent)
                                     }
                                   >
                                     <i
@@ -1729,14 +1727,14 @@ class RegistrationList extends Component {
                       <PaginationProvider
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
-                        columns={uniStudentListColumns}
+                        columns={traineeListColumns}
                         data={registrations}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
                             data={registrations}
-                            columns={uniStudentListColumns}
+                            columns={traineeListColumns}
                             search
                           >
                             {toolkitprops => (
@@ -1766,7 +1764,7 @@ class RegistrationList extends Component {
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
                                   data={registrations}
-                                  columns={uniStudentListColumns}
+                                  columns={traineeListColumns}
                                   defaultSorted={defaultSorting}
                                   filter={filterFactory()}
                                   filterPosition="top"
