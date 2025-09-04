@@ -72,7 +72,7 @@ class CourseCatalogeList extends Component {
       coursesCatalogs: [],
       courseCataloge: "",
       selectConId: null,
-      sectorArray:[],
+      CourseSectors: [],
       showAlert: null,
       showAddButton: false,
       showDeleteButton: false,
@@ -345,20 +345,21 @@ class CourseCatalogeList extends Component {
 
   handleSubmit = values => {
     const { onAddNewCoursesCatalog, onUpdateCoursesCatalog } = this.props;
+
     console.log("values", values);
 
     const {
-      selectedTrainingSector,
       selectedQualificationTrack,
       selectedTrainingProgram,
       selectedTrainingType,
       selectedTrainingFormat,
       isEdit,
       isAdd,
-      sectorArray,
+      CourseSectors,
       prerequisiteCoursesArray,
       selectedIsNeedLabs,
       selectedIsNeedSection,
+      sectorCode,
     } = this.state;
 
     let arCoursenameError = false;
@@ -369,72 +370,53 @@ class CourseCatalogeList extends Component {
     let trainingProgramError = false;
     let courseTypeError = false;
     let isSelectError = false;
+    let NeedLabError = false;
+    let NeedSectionError = false;
 
+    // Format selected sectors for saving
     const formattedSector =
-      sectorArray?.map(item=>({
-        label:item.label,
-        value:item.value,
-      }))||[];
-    
+      CourseSectors?.map(item => ({
+        label: item.label,
+        value: item.value,
+      })) || [];
 
+    // Assign form values
     values["arTitle"] = values["arTitle"] || "";
     values["enTitle"] = values["enTitle"] || "";
-    values["sectorId"] = formattedSector;
+    values["sectorId"] = formattedSector.value;
     values["qualificationTrackId"] = selectedQualificationTrack;
     values["qualificationCode"] = values["qualificationCode"] || "";
-
     values["programId"] = selectedTrainingProgram;
     values["Code"] = values["Code"] || "";
+    values["sectorCode"] = sectorCode || "";
     values["courseTypeId"] = selectedTrainingType;
     values["totalTrainingHours"] = values["totalTrainingHours"] || "";
     values["trainingModule"] = values["trainingModule"] || "";
     values["trainingFormatId"] = selectedTrainingFormat;
     values["descriptionAr"] = values["descriptionAr"] || "";
     values["descriptionEn"] = values["descriptionEn"] || "";
-
     values["isNeedSection"] = selectedIsNeedSection;
     values["isNeedLab"] = selectedIsNeedLabs;
 
-    if (values.arTitle === "") {
-      arCoursenameError = true;
-    }
+    // Validation
+    if (values.arTitle === "") arCoursenameError = true;
+    if (values.enTitle === "") enCoursenameError = true;
+    if (values.qualificationCode === "") qualificationCodeError = true;
 
-    if (values.enTitle === "") {
-      enCoursenameError = true;
+    if (CourseSectors.length === 0) traningSectorError = true;
+    if (!selectedQualificationTrack) traningSectorError = true;
+    if (values.Code === "") courseCodeError = true;
+    if (!selectedTrainingProgram) trainingProgramError = true;
+    if (!selectedTrainingType) courseTypeError = true;
+    if (selectedIsNeedSection !== 0 && selectedIsNeedSection !== 1) {
+      NeedSectionError = true;
     }
-    if (values.qualificationCode === "") {
-      qualificationCodeError = true;
-    }
-
-    if (!selectedTrainingSector) {
-      traningSectorError = true;
-    }
-
-    if (!selectedQualificationTrack) {
-      traningSectorError = true;
-    }
-
-    if (values.Code === "") {
-      courseCodeError = true;
-    }
-
-    if (!selectedTrainingProgram) {
-      trainingProgramError = true;
-    }
-
-    if (!selectedTrainingType) {
-      courseTypeError = true;
-    }
-
-    if (!selectedIsNeedSection) {
-      this.setState({ NeedSectionError: true });
-    }
-    if (!selectedIsNeedLabs) {
-      this.setState({ NeedLabError: true });
+    if (selectedIsNeedLabs !== 0 && selectedIsNeedLabs !== 1) {
+      NeedLabError = true;
     }
 
     if (
-      !selectedTrainingSector ||
+      CourseSectors.length === 0 ||
       !selectedQualificationTrack ||
       !selectedTrainingFormat ||
       !selectedTrainingProgram ||
@@ -451,7 +433,9 @@ class CourseCatalogeList extends Component {
       courseCodeError ||
       trainingProgramError ||
       courseTypeError ||
-      isSelectError
+      isSelectError ||
+      NeedLabError ||
+      NeedSectionError
     ) {
       this.setState({
         arCoursenameError,
@@ -461,20 +445,21 @@ class CourseCatalogeList extends Component {
         courseCodeError,
         trainingProgramError,
         courseTypeError,
+        NeedLabError,
+        NeedSectionError,
         emptyError: "Please fill all required fields",
       });
       return;
     }
 
+    // Build object for saving
     let courseCatalogInfo = {};
-
-    // courseCatalogInfo["prerequisiteCourses"] = prerequisiteCoursesArray;
-
     Object.keys(values).forEach(key => {
       if (values[key] !== undefined && values[key] !== "") {
         courseCatalogInfo[key] = values[key];
       }
     });
+
     if (isEdit) {
       console.log("Updating courseCatalogInfo:", courseCatalogInfo);
       onUpdateCoursesCatalog(courseCatalogInfo);
@@ -492,8 +477,23 @@ class CourseCatalogeList extends Component {
       enCoursenameError: false,
       emptyError: "",
     });
+  };
+  handleMultiSectors = (fieldName, selectedMulti) => {
+    if (fieldName === "sectorId") {
+      const CourseSectors = selectedMulti || [];
 
-    //this.toggle();
+      const concatenatedCodes = CourseSectors.map(sector => sector.code).join(
+        ","
+      );
+
+      this.setState({
+        CourseSectors: CourseSectors,
+        sectorCode: concatenatedCodes, // store concatenated codes
+      });
+
+      console.log("CourseSectors:", CourseSectors);
+      console.log("sectorCode:", concatenatedCodes);
+    }
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
@@ -568,7 +568,7 @@ class CourseCatalogeList extends Component {
       selectedTrainingFormat: arg.trainingFormatId,
       selectedTrainingSector: arg.sectorId,
       sectorCode: arg.sectorCode,
-      sectorArray:arg.sectorId,
+      CourseSectors: arg.sectorId,
       selectedQualificationTrack: arg.qualificationTrackId,
 
       selectedTrainingProgram: arg.programId,
@@ -618,6 +618,7 @@ class CourseCatalogeList extends Component {
       deleted,
       sectors,
       qualificationTracks,
+      CourseSectors,
       certificateTypes,
       courseTypes,
       trainingFormats,
@@ -1206,8 +1207,6 @@ class CourseCatalogeList extends Component {
                                                                     </Row>
                                                                   </div>
 
-                                                                 
-
                                                                   {/* Training Sector - SELECT */}
                                                                   <div className="mb-3">
                                                                     <Row>
@@ -1223,6 +1222,7 @@ class CourseCatalogeList extends Component {
                                                                       </Col>
                                                                       <Col className="col-8">
                                                                         <Select
+                                                                          id="sector"
                                                                           name="sectorId"
                                                                           options={
                                                                             trainingSectorOptions
@@ -1235,24 +1235,23 @@ class CourseCatalogeList extends Component {
                                                                               : "")
                                                                           }
                                                                           onChange={newValue =>
-                                                                            this.handleSelect(
+                                                                            this.handleMultiSectors(
                                                                               "sectorId",
-                                                                              newValue,
-                                                                              values
+                                                                              newValue
                                                                             )
                                                                           }
-                                                                          defaultValue={trainingSectorOptions.find(
-                                                                            opt =>
-                                                                              opt.value ===
-                                                                              courseCataloge?.sectorId
-                                                                          )}
+                                                                          isMulti
+                                                                          value={
+                                                                            this
+                                                                              .state
+                                                                              .CourseSectors
+                                                                          } // must come from state
                                                                         />
                                                                       </Col>
-
-                                                                      <Col></Col>
                                                                     </Row>
                                                                   </div>
-                                                                  {/* Sector Code - auto-filled from selected sector */}
+
+                                                                  {/* Sector Code - auto-filled from selected sectors */}
                                                                   <div className="mb-3">
                                                                     <Row>
                                                                       <Col className="col-4">
@@ -1271,16 +1270,14 @@ class CourseCatalogeList extends Component {
                                                                             this
                                                                               .state
                                                                               .sectorCode ||
-                                                                            courseCataloge.sectorCode ||
                                                                             ""
-                                                                          }
+                                                                          } // only use state
                                                                           readOnly
                                                                           className="form-control"
                                                                         />
                                                                       </Col>
                                                                     </Row>
                                                                   </div>
-
                                                                   {/* Training Program - SELECT */}
                                                                   <div className="mb-3">
                                                                     <Row>
@@ -1409,10 +1406,10 @@ class CourseCatalogeList extends Component {
                                                                 </Col>
 
                                                                 <Col lg="6">
-                                                                 {/* Course Name (EN) */}
+                                                                  {/* Course Name (EN) */}
                                                                   <div className="mb-3">
                                                                     <Row>
-                                                                     <Col className="col-4">
+                                                                      <Col className="col-4">
                                                                         <Label for="enTitle">
                                                                           {this.props.t(
                                                                             "Course Name (en)"
@@ -1442,9 +1439,6 @@ class CourseCatalogeList extends Component {
                                                                           className="invalid-feedback"
                                                                         />
                                                                       </Col>
-                                                                    
-                                                                    
-                                                                    
                                                                     </Row>
                                                                   </div>
                                                                   {/* Course Type - SELECT */}

@@ -106,6 +106,7 @@ function* fetchCoursesCatalogs(selectedpayload) {
 
   try {
     const response = yield call(getSectors, get_sectors_req);
+
     yield put(getSectorsSuccess(response));
   } catch (error) {
     yield put(getSectorsFail(error));
@@ -201,6 +202,7 @@ function* fetchCoursesCatalogs(selectedpayload) {
   payload["tablename"] = "_Common_CoursesCatalog";
   try {
     const response = yield call(getCoursesCatalogs, payload);
+
     console.log("responseresponseresponse", response);
     yield put(getCoursesCatalogsSuccess(response));
   } catch (error) {
@@ -217,6 +219,7 @@ function* onAddNewCoursesCatalog({ payload }) {
     payload["queryname"] = "_Common_CoursesCatalog";
 
     const response = yield call(addNewCoursesCatalog, payload);
+
     yield put(addCoursesCatalogSuccess(response[0]));
   } catch (error) {
     yield put(addCoursesCatalogFail(error));
@@ -232,6 +235,7 @@ function* onUpdateCoursesCatalog({ payload }) {
     payload["queryname"] = "_Common_CoursesCatalog";
 
     const response = yield call(updateCoursesCatalog, payload);
+    console.log("updatePayloadddddddddd",payload)
     yield put(updateCoursesCatalogSuccess(response[0]));
   } catch (error) {
     yield put(updateCoursesCatalogFail(error));
@@ -361,8 +365,6 @@ function* coursesCatalogsSaga() {
     onGetCoursesCatalogDeletedValue
   );
   yield takeEvery(GET_COURSES_CATALOGS_DATALIST, fetchCoursesCatalogsDatalist);
-  
-  
 
   //preeereqqq
   yield takeEvery(

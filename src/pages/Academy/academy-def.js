@@ -292,7 +292,7 @@ class AcademyInfo extends Component {
         <div className="page-content">
           <Breadcrumbs
             title={this.props.t("Academy Definition")}
-            breadcrumbItem={this.props.t("AcademyDefinition")}
+            breadcrumbItem={this.props.t("Academy Definition")}
           />
           <div>
             {successMessage && (
@@ -383,22 +383,22 @@ class AcademyInfo extends Component {
                                     onChange={this.handleInputChange}
                                   />
                                 </Col>
-                                
-                                 <Col lg="4" className="mt-2">
-                                <label
-                                  htmlFor="logo"
-                                  className="col-form-label"
-                                >
-                                  {t("Academy Logo")}:
-                                </label>
 
-                                <Input
-                                  type="file"
-                                  id="logo"
-                                  name="logo"
-                                  accept="image/*"
-                                />
-                              </Col>
+                                <Col lg="4" className="mt-2">
+                                  <label
+                                    htmlFor="logo"
+                                    className="col-form-label"
+                                  >
+                                    {t("Academy Logo")}:
+                                  </label>
+
+                                  <Input
+                                    type="file"
+                                    id="logo"
+                                    name="logo"
+                                    accept="image/*"
+                                  />
+                                </Col>
                               </Row>
                               <Row className="mt-3">
                                 <Col lg="4" className="mt-2">
@@ -443,156 +443,161 @@ class AcademyInfo extends Component {
                                   />
                                 </Col>
 
-                                 <Col lg="4" className="mt-2">
-                                <label
-                                  htmlFor="academyEventDecision"
-                                  className="col-form-label"
-                                >
-                                  {t("Academy Event Decision")}:
-                                </label>
+                                <Col lg="4" className="mt-2">
+                                  <label
+                                    htmlFor="academyEventDecision"
+                                    className="col-form-label"
+                                  >
+                                    {t("Academy Event Decision")}:
+                                  </label>
 
-                                <Input
-                                  type="file"
-                                  id="academyEventDecision"
-                                  name="academyEventDecision"
-                                  accept="image/*"
-                                />
-                              </Col>
+                                  <Input
+                                    type="file"
+                                    id="academyEventDecision"
+                                    name="academyEventDecision"
+                                    accept="image/*"
+                                  />
+                                </Col>
                               </Row>
                             </div>
 
-                            {AcademyCountryInfo.map((row, idx) => (
-                              <div
-                                key={idx}
-                                className="mb-3 border p-3 rounded"
-                              >
-                                <Row className="mb-3">
-                                  <Col lg="4">
-                                    <label className="form-label">
-                                      {t("Country")}
-                                    </label>
-                                    <Select
-                                      className="form-control"
-                                      name="CountryId"
-                                      id={`CountryId_${idx}`}
-                                      key={`CountryId_select_${idx}`}
-                                      options={
-                                        Array.isArray(countriesOpt)
-                                          ? countriesOpt
-                                          : []
-                                      }
-                                      onChange={newValue =>
-                                        this.handleCountryChange(idx, {
-                                          target: {
-                                            name: "CountryId",
-                                            value: newValue
-                                              ? newValue.value
-                                              : "",
-                                          },
-                                        })
-                                      }
-                                      value={
-                                        Array.isArray(countriesOpt)
-                                          ? countriesOpt.find(
-                                              opt => opt.value === row.CountryId
-                                            ) || null
-                                          : null
-                                      }
-                                      placeholder={t("Select Country")}
-                                    />
-                                  </Col>
-                                  <Col lg="4" className="mt-2">
-                                    <label className="col-form-label">
-                                      {t("Location")} :
-                                    </label>
-
-                                    <input
-                                      type="text"
-                                      name="Location"
-                                      className="form-control"
-                                      value={row.Location}
-                                      onChange={e =>
-                                        this.handleCountryChange(idx, e)
-                                      }
-                                    />
-                                  </Col>
-                                  <Col lg="4" className="mt-2">
-                                    <label className="col-form-label">
-                                      {t("Only WhatsApp Number")} :
-                                    </label>
-
-                                    <input
-                                      type="text"
-                                      name="WhatsAppNumber"
-                                      className="form-control"
-                                      value={row.WhatsAppNumber}
-                                      onChange={e =>
-                                        this.handleCountryChange(idx, e)
-                                      }
-                                    />
-                                  </Col>
-                                </Row>
-
-                                <Row className="mt-2"></Row>
-
-                                <Row className="mt-2">
-                                  <Col lg="4" className="mt-2">
-                                    <label className="col-form-label">
-                                      {t("Phone & WhatsApp")} :
-                                    </label>
-
-                                    <input
-                                      type="text"
-                                      name="phoneAndWhatsappNumber"
-                                      className="form-control"
-                                      value={row.phoneAndWhatsappNumber}
-                                      onChange={e =>
-                                        this.handleCountryChange(idx, e)
-                                      }
-                                    />
-                                  </Col>
-                                  <Col lg="4" className="mt-2">
-                                    <label className="col-form-label">
-                                      {t("Only Phone")}:
-                                    </label>
-
-                                    <input
-                                      type="text"
-                                      name="PhoneNumber"
-                                      className="form-control"
-                                      value={row.PhoneNumber}
-                                      onChange={e =>
-                                        this.handleCountryChange(idx, e)
-                                      }
-                                    />
-                                  </Col>
-                                  <Col lg="4" className="mt-2">
-                                    <label className="col-form-label">
-                                      {t("Fax")}:
-                                    </label>
-
-                                    <input
-                                      type="text"
-                                      name="FaxNumber"
-                                      className="form-control"
-                                      value={row.FaxNumber}
-                                      onChange={e =>
-                                        this.handleCountryChange(idx, e)
-                                      }
-                                    />
-                                  </Col>
-                                </Row>
-
-                                <Button
-                                  type="button"
-                                  color="danger"
-                                  className="mt-2"
-                                  onClick={() => this.handleRemoveCountry(idx)}
+                            {Array.isArray(this.state.AcademyCountryInfo) &&
+                              this.state.AcademyCountryInfo.map((row, idx) => (
+                                <div
+                                  key={idx}
+                                  className="mb-3 border p-3 rounded"
                                 >
-                                  {t("Remove")}
-                                </Button>
-                              </div>
-                            ))}
+                                  <Row className="mb-3">
+                                    <Col lg="4">
+                                      <label className="form-label">
+                                        {t("Country")}
+                                      </label>
+                                      <Select
+                                        className="form-control"
+                                        name="CountryId"
+                                        id={`CountryId_${idx}`}
+                                        key={`CountryId_select_${idx}`}
+                                        options={
+                                          Array.isArray(countriesOpt)
+                                            ? countriesOpt
+                                            : []
+                                        }
+                                        onChange={newValue =>
+                                          this.handleCountryChange(idx, {
+                                            target: {
+                                              name: "CountryId",
+                                              value: newValue
+                                                ? newValue.value
+                                                : "",
+                                            },
+                                          })
+                                        }
+                                        value={
+                                          Array.isArray(countriesOpt)
+                                            ? countriesOpt.find(
+                                                opt =>
+                                                  opt.value === row.CountryId
+                                              ) || null
+                                            : null
+                                        }
+                                        placeholder={t("Select Country")}
+                                      />
+                                    </Col>
+                                    <Col lg="4" className="mt-2">
+                                      <label className="col-form-label">
+                                        {t("Location")} :
+                                      </label>
+
+                                      <input
+                                        type="text"
+                                        name="Location"
+                                        className="form-control"
+                                        value={row.Location}
+                                        onChange={e =>
+                                          this.handleCountryChange(idx, e)
+                                        }
+                                      />
+                                    </Col>
+                                    <Col lg="4" className="mt-2">
+                                      <label className="col-form-label">
+                                        {t("Only WhatsApp Number")} :
+                                      </label>
+
+                                      <input
+                                        type="text"
+                                        name="WhatsAppNumber"
+                                        className="form-control"
+                                        value={row.WhatsAppNumber}
+                                        onChange={e =>
+                                          this.handleCountryChange(idx, e)
+                                        }
+                                      />
+                                    </Col>
+                                  </Row>
+
+                                  <Row className="mt-2"></Row>
+
+                                  <Row className="mt-2">
+                                    <Col lg="4" className="mt-2">
+                                      <label className="col-form-label">
+                                        {t("Phone & WhatsApp")} :
+                                      </label>
+
+                                      <input
+                                        type="text"
+                                        name="phoneAndWhatsappNumber"
+                                        className="form-control"
+                                        value={row.phoneAndWhatsappNumber}
+                                        onChange={e =>
+                                          this.handleCountryChange(idx, e)
+                                        }
+                                      />
+                                    </Col>
+                                    <Col lg="4" className="mt-2">
+                                      <label className="col-form-label">
+                                        {t("Only Phone")}:
+                                      </label>
+
+                                      <input
+                                        type="text"
+                                        name="PhoneNumber"
+                                        className="form-control"
+                                        value={row.PhoneNumber}
+                                        onChange={e =>
+                                          this.handleCountryChange(idx, e)
+                                        }
+                                      />
+                                    </Col>
+                                    <Col lg="4" className="mt-2">
+                                      <label className="col-form-label">
+                                        {t("Fax")}:
+                                      </label>
+
+                                      <input
+                                        type="text"
+                                        name="FaxNumber"
+                                        className="form-control"
+                                        value={row.FaxNumber}
+                                        onChange={e =>
+                                          this.handleCountryChange(idx, e)
+                                        }
+                                      />
+                                    </Col>
+                                  </Row>
+                                  {this.state.AcademyCountryInfo.length > 1 && (
+                                    <Button
+                                      type="button"
+                                      color="danger"
+                                      className="mt-2"
+                                      onClick={() =>
+                                        this.handleRemoveCountry(idx)
+                                      }
+                                    >
+                                      {t("Remove")}
+                                    </Button>
+                                  )}
+                                </div>
+                              ))}
 
                             <Row className="mt-3">
                               <Col lg="12">
@@ -605,27 +610,9 @@ class AcademyInfo extends Component {
                                 </Button>
                               </Col>
                             </Row>
-
-                             
-                          
                           </Col>
 
-                         
-                            <div className="mb-3">
-                             
-                                
-                                <Col lg="8" className="mt-4">
-                                  {logo && (
-                                    <img
-                                      src={URL.createObjectURL(logo)}
-                                      alt="Academy Logo"
-                                      className="academy-logo"
-                                    />
-                                  )}
-                                </Col>
-                              
-                            </div>
-                        
+                          <div className="mb-3"></div>
                         </Row>
                         {/* {this.state.successMessage && (
                       <div className="text-success mb-3">
