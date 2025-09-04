@@ -82,7 +82,7 @@ class CourseCatalogeList extends Component {
       sectorCode: [],
       qualificationTrackOptions: [],
       trainingProgramOptions: [],
-      trainingModuleOptions: [],
+      // trainingModuleOptions: [],
       trainingTypeOptions: [],
     };
     this.state = {
@@ -391,7 +391,7 @@ class CourseCatalogeList extends Component {
     values["sectorCode"] = sectorCode || "";
     values["courseTypeId"] = selectedTrainingType;
     values["totalTrainingHours"] = values["totalTrainingHours"] || "";
-    values["trainingModule"] = values["trainingModule"] || "";
+    // values["trainingModule"] = values["trainingModule"] || "";
     values["trainingFormatId"] = selectedTrainingFormat;
     values["descriptionAr"] = values["descriptionAr"] || "";
     values["descriptionEn"] = values["descriptionEn"] || "";
@@ -741,12 +741,12 @@ class CourseCatalogeList extends Component {
         editable: false,
       },
 
-      {
-        dataField: "trainingModule",
-        text: this.props.t("Training Modules"),
-        sort: true,
-        editable: false,
-      },
+      // {
+      //   dataField: "trainingModule",
+      //   text: this.props.t("Training Modules"),
+      //   sort: true,
+      //   editable: false,
+      // },
       {
         dataField: "courseType",
         text: this.props.t("Course Type"),
@@ -1070,9 +1070,9 @@ class CourseCatalogeList extends Component {
                                           totalTrainingHours:
                                             courseCataloge?.totalTrainingHours ||
                                             "",
-                                          trainingModule:
-                                            courseCataloge?.trainingModule ||
-                                            "",
+                                          // trainingModule:
+                                          //   courseCataloge?.trainingModule ||
+                                          //   "",
                                           trainingFormatId:
                                             courseCataloge?.trainingFormatId ||
                                             selectedTrainingFormat,
@@ -1119,9 +1119,9 @@ class CourseCatalogeList extends Component {
                                                 "Total Training Hours is required"
                                               )
                                             ),
-                                          trainingModule: Yup.string().required(
-                                            t("Training Module is required")
-                                          ),
+                                          // trainingModule: Yup.string().required(
+                                          //   t("Training Module is required")
+                                          // ),
                                           trainingFormatId:
                                             Yup.string().required(
                                               t("Training Format is required")
@@ -1498,9 +1498,9 @@ class CourseCatalogeList extends Component {
                                                                       </Col>
                                                                     </Row>
                                                                   </div>
-
+{/* 
                                                                   {/* Training Module */}
-                                                                  <div className="mb-3">
+                                                                  {/* <div className="mb-3">
                                                                     <Row>
                                                                       <Col className="col-4">
                                                                         <Label for="trainingModule">
@@ -1518,7 +1518,7 @@ class CourseCatalogeList extends Component {
                                                                         />
                                                                       </Col>
                                                                     </Row>
-                                                                  </div>
+                                                                  </div> */}
 
                                                                   {/* Training Format - SELECT */}
                                                                   <div className="mb-3">
@@ -1557,7 +1557,7 @@ class CourseCatalogeList extends Component {
                                                                   <div className="mb-3">
                                                                     <Row>
                                                                       <Col className="col-4">
-                                                                        <Label for="trainingModule">
+                                                                        <Label for="isNeedSection">
                                                                           {this.props.t(
                                                                             "Needet Sections"
                                                                           )}
@@ -1627,9 +1627,9 @@ class CourseCatalogeList extends Component {
                                                                   <div className="mb-3">
                                                                     <Row>
                                                                       <Col className="col-4">
-                                                                        <Label for="trainingModule">
+                                                                        <Label for="isNeedLab">
                                                                           {this.props.t(
-                                                                            "Needet Labs"
+                                                                            "Need Labs"
                                                                           )}
                                                                         </Label>
                                                                         <span className="text-danger">
