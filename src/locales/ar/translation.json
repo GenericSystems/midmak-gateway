@@ -512,16 +512,18 @@
    "Website":"الموقع الالكتروني",
    "Academy Event Decision":"قرار احداث الأكاديمية",
    "Remove":"ازالة",
-   "Add Country Info":"اضافة معلومات بلد جديد",
+   "Add Country Info":"اضافة بلد ",
    "Academy Name (ar)":"اسم الأكاديمية(عربي)",
    "Academy Name (en)":"اسم الأكاديمية (انكليزي)",
    "Academy Logo":"شعار الأكاديمية",
    "Location":"المقر",
    "Qualification Tracks(ar)":"(عربي)المساقات التأهيلية",
    "Qualification Tracks(en)":"(انكليزي)المساقات التأهيلية",
-   "code":"الرمز"
-  
-
+   "code":"الرمز",
+   "Academy Information":"معلومات الاكاديمية",
+   "Academy Definition":"تعريف الاكاديمية",
+   "Select Country":"اختر بلد"
+ 
 
 
 
