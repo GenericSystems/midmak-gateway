@@ -71,15 +71,11 @@ function* fetchArchivedGrades(obj) {
   } catch (error) {
     yield put(getCourseStatisticsFail(error));
   }
-}
-
-function* fetchCoursesOpt() {
-  //get rquired course options
   const get_preReqCourse_opt = {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_courseOffering",
+    tablename: "_Common_CourseOfferingOnly",
     fields: "CourseId,courseCode,courseName",
   };
   try {
@@ -88,10 +84,6 @@ function* fetchCoursesOpt() {
   } catch (error) {
     yield put(getCoursesOptFail(error));
   }
-}
-
-function* fetchCourseContentsGrades(obj) {
-  let course = obj.payload;
 
   const get_courseContents = {
     source: "db",
@@ -145,11 +137,6 @@ function* fetchFilteredSections(obj) {
 }
 
 function* archiveGradesSaga() {
-  yield takeEvery(GET_COURSES_OPT, fetchCoursesOpt);
-  yield takeEvery(
-    GET_COURSE_CONTENTS_ENTERED_GRADES,
-    fetchCourseContentsGrades
-  );
   yield takeEvery(GET_FILTERED_SECTIONS, fetchFilteredSections);
 
   // ARCHIVED GRADES

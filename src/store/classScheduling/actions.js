@@ -390,14 +390,14 @@ export const getScheduleTimingDescsFail = error => ({
   payload: error,
 });
 
-export const getFilteredSections = filteredSrctions => ({
+export const getFilteredSections = filteredSections => ({
   type: GET_FILTERED_SECTIONS,
-  payload: filteredSrctions,
+  payload: filteredSections,
 });
 
-export const getFilteredSectionsSuccess = filteredSrctions => ({
+export const getFilteredSectionsSuccess = filteredSections => ({
   type: GET_FILTERED_SECTIONS_SUCCESS,
-  payload: filteredSrctions,
+  payload: filteredSections,
 });
 
 export const getFilteredSectionsFail = error => ({

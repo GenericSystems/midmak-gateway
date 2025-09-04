@@ -81,7 +81,7 @@ class EnterGradesList extends Component {
     } = this.props;
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    /*  if (enteredGrades && !enteredGrades.length) {
+    if (enteredGrades && !enteredGrades.length) {
       const obj = {
         courseId: 0,
       };
@@ -90,7 +90,7 @@ class EnterGradesList extends Component {
       this.setState({ courseContentsEnteredGrades });
       this.setState({ coursesOpt });
       this.setState({ filteredSections });
-    } */
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

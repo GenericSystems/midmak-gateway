@@ -112,10 +112,11 @@ function* fetchCoursesOpt() {
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_CourseOfferingOnly",
-    fields: "CourseId,courseCode,courseName",
+    fields: "courseId,Code,courseName",
   };
   try {
     const response = yield call(getCoursesOpt, getCourseOptions);
+    console.log("reeeeeeeeeeees", response);
     yield put(getCoursesOptSuccess(response));
   } catch (error) {
     yield put(getCoursesOptFail(error));
@@ -128,8 +129,8 @@ function* fetchFilteredSections({ payload }) {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_Section",
-    fields: "Id,SectionNumber,CourseCode",
-    filter: `CourseId = ${payload.courseId} and CourseCode = ''''${payload.CourseCode}'''' `,
+    fields: "Id,SectionNumber,courseId",
+    filter: `CourseId = ${payload.courseId}'''' `,
   };
   try {
     const response = yield call(getFilteredSections, request);

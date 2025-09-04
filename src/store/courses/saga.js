@@ -171,7 +171,7 @@ function* fetchCourses() {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Course",
+    tablename: "_Common_CourseOfferingOnly",
     fields: "Id,code,arCourseName",
   };
   try {
@@ -228,7 +228,7 @@ function* fetchCourses() {
 }
 function* fetchFilteredDepartments(obj) {
   let faculty = obj.payload;
-  console.log("faculty",faculty)
+  console.log("faculty", faculty);
   const get_department_opt = {
     source: "db",
     procedure: "Generic_getOptions",
@@ -275,8 +275,8 @@ function* onUpdateCourse({ payload }) {
     const respupdate = yield call(updateCourse, payload);
     respupdate.map(resp => {
       resp["CoursesContents"] = JSON.parse(resp["CoursesContents"]);
-     resp["CoursePrerequisites"] = JSON.parse(resp["CoursePrerequisites"]);
-    }); 
+      resp["CoursePrerequisites"] = JSON.parse(resp["CoursePrerequisites"]);
+    });
     yield put(updateCourseSuccess(respupdate[0]));
   } catch (error) {
     yield put(updateCourseFail(error));
