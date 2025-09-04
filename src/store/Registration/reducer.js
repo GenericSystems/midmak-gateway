@@ -107,11 +107,16 @@ const registrations = (state = INIT_STATE, action) => {
         error: action.payload,
       };
 
-    case GET_STUDENT_REGISTER_INFO_SUCCESS:
-      return {
-        ...state,
-        studentRegisterInfo: action.payload,
-      };
+    // case GET_STUDENT_REGISTER_INFO_SUCCESS:
+    //   return {
+    //     ...state,
+    //     studentRegisterInfo: action.payload,
+    //   };
+    //  case GET_STUDENT_REGISTER_INFO_FAIL:
+    //   return {
+    //     ...state,
+    //     error: action.payload,
+    //   };
 
     case UPDATE_REGISTRATION_SUCCESS:
       return {
@@ -139,12 +144,6 @@ const registrations = (state = INIT_STATE, action) => {
       };
 
     case DELETE_REGISTRATION_FAIL:
-      return {
-        ...state,
-        error: action.payload,
-      };
-
-    case GET_STUDENT_REGISTER_INFO_FAIL:
       return {
         ...state,
         error: action.payload,

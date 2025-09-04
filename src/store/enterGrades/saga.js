@@ -47,7 +47,7 @@ function* fetchEnteredGrades({ payload }) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Current_Common_StudentsCurriculalines",
+    tablename: "_Current_Common_TrianeeCurriculalines",
     filter: payload.filter,
   };
   try {
@@ -63,7 +63,7 @@ function* fetchCourseStatistics({ payload }) {
     source: "db",
     procedure: "getCourseStatistics",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_StudentsCurriculalines",
+    tablename: "Common_Curriculalines",
     filter: `courseId = ${payload.courseId}`,
     flag: payload.flag,
   };
@@ -95,8 +95,8 @@ function* onUpdateEnteredGrade({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SC_SisApp_updateStudentGrade";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_StudentsCurriculalines";
-  payload["queryname"] = "_Current_Common_StudentsCurriculalines";
+  payload["tablename"] = "Common_Curriculalines";
+  payload["queryname"] = "_Current_Common_TrianeeCurriculalines";
 
   try {
     const response = yield call(updateEnteredGrade, payload);

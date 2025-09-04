@@ -11,9 +11,9 @@ import {
   DELETE_REGISTRATION,
   DELETE_REGISTRATION_SUCCESS,
   DELETE_REGISTRATION_FAIL,
-  GET_STUDENT_REGISTER_INFO,
-  GET_STUDENT_REGISTER_INFO_SUCCESS,
-  GET_STUDENT_REGISTER_INFO_FAIL,
+  // GET_STUDENT_REGISTER_INFO,
+  // GET_STUDENT_REGISTER_INFO_SUCCESS,
+  // GET_STUDENT_REGISTER_INFO_FAIL,
   GET_AVAILABLE_COURSES,
   GET_AVAILABLE_COURSES_FAIL,
   GET_AVAILABLE_COURSES_SUCCESS,
@@ -56,20 +56,20 @@ export const getRegistrationsFail = error => ({
   payload: error,
 });
 
-export const getStudentRegisterInfo = studentId => ({
-  type: GET_STUDENT_REGISTER_INFO,
-  payload: studentId,
-});
+// export const getStudentRegisterInfo = studentId => ({
+//   type: GET_STUDENT_REGISTER_INFO,
+//   payload: studentId,
+// });
 
-export const getStudentRegisterInfoSuccess = studentRegisterInfos => ({
-  type: GET_STUDENT_REGISTER_INFO_SUCCESS,
-  payload: studentRegisterInfos,
-});
+// export const getStudentRegisterInfoSuccess = studentRegisterInfos => ({
+//   type: GET_STUDENT_REGISTER_INFO_SUCCESS,
+//   payload: studentRegisterInfos,
+// });
 
-export const getStudentRegisterInfoFail = error => ({
-  type: GET_STUDENT_REGISTER_INFO_FAIL,
-  payload: error,
-});
+// export const getStudentRegisterInfoFail = error => ({
+//   type: GET_STUDENT_REGISTER_INFO_FAIL,
+//   payload: error,
+// });
 
 export const addNewRegistration = registration => ({
   type: ADD_NEW_REGISTRATION,
@@ -116,11 +116,10 @@ export const deleteRegistrationFail = error => ({
   payload: error,
 });
 
-export const getAvailableCourses = (userType, studentId) => ({
+export const getAvailableCourses = traineeId => ({
   type: GET_AVAILABLE_COURSES,
   payload: {
-    userType,
-    studentId,
+    traineeId,
   },
 });
 
@@ -147,11 +146,11 @@ export const addAvailableCourseFail = error => ({
   type: ADD_AVAILABLE_COURSE_FAIL,
   payload: error,
 });
-export const getNonActiveStdCurr = (active, studentId) => ({
+export const getNonActiveStdCurr = (active, traineeId) => ({
   type: GET_NON_ACTIVE_STD_CURRS,
   payload: {
     active,
-    studentId,
+    traineeId,
   },
 });
 

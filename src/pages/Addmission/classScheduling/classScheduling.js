@@ -78,6 +78,7 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+const NoMultiValue = props => null;
 import { sectionLabs } from "common/data/sectionLabs";
 class ClassSchedulingList extends Component {
   constructor(props) {

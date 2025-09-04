@@ -1575,6 +1575,36 @@ class TraineesList extends Component {
     }
   };
 
+  handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
+    // const { onGetempTraineesDocuments } = this.props;
+    const { diplomalevels } = this.props;
+    const selectedValue = event.target.value;
+    console.log("selectedValue", selectedValue);
+
+    this.setState({
+      tempTrainee: values,
+    });
+
+    const diplomaObject = diplomalevels.find(
+      certificate => certificate.value === event.target.value
+    );
+    console.log(diplomaObject, "ollllllll");
+    // let obj = { certificateLevelId: diplomaObject.key };
+    // console.log("objobjobj", obj);
+    // onGetempTraineesDocuments(obj);
+    setFieldValue("diplomaId", selectedValue);
+
+    if (diplomaObject) {
+      this.setState({
+        selectedDiplomaId: diplomaObject.key,
+        selectedDiploma: selectedValue,
+        diplomaTypeName: diplomaObject.value,
+        diplomaError: false,
+        tempTrainee: values,
+      });
+    }
+  };
+
   render() {
     const {
       trainees,
@@ -7002,6 +7032,7 @@ class TraineesList extends Component {
                                                                                           value={
                                                                                             values.UnivCountryId
                                                                                           }
+                                                                                          autoComplete="off"
                                                                                           onChange={event => {
                                                                                             setFieldValue(
                                                                                               "UnivCountryId",
@@ -7327,6 +7358,7 @@ class TraineesList extends Component {
                                                                                           value={
                                                                                             values.InstituteCountryId
                                                                                           }
+                                                                                          autoComplete="off"
                                                                                           onChange={event => {
                                                                                             const selectedInstituteCountry =
                                                                                               event
@@ -7526,6 +7558,7 @@ class TraineesList extends Component {
                                                                                           value={
                                                                                             values.UnivCountryId
                                                                                           }
+                                                                                          autoComplete="off"
                                                                                           onChange={event => {
                                                                                             setFieldValue(
                                                                                               "UnivCountryId",
@@ -7751,6 +7784,7 @@ class TraineesList extends Component {
                                                                                               "diplomaId"
                                                                                             )
                                                                                           }
+                                                                                          autoComplete="off"
                                                                                           onFocus={() =>
                                                                                             this.handleInputFocus(
                                                                                               "diplomaId"
@@ -7838,6 +7872,7 @@ class TraineesList extends Component {
                                                                                           value={
                                                                                             values.DiplomaCountryId
                                                                                           }
+                                                                                          autoComplete="off"
                                                                                           onChange={event => {
                                                                                             const selectedCountry =
                                                                                               event
@@ -7892,6 +7927,7 @@ class TraineesList extends Component {
                                                                                           value={
                                                                                             values.DiplomaGovernorateId
                                                                                           }
+                                                                                          autoComplete="off"
                                                                                           onChange={event => {
                                                                                             setFieldValue(
                                                                                               "DiplomaGovernorateId",

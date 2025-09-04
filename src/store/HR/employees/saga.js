@@ -129,9 +129,9 @@ function* fetchCountries() {
 function* fetchCities() {
   const get_Cities_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Country",
+    tablename: "Settings_City",
     fields: "Id,arTitle",
   };
   try {
@@ -146,9 +146,9 @@ function* fetchCities() {
 function* fetchStates() {
   const get_States_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Country",
+    tablename: "Settings_Governorate",
     fields: "Id,arTitle",
   };
   try {
@@ -163,7 +163,7 @@ function* fetchStates() {
 function* fetchCorporateNodes() {
   const get_CorporateNodes_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_Gender",
     fields: "Id,arTitle",

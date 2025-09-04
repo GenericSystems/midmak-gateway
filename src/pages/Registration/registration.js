@@ -44,7 +44,7 @@ import {
   getTempStdSchedules,
   deleteAllNonActiveStdCurr,
   getAchievedCourses,
-  getStudentRegisterInfo,
+  getTraineeRegisterInfo,
   saveAllNonActiveStdCurr,
 } from "store/Registration/actions";
 import { fetchYearsSemesters } from "store/general-management/actions";
@@ -75,7 +75,7 @@ class RegistrationList extends Component {
       activeTab2: "0",
       mainTab: "5",
       duplicateError: null,
-      duplicateStudent: null,
+      duplicateTrainee: null,
       successMessage: null,
       newStartTime: "",
       newEndTime: "",
@@ -159,13 +159,13 @@ class RegistrationList extends Component {
       this.setState({
         mainTab: tab,
         duplicateError: null,
-        duplicateStudent: null,
+        duplicateTrainee: null,
         successMessage: null,
       });
       if (tab === "6") {
-        // onGetNonActiveStdCurr(1, traineeEdit.SID);
+        // onGetNonActiveStdCurr(1, traineeEdit.TraineeNum);
       } else {
-        // onGetNonActiveStdCurr(0, traineeEdit.SID);
+        // onGetNonActiveStdCurr(0, traineeEdit.TraineeNum);
       }
     }
   }
@@ -324,29 +324,23 @@ class RegistrationList extends Component {
   };
 
   handleAlertClose = () => {
-    this.setState({ duplicateError: null, duplicateStudent: null });
+    this.setState({ duplicateError: null, duplicateTrainee: null });
   };
 
   handleEditTrainee = trainee => {
     const { traineeEdit } = this.state;
-    // const {
-    //   onGetNonActiveStdCurr,
-    //   onGetTempStdSchedules,
-    //   onGetAchievedCourses,
-    //   onGetReqTypes,
-    //   onGetAvailableCourses,
-    //   onGetStudentRegisterInfo,
-    // } = this.props;
+    const {
+      onGetNonActiveStdCurr,
+      onGetTempStdSchedules,
+      onGetAchievedCourses,
+      onGetReqTypes,
+      onGetAvailableCourses,
+    } = this.props;
     console.log("trainees", trainee);
-    // onGetNonActiveStdCurr(0, universityStudent.SID);
+    onGetNonActiveStdCurr(0, trainee.Id);
     this.setState({ traineeEdit: trainee });
-
-    // onGetReqTypes({ facultyId: universityStudent.FacultyId });
-    // onGetTempStdSchedules(universityStudent.SID);
-
-    // onGetAchievedCourses(universityStudent.SID);
-    // onGetAvailableCourses(0, universityStudent.SID);
-    // onGetStudentRegisterInfo(universityStudent.SID);
+    // onGetTempStdSchedules(academyTrainee.TraineeNum);
+    onGetAvailableCourses(trainee.Id);
     this.toggle();
   };
 
@@ -357,6 +351,10 @@ class RegistrationList extends Component {
   handleDeleteNonActiveStdCurr = () => {
     const { onDeleteNonActiveStdCurr } = this.props;
     const { nonActiveCourse, active } = this.state;
+    console.log(
+      "nonActiveCoursenonActiveCoursenonActiveCourse",
+      nonActiveCourse
+    );
     if (active == 0) {
       this.resetNonActiveStdCurrs(nonActiveCourse);
     }
@@ -365,25 +363,24 @@ class RegistrationList extends Component {
     this.setState({ deleteModal: false });
   };
   handleAddToAddedCourses = (row, currentStatus, fieldName) => {
-    // const { onAddNewAvailableCourse, currentSemester, onGetNonActiveStdCurr } =
-    //   this.props;
-    const { traineeEdit, currReqType } = this.state;
+    const { onAddNewAvailableCourse, onGetNonActiveStdCurr } = this.props;
+    const { traineeEdit } = this.state;
+    console.log("traineeEdit", traineeEdit);
     const newRow = {
       courseId: row.courseId,
-      StudentId: traineeEdit.SID,
-      Code: row.courseCode,
-      YearSemesterId: currentSemester.cuYearSemesterId,
+      traineeId: traineeEdit.Id,
+      Code: row.Code,
       active: 0,
       color: this.generateRandomColor(),
     };
-    // onAddNewAvailableCourse(newRow);
+    onAddNewAvailableCourse(newRow);
   };
 
   handleActiveSelectChange = (rowId, fieldName, selectedValue, oldValue) => {
     const { onUpdateNonActiveStdCurr, nonActiveStdCurrs } = this.props;
     const { traineeEdit } = this.state;
     let onUpdate = { Id: rowId };
-    onUpdate["studentId"] = traineeEdit.SID;
+    onUpdate["traineeId"] = traineeEdit.traineeId;
     const checkOverlap = (interval1, interval2) => {
       return (
         interval1.startTimeValue < interval2.endTimeValue &&
@@ -455,7 +452,7 @@ class RegistrationList extends Component {
     const overlaps = checkOverlapWithSelected(selectedValue);
 
     if (overlaps.length > 0) {
-      this.setState({ duplicateStudent: "There is a time conflict" });
+      this.setState({ duplicateTrainee: "There is a time conflict" });
     } else {
       if (fieldName === "section") {
         onUpdate["SectionId"] = selectedValue.value;
@@ -464,7 +461,7 @@ class RegistrationList extends Component {
       }
 
       onUpdateNonActiveStdCurr(onUpdate, 1);
-      this.setState({ duplicateStudent: null });
+      this.setState({ duplicateTrainee: null });
     }
   };
 
@@ -484,7 +481,7 @@ class RegistrationList extends Component {
     const { traineeEdit, timings } = this.state;
     const { onUpdateNonActiveStdCurr } = this.props;
     let onUpdate = { Id: row.Id };
-    onUpdate["studentId"] = traineeEdit.SID;
+    onUpdate["traineeId"] = traineeEdit.TraineeNum;
     if (fieldName === "section") {
       const selectedSection = row.sections.find(
         section => section.value === selectedValue
@@ -523,7 +520,7 @@ class RegistrationList extends Component {
     const { traineeEdit } = this.state;
     const { onDeleteAllNonActiveStdCurr, currentSemester } = this.props;
     let ob = {};
-    ob["studentId"] = traineeEdit.SID;
+    ob["traineeId"] = traineeEdit.TraineeNum;
     ob["flag"] = "reset";
     ob["semesterYearId"] = currentSemester.cuYearSemesterId;
     onDeleteAllNonActiveStdCurr(ob);
@@ -534,7 +531,7 @@ class RegistrationList extends Component {
     const { traineeEdit } = this.state;
     const { onDeleteAllNonActiveStdCurr, currentSemester } = this.props;
     let ob = {};
-    ob["studentId"] = traineeEdit.SID;
+    ob["traineeId"] = traineeEdit.TraineeNum;
     ob["flag"] = "delete";
     ob["semesterYearId"] = currentSemester.cuYearSemesterId;
 
@@ -548,21 +545,21 @@ class RegistrationList extends Component {
       this.setState({ failedWithPassed: false });
     }
   };
-  saveStudent = () => {
+  saveTrainee = () => {
     const {
-      studentRegisterInfo,
+      traineeRegisterInfo,
       nonActiveStdCurrs,
       onSaveAllNonActiveStdCurr,
       currentSemester,
     } = this.props;
     const { totalHours, traineeEdit } = this.state;
     const minHours =
-      studentRegisterInfo &&
-      studentRegisterInfo[0] &&
-      studentRegisterInfo[0].minRegisteredHour;
+      traineeRegisterInfo &&
+      traineeRegisterInfo[0] &&
+      traineeRegisterInfo[0].minRegisteredHour;
     let errors = [];
     let ob = {};
-    ob["studentId"] = traineeEdit.SID;
+    ob["traineeId"] = traineeEdit.TraineeNum;
     ob["yearSemesterId"] = currentSemester.cuYearSemesterId;
 
     if (minHours > totalHours) {
@@ -571,13 +568,13 @@ class RegistrationList extends Component {
         duplicateError: "Minimum registered hours requirement not met.",
       });
     } else {
-      nonActiveStdCurrs.forEach(student => {
-        if (!student.SectionId) {
-          errors.push(`SectionId is empty for student: ${student.code}`);
+      nonActiveStdCurrs.forEach(trainee => {
+        if (!trainee.SectionId) {
+          errors.push(`SectionId is empty for trainee: ${trainee.code}`);
           this.setState({ duplicateError: "Fill the options" });
         }
-        if (student.hasLab === 1 && !student.LabId) {
-          errors.push(`LabId is empty for student: ${student.code}`);
+        if (trainee.hasLab === 1 && !trainee.LabId) {
+          errors.push(`LabId is empty for trainee: ${trainee.code}`);
           this.setState({ duplicateError: "Fill the options" });
         }
       });
@@ -606,7 +603,7 @@ class RegistrationList extends Component {
       Id: row.Id,
       LabId: null,
       SectionId: null,
-      studentId: traineeEdit.SID,
+      traineeId: traineeEdit.TraineeNum,
     };
     // onUpdateNonActiveStdCurr(ob, 0);
   };
@@ -645,12 +642,12 @@ class RegistrationList extends Component {
       currentYear,
       years,
       achievedCourses,
-      studentRegisterInfo,
+      traineeRegisterInfo,
       labs,
     } = this.props;
     const {
       duplicateError,
-      duplicateStudent,
+      duplicateTrainee,
       successMessage,
       deleteModal,
       traineeEdit,
@@ -666,9 +663,9 @@ class RegistrationList extends Component {
       selectedYear,
     } = this.state;
     const minHours =
-      studentRegisterInfo &&
-      studentRegisterInfo[0] &&
-      studentRegisterInfo[0].minRegisteredHour;
+      traineeRegisterInfo &&
+      traineeRegisterInfo[0] &&
+      traineeRegisterInfo[0].minRegisteredHour;
     const { SearchBar } = Search;
     const weekDaysColumns = weekDays.map(weekday =>
       this.props.t(weekday.enTitle)
@@ -745,15 +742,6 @@ class RegistrationList extends Component {
     const columns = [
       { dataField: "courseId", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "requirementType",
-        text: this.props.t("Requirement Type"),
-        sort: true,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
-        }),
-      },
-      {
         dataField: "courseName",
         text: this.props.t("Course Name"),
         sort: true,
@@ -763,7 +751,7 @@ class RegistrationList extends Component {
         }),
       },
       {
-        dataField: "courseCode",
+        dataField: "Code",
         text: this.props.t("Course Code"),
         sort: true,
         filter: textFilter({
@@ -772,7 +760,7 @@ class RegistrationList extends Component {
         }),
       },
       {
-        dataField: "avNbHours",
+        dataField: "nbHours",
         text: this.props.t("Number Of Hours"),
         sort: true,
         filter: textFilter({
@@ -802,7 +790,7 @@ class RegistrationList extends Component {
         dataField: "menu",
         text: this.props.t("Registration"),
         sort: true,
-        formatter: (cellContent, row, universityStudent) => (
+        formatter: (cellContent, row, academyTrainee) => (
           <div className="d-flex justify-content-center gap-3">
             <Input
               type="checkbox"
@@ -1214,25 +1202,25 @@ class RegistrationList extends Component {
                       <Col>
                         <p className="text-muted fw-medium">Study Plan</p>
                         <h5 className="mb-0 blue-noti-icon ">
-                          {studentRegisterInfo &&
-                            studentRegisterInfo[0] &&
-                            studentRegisterInfo[0].planStudy}
+                          {traineeRegisterInfo &&
+                            traineeRegisterInfo[0] &&
+                            traineeRegisterInfo[0].planStudy}
                         </h5>
                       </Col>
                       <Col>
                         <p className="text-muted fw-medium">Faculty</p>
                         <h5 className="mb-0 blue-noti-icon">
-                          {studentRegisterInfo &&
-                            studentRegisterInfo[0] &&
-                            studentRegisterInfo[0].facultyName}
+                          {traineeRegisterInfo &&
+                            traineeRegisterInfo[0] &&
+                            traineeRegisterInfo[0].facultyName}
                         </h5>
                       </Col>
                       <Col>
                         <p className="text-muted fw-medium">Warnings</p>
                         <h5 className="mb-0 blue-noti-icon">
-                          {studentRegisterInfo &&
-                            studentRegisterInfo[0] &&
-                            studentRegisterInfo[0].warning}
+                          {traineeRegisterInfo &&
+                            traineeRegisterInfo[0] &&
+                            traineeRegisterInfo[0].warning}
                         </h5>
                       </Col>
                       <Col>
@@ -1242,9 +1230,9 @@ class RegistrationList extends Component {
                       <Col>
                         <p className="text-muted fw-medium">GPA</p>
                         <h5 className="mb-0 blue-noti-icon">
-                          {studentRegisterInfo &&
-                            studentRegisterInfo[0] &&
-                            studentRegisterInfo[0].GPA}
+                          {traineeRegisterInfo &&
+                            traineeRegisterInfo[0] &&
+                            traineeRegisterInfo[0].GPA}
                         </h5>
                       </Col>
                       <Col>
@@ -1254,18 +1242,18 @@ class RegistrationList extends Component {
                       <Col>
                         <p className="text-muted fw-medium">Least Amount</p>
                         <h5 className="mb-0 blue-noti-icon">
-                          {studentRegisterInfo &&
-                            studentRegisterInfo[0] &&
-                            studentRegisterInfo[0].minRegisteredHour}{" "}
+                          {traineeRegisterInfo &&
+                            traineeRegisterInfo[0] &&
+                            traineeRegisterInfo[0].minRegisteredHour}{" "}
                           hours
                         </h5>
                       </Col>
                       <Col>
                         <p className="text-muted fw-medium">Highest Amount</p>
                         <h5 className="mb-0 blue-noti-icon">
-                          {studentRegisterInfo &&
-                            studentRegisterInfo[0] &&
-                            studentRegisterInfo[0].maxRegisteredHour}{" "}
+                          {traineeRegisterInfo &&
+                            traineeRegisterInfo[0] &&
+                            traineeRegisterInfo[0].maxRegisteredHour}{" "}
                           hours
                         </h5>
                       </Col>
@@ -1291,7 +1279,7 @@ class RegistrationList extends Component {
                     {" "}
                     <Row>
                       <Col>
-                        <p className="text-muted fw-medium">Student Average</p>
+                        <p className="text-muted fw-medium">Trainee Average</p>
                         <h5 className="mb-0 blue-noti-icon ">14</h5>
                       </Col>
                       <Col>
@@ -1333,7 +1321,7 @@ class RegistrationList extends Component {
                   }}
                 >
                   <Tooltip
-                    title={this.props.t("Student's Achievement")}
+                    title={this.props.t("Trainee's Achievement")}
                     placement="top"
                   >
                     {" "}
@@ -1395,7 +1383,7 @@ class RegistrationList extends Component {
                             this.toggleMainTab("6");
                           }}
                         >
-                          {this.props.t("Student Registered Courses")}
+                          {this.props.t("Trainee Registered Courses")}
                         </NavLink>
                       </NavItem>
                     </Nav>
@@ -1447,7 +1435,7 @@ class RegistrationList extends Component {
                                     to="#"
                                     color="primary"
                                     onClick={() =>
-                                      this.handleEditTrainee(universityStudent)
+                                      this.handleEditTrainee(trainee)
                                     }
                                   >
                                     <i
@@ -1527,7 +1515,7 @@ class RegistrationList extends Component {
                                       <IconButton
                                         to="#"
                                         color="primary"
-                                        onClick={() => this.saveStudent()}
+                                        onClick={() => this.saveTrainee()}
                                         className="p-0"
                                       >
                                         <i
@@ -1680,17 +1668,17 @@ class RegistrationList extends Component {
                           <Col>
                             <Col lg="4">
                               <h5 className="header pt-2 ms-3" id="title">
-                                {this.props.t("Student Courses")}
+                                {this.props.t("Trainee Courses")}
                               </h5>
                             </Col>
                             <div>
-                              {duplicateStudent && (
+                              {duplicateTrainee && (
                                 <Alert
                                   color="danger"
                                   className="d-flex justify-content-center align-items-center alert-dismissible fade show"
                                   role="alert"
                                 >
-                                  {duplicateStudent}
+                                  {duplicateTrainee}
                                   <button
                                     type="button"
                                     className="btn-close"
@@ -1809,36 +1797,34 @@ const mapStateToProps = ({
   nonActiveStdCurrs: registrations.nonActiveStdCurrs,
   tempStdSchedules: registrations.tempStdSchedules,
   achievedCourses: registrations.achievedCourses,
-  studentRegisterInfo: registrations.studentRegisterInfo,
+  // traineeRegisterInfo: registrations.traineeRegisterInfo,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
   // onfetchSetting: () => dispatch(fetchYearsSemesters()),
   onGetRegistrations: () => dispatch(getRegistrations()),
-  // onGetReqTypes: facultyId => dispatch(getReqTypes(facultyId)),
   // onAddNewRegistrations: registrations =>
   //   dispatch(addNewRegistration(registrations)),
   // onUpdateRegistrations: registrations =>
   //   dispatch(updateRegistration(registrations)),
   // onDeleteRegistrations: registrations =>
   //   dispatch(deleteRegistration(registrations)),
-  // onGetAvailableCourses: (reqType, studentId) =>
-  //   dispatch(getAvailableCourses(reqType, studentId)),
-  // onGetStudentRegisterInfo: studentId =>
-  //   dispatch(getStudentRegisterInfo(studentId)),
+  onGetAvailableCourses: traineeId => dispatch(getAvailableCourses(traineeId)),
+  // onGetTraineeRegisterInfo: traineeId =>
+  //   dispatch(getTraineeRegisterInfo(traineeId)),
 
-  // onAddNewAvailableCourse: availableCourse =>
-  //   dispatch(addNewAvailableCourse(availableCourse)),
-  // onGetNonActiveStdCurr: (active, studentId) =>
-  //   dispatch(getNonActiveStdCurr(active, studentId)),
+  onAddNewAvailableCourse: availableCourse =>
+    dispatch(addNewAvailableCourse(availableCourse)),
+  onGetNonActiveStdCurr: (active, traineeId) =>
+    dispatch(getNonActiveStdCurr(active, traineeId)),
   // onUpdateNonActiveStdCurr: (nonActiveStdCurrs, active) =>
   //   dispatch(updateNonActiveStdCurr(nonActiveStdCurrs, active)),
-  // onDeleteNonActiveStdCurr: nonActiveStdCurrs =>
-  //   dispatch(deleteNonActiveStdCurr(nonActiveStdCurrs)),
+  onDeleteNonActiveStdCurr: nonActiveStdCurrs =>
+    dispatch(deleteNonActiveStdCurr(nonActiveStdCurrs)),
 
-  // onGetTempStdSchedules: studentId => dispatch(getTempStdSchedules(studentId)),
-  // onGetAchievedCourses: studentId => dispatch(getAchievedCourses(studentId)),
+  // onGetTempStdSchedules: traineeId => dispatch(getTempStdSchedules(traineeId)),
+  // onGetAchievedCourses: traineeId => dispatch(getAchievedCourses(traineeId)),
   // onDeleteAllNonActiveStdCurr: nonActiveStdCurrs =>
   //   dispatch(deleteAllNonActiveStdCurr(nonActiveStdCurrs)),
   // onSaveAllNonActiveStdCurr: nonActiveStdCurrs =>

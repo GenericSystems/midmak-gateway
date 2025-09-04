@@ -3414,6 +3414,7 @@ class NewTrainee extends Component {
                                                                   value={
                                                                     values.UnivCountryId
                                                                   }
+                                                                  autoComplete="off"
                                                                   onChange={event => {
                                                                     setFieldValue(
                                                                       "UnivCountryId",
@@ -3733,6 +3734,7 @@ class NewTrainee extends Component {
                                                                   value={
                                                                     values.InstituteCountryId
                                                                   }
+                                                                  autoComplete="off"
                                                                   onChange={event => {
                                                                     const selectedInstituteCountry =
                                                                       event
@@ -3932,6 +3934,7 @@ class NewTrainee extends Component {
                                                                   value={
                                                                     values.UnivCountryId
                                                                   }
+                                                                  autoComplete="off"
                                                                   onChange={event => {
                                                                     setFieldValue(
                                                                       "UnivCountryId",
@@ -4156,6 +4159,7 @@ class NewTrainee extends Component {
                                                                       "diplomaId"
                                                                     )
                                                                   }
+                                                                  autoComplete="off"
                                                                   onFocus={() =>
                                                                     this.handleInputFocus(
                                                                       "diplomaId"
@@ -4232,6 +4236,7 @@ class NewTrainee extends Component {
                                                                   value={
                                                                     values.DiplomaCountryId
                                                                   }
+                                                                  autoComplete="off"
                                                                   // onChange={event => {
                                                                   //   const selectedCountry =
                                                                   //     event
@@ -4294,6 +4299,7 @@ class NewTrainee extends Component {
                                                                   value={
                                                                     values.DiplomaGovernorateId
                                                                   }
+                                                                  autoComplete="off"
                                                                   onChange={event => {
                                                                     setFieldValue(
                                                                       "DiplomaGovernorateId",

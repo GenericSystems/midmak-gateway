@@ -309,9 +309,9 @@ class EmployeesList extends Component {
       // amanaNum: arg.amanaNum,
       selectedGender: arg.genderId,
       selectedNationality: arg.nationalityId,
-      selectedStateId: arg.stateId,
-      selectedCountryId: arg.countryId,
-      selectedCityId: arg.cityId,
+      // selectedStateId: arg.stateId,
+      // selectedCountryId: arg.countryId,
+      // selectedCityId: arg.cityId,
       isEdit: true,
     });
     this.toggle();
@@ -472,8 +472,9 @@ class EmployeesList extends Component {
       this.setState({
         successMessage: saveEmployeeMessage,
       });
+
+      this.toggle();
     }
-    this.toggle();
   };
 
   handleSubmit = values => {
@@ -639,22 +640,22 @@ class EmployeesList extends Component {
     }
     if (fieldName === "countryId") {
       const selected = this.state.countriesOpt.find(
-        country => country.arTitle === selectedValue
+        country => country.value === selectedValue
       );
-
+      console.log("selectedcountryId", selected);
       this.setState({
-        selectedCountryId: selected ? selected.Id : null,
+        selectedCountryId: selected ? selected.key : null,
         employee: values,
       });
       return;
     }
     if (fieldName === "cityId") {
       const selected = this.state.citiesOpt.find(
-        city => city.arTitle === selectedValue
+        city => city.value === selectedValue
       );
 
       this.setState({
-        selectedCityId: selected ? selected.Id : null,
+        selectedCityId: selected ? selected.key : null,
         employee: values,
       });
       return;
@@ -662,11 +663,11 @@ class EmployeesList extends Component {
 
     if (fieldName === "stateId") {
       const selected = this.state.statesOpt.find(
-        state => state.arTitle === selectedValue
+        state => state.value === selectedValue
       );
 
       this.setState({
-        selectedStateId: selected ? selected.Id : null,
+        selectedStateId: selected ? selected.key : null,
         employee: values,
       });
       return;
@@ -749,8 +750,8 @@ class EmployeesList extends Component {
     // }
   };
 
-  handleAlertClose = () => {
-    this.setState({ duplicateError: null });
+  handleAlertClose = alertName => {
+    this.setState({ [alertName]: null });
   };
 
   handlePhotoChange = event => {
@@ -781,15 +782,8 @@ class EmployeesList extends Component {
   };
 
   handleValidDate = date => {
-    if (
-      !date ||
-      date === "1970-01-01" ||
-      date === "0000-00-00" ||
-      moment(date).year() === 1970
-    ) {
-      return "";
-    }
-    return moment(date).format("DD-MM-YYYY");
+    const date1 = moment(new Date(date)).format("DD /MM/ Y");
+    return date1;
   };
 
   render() {
@@ -1016,7 +1010,9 @@ class EmployeesList extends Component {
                             type="button"
                             className="btn-close"
                             aria-label="Close"
-                            onClick={this.handleAlertClose}
+                            onClick={() =>
+                              this.handleAlertClose("duplicateError")
+                            }
                           ></button>
                         </Alert>
                       )}
@@ -1186,9 +1182,12 @@ class EmployeesList extends Component {
                                         motherNameE:
                                           (employee && employee.motherNameE) ||
                                           "",
-                                        birthDate:
-                                          (employee && employee.birthDate) ||
-                                          selectedBirthDate,
+                                        birthDate: employee?.birthDate
+                                          ? moment
+                                              .utc(employee.birthDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
                                         nationalityId:
                                           (employee &&
                                             employee.nationalityId) ||
@@ -1204,13 +1203,24 @@ class EmployeesList extends Component {
                                             employee.perosonalCardNum) ||
                                           "",
                                         perosonalCardGrantDate:
-                                          (employee &&
-                                            employee.perosonalCardGrantDate) ||
-                                          selectedCardGrantDate,
+                                          employee?.perosonalCardGrantDate
+                                            ? moment
+                                                .utc(
+                                                  employee.perosonalCardGrantDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
                                         perosonalCardExpirationDate:
-                                          (employee &&
-                                            employee.perosonalCardExpirationDate) ||
-                                          selectedCardExpirationDate,
+                                          employee?.perosonalCardExpirationDate
+                                            ? moment
+                                                .utc(
+                                                  employee.perosonalCardExpirationDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+
                                         amanaNum:
                                           (employee && employee.amanaNum) || "",
                                         registrationPlace:
@@ -1225,24 +1235,43 @@ class EmployeesList extends Component {
                                           (employee && employee.passNumber) ||
                                           "",
                                         passportGrantDate:
-                                          (employee &&
-                                            employee.passportGrantDate) ||
-                                          selectedPassportGrantDate,
+                                          employee?.passportGrantDate
+                                            ? moment
+                                                .utc(employee.passportGrantDate)
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+
                                         passportExpirationDate:
-                                          (employee &&
-                                            employee.passportExpirationDate) ||
-                                          selectedPassportExpirationDate,
+                                          employee?.passportExpirationDate
+                                            ? moment
+                                                .utc(
+                                                  employee.passportExpirationDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+
                                         residenceNum:
                                           (employee && employee.residenceNum) ||
                                           "",
                                         residenceGrantedDate:
-                                          (employee &&
-                                            employee.residenceGrantedDate) ||
-                                          selectedResidenceGrantedDate,
+                                          employee?.residenceGrantedDate
+                                            ? moment
+                                                .utc(
+                                                  employee.residenceGrantedDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
                                         resExpirationDate:
-                                          (employee &&
-                                            employee.resExpirationDate) ||
-                                          selectedResExpirationDate,
+                                          employee?.resExpirationDate
+                                            ? moment
+                                                .utc(employee.resExpirationDate)
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+
                                         stateId:
                                           (employee && employee.stateId) ||
                                           selectedStateId,
@@ -1252,14 +1281,14 @@ class EmployeesList extends Component {
                                         cityId:
                                           (employee && employee.cityId) ||
                                           selectedCityId,
-                                        permanentAddress:
-                                          (employee &&
-                                            employee.permanentAddress) ||
-                                          "",
-                                        temporaryAddress:
-                                          (employee &&
-                                            employee.temporaryAddress) ||
-                                          "",
+                                        // permanentAddress:
+                                        //   (employee &&
+                                        //     employee.permanentAddress) ||
+                                        //   "",
+                                        // temporaryAddress:
+                                        //   (employee &&
+                                        //     employee.temporaryAddress) ||
+                                        //   "",
                                         phoneNumber:
                                           (employee && employee.phoneNumber) ||
                                           "",
@@ -1370,8 +1399,10 @@ class EmployeesList extends Component {
                                                     type="button"
                                                     className="btn-close"
                                                     aria-label="Close"
-                                                    onClick={
-                                                      this.handleAlertClose
+                                                    onClick={() =>
+                                                      this.handleAlertClose(
+                                                        "emptyError"
+                                                      )
                                                     }
                                                   ></button>
                                                 </Alert>
@@ -2465,9 +2496,9 @@ class EmployeesList extends Component {
                                                                       id="countryId"
                                                                       placeholder="Type to search..."
                                                                       autoComplete="off"
-                                                                      value={
-                                                                        values.countryId
-                                                                      }
+                                                                      // value={
+                                                                      //   values.countryId
+                                                                      // }
                                                                       onChange={e =>
                                                                         this.handleSelectChange(
                                                                           e
@@ -2516,9 +2547,9 @@ class EmployeesList extends Component {
                                                                       id="stateId"
                                                                       placeholder="Type to search..."
                                                                       autoComplete="off"
-                                                                      value={
-                                                                        values.stateId
-                                                                      }
+                                                                      // value={
+                                                                      //   values.stateId
+                                                                      // }
                                                                       onChange={e =>
                                                                         this.handleSelectChange(
                                                                           e
@@ -2536,10 +2567,10 @@ class EmployeesList extends Component {
                                                                         stateOpt => (
                                                                           <option
                                                                             key={
-                                                                              stateOpt.Id
+                                                                              stateOpt.key
                                                                             }
                                                                             value={
-                                                                              stateOpt.arTitle
+                                                                              stateOpt.value
                                                                             }
                                                                           />
                                                                         )
@@ -2585,10 +2616,10 @@ class EmployeesList extends Component {
                                                                         cityOpt => (
                                                                           <option
                                                                             key={
-                                                                              cityOpt.Id
+                                                                              cityOpt.key
                                                                             }
                                                                             value={
-                                                                              cityOpt.arTitle
+                                                                              cityOpt.value
                                                                             }
                                                                           />
                                                                         )
@@ -2601,7 +2632,7 @@ class EmployeesList extends Component {
                                                           </Row>
                                                           <Row>
                                                             <Col lg="6">
-                                                              <div className="mb-2">
+                                                              {/* <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
                                                                     <Label for="permanentAddress">
@@ -2621,7 +2652,7 @@ class EmployeesList extends Component {
                                                                     />
                                                                   </Col>
                                                                 </Row>
-                                                              </div>
+                                                              </div> */}
                                                               <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
@@ -2679,7 +2710,7 @@ class EmployeesList extends Component {
                                                               <Col lg="12">
                                                                 <Row>
                                                                   <Col lg="12">
-                                                                    <div className="mb-2">
+                                                                    {/* <div className="mb-2">
                                                                       <Row>
                                                                         <Col className="col-6">
                                                                           <Label for="temporaryAddress">
@@ -2699,7 +2730,7 @@ class EmployeesList extends Component {
                                                                           />
                                                                         </Col>
                                                                       </Row>
-                                                                    </div>
+                                                                    </div> */}
                                                                     <div className="mb-2">
                                                                       <Row>
                                                                         <Col className="col-6">
@@ -2923,8 +2954,10 @@ class EmployeesList extends Component {
                                                     type="button"
                                                     className="btn-close"
                                                     aria-label="Close"
-                                                    onClick={
-                                                      this.handleAlertClose
+                                                    onClick={() =>
+                                                      this.handleAlertClose(
+                                                        "emptyError"
+                                                      )
                                                     }
                                                   ></button>
                                                 </Alert>
