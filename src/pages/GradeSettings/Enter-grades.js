@@ -25,7 +25,6 @@ import { connect } from "react-redux";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
-// import TempTraineesChart from "../../components/Common/TempTraineesChart";
 import Accordion from "react-bootstrap/Accordion";
 
 import {
@@ -41,7 +40,7 @@ import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
 } from "react-bootstrap-table2-paginator";
-
+import TraineesChart from "../../components/Common/TraineesChart";
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
 import OtherChart from "../../components/Common/OtherChart";
@@ -746,9 +745,9 @@ class EnterGradesList extends Component {
                                               {" "}
                                               <Row>
                                                 <Col className="col-5">
-                                                  {/* {courseStatistics[1] &&
+                                                  {courseStatistics[1] &&
                                                     combinedArray && (
-                                                      <TempTraineesChart
+                                                      <TraineesChart
                                                         series={combinedArray.map(
                                                           item => item
                                                         )}
@@ -757,12 +756,12 @@ class EnterGradesList extends Component {
                                                           "Fail",
                                                         ]}
                                                       />
-                                                    )} */}
+                                                    )}
                                                 </Col>
 
                                                 <Col className="col-2"></Col>
                                                 <Col className="col-5">
-                                                  {/* {courseStatistics[1] && (
+                                                  {courseStatistics[1] && (
                                                     <OtherChart
                                                       series={courseStatistics[1].map(
                                                         item =>
@@ -773,7 +772,7 @@ class EnterGradesList extends Component {
                                                           item.letter_grade
                                                       )}
                                                     />
-                                                  )} */}
+                                                  )}
                                                 </Col>
                                               </Row>
                                             </DropdownMenu>

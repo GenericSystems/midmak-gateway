@@ -2,18 +2,18 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { connect } from "react-redux";
 
-class TempStudentsChart extends React.Component {
+class TraineesChart extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      series: props.series || [], 
+      series: props.series || [],
       options: {
         chart: {
           width: 370,
-          type: 'donut',
+          type: "donut",
         },
-        labels: props.labels || [], 
+        labels: props.labels || [],
         plotOptions: {
           pie: {
             startAngle: -90,
@@ -27,11 +27,11 @@ class TempStudentsChart extends React.Component {
           // },
         },
         fill: {
-          type: 'gradient',
+          type: "gradient",
         },
         legend: {
           formatter: function (val, opts) {
-            return val + ' - ' + opts.w.globals.series[opts.seriesIndex];
+            return val + " - " + opts.w.globals.series[opts.seriesIndex];
           },
         },
         responsive: [
@@ -42,7 +42,7 @@ class TempStudentsChart extends React.Component {
                 width: 200,
               },
               legend: {
-                position: 'bottom',
+                position: "bottom",
               },
             },
           },
@@ -54,10 +54,15 @@ class TempStudentsChart extends React.Component {
   render() {
     return (
       <div id="chart">
-        <ReactApexChart options={this.state.options} series={this.state.series} type="donut" width={370} />
+        <ReactApexChart
+          options={this.state.options}
+          series={this.state.series}
+          type="donut"
+          width={370}
+        />
       </div>
     );
   }
 }
 
-export default connect()(TempStudentsChart);
+export default connect()(TraineesChart);
