@@ -72,14 +72,14 @@ class CourseCatalogeList extends Component {
       coursesCatalogs: [],
       courseCataloge: "",
       selectConId: null,
-      CourseSectors: [],
+      courseSectors: [],
       showAlert: null,
       showAddButton: false,
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
       trainingSectorOptions: [],
-      sectorCode: [],
+      sectorsCode: [],
       qualificationTrackOptions: [],
       trainingProgramOptions: [],
       // trainingModuleOptions: [],
@@ -101,7 +101,7 @@ class CourseCatalogeList extends Component {
       duplicateErrorPrerequisite: "",
       lastUsedId: 1,
       selectedTrainingSector: null,
-      sectorCode: "",
+      sectorsCode: "",
       selectedQualificationTrack: "",
       selectedTrainingProgram: "",
       selectedTrainingType: "",
@@ -271,7 +271,7 @@ class CourseCatalogeList extends Component {
   handleAddRow = () => {
     this.setState({
       courseCataloge: "",
-      sectorCode: "",
+      sectorsCode: "",
       isEdit: false,
       isOpen: false,
       isAdd: true,
@@ -281,11 +281,17 @@ class CourseCatalogeList extends Component {
   };
 
   handleDeleteRow = () => {
+
     const { onDeleteCoursesCatalog } = this.props;
     const { selectedRowId } = this.state;
 
+    console.log("selectedRowId",selectedRowId.Id)
+
     if (selectedRowId !== null) {
-      onDeleteCoursesCatalog(selectedRowId);
+      let deleteObj ={
+        Id:selectedRowId.Id
+      }
+      onDeleteCoursesCatalog(deleteObj);
 
       this.setState({
         selectedRowId: null,
@@ -355,11 +361,11 @@ class CourseCatalogeList extends Component {
       selectedTrainingFormat,
       isEdit,
       isAdd,
-      CourseSectors,
+      courseSectors,
       prerequisiteCoursesArray,
       selectedIsNeedLabs,
       selectedIsNeedSection,
-      sectorCode,
+      sectorsCode,
     } = this.state;
 
     let arCoursenameError = false;
@@ -375,20 +381,21 @@ class CourseCatalogeList extends Component {
 
     // Format selected sectors for saving
     const formattedSector =
-      CourseSectors?.map(item => ({
+      courseSectors?.map(item => ({
         label: item.label,
         value: item.value,
+        code:item.code,
       })) || [];
 
     // Assign form values
     values["arTitle"] = values["arTitle"] || "";
     values["enTitle"] = values["enTitle"] || "";
-    values["sectorId"] = formattedSector.value;
+    values["courseSectors"] = courseSectors;
     values["qualificationTrackId"] = selectedQualificationTrack;
     values["qualificationCode"] = values["qualificationCode"] || "";
     values["programId"] = selectedTrainingProgram;
     values["Code"] = values["Code"] || "";
-    values["sectorCode"] = sectorCode || "";
+    values["sectorsCode"] = sectorsCode || "";
     values["courseTypeId"] = selectedTrainingType;
     values["totalTrainingHours"] = values["totalTrainingHours"] || "";
     // values["trainingModule"] = values["trainingModule"] || "";
@@ -403,7 +410,7 @@ class CourseCatalogeList extends Component {
     if (values.enTitle === "") enCoursenameError = true;
     if (values.qualificationCode === "") qualificationCodeError = true;
 
-    if (CourseSectors.length === 0) traningSectorError = true;
+    // if (courseSectors.length === 0) traningSectorError = true;
     if (!selectedQualificationTrack) traningSectorError = true;
     if (values.Code === "") courseCodeError = true;
     if (!selectedTrainingProgram) trainingProgramError = true;
@@ -416,7 +423,7 @@ class CourseCatalogeList extends Component {
     }
 
     if (
-      CourseSectors.length === 0 ||
+      // courseSectors.length === 0 ||
       !selectedQualificationTrack ||
       !selectedTrainingFormat ||
       !selectedTrainingProgram ||
@@ -480,19 +487,19 @@ class CourseCatalogeList extends Component {
   };
   handleMultiSectors = (fieldName, selectedMulti) => {
     if (fieldName === "sectorId") {
-      const CourseSectors = selectedMulti || [];
+      const courseSectors = selectedMulti || [];
 
-      const concatenatedCodes = CourseSectors.map(sector => sector.code).join(
+      const concatenatedCodes = courseSectors.map(sector => sector.code).join(
         ","
       );
 
       this.setState({
-        CourseSectors: CourseSectors,
-        sectorCode: concatenatedCodes, // store concatenated codes
+        courseSectors: courseSectors,
+        sectorsCode: concatenatedCodes, // store concatenated codes
       });
 
-      console.log("CourseSectors:", CourseSectors);
-      console.log("sectorCode:", concatenatedCodes);
+      console.log("courseSectors:", courseSectors);
+      console.log("sectorsCode:", concatenatedCodes);
     }
   };
 
@@ -501,11 +508,11 @@ class CourseCatalogeList extends Component {
       console.log("selecteddddddd", selectedValue);
       this.setState({
         selectedTrainingSector: selectedValue.value,
-        sectorCode: selectedValue.code,
+        sectorsCode: selectedValue.code,
 
         courseCataloge: values,
       });
-      console.log("sectorCode", sectorCode);
+      console.log("sectorsCode", sectorsCode);
     }
 
     if (fieldName == "qualificationTrackId") {
@@ -566,9 +573,9 @@ class CourseCatalogeList extends Component {
       filtredPreReqCourses: filteredPreReqCourses,
       selectedCoursId: arg.Id,
       selectedTrainingFormat: arg.trainingFormatId,
-      selectedTrainingSector: arg.sectorId,
-      sectorCode: arg.sectorCode,
-      CourseSectors: arg.sectorId,
+   
+      sectorsCode: arg.sectorsCode,
+      courseSectors: arg.sectorId,
       selectedQualificationTrack: arg.qualificationTrackId,
 
       selectedTrainingProgram: arg.programId,
@@ -591,20 +598,7 @@ class CourseCatalogeList extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
-  handleDeleteRow = () => {
-    const { onDeleteCoursesCatalog } = this.props;
-    const { selectedRowId } = this.state;
-
-    if (selectedRowId !== null) {
-      onDeleteCoursesCatalog(selectedRowId);
-
-      this.setState({
-        selectedRowId: null,
-        deleteModal: false,
-        showAlert: true,
-      });
-    }
-  };
+ 
 
   handleToggleChange = (field, value) => {
     this.setState({ [field]: value });
@@ -618,7 +612,7 @@ class CourseCatalogeList extends Component {
       deleted,
       sectors,
       qualificationTracks,
-      CourseSectors,
+      courseSectors,
       certificateTypes,
       courseTypes,
       trainingFormats,
@@ -647,7 +641,7 @@ class CourseCatalogeList extends Component {
       qualificationCodeError,
       enCoursenameError,
       selectedTrainingSector,
-      sectorCode,
+      sectorsCode,
       selectedQualificationTrack,
       selectedTrainingFormat,
       selectedTrainingProgram,
@@ -1049,12 +1043,12 @@ class CourseCatalogeList extends Component {
                                             courseCataloge?.qualificationCode ||
                                             "",
 
-                                          sectorId:
-                                            courseCataloge?.sectorId ||
-                                            selectedTrainingSector,
-                                          // sectorCode:
-                                          //   courseCataloge?.sectorCode ||
-                                          //   sectorCode,
+                                        //  sectorId :
+                                        //     courseCataloge?.sectorId ||
+                                        //     selectedTrainingSector,
+                                          // sectorsCode:
+                                          //   courseCataloge?.sectorsCode ||
+                                          //   sectorsCode,
 
                                           qualificationTrackId:
                                             courseCataloge?.qualificationTrackId ||
@@ -1224,6 +1218,7 @@ class CourseCatalogeList extends Component {
                                                                         <Select
                                                                           id="sector"
                                                                           name="sectorId"
+                                                                          key="sectorId"
                                                                           options={
                                                                             trainingSectorOptions
                                                                           }
@@ -1241,11 +1236,8 @@ class CourseCatalogeList extends Component {
                                                                             )
                                                                           }
                                                                           isMulti
-                                                                          value={
-                                                                            this
-                                                                              .state
-                                                                              .CourseSectors
-                                                                          } // must come from state
+                                                                          value={courseSectors
+                                                                          } 
                                                                         />
                                                                       </Col>
                                                                     </Row>
@@ -1255,7 +1247,7 @@ class CourseCatalogeList extends Component {
                                                                   <div className="mb-3">
                                                                     <Row>
                                                                       <Col className="col-4">
-                                                                        <Label for="sectorCode">
+                                                                        <Label for="sectorsCode">
                                                                           {this.props.t(
                                                                             "Sector Code"
                                                                           )}
@@ -1264,12 +1256,12 @@ class CourseCatalogeList extends Component {
                                                                       <Col className="col-8">
                                                                         <Field
                                                                           type="text"
-                                                                          name="sectorCode"
-                                                                          id="sectorCode"
+                                                                          name="sectorsCode"
+                                                                          id="sectorsCode"
                                                                           value={
                                                                             this
                                                                               .state
-                                                                              .sectorCode ||
+                                                                              .sectorsCode ||
                                                                             ""
                                                                           } // only use state
                                                                           readOnly
@@ -1977,7 +1969,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteCourseCatalogePrerequisite(prerequisite)),
   onGetCourseCatalogePrerequisitesDeletedValue: () =>
     dispatch(getCourseCatalogePrerequisitesDeletedValue()),
-  // //sectorCode
+  // //sectorsCode
   // onGetSectorCode: courseCataloge => dispatch(getSectors(courseCataloge)),
 });
 

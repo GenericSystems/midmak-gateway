@@ -602,6 +602,7 @@ function* fetchSectionLabDetails(obj) {
   };
   try {
     const response = yield call(getSectionLabDetails, get_SectionLabDetail);
+    console.log("detailssssss", response);
 
     yield put(getSectionLabDetailsSuccess(response));
   } catch (error) {
