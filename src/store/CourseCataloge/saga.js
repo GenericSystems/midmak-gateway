@@ -219,6 +219,7 @@ function* onAddNewCoursesCatalog({ payload }) {
     payload["queryname"] = "_Common_CoursesCatalog";
 
     const response = yield call(addNewCoursesCatalog, payload);
+    console.log("ADDDDDDDDDDDDDD send to db", payload);
 
     yield put(addCoursesCatalogSuccess(response[0]));
   } catch (error) {
@@ -235,7 +236,7 @@ function* onUpdateCoursesCatalog({ payload }) {
     payload["queryname"] = "_Common_CoursesCatalog";
 
     const response = yield call(updateCoursesCatalog, payload);
-    console.log("updatePayloadddddddddd",payload)
+    console.log("updatePayloadddddddddd", payload);
     yield put(updateCoursesCatalogSuccess(response[0]));
   } catch (error) {
     yield put(updateCoursesCatalogFail(error));
@@ -251,6 +252,7 @@ function* onDeleteCoursesCatalog({ payload }) {
     payload["queryname"] = "_Common_CoursesCatalog";
 
     const response = yield call(deleteCoursesCatalog, payload);
+    console.log("DELETEPAYLOADDDDDD", payload);
     yield put(deleteCoursesCatalogSuccess(response[0]));
   } catch (error) {
     yield put(deleteCoursesCatalogFail(error));
