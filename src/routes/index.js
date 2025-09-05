@@ -326,7 +326,7 @@ const authProtectedRoutes = [
   //sectors
   { path: "/sectors", component: SectorsList },
   //university-def
-  { path: "/academyDefinition", component: AcademyInfo },
+  { path: "/acadmyDefinition", component: AcademyInfo },
 
   //qualification_track
   { path: "/qualification-tracks", component: QualificationsTracksList },

@@ -48,6 +48,7 @@ class AcademyInfo extends Component {
       AcademyNameError: "",
       AcademyNameEnError: "",
       successMessage: null,
+      errors:{},
     };
   }
 
@@ -119,6 +120,21 @@ class AcademyInfo extends Component {
     } = this.state;
     console.log("COUNTRIEEEEEESSSSSSSSSSSS", AcademyCountryInfo);
     const { academyInfo } = this.props;
+    let errors = {};
+
+   this.state.AcademyCountryInfo.forEach((row, idx) => {
+     if (!row.CountryId) {
+       errors[`CountryId_${idx}`] = "Country is required";
+     }
+   });
+
+
+    if (Object.keys(errors).length > 0) {
+      this.setState({ errors, saveError: true });
+      return; // stop submission if missing country
+    }
+    console.log("errors", errors)
+
 
     if (academyInfo && academyInfo.length > 0) {
       const formData = {
@@ -502,6 +518,19 @@ class AcademyInfo extends Component {
                                         }
                                         placeholder={t("Select Country")}
                                       />
+
+                                      {this.state.errors &&
+                                        this.state.errors[
+                                          `CountryId_${idx}`
+                                        ] && (
+                                          <div className="invalid-feedback d-block">
+                                            {
+                                              this.state.errors[
+                                                `CountryId_${idx}`
+                                              ]
+                                            }
+                                          </div>
+                                        )}
                                     </Col>
                                     <Col lg="4" className="mt-2">
                                       <label className="col-form-label">
