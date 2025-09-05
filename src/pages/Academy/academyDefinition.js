@@ -46,6 +46,7 @@ class AcademyInfo extends Component {
         },
       ],
       AcademyNameError: "",
+      
       AcademyNameEnError: "",
       successMessage: null,
       errors:{},
@@ -160,6 +161,7 @@ class AcademyInfo extends Component {
         console.log("1111");
         const updateMessage = this.props.t("Academy info updated successfully");
         this.setState({
+          errors:{},
           setErrormessage: null,
           saveError: false,
           successMessage: updateMessage,
@@ -224,6 +226,9 @@ class AcademyInfo extends Component {
         ...updatedCountries[idx],
         [name]: value,
       };
+        
+   
+      
       return { AcademyCountryInfo: updatedCountries };
     });
   };
