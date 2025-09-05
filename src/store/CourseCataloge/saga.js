@@ -202,6 +202,9 @@ function* fetchCoursesCatalogs(selectedpayload) {
   payload["tablename"] = "_Common_CoursesCatalog";
   try {
     const response = yield call(getCoursesCatalogs, payload);
+    response.map(resp => {
+      resp["CourseSectors"] = JSON.parse(resp["CourseSectors"]);
+    });
 
     console.log("responseresponseresponse", response);
     yield put(getCoursesCatalogsSuccess(response));
@@ -237,6 +240,9 @@ function* onUpdateCoursesCatalog({ payload }) {
 
     const response = yield call(updateCoursesCatalog, payload);
     console.log("updatePayloadddddddddd", payload);
+    console.log("updateResponseeeeeee", response);
+
+
     yield put(updateCoursesCatalogSuccess(response[0]));
   } catch (error) {
     yield put(updateCoursesCatalogFail(error));

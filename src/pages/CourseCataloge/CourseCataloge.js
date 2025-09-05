@@ -384,12 +384,13 @@ class CourseCatalogeList extends Component {
       courseSectors?.map(item => ({
         label: item.label,
         value: item.value,
+        code:item.code,
       })) || [];
 
     // Assign form values
     values["arTitle"] = values["arTitle"] || "";
     values["enTitle"] = values["enTitle"] || "";
-    values["courseSectors"] = formattedSector;
+    values["courseSectors"] = courseSectors;
     values["qualificationTrackId"] = selectedQualificationTrack;
     values["qualificationCode"] = values["qualificationCode"] || "";
     values["programId"] = selectedTrainingProgram;
@@ -708,7 +709,7 @@ class CourseCatalogeList extends Component {
         editable: false,
       },
       {
-        dataField: "sectorsCode",
+        dataField: "sectorCode",
         text: this.props.t("Sector Code"),
         sort: true,
         editable: false,

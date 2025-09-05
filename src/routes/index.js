@@ -141,7 +141,7 @@ import SectorsList from "../pages/Sectors/sectors";
 import QualificationsTracksList from "../pages/Certificates/qualification-tracks";
 
 //universityDef
-import AcademyInfo from "../pages/Academy/academy-def";
+import AcademyInfo from "../pages/Academy/academyDefinition";
 
 //Warning
 import warningsList from "../pages/TrainingMembers/training-members";
@@ -326,7 +326,7 @@ const authProtectedRoutes = [
   //sectors
   { path: "/sectors", component: SectorsList },
   //university-def
-  { path: "/academy-def", component: AcademyInfo },
+  { path: "/academyDefinition", component: AcademyInfo },
 
   //qualification_track
   { path: "/qualification-tracks", component: QualificationsTracksList },
