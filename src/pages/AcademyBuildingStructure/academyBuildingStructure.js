@@ -43,6 +43,7 @@ import {
   checkIsDeleteForPage,
   checkIsEditForPage,
 } from "../../utils/menuUtils";
+import academyInfo from "store/academydef/reducer";
 class AcademyBuildingStructuresList extends Component {
   constructor(props) {
     super(props);
@@ -118,6 +119,7 @@ class AcademyBuildingStructuresList extends Component {
       isShowFloorInfo: false,
       isShowHallInfo: false,
       hallOpt: "",
+      languageState: "",
     };
     this.state = {
       duplicateError: null,
@@ -129,11 +131,13 @@ class AcademyBuildingStructuresList extends Component {
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      i18n,
       academyBuildingStructures,
       onGetAcademyBuildingStructures,
       onGetHallTypes,
-      // academyInfo,
+      academyInfo,
       hallTypes,
       deleted,
       user_menu,
@@ -142,12 +146,23 @@ class AcademyBuildingStructuresList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
 
-    onGetAcademyBuildingStructures();
+    onGetAcademyBuildingStructures(lang);
     onGetHallTypes();
 
-    this.setState({ academyBuildingStructures, hallTypes });
-    this.setState({ deleted });
+    this.setState({ academyBuildingStructures, academyInfo, hallTypes });
+    this.setState({ deleted, languageState: lang });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { i18n, onGetAcademyBuildingStructures } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    onGetAcademyBuildingStructures(lang);
+    this.setState({ languageState: lng });
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -864,7 +879,8 @@ class AcademyBuildingStructuresList extends Component {
   };
 
   render() {
-    const { hallTypes, academyBuildingStructures, t, deleted } = this.props;
+    const { academyInfo, hallTypes, academyBuildingStructures, t, deleted } =
+      this.props;
     const {
       newBuildingArName,
       newBuildingEnName,
@@ -919,6 +935,7 @@ class AcademyBuildingStructuresList extends Component {
       isShowFloorInfo,
       isShowHallInfo,
       hallOpt,
+      languageState,
     } = this.state;
 
     const expanded = expandedNodes || [];
@@ -1012,7 +1029,9 @@ class AcademyBuildingStructuresList extends Component {
                                 })
                               }
                             >
-                              {"Midmak Academy"}{" "}
+                              {languageState === "ar"
+                                ? academyInfo.AcademyName + " "
+                                : academyInfo.AcademyNameEn + " "}
                             </span>
                             {showAddButton && (
                               <IconButton
@@ -2081,7 +2100,10 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Show Building")} - {editFloorArName}
+                          {t("Show Building")} -{" "}
+                          {languageState === "ar"
+                            ? editBuildingArName
+                            : editBuildingEnName}{" "}
                         </h5>
                       </Typography>
                     </Row>
@@ -2446,17 +2468,22 @@ class AcademyBuildingStructuresList extends Component {
   }
 }
 
-const mapStateToProps = ({ academyBuildingStructures, menu_items }) => ({
+const mapStateToProps = ({
+  academyInfo,
+  academyBuildingStructures,
+  menu_items,
+}) => ({
   academyBuildingStructures:
     academyBuildingStructures.academyBuildingStructures,
   hallTypes: academyBuildingStructures.hallTypes,
   deleted: academyBuildingStructures.deleted,
   user_menu: menu_items.user_menu || [],
+  academyInfo: academyInfo.academyInfo,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetAcademyBuildingStructures: () =>
-    dispatch(getAcademyBuildingStructures()),
+  onGetAcademyBuildingStructures: lng =>
+    dispatch(getAcademyBuildingStructures(lng)),
   onGetHallTypes: () => dispatch(getHallTypes()),
   onAddNewAcademyBuildingStructure: academyBuildingStructure =>
     dispatch(addNewAcademyBuildingStructure(academyBuildingStructure)),

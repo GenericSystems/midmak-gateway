@@ -25,6 +25,11 @@ import {
   deleteAcademyBuildingStructureFail,
 } from "./actions";
 
+import {
+  getAcademyInfoSuccess,
+  getAcademyInfoFail,
+} from "../academydef/actions";
+
 //Include Both Helper File with needed methods
 import {
   getAcademyBuildingStructures,
@@ -33,9 +38,13 @@ import {
   addNewAcademyBuildingStructure,
   updateAcademyBuildingStructure,
   deleteAcademyBuildingStructure,
+  getAcademyInfo,
 } from "../../helpers/fakebackend_helper";
 
-function* fetchAcademyBuildingStructure() {
+function* fetchAcademyBuildingStructure(selectedpayload) {
+  let lang = selectedpayload.payload;
+
+  const titleField = lang === "en" ? "enTitle" : "arTitle";
   const request = {
     source: "db",
     procedure: "SisApp_getData",
@@ -52,6 +61,21 @@ function* fetchAcademyBuildingStructure() {
     yield put(getAcademyBuildingStructuresSuccess(response));
   } catch (error) {
     yield put(getAcademyBuildingStructuresFail(error));
+  }
+
+  const get_academyInfo_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_AcademyInfo",
+    // fields: `Id,${titleField}`,
+  };
+
+  try {
+    const response = yield call(getAcademyInfo, get_academyInfo_req);
+    yield put(getAcademyInfoSuccess(response[0]));
+  } catch (error) {
+    yield put(getAcademyInfoFail(error));
   }
 }
 

@@ -64,9 +64,9 @@ class AcademyTree extends Component {
       editDepartmentNum: "",
       editDepartmentPresident: "",
       addingDepartment: false,
-      universityDefaultName: "Your Academy",
+      academyDefaultName: "Your Academy",
       expandedNodes: ["1"],
-      editingUniversityName: false,
+      editingAcademyName: false,
       openForm: null,
       errorMessage: null,
       successMessage: null,
@@ -110,6 +110,7 @@ class AcademyTree extends Component {
       isShowDirectorateInfo: false,
       isShowDepartmentInfo: false,
       isShowOrganismInfo: false,
+      languageState: "",
     };
     this.handleEditDirectorate = this.handleEditDirectorate.bind(this);
     this.handleDirectorateDataChange =
@@ -118,10 +119,12 @@ class AcademyTree extends Component {
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      i18n,
       academyOrgStructures,
       onGetAcademyOrgStructures,
-      // universityInfo,
+      academyInfo,
       deleted,
       user_menu,
     } = this.props;
@@ -129,12 +132,23 @@ class AcademyTree extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
 
-    onGetAcademyOrgStructures();
+    onGetAcademyOrgStructures(lang);
 
     this.setState({ academyOrgStructures });
-    //this.setState({ universityInfo });
-    this.setState({ deleted });
+    this.setState({ academyInfo });
+    this.setState({ deleted, languageState: lang });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { i18n, onGetAcademyOrgStructures } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    onGetAcademyOrgStructures(lang);
+    this.setState({ languageState: lng });
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -1014,9 +1028,9 @@ class AcademyTree extends Component {
       editDepartmentNum,
       editDepartmentPresident,
       selectedDirectorateId,
-      universityDefaultName,
+      academyDefaultName,
       expandedNodes,
-      editingUniversityName,
+      editingAcademyName,
       openForm,
       errorMessage,
       successMessage,
@@ -1049,6 +1063,7 @@ class AcademyTree extends Component {
       isShowDirectorateInfo,
       isShowDepartmentInfo,
       isShowOrganismInfo,
+      languageState,
     } = this.state;
 
     console.log(
@@ -1060,9 +1075,8 @@ class AcademyTree extends Component {
       showEditButton
     );
 
-    const { t, academyOrgStructures, /* universityInfo, */ deleted } =
-      this.props;
-
+    const { t, academyOrgStructures, academyInfo, deleted } = this.props;
+    console.log("1111111111111111", academyInfo);
     const alertMessage =
       deleted == 0
         ? this.props.t("Can't Delete")
@@ -1131,18 +1145,18 @@ class AcademyTree extends Component {
                     nodeId="1"
                     key="1"
                     label={
-                      editingUniversityName ? (
+                      editingAcademyName ? (
                         <Form className="university-name-form">
                           <Input
                             type="text"
-                            value={universityInfo.universityName}
+                            value={academyInfo.AcademyName}
                             onChange={e =>
                               this.setState({
-                                universityDefaultName: e.target.value,
+                                academyDefaultName: e.target.value,
                               })
                             }
                             onBlur={() =>
-                              this.setState({ editingUniversityName: false })
+                              this.setState({ editingAcademyName: false })
                             }
                             autoFocus
                           />
@@ -1154,11 +1168,13 @@ class AcademyTree extends Component {
                               className="university-name"
                               onClick={() =>
                                 this.setState({
-                                  editingUniversityName: false,
+                                  editingAcademyName: false,
                                 })
                               }
                             >
-                              {"Midmak Academy"}{" "}
+                              {languageState === "ar"
+                                ? academyInfo.AcademyName + " "
+                                : academyInfo.AcademyNameEn + " "}
                             </span>
                             {showAddButton && (
                               <IconButton
@@ -2345,7 +2361,7 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Show Directorate")} - {editDepartmentArName}
+                          {t("Show Directorate")} - {editDirectorateArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2771,16 +2787,16 @@ class AcademyTree extends Component {
 
 const mapStateToProps = ({
   academyOrgStructures,
-  //universityInfo,
+  academyInfo,
   menu_items,
 }) => ({
   academyOrgStructures: academyOrgStructures.academyOrgStructures,
   deleted: academyOrgStructures.deleted,
-  //universityInfo: universityInfo.universityInfo,
+  academyInfo: academyInfo.academyInfo,
   user_menu: menu_items.user_menu || [],
 });
 const mapDispatchToProps = dispatch => ({
-  onGetAcademyOrgStructures: () => dispatch(getAcademyOrgStructure()),
+  onGetAcademyOrgStructures: lng => dispatch(getAcademyOrgStructure(lng)),
   onAddAcademyOrgStructure: academyOrgStructure =>
     dispatch(addNewAcademyOrgStructure(academyOrgStructure)),
 

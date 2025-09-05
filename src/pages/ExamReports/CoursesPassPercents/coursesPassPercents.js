@@ -1109,8 +1109,8 @@ class CoursesPassPercentsList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={t("Academic Warning Rules")}
-              breadcrumbItem={t("Academic Warning Rules List")}
+              title={t("Courses Pass Percents")}
+              breadcrumbItem={t("Courses Pass Percents List")}
             />
 
             <Card>
