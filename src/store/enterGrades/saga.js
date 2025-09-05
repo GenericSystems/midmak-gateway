@@ -43,6 +43,7 @@ import {
 } from "../../helpers/fakebackend_helper";
 
 function* fetchEnteredGrades({ payload }) {
+  console.log("payloadpayloadpayloadpayload", payload);
   const request = {
     source: "db",
     procedure: "SisApp_getData",
@@ -85,6 +86,7 @@ function* fetchCourseContentsEnteredGrades({ payload }) {
   };
   try {
     const response = yield call(getCourseContentsEnteredGrades, request);
+    console.log("wwwwwwwwwwwww", response);
     yield put(getCourseContentsEnteredGradesSuccess(response));
   } catch (error) {
     yield put(getCourseContentsEnteredGradesFail(error));
@@ -130,7 +132,7 @@ function* fetchFilteredSections({ payload }) {
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_Section",
     fields: "Id,SectionNumber,courseId",
-    filter: `CourseId = ${payload.courseId}'''' `,
+    filter: `CourseId = ${payload.courseId} `,
   };
   try {
     const response = yield call(getFilteredSections, request);

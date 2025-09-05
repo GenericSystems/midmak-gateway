@@ -118,26 +118,26 @@ function* onUpdateArchivedGrade({ payload }) {
   }
 }
 
-function* fetchFilteredSections(obj) {
-  let schedulingLec = obj.payload;
-  const get_filtered_Sections = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Section",
-    fields: "Id,SectionNumber,CourseCode",
-    filter: `CourseId = ${schedulingLec.courseId} and CourseCode = ''''${schedulingLec.CourseCode}'''' `,
-  };
-  try {
-    const response = yield call(getFilteredSections, get_filtered_Sections);
-    yield put(getFilteredSectionsSuccess(response));
-  } catch (error) {
-    yield put(getFilteredSectionsFail(error));
-  }
-}
+// function* fetchFilteredSections(obj) {
+//   let schedulingLec = obj.payload;
+//   const get_filtered_Sections = {
+//     source: "db",
+//     procedure: "Generic_getOptions",
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     tablename: "Common_Section",
+//     fields: "Id,SectionNumber,CourseCode",
+//     filter: `CourseId = ${schedulingLec.courseId} and CourseCode = ''''${schedulingLec.CourseCode}'''' `,
+//   };
+//   try {
+//     const response = yield call(getFilteredSections, get_filtered_Sections);
+//     yield put(getFilteredSectionsSuccess(response));
+//   } catch (error) {
+//     yield put(getFilteredSectionsFail(error));
+//   }
+// }
 
 function* archiveGradesSaga() {
-  yield takeEvery(GET_FILTERED_SECTIONS, fetchFilteredSections);
+  // yield takeEvery(GET_FILTERED_SECTIONS, fetchFilteredSections);
 
   // ARCHIVED GRADES
   yield takeEvery(GET_ARCHIVED_GRADES, fetchArchivedGrades);

@@ -97,7 +97,7 @@ function* fetchDefineExamDates(selectedpayload) {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_GradeType",
+    tablename: "Settings_CourseContents",
     fields: "Id,arTitle",
   };
 

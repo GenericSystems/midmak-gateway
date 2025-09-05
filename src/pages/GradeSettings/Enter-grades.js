@@ -25,7 +25,7 @@ import { connect } from "react-redux";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
-import TempStudentsChart from "../../components/Common/TempStudentsChart";
+// import TempTraineesChart from "../../components/Common/TempTraineesChart";
 import Accordion from "react-bootstrap/Accordion";
 
 import {
@@ -259,14 +259,14 @@ class EnterGradesList extends Component {
             if (fieldValue == "") {
               const updateData = {
                 Id: row.Id,
-                studentId: row.studentId,
+                traineeId: row.traineeId,
                 [FieldToUpdate]: null,
               };
               onUpdateGrade(updateData);
             } else {
               const updateData = {
                 Id: row.Id,
-                studentId: row.studentId,
+                traineeId: row.traineeId,
                 [FieldToUpdate]: fieldValue,
               };
               onUpdateGrade(updateData);
@@ -342,8 +342,8 @@ class EnterGradesList extends Component {
           dataField: column.dataField,
           text: column.textField,
           editable: showEditButton
-            ? column.dataField !== "studentId" &&
-              column.dataField !== "studentName" &&
+            ? column.dataField !== "traineeId" &&
+              column.dataField !== "traineeName" &&
               column.dataField !== "totalGrade" &&
               column.dataField !== "letter_grade"
             : false,
@@ -370,8 +370,8 @@ class EnterGradesList extends Component {
 
           const mappedData = {
             Id: grade.Id || "",
-            studentId: grade.studentId || "",
-            studentName: grade.studentName || "",
+            traineeId: grade.traineeId || "",
+            traineeName: grade.traineeName || "",
             totalGrade: grade.totalGrade || "",
             letter_grade: grade.letter_grade || "",
           };
@@ -395,8 +395,8 @@ class EnterGradesList extends Component {
       } else {
         mappedDataArray.push({
           Id: "",
-          studentId: "",
-          studentName: "",
+          traineeId: "",
+          traineeName: "",
           Total: "",
           Letter: "",
         });
@@ -437,7 +437,7 @@ class EnterGradesList extends Component {
                     <Col lg={sidebarOpen ? "3" : "1"}>
                       <Card>
                         <CardTitle id="course_header">
-                          {t("Search for the course student")}
+                          {t("Search for the course trainee")}
                         </CardTitle>
                         <CardBody>
                           <div className="mb-3">
@@ -659,7 +659,7 @@ class EnterGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Number of Students"
+                                                      "Number of Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon ">
@@ -671,7 +671,7 @@ class EnterGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Successful Students"
+                                                      "Successful Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon">
@@ -683,7 +683,7 @@ class EnterGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Failed Students"
+                                                      "Failed Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon">
@@ -695,7 +695,7 @@ class EnterGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Applicant Students"
+                                                      "Applicant Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon">
@@ -746,9 +746,9 @@ class EnterGradesList extends Component {
                                               {" "}
                                               <Row>
                                                 <Col className="col-5">
-                                                  {courseStatistics[1] &&
+                                                  {/* {courseStatistics[1] &&
                                                     combinedArray && (
-                                                      <TempStudentsChart
+                                                      <TempTraineesChart
                                                         series={combinedArray.map(
                                                           item => item
                                                         )}
@@ -757,12 +757,12 @@ class EnterGradesList extends Component {
                                                           "Fail",
                                                         ]}
                                                       />
-                                                    )}
+                                                    )} */}
                                                 </Col>
 
                                                 <Col className="col-2"></Col>
                                                 <Col className="col-5">
-                                                  {courseStatistics[1] && (
+                                                  {/* {courseStatistics[1] && (
                                                     <OtherChart
                                                       series={courseStatistics[1].map(
                                                         item =>
@@ -773,7 +773,7 @@ class EnterGradesList extends Component {
                                                           item.letter_grade
                                                       )}
                                                     />
-                                                  )}
+                                                  )} */}
                                                 </Col>
                                               </Row>
                                             </DropdownMenu>

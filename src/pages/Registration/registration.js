@@ -154,7 +154,7 @@ class RegistrationList extends Component {
   }
   toggleMainTab(tab) {
     const { traineeEdit } = this.state;
-    // const { onGetNonActiveStdCurr } = this.props;
+    const { onGetNonActiveStdCurr } = this.props;
     if (this.state.mainTab !== tab) {
       this.setState({
         mainTab: tab,
@@ -163,9 +163,9 @@ class RegistrationList extends Component {
         successMessage: null,
       });
       if (tab === "6") {
-        // onGetNonActiveStdCurr(1, traineeEdit.TraineeNum);
+        onGetNonActiveStdCurr(1, traineeEdit.TraineeNum);
       } else {
-        // onGetNonActiveStdCurr(0, traineeEdit.TraineeNum);
+        onGetNonActiveStdCurr(0, traineeEdit.TraineeNum);
       }
     }
   }
@@ -363,7 +363,7 @@ class RegistrationList extends Component {
     this.setState({ deleteModal: false });
   };
   handleAddToAddedCourses = (row, currentStatus, fieldName) => {
-    const { onAddNewAvailableCourse, onGetNonActiveStdCurr } = this.props;
+    const { onAddNewAvailableCourse, onGetNonActiveStdCurr, ava } = this.props;
     const { traineeEdit } = this.state;
     console.log("traineeEdit", traineeEdit);
     const newRow = {
@@ -374,6 +374,11 @@ class RegistrationList extends Component {
       color: this.generateRandomColor(),
     };
     onAddNewAvailableCourse(newRow);
+    this.setState({
+      availableCourses: availableCourses.filter(
+        c => c.courseId !== row.courseId
+      ),
+    });
   };
 
   handleActiveSelectChange = (rowId, fieldName, selectedValue, oldValue) => {
@@ -760,7 +765,7 @@ class RegistrationList extends Component {
         }),
       },
       {
-        dataField: "nbHours",
+        dataField: "totalTrainingHours",
         text: this.props.t("Number Of Hours"),
         sort: true,
         filter: textFilter({
