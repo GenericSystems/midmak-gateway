@@ -203,7 +203,7 @@ function* fetchCoursesCatalogs(selectedpayload) {
   try {
     const response = yield call(getCoursesCatalogs, payload);
     response.map(resp => {
-      resp["CourseSectors"] = JSON.parse(resp["CourseSectors"]);
+      resp["courseSectors"] = JSON.parse(resp["courseSectors"]);
     });
 
     console.log("responseresponseresponse", response);

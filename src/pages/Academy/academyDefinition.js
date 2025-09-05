@@ -46,7 +46,7 @@ class AcademyInfo extends Component {
         },
       ],
       AcademyNameError: "",
-      
+      CountryError:"",
       AcademyNameEnError: "",
       successMessage: null,
       errors:{},
