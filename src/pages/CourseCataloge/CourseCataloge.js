@@ -281,16 +281,15 @@ class CourseCatalogeList extends Component {
   };
 
   handleDeleteRow = () => {
-
     const { onDeleteCoursesCatalog } = this.props;
     const { selectedRowId } = this.state;
 
-    console.log("selectedRowId",selectedRowId.Id)
+    console.log("selectedRowId", selectedRowId.Id);
 
     if (selectedRowId !== null) {
-      let deleteObj ={
-        Id:selectedRowId.Id
-      }
+      let deleteObj = {
+        Id: selectedRowId.Id,
+      };
       onDeleteCoursesCatalog(deleteObj);
 
       this.setState({
@@ -384,7 +383,7 @@ class CourseCatalogeList extends Component {
       courseSectors?.map(item => ({
         label: item.label,
         value: item.value,
-        code:item.code,
+        code: item.code,
       })) || [];
 
     // Assign form values
@@ -489,9 +488,9 @@ class CourseCatalogeList extends Component {
     if (fieldName === "sectorId") {
       const courseSectors = selectedMulti || [];
 
-      const concatenatedCodes = courseSectors.map(sector => sector.code).join(
-        ","
-      );
+      const concatenatedCodes = courseSectors
+        .map(sector => sector.code)
+        .join(",");
 
       this.setState({
         courseSectors: courseSectors,
@@ -559,32 +558,46 @@ class CourseCatalogeList extends Component {
     onGetCoursesCatalogDeletedValue();
   };
 
-  handleEditCourse = arg => {
-    console.log("orgsssssssss", arg);
-    const { preReqCourses, onGetCourseCatalogePrerequisites } = this.props;
+handleEditCourse = arg => {
+  const { preReqCourses, onGetCourseCatalogePrerequisites, trainingSectorOptions = [] } = this.props;
 
-    const filteredPreReqCourses = preReqCourses.filter(
-      course => course.key != arg.Id
-    );
+  const filteredPreReqCourses = preReqCourses.filter(
+    course => course.key !== arg.Id
+  );
 
-    this.setState({
-      courseCataloge: arg,
-      isEdit: true,
-      filtredPreReqCourses: filteredPreReqCourses,
-      selectedCoursId: arg.Id,
-      selectedTrainingFormat: arg.trainingFormatId,
-   
-      sectorsCode: arg.sectorsCode,
-      courseSectors: arg.sectorId,
-      selectedQualificationTrack: arg.qualificationTrackId,
+ 
+  const sectorsArray = Array.isArray(arg.courseSectors) && trainingSectorOptions.length
+    ? arg.courseSectors
+        .map(s => trainingSectorOptions.find(opt => opt.value === s.sectorId))
+        .filter(Boolean)
+    : [];
 
-      selectedTrainingProgram: arg.programId,
-      selectedTrainingType: arg.courseTypeId,
-    });
-    onGetCourseCatalogePrerequisites(arg.Id);
+  // Generate sector code for read-only field
+  const concatenatedCodes = arg.sectorCode || sectorsArray.map(s => s.value).join(",");
 
-    this.toggle();
-  };
+  this.setState({
+    courseCataloge: arg,
+    isEdit: true,
+    filtredPreReqCourses: filteredPreReqCourses,
+    selectedCoursId: arg.Id,
+    selectedTrainingFormat: arg.trainingFormatId,
+
+    selectedMulti: sectorsArray,   
+    sectorsCode: concatenatedCodes, 
+
+    selectedQualificationTrack: arg.qualificationTrackId,
+    selectedIsNeedLabs: arg.isNeedLab,
+    selectedIsNeedSection: arg.isNeedSection,
+    selectedTrainingProgram: arg.programId,
+    selectedTrainingType: arg.courseTypeId,
+  });
+  console.log("sectorsArray",sectorsArray)
+
+  onGetCourseCatalogePrerequisites(arg.Id);
+  this.toggle();
+};
+
+
 
   deletePrerequisite = row => {
     this.props.onDeleteCourseCatalogePrerequisite({ Id: row.Id });
@@ -597,8 +610,6 @@ class CourseCatalogeList extends Component {
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
-
- 
 
   handleToggleChange = (field, value) => {
     this.setState({ [field]: value });
@@ -703,7 +714,7 @@ class CourseCatalogeList extends Component {
         editable: false,
       },
       {
-        dataField: "sectorName",
+        dataField: "courseSectorsNames",
         text: this.props.t("Sector"),
         sort: true,
         editable: false,
@@ -1043,9 +1054,9 @@ class CourseCatalogeList extends Component {
                                             courseCataloge?.qualificationCode ||
                                             "",
 
-                                        //  sectorId :
-                                        //     courseCataloge?.sectorId ||
-                                        //     selectedTrainingSector,
+                                          //  sectorId :
+                                          //     courseCataloge?.sectorId ||
+                                          //     selectedTrainingSector,
                                           // sectorsCode:
                                           //   courseCataloge?.sectorsCode ||
                                           //   sectorsCode,
@@ -1236,8 +1247,9 @@ class CourseCatalogeList extends Component {
                                                                             )
                                                                           }
                                                                           isMulti
-                                                                          value={courseSectors
-                                                                          } 
+                                                                          value={
+                                                                            courseSectors
+                                                                          }
                                                                         />
                                                                       </Col>
                                                                     </Row>
@@ -1490,7 +1502,7 @@ class CourseCatalogeList extends Component {
                                                                       </Col>
                                                                     </Row>
                                                                   </div>
-{/* 
+                                                                  {/* 
                                                                   {/* Training Module */}
                                                                   {/* <div className="mb-3">
                                                                     <Row>
