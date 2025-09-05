@@ -82,7 +82,7 @@ function* fetchCourseContentsEnteredGrades({ payload }) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_DistributingMethods",
-    filter: `courseId = ${payload.courseId} `,
+    filter: `courseId = ${payload.courseId}  or courseId = 0`,
   };
   try {
     const response = yield call(getCourseContentsEnteredGrades, request);
