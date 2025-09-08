@@ -21,6 +21,9 @@ import chat from "./chat/reducer";
 //crypto
 import crypto from "./crypto/reducer";
 
+//hiddenMarks
+import hiddenGrades from "./hide-grade/reducer";
+
 //invoices
 import invoices from "./invoices/reducer";
 
@@ -358,6 +361,7 @@ const rootReducer = combineReducers({
   projects,
   tasks,
   contacts,
+  hiddenGrades,
 
   certificateTypes,
   studentManagements,

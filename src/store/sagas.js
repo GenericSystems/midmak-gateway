@@ -89,6 +89,7 @@ import certificateGradesSaga from "./certificateGrades/saga";
 import academyBuildingStructureSaga from "./academyBuildingStructure/saga";
 import contractsTypesSaga from "./HR/contractsTypes/saga";
 import gradesVersionsSaga from "./gradesVersions/saga";
+import hiddenGradesSaga from "./hide-grade/saga";
 
 import ExamRoomsSaga from "./Exam/ExamRooms/saga";
 import employmentCasesSaga from "./HR/employmentCases/saga";
@@ -187,6 +188,7 @@ export default function* rootSaga() {
     fork(academiccertificatesSaga),
     fork(coursesSaga),
     fork(estimatesSaga),
+    fork(hiddenGradesSaga),
     fork(courseContentsSaga),
     fork(courseTypesSaga),
     fork(levelsSaga),

@@ -182,6 +182,9 @@ import AbsenceWarningsList from "../pages/Rules-and-Regulations/Absence-warnings
 //documet types
 import DocumentsTypesList from "../pages/Addmission/AdmissionSettings/documents-types";
 
+//hidden-grades
+import HiddenGradesList from "../pages/Exam/Grades/hide-grades"
+
 // RegReqDocuments
 
 import RegReqDocumentsTable from "../pages/Addmission/AdmissionSettings/regReqDocuments";
@@ -359,6 +362,9 @@ const authProtectedRoutes = [
   // contracts
 
   { path: "/contracts", component: ContractsList },
+
+  //hidden grades
+  { path:"/hide-grades",component: HiddenGradesList },
 
   // Applicants
 

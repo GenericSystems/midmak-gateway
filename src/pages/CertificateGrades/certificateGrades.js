@@ -181,7 +181,7 @@ class CertificateGradesList extends Component {
     }
   };
   handleCertificateGradeDataChange = (rowId, fieldName, fieldValue) => {
-    const { certificateGrades, onUpdateCertificateGrade } = this.props;
+    const { certificate, onUpdateCertificateGrade } = this.props;
     const isDuplicate = certificateGrades.some(
       grade => grade.Id !== rowId && grade.arTitle.trim() === fieldValue.trim()
     );

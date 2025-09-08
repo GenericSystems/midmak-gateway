@@ -560,20 +560,27 @@ class CourseCatalogeList extends Component {
 
 handleEditCourse = arg => {
   const { preReqCourses, onGetCourseCatalogePrerequisites, trainingSectorOptions = [] } = this.props;
+  console.log("argsssss",arg)
 
   const filteredPreReqCourses = preReqCourses.filter(
     course => course.key !== arg.Id
   );
 
- 
-  const sectorsArray = Array.isArray(arg.courseSectors) && trainingSectorOptions.length
-    ? arg.courseSectors
-        .map(s => trainingSectorOptions.find(opt => opt.value === s.sectorId))
-        .filter(Boolean)
-    : [];
+ const sectorsArray = Array.isArray(arg.courseSectors)
+  ? arg.courseSectors.map(s => {
+     
+      const match = trainingSectorOptions.find(
+        opt => opt.value === s.sectorId
+      );
+      return match || { value: s.sectorId, label: s.sectorName };
+    })
+  : [];
+
 
   // Generate sector code for read-only field
   const concatenatedCodes = arg.sectorCode || sectorsArray.map(s => s.value).join(",");
+  console.log("sectorsArray",sectorsArray)
+
 
   this.setState({
     courseCataloge: arg,
@@ -582,7 +589,8 @@ handleEditCourse = arg => {
     selectedCoursId: arg.Id,
     selectedTrainingFormat: arg.trainingFormatId,
 
-    selectedMulti: sectorsArray,   
+    courseSectors: sectorsArray, 
+      
     sectorsCode: concatenatedCodes, 
 
     selectedQualificationTrack: arg.qualificationTrackId,
@@ -592,6 +600,8 @@ handleEditCourse = arg => {
     selectedTrainingType: arg.courseTypeId,
   });
   console.log("sectorsArray",sectorsArray)
+  console.log("trainingSectorOptions",trainingSector)
+
 
   onGetCourseCatalogePrerequisites(arg.Id);
   this.toggle();

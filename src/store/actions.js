@@ -27,6 +27,9 @@ export * from "./invoices/actions";
 // students history
 export * from "./students-history/actions";
 
+//hiddenGrade
+export * from "./hide-grade/actions"
+
 //trainees
 export * from "./trainees/actions";
 
