@@ -15,6 +15,7 @@ import {
     hiddenGrades: [],
     deleted: {},
     error: {},
+    hidereasons:[],
     }
     
     const hiddenGrades = (state = INIT_STATE, action) => {

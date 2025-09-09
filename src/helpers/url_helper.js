@@ -1027,11 +1027,11 @@ export const DELETE_DOCUMENT_TYPE = "/delete/documentType";
 
 
 //HIDE_GRADES
-export const GET_HIDDEN_GRADES = "/hiddenMarks";
+export const GET_HIDDEN_GRADES = "/hiddenGrades";
 export const GET_HIDDEN_GRADE_DELETED_VALUE = "/deleted";
-export const ADD_NEW_HIDDEN_GRADE = "/add/hiddenMark";
-export const UPDATE_HIDDEN_GRADE = "/update/hiddenMark";
-export const DELETE_HIDDEN_GRADE = "/delete/hiddenMark";
+export const ADD_NEW_HIDDEN_GRADE = "/add/hiddenGrades";
+export const UPDATE_HIDDEN_GRADE = "/update/hiddenGrades";
+export const DELETE_HIDDEN_GRADE = "/delete/hiddenGrades";
 
 //ABSCENCE_WARNINGS
 export const GET_ABSENCE_WARNINGS = "/absenceWarnings";

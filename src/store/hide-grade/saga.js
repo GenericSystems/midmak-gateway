@@ -31,7 +31,7 @@ import {
 import {
   getHiddenGrades,
   getHiddenGradeDeletedValue,
-  // addNewhiddenGrade,
+  addNewHiddenGrade,
   updateHiddenGrade,
   deleteHiddenGrade,
   getCoursesOffering,
@@ -42,7 +42,7 @@ function* fetchhiddenGrades() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_HiddenGrade",
+    tablename: "Common_HiddenGrades ",
   };
   try {
     const response = yield call(getHiddenGrades, get_settings_req);
@@ -56,9 +56,9 @@ function* fetchhiddenGrades() {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_CourseOffering",
-    // fields:"Id,arTitle",
+    fields: "Id,arTitle,Code",
 
-    filter:`isOffered = 1`,
+    filter: `isOffered = 1`,
   };
   try {
     const response = yield call(getCoursesOffering, get_courses_req);
@@ -78,14 +78,16 @@ function* onGethiddenGradeDeletedValue() {
   }
 }
 
-function* onAddNewhiddenGrade({ payload, hiddenGrade }) {
-  delete payload["id"];
+function* onAddNewHiddenGrade({ payload, hiddenGrade }) {
+  // delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_RegDocType";
+  payload["tablename"] = "Common_HiddenGrades ";
   try {
-    const response = yield call(addNewhiddenGrade, payload);
+    const response = yield call(addNewHiddenGrade, payload);
+    console.log("payload",payload)
+    console.log("response",response)
     yield put(addHiddenGradeSuccess(response[0]));
   } catch (error) {
     yield put(addHiddenGradeFail(error));
@@ -96,7 +98,7 @@ function* onUpdatehiddenGrade({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_RegDocType";
+  payload["tablename"] = "Common_HiddenGrades ";
   try {
     const respupdate = yield call(updateHiddenGrade, payload);
     yield put(updateHiddenGradeSuccess(respupdate[0]));
@@ -109,7 +111,7 @@ function* onDeletehiddenGrade({ payload, hiddenGrade }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_RegDocType";
+  payload["tablename"] = "Common_HiddenGrades ";
   try {
     const respdelete = yield call(deletehiddenGrade, payload);
     yield put(deletehiddenGradeSuccess(respdelete[0]));
@@ -121,7 +123,7 @@ function* onDeletehiddenGrade({ payload, hiddenGrade }) {
 function* hiddenGradesSaga() {
   yield takeEvery(GET_HIDDEN_GRADES, fetchhiddenGrades);
   yield takeEvery(GET_HIDDEN_GRADE_DELETED_VALUE, onGethiddenGradeDeletedValue);
-  yield takeEvery(ADD_NEW_HIDDEN_GRADE, onAddNewhiddenGrade);
+  yield takeEvery(ADD_NEW_HIDDEN_GRADE, onAddNewHiddenGrade);
   yield takeEvery(UPDATE_HIDDEN_GRADE, onUpdatehiddenGrade);
   yield takeEvery(DELETE_HIDDEN_GRADE, onDeletehiddenGrade);
 }

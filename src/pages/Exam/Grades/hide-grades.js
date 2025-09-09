@@ -51,6 +51,7 @@ class HiddenGradesList extends Component {
     super(props);
     this.state = {
       hiddenGrades: [],
+      rows: [],
       hiddenGrade: "",
       showAlert: null,
       showAddButton: false,
@@ -64,7 +65,8 @@ class HiddenGradesList extends Component {
   }
 
   componentDidMount() {
-    const { hiddenGrades, onGetHiddenGrades, user_menu,coursesOffering } = this.props;
+    const { hiddenGrades, onGetHiddenGrades, user_menu, coursesOffering } =
+      this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
 
     this.updateShowEditButton(user_menu, this.props.location.pathname);
@@ -74,7 +76,7 @@ class HiddenGradesList extends Component {
     // }
     onGetHiddenGrades();
 
-    this.setState({ hiddenGrades ,coursesOffering});
+    this.setState({ hiddenGrades, coursesOffering });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -124,52 +126,78 @@ class HiddenGradesList extends Component {
       this.node.current.props.pagination.options.onPageChange(page);
     }
   };
-
   handleAddRow = () => {
     const { onAddNewHiddenGrade, hiddenGrades } = this.props;
     console.log("hiddenGrades", hiddenGrades);
 
     const newRow = {
-      arTitle: "-----",
+      courseId: 1,
     };
 
-    // Check if the same value already exists in the table
-    const emptyRowsExist = hiddenGrades.some(
-      hiddenGrades => hiddenGrades.arTitle.trim() === "-----"
-      // ||
-      // hiddenGrade.enTitle.trim() === ""
+    const hasEmptyRow = hiddenGrades.some(
+      row => !row.courseId || row.courseId === null
     );
 
-    if (emptyRowsExist) {
-      const errorMessage = this.props.t("Fill in the empty row");
+    if (hasEmptyRow) {
+      const errorMessage = this.props.t("Fill in the empty row first");
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
+      console.log("11111111111");
       onAddNewHiddenGrade(newRow);
     }
   };
+handleSelect = (rowId, fieldName, selectedValue) => {
+  console.log("selected value:", selectedValue);
 
-  handlehiddenGradeDataChange = (rowId, fieldName, fieldValue) => {
-    const { hiddenGrades, onUpdateHiddenGrade } = this.props;
+  this.setState(prevState => {
+    const updatedHiddenGrades = prevState.hiddenGrades.map(row => {
+      if (row.Id === rowId) {
+        const updatedRow = { ...row };
 
-    const isDuplicate = hiddenGrades.some(hiddenGrade => {
-      return (
-        hiddenGrade.Id !== rowId &&
-        hiddenGrade.arTitle.trim() === fieldValue.trim()
-      );
+        if (fieldName === "courseId") {
+          updatedRow.courseId = selectedValue.value;
+          updatedRow.courseCode = selectedValue.Code; // auto-fill
+        }
+
+        if (fieldName === "hideReasonId") {
+          updatedRow.hideReasonId = selectedValue.value;
+        }
+
+        return updatedRow;
+      }
+      return row;
     });
 
-    if (isDuplicate) {
-      const errorMessage = this.props.t("Value already exists");
-      this.setState({ duplicateError: errorMessage });
-      let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateHiddenGrade(onUpdate);
-    } else {
-      this.setState({ duplicateError: null });
-      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateHiddenGrade(onUpdate);
-    }
-  };
+    return { hiddenGrades: updatedHiddenGrades };
+  }, () => {
+    const updatedRow = this.state.hiddenGrades.find(r => r.Id === rowId);
+    console.log("Updated Row:", updatedRow);
+  });
+};
+
+
+  // handlehiddenGradeDataChange = (rowId, fieldName, fieldValue) => {
+  //   const { hiddenGrades, onUpdateHiddenGrade } = this.props;
+
+  //   const isDuplicate = hiddenGrades.some(hiddenGrade => {
+  //     return (
+  //       hiddenGrade.Id !== rowId &&
+  //       hiddenGrade.arTitle.trim() === fieldValue.trim()
+  //     );
+  //   });
+
+  //   if (isDuplicate) {
+  //     const errorMessage = this.props.t("Value already exists");
+  //     this.setState({ duplicateError: errorMessage });
+  //     let onUpdate = { Id: rowId, [fieldName]: "-----" };
+  //     onUpdateHiddenGrade(onUpdate);
+  //   } else {
+  //     this.setState({ duplicateError: null });
+  //     let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+  //     onUpdateHiddenGrade(onUpdate);
+  //   }
+  // };
 
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
@@ -182,7 +210,7 @@ class HiddenGradesList extends Component {
   }
 
   render() {
-    const { hiddenGrades, t, deleted ,coursesOffering} = this.props;
+    const { hiddenGrades, t, deleted, coursesOffering } = this.props;
     const {
       duplicateError,
 
@@ -203,17 +231,16 @@ class HiddenGradesList extends Component {
     const columns = [
       { dataField: "Id", text: "ID", hidden: true },
       {
-        dataField: "courseNameId",
+        dataField: "courseId",
         text: this.props.t("Course Name"),
-       formatter: (cell, row) => (
+        formatter: (cell, row) => (
           <Select
-            key={`hidden_grade_${row.Id}`}
+            key={`course_select_${row.Id}`}
             options={coursesOffering}
-            onChange={newValue => {
-              this.handleSelect(row.Id, "courseNameId", newValue.value);
-            }}
-            value={coursesOffering.find(opt => opt.value == row.dataField)}
-
+            onChange={newValue =>
+              this.handleSelect(row.Id, "courseId", newValue)
+            }
+            value={coursesOffering.find(opt => opt.value === row.courseId)}
           />
         ),
         editable: false,
@@ -222,10 +249,10 @@ class HiddenGradesList extends Component {
         dataField: "courseCode",
         text: this.props.t("Course Code"),
         sort: true,
-       
-    
+        formatter: (cell, row) => row.courseCode || "",
+        editable: false, 
       },
-        {
+      {
         dataField: "fromDate",
         text: this.props.t("fom Date"),
         sort: true,
@@ -259,7 +286,7 @@ class HiddenGradesList extends Component {
         },
       },
 
-     {
+      {
         dataField: "toDate",
         text: this.props.t("toDate"),
         sort: true,
@@ -292,26 +319,25 @@ class HiddenGradesList extends Component {
           );
         },
       },
-       {
-        dataField: "hideReasonId",
-        text: this.props.t("Hide Reason"),
-       formatter: (cell, row) => (
-          <Select
-            key={`hidden_grade_${row.Id}`}
-            options={hidereasons}
-            onChange={newValue => {
-              this.handleSelect(row.Id, "hideReasonId", newValue.value);
-            }}
-            value={hidereasons.find(opt => opt.value == row.dataField)}
-
-          />
-        ),
-        editable: false,
-      },
+      // {
+      //   dataField: "hideReasonId",
+      //   text: this.props.t("Hide Reason"),
+      //   formatter: (cell, row) => (
+      //     <Select
+      //       key={`hide_reason_select_${row.Id}`}
+      //       options={hidereasons}
+      //       onChange={newValue =>
+      //         this.handleSelect(row.Id, "hideReasonId", newValue)
+      //       }
+      //       value={hidereasons.find(opt => opt.value === row.hideReasonId)}
+      //     />
+      //   ),
+      //   editable: false,
+      // },
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: hiddenGrades?.length || 0, // avoids crash if undefined
+      totalSize: hiddenGrades?.length || 0,
       custom: true,
     };
 
@@ -391,7 +417,7 @@ class HiddenGradesList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={hiddenGrades || []}
+                                  data={this.state.hiddenGrades || []}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "dbclick",
@@ -438,11 +464,9 @@ class HiddenGradesList extends Component {
   }
 }
 
-const mapStateToProps = ({ hiddenGrades, menu_items ,classScheduling}) => ({
+const mapStateToProps = ({ hiddenGrades, menu_items, classScheduling }) => ({
   hiddenGrades: hiddenGrades.hiddenGrades,
-  coursesOffering:classScheduling.coursesOffering,
-
-  
+  coursesOffering: classScheduling.coursesOffering,
 
   user_menu: menu_items.user_menu || [],
 });
