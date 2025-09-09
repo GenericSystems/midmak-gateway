@@ -146,7 +146,8 @@ class AcademyBuildingStructuresList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
 
-    onGetAcademyBuildingStructures(lang);
+    // onGetAcademyBuildingStructures(lang);
+    onGetAcademyBuildingStructures();
     onGetHallTypes();
 
     this.setState({ academyBuildingStructures, academyInfo, hallTypes });
@@ -159,7 +160,7 @@ class AcademyBuildingStructuresList extends Component {
     const lang = localStorage.getItem("I18N_LANGUAGE");
 
     // if (lang != lng) {
-    onGetAcademyBuildingStructures(lang);
+    // onGetAcademyBuildingStructures(lang);
     this.setState({ languageState: lng });
     // }
   };
@@ -938,7 +939,6 @@ class AcademyBuildingStructuresList extends Component {
       languageState,
     } = this.state;
 
-    const expanded = expandedNodes || [];
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
     return (
@@ -973,10 +973,10 @@ class AcademyBuildingStructuresList extends Component {
                   defaultCollapseIcon={<ExpandMoreIcon />}
                   defaultExpandIcon={<ChevronRightIcon />}
                   multiSelect
-                  expanded={expandedNodes}
-                  onNodeToggle={(event, nodeIds) =>
-                    this.setState({ expandedNodes: nodeIds })
-                  }
+                  // expanded={expandedNodes}
+                  // onNodeToggle={(event, nodeIds) =>
+                  //   this.setState({ expandedNodes: nodeIds })
+                  // }
                   sx={{
                     flexGrow: 1,
                     overflowY: "auto",
@@ -1409,11 +1409,13 @@ class AcademyBuildingStructuresList extends Component {
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
                           {this.props.t("Add New Floor")}{" "}
-                          {
-                            academyBuildingStructures.find(
-                              building => building.Id === selectedBuildingId
-                            )?.arTitle
-                          }
+                          {languageState === "ar"
+                            ? academyBuildingStructures.find(
+                                building => building.Id === selectedBuildingId
+                              )?.arTitle
+                            : academyBuildingStructures.find(
+                                building => building.Id === selectedBuildingId
+                              )?.enTitle}
                         </h5>
                       </Typography>
                     </Row>
@@ -1514,7 +1516,10 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Building")}- {editBuildingArName}
+                          {t("Edit Building")} -{" "}
+                          {languageState === "ar"
+                            ? editBuildingArName
+                            : editBuildingEnName}
                         </h5>
                       </Typography>
                     </Row>
@@ -1621,7 +1626,10 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Floor")} {editBuildingArName}
+                          {t("Edit Floor")} -{" "}
+                          {languageState === "ar"
+                            ? editFloorArName
+                            : editFloorEnName}
                         </h5>
                       </Typography>
                     </Row>
@@ -1718,11 +1726,15 @@ class AcademyBuildingStructuresList extends Component {
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
                           {this.props.t("Add New Hall")}{" "}
-                          {
-                            academyBuildingStructures
-                              .flatMap(building => building.floors)
-                              .find(floor => floor.Id === floorHallId)?.arTitle
-                          }
+                          {languageState === "ar"
+                            ? academyBuildingStructures
+                                .flatMap(building => building.floors)
+                                .find(floor => floor.Id === floorHallId)
+                                ?.arTitle
+                            : academyBuildingStructures
+                                .flatMap(building => building.floors)
+                                .find(floor => floor.Id === floorHallId)
+                                ?.enTitle}
                         </h5>
                       </Typography>
                     </Row>
@@ -1910,7 +1922,10 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Hall")}- {editHallArName}
+                          {t("Edit Hall")}-{" "}
+                          {languageState === "ar"
+                            ? editHallArName
+                            : editHallEnName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2201,7 +2216,10 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Show Floor")} - {editFloorArName}
+                          {t("Show Floor")} -{" "}
+                          {languageState === "ar"
+                            ? editFloorArName
+                            : editFloorEnName || editFloorArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2289,7 +2307,10 @@ class AcademyBuildingStructuresList extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Show Hall")} - {editHallArName}
+                          {t("Show Hall")} -{""}
+                          {languageState === "ar"
+                            ? editHallArName
+                            : editHallEnName || editHallArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2482,8 +2503,8 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetAcademyBuildingStructures: lng =>
-    dispatch(getAcademyBuildingStructures(lng)),
+  onGetAcademyBuildingStructures: () =>
+    dispatch(getAcademyBuildingStructures()),
   onGetHallTypes: () => dispatch(getHallTypes()),
   onAddNewAcademyBuildingStructure: academyBuildingStructure =>
     dispatch(addNewAcademyBuildingStructure(academyBuildingStructure)),

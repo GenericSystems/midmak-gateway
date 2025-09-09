@@ -41,10 +41,10 @@ import {
   getAcademyInfo,
 } from "../../helpers/fakebackend_helper";
 
-function* fetchAcademyBuildingStructure(selectedpayload) {
-  let lang = selectedpayload.payload;
+function* fetchAcademyBuildingStructure() {
+  // let lang = selectedpayload.payload;
 
-  const titleField = lang === "en" ? "enTitle" : "arTitle";
+  // const titleField = lang === "en" ? "enTitle" : "arTitle";
   const request = {
     source: "db",
     procedure: "SisApp_getData",
@@ -55,9 +55,9 @@ function* fetchAcademyBuildingStructure(selectedpayload) {
   try {
     const response = yield call(getAcademyBuildingStructures, request);
     console.log("RRRRRRRRRRRRRRRRRRRE", response);
-    /* response.map(resp => {
-      resp["departments"] = JSON.parse(resp["departments"]);
-    }); */
+    response.map(resp => {
+      resp["floors"] = JSON.parse(resp["floors"]);
+    });
     yield put(getAcademyBuildingStructuresSuccess(response));
   } catch (error) {
     yield put(getAcademyBuildingStructuresFail(error));
@@ -82,17 +82,14 @@ function* fetchAcademyBuildingStructure(selectedpayload) {
 function* fetchHallTypes() {
   const get_hallTypes_req = {
     source: "db",
-    procedure: "Settings_HallType",
+    procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Gender",
+    tablename: "Settings_HallType",
     fields: "Id,arTitle",
   };
 
   try {
     const response = yield call(getHallTypes, get_hallTypes_req);
-    /* response.map(resp => {
-      resp["departments"] = JSON.parse(resp["departments"]);
-    }); */
     yield put(getHallTypesSuccess(response));
   } catch (error) {
     yield put(getHallTypesFail(error));

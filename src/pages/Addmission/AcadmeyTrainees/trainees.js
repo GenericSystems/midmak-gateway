@@ -95,6 +95,7 @@ class TraineesList extends Component {
       deleteModal: false,
       selectedRowId: null,
       isEdit: false,
+      isOpen: false,
       showFatherName: false,
       showTraineeStatus: false,
       showYear: false,
@@ -161,6 +162,7 @@ class TraineesList extends Component {
       showAcademyCouncilDate: false,
       showDecisionNote: false,
       modal: false,
+      modal1: false,
       selectedMulti: null,
       selectedFromAdmSemes: "",
       selectedToAdmSemes: "",
@@ -180,8 +182,11 @@ class TraineesList extends Component {
       showEditButton: false,
       showSearchButton: false,
       successMessage: null,
-      showAcademicForm: false,
+      showTraineeFile: false,
       showRegistrationForm: false,
+      showTranscript: false,
+      showDocuments: false,
+      showTranscriptNoHide: false,
       showReportsLi: false,
       showTraineeLifeLi: false,
       selecetdDiplomaId: "",
@@ -425,6 +430,12 @@ class TraineesList extends Component {
       modal: !prevState.modal,
     }));
     this.props.onGetTrainees();
+  };
+
+  toggle1 = () => {
+    this.setState(prevState => ({
+      modal1: !prevState.modal1,
+    }));
   };
 
   onPaginationPageChange = page => {
@@ -952,23 +963,65 @@ class TraineesList extends Component {
   handleRegistrationForm = () => {
     this.setState({
       showRegistrationForm: true,
-      showAcademicForm: false,
+      showTraineeFile: false,
+      showTranscript: false,
+      showDocuments: false,
+      showTranscriptNoHide: false,
     });
   };
 
-  handleAcademicForm = () => {
+  handleTraineeFile = () => {
     this.setState({
-      showAcademicForm: true,
+      showTraineeFile: true,
       showRegistrationForm: false,
+      showTranscript: false,
+      showDocuments: false,
+      showTranscriptNoHide: false,
+    });
+  };
+  handleTranscript = () => {
+    this.setState({
+      showTraineeFile: false,
+      showRegistrationForm: false,
+      showTranscript: true,
+      showDocuments: false,
+      showTranscriptNoHide: false,
+    });
+  };
+  handleTranscriptNoHide = () => {
+    this.setState({
+      showTraineeFile: false,
+      showRegistrationForm: false,
+      showTranscript: false,
+      showDocuments: false,
+      showTranscriptNoHide: true,
+    });
+  };
+  handleDocuments = () => {
+    this.setState({
+      showTraineeFile: false,
+      showRegistrationForm: false,
+      showDocuments: true,
+      showTranscript: false,
+      showTranscriptNoHide: false,
     });
   };
 
   handleReportsDropdown = () => {
-    const { showAcademicForm, showRegistrationForm } = this.state;
+    const {
+      showTraineeFile,
+      showRegistrationForm,
+      showTranscript,
+      showDocuments,
+      showTranscriptNoHide,
+    } = this.state;
 
     this.setState({
-      showAcademicForm: showAcademicForm ? true : false,
+      showTraineeFile: showTraineeFile ? true : false,
       showRegistrationForm: showRegistrationForm ? true : false,
+      showTranscript: showTranscript ? true : false,
+      showDocuments: showDocuments ? true : false,
+      showTranscriptNoHide: showTranscriptNoHide ? true : false,
     });
     this.setState(prevState => ({
       showReportsLi: !prevState.showReportsLi,
@@ -976,12 +1029,19 @@ class TraineesList extends Component {
   };
 
   handleUniTraineesDropdown = () => {
-    const { showAcademicForm, showRegistrationForm, showReportsLi } =
-      this.state;
+    const {
+      showTraineeFile,
+      showRegistrationForm,
+      showReportsLi,
+      showTranscript,
+    } = this.state;
     this.setState({
-      showAcademicForm: showAcademicForm ? true : false,
+      showTraineeFile: showTraineeFile ? true : false,
       showRegistrationForm: showRegistrationForm ? true : false,
       showReportsLi: showReportsLi ? true : false,
+      showTranscript: showTranscript ? true : false,
+      showDocuments: showDocuments ? true : false,
+      showTranscriptNoHide: showTranscriptNoHide ? true : false,
     });
     this.setState(prevState => ({
       showTraineeLifeLi: !prevState.showTraineeLifeLi,
@@ -1605,6 +1665,13 @@ class TraineesList extends Component {
     }
   };
 
+  handlePrintHistory = trainee => {
+    //  this.setState({
+    //     trainee: trainee,
+    //   });
+    this.toggle1();
+  };
+
   render() {
     const {
       trainees,
@@ -1664,7 +1731,10 @@ class TraineesList extends Component {
       selectedDiplomaVerificationDate,
       selectedNationalityId,
       showRegistrationForm,
-      showAcademicForm,
+      showTranscript,
+      showDocuments,
+      showTraineeFile,
+      showTranscriptNoHide,
       showReportsLi,
       showTraineeLifeLi,
       languageState,
@@ -1783,6 +1853,8 @@ class TraineesList extends Component {
       errorMessage1,
       successMessage1,
       diplomaIdError,
+      modal1,
+      isOpen,
     } = this.state;
 
     const showNewInput =
@@ -1861,6 +1933,154 @@ class TraineesList extends Component {
             ></i>
           </Link>
         ),
+      },
+    ];
+
+    const gradeColumns = [
+      {
+        dataField: "Id",
+        text: this.props.t("#"),
+        editable: false,
+        hidden: true,
+      },
+      {
+        dataField: "docName",
+
+        text: this.props.t("Course Name"),
+        editable: false,
+      },
+      {
+        dataField: "requiredNumber",
+
+        text: this.props.t("Course Code"),
+        editable: false,
+      },
+      {
+        dataField: "availableNumber",
+
+        text: this.props.t("Total Hours"),
+        editable: false,
+      },
+      {
+        dataField: "preventAdmission",
+
+        text: this.props.t("Final Marks"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Points"),
+        editable: false,
+      },
+      {
+        dataField: "preventGraduation",
+
+        text: this.props.t("Grade"),
+        editable: false,
+      },
+    ];
+    const documentsColumns = [
+      {
+        dataField: "Id",
+        text: this.props.t("#"),
+        editable: false,
+        hidden: true,
+      },
+      {
+        dataField: "docName",
+
+        text: this.props.t("Document Num"),
+        editable: false,
+      },
+      {
+        dataField: "requiredNumber",
+
+        text: this.props.t("Document Type"),
+        editable: false,
+      },
+      {
+        dataField: "availableNumber",
+
+        text: this.props.t("Year"),
+        editable: false,
+      },
+      {
+        dataField: "preventAdmission",
+
+        text: this.props.t("Request Date"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Due Date"),
+        editable: false,
+      },
+      {
+        dataField: "preventGraduation",
+
+        text: this.props.t("Last Print Date"),
+        editable: false,
+      },
+      {
+        dataField: "Print History",
+        isDummyField: true,
+        editable: false,
+        text: "",
+        formatter: (cellContent, trainee) => (
+          <div className="d-flex gap-3">
+            <Tooltip title={this.props.t("Print History")} placement="top">
+              <Link className="" to="#">
+                <div className="text-center mt-3">
+                  <i
+                    className="fas fa-history"
+                    id="printtooltip"
+                    onClick={() => this.handlePrintHistory(trainee)}
+                  ></i>
+                </div>
+              </Link>
+            </Tooltip>
+          </div>
+        ),
+      },
+    ];
+    const printHistoryColumns = [
+      {
+        dataField: "Id",
+        text: this.props.t("#"),
+        editable: false,
+        hidden: true,
+      },
+      {
+        dataField: "docName",
+
+        text: this.props.t("Print Notes"),
+        editable: false,
+      },
+      {
+        dataField: "requiredNumber",
+
+        text: this.props.t("Reprint Reason"),
+        editable: false,
+      },
+      {
+        dataField: "availableNumber",
+
+        text: this.props.t("User Name"),
+        editable: false,
+      },
+      {
+        dataField: "preventAdmission",
+
+        text: this.props.t("Print Date"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Print Time"),
+        editable: false,
       },
     ];
 
@@ -4579,16 +4799,16 @@ class TraineesList extends Component {
                                                     <a
                                                       href="#"
                                                       onClick={
-                                                        this.handleAcademicForm
+                                                        this.handleTraineeFile
                                                       }
                                                       style={{
-                                                        color: showAcademicForm
+                                                        color: showTraineeFile
                                                           ? "orange"
                                                           : "black",
                                                       }}
                                                     >
                                                       {this.props.t(
-                                                        "Academic File"
+                                                        "Trainee File"
                                                       )}
                                                     </a>
                                                   </li>
@@ -4612,6 +4832,59 @@ class TraineesList extends Component {
                                                     </a>
                                                   </li>
                                                   <li>
+                                                    <a
+                                                      href="#"
+                                                      onClick={
+                                                        this.handleTranscript
+                                                      }
+                                                      style={{
+                                                        color: showTranscript
+                                                          ? "orange"
+                                                          : "black",
+                                                      }}
+                                                    >
+                                                      {this.props.t(
+                                                        "Transcript"
+                                                      )}
+                                                    </a>
+                                                  </li>
+                                                  <li>
+                                                    <a
+                                                      href="#"
+                                                      onClick={
+                                                        this
+                                                          .handleTranscriptNoHide
+                                                      }
+                                                      style={{
+                                                        color:
+                                                          showTranscriptNoHide
+                                                            ? "orange"
+                                                            : "black",
+                                                      }}
+                                                    >
+                                                      {this.props.t(
+                                                        "Transcript (No Hide)"
+                                                      )}
+                                                    </a>
+                                                  </li>
+                                                  <li>
+                                                    <a
+                                                      href="#"
+                                                      onClick={
+                                                        this.handleDocuments
+                                                      }
+                                                      style={{
+                                                        color: showDocuments
+                                                          ? "orange"
+                                                          : "black",
+                                                      }}
+                                                    >
+                                                      {this.props.t(
+                                                        "Requested Documents"
+                                                      )}
+                                                    </a>
+                                                  </li>
+                                                  {/* <li>
                                                     <a
                                                       href="#"
                                                       onClick={
@@ -4777,7 +5050,7 @@ class TraineesList extends Component {
                                                         </li>
                                                       </ul>
                                                     )}
-                                                  </li>
+                                                  </li> */}
                                                 </ul>
                                               </div>
                                               <div className="collapse-button">
@@ -4791,7 +5064,7 @@ class TraineesList extends Component {
                                               </div>
 
                                               <div className="modal-content">
-                                                {showAcademicForm && (
+                                                {showTraineeFile && (
                                                   <div>
                                                     <Card className="bordered">
                                                       <CardHeader className="card-header">
@@ -4823,288 +5096,353 @@ class TraineesList extends Component {
                                                             <div className="mb-2">
                                                               <Label className="right-label">
                                                                 {this.props.t(
-                                                                  "Faculty"
+                                                                  "Permanent State"
                                                                 )}{" "}
                                                                 :
                                                               </Label>
                                                               <Label className="left-label">
                                                                 {
-                                                                  (
-                                                                    faculties.find(
-                                                                      opt =>
-                                                                        opt.value ===
-                                                                        trainee.FacultyId
-                                                                    ) || ""
-                                                                  ).label
+                                                                  trainee.traineeStatus
                                                                 }
                                                               </Label>
                                                             </div>
 
-                                                            {/* <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Last Semester"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {tempTrainee.registerYearSemesterId
-                                                              ? yearSemesters.find(
-                                                                  yearSemester =>
-                                                                    yearSemester.key ===
-                                                                      tempTrainee.registerYearSemesterId ||
-                                                                    ""
-                                                                ).value
-                                                              : ""}
-                                                          </Label>
-                                                        </div>
+                                                            <div className="mb-2">
+                                                              <Label className="right-label">
+                                                                {this.props.t(
+                                                                  "Temporary Status"
+                                                                )}{" "}
+                                                                :
+                                                              </Label>
+                                                              <Label className="left-label">
+                                                                {
+                                                                  trainee.traineeStatus
+                                                                }
+                                                              </Label>
+                                                            </div>
 
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Level"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label"></Label>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Finished Hours"
-                                                            )}
-                                                          </Label>
-
-                                                          <Label className="left-label"></Label>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "GPA"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-
-                                                          <Label className="left-label"></Label>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Academic Warning"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label"></Label>
-                                                        </div>
-                                                      </Col>
-                                                      <Col lg="4">
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Academic Director"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label"></Label>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Trainee Status"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label"></Label>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Last Semester Status"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label"></Label>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Current Semester Status"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label"></Label>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Transfer Hours"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label"></Label>
-                                                        </div>*/}
+                                                            <div className="mb-2">
+                                                              <Label className="right-label">
+                                                                {this.props.t(
+                                                                  "Academic Year"
+                                                                )}{" "}
+                                                                :
+                                                              </Label>
+                                                              <Label className="left-label">
+                                                                {trainee.year}
+                                                              </Label>
+                                                            </div>
                                                           </Col>
                                                         </Row>
                                                       </CardBody>
                                                     </Card>
+                                                  </div>
+                                                )}
 
-                                                    {/* <Card className="bordered">
-                                                  <CardHeader className="card-header">
-                                                    <h4>
-                                                      {" "}
-                                                      {this.props.t(
-                                                        "Financial Informations"
-                                                      )}
-                                                    </h4>
-                                                  </CardHeader>
-                                                  <CardBody>
-                                                    <Row>
-                                                      <Col lg="4">
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label className="label-style">
-                                                                {this.props.t(
-                                                                  "Semester Fees"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Label></Label>
-                                                            </Col>
-                                                          </Row>
+                                                {showTranscript && (
+                                                  <div>
+                                                    <Card className="bordered">
+                                                      <CardHeader className="card-header">
+                                                        <h4>
+                                                          <i className="fas fa-user-circle" />{" "}
+                                                          {languageState ===
+                                                          "ar"
+                                                            ? trainee.FirstName +
+                                                              " " +
+                                                              trainee.FatherName +
+                                                              " " +
+                                                              trainee.LastName +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"
+                                                            : trainee.FirstNameE +
+                                                              " " +
+                                                              trainee.FatherNameE +
+                                                              " " +
+                                                              trainee.LastNameE +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"}
+                                                        </h4>
+                                                      </CardHeader>
+                                                      <CardBody>
+                                                        <div>
+                                                          <div className="mb-2">
+                                                            <Label className="left-label">
+                                                              {
+                                                                trainee.TraineeNum
+                                                              }
+                                                            </Label>
+                                                          </div>
+                                                          <BootstrapTable
+                                                            keyField="Id"
+                                                            data={trainees}
+                                                            columns={
+                                                              gradeColumns
+                                                            }
+                                                            cellEdit={cellEditFactory(
+                                                              {
+                                                                mode: "dbclick",
+                                                                blurToSave: true,
+                                                                // afterSaveCell: (
+                                                                //   oldValue,
+                                                                //   newValue,
+                                                                //   row,
+                                                                //   column
+                                                                // ) => {
+                                                                //   this.handleParentsDataChange(
+                                                                //     row.Id,
+                                                                //     column.dataField,
+                                                                //     newValue
+                                                                //   );
+                                                                // },
+                                                              }
+                                                            )}
+                                                            noDataIndication={t(
+                                                              "No Relatives Found"
+                                                            )}
+                                                            defaultSorted={
+                                                              defaultSorting
+                                                            }
+                                                          />
+                                                          <div className="d-flex justify-content-start mt-3">
+                                                            <button
+                                                              className="btn"
+                                                              onClick={() =>
+                                                                window.print()
+                                                              }
+                                                            >
+                                                              <i className="fas fa-print"></i>
+                                                            </button>
+                                                          </div>
                                                         </div>
-
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label className="label-style">
-                                                                {this.props.t(
-                                                                  "Total Payments"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Label></Label>
-                                                            </Col>
-                                                          </Row>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </div>
+                                                )}
+                                                {showTranscriptNoHide && (
+                                                  <div>
+                                                    <Card className="bordered">
+                                                      <CardHeader className="card-header">
+                                                        <h4>
+                                                          <i className="fas fa-user-circle" />{" "}
+                                                          {languageState ===
+                                                          "ar"
+                                                            ? trainee.FirstName +
+                                                              " " +
+                                                              trainee.FatherName +
+                                                              " " +
+                                                              trainee.LastName +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"
+                                                            : trainee.FirstNameE +
+                                                              " " +
+                                                              trainee.FatherNameE +
+                                                              " " +
+                                                              trainee.LastNameE +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"}
+                                                        </h4>
+                                                      </CardHeader>
+                                                      <CardBody>
+                                                        <div>
+                                                          <div className="mb-2">
+                                                            <Label className="left-label">
+                                                              {trainee.year}
+                                                            </Label>
+                                                          </div>
+                                                          <BootstrapTable
+                                                            keyField="Id"
+                                                            data={trainees}
+                                                            columns={
+                                                              gradeColumns
+                                                            }
+                                                            cellEdit={cellEditFactory(
+                                                              {
+                                                                mode: "dbclick",
+                                                                blurToSave: true,
+                                                                // afterSaveCell: (
+                                                                //   oldValue,
+                                                                //   newValue,
+                                                                //   row,
+                                                                //   column
+                                                                // ) => {
+                                                                //   this.handleParentsDataChange(
+                                                                //     row.Id,
+                                                                //     column.dataField,
+                                                                //     newValue
+                                                                //   );
+                                                                // },
+                                                              }
+                                                            )}
+                                                            noDataIndication={t(
+                                                              "No Relatives Found"
+                                                            )}
+                                                            defaultSorted={
+                                                              defaultSorting
+                                                            }
+                                                          />
+                                                          <div className="d-flex justify-content-start mt-3">
+                                                            <button
+                                                              className="btn"
+                                                              onClick={() =>
+                                                                window.print()
+                                                              }
+                                                            >
+                                                              <i className="fas fa-print"></i>
+                                                            </button>
+                                                          </div>
                                                         </div>
-
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label className="label-style">
-                                                                {this.props.t(
-                                                                  "Total Semester Payments"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Label></Label>
-                                                            </Col>
-                                                          </Row>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </div>
+                                                )}
+                                                {showDocuments && (
+                                                  <div>
+                                                    <Card className="bordered">
+                                                      <CardHeader className="card-header">
+                                                        <h4>
+                                                          <i className="fas fa-user-circle" />{" "}
+                                                          {languageState ===
+                                                          "ar"
+                                                            ? trainee.FirstName +
+                                                              " " +
+                                                              trainee.FatherName +
+                                                              " " +
+                                                              trainee.LastName +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"
+                                                            : trainee.FirstNameE +
+                                                              " " +
+                                                              trainee.FatherNameE +
+                                                              " " +
+                                                              trainee.LastNameE +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"}
+                                                        </h4>
+                                                      </CardHeader>
+                                                      <CardBody>
+                                                        <div>
+                                                          <div className="mb-2">
+                                                            <Label className="left-label">
+                                                              {trainee.year}
+                                                            </Label>
+                                                          </div>
+                                                          <BootstrapTable
+                                                            keyField="Id"
+                                                            data={trainees}
+                                                            columns={
+                                                              documentsColumns
+                                                            }
+                                                            cellEdit={cellEditFactory(
+                                                              {
+                                                                mode: "dbclick",
+                                                                blurToSave: true,
+                                                                // afterSaveCell: (
+                                                                //   oldValue,
+                                                                //   newValue,
+                                                                //   row,
+                                                                //   column
+                                                                // ) => {
+                                                                //   this.handleParentsDataChange(
+                                                                //     row.Id,
+                                                                //     column.dataField,
+                                                                //     newValue
+                                                                //   );
+                                                                // },
+                                                              }
+                                                            )}
+                                                            noDataIndication={t(
+                                                              "No Relatives Found"
+                                                            )}
+                                                            defaultSorted={
+                                                              defaultSorting
+                                                            }
+                                                          />
                                                         </div>
-
-                                                        <div className="mb-2">
+                                                        <Modal
+                                                          isOpen={
+                                                            this.state.modal1
+                                                          }
+                                                          className={
+                                                            this.props.className
+                                                          }
+                                                          size="lg"
+                                                        >
+                                                          <ModalHeader
+                                                            toggle={
+                                                              this.toggle1
+                                                            }
+                                                            tag="h4"
+                                                          >
+                                                            {!!isOpen
+                                                              ? this.props.t(
+                                                                  "Print History"
+                                                                )
+                                                              : ""}
+                                                          </ModalHeader>
                                                           <Row>
-                                                            <Col className="col-4">
-                                                              <Label className="label-style">
-                                                                {this.props.t(
-                                                                  "Amount to be paid"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Label></Label>
-                                                            </Col>
+                                                            <div>
+                                                              {errorMessage && (
+                                                                <Alert
+                                                                  color="danger"
+                                                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                  role="alert"
+                                                                >
+                                                                  {errorMessage}
+                                                                  <button
+                                                                    type="button"
+                                                                    className="btn-close"
+                                                                    aria-label="Close"
+                                                                    onClick={
+                                                                      this
+                                                                        .handleErrorClose
+                                                                    }
+                                                                  ></button>
+                                                                </Alert>
+                                                              )}
+                                                            </div>
                                                           </Row>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label className="label-style">
-                                                                {this.props.t(
-                                                                  "Remaining Balance"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Label></Label>
-                                                            </Col>
-                                                          </Row>
-                                                        </div>
-                                                      </Col>
-                                                      <Col lg="4">
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label className="label-style">
-                                                                {this.props.t(
-                                                                  "Currency"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Label></Label>
-                                                            </Col>
-                                                          </Row>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label className="label-style">
-                                                                {this.props.t(
-                                                                  "Financial Hourly Rate"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-2">
-                                                              <Label></Label>
-                                                            </Col>
-                                                          </Row>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label className="label-style">
-                                                                {this.props.t(
-                                                                  "Study Fees"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Label></Label>
-                                                            </Col>
-                                                          </Row>
-                                                        </div>
-
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label className="label-style">
-                                                                {this.props.t(
-                                                                  "Service and Order Fees"
-                                                                )}
-                                                              </Label>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Label></Label>
-                                                            </Col>
-                                                          </Row>
-                                                        </div>
-                                                      </Col>
-                                                    </Row> 
-                                                  </CardBody>
-                                                </Card>*/}
+                                                          <ModalBody>
+                                                            <BootstrapTable
+                                                              keyField="Id"
+                                                              data={trainees}
+                                                              columns={
+                                                                printHistoryColumns
+                                                              }
+                                                              cellEdit={cellEditFactory(
+                                                                {
+                                                                  mode: "dbclick",
+                                                                  blurToSave: true,
+                                                                  // afterSaveCell: (
+                                                                  //   oldValue,
+                                                                  //   newValue,
+                                                                  //   row,
+                                                                  //   column
+                                                                  // ) => {
+                                                                  //   this.handleParentsDataChange(
+                                                                  //     row.Id,
+                                                                  //     column.dataField,
+                                                                  //     newValue
+                                                                  //   );
+                                                                  // },
+                                                                }
+                                                              )}
+                                                              noDataIndication={t(
+                                                                "No Relatives Found"
+                                                              )}
+                                                              defaultSorted={
+                                                                defaultSorting
+                                                              }
+                                                            />
+                                                          </ModalBody>
+                                                        </Modal>
+                                                      </CardBody>
+                                                    </Card>
                                                   </div>
                                                 )}
 
@@ -9290,7 +9628,7 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetTrainees: () => dispatch(getTrainees()),
+  onGetTrainees: lng => dispatch(getTrainees(lng)),
   onAddNewTrainee: trainee => dispatch(addNewTrainee(trainee)),
   onUpdateTrainee: trainee => dispatch(updateTrainee(trainee)),
   onDeleteTrainee: trainee => dispatch(deleteTrainee(trainee)),

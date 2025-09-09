@@ -55,8 +55,7 @@ import {
   GET_EMPLOYEES_NAMES_SUCCESS,
   GET_EMPLOYEES_NAMES_FAIL,
   GET_STATUSES_SUCCESS,
-  GET_STATUSES_FAIL
-
+  GET_STATUSES_FAIL,
 } from "./actionTypes";
 
 export const getGendersch = () => ({
@@ -101,8 +100,9 @@ export const getNationalitiesOptFail = error => ({
   payload: error,
 });
 
-export const getEmployees = () => ({
+export const getEmployees = employees => ({
   type: GET_EMPLOYEES,
+  payload: employees,
 });
 
 export const getEmployeesSuccess = employees => ({

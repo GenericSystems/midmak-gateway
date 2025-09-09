@@ -17,9 +17,9 @@ import {
 } from "./actionTypes";
 
 /* GET */
-export const getAcademyOrgStructure = academyOrgStructures => ({
+export const getAcademyOrgStructure = () => ({
   type: GET_ACADEMY_ORG_STRUCTURES,
-  payload: academyOrgStructures,
+  // payload: academyOrgStructures,
 });
 
 export const getAcademyOrgStructureSuccess = academyOrgStructures => ({

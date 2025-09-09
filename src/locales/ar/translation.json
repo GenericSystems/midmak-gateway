@@ -482,7 +482,7 @@
   "Diploma Governorate": " محافظة الشهادة الثانوية",
   "Diploma Year": " سنة الشهادة الثانوية",
   "Diploma Number": " رقم الشهادة الثانوية",
-  
+
   "Register Info": "معلومات التسجيل",
   "Last Reg.Course": "اخر دورة مسجلة",
   "Applicants": "المتقدمون",
@@ -501,34 +501,43 @@
   "Work Field": "مجال العمل",
   "work Duration": "مدة العمل",
   "Course Status": "حالة الدورة",
- 
 
-   
-  
-   "Only WhatsApp Number":"واتس اب (فقط)",
-   "Only Phone":"رقم التواصل (فقط)",
-   "Phone & WhatsApp":"رقم النواصل & واتس اب",
-   "Fax":"فاكس",
-   "Website":"الموقع الالكتروني",
-   "Academy Event Decision":"قرار احداث الأكاديمية",
-   "Remove":"ازالة",
-   "Add Country Info":"اضافة بلد ",
-   "Academy Name (ar)":"اسم الأكاديمية(عربي)",
-   "Academy Name (en)":"اسم الأكاديمية (انكليزي)",
-   "Academy Logo":"شعار الأكاديمية",
-   "Location":"المقر",
-   "Qualification Tracks(ar)":"(عربي)المساقات التأهيلية",
-   "Qualification Tracks(en)":"(انكليزي)المساقات التأهيلية",
-   "code":"الرمز",
-   "Academy Information":"معلومات الاكاديمية",
-   "Academy Definition":"تعريف الاكاديمية",
-   "Select Country":"اختر بلد"
- 
-
-
-
-
-
-
-
+  "Only WhatsApp Number": "واتس اب (فقط)",
+  "Only Phone": "رقم التواصل (فقط)",
+  "Phone & WhatsApp": "رقم النواصل & واتس اب",
+  "Fax": "فاكس",
+  "Website": "الموقع الالكتروني",
+  "Academy Event Decision": "قرار احداث الأكاديمية",
+  "Remove": "ازالة",
+  "Add Country Info": "اضافة بلد ",
+  "Academy Name (ar)": "اسم الأكاديمية(عربي)",
+  "Academy Name (en)": "اسم الأكاديمية (انكليزي)",
+  "Academy Logo": "شعار الأكاديمية",
+  "Location": "المقر",
+  "Qualification Tracks(ar)": "(عربي)المساقات التأهيلية",
+  "Qualification Tracks(en)": "(انكليزي)المساقات التأهيلية",
+  "code": "الرمز",
+  "Academy Information": "معلومات الاكاديمية",
+  "Academy Definition": "تعريف الاكاديمية",
+  "Select Country": "اختر بلد",
+  "Required data": "البيانات المطلوبة",
+  "Trainee File": "ملف المتدرب",
+  "Registration File": "المعلومات الأساسية",
+  "Transcript": "كشف علامات",
+  "Transcript (No Hide)": "كشف علامات (بدون حجب) ",
+  "Requested Documents": "الوثائق المطلوبة",
+  "Permanent State": "الحالة الدائمة",
+  "Temporary Status": "الحالة المؤقتة",
+  "Total Hours": "الساعات الإجمالية",
+  "Final Marks": "العلامة",
+  "Document Num": "رقم الطلب",
+  "Document Type": "نوع الوثيقة",
+  "Request Date": "تاريخ الطلب",
+  "Due Date": "تاريخ الطلب",
+  "Last Print Date": "تاريخ آخر طباعة",
+  "Print Notes": "ملاحظات الطباعة",
+  "Reprint Reason": "سبب إعادة الطباعة",
+  "User Name": "اسم المستخدم/ة",
+  "Print Date": "تاريخ الطباعة",
+  "Print Time": "توقيت الطباعة"
 }

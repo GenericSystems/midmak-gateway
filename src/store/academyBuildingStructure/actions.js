@@ -22,9 +22,9 @@ import {
   GET_ACADEMY_BUILDING_STRUCTURE_DELETED_VALUE_FAIL,
 } from "./actionTypes";
 
-export const getAcademyBuildingStructures = academyBuildingStructures => ({
+export const getAcademyBuildingStructures = () => ({
   type: GET_ACADEMY_BUILDING_STRUCTURES,
-  payload: academyBuildingStructures,
+  // payload: academyBuildingStructures,
 });
 
 export const getAcademyBuildingStructuresSuccess =

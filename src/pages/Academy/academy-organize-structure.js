@@ -132,7 +132,7 @@ class AcademyTree extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
 
-    onGetAcademyOrgStructures(lang);
+    onGetAcademyOrgStructures();
 
     this.setState({ academyOrgStructures });
     this.setState({ academyInfo });
@@ -145,7 +145,7 @@ class AcademyTree extends Component {
     const lang = localStorage.getItem("I18N_LANGUAGE");
 
     // if (lang != lng) {
-    onGetAcademyOrgStructures(lang);
+    // onGetAcademyOrgStructures();
     this.setState({ languageState: lng });
     // }
   };
@@ -2796,7 +2796,7 @@ const mapStateToProps = ({
   user_menu: menu_items.user_menu || [],
 });
 const mapDispatchToProps = dispatch => ({
-  onGetAcademyOrgStructures: lng => dispatch(getAcademyOrgStructure(lng)),
+  onGetAcademyOrgStructures: () => dispatch(getAcademyOrgStructure()),
   onAddAcademyOrgStructure: academyOrgStructure =>
     dispatch(addNewAcademyOrgStructure(academyOrgStructure)),
 

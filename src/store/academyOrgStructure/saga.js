@@ -41,11 +41,11 @@ import {
 // Constants
 
 /* FETCH */
-function* fetchAcademyOrgStructure(selectedpayload) {
-  let lang = selectedpayload.payload;
-  console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", lang);
+function* fetchAcademyOrgStructure() {
+  // let lang = selectedpayload.payload;
+  // console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", lang);
 
-  const titleField = lang === "en" ? "enTitle" : "arTitle";
+  // const titleField = lang === "en" ? "enTitle" : "arTitle";
   const request = {
     source: "db",
     procedure: "SisApp_getData",
@@ -55,9 +55,9 @@ function* fetchAcademyOrgStructure(selectedpayload) {
 
   try {
     const response = yield call(getAcademyOrgStructure, request);
-    /* response.map(resp => {
+    response.map(resp => {
       resp["departments"] = JSON.parse(resp["departments"]);
-    }); */
+    });
     yield put(getAcademyOrgStructureSuccess(response));
   } catch (error) {
     yield put(getAcademyOrgStructureFail(error));
