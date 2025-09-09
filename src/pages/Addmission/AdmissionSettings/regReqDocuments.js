@@ -679,8 +679,7 @@ class RegReqDocumentsTable extends Component {
                           {t("Certificate Levels")}
                         </CardTitle>
                         <CardBody>
-                          {console.log("regcertificates", regcertificates)}
-                          {regcertificates.map((certificate, index) => (
+                          {(regcertificates ).map((certificate, index) => (
                             <div className="mb-1" key={certificate.value}>
                               <Row>
                                 <Col>
@@ -874,7 +873,7 @@ const mapStateToProps = ({
   semesters,
   menu_items,
   years,
-  trainees,
+  tempTrainees,
 }) => ({
   regReqDocuments: regReqDocuments.regReqDocuments,
   deleted: regReqDocuments.deleted,
@@ -882,7 +881,7 @@ const mapStateToProps = ({
   currentSemester: semesters.currentSemester,
   years: years.years,
   user_menu: menu_items.user_menu || [],
-  regcertificates: trainees.regcertificates,
+ regcertificates: tempTrainees.regcertificates, 
 });
 
 const mapDispatchToProps = dispatch => ({

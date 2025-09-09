@@ -179,7 +179,7 @@ function* onAddNewRegReqDocument({ payload, regReqDocument }) {
   payload["tablename"] = "Settings_RequiredRegistrationDocuments";
   try {
     const response = yield call(addNewRegReqDocument, payload);
-    console.log("payload", payload);
+    console.log("response", response);
     yield put(addRegReqDocumentSuccess(response[0]));
   } catch (error) {
     yield put(addRegReqDocumentFail(error));

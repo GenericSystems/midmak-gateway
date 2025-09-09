@@ -2085,6 +2085,25 @@ export const getDocumentTypeDeletedValue = () =>
 // update documentType
 export const updateDocumentType = data => post(url.UPDATE_DOCUMENT_TYPE, data);
 
+
+
+//hiddenGrade
+
+export const getHiddenGrades = data => post(url.GET_HIDDEN_GRADES, data);
+
+
+// add 
+export const addNewHiddenGrade = data => post(url.ADD_NEW_HIDDEN_GRADE, data);
+
+// HIDDEN_GRADE
+export const getHiddenGradeDeletedValue = () =>
+  get(url.GET_HIDDEN_GRADE_DELETED_VALUE);
+
+// update 
+export const updateHiddenGrade = data => post(url.UPDATE_HIDDEN_GRADE, data);
+
+
+
 //EMPLOYMENT_CASE
 export const getEmploymentCases = data => post(url.GET_EMPLOYMENT_CASES, data);
 

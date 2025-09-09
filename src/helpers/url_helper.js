@@ -1025,6 +1025,14 @@ export const ADD_NEW_DOCUMENT_TYPE = "/add/documentType";
 export const UPDATE_DOCUMENT_TYPE = "/update/documentType";
 export const DELETE_DOCUMENT_TYPE = "/delete/documentType";
 
+
+//HIDE_GRADES
+export const GET_HIDDEN_GRADES = "/hiddenGrades";
+export const GET_HIDDEN_GRADE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_HIDDEN_GRADE = "/add/hiddenGrades";
+export const UPDATE_HIDDEN_GRADE = "/update/hiddenGrades";
+export const DELETE_HIDDEN_GRADE = "/delete/hiddenGrades";
+
 //ABSCENCE_WARNINGS
 export const GET_ABSENCE_WARNINGS = "/absenceWarnings";
 export const GET_ABSENCE_WARNING_DELETED_VALUE = "/deleted";
