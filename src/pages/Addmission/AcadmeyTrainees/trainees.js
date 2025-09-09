@@ -1665,9 +1665,10 @@ class TraineesList extends Component {
   };
 
   handlePrintHistory = trainee => {
-    //  this.setState({
-    //     trainee: trainee,
-    //   });
+    this.setState({
+      trainee: trainee,
+      isOpen: true,
+    });
     this.toggle1();
   };
 
