@@ -848,6 +848,26 @@
   }
 }
 
+.card-header1 {
+  background-color: #c5ab5a;
+  align-items: center;
+  height: 40px;
+  padding-top: 10px !important;
+  padding-right: 15px;
+  margin-top: -10px;
+  margin-left: -10px;
+  margin-right: -10px;
+  h4 {
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    i {
+      color: white;
+      border-radius: 13px;
+    }
+  }
+}
+
 @media (max-width: 1700px) {
   .schedule-timing-responsive,
   .branches-categories-responsive {

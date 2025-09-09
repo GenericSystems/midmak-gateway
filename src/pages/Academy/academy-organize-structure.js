@@ -1672,7 +1672,7 @@ class AcademyTree extends Component {
                           htmlFor="departmentName"
                           className="col-form-label"
                         >
-                          {"Department Name"}:
+                          {t("Department Name")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1941,7 +1941,7 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Department")}
+                          {t("Edit Department")} - {""}
                           {editDirectorateArName}
                         </h5>
                       </Typography>
@@ -1978,7 +1978,7 @@ class AcademyTree extends Component {
                           htmlFor="departmentNameEn"
                           className="col-form-label"
                         >
-                          {"Department Name"}:
+                          {t("Department Name")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -2564,7 +2564,7 @@ class AcademyTree extends Component {
                           htmlFor="departmentNameEn"
                           className="col-form-label"
                         >
-                          {"Department Name"}:
+                          {t("Department Name")}:
                         </label>
                       </Col>
                       <Col md="4">

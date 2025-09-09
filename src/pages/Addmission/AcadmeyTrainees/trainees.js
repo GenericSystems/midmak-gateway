@@ -95,7 +95,6 @@ class TraineesList extends Component {
       deleteModal: false,
       selectedRowId: null,
       isEdit: false,
-      isOpen: false,
       showFatherName: false,
       showTraineeStatus: false,
       showYear: false,
@@ -3038,7 +3037,9 @@ class TraineesList extends Component {
                       }}
                     >
                       <Card className="accordion-card">
-                        <CardHeader>{t("Required data")}</CardHeader>
+                        <CardHeader className="card-header1">
+                          {t("Required data")}
+                        </CardHeader>
                         <CardBody style={{ padding: "0" }}>
                           <Accordion flush>
                             <Accordion.Item eventKey="0">
@@ -5167,7 +5168,13 @@ class TraineesList extends Component {
                                                       </CardHeader>
                                                       <CardBody>
                                                         <div>
-                                                          <div className="mb-2">
+                                                          <div
+                                                            className="card-header text-dark text-center fw-bold mb-2"
+                                                            style={{
+                                                              backgroundColor:
+                                                                "#b3d4f5",
+                                                            }}
+                                                          >
                                                             <Label className="left-label">
                                                               {
                                                                 trainee.TraineeNum
@@ -5248,11 +5255,6 @@ class TraineesList extends Component {
                                                       </CardHeader>
                                                       <CardBody>
                                                         <div>
-                                                          <div className="mb-2">
-                                                            <Label className="left-label">
-                                                              {trainee.year}
-                                                            </Label>
-                                                          </div>
                                                           <BootstrapTable
                                                             keyField="Id"
                                                             data={trainees}
@@ -5327,11 +5329,6 @@ class TraineesList extends Component {
                                                       </CardHeader>
                                                       <CardBody>
                                                         <div>
-                                                          <div className="mb-2">
-                                                            <Label className="left-label">
-                                                              {trainee.year}
-                                                            </Label>
-                                                          </div>
                                                           <BootstrapTable
                                                             keyField="Id"
                                                             data={trainees}

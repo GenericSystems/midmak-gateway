@@ -1347,7 +1347,7 @@ class AcademyBuildingStructuresList extends Component {
                           htmlFor="buildingName"
                           className="col-form-label"
                         >
-                          {"Building Name"}:
+                          {t("Building Name")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1456,7 +1456,7 @@ class AcademyBuildingStructuresList extends Component {
                       </Col>
                       <Col lg="2">
                         <label htmlFor="floorName" className="col-form-label">
-                          {"Floor Name"}:
+                          {t("Floor Name")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1563,7 +1563,7 @@ class AcademyBuildingStructuresList extends Component {
                           htmlFor="BuildingName"
                           className="col-form-label"
                         >
-                          {"Building Name"}:
+                          {t("Building Name")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1664,7 +1664,7 @@ class AcademyBuildingStructuresList extends Component {
                       </Col>
                       <Col lg="2">
                         <label htmlFor="floorNameEn" className="col-form-label">
-                          {"Floor Name"}:
+                          {t("Floor Name")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -2162,7 +2162,7 @@ class AcademyBuildingStructuresList extends Component {
                           htmlFor="BuildingName"
                           className="col-form-label"
                         >
-                          {"Building Name"}:
+                          {t("Building Name")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -2254,7 +2254,7 @@ class AcademyBuildingStructuresList extends Component {
                       </Col>
                       <Col lg="2">
                         <label htmlFor="floorNameEn" className="col-form-label">
-                          {"Floor Name"}:
+                          {t("Floor Name")}:
                         </label>
                       </Col>
                       <Col md="4">
