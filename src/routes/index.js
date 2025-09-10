@@ -170,6 +170,9 @@ import classSchedulingList from "../pages/Addmission/classScheduling/classSchedu
 //ContractsTypes
 import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 
+//TraineesReport
+import TraineesReportList from "../pages/ExamReports/TraineesGradeDetailsReport/traineesGradeDetailsReport";
+
 //GradesVersions
 import GradesVersionsList from "../pages/GradeSettings/gradesVersions";
 
@@ -183,7 +186,7 @@ import AbsenceWarningsList from "../pages/Rules-and-Regulations/Absence-warnings
 import DocumentsTypesList from "../pages/Addmission/AdmissionSettings/documents-types";
 
 //hidden-grades
-import HiddenGradesList from "../pages/Exam/Grades/hide-grades"
+import HiddenGradesList from "../pages/Exam/Grades/hide-grades";
 
 // RegReqDocuments
 
@@ -344,6 +347,10 @@ const authProtectedRoutes = [
 
   { path: "/contractsTypes", component: ContractsTypesList },
 
+  // TraineesReport
+
+  { path: "/traineesGradeDetailsReport", component: TraineesReportList },
+
   // gradesVersions
 
   { path: "/gradesVersions", component: GradesVersionsList },
@@ -364,7 +371,7 @@ const authProtectedRoutes = [
   { path: "/contracts", component: ContractsList },
 
   //hidden grades
-  { path:"/hide-grades",component: HiddenGradesList },
+  { path: "/hide-grades", component: HiddenGradesList },
 
   // Applicants
 

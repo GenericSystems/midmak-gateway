@@ -88,9 +88,11 @@ class DefineExamDatesList extends Component {
       duplicateErrorDePer: null,
       selectedRowId: null,
       modal: false,
+      deleteModal1: false,
       modal2: false,
       isEdit: false,
       isOpen: false,
+      isOpen1: false,
       isAdd: false,
       selectedExamType: "",
       selectedDay: null,
@@ -231,6 +233,19 @@ class DefineExamDatesList extends Component {
       modal: !prevState.modal,
     }));
   };
+
+  toggle1 = () => {
+    this.setState(prevState => ({
+      modal1: !prevState.modal1,
+    }));
+  };
+
+  toggle2 = () => {
+    this.setState(prevState => ({
+      modal2: !prevState.modal2,
+    }));
+  };
+
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
@@ -361,8 +376,8 @@ class DefineExamDatesList extends Component {
       } else if (isAdd) {
         const response = onAddNewDefineExamDate(defineExamDateInfo);
         if (response?.allDays) {
-          const parsedDays = JSON.parse(response.allDays);
-          this.setState({ allDaysArray: parsedDays });
+          // const parsedDays = JSON.parse(response.allDays);
+          this.setState({ allDaysArray: response.allDays });
         }
         if (response?.Id) {
           this.setState({ examId: response.Id });
@@ -486,6 +501,22 @@ class DefineExamDatesList extends Component {
     }
   };
 
+  handleExamDateDetailEdit = arg => {
+    console.log("arg", arg);
+    this.setState({ isOpen: true });
+    this.toggle1();
+  };
+
+  handleExamSchedule = arg => {
+    console.log("arg", arg);
+    this.setState({
+      exam: arg,
+      isOpen1: true,
+      allDaysArray: arg.all_days,
+    });
+    this.toggle2();
+  };
+
   render() {
     const defineExamDate = this.state.defineExamDate;
 
@@ -499,6 +530,7 @@ class DefineExamDatesList extends Component {
       isLoading,
     } = this.props;
     const {
+      modal1,
       languageState,
       duplicateError,
       duplicateErrorDePer,
@@ -508,8 +540,8 @@ class DefineExamDatesList extends Component {
       modal,
       modal2,
       isEdit,
+      isOpen1,
       isOpen,
-      isAdd,
       emptyError,
       showAlert,
       showAddButton,
@@ -581,6 +613,15 @@ class DefineExamDatesList extends Component {
         //  hidden: !showDeleteButton,
         formatter: (cellContent, defineExamDate) => (
           <div className="d-flex gap-4">
+            <Tooltip title={this.props.t("Edit")} placement="top">
+              <Link className="text-sm-end" to="#">
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  onClick={() => this.handleExamDateEdit(defineExamDate)}
+                ></i>
+              </Link>
+            </Tooltip>
             <Tooltip title={this.props.t("Exam Date Settings")} placement="top">
               <Link
                 className="d-flex align-items-center justify-content-center"
@@ -593,12 +634,12 @@ class DefineExamDatesList extends Component {
                 ></i>
               </Link>
             </Tooltip>
-            <Tooltip title={this.props.t("Edit")} placement="top">
+            <Tooltip title={this.props.t("Exam Schedule")} placement="top">
               <Link className="text-sm-end" to="#">
                 <i
-                  className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
-                  onClick={() => this.handleExamDateEdit(defineExamDate)}
+                  className="fas fa-calendar-alt"
+                  id="examtooltip"
+                  onClick={() => this.handleExamSchedule(defineExamDate)}
                 ></i>
               </Link>
             </Tooltip>
@@ -683,6 +724,59 @@ class DefineExamDatesList extends Component {
         ),
       },
     ];
+
+    const timeDateColumns = [
+      { dataField: "Id", text: t("ID"), hidden: true },
+      {
+        dataField: "flag",
+        text: t("Exam Date"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "startTime",
+        text: t("Start Time"),
+        sort: true,
+        // editable: true,
+        formatter: (cellContent, row, column) => (
+          <Input
+            className="form-control"
+            type="time"
+            value={row.startTime}
+            onChange={newValue => {
+              this.handleExamPeriodDataChange(
+                row.Id,
+                "startTime",
+                newValue.target.value
+              );
+            }}
+            // disabled={!showEditButton}
+          />
+        ),
+      },
+      {
+        dataField: "endTime",
+        text: t("End Time"),
+        sort: true,
+        // editable: true,
+        formatter: (cellContent, row, column) => (
+          <Input
+            className="form-control"
+            type="time"
+            value={row.endTime}
+            onChange={newValue => {
+              this.handleExamPeriodDataChange(
+                row.Id,
+                "endTime",
+                newValue.target.value
+              );
+            }}
+            // disabled={!showEditButton}
+          />
+        ),
+      },
+    ];
+
     const pageOptions = {
       sizePerPage: 10,
       totalSize: defineExamDates.length,
@@ -1450,6 +1544,124 @@ class DefineExamDatesList extends Component {
                                       </Formik>
                                     </ModalBody>
                                   </Modal>
+                                  <Modal
+                                    isOpen={modal1}
+                                    toggle={this.toggle1}
+                                    // className={"modal-fullscreen"}
+                                    size="lg"
+                                  >
+                                    <ModalHeader toggle={this.toggle1} tag="h4">
+                                      {!!isOpen ? t("Edit Exam Date") : ""}
+                                    </ModalHeader>
+                                    <ModalBody>
+                                      <BootstrapTable
+                                        keyField="Id"
+                                        data={defineExamDates}
+                                        columns={timeDateColumns}
+                                        cellEdit={cellEditFactory({
+                                          mode: "dbclick",
+                                          blurToSave: true,
+                                          afterSaveCell: (
+                                            oldValue,
+                                            newValue,
+                                            row,
+                                            column
+                                          ) => {
+                                            this.handleExperienceDataChange(
+                                              row.Id,
+                                              column.dataField,
+                                              newValue
+                                            );
+                                          },
+                                        })}
+                                      />
+                                    </ModalBody>
+                                  </Modal>
+                                  <Modal
+                                    isOpen={modal2}
+                                    toggle={this.toggle2}
+                                    className={"modal-fullscreen"}
+                                  >
+                                    <ModalHeader toggle={this.toggle2} tag="h4">
+                                      {!!isOpen1 ? t("Edit Exam Date") : ""}
+                                    </ModalHeader>
+                                    <ModalBody>
+                                      <Card id="employee-card">
+                                        <CardTitle id="course_header">
+                                          {t("Exam Days")}
+                                        </CardTitle>
+                                        <CardBody className="cardBody">
+                                          <Row>
+                                            {/* <Col lg="4">
+                                              <Label
+                                                for="studentOrder-Id"
+                                                className="form-label d-flex"
+                                              >
+                                                {this.props.t("Students Order")}
+                                                <span className="text-danger">
+                                                  *
+                                                </span>
+                                              </Label>
+                                            </Col> */}
+                                            <Col lg="12">
+                                              <div className="d-flex flex-wrap gap-3">
+                                                <div
+                                                  className="btn-group button-or"
+                                                  role="group"
+                                                >
+                                                  {allDaysArray &&
+                                                    allDaysArray.map(
+                                                      (status, index) => (
+                                                        <React.Fragment
+                                                          key={index}
+                                                        >
+                                                          <input
+                                                            type="radio"
+                                                            className={`btn-check ${
+                                                              selectedDay ===
+                                                              status.value
+                                                                ? "active"
+                                                                : ""
+                                                            }`}
+                                                            name="dayId"
+                                                            id={`btnradio${index}`}
+                                                            autoComplete="off"
+                                                            checked={
+                                                              selectedDay ===
+                                                              status.value
+                                                            }
+                                                            onChange={() =>
+                                                              setFieldValue(
+                                                                "dayId",
+                                                                status.value
+                                                              )
+                                                            }
+                                                          />
+                                                          <label
+                                                            className="btn btn-outline-primary smallButton w-sm"
+                                                            htmlFor={`btnradio${index}`}
+                                                          >
+                                                            {status.label}
+                                                          </label>
+                                                        </React.Fragment>
+                                                      )
+                                                    )}
+                                                </div>
+                                              </div>
+                                            </Col>
+                                          </Row>
+                                        </CardBody>
+                                      </Card>
+                                      <Card>
+                                        <CardTitle>{t("Courses")}</CardTitle>
+                                        <CardBody></CardBody>
+                                      </Card>
+                                      <Card>
+                                        <CardTitle>{t("Periods")}</CardTitle>
+                                        <CardBody></CardBody>
+                                      </Card>
+                                    </ModalBody>
+                                  </Modal>
                                 </React.Fragment>
                               )}
                             </ToolkitProvider>
@@ -1493,7 +1705,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getDefineExamDateDeletedValue()),
   onGetDefinePeriods: defineExamDateId =>
     dispatch(getDefinePeriods(defineExamDateId)),
-  
+
   onAddNewDefinePeriod: definePeriod =>
     dispatch(addNewDefinePeriod(definePeriod)),
   onUpdateDefinePeriod: definePeriod =>

@@ -64,6 +64,7 @@ class ExamRoomsList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      languageState: "",
     };
     this.toggleVertical = this.toggleVertical.bind(this);
   }
@@ -81,6 +82,7 @@ class ExamRoomsList extends Component {
     }
   }
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
       studentManagements,
       examRooms,
@@ -88,6 +90,7 @@ class ExamRoomsList extends Component {
       onGetDefineExamDates,
       levels,
       user_menu,
+      i18n,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -100,7 +103,18 @@ class ExamRoomsList extends Component {
     this.setState({ examRooms });
     this.setState({ defineExamDates });
     console.log("defineExamDates", defineExamDates);
+    this.setState({ languageState: lang });
+
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    if (lang != lng) {
+      this.setState({ languageState: lng });
+    }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -222,6 +236,7 @@ class ExamRoomsList extends Component {
   };
   render() {
     const {
+      languageState,
       selectedLevel,
       duplicateError,
       showAddButton,
@@ -243,7 +258,7 @@ class ExamRoomsList extends Component {
       {
         dataField: "defineExamDateId",
         text: this.props.t("defineExamDateId"),
-        hidden: false,
+        hidden: true,
       },
 
       {
@@ -272,7 +287,7 @@ class ExamRoomsList extends Component {
       {
         key: "defineExamDateNum",
         dataField: "defineExamDateNum",
-        text: this.props.t("DefineExamDate Number"),
+        text: this.props.t("Hall No."),
         editable: false,
         // formatter: (cellContent, row, column) => (
         //   <Input
@@ -367,7 +382,10 @@ class ExamRoomsList extends Component {
                         >
                           <p className="font-weight-bold m-1 pt-2 ">
                             <span style={{ fontWeight: "bold" }}>
-                              (
+                              {languageState === "ar"
+                                ? defineExamDate.arTitle
+                                : defineExamDate.enTitle}{" "}
+                              - (
                               {moment(defineExamDate.startDate).format(
                                 "DD/MM/YYYY"
                               )}{" "}
@@ -431,7 +449,9 @@ class ExamRoomsList extends Component {
                               )}
                               <BootstrapTable
                                 keyField="Id"
-                                data={examRooms}
+                                data={defineExamDates.filter(
+                                  d => d.Id === defineExamDate.Id
+                                )}
                                 columns={columns}
                                 filter={filterFactory()}
                                 cellEdit={cellEditFactory({

@@ -148,9 +148,9 @@ function* onAddNewDefineExamDate({ payload }) {
   try {
     const response = yield call(addNewDefineExamDate, payload);
     console.log("اااااااااااااااااااااااااااااااا", response);
-    response.map(resp => {
-      resp["allDays"] = JSON.parse(resp["allDays"]);
-    });
+    // response.map(resp => {
+    //   resp["allDays"] = JSON.parse(resp["allDays"]);
+    // });
     yield put(addDefineExamDateSuccess(response[0]));
   } catch (error) {
     yield put(addDefineExamDateFail(error));
