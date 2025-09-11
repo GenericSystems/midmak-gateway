@@ -1260,23 +1260,23 @@ class CoursesPassPercentsList extends Component {
                                           value={selectedYear}
                                         />
                                       </Col>
-                                      <div className="text-sm-end">
-                                        <Tooltip
-                                          title={this.props.t(
-                                            "Export to Excel"
-                                          )}
-                                          placement="top"
-                                        >
-                                          <IconButton
-                                            color="success"
-                                            onClick={this.exportToExcel}
+                                      <Col lg="3">
+                                        <div className="text-sm-end">
+                                          <Tooltip
+                                            title={this.props.t(
+                                              "Export to Excel"
+                                            )}
+                                            placement="top"
                                           >
-                                            <i className="mdi mdi-file-excel blue-noti-icon" />
-                                          </IconButton>
-                                        </Tooltip>
-                                      </div>
-
-                                      <Col></Col>
+                                            <IconButton
+                                              color="success"
+                                              onClick={this.exportToExcel}
+                                            >
+                                              <i className="mdi mdi-file-excel blue-noti-icon" />
+                                            </IconButton>
+                                          </Tooltip>
+                                        </div>
+                                      </Col>
                                     </Row>
                                     <Row>
                                       <div>
