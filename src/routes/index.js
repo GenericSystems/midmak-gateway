@@ -172,6 +172,10 @@ import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 
 //TraineesReport
 import TraineesReportList from "../pages/ExamReports/TraineesGradeDetailsReport/traineesGradeDetailsReport";
+//AbsenceTypes
+import AbsencesTypesList from "../pages/TraineeAttendence/AttendenceSettings/absenceTypes"
+//AbsenceJustifications
+import AbsencesJustificationsList from "../pages/TraineeAttendence/AttendenceSettings/absenceJustification"
 
 //GradesVersions
 import GradesVersionsList from "../pages/GradeSettings/gradesVersions";
@@ -346,6 +350,12 @@ const authProtectedRoutes = [
   // contractsTypes
 
   { path: "/contractsTypes", component: ContractsTypesList },
+
+  //absenceTypes
+  { path:"/absenceTypes",component:AbsencesTypesList },
+  //absenceJustifications
+    { path:"/absenceJustifications",component:AbsencesJustificationsList },
+
 
   // TraineesReport
 

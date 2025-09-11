@@ -9,6 +9,11 @@ import {
     DELETE_HIDDEN_GRADE_FAIL,
     GET_HIDDEN_GRADE_DELETED_VALUE_SUCCESS,
     GET_HIDDEN_GRADE_DELETED_VALUE_FAIL,
+    GET_HIDE_REASONS_FAIL,
+    GET_HIDE_REASONS_SUCCESS,
+    
+
+
     } from "./actionTypes"
     
     const INIT_STATE = {
@@ -30,6 +35,18 @@ import {
                 ...state,
                 error: action.payload,
             }
+
+         case GET_HIDE_REASONS_SUCCESS:
+        return {
+            ...state,
+            hidereasons: action.payload,
+        }
+        case GET_HIDE_REASONS_FAIL:
+            return {
+                ...state,
+                error: action.payload,
+            }
+    
 
         case ADD_HIDDEN_GRADE_SUCCESS:
             return {

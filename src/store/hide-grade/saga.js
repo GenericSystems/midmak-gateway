@@ -7,6 +7,8 @@ import {
   ADD_NEW_HIDDEN_GRADE,
   DELETE_HIDDEN_GRADE,
   UPDATE_HIDDEN_GRADE,
+  GET_HIDE_REASONS,
+  
 } from "./actionTypes";
 
 import {
@@ -17,9 +19,12 @@ import {
   addHiddenGradeFail,
   addHiddenGradeSuccess,
   updateHiddenGradeSuccess,
+  getHideReasonSuccess,
+  getHideReasonFail,
   updateHiddenGradeFail,
   deleteHiddenGradeSuccess,
   deleteHiddenGradeFail,
+ 
 } from "./actions";
 
 import {
@@ -35,6 +40,7 @@ import {
   updateHiddenGrade,
   deleteHiddenGrade,
   getCoursesOffering,
+  getHideReasons,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchhiddenGrades() {
@@ -67,7 +73,9 @@ function* fetchhiddenGrades() {
   } catch (error) {
     yield put(getCoursesOfferingFail(error));
   }
-}
+   
+  }
+
 
 function* onGethiddenGradeDeletedValue() {
   try {
@@ -79,7 +87,7 @@ function* onGethiddenGradeDeletedValue() {
 }
 
 function* onAddNewHiddenGrade({ payload, hiddenGrade }) {
-  // delete payload["id"];
+  delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
@@ -92,6 +100,26 @@ function* onAddNewHiddenGrade({ payload, hiddenGrade }) {
   } catch (error) {
     yield put(addHiddenGradeFail(error));
   }
+}
+function* onGetHideReasons(){
+   const get_HideReasons_req = {
+      source: "db",
+      procedure: "Generic_getOptions",
+      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+      tablename: "Settings_HidingReason",
+      fields: "Id,arTitle",
+    };
+    try {
+      const response = yield call(getHideReasons, get_HideReasons_req);
+      console.log("hidereasonsssssssss",response)
+      yield put(getHideReasonSuccess(response));
+    } catch (error) {
+      yield put(getHideReasonFail(error));
+    }
+
+
+
+  
 }
 
 function* onUpdatehiddenGrade({ payload }) {
@@ -113,10 +141,10 @@ function* onDeletehiddenGrade({ payload, hiddenGrade }) {
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_HiddenGrades ";
   try {
-    const respdelete = yield call(deletehiddenGrade, payload);
-    yield put(deletehiddenGradeSuccess(respdelete[0]));
+    const respdelete = yield call(deleteHiddenGrade, payload);
+    yield put(deleteHiddenGradeSuccess(respdelete[0]));
   } catch (error) {
-    yield put(deletehiddenGradeFail(error));
+    yield put(deleteHiddenGradeFail(error));
   }
 }
 
@@ -126,6 +154,7 @@ function* hiddenGradesSaga() {
   yield takeEvery(ADD_NEW_HIDDEN_GRADE, onAddNewHiddenGrade);
   yield takeEvery(UPDATE_HIDDEN_GRADE, onUpdatehiddenGrade);
   yield takeEvery(DELETE_HIDDEN_GRADE, onDeletehiddenGrade);
+  yield takeEvery(GET_HIDE_REASONS,onGetHideReasons)
 }
 
 export default hiddenGradesSaga;

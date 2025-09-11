@@ -103,6 +103,7 @@ export const getUserId = () => get(url.GET_USER_ID);
 // get Products
 export const getProducts = () => get(url.GET_PRODUCTS);
 
+
 // get Data Items
 export const getDataItems = config => get(url.GET_DATA_ITEMS, config);
 
@@ -2004,6 +2005,46 @@ export const updateContractType = data => post(url.UPDATE_CONTRACT_TYPE, data);
 //delete contractType
 export const deleteContractType = data => post(url.DELETE_CONTRACT_TYPE, data);
 
+
+
+//ABSENCE_TYPE
+export const getAbsencesTypes = data => post(url.GET_ABSENCES_TYPES, data);
+
+// add
+export const addNewAbsenceType = data => post(url.ADD_NEW_ABSENCE_TYPE, data);
+
+//ABSENCE_TYPE
+export const getAbsenceTypeDeletedValue = () =>
+  get(url.GET_ABSENCE_TYPE_DELETED_VALUE);
+
+//update 
+export const updateAbsenceType = data => post(url.UPDATE_ABSENCE_TYPE, data);
+
+//delete 
+export const deleteAbsenceType = data => post(url.DELETE_ABSENCE_TYPE, data);
+
+
+//ABSENCE_JUSTIFICATION
+export const getAbsencesJustifications = data => post(url.GET_ABSENCES_JUSTIFICATIONS, data);
+
+// add
+export const addNewAbsenceJustification = data => post(url.ADD_NEW_ABSENCE_JUSTIFICATION, data);
+
+//ABSENCE_JUSTIFICATION
+export const getAbsenceJustificationDeletedValue = () =>
+  get(url.GET_ABSENCE_JUSTIFICATION_DELETED_VALUE);
+
+//update 
+export const updateAbsenceJustification = data => post(url.UPDATE_ABSENCE_JUSTIFICATION, data);
+
+//delete 
+export const deleteAbsenceJustification = data => post(url.DELETE_ABSENCE_JUSTIFICATION, data);
+
+
+
+
+
+
 //QUALIFICATION_TRACK
 export const getQualificationsTracks = data =>
   post(url.GET_QUALIFICATIONS_TRACKS, data);
@@ -2101,6 +2142,11 @@ export const getHiddenGradeDeletedValue = () =>
 
 // update 
 export const updateHiddenGrade = data => post(url.UPDATE_HIDDEN_GRADE, data);
+//getHideReasons
+export const getHideReasons = data => post(url.GET_HIDE_REASONS,data)
+//delete
+export const deleteHiddenGrade = data =>
+  post(url.DELETE_HIDDEN_GRADE, data);
 
 
 

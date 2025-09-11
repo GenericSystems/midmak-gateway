@@ -14,6 +14,9 @@ import {
   DELETE_HIDDEN_GRADE,
   DELETE_HIDDEN_GRADE_SUCCESS,
   DELETE_HIDDEN_GRADE_FAIL,
+  GET_HIDE_REASONS,
+  GET_HIDE_REASONS_SUCCESS,
+  GET_HIDE_REASONS_FAIL
 } from "./actionTypes";
 
 export const getHiddenGrades = () => ({
@@ -23,13 +26,28 @@ export const getHiddenGrades = () => ({
 export const getHiddenGradesSuccess = hiddenGrades => ({
   type: GET_HIDDEN_GRADES_SUCCESS,
   payload: hiddenGrades,
-  
 });
 
 export const getHiddenGradesFail = error => ({
   type: GET_HIDDEN_GRADES_FAIL,
   payload: error,
 });
+
+export const getHideReasons = () => ({
+  type: GET_HIDE_REASONS,
+});
+
+export const getHideReasonSuccess = hidereasons => ({
+  type: GET_HIDE_REASONS_SUCCESS,
+  payload: hidereasons,
+});
+
+export const getHideReasonFail = error => ({
+  type: GET_HIDE_REASONS_FAIL,
+  payload: error,
+});
+
+
 
 export const getHiddenGradeDeletedValue = () => ({
   type: GET_HIDDEN_GRADE_DELETED_VALUE,
@@ -44,6 +62,8 @@ export const getHiddenGradeDeletedValueFail = error => ({
   type: GET_HIDDEN_GRADE_DELETED_VALUE_FAIL,
   payload: error,
 });
+
+
 
 export const addNewHiddenGrade = hiddenGrade => ({
   type: ADD_NEW_HIDDEN_GRADE,

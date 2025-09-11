@@ -246,6 +246,13 @@ import academyBuildingStructures from "./academyBuildingStructure/reducer";
 // contractsTypes
 import contractsTypes from "./HR/contractsTypes/reducer";
 
+//absenceTypes
+import absencesTypes from "./absenceType/reducer"
+//absenceJustification
+import absencesJustifications from "./absenceJustification/reducer"
+
+
+
 // gradesVersions
 import gradesVersions from "./gradesVersions/reducer";
 
@@ -362,6 +369,8 @@ const rootReducer = combineReducers({
   tasks,
   contacts,
   hiddenGrades,
+  absencesTypes,
+  absencesJustifications,
 
   certificateTypes,
   studentManagements,
