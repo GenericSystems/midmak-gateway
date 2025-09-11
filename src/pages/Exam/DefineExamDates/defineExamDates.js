@@ -517,6 +517,23 @@ class DefineExamDatesList extends Component {
     this.toggle2();
   };
 
+  exportToExcel = () => {
+    const { trainees } = this.state;
+
+    const worksheet = XLSX.utils.json_to_sheet(trainees);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Trainees");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(data, "trainees.xlsx");
+  };
+
   render() {
     const defineExamDate = this.state.defineExamDate;
 

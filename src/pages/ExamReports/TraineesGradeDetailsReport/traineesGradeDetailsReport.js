@@ -30,6 +30,8 @@ import filterFactory, {
   textFilter,
   customFilter,
 } from "react-bootstrap-table2-filter";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import Select from "react-select";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
@@ -72,16 +74,9 @@ class TraineesReportList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profExperiencesArray: [],
       trainees: {},
       trainee: "",
       years: [],
-      tempTraineeLocal: "",
-      activeTab: 1,
-      activeTabVartical: 1,
-      passedSteps: [1],
-      passedStepsVertical: [1],
-      selectedView: "",
       errorMessage: null,
       sidebarOpen: true,
       deleteModal: false,
@@ -132,151 +127,9 @@ class TraineesReportList extends Component {
       showTest5Arch: false,
       showTest6Arch: false,
       showTest7Arch: false,
-      showCurrentAddrCell: false,
-      showPermanentAddress: false,
-      showParentAddrPhone: false,
-      showWhatsappMobileNum: false,
-      showEmail: false,
-      showWorkPlace: false,
-      showWorkField: false,
-      showWorkDuration: false,
-      showWorkAddress: false,
-      showJobTitle: false,
-      showAdmissionDate: false,
-      showRegisterYear: false,
-      showLastRegCourse: false,
-      showCourseStatus: false,
-      showDecisionCode: false,
-      showDecisionType: false,
-      showDecisionDate: false,
-      showApplyingDate: false,
-      showAcademyCouncilNo: false,
-      showAcademyCouncilDate: false,
-      showDecisionNote: false,
       modal: false,
       modal1: false,
       selectedMulti: null,
-      selectedFromAdmSemes: "",
-      selectedToAdmSemes: "",
-      selectedFromRegSemes: "",
-      selectedToRegSemes: "",
-      selectedColor: "#556ee6",
-      selectedRuleType: "",
-      selectedCalculatedTransferCred: "",
-      selectedActiveAdditionalPeriod: "",
-      applyForSemesterArray: [],
-      prevStatusSemesArray: [],
-      applyStatusArray: [],
-      prevAcademicWarningArray: [],
-      showAlert: null,
-      showAddButton: false,
-      showDeleteButton: false,
-      showEditButton: false,
-      showSearchButton: false,
-      successMessage: null,
-      showTraineeFile: false,
-      showRegistrationForm: false,
-      showTranscript: false,
-      showDocuments: false,
-      showTranscriptNoHide: false,
-      showReportsLi: false,
-      showTraineeLifeLi: false,
-      selecetdDiplomaId: "",
-      selectedFacultyId: 0,
-      tempTrainee: "",
-      hasError: false,
-      isOpen: false,
-      generateModal: false,
-      averageValue: "",
-      selectedDiploma: "",
-      IsSpecial: false,
-      grantCond: 0,
-      selectedStudyPlanId: 0,
-      selectedYear: null,
-      currentYearObj: {},
-      facultyName: "",
-      studyPlanName: "",
-      socialStatusName: "",
-      selectedRegistrationCertLevelId: "",
-      selectedStudyPattern: "",
-      selectedExaminationSession: "",
-      IsTransferTempTraineeCheck: false,
-      transferUniName: "",
-      selectedTransferUnivCountry: "",
-      selectedUnivCountry: "",
-      selectedRegistrationDate: new Date().toISOString().split("T")[0],
-      selectedNationalityId: 0,
-      nationalityName: "",
-      grantName: "",
-      selectedCountry: "",
-      selectedSemester: "",
-      selectedGovernorate: "",
-      genderName: "",
-      diplomaTypeName: "",
-      selectedSocialStatus: "",
-      selectedBirthDate: "",
-      selectedRegistrationDiplomaDate: "",
-      selectedEmissionDate: "",
-      selectedIdentityIssueDate: "",
-      selectedPassportGrantDate: "",
-      selectedPassportExpirationDate: "",
-      selectedPassportIssueDate: "",
-      selectedPassportExpiryDate: "",
-      selectedDiplomaDate: "",
-      selectedDiplomaVerificationDate: "",
-      values: "",
-      firstNameError: false,
-      lastNameError: false,
-      fatherNameError: false,
-      grandFatherNameError: false,
-      motherNameError: false,
-      birthLocError: false,
-      birthdateError: false,
-      nationalityError: false,
-      genderError: false,
-      facultyError: false,
-      diplomaError: false,
-      diplomaIdError: false,
-      diplomaNumberError: false,
-      averageError: false,
-      stdTotalGradeError: false,
-      gradeError: false,
-      nationalNoError: false,
-      identityNoError: false,
-      examinationSessionError: false,
-      plan_studyError: false,
-      errorMessage1: null,
-      successMessage1: null,
-      HasBrotherCheck: false,
-      showGenerateButton: false,
-      totalGradeValue: "",
-      traineeGrade: "",
-      studentGrade: "",
-      attestatedValue: 0,
-      rows: [],
-      bloodTypeName: "",
-      duplicateRelativeError: null,
-      duplicateError: null,
-      duplicateErrorSibling: null,
-      lastUsedId: 0,
-      stdDocsArray: [],
-      lastUsedExperienceId: 0,
-      trnProfExperiences: {},
-      trnProfExperience: "",
-      showSiblingsSelect: false,
-      siblingsArray: [],
-      deleteBroModal: false,
-      tempTrainees: {},
-      selectedParentNationality: null,
-      selectedInstituteCountry: "",
-      selectedTraineeStatus: "",
-      languageState: "",
-      selectedHightStudyTypeId: "",
-      selectedEstimateId: "",
-      selectedRegUniDate: "",
-      isTempTraineeSaved: false,
-      selectedTraineeId: 0,
-      isAdd: false,
     };
   }
 
@@ -465,7 +318,7 @@ class TraineesReportList extends Component {
   };
 
   handleShowColumn = fieldName => {
-    if (fieldName == "FatherName") {
+    if (fieldName == "registerStatus") {
       this.setState(prevState => ({
         showRegisterStatus: !prevState.showRegisterStatus,
       }));
@@ -476,25 +329,24 @@ class TraineesReportList extends Component {
       }));
     }
 
-    if (fieldName == "grandFatherName") {
+    if (fieldName == "practicalMarks") {
       this.setState(prevState => ({
         showPracticalMarks: !prevState.showPracticalMarks,
       }));
     }
 
-    if (fieldName == "MotherName") {
+    if (fieldName == "finalExam") {
       this.setState(prevState => ({
         showFinalExam: !prevState.showFinalExam,
       }));
     }
-
-    if (fieldName == "birthdate") {
+    if (fieldName == "gradingMethod") {
       this.setState(prevState => ({
         showGradingMethod: !prevState.showGradingMethod,
       }));
     }
 
-    if (fieldName == "NationalityId") {
+    if (fieldName == "test3Ent") {
       this.setState(prevState => ({
         showTest3Ent: !prevState.showTest3Ent,
       }));
@@ -506,13 +358,13 @@ class TraineesReportList extends Component {
       }));
     }
 
-    if (fieldName == "FirstName") {
+    if (fieldName == "courseName") {
       this.setState(prevState => ({
         showCourseName: !prevState.showCourseName,
       }));
     }
 
-    if (fieldName == "LastName") {
+    if (fieldName == "courseCode") {
       this.setState(prevState => ({
         showCourseCode: !prevState.showCourseCode,
       }));
@@ -524,61 +376,61 @@ class TraineesReportList extends Component {
       }));
     }
 
-    if (fieldName == "identityNo") {
+    if (fieldName == "finalMarks") {
       this.setState(prevState => ({
         showFinalMarks: !prevState.showFinalMarks,
       }));
     }
 
-    if (fieldName == "nationalNo") {
+    if (fieldName == "grade") {
       this.setState(prevState => ({
         showGrade: !prevState.showGrade,
       }));
     }
 
-    if (fieldName == "identityIssueDate") {
+    if (fieldName == "totalMarksEnt") {
       this.setState(prevState => ({
         showTotalMarksEnt: !prevState.showTotalMarksEnt,
       }));
     }
 
-    if (fieldName == "PassNumber") {
+    if (fieldName == "practicalMarksEnt") {
       this.setState(prevState => ({
         showPracticalMarksEnt: !prevState.showPracticalMarksEnt,
       }));
     }
 
-    if (fieldName == "passportIssueDate") {
+    if (fieldName == "finalExamEnt") {
       this.setState(prevState => ({
         showFinalExamEnt: !prevState.showFinalExamEnt,
       }));
     }
 
-    if (fieldName == "passportExpiryDate") {
+    if (fieldName == "test1Ent") {
       this.setState(prevState => ({
         showTest1Ent: !prevState.showTest1Ent,
       }));
     }
 
-    if (fieldName == "GenderId") {
+    if (fieldName == "test2Ent") {
       this.setState(prevState => ({
         showTest2Ent: !prevState.showTest2Ent,
       }));
     }
 
-    if (fieldName == "civicZone") {
+    if (fieldName == "test4Ent") {
       this.setState(prevState => ({
         showTest4Ent: !prevState.showTest4Ent,
       }));
     }
 
-    if (fieldName == "registerZone") {
+    if (fieldName == "test5Ent") {
       this.setState(prevState => ({
         showTest5Ent: !prevState.showTest5Ent,
       }));
     }
 
-    if (fieldName == "registerNo") {
+    if (fieldName == "test6Ent") {
       this.setState(prevState => ({
         showTest6Ent: !prevState.showTest6Ent,
       }));
@@ -596,13 +448,13 @@ class TraineesReportList extends Component {
       }));
     }
 
-    if (fieldName == "RegistrationDate") {
+    if (fieldName == "test7Ent") {
       this.setState(prevState => ({
         showTest7Ent: !prevState.showTest7Ent,
       }));
     }
 
-    if (fieldName == "registrationCertLevelId") {
+    if (fieldName == "totalMarksAud") {
       this.setState(prevState => ({
         showTotalMarksAud: !prevState.showTotalMarksAud,
       }));
@@ -620,115 +472,115 @@ class TraineesReportList extends Component {
       }));
     }
 
-    if (fieldName == "uniName") {
+    if (fieldName == "practicalMarksAud") {
       this.setState(prevState => ({
         showPracticalMarksAud: !prevState.showPracticalMarksAud,
       }));
     }
 
-    if (fieldName == "UnivCountryId") {
+    if (fieldName == "test1Aud") {
       this.setState(prevState => ({
         showTest1Aud: !prevState.showTest1Aud,
       }));
     }
 
-    if (fieldName == "uniAverage") {
+    if (fieldName == "test3Aud") {
       this.setState(prevState => ({
         showTest3Aud: !prevState.showTest3Aud,
       }));
     }
 
-    if (fieldName == "RegUniDate") {
+    if (fieldName == "test6Aud") {
       this.setState(prevState => ({
         showTest6Aud: !prevState.showTest6Aud,
       }));
     }
 
-    if (fieldName == "EstimateId") {
+    if (fieldName == "test5Aud") {
       this.setState(prevState => ({
         showTest5Aud: !prevState.showTest5Aud,
       }));
     }
 
-    if (fieldName == "diplomaName") {
+    if (fieldName == "finalExamAud") {
       this.setState(prevState => ({
         showFinalExamAud: !prevState.showFinalExamAud,
       }));
     }
 
-    if (fieldName == "InstituteCountryId") {
+    if (fieldName == "test2Aud") {
       this.setState(prevState => ({
         showTest2Aud: !prevState.showTest2Aud,
       }));
     }
 
-    if (fieldName == "registrationDiplomaAverage") {
+    if (fieldName == "test4Aud") {
       this.setState(prevState => ({
         showTest4Aud: !prevState.showTest4Aud,
       }));
     }
 
-    if (fieldName == "academicYear") {
+    if (fieldName == "test7Aud") {
       this.setState(prevState => ({
         showTest7Aud: !prevState.showTest7Aud,
       }));
     }
 
-    if (fieldName == "HighStudyTypeId") {
+    if (fieldName == "totalMarksArch") {
       this.setState(prevState => ({
         showTotalMarksArch: !prevState.showTotalMarksArch,
       }));
     }
 
-    if (fieldName == "diplomaId") {
+    if (fieldName == "practicalMarksArch") {
       this.setState(prevState => ({
         showPracticalMarksArch: !prevState.showPracticalMarksArch,
       }));
     }
 
-    if (fieldName == "DiplomaCountryId") {
+    if (fieldName == "finalExamArch") {
       this.setState(prevState => ({
         showFinalExamArch: !prevState.showFinalExamArch,
       }));
     }
 
-    if (fieldName == "DiplomaGovernorateId") {
+    if (fieldName == "test1Arch") {
       this.setState(prevState => ({
         showTest1Arch: !prevState.showTest1Arch,
       }));
     }
 
-    if (fieldName == "DiplomaYear") {
+    if (fieldName == "test2Arch") {
       this.setState(prevState => ({
         showTest2Arch: !prevState.showTest2Arch,
       }));
     }
 
-    if (fieldName == "ExaminationSession") {
+    if (fieldName == "test3Arch") {
       this.setState(prevState => ({
         showTest3Arch: !prevState.showTest3Arch,
       }));
     }
 
-    if (fieldName == "DiplomaNumber") {
+    if (fieldName == "test4Arch") {
       this.setState(prevState => ({
         showTest4Arch: !prevState.showTest4Arch,
       }));
     }
 
-    if (fieldName == "Average") {
+    if (fieldName == "test5Arch") {
       this.setState(prevState => ({
         showTest5Arch: !prevState.showTest5Arch,
       }));
     }
 
-    if (fieldName == "CurrentAddress") {
+    if (fieldName == "test6Arch") {
       this.setState(prevState => ({
         showTest6Arch: !prevState.showTest6Arch,
       }));
     }
 
-    if (fieldName == "CurrentAddrPhone") {
+    if (fieldName == "test7Arch") {
       this.setState(prevState => ({
         showTest7Arch: !prevState.showTest7Arch,
       }));
@@ -869,14 +721,31 @@ class TraineesReportList extends Component {
       },
     });
   };
+  //export excel
+  exportToExcel = () => {
+    const { trainees } = this.state;
+
+    const worksheet = XLSX.utils.json_to_sheet(trainees);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Trainees");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(data, "trainees.xlsx");
+  };
 
   render() {
     const { trainees, deleted, years, t } = this.props;
     const {
       trainee,
       selectedYear,
-      selectedRegistrationDate,
-      selectedRegistrationCertLevelId,
+      selectedtest7Ent,
+      selectedtotalMarksAud,
       languageState,
       duplicateError,
       sidebarOpen,
@@ -1000,7 +869,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "FirstName",
+        dataField: "courseName",
         text: this.props.t("Course Name"),
         sort: true,
         editable: false,
@@ -1010,7 +879,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "LastName",
+        dataField: "courseCode",
         text: this.props.t("Course Code"),
         sort: true,
         editable: false,
@@ -1031,7 +900,7 @@ class TraineesReportList extends Component {
       },
 
       {
-        dataField: "FatherName",
+        dataField: "registerStatus",
         text: this.props.t("Register Status"),
         sort: true,
         editable: false,
@@ -1052,7 +921,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "FatherName",
+        dataField: "courseStatus",
         text: this.props.t("Course Status"),
         sort: true,
         editable: false,
@@ -1062,7 +931,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "grandFatherName",
+        dataField: "practicalMarks",
         text: this.props.t("Practical Marks - Full Mark"),
         sort: true,
         editable: false,
@@ -1072,7 +941,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "MotherName",
+        dataField: "finalExam",
         text: this.props.t("Final Exam - Full Mark"),
         sort: true,
         editable: false,
@@ -1082,7 +951,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "birthdate",
+        dataField: "gradingMethod",
 
         text: this.props.t("Grading Method"),
         sort: true,
@@ -1094,7 +963,7 @@ class TraineesReportList extends Component {
       },
 
       {
-        dataField: "nationalNo",
+        dataField: "grade",
         text: this.props.t("Grade"),
         sort: true,
         editable: false,
@@ -1104,7 +973,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "identityNo",
+        dataField: "finalMarks",
         text: this.props.t("Final Marks"),
         sort: true,
         editable: false,
@@ -1115,7 +984,7 @@ class TraineesReportList extends Component {
       },
 
       {
-        dataField: "identityIssueDate",
+        dataField: "totalMarksEnt",
         text: this.props.t("Total Marks (Enter)"),
         editable: false,
         sort: true,
@@ -1125,7 +994,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "PassNumber",
+        dataField: "practicalMarksEnt",
         text: this.props.t("Practical Marks (Enter)"),
         editable: false,
         sort: true,
@@ -1135,7 +1004,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "passportIssueDate",
+        dataField: "finalExamEnt",
         text: this.props.t("Final Exam (Enter)"),
         editable: false,
         sort: true,
@@ -1145,7 +1014,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "passportExpiryDate",
+        dataField: "test1Ent",
         text: this.props.t("Test1 (Enter)"),
         editable: false,
         sort: true,
@@ -1155,7 +1024,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "GenderId",
+        dataField: "test2Ent",
         text: this.props.t("Test2 (Enter)"),
         editable: false,
         sort: true,
@@ -1165,7 +1034,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "NationalityId",
+        dataField: "test3Ent",
 
         text: this.props.t("Test3 (Enter)"),
         sort: true,
@@ -1176,7 +1045,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "civicZone",
+        dataField: "test4Ent",
         text: this.props.t("Test4 (Enter)"),
         editable: false,
         sort: true,
@@ -1186,7 +1055,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "registerZone",
+        dataField: "test5Ent",
         text: this.props.t("Test5 (Enter)"),
         editable: false,
         sort: true,
@@ -1196,7 +1065,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "registerNo",
+        dataField: "test6Ent",
         text: this.props.t("Test6 (Enter)"),
         editable: false,
         sort: true,
@@ -1206,7 +1075,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "RegistrationDate",
+        dataField: "test7Ent",
         text: this.props.t("Test7 (Enter)"),
         editable: false,
         sort: true,
@@ -1216,7 +1085,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "registrationCertLevelId",
+        dataField: "totalMarksAud",
         text: this.props.t("Total Marks (Audit)"),
         editable: false,
         sort: true,
@@ -1226,7 +1095,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "uniName",
+        dataField: "practicalMarksAud",
         text: this.props.t("Practical Marks (Audit)"),
         editable: false,
         sort: true,
@@ -1236,7 +1105,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "diplomaName",
+        dataField: "finalExamAud",
         text: this.props.t("Final Exam (Audit)"),
         editable: false,
         sort: true,
@@ -1246,7 +1115,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "UnivCountryId",
+        dataField: "test1Aud",
         text: this.props.t("Test1 (Audit)"),
         editable: false,
         sort: true,
@@ -1256,7 +1125,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "InstituteCountryId",
+        dataField: "test2Aud",
         text: this.props.t("Test2 (Audit)"),
         editable: false,
         sort: true,
@@ -1266,7 +1135,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "uniAverage",
+        dataField: "test3Aud",
         text: this.props.t("Test3 (Audit)"),
         editable: false,
         sort: true,
@@ -1276,7 +1145,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "registrationDiplomaAverage",
+        dataField: "test4Aud",
         text: this.props.t("Test4 (Audit)"),
         editable: false,
         sort: true,
@@ -1286,7 +1155,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "EstimateId",
+        dataField: "test5Aud",
         text: this.props.t("Test5 (Audit)"),
         editable: false,
         sort: true,
@@ -1296,7 +1165,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "RegUniDate",
+        dataField: "test6Aud",
         text: this.props.t("Test6 (Audit)"),
         editable: false,
         sort: true,
@@ -1306,7 +1175,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "academicYear",
+        dataField: "test7Aud",
         text: this.props.t("Test7 (Audit)"),
         editable: false,
         sort: true,
@@ -1316,7 +1185,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "HighStudyTypeId",
+        dataField: "totalMarksArch",
         text: this.props.t("Total Marks (Archive)"),
         editable: false,
         sort: true,
@@ -1326,7 +1195,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "diplomaId",
+        dataField: "practicalMarksArch",
         text: this.props.t("Practical Marks (Archive)"),
         editable: false,
         sort: true,
@@ -1336,7 +1205,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "DiplomaCountryId",
+        dataField: "finalExamArch",
         text: this.props.t("Final Exam (Archive)"),
         editable: false,
         sort: true,
@@ -1346,7 +1215,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "DiplomaGovernorateId",
+        dataField: "test1Arch",
         text: this.props.t("Test1 (Archive)"),
         editable: false,
         sort: true,
@@ -1356,7 +1225,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "DiplomaYear",
+        dataField: "test2Arch",
         text: this.props.t("Test2 (Archive)"),
         editable: false,
         sort: true,
@@ -1366,7 +1235,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "ExaminationSession",
+        dataField: "test3Arch",
         text: this.props.t("Test3 (Archive)"),
         editable: false,
         sort: true,
@@ -1376,7 +1245,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "DiplomaNumber",
+        dataField: "test4Arch",
         text: this.props.t("Test4 (Archive)"),
         editable: false,
         sort: true,
@@ -1386,7 +1255,7 @@ class TraineesReportList extends Component {
         }),
       },
       {
-        dataField: "Average",
+        dataField: "test5Arch",
         text: this.props.t("Test5 (Archive)"),
         editable: false,
         sort: true,
@@ -1397,7 +1266,7 @@ class TraineesReportList extends Component {
       },
 
       {
-        dataField: "CurrentAddress",
+        dataField: "test6Arch",
         text: this.props.t("Test6 (Archive)"),
         editable: false,
         sort: true,
@@ -1408,7 +1277,7 @@ class TraineesReportList extends Component {
       },
       ,
       {
-        dataField: "CurrentAddrPhone",
+        dataField: "test7Arch",
         text: this.props.t("Test7 (Archive)"),
         editable: false,
         sort: true,
@@ -1464,7 +1333,7 @@ class TraineesReportList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={t("Academy Trainees")} />
+            <Breadcrumbs breadcrumbItem={t("Trainees Grade Details Report")} />
 
             <Row>
               {sidebarOpen && (
@@ -1522,7 +1391,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showCourseName}
                                         onClick={() =>
-                                          this.handleShowColumn("FirstName")
+                                          this.handleShowColumn("courseName")
                                         }
                                       />
                                       <label
@@ -1544,7 +1413,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showCourseCode}
                                         onClick={() =>
-                                          this.handleShowColumn("LastName")
+                                          this.handleShowColumn("courseCode")
                                         }
                                       />
                                       <label
@@ -1588,7 +1457,9 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showRegisterStatus}
                                         onClick={() =>
-                                          this.handleShowColumn("FatherName")
+                                          this.handleShowColumn(
+                                            "registerStatus"
+                                          )
                                         }
                                       />
                                       <label
@@ -1632,7 +1503,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showCourseStatus}
                                         onClick={() =>
-                                          this.handleShowColumn("FatherName")
+                                          this.handleShowColumn("courseStatus")
                                         }
                                       />
                                       <label
@@ -1655,7 +1526,7 @@ class TraineesReportList extends Component {
                                         defaultChecked={showPracticalMarks}
                                         onClick={() =>
                                           this.handleShowColumn(
-                                            "grandFatherName"
+                                            "practicalMarks"
                                           )
                                         }
                                       />
@@ -1680,7 +1551,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showFinalExam}
                                         onClick={() =>
-                                          this.handleShowColumn("MotherName")
+                                          this.handleShowColumn("finalExam")
                                         }
                                       />
                                       <label
@@ -1702,7 +1573,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showGradingMethod}
                                         onClick={() =>
-                                          this.handleShowColumn("birthdate")
+                                          this.handleShowColumn("gradingMethod")
                                         }
                                       />
                                       <label
@@ -1724,7 +1595,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showGrade}
                                         onClick={() =>
-                                          this.handleShowColumn("nationalNo")
+                                          this.handleShowColumn("grade")
                                         }
                                       />
                                       <label
@@ -1747,7 +1618,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showFinalMarks}
                                         onClick={() =>
-                                          this.handleShowColumn("identityNo")
+                                          this.handleShowColumn("finalMarks")
                                         }
                                       />
                                       <label
@@ -1778,7 +1649,7 @@ class TraineesReportList extends Component {
                                           defaultChecked={showTotalMarksEnt}
                                           onClick={() =>
                                             this.handleShowColumn(
-                                              "identityIssueDate"
+                                              "totalMarksEnt"
                                             )
                                           }
                                         />
@@ -1802,7 +1673,9 @@ class TraineesReportList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showPracticalMarksEnt}
                                           onClick={() =>
-                                            this.handleShowColumn("PassNumber")
+                                            this.handleShowColumn(
+                                              "practicalMarksEnt"
+                                            )
                                           }
                                         />
                                         <label
@@ -1828,7 +1701,7 @@ class TraineesReportList extends Component {
                                           defaultChecked={showFinalExamEnt}
                                           onClick={() =>
                                             this.handleShowColumn(
-                                              "passportIssueDate"
+                                              "finalExamEnt"
                                             )
                                           }
                                         />
@@ -1852,9 +1725,7 @@ class TraineesReportList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showTest1Ent}
                                           onClick={() =>
-                                            this.handleShowColumn(
-                                              "passportExpiryDate"
-                                            )
+                                            this.handleShowColumn("test1Ent")
                                           }
                                         />
                                         <label
@@ -1876,7 +1747,7 @@ class TraineesReportList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showTest2Ent}
                                           onClick={() =>
-                                            this.handleShowColumn("GenderId")
+                                            this.handleShowColumn("test2Ent")
                                           }
                                         />
                                         <label
@@ -1898,9 +1769,7 @@ class TraineesReportList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showTest3Ent}
                                           onClick={() =>
-                                            this.handleShowColumn(
-                                              "NationalityId"
-                                            )
+                                            this.handleShowColumn("test3Ent")
                                           }
                                         />
                                         <label
@@ -1923,7 +1792,7 @@ class TraineesReportList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showTest4Ent}
                                           onClick={() =>
-                                            this.handleShowColumn("civicZone")
+                                            this.handleShowColumn("test4Ent")
                                           }
                                         />
                                         <label
@@ -1945,9 +1814,7 @@ class TraineesReportList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showTest5Ent}
                                           onClick={() =>
-                                            this.handleShowColumn(
-                                              "registerZone"
-                                            )
+                                            this.handleShowColumn("test5Ent")
                                           }
                                         />
                                         <label
@@ -1969,7 +1836,7 @@ class TraineesReportList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showTest6Ent}
                                           onClick={() =>
-                                            this.handleShowColumn("registerNo")
+                                            this.handleShowColumn("test6Ent")
                                           }
                                         />
                                         <label
@@ -1991,9 +1858,7 @@ class TraineesReportList extends Component {
                                           autoComplete="off"
                                           defaultChecked={showTest7Ent}
                                           onClick={() =>
-                                            this.handleShowColumn(
-                                              "RegistrationDate"
-                                            )
+                                            this.handleShowColumn("test7Ent")
                                           }
                                         />
                                         <label
@@ -2023,9 +1888,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTotalMarksAud}
                                         onClick={() =>
-                                          this.handleShowColumn(
-                                            "registrationCertLevelId"
-                                          )
+                                          this.handleShowColumn("totalMarksAud")
                                         }
                                       />
                                       <label
@@ -2047,7 +1910,9 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showPracticalMarksAud}
                                         onClick={() =>
-                                          this.handleShowColumn("uniName")
+                                          this.handleShowColumn(
+                                            "practicalMarksAud"
+                                          )
                                         }
                                       />
                                       <label
@@ -2071,7 +1936,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showFinalExamAud}
                                         onClick={() =>
-                                          this.handleShowColumn("diplomaName")
+                                          this.handleShowColumn("finalExamAud")
                                         }
                                       />
                                       <label
@@ -2093,7 +1958,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest1Aud}
                                         onClick={() =>
-                                          this.handleShowColumn("UnivCountryId")
+                                          this.handleShowColumn("test1Aud")
                                         }
                                       />
                                       <label
@@ -2115,9 +1980,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest2Aud}
                                         onClick={() =>
-                                          this.handleShowColumn(
-                                            "InstituteCountryId"
-                                          )
+                                          this.handleShowColumn("test2Aud")
                                         }
                                       />
                                       <label
@@ -2139,7 +2002,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest3Aud}
                                         onClick={() =>
-                                          this.handleShowColumn("uniAverage")
+                                          this.handleShowColumn("test3Aud")
                                         }
                                       />
                                       <label
@@ -2161,9 +2024,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest4Aud}
                                         onClick={() =>
-                                          this.handleShowColumn(
-                                            "registrationDiplomaAverage"
-                                          )
+                                          this.handleShowColumn("test4Aud")
                                         }
                                       />
                                       <label
@@ -2185,7 +2046,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest5Aud}
                                         onClick={() =>
-                                          this.handleShowColumn("EstimateId")
+                                          this.handleShowColumn("test5Aud")
                                         }
                                       />
                                       <label
@@ -2207,7 +2068,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest6Aud}
                                         onClick={() =>
-                                          this.handleShowColumn("RegUniDate")
+                                          this.handleShowColumn("test6Aud")
                                         }
                                       />
                                       <label
@@ -2229,7 +2090,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest7Aud}
                                         onClick={() =>
-                                          this.handleShowColumn("academicYear")
+                                          this.handleShowColumn("test7Aud")
                                         }
                                       />
                                       <label
@@ -2259,7 +2120,7 @@ class TraineesReportList extends Component {
                                         defaultChecked={showTotalMarksArch}
                                         onClick={() =>
                                           this.handleShowColumn(
-                                            "HighStudyTypeId"
+                                            "totalMarksArch"
                                           )
                                         }
                                       />
@@ -2282,7 +2143,9 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showPracticalMarksArch}
                                         onClick={() =>
-                                          this.handleShowColumn("diplomaId")
+                                          this.handleShowColumn(
+                                            "practicalMarksArch"
+                                          )
                                         }
                                       />
                                       <label
@@ -2306,9 +2169,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showFinalExamArch}
                                         onClick={() =>
-                                          this.handleShowColumn(
-                                            "DiplomaCountryId"
-                                          )
+                                          this.handleShowColumn("finalExamArch")
                                         }
                                       />
                                       <label
@@ -2330,9 +2191,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest1Arch}
                                         onClick={() =>
-                                          this.handleShowColumn(
-                                            "DiplomaGovernorateId"
-                                          )
+                                          this.handleShowColumn("test1Arch")
                                         }
                                       />
                                       <label
@@ -2354,7 +2213,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest2Arch}
                                         onClick={() =>
-                                          this.handleShowColumn("DiplomaYear")
+                                          this.handleShowColumn("test2Arch")
                                         }
                                       />
                                       <label
@@ -2376,9 +2235,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest3Arch}
                                         onClick={() =>
-                                          this.handleShowColumn(
-                                            "ExaminationSession"
-                                          )
+                                          this.handleShowColumn("test3Arch")
                                         }
                                       />
                                       <label
@@ -2400,7 +2257,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest4Arch}
                                         onClick={() =>
-                                          this.handleShowColumn("DiplomaNumber")
+                                          this.handleShowColumn("test4Arch")
                                         }
                                       />
                                       <label
@@ -2422,7 +2279,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest5Arch}
                                         onClick={() =>
-                                          this.handleShowColumn("Average")
+                                          this.handleShowColumn("test5Arch")
                                         }
                                       />
                                       <label
@@ -2444,9 +2301,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest6Arch}
                                         onClick={() =>
-                                          this.handleShowColumn(
-                                            "CurrentAddress"
-                                          )
+                                          this.handleShowColumn("test6Arch")
                                         }
                                       />
                                       <label
@@ -2468,9 +2323,7 @@ class TraineesReportList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showTest7Arch}
                                         onClick={() =>
-                                          this.handleShowColumn(
-                                            "CurrentAddrPhone"
-                                          )
+                                          this.handleShowColumn("test7Arch")
                                         }
                                       />
                                       <label
@@ -2601,6 +2454,24 @@ class TraineesReportList extends Component {
                                           </Tooltip>
                                         </div>
                                       </Col> */}
+                                      {/* export excel */}
+                                      <Col sm="5">
+                                        <div className="text-sm-end">
+                                          <Tooltip
+                                            title={this.props.t(
+                                              "Export to Excel"
+                                            )}
+                                            placement="top"
+                                          >
+                                            <IconButton
+                                              color="success"
+                                              onClick={this.exportToExcel}
+                                            >
+                                              <i className="mdi mdi-file-excel blue-noti-icon" />
+                                            </IconButton>
+                                          </Tooltip>
+                                        </div>
+                                      </Col>
                                     </Row>
                                     <Col xl="12">
                                       <div className="table-responsive">
@@ -2679,7 +2550,6 @@ const mapStateToProps = ({
   deleted: trainees.deleted,
   faculties: mobAppFacultyAccs.faculties,
   currencies: currencies.currencies,
-  FatherNames: generalManagements.FatherNames,
   years: years.years,
   nationalities: nationalities.nationalities,
   faculties: mobAppFacultyAccs.faculties,
