@@ -596,5 +596,27 @@
   "Pass Percent(Exclude W)": "نسبة النجاح (دون الانسحاب)",
   "Fail Percent(Exclude W)": "نسبة الرسوب (دون الانسحاب)",
   "Withdraw Percent": "نسبة الانسحاب",
-  "Archiving Percent": "نسبة الأرشفة"
+  "Archiving Percent": "نسبة الأرشفة",
+ 
+
+  
+   "Absence Type(ar)":"نوع الغياب (عربي)",
+   "Absence Type(en)":"نوع الغياب (انكليزي)",
+   "Weight":"تأثير الغياب",
+   "Absences Type":"أنواع الغياب",
+   "No Absence Type found":"لا يوجد أنواع غياب",
+   "Absence Reason(ar)":"سبب الغياب (عربي)",
+   "Absence Reason(en)":"سبب الغياب(انكليزي)",
+   "Absences Justification":"مبررات الغياب",
+   "No Absence Justification found":"لا يوجد مبررات غياب",
+   "Acceptable":"مبرر"
+
+ 
+
+
+
+
+
+
+
 }

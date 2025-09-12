@@ -992,6 +992,20 @@ export const ADD_NEW_CONTRACT_TYPE = "/add/contractType";
 export const UPDATE_CONTRACT_TYPE = "/update/contractType";
 export const DELETE_CONTRACT_TYPE = "/delete/contractType";
 
+//absence_types
+export const GET_ABSENCES_TYPES = "/absencesTypes";
+export const GET_ABSENCE_TYPE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_ABSENCE_TYPE = "/add/absenceType";
+export const UPDATE_ABSENCE_TYPE = "/update/absenceType";
+export const DELETE_ABSENCE_TYPE = "/delete/absenceType";
+//absence_justification
+export const GET_ABSENCES_JUSTIFICATIONS = "/absencesJustifications";
+export const GET_ABSENCE_JUSTIFICATION_DELETED_VALUE = "/deleted";
+export const ADD_NEW_ABSENCE_JUSTIFICATION = "/add/absenceJustification";
+export const UPDATE_ABSENCE_JUSTIFICATION = "/update/absenceJustification";
+export const DELETE_ABSENCE_JUSTIFICATION = "/delete/absenceJustification";
+
+
 //qualificaqtion_track
 export const GET_QUALIFICATIONS_TRACKS = "/qualificationTracks";
 export const GET_QUALIFICATION_TRACK_DELETED_VALUE = "/deleted";
@@ -1031,6 +1045,7 @@ export const GET_HIDDEN_GRADE_DELETED_VALUE = "/deleted";
 export const ADD_NEW_HIDDEN_GRADE = "/add/hiddenGrades";
 export const UPDATE_HIDDEN_GRADE = "/update/hiddenGrades";
 export const DELETE_HIDDEN_GRADE = "/delete/hiddenGrades";
+export const GET_HIDE_REASONS = "/hideReasons"
 
 //ABSCENCE_WARNINGS
 export const GET_ABSENCE_WARNINGS = "/absenceWarnings";

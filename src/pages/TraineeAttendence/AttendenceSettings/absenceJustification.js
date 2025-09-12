@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
-import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
-import Select from "react-select";
 import {
   Card,
   CardBody,
@@ -20,25 +18,24 @@ import {
   Input,
 } from "reactstrap";
 import BootstrapTable from "react-bootstrap-table-next";
-import DeleteModal from "components/Common/DeleteModal";
 import cellEditFactory from "react-bootstrap-table2-editor";
 import { IconButton } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 
 import Breadcrumbs from "components/Common/Breadcrumb";
+import DeleteModal from "components/Common/DeleteModal";
 import {
-  getHiddenGrades,
-  addNewHiddenGrade,
-  updateHiddenGrade,
-  deleteHiddenGrade,
-  getHiddenGradeDeletedValue,
-  getHideReasons,
-} from "store/hide-grade/actions";
-//store/hide-grade/actions";
+  getAbsencesJustifications,
+  addNewAbsenceJustification,
+  updateAbsenceJustification,
+  deleteAbsenceJustification,
+  getAbsenceJustificationDeletedValue,
+} from "store/absenceJustification/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -47,63 +44,44 @@ import paginationFactory, {
 import { isEmpty, size, map } from "lodash";
 import {
   checkIsAddForPage,
-  checkIsEditForPage,
   checkIsDeleteForPage,
+  checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-class HiddenGradesList extends Component {
+class AbsencesJustificationsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCourseId:null,
-      selectedHideReasonId:null,
-      hiddenGrades: [],
-      rows: [],
-      hiddenGrade: "",
+      absencesJustifications: [],
+      absenceJustification: "",
       showAlert: null,
       showAddButton: false,
+      showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
-      deleteModal: false,
-      showDeleteButton: false,
-      deleteModal: false,
     };
     this.state = {
+      deleteModal: false,
       duplicateError: null,
       selectedRowId: null,
     };
   }
 
   componentDidMount() {
-    const {
-      hiddenGrades,
-      onGetHiddenGrades,
-      onGetHideReasons,
-      user_menu,
-      coursesOffering,
-      hidereasons,
-      deleted,
-    } = this.props;
-
+    const { absencesJustifications, onGetAbsencesJustifications, deleted, user_menu } =
+      this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
+    this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    this.updateShowDeleteButton(user_menu, this.props.location.pathname);
+    // if (absenceJustification && !absencesJustifications.length) {
+    //   onGetAbsencesJustifications();
+    // }
+    onGetAbsencesJustifications();
 
-    onGetHiddenGrades();
-    onGetHideReasons();
-
-    const mappedHideReasons = (hidereasons || []).map(r => ({
-      value: r.Id,
-      label: r.arTitle,
-    }));
-
-    this.setState({
-      hiddenGrades,
-      coursesOffering,
-      hidereasons: mappedHideReasons,
-      deleted,
-    });
+    this.setState({ absencesJustifications });
+    this.setState({ deleted });
+    console.log("rsssssssssssssss", absencesJustifications);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -115,7 +93,10 @@ class HiddenGradesList extends Component {
         this.props.user_menu,
         this.props.location.pathname
       );
-
+      this.updateShowDeleteButton(
+        this.props.user_menu,
+        this.props.location.pathname
+      );
       this.updateShowEditButton(
         this.props.user_menu,
         this.props.location.pathname
@@ -132,6 +113,11 @@ class HiddenGradesList extends Component {
     this.setState({ showAddButton });
   };
 
+  updateShowDeleteButton = (menu, pathname) => {
+    const showDeleteButton = checkIsDeleteForPage(menu, pathname);
+    this.setState({ showDeleteButton });
+  };
+
   updateShowEditButton = (menu, pathname) => {
     const showEditButton = checkIsEditForPage(menu, pathname);
     this.setState({ showEditButton });
@@ -140,10 +126,6 @@ class HiddenGradesList extends Component {
   updateShowSearchButton = (menu, pathname) => {
     const showSearchButton = checkIsSearchForPage(menu, pathname);
     this.setState({ showSearchButton });
-  };
-  updateShowDeleteButton = (menu, pathname) => {
-    const showDeleteButton = checkIsDeleteForPage(menu, pathname);
-    this.setState({ showDeleteButton });
   };
 
   onPaginationPageChange = page => {
@@ -157,41 +139,44 @@ class HiddenGradesList extends Component {
       this.node.current.props.pagination.options.onPageChange(page);
     }
   };
-  handleAddRow = () => {
-    const { onAddNewHiddenGrade, hiddenGrades } = this.props;
-    console.log("hiddenGrades", hiddenGrades);
-
-    const newRow = {
-      courseId: null,
-    };
-    console.log("neww roww", newRow);
-
-    const hasEmptyRow = hiddenGrades.some(row => row.courseId === null);
-
-    if (hasEmptyRow) {
-      const errorMessage = this.props.t("Fill in the empty row first");
-      this.setState({ duplicateError: errorMessage });
-    } else {
-      this.setState({ duplicateError: null });
-      console.log("11111111111");
-      onAddNewHiddenGrade(newRow);
-    }
-  };
-  onClickDelete = rowId => {
-    console.log("roeIDDDDD", rowId);
-    this.setState({ selectedRowId: rowId, deleteModal: true });
-  };
   toggleDeleteModal = () => {
     this.setState(prevState => ({
       deleteModal: !prevState.deleteModal,
     }));
   };
- handleDeleteRow = () => {
-    const { onDeleteHiddenGrade } = this.props;
+  onClickDelete = rowId => {
+    this.setState({ selectedRowId: rowId, deleteModal: true });
+  };
+
+  handleAddRow = () => {
+    const { onAddNewAbsenceJustification, absencesJustifications } = this.props;
+
+    const newRow = {
+      arTitle: "-----",
+    };
+
+    // Check if the same value already exists in the table
+    const emptyRowsExist = absencesJustifications.some(
+      absencesJustifications => absencesJustifications.arTitle.trim() === "-----"
+      // ||
+      // absenceJustification.enTitle.trim() === ""
+    );
+
+    if (emptyRowsExist) {
+      const errorMessage = this.props.t("Fill in the empty row");
+      this.setState({ duplicateError: errorMessage });
+    } else {
+      this.setState({ duplicateError: null });
+      onAddNewAbsenceJustification(newRow);
+    }
+  };
+
+  handleDeleteRow = () => {
+    const { onDeleteAbsenceJustification } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteHiddenGrade(selectedRowId);
+      onDeleteAbsenceJustification(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -200,90 +185,58 @@ class HiddenGradesList extends Component {
       });
     }
   };
-  handleSuccessClose = () => {
-    const { onGetHiddenGradeDeletedValue } = this.props;
-    this.setState({ showAlert: null });
-    onGetHiddenGradeDeletedValue();
+
+  handleAbsenceJustificationDataChange = (rowId, fieldName, fieldValue) => {
+    const { absencesJustifications, onUpdateAbsenceJustification } = this.props;
+
+    const isDuplicate = absencesJustifications.some(absenceJustification => {
+      return (
+        absenceJustification.Id !== rowId &&
+        absenceJustification.arTitle.trim() === fieldValue.trim()
+      );
+    });
+
+    if (isDuplicate) {
+      const errorMessage = this.props.t("Value already exists");
+      this.setState({ duplicateError: errorMessage });
+      let onUpdate = { Id: rowId, [fieldName]: "-----" };
+      onUpdateAbsenceJustification(onUpdate);
+    } else {
+      this.setState({ duplicateError: null });
+      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+      onUpdateAbsenceJustification(onUpdate);
+    }
   };
-  handleErrorClose = () => {
-    const { onGetHiddenGradeDeletedValue } = this.props;
-    this.setState({ showAlert: null });
-    onGetHiddenGradeDeletedValue();
-  };
-
-handleSelect = (rowId, fieldName, selectedValue) => {
-  const { onUpdateHiddenGrade } = this.props;
-
-  let onUpdate;
-
-  if (fieldName === "courseId") {
-    onUpdate = {
-      Id: rowId,
-      courseId: selectedValue.value,
-      courseCode: selectedValue.Code || "", // auto-fill
-    };
-  } else if (fieldName === "hideReasonId") {
-    onUpdate = {
-      Id: rowId,
-      [fieldName]: selectedValue.value,
-    };
-  }
-
-  onUpdateHiddenGrade(onUpdate);
-};
-
-  handlehiddenGradeDataChange = (rowId, fieldName, fieldValue) => {
-    console.log("called");
-    const { onUpdateHiddenGrade } = this.props;
-
-    let onUpdate = {
-      Id: rowId,
-      [fieldName]: fieldValue,
-    };
-    console.log("onUpdate", onUpdate);
-    onUpdateHiddenGrade(onUpdate);
-  };
-
-  // handlehiddenGradeDataChange = (rowId, fieldName, fieldValue) => {
-  //   const { hiddenGrades, onUpdateHiddenGrade } = this.props;
-
-  //   const isDuplicate = hiddenGrades.some(hiddenGrade => {
-  //     return (
-  //       hiddenGrade.Id !== rowId &&
-  //       hiddenGrade.arTitle.trim() === fieldValue.trim()
-  //     );
-  //   });
-
-  //   if (isDuplicate) {
-  //     const errorMessage = this.props.t("Value already exists");
-  //     this.setState({ duplicateError: errorMessage });
-  //     let onUpdate = { Id: rowId, [fieldName]: "-----" };
-  //     onUpdateHiddenGrade(onUpdate);
-  //   } else {
-  //     this.setState({ duplicateError: null });
-  //     let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-  //     onUpdateHiddenGrade(onUpdate);
-  //   }
-  // };
 
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
   };
 
   handleSelectFaculty(rowId, fieldName, newValue) {
-    const { onUpdateHiddenGrade } = this.props;
+    const { onUpdateAbsenceJustification } = this.props;
     const onUpdate = { Id: rowId, [fieldName]: newValue };
-    onUpdateHiddenGrade(onUpdate);
+    onUpdateAbsenceJustification(onUpdate);
   }
 
+  handleSuccessClose = () => {
+    const { onGetAbsenceJustificationDeletedValue } = this.props;
+    this.setState({ showAlert: null });
+    onGetAbsenceJustificationDeletedValue();
+  };
+
+  handleErrorClose = () => {
+    const { onGetAbsenceJustificationDeletedValue } = this.props;
+    this.setState({ showAlert: null });
+    onGetAbsenceJustificationDeletedValue();
+  };
+
   render() {
-    const { hiddenGrades, t, deleted, coursesOffering, hidereasons } =
-      this.props;
+    const { absencesJustifications, t, deleted } = this.props;
     const {
       duplicateError,
+      deleteModal,
       showAlert,
       showAddButton,
-      deleteModal,
       showDeleteButton,
       showEditButton,
       showSearchButton,
@@ -301,127 +254,49 @@ handleSelect = (rowId, fieldName, selectedValue) => {
       },
     ];
     const columns = [
-      { dataField: "Id", text: "ID", hidden: true },
+      { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "courseId",
-        text: this.props.t("Course Name"),
-        formatter: (cell, row) => (
-          <Select
-            key={`course_select_${row.Id}`}
-            options={coursesOffering}
-            value={coursesOffering.find(opt => opt.value === row.courseId)}
-            onChange={selectedValue =>
-              this.handleSelect(row.Id, "courseId", selectedValue)
-            }
-          />
-        ),
-        editable: false,
-      },
-
-      {
-        dataField: "courseCode",
-        text: this.props.t("Course Code"),
+        dataField: "arTitle",
+        text: this.props.t("Absence Reason(ar)"),
         sort: true,
-        formatter: (cell, row) => row.courseCode || "",
-        editable: false,
+        //  editable: showEditButton,
       },
+
       {
-        dataField: "fromDate",
-        text: this.props.t("fom Date"),
+        dataField: "enTitle",
+        text: this.props.t("Absence Reason(en)"),
         sort: true,
-        formatter: cell => {
-          if (!cell) return "";
-          const date = new Date(cell);
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, "0");
-          const day = String(date.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`; // 2025-08-11
-        },
-
-        editable: true,
-        editorRenderer: (
-          editorProps,
-          value,
-          row,
-          column,
-          rowIndex,
-          columnIndex
-        ) => {
-          return (
-            <input
-              type="date"
-              {...editorProps}
-              value={value || ""}
-              onChange={e => editorProps.onUpdate(e.target.value)}
-              className="form-control"
-            />
-          );
-        },
+        //  editable: showEditButton,
       },
 
       {
-        dataField: "toDate",
-        text: this.props.t("toDate"),
-        sort: true,
-        formatter: cell => {
-          if (!cell) return "";
-          const date = new Date(cell);
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, "0");
-          const day = String(date.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`; // 2025-08-11
-        },
-
-        editable: true,
-        editorRenderer: (
-          editorProps,
-          value,
-          row,
-          column,
-          rowIndex,
-          columnIndex
-        ) => {
-          return (
-            <input
-              type="date"
-              {...editorProps}
-              value={value || ""}
-              onChange={e => editorProps.onUpdate(e.target.value)}
-              className="form-control"
-            />
-          );
-        },
+        dataField: "acceptableId",
+        text: this.props.t("Acceptable"),
+        // formatter: (cell, row) => (
+        //   <Select
+        //     key={`status_grade_${row.Id}`}
+        //     options={yesno}
+        //     onChange={newValue => {
+        //       this.handleSelect(row.Id, "acceptableId", newValue.value);
+        //     }}
+        //     value={yesno.find(opt => opt.value == row.acceptableId)}
+        //   />
+        // ),
+        // editable: false,
       },
-
-      {
-        dataField: "hideReasonId",
-        text: this.props.t("Hide Reason"),
-        formatter: (cell, row) => (
-          <Select
-            key={`hide_reason_select_${row.Id}`}
-            options={hidereasons}
-            value={hidereasons.find(opt => opt.value === row.hideReasonId)}
-            onChange={selectedValue =>
-              this.handleSelect(row.Id, "hideReasonId", selectedValue)
-            }
-          />
-        ),
-        editable: false,
-      },
-
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
         //  hidden: !showDeleteButton,
-        formatter: (cellContent, hiddenGrade) => (
+        formatter: (cellContent, absenceJustification) => (
           <Tooltip title={this.props.t("Delete")} placement="top">
             <Link className="text-danger" to="#">
               <i
                 className="mdi mdi-delete font-size-18"
                 id="deletetooltip"
-                onClick={() => this.onClickDelete(hiddenGrade)}
+                onClick={() => this.onClickDelete(absenceJustification)}
               ></i>
             </Link>
           </Tooltip>
@@ -430,10 +305,9 @@ handleSelect = (rowId, fieldName, selectedValue) => {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: hiddenGrades.length,
+      totalSize: absencesJustifications.length,
       custom: true,
     };
-
     return (
       <React.Fragment>
         <DeleteModal
@@ -445,7 +319,7 @@ handleSelect = (rowId, fieldName, selectedValue) => {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Hidden Grades")} />
+            <Breadcrumbs breadcrumbItem={this.props.t("Absences Justification")} />
             <Row>
               <Col>
                 <Card>
@@ -502,12 +376,12 @@ handleSelect = (rowId, fieldName, selectedValue) => {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={hiddenGrades}
+                        data={absencesJustifications}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={hiddenGrades}
+                            data={absencesJustifications}
                             columns={columns}
                             search
                           >
@@ -547,7 +421,7 @@ handleSelect = (rowId, fieldName, selectedValue) => {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={hiddenGrades}
+                                  data={absencesJustifications}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "dbclick",
@@ -558,7 +432,7 @@ handleSelect = (rowId, fieldName, selectedValue) => {
                                       row,
                                       column
                                     ) => {
-                                      this.handlehiddenGradeDataChange(
+                                      this.handleAbsenceJustificationDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
@@ -566,12 +440,10 @@ handleSelect = (rowId, fieldName, selectedValue) => {
                                     },
                                   })}
                                   noDataIndication={this.props.t(
-                                    "No hiddenGrades found"
+                                    "No Absence Justification found"
                                   )}
                                   defaultSorted={defaultSorting}
-                                  filter={filterFactory()}
                                 />
-
                                 <Col className="pagination pagination-rounded justify-content-end mb-2">
                                   <PaginationListStandalone
                                     {...paginationProps}
@@ -594,26 +466,24 @@ handleSelect = (rowId, fieldName, selectedValue) => {
   }
 }
 
-const mapStateToProps = ({ hiddenGrades, menu_items, classScheduling }) => ({
-  hiddenGrades: hiddenGrades.hiddenGrades,
-  hidereasons: hiddenGrades.hidereasons,
-  deleted: hiddenGrades.deleted,
-
-  coursesOffering: classScheduling.coursesOffering,
-
+const mapStateToProps = ({ absencesJustifications, menu_items }) => ({
+  absencesJustifications: absencesJustifications.absencesJustifications,
+  deleted: absencesJustifications.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetHiddenGrades: () => dispatch(getHiddenGrades()),
-  onAddNewHiddenGrade: hiddenGrade => dispatch(addNewHiddenGrade(hiddenGrade)),
-  onUpdateHiddenGrade: hiddenGrade => dispatch(updateHiddenGrade(hiddenGrade)),
-  onDeleteHiddenGrade: hiddenGrade => dispatch(deleteHiddenGrade(hiddenGrade)),
-  onGetHiddenGradeDeletedValue: () => dispatch(getHiddenGradeDeletedValue()),
-  onGetHideReasons:()=>dispatch(getHideReasons())
+  onGetAbsencesJustifications: () => dispatch(getAbsencesJustifications()),
+  onAddNewAbsenceJustification: absenceJustification =>
+    dispatch(addNewAbsenceJustification(absenceJustification)),
+  onUpdateAbsenceJustification: absenceJustification =>
+    dispatch(updateAbsenceJustification(absenceJustification)),
+  onDeleteAbsenceJustification: absenceJustification =>
+    dispatch(deleteAbsenceJustification(absenceJustification)),
+  onGetAbsenceJustificationDeletedValue: () => dispatch(getAbsenceJustificationDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(HiddenGradesList));
+)(withTranslation()(AbsencesJustificationsList));

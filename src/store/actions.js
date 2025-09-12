@@ -95,6 +95,14 @@ export * from "./academyBuildingStructure/actions";
 //contractsTypes
 export * from "./HR/contractsTypes/actions";
 
+//absence
+//absencesTypes
+export * from "./absenceType/actions";
+
+//absenceJustification
+export * from "./absenceJustification/actions";
+
+
 //gradesVersions
 export * from "./gradesVersions/actions";
 
