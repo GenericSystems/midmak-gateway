@@ -28,7 +28,7 @@ export * from "./invoices/actions";
 export * from "./students-history/actions";
 
 //hiddenGrade
-export * from "./hide-grade/actions"
+export * from "./hide-grade/actions";
 
 //trainees
 export * from "./trainees/actions";
@@ -288,6 +288,10 @@ export * from "./students-requests/actions";
 
 export * from "./HR/contracts/actions";
 
+//ExamAttendance
+
+export * from "./examAttendance/actions";
+
 //Trainees
 export * from "./new-Trainee/actions";
 
@@ -325,6 +329,6 @@ export * from "./diploma-level/actions";
 //HighStudyType
 
 export * from "./high-study-types/actions";
- 
+
 //qualification-track
-export * from "./qualification-tracks/actions"
+export * from "./qualification-tracks/actions";

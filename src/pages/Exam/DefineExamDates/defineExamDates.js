@@ -62,13 +62,13 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-import periods from "store/periods/reducer";
-import defineExamDates from "store/Exam/DefineExamDates/reducer";
+import { getCoursesOffering } from "store/classScheduling/actions";
 class DefineExamDatesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       defineExamDates: [],
+      coursesOffering: [],
       selecteDefineExamDateId: 0,
       gradeTypes: [],
       allDaysArray: [],
@@ -96,6 +96,7 @@ class DefineExamDatesList extends Component {
       isAdd: false,
       selectedExamType: "",
       selectedDay: null,
+      selectedCourseName: null,
       selectedStudentsOrder: "",
       startDateError: false,
       endDateError: false,
@@ -116,6 +117,7 @@ class DefineExamDatesList extends Component {
       i18n,
       isLoading,
       defineExamDates,
+      coursesOffering,
       onGetDefineExamDates,
       onGetStudentsOrder,
       gradeTypes,
@@ -130,6 +132,9 @@ class DefineExamDatesList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetDefineExamDates(lang);
     onGetStudentsOrder();
+
+    this.props.onGetCourseOffering();
+
     this.setState({
       defineExamDates,
       definePeriods,
@@ -138,6 +143,7 @@ class DefineExamDatesList extends Component {
       studentsOrder,
       languageState: lang,
       isLoading,
+      coursesOffering,
     });
     i18n.on("languageChanged", this.handleLanguageChange);
   }
@@ -545,6 +551,7 @@ class DefineExamDatesList extends Component {
       t,
       deleted,
       isLoading,
+      coursesOffering,
     } = this.props;
     const {
       modal1,
@@ -566,6 +573,7 @@ class DefineExamDatesList extends Component {
       showEditButton,
       showSearchButton,
       selectedDay,
+      selectedCourseName,
       selectedExamType,
       selectedStudentsOrder,
       isShowPreReq,
@@ -1603,13 +1611,65 @@ class DefineExamDatesList extends Component {
                                       {!!isOpen1 ? t("Edit Exam Date") : ""}
                                     </ModalHeader>
                                     <ModalBody>
-                                      <Card id="employee-card">
-                                        <CardTitle id="course_header">
-                                          {t("Exam Days")}
-                                        </CardTitle>
-                                        <CardBody className="cardBody">
-                                          <Row>
-                                            {/* <Col lg="4">
+                                      <Formik
+                                        enableReinitialize={true}
+                                        initialValues={{
+                                          courseId:
+                                            (defineExamDate &&
+                                              defineExamDate.courseId) ||
+                                            "",
+                                          dayId:
+                                            (defineExamDate &&
+                                              defineExamDate.dayId) ||
+                                            "",
+                                        }}
+                                        validationSchema={Yup.object().shape({
+                                          arTitle: Yup.string()
+                                            .matches(
+                                              /^[أ-ي]+$/,
+                                              "Only Arabic letters are allowed"
+                                            )
+                                            .required(
+                                              "Please Enter Your Exam Name In Arabic"
+                                            ),
+                                          enTitle: Yup.string()
+                                            .matches(
+                                              /^[A-Za-z]+$/,
+                                              "Only English letters are allowed"
+                                            )
+                                            .required(
+                                              "Please Enter Exam Name In English"
+                                            ),
+                                          startDate: Yup.date().required(
+                                            "Please Enter Your Start Date"
+                                          ),
+                                          endDate: Yup.date()
+                                            .required(
+                                              "Please Enter Your End Date"
+                                            )
+                                            .min(
+                                              Yup.ref("startDate"),
+                                              "End date must be after start date"
+                                            ),
+                                        })}
+                                      >
+                                        {({
+                                          errors,
+                                          status,
+                                          touched,
+                                          values,
+                                          handleChange,
+                                          handleBlur,
+                                          setFieldValue,
+                                        }) => (
+                                          <Form>
+                                            <Card id="employee-card">
+                                              <CardTitle id="course_header">
+                                                {t("Exam Days")}
+                                              </CardTitle>
+                                              <CardBody className="cardBody">
+                                                <Row>
+                                                  {/* <Col lg="4">
                                               <Label
                                                 for="studentOrder-Id"
                                                 className="form-label d-flex"
@@ -1620,63 +1680,136 @@ class DefineExamDatesList extends Component {
                                                 </span>
                                               </Label>
                                             </Col> */}
-                                            <Col lg="12">
-                                              <div className="d-flex flex-wrap gap-3">
-                                                <div
-                                                  className="btn-group button-or"
-                                                  role="group"
-                                                >
-                                                  {allDaysArray &&
-                                                    allDaysArray.map(
-                                                      (status, index) => (
-                                                        <React.Fragment
-                                                          key={index}
-                                                        >
-                                                          <input
-                                                            type="radio"
-                                                            className={`btn-check ${
-                                                              selectedDay ===
-                                                              status.value
-                                                                ? "active"
-                                                                : ""
-                                                            }`}
-                                                            name="dayId"
-                                                            id={`btnradio${index}`}
-                                                            autoComplete="off"
-                                                            checked={
-                                                              selectedDay ===
-                                                              status.value
-                                                            }
-                                                            onChange={() =>
-                                                              setFieldValue(
-                                                                "dayId",
-                                                                status.value
-                                                              )
-                                                            }
-                                                          />
-                                                          <label
-                                                            className="btn btn-outline-primary smallButton w-sm"
-                                                            htmlFor={`btnradio${index}`}
+                                                  <Col lg="12">
+                                                    <div className="d-flex flex-wrap gap-3">
+                                                      <div
+                                                        className="btn-group button-or"
+                                                        role="group"
+                                                      >
+                                                        {allDaysArray &&
+                                                          allDaysArray.map(
+                                                            (status, index) => (
+                                                              <React.Fragment
+                                                                key={index}
+                                                              >
+                                                                <input
+                                                                  type="radio"
+                                                                  className={`btn-check ${
+                                                                    selectedDay ===
+                                                                    status.value
+                                                                      ? "active"
+                                                                      : ""
+                                                                  }`}
+                                                                  name="dayId"
+                                                                  id={`dayradio${index}`}
+                                                                  autoComplete="off"
+                                                                  checked={
+                                                                    selectedDay ===
+                                                                    status.value
+                                                                  }
+                                                                  onChange={() => {
+                                                                    setFieldValue(
+                                                                      "dayId",
+                                                                      status.value
+                                                                    );
+
+                                                                    this.setState(
+                                                                      {
+                                                                        selectedDay:
+                                                                          status.value,
+                                                                      }
+                                                                    );
+                                                                  }}
+                                                                />
+                                                                <label
+                                                                  className="btn btn-outline-primary smallButton w-sm"
+                                                                  htmlFor={`dayradio${index}`}
+                                                                >
+                                                                  {status.label}
+                                                                </label>
+                                                              </React.Fragment>
+                                                            )
+                                                          )}
+                                                      </div>
+                                                    </div>
+                                                  </Col>
+                                                </Row>
+                                              </CardBody>
+                                            </Card>
+                                            <Card>
+                                              <CardTitle>
+                                                {t("Courses")}
+                                              </CardTitle>
+                                              <CardBody>
+                                                <Row>
+                                                  {/* <Col lg="4">
+                                              <Label
+                                                for="studentOrder-Id"
+                                                className="form-label d-flex"
+                                              >
+                                                {this.props.t("Students Order")}
+                                                <span className="text-danger">
+                                                  *
+                                                </span>
+                                              </Label>
+                                            </Col> */}
+                                                  <Col lg="12">
+                                                    <div className="d-flex flex-wrap gap-2">
+                                                      {coursesOffering.map(
+                                                        (status, index) => (
+                                                          <React.Fragment
+                                                            key={index}
                                                           >
-                                                            {status.label}
-                                                          </label>
-                                                        </React.Fragment>
-                                                      )
-                                                    )}
-                                                </div>
-                                              </div>
-                                            </Col>
-                                          </Row>
-                                        </CardBody>
-                                      </Card>
-                                      <Card>
-                                        <CardTitle>{t("Courses")}</CardTitle>
-                                        <CardBody></CardBody>
-                                      </Card>
-                                      <Card>
-                                        <CardTitle>{t("Periods")}</CardTitle>
-                                        <CardBody></CardBody>
-                                      </Card>
+                                                            <input
+                                                              type="radio"
+                                                              className={`btn-check ${
+                                                                selectedCourseName ===
+                                                                status.value
+                                                                  ? "active"
+                                                                  : ""
+                                                              }`}
+                                                              name="courseId"
+                                                              id={`courseradio${index}`}
+                                                              autoComplete="off"
+                                                              checked={
+                                                                selectedCourseName ===
+                                                                status.value
+                                                              }
+                                                              onChange={() => {
+                                                                setFieldValue(
+                                                                  "courseId",
+                                                                  status.value
+                                                                );
+
+                                                                this.setState({
+                                                                  selectedCourseName:
+                                                                    status.value,
+                                                                });
+                                                              }}
+                                                            />
+                                                            <label
+                                                              className="btn btn-outline-primary smallButton w-sm"
+                                                              htmlFor={`courseradio${index}`}
+                                                            >
+                                                              {status.label}
+                                                            </label>
+                                                          </React.Fragment>
+                                                        )
+                                                      )}
+                                                    </div>
+                                                  </Col>
+                                                </Row>
+                                              </CardBody>
+                                            </Card>
+                                            <Card>
+                                              <CardTitle>
+                                                {t("Periods")}
+                                              </CardTitle>
+                                              <CardBody></CardBody>
+                                            </Card>
+                                          </Form>
+                                        )}
+                                      </Formik>
                                     </ModalBody>
                                   </Modal>
                                 </React.Fragment>
@@ -1697,8 +1830,14 @@ class DefineExamDatesList extends Component {
   }
 }
 
-const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
+const mapStateToProps = ({
+  menu_items,
+  gradeTypes,
+  classScheduling,
+  defineExamDates,
+}) => ({
   defineExamDates: defineExamDates.defineExamDates,
+  coursesOffering: classScheduling.coursesOffering,
   studentsOrder: defineExamDates.studentsOrder,
   definePeriods: defineExamDates.definePeriods,
   lastAddedId: defineExamDates.lastAddedId,
@@ -1711,6 +1850,7 @@ const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onGetDefineExamDates: () => dispatch(getDefineExamDates()),
+  onGetCourseOffering: () => dispatch(getCoursesOffering()),
   onGetStudentsOrder: () => dispatch(getStudentsOrder()),
   onAddNewDefineExamDate: defineExamDate =>
     dispatch(addNewDefineExamDate(defineExamDate)),

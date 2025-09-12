@@ -14,6 +14,7 @@ import {
   UPDATE_DEFINE_PERIOD,
   DELETE_DEFINE_PERIOD,
 } from "./actionTypes";
+import { GET_COURSES_OFFERING } from "../../classScheduling/actionTypes";
 
 import {
   getDefineExamDatesSuccess,
@@ -41,6 +42,11 @@ import {
 } from "./actions";
 
 import {
+  getCoursesOfferingSuccess,
+  getCoursesOfferingFail,
+} from "../../classScheduling/actions";
+
+import {
   getGradeTypesSuccess,
   getGradeTypesFail,
 } from "../../grade-types/actions";
@@ -59,6 +65,7 @@ import {
   addNewDefinePeriod,
   updateDefinePeriod,
   deleteDefinePeriod,
+  getCoursesOffering,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchDefineExamDates(selectedpayload) {
@@ -124,6 +131,24 @@ function* fetchStudentsOrder() {
     yield put(getStudentsOrderSuccess(response));
   } catch (error) {
     yield put(getStudentsOrderFail(error));
+  }
+}
+
+function* fetchCourseName() {
+  const get_Course_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_CourseOffering",
+    filter: `isOffered = 1`,
+    fields: "Id,arTitle,Code",
+  };
+  try {
+    const response = yield call(getCoursesOffering, get_Course_req);
+    console.log("11111111111", response);
+    yield put(getCoursesOfferingSuccess(response));
+  } catch (error) {
+    yield put(getCoursesOfferingFail(error));
   }
 }
 
@@ -281,6 +306,7 @@ function* onGetDefinePeriodDeletedValue() {
 
 function* DefineExamDatesSaga() {
   yield takeEvery(GET_DEFINE_EXAM_DATES, fetchDefineExamDates);
+  yield takeEvery(GET_COURSES_OFFERING, fetchCourseName);
   yield takeEvery(
     GET_DEFINE_EXAM_DATE_DELETED_VALUE,
     onGetDefineExamDateDeletedValue

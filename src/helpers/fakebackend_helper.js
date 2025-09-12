@@ -2085,24 +2085,19 @@ export const getDocumentTypeDeletedValue = () =>
 // update documentType
 export const updateDocumentType = data => post(url.UPDATE_DOCUMENT_TYPE, data);
 
-
-
 //hiddenGrade
 
 export const getHiddenGrades = data => post(url.GET_HIDDEN_GRADES, data);
 
-
-// add 
+// add
 export const addNewHiddenGrade = data => post(url.ADD_NEW_HIDDEN_GRADE, data);
 
 // HIDDEN_GRADE
 export const getHiddenGradeDeletedValue = () =>
   get(url.GET_HIDDEN_GRADE_DELETED_VALUE);
 
-// update 
+// update
 export const updateHiddenGrade = data => post(url.UPDATE_HIDDEN_GRADE, data);
-
-
 
 //EMPLOYMENT_CASE
 export const getEmploymentCases = data => post(url.GET_EMPLOYMENT_CASES, data);
@@ -2210,6 +2205,26 @@ export const updateContract = data => post(url.UPDATE_CONTRACT, data);
 
 //delete Contract
 export const deleteContract = data => post(url.DELETE_CONTRACT, data);
+
+//ExamAttendance
+export const getExamsAttendance = data => post(url.GET_EXAMS_ATTENDANCE, data);
+
+// add ExamAttendance
+
+export const addNewExamAttendance = data =>
+  post(url.ADD_NEW_EXAM_ATTENDANCE, data);
+
+//ExamAttendance
+export const getExamAttendanceDeletedValue = () =>
+  get(url.GET_EXAM_ATTENDANCE_DELETED_VALUE);
+
+//update ExamAttendance
+export const updateExamAttendance = data =>
+  post(url.UPDATE_EXAM_ATTENDANCE, data);
+
+//delete ExamAttendance
+export const deleteExamAttendance = data =>
+  post(url.DELETE_EXAM_ATTENDANCE, data);
 //DefineExamDate
 export const getDefineExamDates = data => post(url.GET_DEFINE_EXAM_DATES, data);
 

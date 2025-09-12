@@ -1025,7 +1025,6 @@ export const ADD_NEW_DOCUMENT_TYPE = "/add/documentType";
 export const UPDATE_DOCUMENT_TYPE = "/update/documentType";
 export const DELETE_DOCUMENT_TYPE = "/delete/documentType";
 
-
 //HIDE_GRADES
 export const GET_HIDDEN_GRADES = "/hiddenGrades";
 export const GET_HIDDEN_GRADE_DELETED_VALUE = "/deleted";
@@ -1089,6 +1088,13 @@ export const GET_CONTRACT_DELETED_VALUE = "/deleted";
 export const ADD_NEW_CONTRACT = "/add/contract";
 export const UPDATE_CONTRACT = "/update/contract";
 export const DELETE_CONTRACT = "/deleted/contract";
+
+//ExamAttendance
+export const GET_EXAMS_ATTENDANCE = "/examAttendance";
+export const GET_EXAM_ATTENDANCE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_EXAM_ATTENDANCE = "/add/ExamAttendance";
+export const UPDATE_EXAM_ATTENDANCE = "/update/ExamAttendance";
+export const DELETE_EXAM_ATTENDANCE = "/deleted/ExamAttendance";
 
 export const GET_ADMINISTRATIVE_SUPERVISORS_OPT = "/administrativeSupervisors";
 export const GET_PHYSIACL_WORK_LOCATIONS_OPT = "/physicalWorkLocationsOpt";

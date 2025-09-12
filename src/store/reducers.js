@@ -81,8 +81,7 @@ import userTypes from "./user-types/reducer";
 import certificates from "./certificates/reducer";
 
 //qualificationTypes
-import qualificationTracks from "./qualification-tracks/reducer"
-
+import qualificationTracks from "./qualification-tracks/reducer";
 
 //certificateTypes
 import certificateTypes from "./certificateTypes/reducer";
@@ -300,6 +299,9 @@ import studentsRequests from "./students-requests/reducer";
 //contract
 import contracts from "./HR/contracts/reducer";
 
+//contract
+import examsAttendance from "./examAttendance/reducer";
+
 //tempTrainees
 import tempTrainees from "./new-Trainee/reducer";
 
@@ -417,7 +419,7 @@ const rootReducer = combineReducers({
   studentsInfo,
   academyInfo,
   qualificationTracks,
- 
+
   menu_items,
   trainingMembers,
   warningRules,
@@ -437,6 +439,7 @@ const rootReducer = combineReducers({
   workClassifications,
   employees,
   contracts,
+  examsAttendance,
   examRooms,
   defineExamDates,
   academyBuildingStructures,

@@ -213,6 +213,9 @@ import DecisionsList from "../pages/HR/decisions/decisions";
 //Contracts
 import ContractsList from "../pages/HR/contracts/contracts";
 
+//ExamsAttendance
+import ExamsAttendance from "../pages/Exam/ExamAttendance/examAttendance";
+
 //Applicants
 import ApplicantsList from "../pages/Addmission/Applicants/applicants";
 
@@ -369,6 +372,10 @@ const authProtectedRoutes = [
   // contracts
 
   { path: "/contracts", component: ContractsList },
+
+  // ExamsAttendance
+
+  { path: "/examsAttendance", component: ExamsAttendance },
 
   //hidden grades
   { path: "/hide-grades", component: HiddenGradesList },

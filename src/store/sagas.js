@@ -100,6 +100,7 @@ import letterGradesSaga from "./letter-grade/saga";
 import transportLinesSaga from "./transportLines/saga";
 import StudentsRequestsSaga from "./students-requests/saga";
 import ContractsSaga from "./HR/contracts/saga";
+import ExamsAttendanceSaga from "./examAttendance/saga";
 import DefineExamDatesSaga from "./Exam/DefineExamDates/saga";
 import WarningsTypesSaga from "./HR/warningsTypes/saga";
 import RewardsTypesSaga from "./HR/rewardsTypes/saga";
@@ -232,6 +233,7 @@ export default function* rootSaga() {
     fork(StudentsHistorySaga),
     fork(StudentsRequestsSaga),
     fork(ContractsSaga),
+    fork(ExamsAttendanceSaga),
     fork(DefineExamDatesSaga),
     fork(academyBuildingStructureSaga),
     fork(WarningsTypesSaga),

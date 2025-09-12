@@ -88,6 +88,7 @@ class ExamRoomsList extends Component {
       examRooms,
       defineExamDates,
       onGetDefineExamDates,
+
       levels,
       user_menu,
       i18n,
@@ -234,6 +235,29 @@ class ExamRoomsList extends Component {
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
   };
+
+  handleExamRoomDataChange = (rowId, fieldName, fieldValue) => {
+    const { examRooms, onUpdateExamRoom } = this.props;
+
+    const isDuplicate = examRooms.some(examRoom => {
+      return (
+        examRoom.Id !== rowId &&
+        examRoom.examCapacity.trim() === fieldValue.trim()
+      );
+    });
+
+    if (isDuplicate) {
+      const errorMessage = this.props.t("Value already exists");
+      this.setState({ duplicateError: errorMessage });
+      let onUpdate = { Id: rowId, [fieldName]: "-----" };
+      onUpdateExamRoom(onUpdate);
+    } else {
+      this.setState({ duplicateError: null });
+      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+      onUpdateExamRoom(onUpdate);
+    }
+  };
+
   render() {
     const {
       languageState,
@@ -262,7 +286,7 @@ class ExamRoomsList extends Component {
       },
 
       {
-        dataField: "arTitle",
+        dataField: "hallArName",
         text: this.props.t("hall Name"),
         // formatter: (cell, row) => (
         //   <Select
@@ -285,7 +309,7 @@ class ExamRoomsList extends Component {
       },
 
       {
-        key: "defineExamDateNum",
+        key: "hallNum",
         dataField: "defineExamDateNum",
         text: this.props.t("Hall No."),
         editable: false,
@@ -449,14 +473,27 @@ class ExamRoomsList extends Component {
                               )}
                               <BootstrapTable
                                 keyField="Id"
-                                data={defineExamDates.filter(
-                                  d => d.Id === defineExamDate.Id
-                                )}
+                                // data={defineExamDates.filter(
+                                //   d => d.Id === defineExamDate.Id
+                                // )}
+                                data={examRooms}
                                 columns={columns}
                                 filter={filterFactory()}
                                 cellEdit={cellEditFactory({
-                                  mode: "click",
+                                  mode: "dbclick",
                                   blurToSave: true,
+                                  afterSaveCell: (
+                                    oldValue,
+                                    newValue,
+                                    row,
+                                    column
+                                  ) => {
+                                    this.handleExamRoomDataChange(
+                                      row.Id,
+                                      column.dataField,
+                                      newValue
+                                    );
+                                  },
                                 })}
                                 noDataIndication={this.props.t(
                                   "No trainee found"
