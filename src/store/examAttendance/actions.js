@@ -2,6 +2,9 @@ import {
   GET_EXAMS_ATTENDANCE,
   GET_EXAMS_ATTENDANCE_FAIL,
   GET_EXAMS_ATTENDANCE_SUCCESS,
+  GET_ATTEND_STATUS,
+  GET_ATTEND_STATUS_FAIL,
+  GET_ATTEND_STATUS_SUCCESS,
   ADD_NEW_EXAM_ATTENDANCE,
   ADD_EXAM_ATTENDANCE_SUCCESS,
   ADD_EXAM_ATTENDANCE_FAIL,
@@ -89,5 +92,20 @@ export const getExamAttendanceDeletedValueSuccess = deleted => ({
 
 export const getExamAttendanceDeletedValueFail = error => ({
   type: GET_EXAM_ATTENDANCE_DELETED_VALUE_FAIL,
+  payload: error,
+});
+
+export const getAttendStatus = () => ({
+  type: GET_ATTEND_STATUS,
+  // payload: examsAttendance,
+});
+
+export const getAttendStatusSuccess = attendStatus => ({
+  type: GET_ATTEND_STATUS_SUCCESS,
+  payload: attendStatus,
+});
+
+export const getAttendStatusFail = error => ({
+  type: GET_ATTEND_STATUS_FAIL,
   payload: error,
 });

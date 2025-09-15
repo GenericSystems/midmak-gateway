@@ -1003,9 +1003,7 @@ class ApplicantsList extends Component {
       } else if (isAdd) {
         onAddNewTempTrainee(traineeinfo);
       }
-      const saveTempTraineeMessage = this.props.t(
-        "TempTrainee saved successfully"
-      );
+      const saveTempTraineeMessage = this.props.t("Trainee saved successfully");
       this.setState({
         successMessage: saveTempTraineeMessage,
       });

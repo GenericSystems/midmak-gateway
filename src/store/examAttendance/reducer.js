@@ -9,10 +9,13 @@ import {
   DELETE_EXAM_ATTENDANCE_FAIL,
   GET_EXAM_ATTENDANCE_DELETED_VALUE_SUCCESS,
   GET_EXAM_ATTENDANCE_DELETED_VALUE_FAIL,
+  GET_ATTEND_STATUS_SUCCESS,
+  GET_ATTEND_STATUS_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   examsAttendance: [],
+  attendStatus: [],
   error: {},
 };
 
@@ -81,6 +84,19 @@ const examsAttendance = (state = INIT_STATE, action) => {
       };
 
     case GET_EXAM_ATTENDANCE_DELETED_VALUE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_ATTEND_STATUS_SUCCESS:
+      return {
+        ...state,
+        attendStatus: action.payload,
+        deleted: {},
+      };
+
+    case GET_ATTEND_STATUS_FAIL:
       return {
         ...state,
         error: action.payload,

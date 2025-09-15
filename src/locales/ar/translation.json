@@ -597,26 +597,33 @@
   "Fail Percent(Exclude W)": "نسبة الرسوب (دون الانسحاب)",
   "Withdraw Percent": "نسبة الانسحاب",
   "Archiving Percent": "نسبة الأرشفة",
- 
-
-  
-   "Absence Type(ar)":"نوع الغياب (عربي)",
-   "Absence Type(en)":"نوع الغياب (انكليزي)",
-   "Weight":"تأثير الغياب",
-   "Absences Type":"أنواع الغياب",
-   "No Absence Type found":"لا يوجد أنواع غياب",
-   "Absence Reason(ar)":"سبب الغياب (عربي)",
-   "Absence Reason(en)":"سبب الغياب(انكليزي)",
-   "Absences Justification":"مبررات الغياب",
-   "No Absence Justification found":"لا يوجد مبررات غياب",
-   "Acceptable":"مبرر"
-
- 
-
-
-
-
-
-
-
+  "Absence Type(ar)": "نوع الغياب (عربي)",
+  "Absence Type(en)": "نوع الغياب (انكليزي)",
+  "Weight": "تأثير الغياب",
+  "Absences Type": "أنواع الغياب",
+  "No Absence Type found": "لا يوجد أنواع غياب",
+  "Absence Reason(ar)": "سبب الغياب (عربي)",
+  "Absence Reason(en)": "سبب الغياب(انكليزي)",
+  "Absences Justification": "مبررات الغياب",
+  "No Absence Justification found": "لا يوجد مبررات غياب",
+  "Period": "الفترة",
+  "Course": "المقرر",
+  "Observer": "المراقب",
+  "Employee Name": "اسم الموظف",
+  "Exam Date": "تاريخ الامتحان",
+  "Exam Period": "توقيت الامتحان",
+  "Responsibility": "المسؤولية",
+  "Attend Status": "الحالة",
+  "Exam Alternative": "تحديد بديل المراقب",
+  "Exam Time": "فترة الامتحان",
+  "Attend Status Edit": "تعديل الحالة ",
+  "Alt Observer": "المراقب البديل",
+  "Search Criteria": "معايير البحث",
+  "ExamAttendanceObservers": "تسجيل الحضور(المراقبين)",
+  "Attend Type": "وضع الحضور",
+  "Trainees Count": "عدد المتدربين",
+  "Room Details": "تفاصيل القاعة",
+  "Print": "طباعة",
+  "Postition": "رقم المقعد",
+  "Acceptable": "مبرر"
 }

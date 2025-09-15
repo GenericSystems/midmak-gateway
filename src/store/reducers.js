@@ -246,11 +246,9 @@ import academyBuildingStructures from "./academyBuildingStructure/reducer";
 import contractsTypes from "./HR/contractsTypes/reducer";
 
 //absenceTypes
-import absencesTypes from "./absenceType/reducer"
+import absencesTypes from "./absenceType/reducer";
 //absenceJustification
-import absencesJustifications from "./absenceJustification/reducer"
-
-
+import absencesJustifications from "./absenceJustification/reducer";
 
 // gradesVersions
 import gradesVersions from "./gradesVersions/reducer";
@@ -263,6 +261,9 @@ import absenceWarnings from "./Rules-and-Regulations/Absence-warnings/reducer";
 
 // ExamRooms
 import examRooms from "./Exam/ExamRooms/reducer";
+
+// ExamObservers
+import examObservers from "./examObservers/reducer";
 
 // defineExamDates
 import defineExamDates from "./Exam/DefineExamDates/reducer";
@@ -306,8 +307,14 @@ import studentsRequests from "./students-requests/reducer";
 //contract
 import contracts from "./HR/contracts/reducer";
 
-//contract
+//ExamsAttendance
 import examsAttendance from "./examAttendance/reducer";
+
+//ExamsAttendanceObserver
+import attendanceObservers from "./examAttendanceObservers/reducer";
+
+//HallSchedule
+import hallSchedules from "./hallSchedules/reducer";
 
 //tempTrainees
 import tempTrainees from "./new-Trainee/reducer";
@@ -449,7 +456,10 @@ const rootReducer = combineReducers({
   employees,
   contracts,
   examsAttendance,
+  attendanceObservers,
+  hallSchedules,
   examRooms,
+  examObservers,
   defineExamDates,
   academyBuildingStructures,
   warningsTypes,

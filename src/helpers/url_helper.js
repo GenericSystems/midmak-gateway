@@ -207,6 +207,13 @@ export const ADD_NEW_EXAM_ROOM = "/add/examRoom";
 export const UPDATE_EXAM_ROOM = "/update/examRoom";
 export const DELETE_EXAM_ROOM = "/delete/examRoom";
 
+//EXAM_OBSERVERS
+export const GET_EXAM_OBSERVERS = "/examObservers";
+export const GET_EXAM_OBSERVER_PROFILE = "/examObserver";
+export const ADD_NEW_EXAM_OBSERVER = "/add/examObserver";
+export const UPDATE_EXAM_OBSERVER = "/update/examObserver";
+export const DELETE_EXAM_OBSERVER = "/delete/examObserver";
+
 //SECTORS
 export const GET_SECTORS = "/sectors";
 export const GET_SECTOR_PROFILE = "/sector";
@@ -1005,7 +1012,6 @@ export const ADD_NEW_ABSENCE_JUSTIFICATION = "/add/absenceJustification";
 export const UPDATE_ABSENCE_JUSTIFICATION = "/update/absenceJustification";
 export const DELETE_ABSENCE_JUSTIFICATION = "/delete/absenceJustification";
 
-
 //qualificaqtion_track
 export const GET_QUALIFICATIONS_TRACKS = "/qualificationTracks";
 export const GET_QUALIFICATION_TRACK_DELETED_VALUE = "/deleted";
@@ -1045,7 +1051,7 @@ export const GET_HIDDEN_GRADE_DELETED_VALUE = "/deleted";
 export const ADD_NEW_HIDDEN_GRADE = "/add/hiddenGrades";
 export const UPDATE_HIDDEN_GRADE = "/update/hiddenGrades";
 export const DELETE_HIDDEN_GRADE = "/delete/hiddenGrades";
-export const GET_HIDE_REASONS = "/hideReasons"
+export const GET_HIDE_REASONS = "/hideReasons";
 
 //ABSCENCE_WARNINGS
 export const GET_ABSENCE_WARNINGS = "/absenceWarnings";
@@ -1104,12 +1110,30 @@ export const ADD_NEW_CONTRACT = "/add/contract";
 export const UPDATE_CONTRACT = "/update/contract";
 export const DELETE_CONTRACT = "/deleted/contract";
 
+//attend status
+export const GET_ATTEND_STATUS = "/attendStatus";
+
 //ExamAttendance
 export const GET_EXAMS_ATTENDANCE = "/examAttendance";
 export const GET_EXAM_ATTENDANCE_DELETED_VALUE = "/deleted";
 export const ADD_NEW_EXAM_ATTENDANCE = "/add/ExamAttendance";
 export const UPDATE_EXAM_ATTENDANCE = "/update/ExamAttendance";
 export const DELETE_EXAM_ATTENDANCE = "/deleted/ExamAttendance";
+
+//examAttendanceObservers
+export const GET_EXAM_ATTENDANCE_OBSERVERS = "/examAttendanceObservers";
+export const GET_EXAM_ATTENDANCE_OBSERVER_DELETED_VALUE = "/deleted";
+export const ADD_NEW_EXAM_ATTENDANCE_OBSERVER = "/add/examAttendanceObserver";
+export const UPDATE_EXAM_ATTENDANCE_OBSERVER = "/update/examAttendanceObserver";
+export const DELETE_EXAM_ATTENDANCE_OBSERVER =
+  "/deleted/examAttendanceObserver";
+
+//HallSchedule
+export const GET_HALL_SCHEDULES = "/HallSchedules";
+export const GET_HALL_SCHEDULE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_HALL_SCHEDULE = "/add/HallSchedule";
+export const UPDATE_HALL_SCHEDULE = "/update/HallSchedule";
+export const DELETE_HALL_SCHEDULE = "/deleted/HallSchedule";
 
 export const GET_ADMINISTRATIVE_SUPERVISORS_OPT = "/administrativeSupervisors";
 export const GET_PHYSIACL_WORK_LOCATIONS_OPT = "/physicalWorkLocationsOpt";

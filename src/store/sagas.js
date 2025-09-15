@@ -94,6 +94,7 @@ import gradesVersionsSaga from "./gradesVersions/saga";
 import hiddenGradesSaga from "./hide-grade/saga";
 
 import ExamRoomsSaga from "./Exam/ExamRooms/saga";
+import ExamObserversSaga from "./examObservers/saga";
 import employmentCasesSaga from "./HR/employmentCases/saga";
 import workClassificationsSaga from "./HR/workClassifications/saga";
 import employeesSaga from "./HR/employees/saga";
@@ -103,6 +104,8 @@ import transportLinesSaga from "./transportLines/saga";
 import StudentsRequestsSaga from "./students-requests/saga";
 import ContractsSaga from "./HR/contracts/saga";
 import ExamsAttendanceSaga from "./examAttendance/saga";
+import ExamAttendanceObserverSaga from "./examAttendanceObservers/saga";
+import HallSchedulesSaga from "./hallSchedules/saga";
 import DefineExamDatesSaga from "./Exam/DefineExamDates/saga";
 import WarningsTypesSaga from "./HR/warningsTypes/saga";
 import RewardsTypesSaga from "./HR/rewardsTypes/saga";
@@ -227,6 +230,7 @@ export default function* rootSaga() {
     fork(certificateGradesSaga),
     fork(contractsTypesSaga),
     fork(ExamRoomsSaga),
+    fork(ExamObserversSaga),
     fork(employmentCasesSaga),
     fork(workClassificationsSaga),
     fork(employeesSaga),
@@ -238,6 +242,8 @@ export default function* rootSaga() {
     fork(StudentsRequestsSaga),
     fork(ContractsSaga),
     fork(ExamsAttendanceSaga),
+    fork(ExamAttendanceObserverSaga),
+    fork(HallSchedulesSaga),
     fork(DefineExamDatesSaga),
     fork(academyBuildingStructureSaga),
     fork(WarningsTypesSaga),

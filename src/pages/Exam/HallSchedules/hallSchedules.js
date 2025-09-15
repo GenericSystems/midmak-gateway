@@ -27,12 +27,12 @@ import Select from "react-select";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import {
-  getExamsAttendance,
-  addNewExamAttendance,
-  updateExamAttendance,
-  deleteExamAttendance,
-  getExamAttendanceDeletedValue,
-} from "store/examAttendance/actions";
+  getHallSchedules,
+  addNewHallSchedule,
+  updateHallSchedule,
+  deleteHallSchedule,
+  getHallScheduleDeletedValue,
+} from "store/hallSchedules/actions";
 import { getUserTypesOpt } from "store/user-types/actions";
 
 import * as Yup from "yup";
@@ -54,12 +54,12 @@ import {
 } from "../../../utils/menuUtils";
 import QRCode from "qrcode";
 
-class ExamsAttendance extends Component {
+class HallSchedules extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      examsAttendance: [],
-      examAttendance: "",
+      hallSchedules: [],
+      hallSchedule: "",
       selectedCertLevel: null,
       deleteModal: false,
       duplicateError: null,
@@ -90,15 +90,15 @@ class ExamsAttendance extends Component {
 
   componentDidMount() {
     const {
-      examsAttendance,
-      examAttendanceTypes,
+      hallSchedules,
+      hallScheduleTypes,
       deleted,
       user_menu,
       userTypesOpt,
       sectors,
       years,
       attendStatus,
-      filteredExamAttendanceGrades,
+      filteredHallScheduleGrades,
       filteredMembers,
       onGetUsers,
     } = this.props;
@@ -106,18 +106,18 @@ class ExamsAttendance extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (examsAttendance && !examsAttendance.length) {
+    if (hallSchedules && !hallSchedules.length) {
       // onGetUsers();
     }
-    this.props.onGetExamsAttendance();
+    this.props.onGetHallSchedules();
     this.setState({
       attendStatus,
-      examsAttendance,
-      examAttendanceTypes,
+      hallSchedules,
+      hallScheduleTypes,
       deleted,
       userTypesOpt,
       sectors,
-      filteredExamAttendanceGrades,
+      filteredHallScheduleGrades,
       filteredMembers,
       years,
     });
@@ -199,7 +199,7 @@ class ExamsAttendance extends Component {
 
   handleAddRow = () => {
     this.setState({
-      examAttendance: "",
+      hallSchedule: "",
       isEdit: false,
     });
     this.toggle();
@@ -210,10 +210,10 @@ class ExamsAttendance extends Component {
   };
 
   handleDeleteRow = () => {
-    const { onDeleteExamAttendance } = this.props;
+    const { onDeleteHallSchedule } = this.props;
     const { selectedRowId } = this.state;
     if (selectedRowId !== null) {
-      onDeleteExamAttendance({ Id: selectedRowId });
+      onDeleteHallSchedule({ Id: selectedRowId });
 
       this.setState({
         selectedRowId: null,
@@ -222,42 +222,42 @@ class ExamsAttendance extends Component {
       });
     }
   };
-  handleExamAttendanceDataChange = (rowId, fieldName, fieldValue) => {
-    const { examsAttendance, onUpdateExamAttendance } = this.props;
-    const isDuplicate = examsAttendance.some(
-      examAttendance =>
-        examAttendance.Id !== rowId &&
-        examAttendance.arTitle.trim() === fieldValue.trim()
+  handleHallScheduleDataChange = (rowId, fieldName, fieldValue) => {
+    const { hallSchedules, onUpdateHallSchedule } = this.props;
+    const isDuplicate = hallSchedules.some(
+      hallSchedule =>
+        hallSchedule.Id !== rowId &&
+        hallSchedule.arTitle.trim() === fieldValue.trim()
     );
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateExamAttendance(onUpdate);
+      onUpdateHallSchedule(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateExamAttendance(onUpdate);
+      onUpdateHallSchedule(onUpdate);
     }
   };
 
   handleSuccessClose = () => {
-    const { onGetExamAttendanceDeletedValue } = this.props;
+    const { onGetHallScheduleDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetExamAttendanceDeletedValue();
+    onGetHallScheduleDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetExamAttendanceDeletedValue } = this.props;
+    const { onGetHallScheduleDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetExamAttendanceDeletedValue();
+    onGetHallScheduleDeletedValue();
   };
 
   /*   handleSelectChange = (rowId, fieldName, selectedValue) => {
-    const { onUpdateExamAttendance } = this.props;
+    const { onUpdateHallSchedule } = this.props;
     let onUpdate = { Id: rowId, [fieldName]: selectedValue };
-    onUpdateExamAttendance(onUpdate);
+    onUpdateHallSchedule(onUpdate);
   }; */
 
   toggle = () => {
@@ -280,8 +280,8 @@ class ExamsAttendance extends Component {
   //   } else if (fieldName == "userTypeId") {
   //     console.log("selected value", selectedValue);
 
-  //     const { onGetExamsAttendance } = this.props;
-  //     onGetExamsAttendance({ userTypeId: selectedValue });
+  //     const { onGetHallSchedules } = this.props;
+  //     onGetHallSchedules({ userTypeId: selectedValue });
   //     this.setState({
   //       selectedUserType: selectedValue,
   //     });
@@ -289,9 +289,9 @@ class ExamsAttendance extends Component {
   //     this.setState({
   //       selectedMemberGrade: selectedValue,
   //     });
-  //   } else if (fieldName == "examAttendanceTypeId") {
+  //   } else if (fieldName == "hallScheduleTypeId") {
   //     this.setState({
-  //       selectedExamAttendanceType: selectedValue,
+  //       selectedHallScheduleType: selectedValue,
   //     });
   //   } else if (fieldName == "yearId") {
   //     this.setState({
@@ -311,21 +311,21 @@ class ExamsAttendance extends Component {
       isEdit,
       selectedUserType,
       selectedMember,
-      selectedExamAttendanceType,
+      selectedHallScheduleType,
       selectedMemberGrade,
       selectedSector,
       selectedYear,
-      examAttendance,
+      hallSchedule,
       sectorsArray,
     } = this.state;
-    const { onAddNewExamAttendance, onUpdateExamAttendance, examsAttendance } =
+    const { onAddNewHallSchedule, onUpdateHallSchedule, hallSchedules } =
       this.props;
     console.log("values", values);
 
     values["yearId"] = selectedYear;
     values["trainerId"] = selectedMember;
     values["userTypeId"] = selectedUserType;
-    values["examAttendanceTypeId"] = selectedExamAttendanceType;
+    values["hallScheduleTypeId"] = selectedHallScheduleType;
     values["trainerGradeId"] = selectedMemberGrade;
     values["sector"] = sectorsArray;
 
@@ -342,7 +342,7 @@ class ExamsAttendance extends Component {
       selectedUserType !== null &&
       selectedMember !== null &&
       selectedYear !== null &&
-      selectedExamAttendanceType !== null &&
+      selectedHallScheduleType !== null &&
       selectedMemberGrade !== null &&
       sectorsArray.length !== 0
     ) {
@@ -355,12 +355,12 @@ class ExamsAttendance extends Component {
           sectionInfo[key] = values[key];
       });
       if (isEdit) {
-        onUpdateExamAttendance(sectionInfo);
+        onUpdateHallSchedule(sectionInfo);
       } else {
-        onAddNewExamAttendance(sectionInfo);
+        onAddNewHallSchedule(sectionInfo);
       }
       this.setState({
-        selectedAcademicExamAttendance: null,
+        selectedAcademicHallSchedule: null,
         errorMessages: {},
       });
       this.toggle();
@@ -382,19 +382,19 @@ class ExamsAttendance extends Component {
       if (sectorsArray.length == 0) {
         emptyError = "Fill the empty select";
       }
-      if (selectedExamAttendanceType === undefined) {
+      if (selectedHallScheduleType === undefined) {
         emptyError = "Fill the empty select";
       }
       this.setState({ emptyError: emptyError });
     }
   };
 
-  handleExamAttendanceClick = arg => {
-    const { examAttendance } = this.state;
+  handleHallDetails = arg => {
+    const { hallSchedule } = this.state;
     console.log("arg", arg);
 
     this.setState({
-      examAttendance: arg,
+      hallSchedule: arg,
       isEdit: true,
     });
 
@@ -409,9 +409,9 @@ class ExamsAttendance extends Component {
 
   handleSearch = () => {
     const { exam, period, course, room, observer } = this.state;
-    const { examsAttendance } = this.props;
+    const { hallSchedules } = this.props;
 
-    const filtered = examsAttendance.filter(row => {
+    const filtered = hallSchedules.filter(row => {
       return (
         (!exam || row.exam === exam) &&
         (!period || row.period === period) &&
@@ -435,15 +435,15 @@ class ExamsAttendance extends Component {
       };
     }
 
-    // onUpdateExamAttendance(onUpdate);
+    // onUpdateHallSchedule(onUpdate);
   };
 
   handlePrint = arg => {
-    const { examAttendance } = this.state;
+    const { hallSchedule } = this.state;
     console.log("arg", arg);
 
     this.setState({
-      examAttendance: arg,
+      hallSchedule: arg,
       isPrint: true,
     });
 
@@ -454,14 +454,14 @@ class ExamsAttendance extends Component {
     const { filteredData } = this.state;
     const { SearchBar } = Search;
     const {
-      examsAttendance,
+      hallSchedules,
       user_menu,
       deleted,
       userTypesOpt,
       years,
       sectors,
-      examAttendanceTypes,
-      filteredExamAttendanceGrades,
+      hallScheduleTypes,
+      filteredHallScheduleGrades,
       filteredMembers,
       t,
       attendStatus,
@@ -469,7 +469,7 @@ class ExamsAttendance extends Component {
     const {
       modal,
       modal1,
-      examAttendance,
+      hallSchedule,
       isEdit,
       isPrint,
       academicCodeError,
@@ -525,7 +525,7 @@ class ExamsAttendance extends Component {
       },
 
       {
-        dataField: "examAttendanceType",
+        dataField: "hallScheduleType",
         text: this.props.t("Day"),
         sort: true,
 
@@ -559,22 +559,16 @@ class ExamsAttendance extends Component {
       },
       {
         dataField: "Room",
-        text: this.props.t("Sector"),
+        text: this.props.t("Room"),
         sort: true,
         editable: false,
-        formatter: (cellContent, row) => {
-          if (row.sector && Array.isArray(row.sector)) {
-            return row.sector.map(item => item.label).join(", ");
-          }
-          return "";
-        },
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
         }),
       },
       {
-        dataField: "examAttendanceYear",
+        dataField: "hallScheduleYear",
         text: this.props.t("Trainees Count"),
         sort: true,
         editable: false,
@@ -590,14 +584,14 @@ class ExamsAttendance extends Component {
         //   hidden: !showDeleteButton,
         isDummyField: true,
         editable: false, // Set the "Action" column to not editable
-        formatter: (cellContent, examAttendance) => (
+        formatter: (cellContent, hallSchedule) => (
           <div className="d-flex gap-3">
             <Tooltip title={this.props.t("Room Details")} placement="top">
               <Link className="text-secondary" to="#">
                 <i
                   className="bx bx-bx bxs-report"
-                  id="roomDetails"
-                  onClick={() => this.handleExamAttendanceClick(examAttendance)}
+                  id="printtooltip"
+                  onClick={() => this.handleHallDetails(hallSchedule)}
                 ></i>
               </Link>
             </Tooltip>
@@ -621,7 +615,7 @@ class ExamsAttendance extends Component {
       },
 
       {
-        dataField: "examAttendanceType",
+        dataField: "hallScheduleType",
         text: this.props.t("Trainees Count"),
         sort: true,
 
@@ -633,14 +627,14 @@ class ExamsAttendance extends Component {
         //   hidden: !showDeleteButton,
         isDummyField: true,
         editable: false, // Set the "Action" column to not editable
-        formatter: (cellContent, examAttendance) => (
+        formatter: (cellContent, hallSchedule) => (
           <div className="d-flex gap-3">
             <Tooltip title={this.props.t("Print")} placement="top">
               <Link className="text-secondary" to="#">
                 <i
                   className="fas fa-print"
                   id="printtooltip"
-                  onClick={() => this.handlePrint(examAttendance)}
+                  onClick={() => this.handlePrint(hallSchedule)}
                 ></i>
               </Link>
             </Tooltip>
@@ -664,7 +658,7 @@ class ExamsAttendance extends Component {
       },
 
       {
-        dataField: "examAttendanceType",
+        dataField: "hallScheduleType",
         text: this.props.t("Postition"),
         sort: true,
 
@@ -684,33 +678,11 @@ class ExamsAttendance extends Component {
         sort: true,
         editable: false,
       },
-      {
-        dataField: "attendStatusId",
-        text: this.props.t("Attend Status"),
-        sort: true,
-        editable: false,
-        formatter: (cell, row) => (
-          <Select
-            key={`hide_reason_select_${row.Id}`}
-            options={attendStatus}
-            value={attendStatus.find(opt => opt.value === row.attendStatusId)}
-            onChange={selectedValue =>
-              this.handleSelect(row.Id, "attendStatusId ", selectedValue)
-            }
-          />
-        ),
-      },
-      {
-        dataField: "examAttendanceYear",
-        text: this.props.t("Notes"),
-        sort: true,
-        editable: true,
-      },
     ];
 
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: examsAttendance.length,
+      totalSize: hallSchedules.length,
       custom: true,
     };
 
@@ -725,7 +697,7 @@ class ExamsAttendance extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("ExamsAttendance")} />
+            <Breadcrumbs breadcrumbItem={this.props.t("HallSchedules")} />
 
             <Row>
               <Col>
@@ -981,12 +953,12 @@ class ExamsAttendance extends Component {
                               pagination={paginationFactory(pageOptions)}
                               keyField="Id"
                               columns={columns}
-                              data={examsAttendance}
+                              data={hallSchedules}
                             >
                               {({ paginationProps, paginationTableProps }) => (
                                 <ToolkitProvider
                                   keyField="Id"
-                                  data={examsAttendance}
+                                  data={hallSchedules}
                                   columns={columns}
                                   search
                                 >
@@ -1027,7 +999,7 @@ class ExamsAttendance extends Component {
                                         keyField="Id"
                                         {...toolkitprops.baseProps}
                                         {...paginationTableProps}
-                                        data={examsAttendance}
+                                        data={hallSchedules}
                                         columns={columns}
                                         cellEdit={cellEditFactory({
                                           mode: "click",
@@ -1038,7 +1010,7 @@ class ExamsAttendance extends Component {
                                             row,
                                             column
                                           ) => {
-                                            this.handleExamAttendanceDataChange(
+                                            this.handleHallScheduleDataChange(
                                               row.Id,
                                               column.dataField,
                                               newValue
@@ -1046,7 +1018,7 @@ class ExamsAttendance extends Component {
                                           },
                                         })}
                                         noDataIndication={this.props.t(
-                                          "No ExamAttendance Types found"
+                                          "No HallSchedule Types found"
                                         )}
                                         defaultSorted={defaultSorting}
                                         filter={filterFactory()}
@@ -1075,7 +1047,7 @@ class ExamsAttendance extends Component {
                                                 keyField="Id"
                                                 {...toolkitprops.baseProps}
                                                 {...paginationTableProps}
-                                                data={examsAttendance}
+                                                data={hallSchedules}
                                                 columns={columns2}
                                                 cellEdit={cellEditFactory({
                                                   mode: "click",
@@ -1086,7 +1058,7 @@ class ExamsAttendance extends Component {
                                                     row,
                                                     column
                                                   ) => {
-                                                    this.handleExamAttendanceDataChange(
+                                                    this.handleHallScheduleDataChange(
                                                       row.Id,
                                                       column.dataField,
                                                       newValue
@@ -1094,7 +1066,7 @@ class ExamsAttendance extends Component {
                                                   },
                                                 })}
                                                 noDataIndication={this.props.t(
-                                                  "No ExamAttendance Types found"
+                                                  "No HallSchedule Types found"
                                                 )}
                                                 defaultSorted={defaultSorting}
                                                 filter={filterFactory()}
@@ -1107,7 +1079,7 @@ class ExamsAttendance extends Component {
                                                 keyField="Id"
                                                 {...toolkitprops.baseProps}
                                                 {...paginationTableProps}
-                                                data={examsAttendance}
+                                                data={hallSchedules}
                                                 columns={columns3}
                                                 cellEdit={cellEditFactory({
                                                   mode: "click",
@@ -1118,7 +1090,7 @@ class ExamsAttendance extends Component {
                                                     row,
                                                     column
                                                   ) => {
-                                                    this.handleExamAttendanceDataChange(
+                                                    this.handleHallScheduleDataChange(
                                                       row.Id,
                                                       column.dataField,
                                                       newValue
@@ -1126,7 +1098,7 @@ class ExamsAttendance extends Component {
                                                   },
                                                 })}
                                                 noDataIndication={this.props.t(
-                                                  "No ExamAttendance Types found"
+                                                  "No HallSchedule Types found"
                                                 )}
                                                 defaultSorted={defaultSorting}
                                                 filter={filterFactory()}
@@ -1149,12 +1121,10 @@ class ExamsAttendance extends Component {
                                             <Col lg={12}>
                                               <div className="text-center">
                                                 <h4 className="text-primary">
-                                                  {examAttendance.trainerName}
+                                                  {hallSchedule.trainerName}
                                                 </h4>
                                                 <h6 className="text-primary">
-                                                  {
-                                                    examAttendance.examAttendanceNum
-                                                  }
+                                                  {hallSchedule.hallScheduleNum}
                                                 </h6>
 
                                                 {qr && (
@@ -1178,8 +1148,8 @@ class ExamsAttendance extends Component {
                                                         );
                                                       link.href = qr;
                                                       link.download = `${
-                                                        examAttendance.trainerName +
-                                                        examAttendance.examAttendanceNum
+                                                        hallSchedule.trainerName +
+                                                        hallSchedule.hallScheduleNum
                                                       }.png`;
                                                       link.click();
                                                     }}
@@ -1211,7 +1181,7 @@ class ExamsAttendance extends Component {
                                                 keyField="Id"
                                                 {...toolkitprops.baseProps}
                                                 {...paginationTableProps}
-                                                data={examsAttendance}
+                                                data={hallSchedules}
                                                 columns={columns2}
                                                 cellEdit={cellEditFactory({
                                                   mode: "click",
@@ -1222,7 +1192,7 @@ class ExamsAttendance extends Component {
                                                     row,
                                                     column
                                                   ) => {
-                                                    this.handleExamAttendanceDataChange(
+                                                    this.handleHallScheduleDataChange(
                                                       row.Id,
                                                       column.dataField,
                                                       newValue
@@ -1230,7 +1200,7 @@ class ExamsAttendance extends Component {
                                                   },
                                                 })}
                                                 noDataIndication={this.props.t(
-                                                  "No ExamAttendance Types found"
+                                                  "No HallSchedule Types found"
                                                 )}
                                                 defaultSorted={defaultSorting}
                                                 filter={filterFactory()}
@@ -1243,7 +1213,7 @@ class ExamsAttendance extends Component {
                                                 keyField="Id"
                                                 {...toolkitprops.baseProps}
                                                 {...paginationTableProps}
-                                                data={examsAttendance}
+                                                data={hallSchedules}
                                                 columns={columns3}
                                                 cellEdit={cellEditFactory({
                                                   mode: "click",
@@ -1254,7 +1224,7 @@ class ExamsAttendance extends Component {
                                                     row,
                                                     column
                                                   ) => {
-                                                    this.handleExamAttendanceDataChange(
+                                                    this.handleHallScheduleDataChange(
                                                       row.Id,
                                                       column.dataField,
                                                       newValue
@@ -1262,7 +1232,7 @@ class ExamsAttendance extends Component {
                                                   },
                                                 })}
                                                 noDataIndication={this.props.t(
-                                                  "No ExamAttendance Types found"
+                                                  "No HallSchedule Types found"
                                                 )}
                                                 defaultSorted={defaultSorting}
                                                 filter={filterFactory()}
@@ -1285,12 +1255,10 @@ class ExamsAttendance extends Component {
                                             <Col lg={12}>
                                               <div className="text-center">
                                                 <h4 className="text-primary">
-                                                  {examAttendance.trainerName}
+                                                  {hallSchedule.trainerName}
                                                 </h4>
                                                 <h6 className="text-primary">
-                                                  {
-                                                    examAttendance.examAttendanceNum
-                                                  }
+                                                  {hallSchedule.hallScheduleNum}
                                                 </h6>
 
                                                 {qr && (
@@ -1314,8 +1282,8 @@ class ExamsAttendance extends Component {
                                                         );
                                                       link.href = qr;
                                                       link.download = `${
-                                                        examAttendance.trainerName +
-                                                        examAttendance.examAttendanceNum
+                                                        hallSchedule.trainerName +
+                                                        hallSchedule.hallScheduleNum
                                                       }.png`;
                                                       link.click();
                                                     }}
@@ -1349,41 +1317,40 @@ class ExamsAttendance extends Component {
 }
 
 const mapStateToProps = ({
-  examsAttendance,
+  hallSchedules,
   menu_items,
   years,
   userTypes,
-  examAttendanceTypes,
+  hallScheduleTypes,
   sectors,
-  examAttendanceGrades,
+  hallScheduleGrades,
   trainingMembers,
 }) => ({
-  examsAttendance: examsAttendance.examsAttendance,
-  attendStatus: examsAttendance.attendStatus,
+  hallSchedules: hallSchedules.hallSchedules,
+  attendStatus: hallSchedules.attendStatus,
   userTypesOpt: userTypes.userTypesOpt,
   sectors: sectors.sectors,
   filteredMembers: trainingMembers.filteredMembers,
-  //   filteredExamAttendanceGrades:
-  //     examAttendanceGrades.filteredExamAttendanceGrades,
+  //   filteredHallScheduleGrades:
+  //     hallScheduleGrades.filteredHallScheduleGrades,
   years: years.years,
-  deleted: examsAttendance.deleted,
+  deleted: hallSchedules.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetExamsAttendance: () => dispatch(getExamsAttendance()),
+  onGetHallSchedules: () => dispatch(getHallSchedules()),
   onGetUsers: () => dispatch(getUserTypesOpt()),
-  onAddNewExamAttendance: examAttendance =>
-    dispatch(addNewExamAttendance(examAttendance)),
-  onUpdateExamAttendance: examAttendance =>
-    dispatch(updateExamAttendance(examAttendance)),
-  onDeleteExamAttendance: examAttendance =>
-    dispatch(deleteExamAttendance(examAttendance)),
-  onGetExamAttendanceDeletedValue: () =>
-    dispatch(getExamAttendanceDeletedValue()),
+  onAddNewHallSchedule: hallSchedule =>
+    dispatch(addNewHallSchedule(hallSchedule)),
+  onUpdateHallSchedule: hallSchedule =>
+    dispatch(updateHallSchedule(hallSchedule)),
+  onDeleteHallSchedule: hallSchedule =>
+    dispatch(deleteHallSchedule(hallSchedule)),
+  onGetHallScheduleDeletedValue: () => dispatch(getHallScheduleDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(withTranslation()(ExamsAttendance)));
+)(withRouter(withTranslation()(HallSchedules)));

@@ -2,29 +2,32 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 // Crypto Redux States
 import {
-  GET_EXAMS_ATTENDANCE,
-  ADD_NEW_EXAM_ATTENDANCE,
-  DELETE_EXAM_ATTENDANCE,
-  UPDATE_EXAM_ATTENDANCE,
-  GET_EXAM_ATTENDANCE_DELETED_VALUE,
+  GET_EXAM_ATTENDANCE_OBSERVERS,
+  ADD_NEW_EXAM_ATTENDANCE_OBSERVER,
+  DELETE_EXAM_ATTENDANCE_OBSERVER,
+  UPDATE_EXAM_ATTENDANCE_OBSERVER,
+  GET_EXAM_ATTENDANCE_OBSERVER_DELETED_VALUE,
 } from "./actionTypes";
 
 import { GET_USER_TYPES_OPT } from "../user-types/actionTypes";
 
 import {
-  getExamsAttendanceSuccess,
-  getExamsAttendanceFail,
-  addExamAttendanceFail,
-  addExamAttendanceSuccess,
-  updateExamAttendanceSuccess,
-  updateExamAttendanceFail,
-  deleteExamAttendanceSuccess,
-  deleteExamAttendanceFail,
-  getExamAttendanceDeletedValueSuccess,
-  getExamAttendanceDeletedValueFail,
+  getExamAttendanceObserversSuccess,
+  getExamAttendanceObserversFail,
+  addExamAttendanceObserverFail,
+  addExamAttendanceObserverSuccess,
+  updateExamAttendanceObserverSuccess,
+  updateExamAttendanceObserverFail,
+  deleteExamAttendanceObserverSuccess,
+  deleteExamAttendanceObserverFail,
+  getExamAttendanceObserverDeletedValueSuccess,
+  getExamAttendanceObserverDeletedValueFail,
+} from "./actions";
+
+import {
   getAttendStatusSuccess,
   getAttendStatusFail,
-} from "./actions";
+} from "../examAttendance/actions";
 
 import {
   getUserTypesOptFail,
@@ -34,13 +37,13 @@ import {
 import { getSectorsFail, getSectorsSuccess } from "../sectors/actions";
 
 // import {
-//   getFilteredExamAttendanceGradesFail,
-//   getFilteredExamAttendanceGradesSuccess,
+//   getFilteredExamAttendanceObserverGradesFail,
+//   getFilteredExamAttendanceObserverGradesSuccess,
 // } from "../certificateGrades/actions";
 
 import {
-  getExamAttendanceTypesFail,
-  getExamAttendanceTypesSuccess,
+  getExamAttendanceObserverTypesFail,
+  getExamAttendanceObserverTypesSuccess,
 } from "../certificateTypes/actions";
 
 import {
@@ -51,14 +54,14 @@ import {
 import { getYearsFail, getYearsSuccess } from "../years/actions";
 
 import {
-  getExamsAttendance,
-  addNewExamAttendance,
-  updateExamAttendance,
-  deleteExamAttendance,
+  getExamAttendanceObservers,
+  addNewExamAttendanceObserver,
+  updateExamAttendanceObserver,
+  deleteExamAttendanceObserver,
   getUserTypesOpt,
   getSectors,
   getFilteredGrades,
-  getExamAttendanceDeletedValue,
+  getExamAttendanceObserverDeletedValue,
   getYears,
   getFilteredMembers,
   getAttendStatus,
@@ -113,11 +116,11 @@ function* fetchUsers() {
   }
 }
 
-function* fetchExamsAttendance() {
+function* fetchExamsAttendanceObserver() {
   // console.log("in saga obj", obj);
   // const userTypeId = obj.payload.userTypeId;
 
-  const get_ExamsAttendance_req = {
+  const get_ExamsAttendanceObserver_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -125,13 +128,16 @@ function* fetchExamsAttendance() {
     // filter: `userTypeId = ${userTypeId}`,
   };
   try {
-    const response = yield call(getExamsAttendance, get_ExamsAttendance_req);
+    const response = yield call(
+      getExamAttendanceObservers,
+      get_ExamsAttendanceObserver_req
+    );
     /* response.map(resp => {
       resp["sector"] = JSON.parse(resp["sector"]);
     }); */
-    yield put(getExamsAttendanceSuccess(response));
+    yield put(getExamAttendanceObserversSuccess(response));
   } catch (error) {
-    yield put(getExamsAttendanceFail(error));
+    yield put(getExamAttendanceObserversFail(error));
   }
 
   const get_AttendStatus_req = {
@@ -176,75 +182,84 @@ function* fetchExamsAttendance() {
   // try {
   //   const response = yield call(getFilteredGrades, get_TrainerGrades_req);
 
-  //   yield put(getFilteredExamAttendanceGradesSuccess(response));
+  //   yield put(getFilteredExamAttendanceObserverGradesSuccess(response));
   // } catch (error) {
-  //   yield put(getFilteredExamAttendanceGradesFail(error));
+  //   yield put(getFilteredExamAttendanceObserverGradesFail(error));
   // }
 }
 
-function* onAddNewExamAttendance({ payload }) {
+function* onAddNewExamAttendanceObserver({ payload }) {
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_ExamsAttendance";
-  payload["queryname"] = "_Common_ExamsAttendance";
+  payload["tablename"] = "Common_ExamsAttendanceObserver";
+  payload["queryname"] = "_Common_ExamsAttendanceObserver";
 
   try {
-    const response = yield call(addNewExamAttendance, payload);
-    yield put(addExamAttendanceSuccess(response[0]));
+    const response = yield call(addNewExamAttendanceObserver, payload);
+    yield put(addExamAttendanceObserverSuccess(response[0]));
   } catch (error) {
-    yield put(addExamAttendanceFail(error));
+    yield put(addExamAttendanceObserverFail(error));
   }
 }
 
-function* onUpdateExamAttendance({ payload }) {
+function* onUpdateExamAttendanceObserver({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_ExamsAttendance";
-  payload["queryname"] = "_Common_ExamsAttendance";
+  payload["tablename"] = "Common_ExamsAttendanceObserver";
+  payload["queryname"] = "_Common_ExamsAttendanceObserver";
 
   try {
-    const respupdate = yield call(updateExamAttendance, payload);
-    yield put(updateExamAttendanceSuccess(respupdate[0]));
+    const respupdate = yield call(updateExamAttendanceObserver, payload);
+    yield put(updateExamAttendanceObserverSuccess(respupdate[0]));
   } catch (error) {
-    yield put(updateExamAttendanceFail(error));
+    yield put(updateExamAttendanceObserverFail(error));
   }
 }
 
-function* onDeleteExamAttendance({ payload }) {
+function* onDeleteExamAttendanceObserver({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_ExamsAttendance";
+  payload["tablename"] = "Common_ExamsAttendanceObserver";
   try {
-    const respdelete = yield call(deleteExamAttendance, payload);
-    yield put(deleteExamAttendanceSuccess(respdelete[0]));
+    const respdelete = yield call(deleteExamAttendanceObserver, payload);
+    yield put(deleteExamAttendanceObserverSuccess(respdelete[0]));
   } catch (error) {
-    yield put(deleteExamAttendanceFail(error));
+    yield put(deleteExamAttendanceObserverFail(error));
   }
 }
 
-function* onGetExamAttendanceDeletedValue() {
+function* onGetExamAttendanceObserverDeletedValue() {
   try {
-    const response = yield call(getExamAttendanceDeletedValue);
-    yield put(getExamAttendanceDeletedValueSuccess(response));
+    const response = yield call(getExamAttendanceObserverDeletedValue);
+    yield put(getExamAttendanceObserverDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getExamAttendanceDeletedValueFail(error));
+    yield put(getExamAttendanceObserverDeletedValueFail(error));
   }
 }
 
-function* ExamsAttendanceSaga() {
+function* ExamAttendanceObserverSaga() {
   yield takeEvery(GET_USER_TYPES_OPT, fetchUsers);
-  yield takeEvery(GET_EXAMS_ATTENDANCE, fetchExamsAttendance);
-  yield takeEvery(ADD_NEW_EXAM_ATTENDANCE, onAddNewExamAttendance);
-  yield takeEvery(UPDATE_EXAM_ATTENDANCE, onUpdateExamAttendance);
-  yield takeEvery(DELETE_EXAM_ATTENDANCE, onDeleteExamAttendance);
+  yield takeEvery(GET_EXAM_ATTENDANCE_OBSERVERS, fetchExamsAttendanceObserver);
   yield takeEvery(
-    GET_EXAM_ATTENDANCE_DELETED_VALUE,
-    onGetExamAttendanceDeletedValue
+    ADD_NEW_EXAM_ATTENDANCE_OBSERVER,
+    onAddNewExamAttendanceObserver
+  );
+  yield takeEvery(
+    UPDATE_EXAM_ATTENDANCE_OBSERVER,
+    onUpdateExamAttendanceObserver
+  );
+  yield takeEvery(
+    DELETE_EXAM_ATTENDANCE_OBSERVER,
+    onDeleteExamAttendanceObserver
+  );
+  yield takeEvery(
+    GET_EXAM_ATTENDANCE_OBSERVER_DELETED_VALUE,
+    onGetExamAttendanceObserverDeletedValue
   );
 }
 
-export default ExamsAttendanceSaga;
+export default ExamAttendanceObserverSaga;

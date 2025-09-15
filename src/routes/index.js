@@ -173,9 +173,9 @@ import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 //TraineesReport
 import TraineesReportList from "../pages/ExamReports/TraineesGradeDetailsReport/traineesGradeDetailsReport";
 //AbsenceTypes
-import AbsencesTypesList from "../pages/TraineeAttendence/AttendenceSettings/absenceTypes"
+import AbsencesTypesList from "../pages/TraineeAttendence/AttendenceSettings/absenceTypes";
 //AbsenceJustifications
-import AbsencesJustificationsList from "../pages/TraineeAttendence/AttendenceSettings/absenceJustification"
+import AbsencesJustificationsList from "../pages/TraineeAttendence/AttendenceSettings/absenceJustification";
 
 //GradesVersions
 import GradesVersionsList from "../pages/GradeSettings/gradesVersions";
@@ -199,6 +199,9 @@ import RegReqDocumentsTable from "../pages/Addmission/AdmissionSettings/regReqDo
 //ExamRooms
 import ExamRoomsList from "../pages/Exam/ExamRooms/examRooms";
 
+//ExamObservers
+import ExamObserversList from "../pages/Exam/ExamObservers/examObservers";
+
 //trainees
 import TraineesList from "../pages/Addmission/AcadmeyTrainees/trainees";
 
@@ -219,6 +222,12 @@ import ContractsList from "../pages/HR/contracts/contracts";
 
 //ExamsAttendance
 import ExamsAttendance from "../pages/Exam/ExamAttendance/examAttendance";
+
+//ExamsAttendanceObserver
+import ExamAttendanceObservers from "../pages/Exam/ExamAttendanceObservers/examAttendanceObservers";
+
+//hallShedule
+import HallSchedules from "../pages/Exam/HallSchedules/hallSchedules";
 
 //Applicants
 import ApplicantsList from "../pages/Addmission/Applicants/applicants";
@@ -355,10 +364,9 @@ const authProtectedRoutes = [
   { path: "/contractsTypes", component: ContractsTypesList },
 
   //absenceTypes
-  { path:"/absenceTypes",component:AbsencesTypesList },
+  { path: "/absenceTypes", component: AbsencesTypesList },
   //absenceJustifications
-    { path:"/absenceJustifications",component:AbsencesJustificationsList },
-
+  { path: "/absenceJustifications", component: AbsencesJustificationsList },
 
   // TraineesReport
 
@@ -379,6 +387,10 @@ const authProtectedRoutes = [
 
   { path: "/examRooms", component: ExamRoomsList },
 
+  // ExamRooms
+
+  { path: "/examObservers", component: ExamObserversList },
+
   // contracts
 
   { path: "/contracts", component: ContractsList },
@@ -386,6 +398,14 @@ const authProtectedRoutes = [
   // ExamsAttendance
 
   { path: "/examsAttendance", component: ExamsAttendance },
+
+  // ExamsAttendanceObserver
+
+  { path: "/examAttendanceObservers", component: ExamAttendanceObservers },
+
+  // HallSchedules
+
+  { path: "/hallSchedules", component: HallSchedules },
 
   //hidden grades
   { path: "/hide-grades", component: HiddenGradesList },

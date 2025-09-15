@@ -102,7 +102,6 @@ export * from "./absenceType/actions";
 //absenceJustification
 export * from "./absenceJustification/actions";
 
-
 //gradesVersions
 export * from "./gradesVersions/actions";
 
@@ -117,6 +116,9 @@ export * from "./nationality/actions";
 
 //ExamRooms
 export * from "./Exam/ExamRooms/actions";
+
+///examObservers
+export * from "./examObservers/actions";
 
 //warningsTypes
 export * from "./HR/warningsTypes/actions";
@@ -299,6 +301,14 @@ export * from "./HR/contracts/actions";
 //ExamAttendance
 
 export * from "./examAttendance/actions";
+
+//examAttendanceObservers
+
+export * from "./examAttendanceObservers/actions";
+
+//HallSchedule
+
+export * from "./hallSchedules/actions";
 
 //Trainees
 export * from "./new-Trainee/actions";

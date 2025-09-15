@@ -2,28 +2,26 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 // Crypto Redux States
 import {
-  GET_EXAMS_ATTENDANCE,
-  ADD_NEW_EXAM_ATTENDANCE,
-  DELETE_EXAM_ATTENDANCE,
-  UPDATE_EXAM_ATTENDANCE,
-  GET_EXAM_ATTENDANCE_DELETED_VALUE,
+  GET_HALL_SCHEDULES,
+  ADD_NEW_HALL_SCHEDULE,
+  DELETE_HALL_SCHEDULE,
+  UPDATE_HALL_SCHEDULE,
+  GET_HALL_SCHEDULE_DELETED_VALUE,
 } from "./actionTypes";
 
 import { GET_USER_TYPES_OPT } from "../user-types/actionTypes";
 
 import {
-  getExamsAttendanceSuccess,
-  getExamsAttendanceFail,
-  addExamAttendanceFail,
-  addExamAttendanceSuccess,
-  updateExamAttendanceSuccess,
-  updateExamAttendanceFail,
-  deleteExamAttendanceSuccess,
-  deleteExamAttendanceFail,
-  getExamAttendanceDeletedValueSuccess,
-  getExamAttendanceDeletedValueFail,
-  getAttendStatusSuccess,
-  getAttendStatusFail,
+  getHallSchedulesSuccess,
+  getHallSchedulesFail,
+  addHallScheduleFail,
+  addHallScheduleSuccess,
+  updateHallScheduleSuccess,
+  updateHallScheduleFail,
+  deleteHallScheduleSuccess,
+  deleteHallScheduleFail,
+  getHallScheduleDeletedValueSuccess,
+  getHallScheduleDeletedValueFail,
 } from "./actions";
 
 import {
@@ -34,13 +32,13 @@ import {
 import { getSectorsFail, getSectorsSuccess } from "../sectors/actions";
 
 // import {
-//   getFilteredExamAttendanceGradesFail,
-//   getFilteredExamAttendanceGradesSuccess,
+//   getFilteredHallScheduleGradesFail,
+//   getFilteredHallScheduleGradesSuccess,
 // } from "../certificateGrades/actions";
 
 import {
-  getExamAttendanceTypesFail,
-  getExamAttendanceTypesSuccess,
+  getHallScheduleTypesFail,
+  getHallScheduleTypesSuccess,
 } from "../certificateTypes/actions";
 
 import {
@@ -51,17 +49,16 @@ import {
 import { getYearsFail, getYearsSuccess } from "../years/actions";
 
 import {
-  getExamsAttendance,
-  addNewExamAttendance,
-  updateExamAttendance,
-  deleteExamAttendance,
+  getHallSchedules,
+  addNewHallSchedule,
+  updateHallSchedule,
+  deleteHallSchedule,
   getUserTypesOpt,
   getSectors,
   getFilteredGrades,
-  getExamAttendanceDeletedValue,
+  getHallScheduleDeletedValue,
   getYears,
   getFilteredMembers,
-  getAttendStatus,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchUsers() {
@@ -113,11 +110,11 @@ function* fetchUsers() {
   }
 }
 
-function* fetchExamsAttendance() {
+function* fetchHallSchedules() {
   // console.log("in saga obj", obj);
   // const userTypeId = obj.payload.userTypeId;
 
-  const get_ExamsAttendance_req = {
+  const get_HallSchedules_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -125,13 +122,13 @@ function* fetchExamsAttendance() {
     // filter: `userTypeId = ${userTypeId}`,
   };
   try {
-    const response = yield call(getExamsAttendance, get_ExamsAttendance_req);
+    const response = yield call(getHallSchedules, get_HallSchedules_req);
     /* response.map(resp => {
       resp["sector"] = JSON.parse(resp["sector"]);
     }); */
-    yield put(getExamsAttendanceSuccess(response));
+    yield put(getHallSchedulesSuccess(response));
   } catch (error) {
-    yield put(getExamsAttendanceFail(error));
+    yield put(getHallSchedulesFail(error));
   }
 
   const get_AttendStatus_req = {
@@ -176,75 +173,75 @@ function* fetchExamsAttendance() {
   // try {
   //   const response = yield call(getFilteredGrades, get_TrainerGrades_req);
 
-  //   yield put(getFilteredExamAttendanceGradesSuccess(response));
+  //   yield put(getFilteredHallScheduleGradesSuccess(response));
   // } catch (error) {
-  //   yield put(getFilteredExamAttendanceGradesFail(error));
+  //   yield put(getFilteredHallScheduleGradesFail(error));
   // }
 }
 
-function* onAddNewExamAttendance({ payload }) {
+function* onAddNewHallSchedule({ payload }) {
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_ExamsAttendance";
-  payload["queryname"] = "_Common_ExamsAttendance";
+  payload["tablename"] = "Common_HallSchedules";
+  payload["queryname"] = "_Common_HallSchedules";
 
   try {
-    const response = yield call(addNewExamAttendance, payload);
-    yield put(addExamAttendanceSuccess(response[0]));
+    const response = yield call(addNewHallSchedule, payload);
+    yield put(addHallScheduleSuccess(response[0]));
   } catch (error) {
-    yield put(addExamAttendanceFail(error));
+    yield put(addHallScheduleFail(error));
   }
 }
 
-function* onUpdateExamAttendance({ payload }) {
+function* onUpdateHallSchedule({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_ExamsAttendance";
-  payload["queryname"] = "_Common_ExamsAttendance";
+  payload["tablename"] = "Common_HallSchedules";
+  payload["queryname"] = "_Common_HallSchedules";
 
   try {
-    const respupdate = yield call(updateExamAttendance, payload);
-    yield put(updateExamAttendanceSuccess(respupdate[0]));
+    const respupdate = yield call(updateHallSchedule, payload);
+    yield put(updateHallScheduleSuccess(respupdate[0]));
   } catch (error) {
-    yield put(updateExamAttendanceFail(error));
+    yield put(updateHallScheduleFail(error));
   }
 }
 
-function* onDeleteExamAttendance({ payload }) {
+function* onDeleteHallSchedule({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_ExamsAttendance";
+  payload["tablename"] = "Common_HallSchedules";
   try {
-    const respdelete = yield call(deleteExamAttendance, payload);
-    yield put(deleteExamAttendanceSuccess(respdelete[0]));
+    const respdelete = yield call(deleteHallSchedule, payload);
+    yield put(deleteHallScheduleSuccess(respdelete[0]));
   } catch (error) {
-    yield put(deleteExamAttendanceFail(error));
+    yield put(deleteHallScheduleFail(error));
   }
 }
 
-function* onGetExamAttendanceDeletedValue() {
+function* onGetHallScheduleDeletedValue() {
   try {
-    const response = yield call(getExamAttendanceDeletedValue);
-    yield put(getExamAttendanceDeletedValueSuccess(response));
+    const response = yield call(getHallScheduleDeletedValue);
+    yield put(getHallScheduleDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getExamAttendanceDeletedValueFail(error));
+    yield put(getHallScheduleDeletedValueFail(error));
   }
 }
 
-function* ExamsAttendanceSaga() {
+function* HallSchedulesSaga() {
   yield takeEvery(GET_USER_TYPES_OPT, fetchUsers);
-  yield takeEvery(GET_EXAMS_ATTENDANCE, fetchExamsAttendance);
-  yield takeEvery(ADD_NEW_EXAM_ATTENDANCE, onAddNewExamAttendance);
-  yield takeEvery(UPDATE_EXAM_ATTENDANCE, onUpdateExamAttendance);
-  yield takeEvery(DELETE_EXAM_ATTENDANCE, onDeleteExamAttendance);
+  yield takeEvery(GET_HALL_SCHEDULES, fetchHallSchedules);
+  yield takeEvery(ADD_NEW_HALL_SCHEDULE, onAddNewHallSchedule);
+  yield takeEvery(UPDATE_HALL_SCHEDULE, onUpdateHallSchedule);
+  yield takeEvery(DELETE_HALL_SCHEDULE, onDeleteHallSchedule);
   yield takeEvery(
-    GET_EXAM_ATTENDANCE_DELETED_VALUE,
-    onGetExamAttendanceDeletedValue
+    GET_HALL_SCHEDULE_DELETED_VALUE,
+    onGetHallScheduleDeletedValue
   );
 }
 
-export default ExamsAttendanceSaga;
+export default HallSchedulesSaga;
