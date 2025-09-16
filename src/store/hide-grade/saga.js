@@ -8,7 +8,6 @@ import {
   DELETE_HIDDEN_GRADE,
   UPDATE_HIDDEN_GRADE,
   GET_HIDE_REASONS,
-  
 } from "./actionTypes";
 
 import {
@@ -24,7 +23,6 @@ import {
   updateHiddenGradeFail,
   deleteHiddenGradeSuccess,
   deleteHiddenGradeFail,
- 
 } from "./actions";
 
 import {
@@ -73,9 +71,7 @@ function* fetchhiddenGrades() {
   } catch (error) {
     yield put(getCoursesOfferingFail(error));
   }
-   
-  }
-
+}
 
 function* onGethiddenGradeDeletedValue() {
   try {
@@ -94,32 +90,28 @@ function* onAddNewHiddenGrade({ payload, hiddenGrade }) {
   payload["tablename"] = "Common_HiddenGrades ";
   try {
     const response = yield call(addNewHiddenGrade, payload);
-    console.log("payload",payload)
-    console.log("response",response)
+    console.log("payload", payload);
+    console.log("response", response);
     yield put(addHiddenGradeSuccess(response[0]));
   } catch (error) {
     yield put(addHiddenGradeFail(error));
   }
 }
-function* onGetHideReasons(){
-   const get_HideReasons_req = {
-      source: "db",
-      procedure: "Generic_getOptions",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "Settings_HidingReason",
-      fields: "Id,arTitle",
-    };
-    try {
-      const response = yield call(getHideReasons, get_HideReasons_req);
-      console.log("hidereasonsssssssss",response)
-      yield put(getHideReasonSuccess(response));
-    } catch (error) {
-      yield put(getHideReasonFail(error));
-    }
-
-
-
-  
+function* onGetHideReasons() {
+  const get_HideReasons_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_HidingReason",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getHideReasons, get_HideReasons_req);
+    console.log("hidereasonsssssssss", response);
+    yield put(getHideReasonSuccess(response));
+  } catch (error) {
+    yield put(getHideReasonFail(error));
+  }
 }
 
 function* onUpdatehiddenGrade({ payload }) {
@@ -129,6 +121,7 @@ function* onUpdatehiddenGrade({ payload }) {
   payload["tablename"] = "Common_HiddenGrades ";
   try {
     const respupdate = yield call(updateHiddenGrade, payload);
+    console.log("999999999999999", respupdate);
     yield put(updateHiddenGradeSuccess(respupdate[0]));
   } catch (error) {
     yield put(updateHiddenGradeFail(error));
@@ -154,7 +147,7 @@ function* hiddenGradesSaga() {
   yield takeEvery(ADD_NEW_HIDDEN_GRADE, onAddNewHiddenGrade);
   yield takeEvery(UPDATE_HIDDEN_GRADE, onUpdatehiddenGrade);
   yield takeEvery(DELETE_HIDDEN_GRADE, onDeletehiddenGrade);
-  yield takeEvery(GET_HIDE_REASONS,onGetHideReasons)
+  yield takeEvery(GET_HIDE_REASONS, onGetHideReasons);
 }
 
 export default hiddenGradesSaga;

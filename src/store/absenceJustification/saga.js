@@ -36,7 +36,7 @@ function* fetchAbsencesJustifications() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_AbsenceJustification",
+    tablename: "Settings_AbsenceReason",
   };
   try {
     const response = yield call(getAbsencesJustifications, get_absenceJustification_req);
@@ -61,7 +61,7 @@ function* onAddNewAbsenceJustification({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_AbsenceJustification";
+  payload["tablename"] = "Settings_AbsenceReason";
 
   try {
     const response = yield call(addNewAbsenceJustification, payload);
@@ -75,7 +75,7 @@ function* onUpdateAbsenceJustification({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_AbsenceJustification";
+  payload["tablename"] = "Settings_AbsenceReason";
 
   try {
     const response = yield call(updateAbsenceJustification, payload);
@@ -89,7 +89,7 @@ function* onDeleteAbsenceJustification({ payload, absenceJustification }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_AbsenceJustification";
+  payload["tablename"] = "Settings_AbsenceReason";
 
   try {
     const response = yield call(deleteAbsenceJustification, payload);

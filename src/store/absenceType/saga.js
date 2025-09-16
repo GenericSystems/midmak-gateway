@@ -65,6 +65,8 @@ function* onAddNewAbsenceType({ payload }) {
 
   try {
     const response = yield call(addNewAbsenceType, payload);
+    console.log("addddddddddddd", response);
+
     yield put(addAbsenceTypeSuccess(response[0]));
   } catch (error) {
     yield put(addAbsenceTypeFail(error));

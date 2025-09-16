@@ -642,6 +642,7 @@ class EmployeesList extends Component {
   // };
 
   handleSelectChange = (fieldName, selectedValue, values) => {
+    console.log("selectedValue", selectedValue);
     const { nationalitiesOpt, countries, cities, governorates } = this.props;
 
     if (fieldName == "nationalityId") {

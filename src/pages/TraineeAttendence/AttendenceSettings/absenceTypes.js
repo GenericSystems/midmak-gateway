@@ -167,6 +167,7 @@ class AbsencesTypesList extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
+      console.log("11111111111111111")
       onAddNewAbsenceType(newRow);
     }
   };

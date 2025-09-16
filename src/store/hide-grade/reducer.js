@@ -25,86 +25,96 @@ import {
     
     const hiddenGrades = (state = INIT_STATE, action) => {
     switch (action.type) {
-        case GET_HIDDEN_GRADES_SUCCESS:
+      case GET_HIDDEN_GRADES_SUCCESS:
         return {
-            ...state,
-            hiddenGrades: action.payload,
-        }
-        case GET_HIDDEN_GRADES_FAIL:
-            return {
-                ...state,
-                error: action.payload,
-            }
-
-         case GET_HIDE_REASONS_SUCCESS:
+          ...state,
+          hiddenGrades: action.payload,
+        };
+      case GET_HIDDEN_GRADES_FAIL:
         return {
-            ...state,
-            hidereasons: action.payload,
-        }
-        case GET_HIDE_REASONS_FAIL:
-            return {
-                ...state,
-                error: action.payload,
-            }
-    
+          ...state,
+          error: action.payload,
+        };
 
-        case ADD_HIDDEN_GRADE_SUCCESS:
-            return {
-                ...state,
-                hiddenGrades: [...state.hiddenGrades, action.payload],
-            }
+      case GET_HIDE_REASONS_SUCCESS:
+        return {
+          ...state,
+          hidereasons: action.payload,
+        };
+      case GET_HIDE_REASONS_FAIL:
+        return {
+          ...state,
+          error: action.payload,
+        };
 
-        case ADD_HIDDEN_GRADE_FAIL:
-            return {
-                ...state,
-                error: action.payload,
-            }
+      case ADD_HIDDEN_GRADE_SUCCESS:
+        return {
+          ...state,
+          hiddenGrades: [...state.hiddenGrades, action.payload],
+        };
 
-        case GET_HIDDEN_GRADE_DELETED_VALUE_SUCCESS:
-            return {
-                ...state,
-                deleted: action.payload,
-            }
+      case ADD_HIDDEN_GRADE_FAIL:
+        return {
+          ...state,
+          error: action.payload,
+        };
 
-        case UPDATE_HIDDEN_GRADE_SUCCESS:
-            return {
-                ...state,
-                hiddenGrades: state.hiddenGrades.map(hiddenGrade =>
-                    hiddenGrade.Id.toString() === action.payload.Id.toString()
-                        ? { hiddenGrade, ...action.payload }
-                        : hiddenGrade
-                ),
-            }
+      case GET_HIDDEN_GRADE_DELETED_VALUE_SUCCESS:
+        return {
+          ...state,
+          deleted: action.payload,
+        };
+      case "UPDATE_HIDDEN_GRADE":
+        return {
+          ...state,
+          hiddenGrades: state.hiddenGrades.map(hg =>
+            hg.Id.toString() === action.payload.Id.toString()
+              ? { ...hg, ...action.payload }
+              : hg
+          ),
+        };
+        
 
-        case UPDATE_HIDDEN_GRADE_FAIL:
-            return {
-                ...state,
-                error: action.payload,
-            }
+      case UPDATE_HIDDEN_GRADE_SUCCESS:
+        return {
+          ...state,
+          hiddenGrades: state.hiddenGrades.map(hiddenGrade =>
+            hiddenGrade.Id.toString() === action.payload.Id.toString()
+              ? { ...hiddenGrade, ...action.payload }
+              : hiddenGrade
+          ),
+        };
 
-        case DELETE_HIDDEN_GRADE_SUCCESS:
-            return {
-                ...state,
-                hiddenGrades: state.hiddenGrades.filter(
-                    hiddenGrade => hiddenGrade.Id.toString() !== action.payload.Id.toString()
-                ),
-                deleted: action.payload.deleted
-            }
+      case UPDATE_HIDDEN_GRADE_FAIL:
+        return {
+          ...state,
+          error: action.payload,
+        };
 
-        case DELETE_HIDDEN_GRADE_FAIL:
-            return {
-                ...state,
-                error: action.payload,
-            }
+      case DELETE_HIDDEN_GRADE_SUCCESS:
+        return {
+          ...state,
+          hiddenGrades: state.hiddenGrades.filter(
+            hiddenGrade =>
+              hiddenGrade.Id.toString() !== action.payload.Id.toString()
+          ),
+          deleted: action.payload.deleted,
+        };
 
-        case GET_HIDDEN_GRADE_DELETED_VALUE_FAIL:
-            return {
-                ...state,
-                error: action.payload,
-            }
+      case DELETE_HIDDEN_GRADE_FAIL:
+        return {
+          ...state,
+          error: action.payload,
+        };
 
-        default:
-            return state
+      case GET_HIDDEN_GRADE_DELETED_VALUE_FAIL:
+        return {
+          ...state,
+          error: action.payload,
+        };
+
+      default:
+        return state;
     }
 }
 
