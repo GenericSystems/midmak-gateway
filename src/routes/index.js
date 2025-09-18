@@ -176,6 +176,8 @@ import TraineesReportList from "../pages/ExamReports/TraineesGradeDetailsReport/
 import AbsencesTypesList from "../pages/TraineeAttendence/AttendenceSettings/absenceTypes";
 //AbsenceJustifications
 import AbsencesJustificationsList from "../pages/TraineeAttendence/AttendenceSettings/absenceJustification";
+//AbsencePercent
+import AbsencePercentsList from "pages/TraineeAttendence/AttendenceSettings/absencePercents";
 
 //GradesVersions
 import GradesVersionsList from "../pages/GradeSettings/gradesVersions";
@@ -370,6 +372,8 @@ const authProtectedRoutes = [
   { path: "/absenceTypes", component: AbsencesTypesList },
   //absenceJustifications
   { path: "/absenceJustifications", component: AbsencesJustificationsList },
+  //absencePercents
+  { path:"/absencePercents",component:AbsencePercentsList},
 
   // TraineesReport
 

@@ -218,7 +218,7 @@
   "Training Sector": "قطاع التدريب",
   "Training Format": "نظام التدريب",
   "Training Program": "برنامج التدريب",
-  "Course Code": "رمز الدورة",
+  "Course Code": "رمز المقرر",
   "Method Of Offering": "طريقة طرح الدورة",
   "Start Date": "تاريخ البداية",
   "Course Type (ar)": "نوع الدورة(عربي)",
@@ -354,7 +354,7 @@
   "Edit Floor": "تعديل الطابق",
   "Edit Hall": "تعديل القاعة",
   "Trainee Name": "اسم المتدرب",
-  "Course Name": "اسم الدورة",
+  "Course Name": "اسم المقرر",
   "Archive Detailes": "التفاصيل",
   "Operation Needed": "العملية المطلوبة",
   "Applyning Date": "تاريخ التقديم",
@@ -625,6 +625,7 @@
   "Room Details": "تفاصيل القاعة",
   "Print": "طباعة",
   "Postition": "رقم المقعد",
+
   "ExamsAttendance": "تسجيل الحضور(للمتدربين)",
   "Job No.": "الرقم الوظيفي",
   "Contract Type": "نوع التعاقد",
@@ -636,5 +637,18 @@
   "Exam Rooms": "القاعات الامتحانية",
   "Room No.": "رقم القاعة",
   "Exam Capacity": "السعة الامتحانية",
-  "Acceptable": "مبرر"
+  
+  "Acceptable": "مبرر",
+  "Hide Reason":"سبب الحجب",
+  "Hide Grades":"حجب العلامات",
+  "No hidden grades found":"لا يوجد علامات محجوبة",
+  "Course Credit":"عدد الساعات",
+  "Issue Warning Percent":"تحرير الانذار عند النسبة",
+  "Issue Dismiss Percent":"تحرير قرار الفصل",
+  "No Absence Percents found":"لا يوجد نسب غياب",
+  "Define Allowed Absence Percent":"تحديد نسب الغياب المسموحة"
+
+
 }
+
+
