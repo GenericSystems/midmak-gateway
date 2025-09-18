@@ -107,9 +107,9 @@ class ExamsAttendance extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (examsAttendance && !examsAttendance.length) {
-      // onGetUsers();
+      onGetUsers();
     }
-    this.props.onGetExamsAttendance();
+    // this.props.onGetExamsAttendance();
     this.setState({
       attendStatus,
       examsAttendance,
@@ -254,12 +254,6 @@ class ExamsAttendance extends Component {
     onGetExamAttendanceDeletedValue();
   };
 
-  /*   handleSelectChange = (rowId, fieldName, selectedValue) => {
-    const { onUpdateExamAttendance } = this.props;
-    let onUpdate = { Id: rowId, [fieldName]: selectedValue };
-    onUpdateExamAttendance(onUpdate);
-  }; */
-
   toggle = () => {
     this.setState(prevState => ({
       modal: !prevState.modal,
@@ -272,33 +266,37 @@ class ExamsAttendance extends Component {
     }));
   };
 
-  // handleSelectChange = (fieldName, selectedValue) => {
-  //   if (fieldName === "trainerId") {
-  //     this.setState({
-  //       selectedMember: selectedValue,
-  //     });
-  //   } else if (fieldName == "userTypeId") {
-  //     console.log("selected value", selectedValue);
+  handleSelectChange = (fieldName, selectedValue) => {
+    if (fieldName === "trainerId") {
+      this.setState({
+        selectedMember: selectedValue,
+      });
+    } else if (fieldName == "userTypeId") {
+      console.log("selected value", selectedValue);
 
-  //     const { onGetExamsAttendance } = this.props;
-  //     onGetExamsAttendance({ userTypeId: selectedValue });
-  //     this.setState({
-  //       selectedUserType: selectedValue,
-  //     });
-  //   } else if (fieldName == "trainerGradeId") {
-  //     this.setState({
-  //       selectedMemberGrade: selectedValue,
-  //     });
-  //   } else if (fieldName == "examAttendanceTypeId") {
-  //     this.setState({
-  //       selectedExamAttendanceType: selectedValue,
-  //     });
-  //   } else if (fieldName == "yearId") {
-  //     this.setState({
-  //       selectedYear: selectedValue,
-  //     });
-  //   }
-  // };
+      const { onGetExamsAttendance } = this.props;
+      console.log("{ userTypeId: selectedValue }", {
+        userTypeId: selectedValue,
+      });
+      onGetExamsAttendance({ userTypeId: selectedValue });
+      this.setState({
+        selectedUserType: selectedValue,
+      });
+    }
+    // else if (fieldName == "trainerGradeId") {
+    //   this.setState({
+    //     selectedMemberGrade: selectedValue,
+    //   });
+    // } else if (fieldName == "examAttendanceTypeId") {
+    //   this.setState({
+    //     selectedExamAttendanceType: selectedValue,
+    //   });
+    // } else if (fieldName == "yearId") {
+    //   this.setState({
+    //     selectedYear: selectedValue,
+    //   });
+    // }
+  };
 
   handleMulti = (fieldName, selectedMulti) => {
     if (fieldName === "sector") {
@@ -438,17 +436,17 @@ class ExamsAttendance extends Component {
     // onUpdateExamAttendance(onUpdate);
   };
 
-  handlePrint = arg => {
-    const { examAttendance } = this.state;
-    console.log("arg", arg);
+  // handlePrint = arg => {
+  //   const { examAttendance } = this.state;
+  //   console.log("arg", arg);
 
-    this.setState({
-      examAttendance: arg,
-      isPrint: true,
-    });
+  //   this.setState({
+  //     examAttendance: arg,
+  //     isPrint: true,
+  //   });
 
-    this.toggle1();
-  };
+  //   this.toggle1();
+  // };
 
   render() {
     const { filteredData } = this.state;
@@ -748,27 +746,21 @@ class ExamsAttendance extends Component {
                                     </Label>
                                   </Col>
                                   <Col lg="8">
-                                    <input
-                                      type="text"
-                                      list="examOptions"
-                                      name="exam"
-                                      placeholder="Type to search..."
-                                      className="form-control"
-                                      value={this.state.selectedExam || ""}
-                                      onChange={e =>
-                                        this.setState({
-                                          selectedExam: e.target.value,
-                                        })
+                                    <Select
+                                      className="form-style "
+                                      name="userTypeId"
+                                      key="courseType_select"
+                                      options={userTypesOpt}
+                                      onChange={newValue =>
+                                        this.handleSelectChange(
+                                          "userTypeId",
+                                          newValue.value
+                                        )
                                       }
+                                      value={userTypesOpt.find(
+                                        opt => opt.label === selectedUserType
+                                      )}
                                     />
-                                    <datalist id="examOptions">
-                                      {userTypesOpt.map(opt => (
-                                        <option
-                                          key={opt.value}
-                                          value={opt.label}
-                                        />
-                                      ))}
-                                    </datalist>
                                   </Col>
                                 </Row>
 
@@ -1005,7 +997,7 @@ class ExamsAttendance extends Component {
                                           </div>
                                         </Col>
                                         <Col sm="8">
-                                          {selectedUserType && (
+                                          {/* {selectedUserType && (
                                             <div className="text-sm-end">
                                               <Tooltip
                                                 title={this.props.t("Add")}
@@ -1019,7 +1011,7 @@ class ExamsAttendance extends Component {
                                                 </IconButton>
                                               </Tooltip>
                                             </div>
-                                          )}
+                                          )} */}
                                         </Col>
                                       </Row>
 
@@ -1046,7 +1038,7 @@ class ExamsAttendance extends Component {
                                           },
                                         })}
                                         noDataIndication={this.props.t(
-                                          "No ExamAttendance Types found"
+                                          "No Exam Attendance found"
                                         )}
                                         defaultSorted={defaultSorting}
                                         filter={filterFactory()}
@@ -1094,7 +1086,7 @@ class ExamsAttendance extends Component {
                                                   },
                                                 })}
                                                 noDataIndication={this.props.t(
-                                                  "No ExamAttendance Types found"
+                                                  "No Exam Attendance  found"
                                                 )}
                                                 defaultSorted={defaultSorting}
                                                 filter={filterFactory()}
@@ -1126,68 +1118,11 @@ class ExamsAttendance extends Component {
                                                   },
                                                 })}
                                                 noDataIndication={this.props.t(
-                                                  "No ExamAttendance Types found"
+                                                  "No Exam Attendance found"
                                                 )}
                                                 defaultSorted={defaultSorting}
                                                 filter={filterFactory()}
                                               />
-                                            </Col>
-                                          </Row>
-                                        </ModalBody>
-                                      </Modal>
-                                      <Modal isOpen={QRModal} centered={true}>
-                                        <ModalHeader
-                                          toggle={this.onCloseQRModal}
-                                          tag="h4"
-                                        >
-                                          <div className="text-center">
-                                            {this.props.t("QR Code")}
-                                          </div>
-                                        </ModalHeader>
-                                        <ModalBody className="py-3 px-5">
-                                          <Row>
-                                            <Col lg={12}>
-                                              <div className="text-center">
-                                                <h4 className="text-primary">
-                                                  {examAttendance.trainerName}
-                                                </h4>
-                                                <h6 className="text-primary">
-                                                  {
-                                                    examAttendance.examAttendanceNum
-                                                  }
-                                                </h6>
-
-                                                {qr && (
-                                                  <img src={qr} alt="QR Code" />
-                                                )}
-                                              </div>
-                                            </Col>
-                                          </Row>
-                                          <Row>
-                                            <Col>
-                                              <div className="text-center mt-3">
-                                                {qr && (
-                                                  <Button
-                                                    color="success"
-                                                    size="lg"
-                                                    className="me-2"
-                                                    onClick={() => {
-                                                      const link =
-                                                        document.createElement(
-                                                          "a"
-                                                        );
-                                                      link.href = qr;
-                                                      link.download = `${
-                                                        examAttendance.trainerName +
-                                                        examAttendance.examAttendanceNum
-                                                      }.png`;
-                                                      link.click();
-                                                    }}
-                                                  >
-                                                    {this.props.t("Download")}
-                                                  </Button>
-                                                )}
-                                              </div>
                                             </Col>
                                           </Row>
                                         </ModalBody>
@@ -1230,7 +1165,7 @@ class ExamsAttendance extends Component {
                                                   },
                                                 })}
                                                 noDataIndication={this.props.t(
-                                                  "No ExamAttendance Types found"
+                                                  "No Exam Attendance found"
                                                 )}
                                                 defaultSorted={defaultSorting}
                                                 filter={filterFactory()}
@@ -1262,68 +1197,11 @@ class ExamsAttendance extends Component {
                                                   },
                                                 })}
                                                 noDataIndication={this.props.t(
-                                                  "No ExamAttendance Types found"
+                                                  "No Exam Attendance found"
                                                 )}
                                                 defaultSorted={defaultSorting}
                                                 filter={filterFactory()}
                                               />
-                                            </Col>
-                                          </Row>
-                                        </ModalBody>
-                                      </Modal>
-                                      <Modal isOpen={QRModal} centered={true}>
-                                        <ModalHeader
-                                          toggle={this.onCloseQRModal}
-                                          tag="h4"
-                                        >
-                                          <div className="text-center">
-                                            {this.props.t("QR Code")}
-                                          </div>
-                                        </ModalHeader>
-                                        <ModalBody className="py-3 px-5">
-                                          <Row>
-                                            <Col lg={12}>
-                                              <div className="text-center">
-                                                <h4 className="text-primary">
-                                                  {examAttendance.trainerName}
-                                                </h4>
-                                                <h6 className="text-primary">
-                                                  {
-                                                    examAttendance.examAttendanceNum
-                                                  }
-                                                </h6>
-
-                                                {qr && (
-                                                  <img src={qr} alt="QR Code" />
-                                                )}
-                                              </div>
-                                            </Col>
-                                          </Row>
-                                          <Row>
-                                            <Col>
-                                              <div className="text-center mt-3">
-                                                {qr && (
-                                                  <Button
-                                                    color="success"
-                                                    size="lg"
-                                                    className="me-2"
-                                                    onClick={() => {
-                                                      const link =
-                                                        document.createElement(
-                                                          "a"
-                                                        );
-                                                      link.href = qr;
-                                                      link.download = `${
-                                                        examAttendance.trainerName +
-                                                        examAttendance.examAttendanceNum
-                                                      }.png`;
-                                                      link.click();
-                                                    }}
-                                                  >
-                                                    {this.props.t("Download")}
-                                                  </Button>
-                                                )}
-                                              </div>
                                             </Col>
                                           </Row>
                                         </ModalBody>
@@ -1371,7 +1249,8 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetExamsAttendance: () => dispatch(getExamsAttendance()),
+  onGetExamsAttendance: examAttendance =>
+    dispatch(getExamsAttendance(examAttendance)),
   onGetUsers: () => dispatch(getUserTypesOpt()),
   onAddNewExamAttendance: examAttendance =>
     dispatch(addNewExamAttendance(examAttendance)),

@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import {
   Card,
   CardBody,
+  CardHeader,
   CardText,
   CardTitle,
   Col,
@@ -16,6 +18,11 @@ import {
   TabPane,
   Alert,
   Input,
+  Modal,
+  Label,
+  Button,
+  ModalHeader,
+  ModalBody,
 } from "reactstrap";
 import classnames from "classnames";
 import * as moment from "moment";
@@ -51,6 +58,7 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+import examObservers from "store/examObservers/reducer";
 class ExamObserversList extends Component {
   constructor(props) {
     super(props);
@@ -66,8 +74,11 @@ class ExamObserversList extends Component {
       showEditButton: false,
       showSearchButton: false,
       languageState: "",
+      modal: false,
+      isPrint: false,
     };
     this.toggleVertical = this.toggleVertical.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
   toggleVertical(defineExamDateId) {
     const { onGetExamObservers } = this.props;
@@ -160,6 +171,23 @@ class ExamObserversList extends Component {
   updateShowSearchButton = (menu, pathname) => {
     const showSearchButton = checkIsSearchForPage(menu, pathname);
     this.setState({ showSearchButton });
+  };
+
+  toggle = () => {
+    this.setState(prevState => ({
+      modal: !prevState.modal,
+    }));
+  };
+
+  handleExamObservers = arg => {
+    console.log("arg", arg);
+
+    this.setState({
+      examObserver: arg,
+      isPrint: true,
+    });
+
+    this.toggle();
   };
 
   handleAddRow = () => {
@@ -262,7 +290,9 @@ class ExamObserversList extends Component {
   };
 
   render() {
+    const { SearchBar } = Search;
     const {
+      isPrint,
       languageState,
       selectedLevel,
       duplicateError,
@@ -270,9 +300,19 @@ class ExamObserversList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      modal,
+      examObserver,
     } = this.state;
     const { t, studentManagements, examObservers, levels, defineExamDates } =
       this.props;
+
+    const defaultSorting = [
+      {
+        dataField: "Id",
+        order: "desc",
+      },
+    ];
+
     console.log("DefineExamDates from props:", this.props.defineExamDates);
     const pageOptions = {
       sizePerPage: 20,
@@ -311,14 +351,14 @@ class ExamObserversList extends Component {
         editable: false,
       },
       {
-        key: "examCapacity",
-        dataField: "examCapacity",
+        key: "contract",
+        dataField: "contract",
         text: this.props.t("Contract Type"),
         editable: true,
       },
       {
-        key: "examCapacity",
-        dataField: "examCapacity",
+        key: "count",
+        dataField: "count",
         text: this.props.t("Obs. Count"),
         editable: true,
       },
@@ -330,12 +370,15 @@ class ExamObserversList extends Component {
         editable: false, // Set the "Action" column to not editable
         formatter: (cellContent, examObserver) => (
           <div className="d-flex gap-3">
-            <Tooltip title={this.props.t("Attend Status Edit")} placement="top">
+            <Tooltip
+              title={this.props.t("Observers's Schedule")}
+              placement="top"
+            >
               <Link className="text-secondary" to="#">
                 <i
                   className="bx bx-bx bxs-report"
                   id="edit"
-                  onClick={() => this.handleObserversSchedule(examObserver)}
+                  onClick={() => this.handleExamObservers(examObserver)}
                 ></i>
               </Link>
             </Tooltip>
@@ -343,6 +386,57 @@ class ExamObserversList extends Component {
         ),
       },
     ];
+
+    const columns2 = [
+      { dataField: "Id", text: this.props.t("ID"), hidden: true },
+      {
+        dataField: "defineExamDateId",
+        text: this.props.t("defineExamDateId"),
+        hidden: true,
+      },
+
+      {
+        dataField: "hallArName",
+        text: this.props.t("Course Name"),
+        editable: false,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+          hidden: !showSearchButton,
+        }),
+      },
+
+      {
+        key: "hallNum",
+        dataField: "defineExamDateNum",
+        text: this.props.t("Exam Date"),
+        editable: false,
+      },
+      {
+        key: "buildingArName",
+        dataField: "buildingArName",
+        text: this.props.t("Exam Period"),
+        editable: false,
+      },
+      {
+        key: "contract",
+        dataField: "contract",
+        text: this.props.t("Contract Type"),
+        editable: true,
+      },
+      {
+        key: "room",
+        dataField: "room",
+        text: this.props.t("Room"),
+        editable: true,
+      },
+      {
+        key: "examCapacity",
+        dataField: "examCapacity",
+        text: this.props.t("Responssibilty"),
+        editable: true,
+      },
+    ];
+
     const addButtonStyle = {
       backgroundColor: "#75dfd1",
       color: "#ffffff",
@@ -352,7 +446,7 @@ class ExamObserversList extends Component {
       <React.Fragment>
         <div className="page-content">
           <Container fluid>
-            <Breadcrumbs breadcrumbItem={t("Exam Rooms")} />
+            <Breadcrumbs breadcrumbItem={t("Exam Observers")} />
             <div className="checkout-tabs">
               <Row>
                 <Col lg="3">
@@ -442,6 +536,7 @@ class ExamObserversList extends Component {
                                   </Tooltip>
                                 </div>
                               )}
+
                               <BootstrapTable
                                 keyField="Id"
                                 // data={defineExamDates.filter(
@@ -475,6 +570,74 @@ class ExamObserversList extends Component {
                         </Card>
                       </TabPane>
                     ))}
+                    <Modal
+                      isOpen={modal}
+                      className={this.props.className}
+                      size={"xl"}
+                    >
+                      <ModalHeader toggle={this.toggle} tag="h4">
+                        {!!isPrint ? t("Print") : ""}
+                      </ModalHeader>
+
+                      <ModalBody>
+                        <div>
+                          <Card className="bordered">
+                            <CardHeader className="card-header">
+                              <h4>
+                                <i className="fas fa-user-circle" />{" "}
+                                {languageState === "ar"
+                                  ? examObservers.arTitle + " "
+                                  : examObservers.enTitle}
+                              </h4>
+                            </CardHeader>
+                            <CardBody>
+                              <div>
+                                <div className="d-flex justify-content-start mt-3">
+                                  <button
+                                    className="btn"
+                                    onClick={() => window.print()}
+                                  >
+                                    <i className="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <Row>
+                                  <Col lg="12">
+                                    <BootstrapTable
+                                      keyField="Id"
+                                      // {...toolkitprops.baseProps}
+                                      // {...paginationTableProps}
+                                      data={examObservers}
+                                      columns={columns2}
+                                      cellEdit={cellEditFactory({
+                                        mode: "click",
+                                        blurToSave: true,
+                                        afterSaveCell: (
+                                          oldValue,
+                                          newValue,
+                                          row,
+                                          column
+                                        ) => {
+                                          this.handleExamAttendanceDataChange(
+                                            row.Id,
+                                            column.dataField,
+                                            newValue
+                                          );
+                                        },
+                                      })}
+                                      noDataIndication={this.props.t(
+                                        "No ExamAttendance Types found"
+                                      )}
+                                      defaultSorted={defaultSorting}
+                                      filter={filterFactory()}
+                                    />
+                                  </Col>
+                                </Row>
+                              </div>
+                            </CardBody>
+                          </Card>
+                        </div>
+                      </ModalBody>
+                    </Modal>
                   </TabContent>
                 </Col>
               </Row>

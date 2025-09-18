@@ -625,5 +625,16 @@
   "Room Details": "تفاصيل القاعة",
   "Print": "طباعة",
   "Postition": "رقم المقعد",
+  "ExamsAttendance": "تسجيل الحضور(للمتدربين)",
+  "Job No.": "الرقم الوظيفي",
+  "Contract Type": "نوع التعاقد",
+  "Obs. Count": "عدد المراقبات",
+  "Responssibilty": "المسؤولية",
+  "Exam Observers": "مراقبو الامتحانات",
+  "HallSchedules": "جداول القاعات",
+  "Room Name": "اسم القاعة",
+  "Exam Rooms": "القاعات الامتحانية",
+  "Room No.": "رقم القاعة",
+  "Exam Capacity": "السعة الامتحانية",
   "Acceptable": "مبرر"
 }

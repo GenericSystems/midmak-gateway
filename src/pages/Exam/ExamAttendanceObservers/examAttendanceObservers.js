@@ -53,7 +53,6 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-import attendanceObservers from "store/examAttendanceObservers/reducer";
 
 class ExamAttendanceObservers extends Component {
   constructor(props) {
@@ -1407,9 +1406,6 @@ class ExamAttendanceObservers extends Component {
                                                                 "Observer"
                                                               )}
                                                             </Label>
-                                                            <span className="text-danger">
-                                                              *
-                                                            </span>
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Field
@@ -1532,9 +1528,6 @@ class ExamAttendanceObservers extends Component {
                                                                 "Alt Observer"
                                                               )}
                                                             </Label>
-                                                            <span className="text-danger">
-                                                              *
-                                                            </span>
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Field

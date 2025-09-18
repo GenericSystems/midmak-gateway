@@ -131,19 +131,19 @@ function* fetchHallSchedules() {
     yield put(getHallSchedulesFail(error));
   }
 
-  const get_AttendStatus_req = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_AttendStatus",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getAttendStatus, get_AttendStatus_req);
-    yield put(getAttendStatusSuccess(response));
-  } catch (error) {
-    yield put(getAttendStatusFail(error));
-  }
+  // const get_AttendStatus_req = {
+  //   source: "db",
+  //   procedure: "Generic_getOptions",
+  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+  //   tablename: "Settings_AttendStatus",
+  //   fields: "Id,arTitle",
+  // };
+  // try {
+  //   const response = yield call(getAttendStatus, get_AttendStatus_req);
+  //   yield put(getAttendStatusSuccess(response));
+  // } catch (error) {
+  //   yield put(getAttendStatusFail(error));
+  // }
 
   const get_trainer_req = {
     source: "db",

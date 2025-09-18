@@ -19,9 +19,9 @@ import {
   GET_EXAM_ATTENDANCE_DELETED_VALUE_SUCCESS,
 } from "./actionTypes";
 
-export const getExamsAttendance = () => ({
+export const getExamsAttendance = examsAttendance => ({
   type: GET_EXAMS_ATTENDANCE,
-  // payload: examsAttendance,
+  payload: examsAttendance,
 });
 
 export const getExamsAttendanceSuccess = examsAttendance => ({

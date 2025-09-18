@@ -8,10 +8,12 @@ import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import * as Yup from "yup";
 import Select from "react-select";
 import * as moment from "moment";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
   Card,
   CardBody,
   CardTitle,
+  CardHeader,
   Col,
   Container,
   Row,
@@ -69,6 +71,7 @@ class DefineExamDatesList extends Component {
     this.state = {
       defineExamDates: [],
       coursesOffering: [],
+      courses: this.props.coursesOffering,
       selecteDefineExamDateId: 0,
       gradeTypes: [],
       allDaysArray: [],
@@ -125,6 +128,7 @@ class DefineExamDatesList extends Component {
       studentsOrder,
       definePeriods,
       user_menu,
+      onGetCourseOffering,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -133,7 +137,7 @@ class DefineExamDatesList extends Component {
     onGetDefineExamDates(lang);
     onGetStudentsOrder();
 
-    this.props.onGetCourseOffering();
+    onGetCourseOffering(lang);
 
     this.setState({
       defineExamDates,
@@ -436,11 +440,11 @@ class DefineExamDatesList extends Component {
   handleExamDateEdit = arg => {
     console.log("arg", arg);
     const { definePeriods, onGetDefinePeriods } = this.props;
-    console.log("1", arg.examPeriods);
+    console.log("1", arg.definePeriods);
     const filteredDefinePeriods = definePeriods.filter(
       defineExamDate => defineExamDate.key != arg.Id
     );
-    const periodsForGrid = (arg.examPeriods || []).map(period => ({
+    const periodsForGrid = (arg.definePeriods || []).map(period => ({
       id: period.Id,
       flag: period.flag,
       startTime: period.startTime,
@@ -458,13 +462,13 @@ class DefineExamDatesList extends Component {
       // startTime: periods.startTime,
       // endTime: periods.endTime,
       // flag: periods.flag,
-      // examPeriodsGridData: periodsForGrid,
+      // definePeriodsGridData: periodsForGrid,
       isEdit: true,
     }),
       // console.log("definePeriods in state:", this.state.definePeriods);
       onGetDefinePeriods(arg.Id);
     // this.setState({
-    //   examPeriodsGridData: periodsForGrid,
+    //   definePeriodsGridData: periodsForGrid,
     // });
     this.toggle();
   };
@@ -519,6 +523,7 @@ class DefineExamDatesList extends Component {
       exam: arg,
       isOpen1: true,
       allDaysArray: arg.all_days,
+      examPeriods: arg.examPeriods,
     });
     this.toggle2();
   };
@@ -540,6 +545,42 @@ class DefineExamDatesList extends Component {
     saveAs(data, "trainees.xlsx");
   };
 
+  onDragEnd = result => {
+    const { source, destination } = result;
+
+    if (!destination) return;
+
+    const sourcePeriodIndex = this.state.periods.findIndex(
+      p => p.id === source.droppableId
+    );
+    const destPeriodIndex = this.state.periods.findIndex(
+      p => p.id === destination.droppableId
+    );
+
+    if (sourcePeriodIndex === -1 || destPeriodIndex === -1) return;
+
+    const sourceCourses = Array.from(
+      this.state.periods[sourcePeriodIndex].courses
+    );
+    const destCourses = Array.from(this.state.periods[destPeriodIndex].courses);
+
+    const [movedCourse] = sourceCourses.splice(source.index, 1);
+
+    destCourses.splice(destination.index, 0, movedCourse);
+
+    const newPeriods = [...this.state.periods];
+    newPeriods[sourcePeriodIndex] = {
+      ...newPeriods[sourcePeriodIndex],
+      courses: sourceCourses,
+    };
+    newPeriods[destPeriodIndex] = {
+      ...newPeriods[destPeriodIndex],
+      courses: destCourses,
+    };
+
+    this.setState({ periods: newPeriods });
+  };
+
   render() {
     const defineExamDate = this.state.defineExamDate;
 
@@ -554,6 +595,7 @@ class DefineExamDatesList extends Component {
       coursesOffering,
     } = this.props;
     const {
+      examPeriods,
       modal1,
       languageState,
       duplicateError,
@@ -579,7 +621,7 @@ class DefineExamDatesList extends Component {
       isShowPreReq,
     } = this.state;
     console.log("allDaysArray", allDaysArray);
-    console.log("definePeriods", definePeriods);
+    console.log("definePeriods", examPeriods);
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -1736,13 +1778,197 @@ class DefineExamDatesList extends Component {
                                                 </Row>
                                               </CardBody>
                                             </Card>
-                                            <Card>
+                                            <DragDropContext
+                                              onDragEnd={this.onDragEnd}
+                                            >
+                                              {/* Courses List from Props */}
+                                              <Droppable droppableId="courses">
+                                                {provided => (
+                                                  <Card
+                                                    innerRef={provided.innerRef}
+                                                    {...provided.droppableProps}
+                                                  >
+                                                    <CardTitle>
+                                                      {t("Courses")}
+                                                    </CardTitle>
+                                                    <CardBody>
+                                                      {coursesOffering.map(
+                                                        (course, index) => (
+                                                          <Draggable
+                                                            key={course.value}
+                                                            draggableId={String(
+                                                              course.value
+                                                            )}
+                                                            index={index}
+                                                          >
+                                                            {(
+                                                              provided,
+                                                              snapshot
+                                                            ) => (
+                                                              <div
+                                                                ref={
+                                                                  provided.innerRef
+                                                                }
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                className={`btn btn-outline-primary m-1 ${
+                                                                  snapshot.isDragging
+                                                                    ? "dragging"
+                                                                    : ""
+                                                                }`}
+                                                              >
+                                                                {course.label}
+                                                              </div>
+                                                            )}
+                                                          </Draggable>
+                                                        )
+                                                      )}
+                                                      {provided.placeholder}
+                                                    </CardBody>
+                                                  </Card>
+                                                )}
+                                              </Droppable>
+                                              {/* <Droppable droppableId="period">
+                                                {provided => (
+                                                  <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.droppableProps}
+                                                    style={{
+                                                      maxHeight: "300px",
+                                                      overflowY: "auto",
+                                                      padding: "10px",
+                                                      border: "1px solid #ddd",
+                                                      borderRadius: "5px",
+                                                    }}
+                                                  >
+                                                    <h5>Periods</h5>
+                                                    {examPeriods &&
+                                                      examPeriods.map(
+                                                        (course, index) => (
+                                                          <Draggable
+                                                            key={course.value}
+                                                            draggableId={String(
+                                                              course.value
+                                                            )}
+                                                            index={index}
+                                                          >
+                                                            {(
+                                                              provided,
+                                                              snapshot
+                                                            ) => (
+                                                              <div
+                                                                ref={
+                                                                  provided.innerRef
+                                                                }
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                className={`btn btn-success m-1 ${
+                                                                  snapshot.isDragging
+                                                                    ? "dragging"
+                                                                    : ""
+                                                                }`}
+                                                              >
+                                                                {course.label}
+                                                              </div>
+                                                            )}
+                                                          </Draggable>
+                                                        )
+                                                      )}
+                                                    {provided.placeholder}
+                                                  </div>
+                                                )}
+                                              </Droppable> */}
+                                              {Array.isArray(examPeriods) &&
+                                                examPeriods.map(period => (
+                                                  <Card
+                                                    key={period.Id}
+                                                    className="mb-3"
+                                                  >
+                                                    <CardHeader>
+                                                      {period.startTime}
+                                                      {period.endTime}
+                                                    </CardHeader>
+                                                    <CardBody>
+                                                      <Droppable
+                                                        droppableId={period.Id}
+                                                      >
+                                                        {provided => (
+                                                          <div
+                                                            ref={
+                                                              provided.innerRef
+                                                            }
+                                                            {...provided.droppableProps}
+                                                            style={{
+                                                              maxHeight:
+                                                                "200px",
+                                                              overflowY: "auto",
+                                                              padding: "10px",
+                                                              border:
+                                                                "1px solid #ddd",
+                                                              borderRadius:
+                                                                "5px",
+                                                            }}
+                                                          >
+                                                            {Array.isArray(
+                                                              examPeriods
+                                                            ) &&
+                                                              examPeriods.map(
+                                                                (
+                                                                  course,
+                                                                  index
+                                                                ) => (
+                                                                  <Draggable
+                                                                    key={
+                                                                      course.value
+                                                                    }
+                                                                    draggableId={String(
+                                                                      course.value
+                                                                    )}
+                                                                    index={
+                                                                      index
+                                                                    }
+                                                                  >
+                                                                    {(
+                                                                      provided,
+                                                                      snapshot
+                                                                    ) => (
+                                                                      <div
+                                                                        ref={
+                                                                          provided.innerRef
+                                                                        }
+                                                                        {...provided.draggableProps}
+                                                                        {...provided.dragHandleProps}
+                                                                        className={`btn btn-success m-1 ${
+                                                                          snapshot.isDragging
+                                                                            ? "dragging"
+                                                                            : ""
+                                                                        }`}
+                                                                      >
+                                                                        {
+                                                                          course.label
+                                                                        }
+                                                                      </div>
+                                                                    )}
+                                                                  </Draggable>
+                                                                )
+                                                              )}
+                                                            {
+                                                              provided.placeholder
+                                                            }
+                                                          </div>
+                                                        )}
+                                                      </Droppable>
+                                                    </CardBody>
+                                                  </Card>
+                                                ))}
+                                            </DragDropContext>
+                                            {/* <Card>
                                               <CardTitle>
                                                 {t("Courses")}
                                               </CardTitle>
                                               <CardBody>
-                                                <Row>
-                                                  {/* <Col lg="4">
+                                                <Row> */}
+                                            {/* <Col lg="4">
                                               <Label
                                                 for="studentOrder-Id"
                                                 className="form-label d-flex"
@@ -1753,8 +1979,8 @@ class DefineExamDatesList extends Component {
                                                 </span>
                                               </Label>
                                             </Col> */}
-                                                  <Col lg="12">
-                                                    <div className="d-flex flex-wrap gap-2">
+                                            {/* <Col lg="12"> */}
+                                            {/* <div className="d-flex flex-wrap gap-2">
                                                       {coursesOffering.map(
                                                         (status, index) => (
                                                           <React.Fragment
@@ -1796,17 +2022,18 @@ class DefineExamDatesList extends Component {
                                                           </React.Fragment>
                                                         )
                                                       )}
-                                                    </div>
-                                                  </Col>
+                                                    </div> */}
+
+                                            {/* </Col>
                                                 </Row>
                                               </CardBody>
-                                            </Card>
-                                            <Card>
+                                            </Card> */}
+                                            {/* <Card>
                                               <CardTitle>
                                                 {t("Periods")}
                                               </CardTitle>
                                               <CardBody></CardBody>
-                                            </Card>
+                                            </Card> */}
                                           </Form>
                                         )}
                                       </Formik>
@@ -1850,7 +2077,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   onGetDefineExamDates: () => dispatch(getDefineExamDates()),
-  onGetCourseOffering: () => dispatch(getCoursesOffering()),
+  onGetCourseOffering: lng => dispatch(getCoursesOffering(lng)),
   onGetStudentsOrder: () => dispatch(getStudentsOrder()),
   onAddNewDefineExamDate: defineExamDate =>
     dispatch(addNewDefineExamDate(defineExamDate)),

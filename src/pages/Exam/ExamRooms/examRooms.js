@@ -287,7 +287,7 @@ class ExamRoomsList extends Component {
 
       {
         dataField: "hallArName",
-        text: this.props.t("hall Name"),
+        text: this.props.t("Room Name"),
         // formatter: (cell, row) => (
         //   <Select
         //     key={`level_select`}
@@ -311,7 +311,7 @@ class ExamRoomsList extends Component {
       {
         key: "hallNum",
         dataField: "defineExamDateNum",
-        text: this.props.t("Hall No."),
+        text: this.props.t("Room No."),
         editable: false,
         // formatter: (cellContent, row, column) => (
         //   <Input

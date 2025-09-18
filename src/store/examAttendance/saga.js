@@ -113,22 +113,23 @@ function* fetchUsers() {
   }
 }
 
-function* fetchExamsAttendance() {
-  // console.log("in saga obj", obj);
-  // const userTypeId = obj.payload.userTypeId;
+function* fetchExamsAttendance(obj) {
+  console.log("in saga obj", obj);
+  const userTypeId = obj.payload.userTypeId;
 
   const get_ExamsAttendance_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_Certificates",
-    // filter: `userTypeId = ${userTypeId}`,
+    filter: `userTypeId = ${userTypeId}`,
   };
   try {
     const response = yield call(getExamsAttendance, get_ExamsAttendance_req);
     /* response.map(resp => {
       resp["sector"] = JSON.parse(resp["sector"]);
     }); */
+    console.log("responseresponse", response);
     yield put(getExamsAttendanceSuccess(response));
   } catch (error) {
     yield put(getExamsAttendanceFail(error));
@@ -154,7 +155,7 @@ function* fetchExamsAttendance() {
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_TrainingMembers",
     fields: "Id,name",
-    // filter: `userTypeId = ${userTypeId}`,
+    filter: `userTypeId = ${userTypeId}`,
   };
   try {
     const response = yield call(getFilteredMembers, get_trainer_req);

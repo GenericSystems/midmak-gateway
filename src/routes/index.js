@@ -397,7 +397,7 @@ const authProtectedRoutes = [
 
   // ExamsAttendance
 
-  { path: "/examsAttendance", component: ExamsAttendance },
+  { path: "/examAttendance", component: ExamsAttendance },
 
   // ExamsAttendanceObserver
 
