@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import Select from "react-select";
 import {
   Card,
@@ -18,7 +19,10 @@ import {
   Label,
   Alert,
   Input,
+  CardTitle,
 } from "reactstrap";
+import * as moment from "moment";
+
 import BootstrapTable from "react-bootstrap-table-next";
 import DeleteModal from "components/Common/DeleteModal";
 import cellEditFactory from "react-bootstrap-table2-editor";
@@ -51,12 +55,13 @@ import {
   checkIsDeleteForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+import hiddenGrades from "store/hide-grade/reducer";
 class HiddenGradesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCourseId:null,
-      selectedHideReasonId:null,
+      selectedCourseId: null,
+      selectedHideReasonId: null,
       hiddenGrades: [],
       rows: [],
       hiddenGrade: "",
@@ -67,6 +72,8 @@ class HiddenGradesList extends Component {
       deleteModal: false,
       showDeleteButton: false,
       deleteModal: false,
+      modal: false,
+      isEdit: false,
     };
     this.state = {
       duplicateError: null,
@@ -162,7 +169,7 @@ class HiddenGradesList extends Component {
     console.log("hiddenGrades", hiddenGrades);
 
     const newRow = {
-      courseId: null,
+      courseId: 0,
     };
     console.log("neww roww", newRow);
 
@@ -176,6 +183,7 @@ class HiddenGradesList extends Component {
       console.log("11111111111");
       onAddNewHiddenGrade(newRow);
     }
+    this.toggle();
   };
   onClickDelete = rowId => {
     console.log("roeIDDDDD", rowId);
@@ -186,7 +194,7 @@ class HiddenGradesList extends Component {
       deleteModal: !prevState.deleteModal,
     }));
   };
- handleDeleteRow = () => {
+  handleDeleteRow = () => {
     const { onDeleteHiddenGrade } = this.props;
     const { selectedRowId } = this.state;
 
@@ -210,27 +218,40 @@ class HiddenGradesList extends Component {
     this.setState({ showAlert: null });
     onGetHiddenGradeDeletedValue();
   };
+  handleSelectChange = (fieldName, selectedValue, values) => {
+    console.log("selectedValueselectedValue", selectedValue);
+    if (fieldName === "courseId") {
+      this.setState({
+        selectedCourseId: selectedValue.value,
+        courseId: selectedValue.value,
+        courseCode: selectedValue.Code,
+        hiddenGrade: values,
+      });
 
-handleSelect = (rowId, fieldName, selectedValue) => {
-  const { onUpdateHiddenGrade } = this.props;
+      console.log("courseCode", selectedValue.Code);
+    }
+  };
 
-  let onUpdate;
+  handleSelect = (rowId, fieldName, selectedValue) => {
+    console.log("selectedValueselectedValue", selectedValue);
+    const { onUpdateHiddenGrade } = this.props;
+    let onUpdate;
+    if (fieldName === "courseId") {
+      onUpdate = {
+        Id: rowId,
+        courseId: selectedValue.value,
+        courseCode: selectedValue.Code || "", // auto-fill
+      };
+      // console.log("onUpdate",onUpdate)
+    } else if (fieldName === "hideReasonId") {
+      onUpdate = {
+        Id: rowId,
+        [fieldName]: selectedValue.value,
+      };
+    }
 
-  if (fieldName === "courseId") {
-    onUpdate = {
-      Id: rowId,
-      courseId: selectedValue.value,
-      courseCode: selectedValue.Code || "", // auto-fill
-    };
-  } else if (fieldName === "hideReasonId") {
-    onUpdate = {
-      Id: rowId,
-      [fieldName]: selectedValue.value,
-    };
-  }
-
-  onUpdateHiddenGrade(onUpdate);
-};
+    onUpdateHiddenGrade(onUpdate);
+  };
 
   handlehiddenGradeDataChange = (rowId, fieldName, fieldValue) => {
     console.log("called");
@@ -275,6 +296,19 @@ handleSelect = (rowId, fieldName, selectedValue) => {
     const onUpdate = { Id: rowId, [fieldName]: newValue };
     onUpdateHiddenGrade(onUpdate);
   }
+  toggle = () => {
+    this.setState(prevState => ({
+      modal: !prevState.modal,
+    }));
+  };
+
+  handleAddRow = () => {
+    this.setState({
+      hiddenGrade: "",
+      isEdit: false,
+    });
+    this.toggle();
+  };
 
   render() {
     const { hiddenGrades, t, deleted, coursesOffering, hidereasons } =
@@ -284,9 +318,13 @@ handleSelect = (rowId, fieldName, selectedValue) => {
       showAlert,
       showAddButton,
       deleteModal,
+      modal,
       showDeleteButton,
+      isEdit,
       showEditButton,
       showSearchButton,
+      hiddenGrade,
+      selectedCourseId,
     } = this.state;
     const { SearchBar } = Search;
     const alertMessage =
@@ -322,12 +360,12 @@ handleSelect = (rowId, fieldName, selectedValue) => {
         dataField: "courseCode",
         text: this.props.t("Course Code"),
         sort: true,
-        formatter: (cell, row) => row.courseCode || "",
+
         editable: false,
       },
       {
         dataField: "fromDate",
-        text: this.props.t("fom Date"),
+        text: this.props.t("From Date"),
         sort: true,
         formatter: cell => {
           if (!cell) return "";
@@ -335,9 +373,8 @@ handleSelect = (rowId, fieldName, selectedValue) => {
           const year = date.getFullYear();
           const month = String(date.getMonth() + 1).padStart(2, "0");
           const day = String(date.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`; // 2025-08-11
+          return `${year}-${month}-${day}`;
         },
-
         editable: true,
         editorRenderer: (
           editorProps,
@@ -352,7 +389,15 @@ handleSelect = (rowId, fieldName, selectedValue) => {
               type="date"
               {...editorProps}
               value={value || ""}
-              onChange={e => editorProps.onUpdate(e.target.value)}
+              onChange={e => {
+                const newValue = e.target.value;
+                editorProps.onUpdate(newValue); // update table UI
+                this.handlehiddenGradeDataChange(
+                  row.Id,
+                  column.dataField,
+                  newValue
+                ); // update props
+              }}
               className="form-control"
             />
           );
@@ -386,7 +431,15 @@ handleSelect = (rowId, fieldName, selectedValue) => {
               type="date"
               {...editorProps}
               value={value || ""}
-              onChange={e => editorProps.onUpdate(e.target.value)}
+              onChange={e => {
+                const newValue = e.target.value;
+                editorProps.onUpdate(newValue);
+                this.handlehiddenGradeDataChange(
+                  row.Id,
+                  column.dataField,
+                  newValue
+                );
+              }}
               className="form-control"
             />
           );
@@ -589,6 +642,202 @@ handleSelect = (rowId, fieldName, selectedValue) => {
             </Row>
           </div>
         </div>
+        <Modal
+          isOpen={modal} // your modal state
+          toggle={this.toggle} // your toggle function
+          // gradeVersion={this.state.selectedGradeVersion} // now tied to clicked row
+          // gradeVersionId={
+          //   this.state.selectedGradeVersionId
+          // } // FK
+          size="lg"
+        >
+          <ModalHeader toggle={this.toggle} tag="h4">
+            {!!isEdit ? t("Edit Grades Data") : t("Add Grades Data")}
+          </ModalHeader>
+
+          <ModalBody>
+            <Formik
+              enableReinitialize={true}
+              initialValues={{
+                ...(isEdit && {
+                  Id: hiddenGrade.Id,
+                }),
+                courseId:
+                  (hiddenGrade && hiddenGrade.courseId) || selectedCourseId,
+
+                fromDate: hiddenGrade?.fromDate
+                  ? moment
+                      .utc(hiddenGrade.fromDate)
+                      .local()
+                      .format("YYYY-MM-DD")
+                  : "",
+
+                toDate: hiddenGrade?.toDate
+                  ? moment.utc(hiddenGrade.toDate).local().format("YYYY-MM-DD")
+                  : "",
+              }}
+            >
+              {({
+                errors,
+                status,
+                touched,
+                values,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+              }) => (
+                <Form>
+                  <Card>
+                    <CardTitle id="course_header">
+                      {t("Hidden Grades Profile")}
+                    </CardTitle>
+                    <CardBody>
+                      <div className="mb-5">
+                        <Row>
+                          <Col className="col-6">
+                            <Label for="courseId">
+                              {this.props.t("Course Name")}
+                            </Label>
+                            <span className="text-danger">*</span>
+                          </Col>
+                          <Col className="col-6">
+                            <Select
+                              className={`form-control`}
+                              name="courseId"
+                              id="courseId"
+                              key="_course_select_"
+                              options={coursesOffering}
+                              onChange={newValue =>
+                                this.handleSelectChange(
+                                  "courseId",
+                                  newValue,
+                                  values
+                                )
+                              }
+                              defaultValue={coursesOffering.find(
+                                opt => opt.value === hiddenGrade?.courseId
+                              )}
+                            />
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col className="col-6">
+                            <Label for="courseCode">
+                              {this.props.t("Course Code")}
+                            </Label>
+                          </Col>
+
+                          <Col className="col-6">
+                            <Field
+                              type="text"
+                              name="courseCode"
+                              id="courseCode"
+                              value={
+                                this.state.courseCode ||
+                                hiddenGrade.courseCode ||
+                                ""
+                              }
+                              readOnly
+                              className="form-control"
+                            />
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col className="col-6">
+                            <Label for="fromDate">
+                              {this.props.t("from Date")}
+                            </Label>
+                            <span className="text-danger">*</span>
+                          </Col>
+                          <Col className="col-6">
+                            <Field
+                              name="fromDate"
+                              className={`form-control`}
+                              type="date"
+                              value={
+                                values.fromDate
+                                  ? new Date(values.fromDate)
+                                      .toISOString()
+                                      .split("T")[0]
+                                  : ""
+                              }
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              id="fromDate-date-input"
+                            />
+                            {/* {fromDateError && (
+                              <div className="invalid-feedback">
+                                {this.props.t("Birth Date is required")}
+                              </div>
+                            )} */}
+                          </Col>
+
+                          <Col className="col-6 ">
+                            <Label for="toDate">
+                              {this.props.t("to Date")}
+                            </Label>
+                            <span className="text-danger">*</span>
+                          </Col>
+                          <Col className="col-6">
+                            <Field
+                              name="toDate"
+                              className={`form-control`}
+                              type="date"
+                              value={
+                                values.toDate
+                                  ? new Date(values.toDate)
+                                      .toISOString()
+                                      .split("T")[0]
+                                  : ""
+                              }
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              id="toDate-date-input"
+                            />
+                            {/* {toDateError && (
+                              <div className="invalid-feedback">
+                                {this.props.t("Birth Date is required")}
+                              </div>
+                            )} */}
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col className="col-6">
+                            <Label for="hideReasonId">
+                              {this.props.t("Hide Reason")}
+                            </Label>
+                            <span className="text-danger">*</span>
+                          </Col>
+                          <Col className="col-6">
+                            <Select
+                              // className={`form-control ${
+                              //   // nationalityError ? "is-invalid" : ""
+                              // }`}
+                              name="hideReasonId"
+                              id="hideReasonId"
+                              key="_hideReasonselect_"
+                              options={hidereasons}
+                              onChange={newValue =>
+                                this.handleSelectChange(
+                                  "hideReasonId",
+                                  newValue.value,
+                                  values
+                                )
+                              }
+                              defaultValue={hidereasons.find(
+                                opt => opt.value === hiddenGrade?.hideReasonId
+                              )}
+                            />
+                          </Col>
+                        </Row>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Form>
+              )}
+            </Formik>
+          </ModalBody>
+        </Modal>
       </React.Fragment>
     );
   }
@@ -610,7 +859,7 @@ const mapDispatchToProps = dispatch => ({
   onUpdateHiddenGrade: hiddenGrade => dispatch(updateHiddenGrade(hiddenGrade)),
   onDeleteHiddenGrade: hiddenGrade => dispatch(deleteHiddenGrade(hiddenGrade)),
   onGetHiddenGradeDeletedValue: () => dispatch(getHiddenGradeDeletedValue()),
-  onGetHideReasons:()=>dispatch(getHideReasons())
+  onGetHideReasons: () => dispatch(getHideReasons()),
 });
 
 export default connect(
