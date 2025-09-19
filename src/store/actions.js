@@ -33,6 +33,9 @@ export * from "./hide-grade/actions";
 //trainees
 export * from "./trainees/actions";
 
+//regTrainees
+export * from "./registerTraineesAttendance/actions";
+
 // admissionConditions
 export * from "./admissionConditions/actions";
 
@@ -310,7 +313,7 @@ export * from "./examAttendanceObservers/actions";
 
 export * from "./hallSchedules/actions";
 
-//Trainees
+//tempTrainees
 export * from "./new-Trainee/actions";
 
 //TrainingFormats

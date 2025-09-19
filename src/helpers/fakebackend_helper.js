@@ -270,7 +270,7 @@ export const getTraineeDeletedValue = () => get(url.GET_TRAINEE_DELETED_VALUE);
 // get Trainee
 export const getTraineeById = data => post(url.GET_TRAINEE_BY_ID, data);
 
-// get sTrainee_regReqDocs
+// get Trainee_regReqDocs
 export const getTraineeRegReqDocs = data =>
   post(url.GET_TRAINEE_REGREQDOCS, data);
 
@@ -280,6 +280,25 @@ export const updateTraineeRegReqDoc = data =>
 
 // get Trainee Opt
 export const getTraineesOpt = data => post(url.GET_TRAINEES_OPT, data);
+
+// get RegTraineesAttendance
+export const getRegisterTraineesAttendance = data =>
+  post(url.GET_REGISTER_TRAINEES_ATTENDANCE, data);
+
+// add RegisterTraineeAttendance
+export const addNewRegisterTraineeAttendance = data =>
+  post(url.ADD_NEW_REGISTER_TRAINEE_ATTENDANCE, data);
+
+//update RegisterTraineeAttendance
+export const updateRegisterTraineeAttendance = data =>
+  post(url.UPDATE_REGISTER_TRAINEE_ATTENDANCE, data);
+
+//delete RegisterTraineeAttendance
+export const deleteRegisterTraineeAttendance = data =>
+  post(url.DELETE_REGISTER_TRAINEE_ATTENDANCE, data);
+
+export const getRegisterTraineeAttendanceDeletedValue = () =>
+  get(url.GET_REGISTER_TRAINEE_ATTENDANCE_DELETED_VALUE);
 
 // add brother
 export const addBrother = data => post(url.ADD_BROTHER, data);

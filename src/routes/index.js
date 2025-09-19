@@ -205,6 +205,9 @@ import ExamObserversList from "../pages/Exam/ExamObservers/examObservers";
 //trainees
 import TraineesList from "../pages/Addmission/AcadmeyTrainees/trainees";
 
+//RegisterTraineesAttendance
+import RegisterTraineesAttendance from "../pages/TraineeAttendence/RegisterTraineesAttendance/registerTraineesAttendance";
+
 //WarningsTypes
 import WarningsTypesList from "../pages/HR/warningsTypes/warningsTypes";
 
@@ -485,6 +488,12 @@ const authProtectedRoutes = [
 
   // trainees
   { path: "/trainees", component: TraineesList },
+
+  // trainees
+  {
+    path: "/registerTraineesAttendance",
+    component: RegisterTraineesAttendance,
+  },
 
   //trainingFormat
   { path: "/trainingFormat", component: TrainingFormatsList },

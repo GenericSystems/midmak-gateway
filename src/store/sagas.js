@@ -33,6 +33,7 @@ import CertificatesSaga from "./certificates/saga";
 import CertificatelevelSaga from "./certificateTypes/saga";
 import StudentManagementSaga from "./studentManagements/saga";
 import traineesSaga from "./trainees/saga";
+import regTraineesAttendanceSaga from "./registerTraineesAttendance/saga";
 import contactsSaga from "./contacts/saga";
 import dashboardSaga from "./dashboard/saga";
 import dashboardSaasSaga from "./dashboard-saas/saga";
@@ -171,6 +172,7 @@ export default function* rootSaga() {
     fork(CertificatesSaga),
     fork(CertificatelevelSaga),
     fork(traineesSaga),
+    fork(regTraineesAttendanceSaga),
     fork(StudentManagementSaga),
     fork(nationalitiesSaga),
     fork(relativesSaga),

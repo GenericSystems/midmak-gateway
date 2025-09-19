@@ -99,6 +99,14 @@ export const GET_TRAINEE_REGREQDOCS = "/trainee_regReqDocs";
 export const UPDATE_TRAINEE_REGREQDOC = "/update/trainee_regReqDoc";
 export const GET_TRAINEE_STATUS = "/traineeStatus";
 export const GET_TRAINEES_OPT = "/traineesOpt";
+
+//regTraineesAttendance
+export const GET_REGISTER_TRAINEES_ATTENDANCE = "/regTrainees";
+export const GET_REGISTER_TRAINEE_ATTENDANCE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_REGISTER_TRAINEE_ATTENDANCE = "/add/regTrainee";
+export const UPDATE_REGISTER_TRAINEE_ATTENDANCE = "/update/regTrainee";
+export const DELETE_REGISTER_TRAINEE_ATTENDANCE = "/delete/regTrainee";
+
 export const ADD_BROTHER = "/add/Brother";
 export const DELETE_BROTHER = "/delete/Brother";
 export const UPDATE_BROTHER = "/update/Brother";

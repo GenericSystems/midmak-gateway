@@ -33,6 +33,9 @@ import invoices from "./invoices/reducer";
 //trainees
 import trainees from "./trainees/reducer";
 
+//regTraineesAttendance
+import regTraineesAttendance from "./registerTraineesAttendance/reducer";
+
 //admissionConditions
 import admissionConditions from "./admissionConditions/reducer";
 
@@ -426,6 +429,7 @@ const rootReducer = combineReducers({
   grantSponsors,
   years,
   trainees,
+  regTraineesAttendance,
   semesters,
   weekDays,
   timeLines,
