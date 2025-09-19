@@ -4294,7 +4294,7 @@ class RegisterTraineesAttendance extends Component {
                                                                     </Col>
                                                                   </Row>
                                                                   <Row className="mb-3">
-                                                                    <Col className="col-6">
+                                                                    <Col className="col-2">
                                                                       <Label for="arLectureTitle">
                                                                         {this.props.t(
                                                                           "Lecture Title(Ar)"
@@ -4304,7 +4304,7 @@ class RegisterTraineesAttendance extends Component {
                                                                         *
                                                                       </span>
                                                                     </Col>
-                                                                    <Col className="col-6">
+                                                                    <Col className="col-4">
                                                                       <Field
                                                                         type="text"
                                                                         name="arLectureTitle"
@@ -4332,14 +4332,14 @@ class RegisterTraineesAttendance extends Component {
                                                                         className="invalid-feedback"
                                                                       />
                                                                     </Col>
-                                                                    <Col className="col-6">
+                                                                    <Col className="col-2">
                                                                       <Label for="lectureOrder">
                                                                         {this.props.t(
                                                                           "Lecture Order"
                                                                         )}
                                                                       </Label>
                                                                     </Col>
-                                                                    <Col className="col-6">
+                                                                    <Col className="col-4">
                                                                       <Field
                                                                         type="text"
                                                                         name="lectureOrder"
@@ -4351,7 +4351,7 @@ class RegisterTraineesAttendance extends Component {
                                                                     </Col>
                                                                   </Row>
                                                                   <Row className="mb-3">
-                                                                    <Col className="col-6">
+                                                                    <Col className="col-2">
                                                                       <Label for="enLectureTitle">
                                                                         {this.props.t(
                                                                           "Lecture Title(En)"
@@ -4361,7 +4361,7 @@ class RegisterTraineesAttendance extends Component {
                                                                         *
                                                                       </span>
                                                                     </Col>
-                                                                    <Col className="col-6">
+                                                                    <Col className="col-4">
                                                                       <Field
                                                                         type="text"
                                                                         name="enLectureTitle"
@@ -4389,14 +4389,14 @@ class RegisterTraineesAttendance extends Component {
                                                                         className="invalid-feedback"
                                                                       />
                                                                     </Col>
-                                                                    <Col className="col-6">
+                                                                    <Col className="col-2">
                                                                       <Label for="weekOrder">
                                                                         {this.props.t(
                                                                           "Week Order"
                                                                         )}
                                                                       </Label>
                                                                     </Col>
-                                                                    <Col className="col-6">
+                                                                    <Col className="col-4">
                                                                       <Field
                                                                         type="text"
                                                                         name="weekOrder"
