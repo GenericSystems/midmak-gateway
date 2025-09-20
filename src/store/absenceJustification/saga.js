@@ -65,6 +65,8 @@ function* onAddNewAbsenceJustification({ payload }) {
 
   try {
     const response = yield call(addNewAbsenceJustification, payload);
+    console.log("responseresponseee",response)
+    console.log("payloadpayload",payload)
     yield put(addAbsenceJustificationSuccess(response[0]));
   } catch (error) {
     yield put(addAbsenceJustificationFail(error));

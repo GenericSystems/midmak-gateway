@@ -107,7 +107,7 @@ function* onGetHideReasons() {
   };
   try {
     const response = yield call(getHideReasons, get_HideReasons_req);
-    console.log("hidereasonsssssssss", response);
+    console.log("responseresponseresponseresponseresponseresponseresponse", response);
     yield put(getHideReasonSuccess(response));
   } catch (error) {
     yield put(getHideReasonFail(error));
@@ -118,7 +118,7 @@ function* onUpdatehiddenGrade({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_HiddenGrades ";
+  payload["tablename"] = "Common_HiddenGrades";
   try {
     const respupdate = yield call(updateHiddenGrade, payload);
     console.log("999999999999999", respupdate);
@@ -132,7 +132,7 @@ function* onDeletehiddenGrade({ payload, hiddenGrade }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_HiddenGrades ";
+  payload["tablename"] = "Common_HiddenGrades";
   try {
     const respdelete = yield call(deleteHiddenGrade, payload);
     yield put(deleteHiddenGradeSuccess(respdelete[0]));

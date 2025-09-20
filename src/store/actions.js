@@ -105,6 +105,11 @@ export * from "./absenceType/actions";
 //absenceJustification
 export * from "./absenceJustification/actions";
 
+
+//absencePercent
+export * from "./absencePercents/actions";
+
+
 //gradesVersions
 export * from "./gradesVersions/actions";
 

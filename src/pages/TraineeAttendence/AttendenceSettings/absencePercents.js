@@ -35,14 +35,13 @@ import ToolkitProvider, {
 
 import Breadcrumbs from "components/Common/Breadcrumb";
 import {
-  getHiddenGrades,
-  addNewHiddenGrade,
-  updateHiddenGrade,
-  deleteHiddenGrade,
-  getHiddenGradeDeletedValue,
-  getHideReasons,
-} from "store/hide-grade/actions";
-//store/hide-grade/actions";
+  getAbsencePercents,
+  addNewAbsencePercent,
+  updateAbsencePercent,
+  deleteAbsencePercent,
+  getAbsencePercentDeletedValue,
+} from "store/absencePercents/actions";
+
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -55,17 +54,17 @@ import {
   checkIsDeleteForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-import hiddenGrades from "store/hide-grade/reducer";
-class HiddenGradesList extends Component {
+import absencePercents from "store/absencePercents/reducer";
+class AbsencePercentsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedCourseId: null,
-      selectedHideReasonId: null,
       courseCode: "",
-      hiddenGrades: [],
+      courseCredit: "",
+      absencePercents: [],
       rows: [],
-      hiddenGrade: "",
+      absencePercent: "",
       showAlert: null,
       showAddButton: false,
       showEditButton: false,
@@ -84,12 +83,12 @@ class HiddenGradesList extends Component {
 
   componentDidMount() {
     const {
-      hiddenGrades,
-      onGetHiddenGrades,
-      onGetHideReasons,
+      absencePercents,
+      onGetAbsencePercents,
+
       user_menu,
       coursesOffering,
-      hidereasons,
+
       deleted,
     } = this.props;
 
@@ -98,18 +97,12 @@ class HiddenGradesList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
 
-    onGetHiddenGrades();
-    onGetHideReasons();
-
-    const mappedHideReasons = (hidereasons || []).map(r => ({
-      value: r.Id,
-      label: r.arTitle,
-    }));
+    onGetAbsencePercents();
 
     this.setState({
-      hiddenGrades,
+      absencePercents,
       coursesOffering,
-      hidereasons: mappedHideReasons,
+
       deleted,
     });
   }
@@ -166,15 +159,15 @@ class HiddenGradesList extends Component {
     }
   };
   handleAddRow = () => {
-    // const { onAddNewHiddenGrade, hiddenGrades } = this.props;
-    // console.log("hiddenGrades", hiddenGrades);
+    // const { onAddNewAbsencePercent, absencePercents } = this.props;
+    // console.log("absencePercents", absencePercents);
 
     // const newRow = {
     //   courseId: 0,
     // };
     // console.log("neww roww", newRow);
 
-    // const hasEmptyRow = hiddenGrades.some(row => row.courseId === null);
+    // const hasEmptyRow = absencePercents.some(row => row.courseId === null);
 
     // if (hasEmptyRow) {
     //   const errorMessage = this.props.t("Fill in the empty row first");
@@ -182,7 +175,7 @@ class HiddenGradesList extends Component {
     // } else {
     //   this.setState({ duplicateError: null });
     //   console.log("11111111111");
-    //   onAddNewHiddenGrade(newRow);
+    //   onAddNewAbsencePercent(newRow);
     // }
     this.toggle();
   };
@@ -196,11 +189,11 @@ class HiddenGradesList extends Component {
     }));
   };
   handleDeleteRow = () => {
-    const { onDeleteHiddenGrade } = this.props;
+    const { onDeleteAbsencePercent } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteHiddenGrade(selectedRowId);
+      onDeleteAbsencePercent(selectedRowId);
 
       this.setState({
         selectedRowId: null,
@@ -209,42 +202,40 @@ class HiddenGradesList extends Component {
       });
     }
   };
-  handleEditHiddenGrade = hiddenGrade => {
-  console.log("Editing Hidden Grade:", hiddenGrade);
+  handleEditAbsencePercent = absencePercent => {
+    console.log("Editing Absence Percents:", absencePercent);
 
-  this.setState({
-    hiddenGrade: hiddenGrade, // full object for Formik or modal
-    selectedCourseId: hiddenGrade.courseId,
-    courseCode: hiddenGrade.courseCode,
-    selectedHideReason: hiddenGrade.hideReasonId,
-    fromDate: hiddenGrade.fromDate,
-    toDate: hiddenGrade.toDate,
-    isEdit: true,
-  });
+    this.setState({
+      absencePercent: absencePercent,
+      selectedCourseId: absencePercent.courseId,
+      courseCode: absencePercent.courseCode,
+      courseCredit: absencePercent.courseCredit,
+      warningPercent: absencePercent.warningPercent,
+      toDate: absencePercent.toDate,
+      isEdit: true,
+    });
 
-  this.toggle(); // open modal for editing
-};
+    this.toggle();
+  };
 
   handleSave = values => {
     console.log("valueessssss", values);
-    const { selectedCourseId, courseCode, selectedHideReasonId, isEdit } =
-      this.state;
+    const { selectedCourseId, courseCode, courseCredit, isEdit } = this.state;
 
-    const { onAddNewHiddenGrade, onUpdateHiddenGrade } = this.props;
+    const { onAddNewAbsencePercent, onUpdateAbsencePercent } = this.props;
 
     values["courseId"] = selectedCourseId;
     // values["courseCode"] = courseCode;
-    values["hideReasonId"] = selectedHideReasonId;
+    //values["courseCredit"]=courseCredit;
 
-    console.log("Hidden Grade Form Values:", values);
+    console.log("Valuessssssssssss", values);
 
-    let hiddenGradeInfo = {};
+    let absencePercentInfo = {};
 
     // if (
     //   values.courseId &&
     //   values.courseCode &&
-    //   values.hideReasonId &&
-    //   values.fromDate &&
+    //   values.warningPercent &&
     //   values.toDate
     // ) {
 
@@ -253,39 +244,39 @@ class HiddenGradesList extends Component {
         values[key] !== undefined &&
         (values[key].length > 0 || values[key] !== "")
       ) {
-        hiddenGradeInfo[key] = values[key];
+        absencePercentInfo[key] = values[key];
       }
     });
 
     if (isEdit) {
-      console.log("3333333333333333333", hiddenGradeInfo);
+      console.log("3333333333333333333", absencePercentInfo);
 
-      onUpdateHiddenGrade(hiddenGradeInfo);
+      onUpdateAbsencePercent(absencePercentInfo);
     } else {
-      console.log("222222222222222222", hiddenGradeInfo);
+      console.log("222222222222222222", absencePercentInfo);
 
-      onAddNewHiddenGrade(hiddenGradeInfo);
+      onAddNewAbsencePercent(absencePercentInfo);
     }
 
     this.setState({
       errorMessages: {},
     });
     // } else {
-    //   console.log("11111111111111", hiddenGradeInfo);
+    //   console.log("11111111111111", absencePercentInfo);
     //   this.setState({ emptyError: "Please fill in the required fields" });
     // // }
     this.toggle();
   };
 
   handleSuccessClose = () => {
-    const { onGetHiddenGradeDeletedValue } = this.props;
+    const { onGetAbsencePercentDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetHiddenGradeDeletedValue();
+    onGetAbsencePercentDeletedValue();
   };
   handleErrorClose = () => {
-    const { onGetHiddenGradeDeletedValue } = this.props;
+    const { onGetAbsencePercentDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetHiddenGradeDeletedValue();
+    onGetAbsencePercentDeletedValue();
   };
   handleSelectChange = (fieldName, selectedValue, values) => {
     console.log("selectedValueselectedValue", selectedValue);
@@ -294,60 +285,47 @@ class HiddenGradesList extends Component {
         selectedCourseId: selectedValue.value,
         courseId: selectedValue.value,
         courseCode: selectedValue.Code,
-        hiddenGrade: values,
+        courseCredit: selectedValue.totalTrainingHours,
+        absencePercent: values,
       });
     }
-    if (fieldName === "hideReasonId") {
-      this.setState({
-        selectedHideReasonId: selectedValue.value,
-        hideReasonId: selectedValue.value,
-        hiddenGrade: values,
-      });
-    }
-
-    console.log(" hideReasonId", selectedValue.value);
   };
 
   handleSelect = (rowId, fieldName, selectedValue) => {
     console.log("selectedValueselectedValue", selectedValue);
-    const { onUpdateHiddenGrade } = this.props;
+    const { onUpdateAbsencePercent } = this.props;
     let onUpdate;
     if (fieldName === "courseId") {
       onUpdate = {
         Id: rowId,
         courseId: selectedValue.value,
-        courseCode: selectedValue.Code || "", // auto-fill
+        courseCode: selectedValue.Code || "",
+        courseCredit: selectedValue.totalTrainingHours || "",
       };
       // console.log("onUpdate",onUpdate)
-    } else if (fieldName === "hideReasonId") {
-      onUpdate = {
-        Id: rowId,
-        [fieldName]: selectedValue.value,
-      };
     }
-
-    onUpdateHiddenGrade(onUpdate);
+    onUpdateAbsencePercent(onUpdate);
   };
 
-  handlehiddenGradeDataChange = (rowId, fieldName, fieldValue) => {
+  handleabsencePercentDataChange = (rowId, fieldName, fieldValue) => {
     console.log("called");
-    const { onUpdateHiddenGrade } = this.props;
+    const { onUpdateAbsencePercent } = this.props;
 
     let onUpdate = {
       Id: rowId,
       [fieldName]: fieldValue,
     };
     console.log("onUpdate", onUpdate);
-    onUpdateHiddenGrade(onUpdate);
+    onUpdateAbsencePercent(onUpdate);
   };
 
-  // handlehiddenGradeDataChange = (rowId, fieldName, fieldValue) => {
-  //   const { hiddenGrades, onUpdateHiddenGrade } = this.props;
+  // handleabsencePercentDataChange = (rowId, fieldName, fieldValue) => {
+  //   const { absencePercents, onUpdateAbsencePercent } = this.props;
 
-  //   const isDuplicate = hiddenGrades.some(hiddenGrade => {
+  //   const isDuplicate = absencePercents.some(absencePercent => {
   //     return (
-  //       hiddenGrade.Id !== rowId &&
-  //       hiddenGrade.arTitle.trim() === fieldValue.trim()
+  //       absencePercent.Id !== rowId &&
+  //       absencePercent.arTitle.trim() === fieldValue.trim()
   //     );
   //   });
 
@@ -355,11 +333,11 @@ class HiddenGradesList extends Component {
   //     const errorMessage = this.props.t("Value already exists");
   //     this.setState({ duplicateError: errorMessage });
   //     let onUpdate = { Id: rowId, [fieldName]: "-----" };
-  //     onUpdateHiddenGrade(onUpdate);
+  //     onUpdateAbsencePercent(onUpdate);
   //   } else {
   //     this.setState({ duplicateError: null });
   //     let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-  //     onUpdateHiddenGrade(onUpdate);
+  //     onUpdateAbsencePercent(onUpdate);
   //   }
   // };
 
@@ -368,9 +346,9 @@ class HiddenGradesList extends Component {
   };
 
   handleSelectFaculty(rowId, fieldName, newValue) {
-    const { onUpdateHiddenGrade } = this.props;
+    const { onUpdateAbsencePercent } = this.props;
     const onUpdate = { Id: rowId, [fieldName]: newValue };
-    onUpdateHiddenGrade(onUpdate);
+    onUpdateAbsencePercent(onUpdate);
   }
   toggle = () => {
     this.setState(prevState => ({
@@ -380,15 +358,14 @@ class HiddenGradesList extends Component {
 
   handleAddRow = () => {
     this.setState({
-      hiddenGrade: "",
+      absencePercent: "",
       isEdit: false,
     });
     this.toggle();
   };
 
   render() {
-    const { hiddenGrades, t, deleted, coursesOffering, hidereasons } =
-      this.props;
+    const { absencePercents, t, deleted, coursesOffering } = this.props;
     const {
       duplicateError,
       showAlert,
@@ -399,9 +376,8 @@ class HiddenGradesList extends Component {
       isEdit,
       showEditButton,
       showSearchButton,
-      hiddenGrade,
+      absencePercent,
       selectedCourseId,
-      selectedHideReasonId,
     } = this.state;
     const { SearchBar } = Search;
     const alertMessage =
@@ -439,46 +415,24 @@ class HiddenGradesList extends Component {
       },
 
       {
-        dataField: "fromDate",
-        text: this.props.t("From Year"),
+        dataField: "courseCredit",
+        text: this.props.t("Course Credit"),
         sort: true,
         editable: false,
-        formatter: cell => {
-          if (!cell) return "";
-          const date = new Date(cell);
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, "0");
-          const day = String(date.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`;
-        },
       },
 
       {
-        dataField: "toDate",
-        text: this.props.t("To Year"),
+        dataField: "warningPercent",
+        text: this.props.t("Issue Warning Percent"),
         sort: true,
         editable: false,
-        formatter: cell => {
-          if (!cell) return "";
-          const date = new Date(cell);
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, "0");
-          const day = String(date.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`;
-        },
       },
 
       {
-        dataField: "hideReasonId",
-        text: this.props.t("Hide Reason"),
+        dataField: "dismissPercent",
+        text: this.props.t("Issue Dismiss Percent"),
         sort: true,
         editable: false,
-        // formatter: (cell, row) => {
-        //   const reason = hidereasons.find(
-        //     opt => opt.value === row.hideReasonId
-        //   );
-        //   return reason ? reason.label : "";
-        // },
       },
 
       {
@@ -486,14 +440,14 @@ class HiddenGradesList extends Component {
         text: "",
         isDummyField: true,
         editable: false,
-        formatter: (cellContent, hiddenGrade) => (
+        formatter: (cellContent, absencePercent) => (
           <div className="d-flex gap-3">
             {/* Edit action */}
             <Tooltip title={this.props.t("Edit")} placement="top">
               <Link className="text-secondary" to="#">
                 <i
                   className="mdi mdi-pencil font-size-18"
-                  onClick={() => this.handleEditHiddenGrade(hiddenGrade)}
+                  onClick={() => this.handleEditAbsencePercent(absencePercent)}
                 ></i>
               </Link>
             </Tooltip>
@@ -503,7 +457,7 @@ class HiddenGradesList extends Component {
               <Link className="text-danger" to="#">
                 <i
                   className="mdi mdi-delete font-size-18"
-                  onClick={() => this.onClickDelete(hiddenGrade)}
+                  onClick={() => this.onClickDelete(absencePercent)}
                 ></i>
               </Link>
             </Tooltip>
@@ -514,7 +468,7 @@ class HiddenGradesList extends Component {
 
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: hiddenGrades.length,
+      totalSize: absencePercents.length,
       custom: true,
     };
 
@@ -529,7 +483,9 @@ class HiddenGradesList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Hide Grades")} />
+            <Breadcrumbs
+              breadcrumbItem={this.props.t("Define Allowed Absence Percent")}
+            />
             <Row>
               <Col>
                 <Card>
@@ -586,12 +542,12 @@ class HiddenGradesList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={hiddenGrades}
+                        data={absencePercents}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={hiddenGrades}
+                            data={absencePercents}
                             columns={columns}
                             search
                           >
@@ -631,7 +587,7 @@ class HiddenGradesList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={hiddenGrades}
+                                  data={absencePercents}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "dbclick",
@@ -642,7 +598,7 @@ class HiddenGradesList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handlehiddenGradeDataChange(
+                                      this.handleabsencePercentDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
@@ -650,7 +606,7 @@ class HiddenGradesList extends Component {
                                     },
                                   })}
                                   noDataIndication={this.props.t(
-                                    "No hidden grades found"
+                                    "No Absence Percents found"
                                   )}
                                   defaultSorted={defaultSorting}
                                   filter={filterFactory()}
@@ -683,7 +639,7 @@ class HiddenGradesList extends Component {
           size="lg"
         >
           <ModalHeader toggle={this.toggle} tag="h4">
-            {!!isEdit ? t("Edit Hidden Grade") : t("Add Grades Data")}
+            {!!isEdit ? t("Edit Absence Percent") : t("Add Absence Percent")}
           </ModalHeader>
 
           <ModalBody>
@@ -691,25 +647,18 @@ class HiddenGradesList extends Component {
               enableReinitialize={true}
               initialValues={{
                 ...(isEdit && {
-                  Id: hiddenGrade.Id,
+                  Id: absencePercent.Id,
                 }),
                 courseId:
-                  (hiddenGrade && hiddenGrade.courseId) || selectedCourseId,
-                hideReasonId:
-                  (hiddenGrade && hiddenGrade.hideReasonId) ||
-                  selectedHideReasonId,
+                  (absencePercent && absencePercent.courseId) ||
+                  selectedCourseId,
 
-                fromDate: hiddenGrade?.fromDate
-                  ? moment
-                      .utc(hiddenGrade.fromDate)
-                      .local()
-                      .format("YYYY-MM-DD")
-                  : "",
+                warningPercent:
+                  (absencePercent && absencePercent.warningPercent) || "",
+                dismissPercent:
+                  (absencePercent && absencePercent.dismissPercent) || "",
 
-                toDate: hiddenGrade?.toDate
-                  ? moment.utc(hiddenGrade.toDate).local().format("YYYY-MM-DD")
-                  : "",
-                // courseCode: (hiddenGrade && hiddenGrade.courseCode) || "",
+                //courseCode:(absencePercent && absencePercent.courseCode) || "",
               }}
             >
               {({
@@ -724,46 +673,49 @@ class HiddenGradesList extends Component {
                 <Form>
                   <Card>
                     <CardTitle id="course_header">
-                      {t("Add Hidden Grade")}
+                      {t("Add Absence Percent")}
                     </CardTitle>
                     <CardBody>
                       <div className="mb-5">
+                        <Col lg="6">
+                          <Row>
+                            <Col>
+                              <Label for="courseId">
+                                {this.props.t("Course Name")}
+                              </Label>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col>
+                              <Select
+                                className={`form-control`}
+                                name="courseId"
+                                id="courseId"
+                                key="_course_select_"
+                                options={coursesOffering}
+                                onChange={newValue =>
+                                  this.handleSelectChange(
+                                    "courseId",
+                                    newValue,
+                                    values
+                                  )
+                                }
+                                defaultValue={coursesOffering.find(
+                                  opt => opt.value === absencePercent?.courseId
+                                )}
+                              />
+                            </Col>
+                          </Row>
+                        </Col>
+
                         <Row>
                           <Col lg="6">
                             <Row>
                               <Col>
-                                <Label for="courseId">
-                                  {this.props.t("Course Name")}
+                                <Label for="courseCode">
+                                  {this.props.t("Course Code")}
                                 </Label>
                               </Col>
-                            </Row>
-                            <Row>
-                              <Col>
-                                <Select
-                                  // className={`form-control`}
-                                  name="courseId"
-                                  id="courseId"
-                                  key="_course_select_"
-                                  options={coursesOffering}
-                                  onChange={newValue =>
-                                    this.handleSelectChange(
-                                      "courseId",
-                                      newValue,
-                                      values
-                                    )
-                                  }
-                                  defaultValue={coursesOffering.find(
-                                    opt => opt.value === hiddenGrade?.courseId
-                                  )}
-                                />
-                              </Col>
-                            </Row>
-                          </Col>
-                          <Col lg="6">
-                            <Row>
-                              <Label for="courseCode">
-                                {this.props.t("Course Code")}
-                              </Label>
                             </Row>
                             <Row>
                               <Col>
@@ -773,7 +725,31 @@ class HiddenGradesList extends Component {
                                   id="courseCode"
                                   value={
                                     this.state.courseCode ||
-                                    hiddenGrade.courseCode ||
+                                    absencePercent.courseCode ||
+                                    ""
+                                  }
+                                  readOnly
+                                  className="form-control"
+                                />
+                              </Col>
+                            </Row>
+                          </Col>
+
+                          <Col lg="6">
+                            <Row>
+                              <Label for="courseCredit">
+                                {this.props.t("Course Credit")}
+                              </Label>
+                            </Row>
+                            <Row>
+                              <Col>
+                                <Field
+                                  type="text"
+                                  name="courseCredit"
+                                  id="courseCredit"
+                                  value={
+                                    this.state.courseCredit ||
+                                    absencePercent.courseCredit ||
                                     ""
                                   }
                                   readOnly
@@ -788,104 +764,42 @@ class HiddenGradesList extends Component {
                           <Col lg="6">
                             <Row>
                               <Col>
-                                <Label for="fromDate">
-                                  {this.props.t("from Date")}
+                                <Label for="warningPercent">
+                                  {this.props.t("Issue Warning Percent")}
                                 </Label>
                               </Col>
                             </Row>
                             <Row>
                               <Col>
                                 <Field
-                                  name="fromDate"
-                                  className={`form-control`}
-                                  type="date"
-                                  value={
-                                    values.fromDate
-                                      ? new Date(values.fromDate)
-                                          .toISOString()
-                                          .split("T")[0]
-                                      : ""
-                                  }
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  id="fromDate-date-input"
+                                  type="text"
+                                  name="warningPercent"
+                                  id="warningPercent"
+                                  className="form-control"
                                 />
-                                {/* {fromDateError && (
-                              <div className="invalid-feedback">
-                                {this.props.t("Birth Date is required")}
-                              </div>
-                            )} */}
                               </Col>
                             </Row>
                           </Col>
                           <Col lg="6">
                             <Row>
                               <Col>
-                                <Label for="toDate">
-                                  {this.props.t("to Date")}
+                                <Label for="dismissPercent">
+                                  {this.props.t("Issue Dismiss Percent")}
                                 </Label>
                               </Col>
                             </Row>
                             <Row>
-                              <Col >
+                              <Col>
                                 <Field
-                                  name="toDate"
-                                  className={`form-control`}
-                                  type="date"
-                                  value={
-                                    values.toDate
-                                      ? new Date(values.toDate)
-                                          .toISOString()
-                                          .split("T")[0]
-                                      : ""
-                                  }
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  id="toDate-date-input"
+                                  type="text"
+                                  name="dismissPercent"
+                                  id="dismissPercent"
+                                  className="form-control"
                                 />
-                                {/* {toDateError && (
-                              <div className="invalid-feedback">
-                                {this.props.t("Birth Date is required")}
-                              </div>
-                            )} */}
                               </Col>
                             </Row>
                           </Col>
                         </Row>
-
-                        <Row>
-                          <Col className="col-6">
-                            <Label for="hideReasonId">
-                              {this.props.t("Hide Reason")}
-                            </Label>
-                          </Col>
-                        </Row>
-                        <Row>
-                            <Col className="col-6">
-                            <Select
-                              // className={`form-control ${
-                              //   // nationalityError ? "is-invalid" : ""
-                              // }`}
-                              name="hideReasonId"
-                              id="hideReasonId"
-                              key="_hideReasonselect_"
-                              options={hidereasons}
-                              onChange={newValue =>
-                                this.handleSelectChange(
-                                  "hideReasonId",
-                                  newValue,
-                                  values
-                                )
-                              }
-                              defaultValue={hidereasons.find(
-                                opt => opt.value === hiddenGrade?.hideReasonId
-                              )}
-                            />
-                          </Col>
-                        
-
-                        </Row>
-                        
                       </div>
                     </CardBody>
                   </Card>
@@ -914,10 +828,10 @@ class HiddenGradesList extends Component {
   }
 }
 
-const mapStateToProps = ({ hiddenGrades, menu_items, classScheduling }) => ({
-  hiddenGrades: hiddenGrades.hiddenGrades,
-  hidereasons: hiddenGrades.hidereasons,
-  deleted: hiddenGrades.deleted,
+const mapStateToProps = ({ absencePercents, menu_items, classScheduling }) => ({
+  absencePercents: absencePercents.absencePercents,
+
+  deleted: absencePercents.deleted,
 
   coursesOffering: classScheduling.coursesOffering,
 
@@ -925,15 +839,18 @@ const mapStateToProps = ({ hiddenGrades, menu_items, classScheduling }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetHiddenGrades: () => dispatch(getHiddenGrades()),
-  onAddNewHiddenGrade: hiddenGrade => dispatch(addNewHiddenGrade(hiddenGrade)),
-  onUpdateHiddenGrade: hiddenGrade => dispatch(updateHiddenGrade(hiddenGrade)),
-  onDeleteHiddenGrade: hiddenGrade => dispatch(deleteHiddenGrade(hiddenGrade)),
-  onGetHiddenGradeDeletedValue: () => dispatch(getHiddenGradeDeletedValue()),
-  onGetHideReasons: () => dispatch(getHideReasons()),
+  onGetAbsencePercents: () => dispatch(getAbsencePercents()),
+  onAddNewAbsencePercent: absencePercent =>
+    dispatch(addNewAbsencePercent(absencePercent)),
+  onUpdateAbsencePercent: absencePercent =>
+    dispatch(updateAbsencePercent(absencePercent)),
+  onDeleteAbsencePercent: absencePercent =>
+    dispatch(deleteAbsencePercent(absencePercent)),
+  onGetAbsencePercentDeletedValue: () =>
+    dispatch(getAbsencePercentDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(HiddenGradesList));
+)(withTranslation()(AbsencePercentsList));

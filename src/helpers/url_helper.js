@@ -1020,6 +1020,17 @@ export const ADD_NEW_ABSENCE_JUSTIFICATION = "/add/absenceJustification";
 export const UPDATE_ABSENCE_JUSTIFICATION = "/update/absenceJustification";
 export const DELETE_ABSENCE_JUSTIFICATION = "/delete/absenceJustification";
 
+//ABSENCE_PERCENT
+export const GET_ABSENCES_PERCENTS = "/absencesPercents";
+export const GET_ABSENCE_PERCENT_DELETED_VALUE = "/deleted";
+export const ADD_NEW_ABSENCE_PERCENT = "/add/absencePercent";
+export const UPDATE_ABSENCE_PERCENT = "/update/absencePercent";
+export const DELETE_ABSENCE_PERCENT = "/delete/absencePercent";
+
+
+
+
+
 //qualificaqtion_track
 export const GET_QUALIFICATIONS_TRACKS = "/qualificationTracks";
 export const GET_QUALIFICATION_TRACK_DELETED_VALUE = "/deleted";

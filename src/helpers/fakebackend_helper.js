@@ -2061,7 +2061,6 @@ export const getAbsencesJustifications = data =>
 export const addNewAbsenceJustification = data =>
   post(url.ADD_NEW_ABSENCE_JUSTIFICATION, data);
 
-//ABSENCE_JUSTIFICATION
 export const getAbsenceJustificationDeletedValue = () =>
   get(url.GET_ABSENCE_JUSTIFICATION_DELETED_VALUE);
 
@@ -2088,6 +2087,28 @@ export const updateQualificationTrack = data =>
 //DELETE
 export const deleteQualificationTrack = data =>
   post(url.DELETE_QUALIFICATION_TRACK, data);
+
+
+//ABSENCE_PERCENT
+export const getAbsencePercents = data =>
+  post(url.GET_ABSENCES_PERCENTS, data);
+
+// add
+export const addNewAbsencePercent = data =>
+  post(url.ADD_NEW_ABSENCE_PERCENT, data);
+export const getAbsencePercentDeletedValue = () =>
+  get(url.GET_ABSENCE_PERCENT_DELETED_VALUE);
+
+//update
+export const updateAbsencePercent = data =>
+  post(url.UPDATE_ABSENCE_PERCENT, data);
+
+//delete
+export const deleteAbsencePercent = data =>
+  post(url.DELETE_ABSENCE_PERCENT, data);
+
+
+
 
 //GRADE_VERSION
 export const getGradesVersions = data => post(url.GET_GRADES_VERSIONS, data);
