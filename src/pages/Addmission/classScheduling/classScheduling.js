@@ -1199,7 +1199,6 @@ class ClassSchedulingList extends Component {
       sectionLabDetails,
       halls,
       years,
-      instructorsArray,
       weekDays,
       lecturePeriods,
       scheduleTimings,
@@ -1249,6 +1248,7 @@ class ClassSchedulingList extends Component {
       languageState,
       showAddWarning,
       isScheduleEditable,
+      instructorsArray,
     } = this.state;
 
     const selectRow = {
@@ -2775,19 +2775,12 @@ class ClassSchedulingList extends Component {
                                       }}
                                       enableReinitialize={true}
                                       validationSchema={Yup.object().shape({
-                                        methodOfferingId: Yup.string().required(
-                                          "Please Enter Your Methods Offering"
+                                        instructorsId: Yup.string().required(
+                                          "Please Enter Instructor"
                                         ),
-                                        startDate: Yup.date().required(
-                                          "Please Enter Your Start Date"
-                                        ),
-                                        endDate: Yup.date()
-                                          .required(
-                                            "Please Enter Your End Date"
-                                          )
-                                          .min(
-                                            Yup.ref("startDate"),
-                                            "End date must be after start date"
+                                        hallId:
+                                          Yup.string().required(
+                                            "Please Enter Hall"
                                           ),
                                       })}
                                     >

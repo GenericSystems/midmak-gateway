@@ -98,7 +98,7 @@ function* fetchAvailableCourses(obj) {
   }
 }
 
-function* fetchTempTraineeSchedules(obj) {
+function* fetchTraineeSchedules(obj) {
   let traineeId = obj.payload.traineeId;
   const get_temp_schedule = {
     source: "db",
@@ -220,8 +220,14 @@ function* onAddNewAvailableCourse({ payload }) {
 
   try {
     const response = yield call(addNewAvailableCourse, payload);
+    console.log("responseresponseresponseresponse", response);
     yield put(addAvailableCourseSuccess(response[0]));
+    console.log("theoiooooooooooo", theObj);
     yield fetchAvailableCourses(theObj);
+    console.log("theoioooooo555555555555ooooo", {
+      active: 0,
+      traineeId: payload.traineeId,
+    });
     yield call(fetchNonActiveStdCurr, {
       payload: { active: 0, traineeId: payload.traineeId },
     });
@@ -286,7 +292,7 @@ function* onDeleteRegistration({ payload, registration }) {
     yield put(deleteRegistrationFail(error));
   }
 }
-function* onDeleteNonActiveStdCurr({ payload, registrations }) {
+function* onDeleteNonActiveStdCurr({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
@@ -398,7 +404,7 @@ function* RegistrationSaga() {
   yield takeEvery(DELETE_REGISTRATION, onDeleteRegistration);
   yield takeEvery(ADD_NEW_AVAILABLE_COURSE, onAddNewAvailableCourse);
   yield takeEvery(GET_AVAILABLE_COURSES, fetchAvailableCourses);
-  yield takeEvery(GET_TEMP_STD_SCHEDULES, fetchTempTraineeSchedules);
+  yield takeEvery(GET_TEMP_STD_SCHEDULES, fetchTraineeSchedules);
   // yield takeEvery(GET_ACHIEVED_COURSES, fetchAchievedCourses);
   yield takeEvery(DELETE_ALL_NON_ACTIVE_STD_CURR, onDeleteAllNonActiveStdCurr);
   yield takeEvery(SAVE_ALL_NON_ACTIVE_STD_CURR, onSaveAllNonActiveStdCurr);

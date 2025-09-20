@@ -72,6 +72,8 @@ import {
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
 import TraineesAttendance from "components/Common/TraineesAttendance";
+import E from "react-script";
+import trainees from "helpers/trainees";
 class RegisterTraineesAttendance extends Component {
   constructor(props) {
     super(props);
@@ -80,6 +82,8 @@ class RegisterTraineesAttendance extends Component {
       profExperiencesArray: [],
       regTrainees: {},
       regTrainees: "",
+      halls: [],
+      employeesNames: [],
       years: [],
       tempTraineeLocal: "",
       activeTab: 1,
@@ -92,8 +96,11 @@ class RegisterTraineesAttendance extends Component {
       deleteModal: false,
       selectedRowId: null,
       isEdit: false,
+      isView: false,
       modal: false,
       modal1: false,
+      modal2: false,
+      modal3: false,
       selectedMulti: null,
       selectedFromAdmSemes: "",
       selectedToAdmSemes: "",
@@ -124,6 +131,7 @@ class RegisterTraineesAttendance extends Component {
       tempTrainee: "",
       hasError: false,
       isOpen: false,
+      isOpen1: false,
       generateModal: false,
       averageValue: "",
       selectedDiploma: "",
@@ -133,30 +141,8 @@ class RegisterTraineesAttendance extends Component {
       selectedYear: null,
       currentYearObj: {},
       values: "",
-      firstNameError: false,
-      lastNameError: false,
-      fatherNameError: false,
-      grandFatherNameError: false,
-      motherNameError: false,
-      birthLocError: false,
-      birthdateError: false,
-      nationalityError: false,
-      genderError: false,
-      facultyError: false,
-      diplomaError: false,
-      diplomaIdError: false,
-      diplomaNumberError: false,
-      averageError: false,
-      stdTotalGradeError: false,
-      gradeError: false,
-      nationalNoError: false,
-      identityNoError: false,
-      examinationSessionError: false,
-      plan_studyError: false,
       errorMessage1: null,
       successMessage1: null,
-      HasBrotherCheck: false,
-      showGenerateButton: false,
       totalGradeValue: "",
       regTraineesGrade: "",
       studentGrade: "",
@@ -190,10 +176,14 @@ class RegisterTraineesAttendance extends Component {
       selectedShowTrainees: "",
       selectedshowInstructor: "",
       selectedShowLectureInfo: "",
-      selectedRoomId: "",
-      selectedAltRoomId: "",
+      selectedHallKey: null,
+      defaultHallName: "",
+      selectedAltHallKey: null,
+      defaultAltHallName: "",
       selectedInstructorId: "",
+      defaultInstructorName: "",
       selectedAltInstructorId: "",
+      defaultAltInstructorName: "",
       selectedInstAttend: "",
       selectedAltInstAttend: "",
       selectedOnline: "",
@@ -217,13 +207,15 @@ class RegisterTraineesAttendance extends Component {
       deleted,
       user_menu,
       i18n,
+      halls,
+      employeesNames,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (regTrainees && !regTrainees.length) {
       onGetRegisterTraineesAttendance(lang);
 
-      this.setState({ regTrainees, deleted });
+      this.setState({ halls, employeesNames, regTrainees, deleted });
     }
 
     let curentueardata = localStorage.getItem("authUser");
@@ -308,6 +300,18 @@ class RegisterTraineesAttendance extends Component {
     }));
   };
 
+  toggle2 = () => {
+    this.setState(prevState => ({
+      modal2: !prevState.modal2,
+    }));
+  };
+
+  toggle3 = () => {
+    this.setState(prevState => ({
+      modal3: !prevState.modal3,
+    }));
+  };
+
   onPaginationPageChange = page => {
     if (
       this.node &&
@@ -360,409 +364,6 @@ class RegisterTraineesAttendance extends Component {
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
-
-  handleShowColumn = fieldName => {
-    if (fieldName == "FatherName") {
-      this.setState(prevState => ({
-        showFatherName: !prevState.showFatherName,
-      }));
-    }
-
-    if (fieldName == "grandFatherName") {
-      this.setState(prevState => ({
-        showGrandFatherName: !prevState.showGrandFatherName,
-      }));
-    }
-
-    if (fieldName == "MotherName") {
-      this.setState(prevState => ({
-        showMotherName: !prevState.showMotherName,
-      }));
-    }
-
-    if (fieldName == "birthdate") {
-      this.setState(prevState => ({
-        showBirthDate: !prevState.showBirthDate,
-      }));
-    }
-
-    if (fieldName == "NationalityId") {
-      this.setState(prevState => ({
-        showNationalityId: !prevState.showNationalityId,
-      }));
-    }
-
-    if (fieldName == "BirthLocation") {
-      this.setState(prevState => ({
-        BirthLocation: !prevState.BirthLocation,
-      }));
-    }
-
-    if (fieldName == "FirstName") {
-      this.setState(prevState => ({
-        showFirstName: !prevState.showFirstName,
-      }));
-    }
-
-    if (fieldName == "LastName") {
-      this.setState(prevState => ({
-        showLastName: !prevState.showLastName,
-      }));
-    }
-
-    if (fieldName == "identityNo") {
-      this.setState(prevState => ({
-        showIdentityNo: !prevState.showIdentityNo,
-      }));
-    }
-
-    if (fieldName == "nationalNo") {
-      this.setState(prevState => ({
-        showNationalNo: !prevState.showNationalNo,
-      }));
-    }
-
-    if (fieldName == "identityIssueDate") {
-      this.setState(prevState => ({
-        showIdentityIssueDate: !prevState.showIdentityIssueDate,
-      }));
-    }
-
-    if (fieldName == "PassNumber") {
-      this.setState(prevState => ({
-        showPassNumber: !prevState.showPassNumber,
-      }));
-    }
-
-    if (fieldName == "passportIssueDate") {
-      this.setState(prevState => ({
-        showPassportIssueDate: !prevState.showPassportIssueDate,
-      }));
-    }
-
-    if (fieldName == "passportExpiryDate") {
-      this.setState(prevState => ({
-        showPassportExpiryDate: !prevState.showPassportExpiryDate,
-      }));
-    }
-
-    if (fieldName == "GenderId") {
-      this.setState(prevState => ({
-        showGender: !prevState.showGender,
-      }));
-    }
-
-    if (fieldName == "civicZone") {
-      this.setState(prevState => ({
-        showCivicZone: !prevState.showCivicZone,
-      }));
-    }
-
-    if (fieldName == "registerZone") {
-      this.setState(prevState => ({
-        showRegisterZone: !prevState.showRegisterZone,
-      }));
-    }
-
-    if (fieldName == "registerNo") {
-      this.setState(prevState => ({
-        showRegisterNo: !prevState.showRegisterNo,
-      }));
-    }
-
-    if (fieldName == "yearId") {
-      this.setState(prevState => ({
-        showYear: !prevState.showYear,
-      }));
-    }
-
-    if (fieldName == "regTraineesStatusId") {
-      this.setState(prevState => ({
-        showTraineeStatus: !prevState.showTraineeStatus,
-      }));
-    }
-
-    if (fieldName == "RegistrationDate") {
-      this.setState(prevState => ({
-        showRegistrationDate: !prevState.showRegistrationDate,
-      }));
-    }
-
-    if (fieldName == "registrationCertLevelId") {
-      this.setState(prevState => ({
-        showCertificateLevel: !prevState.showCertificateLevel,
-      }));
-    }
-
-    if (fieldName == "Faculty") {
-      this.setState(prevState => ({
-        showFaculty: !prevState.showFaculty,
-      }));
-    }
-
-    if (fieldName == "plan_study") {
-      this.setState(prevState => ({
-        showSpecialty: !prevState.showSpecialty,
-      }));
-    }
-
-    if (fieldName == "uniName") {
-      this.setState(prevState => ({
-        showUniversityName: !prevState.showUniversityName,
-      }));
-    }
-
-    if (fieldName == "UnivCountryId") {
-      this.setState(prevState => ({
-        showUniversityCountry: !prevState.showUniversityCountry,
-      }));
-    }
-
-    if (fieldName == "uniAverage") {
-      this.setState(prevState => ({
-        showUniversityAverage: !prevState.showUniversityAverage,
-      }));
-    }
-
-    if (fieldName == "RegUniDate") {
-      this.setState(prevState => ({
-        showDiplomaDate: !prevState.showDiplomaDate,
-      }));
-    }
-
-    if (fieldName == "EstimateId") {
-      this.setState(prevState => ({
-        showEstimate: !prevState.showEstimate,
-      }));
-    }
-
-    if (fieldName == "diplomaName") {
-      this.setState(prevState => ({
-        showDiplomaName: !prevState.showDiplomaName,
-      }));
-    }
-
-    if (fieldName == "InstituteCountryId") {
-      this.setState(prevState => ({
-        showInstituteCountry: !prevState.showInstituteCountry,
-      }));
-    }
-
-    if (fieldName == "registrationDiplomaAverage") {
-      this.setState(prevState => ({
-        showDiplomaAverage: !prevState.showDiplomaAverage,
-      }));
-    }
-
-    if (fieldName == "academicYear") {
-      this.setState(prevState => ({
-        showAcademicYear: !prevState.showAcademicYear,
-      }));
-    }
-
-    if (fieldName == "HighStudyTypeId") {
-      this.setState(prevState => ({
-        showCertificateType: !prevState.showCertificateType,
-      }));
-    }
-
-    if (fieldName == "diplomaId") {
-      this.setState(prevState => ({
-        showDiplomaId: !prevState.showDiplomaId,
-      }));
-    }
-
-    if (fieldName == "DiplomaCountryId") {
-      this.setState(prevState => ({
-        showDiplomaCountryId: !prevState.showDiplomaCountryId,
-      }));
-    }
-
-    if (fieldName == "DiplomaGovernorateId") {
-      this.setState(prevState => ({
-        showDiplomaGovernorateId: !prevState.showDiplomaGovernorateId,
-      }));
-    }
-
-    if (fieldName == "DiplomaYear") {
-      this.setState(prevState => ({
-        showDiplomaYear: !prevState.showDiplomaYear,
-      }));
-    }
-
-    if (fieldName == "ExaminationSession") {
-      this.setState(prevState => ({
-        showExaminationSession: !prevState.showExaminationSession,
-      }));
-    }
-
-    if (fieldName == "DiplomaNumber") {
-      this.setState(prevState => ({
-        showDiplomaNumber: !prevState.showDiplomaNumber,
-      }));
-    }
-
-    if (fieldName == "Average") {
-      this.setState(prevState => ({
-        showAverage: !prevState.showAverage,
-      }));
-    }
-
-    if (fieldName == "CurrentAddress") {
-      this.setState(prevState => ({
-        showCurrentAddress: !prevState.showCurrentAddress,
-      }));
-    }
-
-    if (fieldName == "CurrentAddrPhone") {
-      this.setState(prevState => ({
-        showCurrentAddrPhone: !prevState.showCurrentAddrPhone,
-      }));
-    }
-
-    if (fieldName == "CurrentAddrCell") {
-      this.setState(prevState => ({
-        showCurrentAddrCell: !prevState.showCurrentAddrCell,
-      }));
-    }
-
-    if (fieldName == "PermanentAddress") {
-      this.setState(prevState => ({
-        showPermanentAddress: !prevState.showPermanentAddress,
-      }));
-    }
-
-    if (fieldName == "ParentAddrPhone") {
-      this.setState(prevState => ({
-        showParentAddrPhone: !prevState.showParentAddrPhone,
-      }));
-    }
-
-    if (fieldName == "WhatsappMobileNum") {
-      this.setState(prevState => ({
-        showWhatsappMobileNum: !prevState.showWhatsappMobileNum,
-      }));
-    }
-
-    if (fieldName == "Email") {
-      this.setState(prevState => ({
-        showEmail: !prevState.showEmail,
-      }));
-    }
-
-    if (fieldName == "workType") {
-      this.setState(prevState => ({
-        showJobTitle: !prevState.showJobTitle,
-      }));
-    }
-
-    if (fieldName == "companyName") {
-      this.setState(prevState => ({
-        showWorkPlace: !prevState.showWorkPlace,
-      }));
-    }
-
-    if (fieldName == "workPlace") {
-      this.setState(prevState => ({
-        showWorkAddress: !prevState.showWorkAddress,
-      }));
-    }
-
-    if (fieldName == "workField") {
-      this.setState(prevState => ({
-        showWorkField: !prevState.showWorkField,
-      }));
-    }
-
-    if (fieldName == "duaration") {
-      this.setState(prevState => ({
-        showWorkDuration: !prevState.showWorkDuration,
-      }));
-    }
-
-    if (fieldName == "registerYear") {
-      this.setState(prevState => ({
-        showRegisterYear: !prevState.showRegisterYear,
-      }));
-    }
-
-    if (fieldName == "admissionDate") {
-      this.setState(prevState => ({
-        showAdmissionDate: !prevState.showAdmissionDate,
-      }));
-    }
-
-    if (fieldName == "lastRegCourse") {
-      this.setState(prevState => ({
-        showLastRegCourse: !prevState.showLastRegCourse,
-      }));
-    }
-
-    if (fieldName == "grade") {
-      this.setState(prevState => ({
-        showGrade: !prevState.showGrade,
-      }));
-    }
-
-    if (fieldName == "courseStatus") {
-      this.setState(prevState => ({
-        showCourseStatus: !prevState.showCourseStatus,
-      }));
-    }
-    if (fieldName == "decisionCode") {
-      this.setState(prevState => ({
-        showDecisionCode: !prevState.showDecisionCode,
-      }));
-    }
-    if (fieldName == "decisionType") {
-      this.setState(prevState => ({
-        showDecisionType: !prevState.showDecisionType,
-      }));
-    }
-    if (fieldName == "decisionDate") {
-      this.setState(prevState => ({
-        showDecisionDate: !prevState.showDecisionDate,
-      }));
-    }
-    if (fieldName == "applyingDate") {
-      this.setState(prevState => ({
-        showApplyingDate: !prevState.showApplyingDate,
-      }));
-    }
-    if (fieldName == "academyCouncilNo") {
-      this.setState(prevState => ({
-        showAcademyCouncilNo: !prevState.showAcademyCouncilNo,
-      }));
-    }
-    if (fieldName == "academyCouncilDate") {
-      this.setState(prevState => ({
-        showAcademyCouncilDate: !prevState.showAcademyCouncilDate,
-      }));
-    }
-    if (fieldName == "decisionNote") {
-      this.setState(prevState => ({
-        showDecisionNote: !prevState.showDecisionNote,
-      }));
-    }
-  };
-
-  // handleMulti = (fieldName, selectedMulti) => {
-  //   if (fieldName === "applyForSemester") {
-  //     this.setState({ applyForSemesterArray: selectedMulti });
-  //   }
-
-  //   if (fieldName === "nationalNo") {
-  //     this.setState({ prevStatusSemesArray: selectedMulti });
-  //   }
-
-  //   if (fieldName === "identityNo") {
-  //     this.setState({ prevAcademicWarningArray: selectedMulti });
-  //   }
-
-  //   if (fieldName === "identityIssueDate") {
-  //     this.setState({ applyStatusArray: selectedMulti });
-  //   }
-  // };
 
   handleColorChange(event) {
     const selectedValue = event.target.value;
@@ -937,386 +538,44 @@ class RegisterTraineesAttendance extends Component {
     sidebar.classList.toggle("collapse-sidebar");
   };
 
-  handleSubmit = values => {
-    const { onAddRequiredDocs } = this.props;
-    const { stdDocsArray } = this.state;
-    console.log("values in save", values);
-    values["regTraineesId"] = values.Id;
-    values["isAdd"] = 0;
-    console.log(values["regTraineesId"]);
-    let regTraineesinfo = {};
-    const extractedArray = stdDocsArray.map(item => ({
-      Id: item.Id,
-      regReqDocId: item.regReqDocId,
-      availableNumber: item.availableNumber,
-    }));
-    console.log("extractedArray", extractedArray);
-    (regTraineesinfo["procedure"] = "Admission_UpdateDocsTrainee"),
-      (regTraineesinfo["tablename"] = "Common_RegReqDocTrainee"),
-      (regTraineesinfo["queryname"] = "_Common_Trainee"),
-      (regTraineesinfo["stdDocs"] = extractedArray);
-    regTraineesinfo["regTraineesId"] = values.Id;
-    regTraineesinfo["isAdd"] = 0;
-    console.log("regTraineesinfo", regTraineesinfo);
-    onAddRequiredDocs(regTraineesinfo);
-    // const saveDocsMessage = this.props.t("Documents requiered saved successfully");
-    //     this.setState({
-    //       successMessage: saveTempTraineeMessage,
-    //     });
-  };
-
-  handleExperienceSubmit = values => {
-    const { lastAddedId, onAddNewProfessionalExperience } = this.props;
-    const { profExperiencesArray, lastUsedExperienceId, isEdit } = this.state;
-    console.log("values in save", values);
-    values["regTraineesId"] = values.Id;
-    console.log(values["regTraineesId"]);
-    // let regTraineesinfo = {};
-    // const extractedArray = profExperiencesArray.map(item => ({
-    //   Id: item.Id,
-    //   workType: item.workType,
-    //   companyName: item.companyName,
-    //   workPlace: item.workPlace,
-    //   workField: item.workField,
-    //   duaration: item.duaration,
-    // }));
-    // console.log("extractedArray", extractedArray);
-    // regTraineesinfo["ProfessionalExperiences"] = extractedArray;
-    // regTraineesinfo["selectedTraineeId"] = values.Id;
-    // let experiencesObject = {};
-    // profExperiencesArray.forEach((item, i) => {
-    //   experiencesObject[`${i}`] = {
-    //     Id: item.Id,
-    //     workType: item.workType,
-    //     companyName: item.companyName,
-    //     workPlace: item.workPlace,
-    //     workField: item.workField,
-    //     duaration: item.duaration,
-    //   };
-    // });
-
-    const regTraineesinfo = {
-      regTraineesId: values.Id,
-      procedure: "SisApp_UpdateTraineeInfo",
-      tablename: "Common_TraineesProfessionalExperiences",
-      queryname: "_Common_Trainee",
-      ProfessionalExperiences: profExperiencesArray.map(item => ({
-        Id: item.Id,
-        workType: item.workType,
-        companyName: item.companyName,
-        workPlace: item.workPlace,
-        workField: item.workField,
-        duaration: item.duaration,
-      })),
-    };
-    console.log("regTraineesinfo", regTraineesinfo);
-    onAddNewProfessionalExperience(regTraineesinfo);
-    const saveProfExperienceMessage = this.props.t(
-      "Professional Experience saved successfully"
-    );
-    this.setState({
-      successMessage1: saveProfExperienceMessage,
-    });
-  };
-
   handleSave = values => {
-    const {
-      selectedBirthDate,
-      selectedRegistrationDiplomaDate,
-      selectedNationalityId,
-      selectedRegistrationCertLevelId,
-      selectedFacultyId,
-      selectedGender,
-      selectedStudyPlanId,
-      isEdit,
-      selectedExaminationSession,
-      selectedSocialStatus,
-      selectedDiplomaId,
-      selectedHightStudyTypeId,
-      selectedEstimateId,
-      selectedRegUniDate,
-      selectedTraineeStatus,
-    } = this.state;
-    console.log("values in save", values);
-    values["socialStatusId"] = selectedSocialStatus;
-    values.statusId = isEdit ? selectedTraineeStatus : 1;
+    console.log("values", values);
+    let flag = 0;
+    const { isEdit1 } = this.state;
 
-    if (
-      values.FirstName === "" ||
-      values.LastName === "" ||
-      values.FatherName === "" ||
-      values.grandFatherName === "" ||
-      values.MotherName === "" ||
-      values.diplomaId === "" ||
-      values.BirthLocation === "" ||
-      values.birthdate === "" ||
-      // values.plan_study === "" ||
-      (values.NationalityId === "" && selectedNationalityId === "") ||
-      (values.GenderId === "" && selectedGender === "") ||
-      (values.registrationCertLevelId === "" &&
-        selectedRegistrationCertLevelId === "")
-    ) {
-      if (values.FirstName.trim() === "") {
-        this.setState({ firstNameError: true, saveError: true });
-      }
+    const { onAddNewSectionLabDetail, onUpdateSectionLabDetail } = this.props;
 
-      if (values.LastName.trim() === "") {
-        this.setState({ lastNameError: true, saveError: true });
-      }
+    // values["type"] = selectedRowSectionLab.type;
+    // values["sectionLabId"] = selectedRowSectionLab.Id;
+    values["hallId"] = this.state.selectedHallKey;
+    values["altHallId"] = this.state.selectedAltHallKey;
+    values["altInstructorId"] = this.state.selectedAltInstructorId;
+    values["instructorId"] = this.state.selectedInstructorId;
 
-      if (values.FatherName.trim() === "") {
-        this.setState({ fatherNameError: true, saveError: true });
-      }
-      if (values.diplomaId.trim() === "") {
-        this.setState({ diplomaIdError: true, saveError: true });
-      }
+    let lectureInfo = {};
 
-      if (values.grandFatherName.trim() === "") {
-        this.setState({ grandFatherNameError: true, saveError: true });
-      }
-      if (values.MotherName.trim() === "") {
-        this.setState({ motherNameError: true, saveError: true });
-      }
+    Object.keys(values).forEach(function (key) {
+      if (
+        values[key] != undefined &&
+        values[key] !== null &&
+        (values[key].length > 0 || values[key] != "")
+      )
+        lectureInfo[key] = values[key];
+    });
+    lectureInfo.hallId = this.state.selectedHallKey;
 
-      if (values.BirthLocation.trim() === "") {
-        this.setState({ birthLocError: true, saveError: true });
-      }
-
-      // if (values.plan_study.trim() === "") {
-      //   this.setState({ plan_studyError: true, saveError: true });
-      // }
-
-      if (values.birthdate === "" && selectedBirthDate === "") {
-        this.setState({ birthdateError: true, saveError: true });
-      }
-
-      if (values.NationalityId === "" && selectedNationalityId === "") {
-        this.setState({ nationalityError: true, saveError: true });
-      }
-      if (values.GenderId === "" && selectedGender === "") {
-        this.setState({ genderError: true, saveError: true });
-      }
-
-      // if (values.FacultyId === "" && selectedFacultyId === "") {
-      //   this.setState({ facultyError: true, saveError: true });
-      // }
-
-      if (values.nationalNo === "") {
-        this.setState({ nationalNoError: true, saveError: true });
-      }
-      if (values.identityNo === "") {
-        this.setState({ identityNoError: true, saveError: true });
-      }
-      const errorSaveTempTraineeMessage = this.props.t(
-        "Fill the Required Fields to Save TempTrainee"
-      );
-      this.setState({ errorMessage: errorSaveTempTraineeMessage }, () => {
-        window.scrollTo(0, 0);
-      });
+    console.log("lectureInfo", lectureInfo);
+    const fieldErrors = {};
+    if (Object.keys(fieldErrors).length > 0) {
+      return fieldErrors;
+    }
+    if (isEdit1) {
+      // onUpdateSectionLabDetail(lectureInfo);
+      this.toggle1();
     } else {
-      this.setState({ firstNameError: false, saveError: false });
-      this.setState({ lastNameError: false, saveError: false });
-      this.setState({ fatherNameError: false, saveError: false });
-      this.setState({ motherNameError: false, saveError: false });
-      this.setState({ birthLocError: false, saveError: false });
-      this.setState({ birthdateError: false, saveError: false });
-      this.setState({ nationalityError: false, saveError: false });
-      this.setState({ genderError: false, saveError: false });
-      // this.setState({ facultyError: false, saveError: false });
-      this.setState({ grandFatherNameError: false, saveError: false });
-      this.setState({ diplomaIdError: false, saveError: false });
-      this.setState({ stdTotalGradeError: false, saveError: false });
-      let regTraineesinfo = {};
-      Object.keys(values).forEach(function (key) {
-        if (
-          values[key] != undefined &&
-          (values[key].length > 0 || values[key] != "")
-        )
-          regTraineesinfo[key] = values[key];
-      });
-      const {
-        regTrainees,
-        selectedExaminationSession,
-        selectedStudyPattern,
-        selectedBirthDate,
-        selectedIdentityIssueDate,
-        selectedPassportIssueDate,
-        selectedPassportExpiryDate,
-        selectedDiplomaDate,
-        selectedDiplomaVerificationDate,
-        selectedRegistrationDate,
-        selectedGender,
-        selectedSocialStatus,
-        relativesArray,
-        averageValue,
-        stdDocsArray,
-        siblingsArray,
-        trnProfExperiences,
-        selectedDiplomaId,
-        isEdit,
-      } = this.state;
-
-      const { onUpdateTrainee, onAddNewTrainee } = this.props;
-      const {
-        cities,
-        countries,
-        diplomalevels,
-        currentSemester,
-        governorates,
-      } = this.props;
-
-      if (values.diplomaId) {
-        const diplomaObject = diplomalevels.find(
-          certificate => certificate.value === values.diplomaId
-        );
-        if (diplomaObject === undefined) {
-          regTraineesinfo["diplomaId"] = regTrainees.diplomaId;
-        }
-      }
-
-      if (values.DiplomaCountryId) {
-        const countryObject = countries.find(
-          country => country.value === values.DiplomaCountryId
-        );
-        if (countryObject === undefined) {
-          regTraineesinfo["DiplomaCountryId"] = regTrainees.DiplomaCountryId;
-        }
-      }
-
-      if (values.DiplomaGovernorateId) {
-        const governorateObject = governorates.find(
-          governorate => governorate.value === values.DiplomaGovernorateId
-        );
-        if (governorateObject === undefined) {
-          regTraineesinfo["DiplomaGovernorateId"] =
-            regTrainees.DiplomaGovernorateId;
-        }
-      }
-
-      if (values.UnivCountryId) {
-        const univCountryObject = countries.find(
-          country => country.value === values.UnivCountryId
-        );
-        if (univCountryObject === undefined) {
-          regTraineesinfo["UnivCountryId"] = regTrainees.UnivCountryId;
-        }
-      }
-
-      if (values.InstituteCountryId) {
-        const instCountryObject = countries.find(
-          country => country.value === values.InstituteCountryId
-        );
-        if (instCountryObject === undefined) {
-          regTraineesinfo["InstituteCountryId"] =
-            regTrainees.InstituteCountryId;
-        }
-      }
-      if (values.birthdate) {
-        regTraineesinfo["birthdate"] =
-          values && values.birthdate
-            ? new Date(values.birthdate).toISOString().split("T")[0]
-            : selectedBirthDate;
-      }
-
-      if (values.identityIssueDate) {
-        regTraineesinfo["identityIssueDate"] =
-          values && values.identityIssueDate
-            ? new Date(values.identityIssueDate).toISOString().split("T")[0]
-            : selectedIdentityIssueDate;
-      }
-      if (values.passportExpiryDate) {
-        regTraineesinfo["passportExpiryDate"] =
-          values && values.passportExpiryDate
-            ? new Date(values.passportExpiryDate).toISOString().split("T")[0]
-            : selectedPassportExpiryDate;
-      }
-      if (values.passportIssueDate) {
-        regTraineesinfo["passportIssueDate"] =
-          values && values.passportIssueDate
-            ? new Date(values.passportIssueDate).toISOString().split("T")[0]
-            : selectedPassportIssueDate;
-      }
-
-      if (selectedGender) {
-        regTraineesinfo["GenderId"] = parseInt(selectedGender);
-      }
-
-      if (selectedNationalityId) {
-        regTraineesinfo["NationalityId"] = regTrainees.NationalityId;
-      }
-
-      if (selectedExaminationSession) {
-        regTraineesinfo["ExaminationSession"] = regTrainees.ExaminationSession;
-      }
-      if (selectedSocialStatus) {
-        regTraineesinfo["socialStatusId"] = selectedSocialStatus;
-      }
-
-      if (selectedStudyPattern) {
-        regTraineesinfo["studyPattern"] = selectedStudyPattern;
-      }
-
-      if (selectedRegistrationCertLevelId) {
-        regTraineesinfo["registrationCertLevelId"] =
-          selectedRegistrationCertLevelId;
-      }
-
-      if (selectedBirthDate != "") {
-        regTraineesinfo["birthdate"] = selectedBirthDate;
-      }
-
-      if (selectedIdentityIssueDate) {
-        regTraineesinfo["identityIssueDate"] = selectedIdentityIssueDate;
-      }
-
-      if (selectedPassportIssueDate) {
-        regTraineesinfo["passportIssueDate"] = selectedPassportIssueDate;
-      }
-
-      if (selectedPassportExpiryDate) {
-        regTraineesinfo["passportExpiryDate"] = selectedPassportExpiryDate;
-      }
-
-      if (selectedDiplomaDate) {
-        regTraineesinfo["diplomaDate"] = selectedDiplomaDate;
-      }
-
-      if (selectedDiplomaVerificationDate) {
-        regTraineesinfo["diplomaVerificationDate"] =
-          selectedDiplomaVerificationDate;
-      }
-
-      if (selectedRegistrationDate) {
-        regTraineesinfo["RegistrationDate"] = selectedRegistrationDate;
-      }
-
-      if (selectedRegistrationDiplomaDate != "") {
-        regTraineesinfo["registrationDiplomaDate"] =
-          selectedRegistrationDiplomaDate;
-      }
-
-      //hhhhh
-
-      if (selectedRegUniDate != "") {
-        regTraineesinfo["RegUniDate"] = selectedRegUniDate;
-      }
-
-      if (averageValue) {
-        regTraineesinfo["Average"] = averageValue;
-      }
-
-      // regTraineesinfo["Id"] = values.Id;
-      // console.log("regTraineesinforegTraineesinfo", regTraineesinfo["Id"]);
-      if (isEdit) {
-        console.log("rrrrrrrrrrrrrrr", regTraineesinfo);
-        onUpdateTrainee(regTraineesinfo);
-      } else if (isAdd) {
-        onAddNewTrainee(regTraineesinfo);
-      }
-      const saveTraineeMessage = this.props.t("Trainee saved successfully");
-      this.setState({
-        successMessage: saveTraineeMessage,
-      });
+      console.log("saaaaave", lectureInfo);
+      // onAddNewSectionLabDetail(lectureInfo);
+      this.toggle1();
     }
   };
 
@@ -1419,44 +678,6 @@ class RegisterTraineesAttendance extends Component {
     });
   };
 
-  handleSelect = (fieldName, selectedValue, values) => {
-    const { socialStatus, tempTraineeStatus } = this.props;
-    if (fieldName == "socialStatusId") {
-      const name = socialStatus.find(
-        socialStat => socialStat.value === selectedValue
-      );
-      console.log("naaaaamesooo", name);
-
-      this.setState({
-        selectedSocialStatus: selectedValue,
-        socialStatusName: name.label,
-        tempTrainee: values,
-      });
-    }
-    if (fieldName == "statusId") {
-      const name = tempTraineeStatus.find(
-        regTraineesStatu => regTraineesStatu.value === selectedValue
-      );
-      console.log("naaaaamesooo", name);
-
-      this.setState({
-        selectedTraineeStatus: selectedValue,
-        socialStatusName: name.label,
-        tempTrainee: values,
-      });
-    }
-    if (fieldName == "EstimateId") {
-      const name = estimates.find(estimate => estimate.value === selectedValue);
-      console.log("naaaaamesooo", name);
-
-      this.setState({
-        selectedEstimateId: selectedValue,
-        estimateNamee: name.label,
-        tempTrainee: values,
-      });
-    }
-  };
-
   handleButtonClick = (fieldName, option) => {
     if (fieldName == "ExaminationSession") {
       this.setState({ selectedExaminationSession: option });
@@ -1550,13 +771,39 @@ class RegisterTraineesAttendance extends Component {
     this.setState({
       reTrainee: arg,
       isOpen: true,
+      Id: arg.Id,
+      defaultHallName: arg.hallName,
+      selectedHallKey: arg.hallId,
+      defaultAltHallName: arg.altHallName,
+      selectedAltHallKey: arg.altHallId,
+      defaultAltInstructorName: arg.altInstructorName,
+      selectedAltInstructorId: arg.altInstructorId,
+      defaultInstructorName: arg.instructorName,
+      selectedInstructorId: arg.instructorId,
     });
 
     this.toggle1();
   };
+  handleAttendanceRecording = arg => {
+    this.setState({
+      regTrainee: arg,
+      isOpen1: true,
+    });
+
+    this.toggle2();
+  };
+  handleTraineeAbsence = arg => {
+    this.setState({
+      traineeAttend: arg,
+      isView: true,
+    });
+
+    this.toggle3();
+  };
 
   render() {
-    const { courseStatistics, regTrainees, deleted, t } = this.props;
+    const { halls, employeesNames, courseStatistics, regTrainees, deleted, t } =
+      this.props;
     const {
       lectureDateError,
       startTimeError,
@@ -1581,15 +828,16 @@ class RegisterTraineesAttendance extends Component {
       isEdit,
       showAlert,
       isOpen,
+      isOpen1,
+      isView,
       selectedShowAbsent,
       selectedShowLecture,
       selectedShowTrainees,
       selectedshowInstructor,
       selectedShowLectureInfo,
       selectedInstructorId,
+      defaultAltHallName,
       selectedAltInstructorId,
-      selectedRoomId,
-      selectedAltRoomId,
       selectedInstAttend,
       selectedAltInstAttend,
       selectedOnline,
@@ -1629,50 +877,6 @@ class RegisterTraineesAttendance extends Component {
       mode: "checkbox",
     };
 
-    const gradeColumns = [
-      {
-        dataField: "Id",
-        text: this.props.t("#"),
-        editable: false,
-        hidden: true,
-      },
-      {
-        dataField: "docName",
-
-        text: this.props.t("Course Name"),
-        editable: false,
-      },
-      {
-        dataField: "requiredNumber",
-
-        text: this.props.t("Course Code"),
-        editable: false,
-      },
-      {
-        dataField: "availableNumber",
-
-        text: this.props.t("Total Hours"),
-        editable: false,
-      },
-      {
-        dataField: "preventAdmission",
-
-        text: this.props.t("Final Marks"),
-        editable: false,
-      },
-      {
-        dataField: "preventRegistration",
-
-        text: this.props.t("Points"),
-        editable: false,
-      },
-      {
-        dataField: "preventGraduation",
-
-        text: this.props.t("Grade"),
-        editable: false,
-      },
-    ];
     const lecturesColumns = [
       {
         dataField: "Id",
@@ -1711,52 +915,52 @@ class RegisterTraineesAttendance extends Component {
         editable: false,
       },
       {
-        dataField: "preventGraduation",
+        dataField: "lectureDate",
 
         text: this.props.t("Lecture Date"),
         editable: false,
       },
       {
-        dataField: "preventGraduation",
+        dataField: "lectureTime",
 
         text: this.props.t("Lecture Time"),
         editable: false,
       },
       {
-        dataField: "preventGraduation",
+        dataField: "lecture",
 
         text: this.props.t("Lecture"),
         editable: false,
       },
       {
-        dataField: "preventGraduation",
+        dataField: "week",
 
         text: this.props.t("Week"),
         editable: false,
       },
       {
-        dataField: "preventGraduation",
+        dataField: "lectureTitle",
 
         text: this.props.t("Lecture Title"),
         editable: false,
       },
 
       {
-        dataField: "preventGraduation",
+        dataField: "close",
 
         text: this.props.t("Close"),
         editable: false,
       },
 
       {
-        dataField: "preventGraduation",
+        dataField: "online",
 
         text: this.props.t("Online"),
         editable: false,
       },
 
       {
-        dataField: "preventGraduation",
+        dataField: "cancel",
 
         text: this.props.t("Cancel"),
         editable: false,
@@ -1780,7 +984,7 @@ class RegisterTraineesAttendance extends Component {
               <Link className="text-sm-end" to="#">
                 <i
                   className="bx bxs-user font-size-18 text-secondary"
-                  onClick={() => this.handleEditCourseLectures(regTrainee)}
+                  onClick={() => this.handleAttendanceRecording(regTrainee)}
                 ></i>
               </Link>
             </Tooltip>
@@ -1788,7 +992,7 @@ class RegisterTraineesAttendance extends Component {
         ),
       },
     ];
-    const printHistoryColumns = [
+    const attendRecordingColumns = [
       {
         dataField: "Id",
         text: this.props.t("#"),
@@ -1798,31 +1002,154 @@ class RegisterTraineesAttendance extends Component {
       {
         dataField: "docName",
 
-        text: this.props.t("Print Notes"),
+        text: this.props.t("Trainee Name"),
         editable: false,
       },
       {
         dataField: "requiredNumber",
 
-        text: this.props.t("Reprint Reason"),
+        text: this.props.t("Trainee Num"),
         editable: false,
       },
       {
         dataField: "availableNumber",
 
-        text: this.props.t("User Name"),
+        text: this.props.t("Register Date"),
         editable: false,
       },
       {
         dataField: "preventAdmission",
 
-        text: this.props.t("Print Date"),
+        text: this.props.t("Absent Percent"),
         editable: false,
       },
       {
         dataField: "preventRegistration",
 
-        text: this.props.t("Print Time"),
+        text: this.props.t("Status"),
+        editable: false,
+      },
+      {
+        dataField: "action",
+        text: "",
+        isDummyField: true,
+        editable: false,
+        formatter: (cellContent, traineeAttend) => (
+          <div className="d-flex justify-content-center gap-3">
+            {/* {showDeleteButton && (*/}
+            <Tooltip title={this.props.t("View Attendance")} placement="top">
+              <IconButton>
+                <i
+                  className="fa fa-history"
+                  id="veiwattendtooltip"
+                  onClick={() => this.handleTraineeAbsence(traineeAttend)}
+                ></i>
+              </IconButton>
+            </Tooltip>
+          </div>
+        ),
+      },
+    ];
+    const absentStatisicsColumns = [
+      {
+        dataField: "Id",
+        text: this.props.t("#"),
+        editable: false,
+        hidden: true,
+      },
+      {
+        dataField: "docName",
+
+        text: this.props.t("Lecture Type"),
+        editable: false,
+      },
+      {
+        dataField: "requiredNumber",
+
+        text: this.props.t("Lecture Duration (Hours)"),
+        editable: false,
+      },
+      {
+        dataField: "availableNumber",
+
+        text: this.props.t("Absent Duration (Hours)"),
+        editable: false,
+      },
+      {
+        dataField: "preventAdmission",
+
+        text: this.props.t("Absents Counts"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Last Absent Date"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Absent Percent%"),
+        editable: false,
+      },
+
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Weight"),
+        editable: false,
+      },
+    ];
+    //here i'm stopped
+    const decreesColumns = [
+      {
+        dataField: "Id",
+        text: this.props.t("#"),
+        editable: false,
+        hidden: true,
+      },
+      {
+        dataField: "docName",
+
+        text: this.props.t("Lecture Type"),
+        editable: false,
+      },
+      {
+        dataField: "requiredNumber",
+
+        text: this.props.t("Lecture Duration (Hours)"),
+        editable: false,
+      },
+      {
+        dataField: "availableNumber",
+
+        text: this.props.t("Absent Duration (Hours)"),
+        editable: false,
+      },
+      {
+        dataField: "preventAdmission",
+
+        text: this.props.t("Absents Counts"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Last Absent Date"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Absent Percent%"),
+        editable: false,
+      },
+
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Weight"),
         editable: false,
       },
     ];
@@ -4102,18 +3429,22 @@ class RegisterTraineesAttendance extends Component {
                                                             weekOrder:
                                                               regTrainee?.weekOrder ||
                                                               "",
-                                                            roomId:
-                                                              regTrainee?.roomId ||
-                                                              selectedRoomId,
-                                                            altRoomId:
-                                                              regTrainee?.altRoomId ||
-                                                              selectedAltRoomId,
+                                                            hallId:
+                                                              (regTrainee &&
+                                                                regTrainee.hallName) ||
+                                                              "",
+                                                            altHallId:
+                                                              (regTrainee &&
+                                                                regTrainee.altHallName) ||
+                                                              "",
                                                             instructorId:
-                                                              regTrainee?.instructorId ||
-                                                              selectedInstructorId,
+                                                              (regTrainee &&
+                                                                regTrainee.instructorName) ||
+                                                              "",
                                                             altInstructorId:
-                                                              regTrainee?.altInstructorId ||
-                                                              selectedAltInstructorId,
+                                                              (regTrainee &&
+                                                                regTrainee.altInstructorName) ||
+                                                              "",
                                                             instAttend:
                                                               regTrainee?.instAttend ||
                                                               selectedInstAttend,
@@ -4407,7 +3738,347 @@ class RegisterTraineesAttendance extends Component {
                                                                       />
                                                                     </Col>
                                                                   </Row>
+                                                                  <Row>
+                                                                    <Col className="col-2 mb-3">
+                                                                      <Label for="inst">
+                                                                        {t(
+                                                                          "Instructor"
+                                                                        )}
+                                                                      </Label>
+                                                                      <span className="text-danger">
+                                                                        *
+                                                                      </span>
+                                                                    </Col>
+                                                                    <Col className="col-4">
+                                                                      <Field
+                                                                        name="instructorId"
+                                                                        as="input"
+                                                                        type="text"
+                                                                        placeholder="Search..."
+                                                                        className={
+                                                                          "form-control" +
+                                                                          (errors.instructorId &&
+                                                                          touched.instructorId
+                                                                            ? " is-invalid"
+                                                                            : "")
+                                                                        }
+                                                                        value={
+                                                                          employeesNames.find(
+                                                                            empl =>
+                                                                              empl.key ===
+                                                                              this
+                                                                                .state
+                                                                                .selectedInstructorId
+                                                                          )
+                                                                            ?.value ||
+                                                                          ""
+                                                                        }
+                                                                        onChange={e => {
+                                                                          const newValue =
+                                                                            e
+                                                                              .target
+                                                                              .value;
 
+                                                                          const selectedInstructor =
+                                                                            employeesNames.find(
+                                                                              empl =>
+                                                                                empl.value ===
+                                                                                newValue
+                                                                            );
+
+                                                                          if (
+                                                                            selectedInstructor
+                                                                          ) {
+                                                                            this.setState(
+                                                                              {
+                                                                                selectedInstructorId:
+                                                                                  selectedInstructor.key,
+                                                                                defaultInstructorName:
+                                                                                  selectedInstructor.value,
+                                                                              }
+                                                                            );
+                                                                          } else {
+                                                                            this.setState(
+                                                                              {
+                                                                                selectedInstructorId:
+                                                                                  null,
+                                                                                defaultInstructorName:
+                                                                                  newValue,
+                                                                              }
+                                                                            );
+                                                                          }
+                                                                        }}
+                                                                        list="instructorIdList"
+                                                                        autoComplete="off"
+                                                                      />
+
+                                                                      <datalist id="instructorIdList">
+                                                                        {employeesNames.map(
+                                                                          employee => (
+                                                                            <option
+                                                                              key={
+                                                                                employee.key
+                                                                              }
+                                                                              value={
+                                                                                employee.value
+                                                                              }
+                                                                            />
+                                                                          )
+                                                                        )}
+                                                                      </datalist>
+                                                                    </Col>
+                                                                    <Col className="col-2 mb-3">
+                                                                      <Label for="room">
+                                                                        {t(
+                                                                          "Room"
+                                                                        )}
+                                                                      </Label>
+                                                                      <span className="text-danger">
+                                                                        *
+                                                                      </span>
+                                                                    </Col>
+                                                                    <Col className="col-4">
+                                                                      <Field
+                                                                        name="hallId"
+                                                                        as="input"
+                                                                        type="text"
+                                                                        placeholder="Search..."
+                                                                        className={
+                                                                          "form-control" +
+                                                                          (errors.hallId &&
+                                                                          touched.hallId
+                                                                            ? " is-invalid"
+                                                                            : "")
+                                                                        }
+                                                                        value={
+                                                                          halls.find(
+                                                                            h =>
+                                                                              h.key ===
+                                                                              this
+                                                                                .state
+                                                                                .selectedHallKey
+                                                                          )
+                                                                            ?.value ||
+                                                                          ""
+                                                                        }
+                                                                        onChange={e => {
+                                                                          const newValue =
+                                                                            e
+                                                                              .target
+                                                                              .value;
+
+                                                                          const selectedHall =
+                                                                            halls.find(
+                                                                              h =>
+                                                                                h.value ===
+                                                                                newValue
+                                                                            );
+
+                                                                          if (
+                                                                            selectedHall
+                                                                          ) {
+                                                                            this.setState(
+                                                                              {
+                                                                                selectedHallKey:
+                                                                                  selectedHall.key,
+                                                                                defaultHallName:
+                                                                                  selectedHall.value,
+                                                                              }
+                                                                            );
+                                                                          } else {
+                                                                            this.setState(
+                                                                              {
+                                                                                selectedHallKey:
+                                                                                  null,
+                                                                                defaultHallName:
+                                                                                  newValue,
+                                                                              }
+                                                                            );
+                                                                          }
+                                                                        }}
+                                                                        list="hallIdList"
+                                                                        autoComplete="off"
+                                                                      />
+
+                                                                      <datalist id="hallIdList">
+                                                                        {halls.map(
+                                                                          hall => (
+                                                                            <option
+                                                                              key={
+                                                                                hall.key
+                                                                              }
+                                                                              value={
+                                                                                hall.value
+                                                                              }
+                                                                            />
+                                                                          )
+                                                                        )}
+                                                                      </datalist>
+                                                                    </Col>
+
+                                                                    <Col className="col-2 mb-3">
+                                                                      <Label for="altInst">
+                                                                        {t(
+                                                                          "Alt.Instructor"
+                                                                        )}
+                                                                      </Label>
+                                                                    </Col>
+                                                                    <Col className="col-4">
+                                                                      <Field
+                                                                        name="altInstructor"
+                                                                        as="input"
+                                                                        type="text"
+                                                                        placeholder="Search..."
+                                                                        className={
+                                                                          "form-control"
+                                                                        }
+                                                                        value={
+                                                                          employeesNames.find(
+                                                                            e =>
+                                                                              e.key ===
+                                                                              this
+                                                                                .state
+                                                                                .selectedAltInstructorId
+                                                                          )
+                                                                            ?.value ||
+                                                                          ""
+                                                                        }
+                                                                        onChange={e => {
+                                                                          const newValue =
+                                                                            e
+                                                                              .target
+                                                                              .value;
+
+                                                                          const selectedAltInstructor =
+                                                                            employeesNames.find(
+                                                                              e =>
+                                                                                e.value ===
+                                                                                newValue
+                                                                            );
+
+                                                                          if (
+                                                                            selectedAltInstructor
+                                                                          ) {
+                                                                            this.setState(
+                                                                              {
+                                                                                selectedAltInstructorId:
+                                                                                  selectedAltInstructor.key,
+                                                                                defaultAltInstructorName:
+                                                                                  selectedAltInstructor.value,
+                                                                              }
+                                                                            );
+                                                                          } else {
+                                                                            this.setState(
+                                                                              {
+                                                                                selectedAltInstructorId:
+                                                                                  null,
+                                                                                defaultAltInstructorName:
+                                                                                  newValue,
+                                                                              }
+                                                                            );
+                                                                          }
+                                                                        }}
+                                                                        list="altInstructorList"
+                                                                        autoComplete="off"
+                                                                      />
+
+                                                                      <datalist id="altInstructorList">
+                                                                        {employeesNames.map(
+                                                                          altEmp => (
+                                                                            <option
+                                                                              key={
+                                                                                altEmp.key
+                                                                              }
+                                                                              value={
+                                                                                altEmp.value
+                                                                              }
+                                                                            />
+                                                                          )
+                                                                        )}
+                                                                      </datalist>
+                                                                    </Col>
+                                                                    <Col className="col-2 mb-3">
+                                                                      <Label for="altroom">
+                                                                        {t(
+                                                                          "Alt Room"
+                                                                        )}
+                                                                      </Label>
+                                                                    </Col>
+                                                                    <Col className="col-4">
+                                                                      <Field
+                                                                        name="altHallId"
+                                                                        as="input"
+                                                                        type="text"
+                                                                        placeholder="Search..."
+                                                                        className={
+                                                                          "form-control"
+                                                                        }
+                                                                        value={
+                                                                          halls.find(
+                                                                            h =>
+                                                                              h.key ===
+                                                                              this
+                                                                                .state
+                                                                                .selectedAltHallKey
+                                                                          )
+                                                                            ?.value ||
+                                                                          ""
+                                                                        }
+                                                                        onChange={e => {
+                                                                          const newValue =
+                                                                            e
+                                                                              .target
+                                                                              .value;
+
+                                                                          const selectedAltHall =
+                                                                            halls.find(
+                                                                              h =>
+                                                                                h.value ===
+                                                                                newValue
+                                                                            );
+
+                                                                          if (
+                                                                            selectedAltHall
+                                                                          ) {
+                                                                            this.setState(
+                                                                              {
+                                                                                selectedAltHallKey:
+                                                                                  selectedAltHall.key,
+                                                                                defaultAltHallName:
+                                                                                  selectedAltHall.value,
+                                                                              }
+                                                                            );
+                                                                          } else {
+                                                                            this.setState(
+                                                                              {
+                                                                                selectedAltHallKey:
+                                                                                  null,
+                                                                                defaultAltHallName:
+                                                                                  newValue,
+                                                                              }
+                                                                            );
+                                                                          }
+                                                                        }}
+                                                                        list="altHallIdList"
+                                                                        autoComplete="off"
+                                                                      />
+
+                                                                      <datalist id="altHallIdList">
+                                                                        {halls.map(
+                                                                          althall => (
+                                                                            <option
+                                                                              key={
+                                                                                althall.key
+                                                                              }
+                                                                              value={
+                                                                                althall.value
+                                                                              }
+                                                                            />
+                                                                          )
+                                                                        )}
+                                                                      </datalist>
+                                                                    </Col>
+                                                                  </Row>
                                                                   <Row>
                                                                     <div className="mb-3">
                                                                       <Row>
@@ -4808,12 +4479,177 @@ class RegisterTraineesAttendance extends Component {
                                                                       </Row>
                                                                     </div>
                                                                   </Row>
+                                                                  <Row>
+                                                                    <Col>
+                                                                      <div className="text-center">
+                                                                        <Link
+                                                                          to="#"
+                                                                          className="btn btn-primary me-2"
+                                                                          onClick={() => {
+                                                                            this.handleSave(
+                                                                              values
+                                                                            );
+                                                                          }}
+                                                                        >
+                                                                          {t(
+                                                                            "Save"
+                                                                          )}
+                                                                        </Link>
+                                                                      </div>
+                                                                    </Col>
+                                                                  </Row>
                                                                 </CardBody>
                                                               </Card>
                                                             </Form>
                                                           )}
                                                         </Formik>
                                                       </ModalBody>
+                                                    </Modal>
+                                                    <Modal
+                                                      isOpen={this.state.modal2}
+                                                      className={
+                                                        this.props.className
+                                                      }
+                                                      size="xl"
+                                                    >
+                                                      <ModalHeader
+                                                        toggle={this.toggle2}
+                                                        tag="h4"
+                                                      >
+                                                        {!!isOpen1
+                                                          ? this.props.t(
+                                                              "Attendance Recording"
+                                                            )
+                                                          : ""}
+                                                      </ModalHeader>
+                                                      <Row>
+                                                        <div>
+                                                          {errorMessage && (
+                                                            <Alert
+                                                              color="danger"
+                                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                              role="alert"
+                                                            >
+                                                              {errorMessage}
+                                                              <button
+                                                                type="button"
+                                                                className="btn-close"
+                                                                aria-label="Close"
+                                                                onClick={
+                                                                  this
+                                                                    .handleErrorClose
+                                                                }
+                                                              ></button>
+                                                            </Alert>
+                                                          )}
+                                                        </div>
+                                                      </Row>
+                                                      <ModalBody>
+                                                        <BootstrapTable
+                                                          keyField="Id"
+                                                          data={regTrainees}
+                                                          columns={
+                                                            attendRecordingColumns
+                                                          }
+                                                          cellEdit={cellEditFactory(
+                                                            {
+                                                              mode: "dbclick",
+                                                              blurToSave: true,
+                                                              // afterSaveCell: (
+                                                              //   oldValue,
+                                                              //   newValue,
+                                                              //   row,
+                                                              //   column
+                                                              // ) => {
+                                                              //   this.handleParentsDataChange(
+                                                              //     row.Id,
+                                                              //     column.dataField,
+                                                              //     newValue
+                                                              //   );
+                                                              // },
+                                                            }
+                                                          )}
+                                                          noDataIndication={t(
+                                                            "No Relatives Found"
+                                                          )}
+                                                          defaultSorted={
+                                                            defaultSorting
+                                                          }
+                                                        />
+                                                      </ModalBody>{" "}
+                                                    </Modal>
+                                                    <Modal
+                                                      isOpen={this.state.modal3}
+                                                      className={
+                                                        this.props.className
+                                                      }
+                                                      size="xl"
+                                                    >
+                                                      <ModalHeader
+                                                        toggle={this.toggle3}
+                                                        tag="h4"
+                                                      >
+                                                        {!!isView
+                                                          ? this.props.t(
+                                                              "Trainee Abesent Details"
+                                                            )
+                                                          : ""}
+                                                      </ModalHeader>
+                                                      <Row>
+                                                        <div>
+                                                          {errorMessage && (
+                                                            <Alert
+                                                              color="danger"
+                                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                              role="alert"
+                                                            >
+                                                              {errorMessage}
+                                                              <button
+                                                                type="button"
+                                                                className="btn-close"
+                                                                aria-label="Close"
+                                                                onClick={
+                                                                  this
+                                                                    .handleErrorClose
+                                                                }
+                                                              ></button>
+                                                            </Alert>
+                                                          )}
+                                                        </div>
+                                                      </Row>
+                                                      <ModalBody>
+                                                        <BootstrapTable
+                                                          keyField="Id"
+                                                          data={regTrainees}
+                                                          columns={
+                                                            attendRecordingColumns
+                                                          }
+                                                          cellEdit={cellEditFactory(
+                                                            {
+                                                              mode: "dbclick",
+                                                              blurToSave: true,
+                                                              // afterSaveCell: (
+                                                              //   oldValue,
+                                                              //   newValue,
+                                                              //   row,
+                                                              //   column
+                                                              // ) => {
+                                                              //   this.handleParentsDataChange(
+                                                              //     row.Id,
+                                                              //     column.dataField,
+                                                              //     newValue
+                                                              //   );
+                                                              // },
+                                                            }
+                                                          )}
+                                                          noDataIndication={t(
+                                                            "No Relatives Found"
+                                                          )}
+                                                          defaultSorted={
+                                                            defaultSorting
+                                                          }
+                                                        />
+                                                      </ModalBody>{" "}
                                                     </Modal>
                                                   </CardBody>
                                                 </Card>
@@ -4846,10 +4682,14 @@ const mapStateToProps = ({
   enteredGrades,
   regTraineesAttendance,
   menu_items,
+  employees,
+  academyBuildingStructures,
 }) => ({
   regTrainees: regTraineesAttendance.regTrainees,
   deleted: regTraineesAttendance.deleted,
   user_menu: menu_items.user_menu || [],
+  employeesNames: employees.employeesNames,
+  halls: academyBuildingStructures.halls,
   courseStatistics: enteredGrades.courseStatistics,
 });
 

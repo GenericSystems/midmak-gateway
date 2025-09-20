@@ -363,7 +363,7 @@ class RegistrationList extends Component {
     this.setState({ deleteModal: false });
   };
   handleAddToAddedCourses = (row, currentStatus, fieldName) => {
-    const { onAddNewAvailableCourse, onGetNonActiveStdCurr, ava } = this.props;
+    const { onAddNewAvailableCourse } = this.props;
     const { traineeEdit } = this.state;
     console.log("traineeEdit", traineeEdit);
     const newRow = {
@@ -374,11 +374,6 @@ class RegistrationList extends Component {
       color: this.generateRandomColor(),
     };
     onAddNewAvailableCourse(newRow);
-    this.setState({
-      availableCourses: availableCourses.filter(
-        c => c.courseId !== row.courseId
-      ),
-    });
   };
 
   handleActiveSelectChange = (rowId, fieldName, selectedValue, oldValue) => {
@@ -1362,7 +1357,7 @@ class RegistrationList extends Component {
               <ModalBody>
                 <Row>
                   <Col md="2">
-                    <Nav pills className="flex-column">
+                    <Nav pills className="flex-column" id="margTop1">
                       <NavItem>
                         <NavLink
                           id="horizontal-home-link"

@@ -21,6 +21,15 @@ import {
   deleteRegisterTraineeAttendanceSuccess,
   deleteRegisterTraineeAttendanceFail,
 } from "./actions";
+import {
+  getHallsSuccess,
+  getHallsFail,
+} from "../academyBuildingStructure/actions";
+
+import {
+  getEmployeesNamesSuccess,
+  getEmployeesNamesFail,
+} from "../HR/employees/actions";
 
 // Include helper functions
 import {
@@ -29,6 +38,8 @@ import {
   addNewRegisterTraineeAttendance,
   updateRegisterTraineeAttendance,
   deleteRegisterTraineeAttendance,
+  getHalls,
+  getEmployeesNames,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchRegTrainees(selectedpayload) {
@@ -53,6 +64,38 @@ function* fetchRegTrainees(selectedpayload) {
     yield put(getRegisterTraineesAttendanceSuccess(response));
   } catch (error) {
     yield put(getRegisterTraineesAttendanceFail(error));
+  }
+
+  //get halls
+  const get_halls_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Hall",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getHalls, get_halls_req);
+    console.log("hallllllllllllllls", response);
+    yield put(getHallsSuccess(response));
+  } catch (error) {
+    yield put(getHallsFail(error));
+  }
+
+  //get instructor
+  const get_instructor_opt = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_EmployeeOption",
+    fields: "Id,fullName",
+  };
+  try {
+    const response = yield call(getEmployeesNames, get_instructor_opt);
+    console.log("employeeName", response);
+    yield put(getEmployeesNamesSuccess(response));
+  } catch (error) {
+    yield put(getEmployeesNamesFail(error));
   }
 }
 
