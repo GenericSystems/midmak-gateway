@@ -97,10 +97,13 @@ class RegisterTraineesAttendance extends Component {
       selectedRowId: null,
       isEdit: false,
       isView: false,
+      isView1: false,
       modal: false,
       modal1: false,
       modal2: false,
       modal3: false,
+      modal4: false,
+      modal5: false,
       selectedMulti: null,
       selectedFromAdmSemes: "",
       selectedToAdmSemes: "",
@@ -309,6 +312,12 @@ class RegisterTraineesAttendance extends Component {
   toggle3 = () => {
     this.setState(prevState => ({
       modal3: !prevState.modal3,
+    }));
+  };
+
+  toggle4 = () => {
+    this.setState(prevState => ({
+      modal4: !prevState.modal4,
     }));
   };
 
@@ -768,6 +777,7 @@ class RegisterTraineesAttendance extends Component {
   };
 
   handleEditCourseLectures = arg => {
+    console.log("dddddddddddddddddddddddd", arg);
     this.setState({
       reTrainee: arg,
       isOpen: true,
@@ -784,7 +794,7 @@ class RegisterTraineesAttendance extends Component {
 
     this.toggle1();
   };
-  handleAttendanceRecording = arg => {
+  handleRegisterAbsence = arg => {
     this.setState({
       regTrainee: arg,
       isOpen1: true,
@@ -801,7 +811,30 @@ class RegisterTraineesAttendance extends Component {
     this.toggle3();
   };
 
+  handleEContent = arg => {
+    this.setState({
+      traineeAttend: arg,
+      isView1: true,
+    });
+
+    this.toggle4();
+  };
+
   render() {
+    //wait for lectures from database // mays
+    // const { lectures } = this.state;
+    // const today = new Date();
+
+    // const sortedLectures = [...lectures].sort(
+    //   (a, b) => new Date(a.date) - new Date(b.date)
+    // );
+
+    // const nextLecture = sortedLectures.find(
+    //   (lec) => new Date(lec.date) >= today
+    // );
+
+    //in bootstrap   noDataIndication={t(noDataMessage)}
+
     const { halls, employeesNames, courseStatistics, regTrainees, deleted, t } =
       this.props;
     const {
@@ -830,6 +863,8 @@ class RegisterTraineesAttendance extends Component {
       isOpen,
       isOpen1,
       isView,
+      isView1,
+      isView2,
       selectedShowAbsent,
       selectedShowLecture,
       selectedShowTrainees,
@@ -876,6 +911,82 @@ class RegisterTraineesAttendance extends Component {
     const selectRow = {
       mode: "checkbox",
     };
+
+    const recordedLecturesColumns = [
+      {
+        dataField: "Id",
+        text: this.props.t("#"),
+        editable: false,
+        hidden: true,
+      },
+      {
+        dataField: "docName",
+
+        text: this.props.t("Course Name"),
+        editable: false,
+      },
+      {
+        dataField: "requiredNumber",
+
+        text: this.props.t("Course Code"),
+        editable: false,
+      },
+      {
+        dataField: "availableNumber",
+
+        text: this.props.t("Group Code"),
+        editable: false,
+      },
+      {
+        dataField: "preventAdmission",
+
+        text: this.props.t("Lecture Type"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Instructor Name"),
+        editable: false,
+      },
+      {
+        dataField: "lectureDate",
+
+        text: this.props.t("Lecture Date"),
+        editable: false,
+      },
+      {
+        dataField: "lectureTime",
+
+        text: this.props.t("Lecture Time"),
+        editable: false,
+      },
+      {
+        dataField: "lecture",
+
+        text: this.props.t("Lecture"),
+        editable: false,
+      },
+      {
+        dataField: "week",
+
+        text: this.props.t("Week"),
+        editable: false,
+      },
+      {
+        dataField: "lectureTitle",
+
+        text: this.props.t("Lecture Title"),
+        editable: false,
+      },
+
+      {
+        dataField: "close",
+
+        text: this.props.t("Record Order"),
+        editable: false,
+      },
+    ];
 
     const lecturesColumns = [
       {
@@ -980,11 +1091,11 @@ class RegisterTraineesAttendance extends Component {
                 ></i>
               </Link>
             </Tooltip>
-            <Tooltip title={this.props.t("Edit")} placement="top">
+            <Tooltip title={this.props.t("Register Absence")} placement="top">
               <Link className="text-sm-end" to="#">
                 <i
                   className="bx bxs-user font-size-18 text-secondary"
-                  onClick={() => this.handleAttendanceRecording(regTrainee)}
+                  onClick={() => this.handleRegisterAbsence(regTrainee)}
                 ></i>
               </Link>
             </Tooltip>
@@ -992,7 +1103,136 @@ class RegisterTraineesAttendance extends Component {
         ),
       },
     ];
-    const attendRecordingColumns = [
+
+    const lectureColumns = [
+      {
+        dataField: "Id",
+        text: this.props.t("#"),
+        editable: false,
+        hidden: true,
+      },
+      {
+        dataField: "docName",
+
+        text: this.props.t("Course Name"),
+        editable: false,
+      },
+      {
+        dataField: "requiredNumber",
+
+        text: this.props.t("Course Code"),
+        editable: false,
+      },
+      {
+        dataField: "lectureDate",
+
+        text: this.props.t("Lecture Date"),
+        editable: false,
+      },
+      {
+        dataField: "lectureTime",
+
+        text: this.props.t("Lecture Time"),
+        editable: false,
+      },
+      {
+        dataField: "preventAdmission",
+
+        text: this.props.t("Lecture Type"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Group Code"),
+        editable: false,
+      },
+      {
+        dataField: "lectureTitle",
+
+        text: this.props.t("Lecture Title"),
+        editable: false,
+      },
+
+      {
+        dataField: "lecture",
+
+        text: this.props.t("Trainees Count"),
+        editable: false,
+      },
+      {
+        dataField: "week",
+
+        text: this.props.t("Update"),
+        editable: false,
+      },
+
+      {
+        dataField: "close",
+
+        text: this.props.t("Absence"),
+        editable: false,
+        formatter: (cellContent, regTrainee) => (
+          <div className="d-flex justify-content-center gap-3">
+            <Tooltip title={this.props.t("Register Absence")} placement="top">
+              <Link className="text-sm-end" to="#">
+                <i
+                  className="bx bxs-user font-size-18 text-secondary"
+                  onClick={() => this.handleRegisterAbsence(regTrainee)}
+                ></i>
+              </Link>
+            </Tooltip>
+          </div>
+        ),
+      },
+
+      {
+        dataField: "online",
+
+        text: this.props.t("eContent"),
+        editable: false,
+        formatter: (cellContent, regTrainee) => (
+          <div className="d-flex justify-content-center gap-3">
+            <Tooltip title={this.props.t("Edit Lecture")} placement="top">
+              <Link className="text-sm-end" to="#">
+                <i
+                  className="fas fa-globe font-size-18 text-center"
+                  onClick={() => this.handleEContent(regTrainee)}
+                ></i>
+              </Link>
+            </Tooltip>
+          </div>
+        ),
+      },
+
+      {
+        dataField: "cancel",
+
+        text: this.props.t("eClass"),
+        editable: false,
+      },
+
+      {
+        dataField: "menu",
+        isDummyField: true,
+        editable: false,
+        text: "",
+        formatter: (cellContent, regTrainee) => (
+          <div className="d-flex justify-content-center gap-3">
+            <Tooltip title={this.props.t("Edit Lecture")} placement="top">
+              <Link className="text-sm-end" to="#">
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  onClick={() => this.handleEditCourseLectures(regTrainee)}
+                ></i>
+              </Link>
+            </Tooltip>
+          </div>
+        ),
+      },
+    ];
+
+    const registerAbsenceColumns = [
       {
         dataField: "Id",
         text: this.props.t("#"),
@@ -1090,7 +1330,7 @@ class RegisterTraineesAttendance extends Component {
       {
         dataField: "preventRegistration",
 
-        text: this.props.t("Absent Percent%"),
+        text: this.props.t("Absent Percent %"),
         editable: false,
       },
 
@@ -1101,7 +1341,7 @@ class RegisterTraineesAttendance extends Component {
         editable: false,
       },
     ];
-    //here i'm stopped
+
     const decreesColumns = [
       {
         dataField: "Id",
@@ -1112,44 +1352,76 @@ class RegisterTraineesAttendance extends Component {
       {
         dataField: "docName",
 
-        text: this.props.t("Lecture Type"),
+        text: this.props.t("Decree Type"),
         editable: false,
       },
       {
         dataField: "requiredNumber",
 
-        text: this.props.t("Lecture Duration (Hours)"),
+        text: this.props.t("Decree Percent"),
         editable: false,
       },
       {
         dataField: "availableNumber",
 
-        text: this.props.t("Absent Duration (Hours)"),
-        editable: false,
-      },
-      {
-        dataField: "preventAdmission",
-
-        text: this.props.t("Absents Counts"),
+        text: this.props.t("Decrees Count"),
         editable: false,
       },
       {
         dataField: "preventRegistration",
 
-        text: this.props.t("Last Absent Date"),
+        text: this.props.t("Last Decree Date"),
         editable: false,
       },
       {
         dataField: "preventRegistration",
 
-        text: this.props.t("Absent Percent%"),
+        text: this.props.t("Decree Issued Percent"),
         editable: false,
       },
+    ];
 
+    const absenceDetailsColumns = [
+      {
+        dataField: "Id",
+        text: this.props.t("#"),
+        editable: false,
+        hidden: true,
+      },
+      {
+        dataField: "docName",
+
+        text: this.props.t("Week"),
+        editable: false,
+      },
+      {
+        dataField: "requiredNumber",
+
+        text: this.props.t("Lecture Num"),
+        editable: false,
+      },
+      {
+        dataField: "availableNumber",
+
+        text: this.props.t("Lecture Date"),
+        editable: false,
+      },
       {
         dataField: "preventRegistration",
 
-        text: this.props.t("Weight"),
+        text: this.props.t("Lecture Type"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Absence"),
+        editable: false,
+      },
+      {
+        dataField: "preventRegistration",
+
+        text: this.props.t("Justification"),
         editable: false,
       },
     ];
@@ -1422,7 +1694,7 @@ class RegisterTraineesAttendance extends Component {
                                         <div className="modal">
                                           <div className="sidebar">
                                             <h2 className="regTrainees-info">
-                                              Course Profile
+                                              {t("Course Profile")}
                                             </h2>
                                             <ul>
                                               <li>
@@ -1540,11 +1812,8 @@ class RegisterTraineesAttendance extends Component {
                                             {showCourseInfo && (
                                               <div>
                                                 <Card className="mt-3">
-                                                  <CardHeader>
-                                                    <strong>
-                                                      {regTrainees.TraineeNum} —{" "}
-                                                      {regTrainees.TraineeNum}
-                                                    </strong>
+                                                  <CardHeader className="card-header text-center">
+                                                    <h4>{t("Course Info")}</h4>
                                                   </CardHeader>
                                                   <CardBody>
                                                     <Row>
@@ -1552,7 +1821,9 @@ class RegisterTraineesAttendance extends Component {
                                                         <Card className="text-white bg-info mb-3">
                                                           <CardBody>
                                                             <CardTitle>
-                                                              Trainees Count
+                                                              {t(
+                                                                "Trainees Count"
+                                                              )}
                                                             </CardTitle>
                                                             {/* <CardText>
                                                               16
@@ -1565,7 +1836,9 @@ class RegisterTraineesAttendance extends Component {
                                                         <Card className="text-white bg-warning mb-3">
                                                           <CardBody>
                                                             <CardTitle>
-                                                              Warnings Count
+                                                              {t(
+                                                                "Warnings Count"
+                                                              )}
                                                             </CardTitle>
                                                             {/* <CardText>
                                                               0
@@ -1578,7 +1851,9 @@ class RegisterTraineesAttendance extends Component {
                                                         <Card className="text-white bg-danger mb-3">
                                                           <CardBody>
                                                             <CardTitle>
-                                                              Dismiss Count
+                                                              {t(
+                                                                "Dismiss Count"
+                                                              )}
                                                             </CardTitle>
                                                             {/* <CardText>
                                                               0
@@ -1707,7 +1982,13 @@ class RegisterTraineesAttendance extends Component {
                                                     setFieldValue,
                                                   }) => (
                                                     <Form>
-                                                      <Card className="mt-3">
+                                                      <Card
+                                                        className="mt-3"
+                                                        style={{
+                                                          position: "relative",
+                                                          marginRight: "30px",
+                                                        }}
+                                                      >
                                                         <CardHeader className="card-header text-center">
                                                           <h4>
                                                             {t(
@@ -1724,75 +2005,1722 @@ class RegisterTraineesAttendance extends Component {
                                                                 )}
                                                               </CardTitle>
                                                               <CardBody className="cardBody">
-                                                                <div className="mb-3">
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal1
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle1
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isOpen
+                                                                      ? this.props.t(
+                                                                          "Update Lecture"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
                                                                   <Row>
-                                                                    <Col className="col-6">
-                                                                      <Row>
-                                                                        <Col className="col-4">
-                                                                          <Label for="showAbsent">
-                                                                            {this.props.t(
-                                                                              "Show Absent"
-                                                                            )}
-                                                                          </Label>
-                                                                        </Col>
-                                                                        <Col className="col-8">
-                                                                          <div
-                                                                            className={
-                                                                              "btn-group"
-                                                                              // +
-                                                                              // (NeedSectionError
-                                                                              //   ? " border border-danger rounded p-1"
-                                                                              //   : "")
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
                                                                             }
-                                                                          >
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedShowAbsent ===
-                                                                                1
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedShowAbsent",
-                                                                                  1
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "Dialog"
-                                                                              )}
-                                                                            </button>
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedShowAbsent ===
-                                                                                0
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedShowAbsent",
-                                                                                  0
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "Same Page"
-                                                                              )}
-                                                                            </button>
-                                                                          </div>
-                                                                        </Col>
-                                                                      </Row>
-                                                                    </Col>
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
                                                                   </Row>
-                                                                </div>
+                                                                  <ModalBody>
+                                                                    <Formik
+                                                                      enableReinitialize={
+                                                                        true
+                                                                      }
+                                                                      initialValues={{
+                                                                        ...(isEdit &&
+                                                                          regTrainee && {
+                                                                            Id: regTrainee.Id,
+                                                                          }),
+                                                                        lectureDate:
+                                                                          regTrainee?.lectureDate
+                                                                            ? moment
+                                                                                .utc(
+                                                                                  regTrainee.lectureDate
+                                                                                )
+                                                                                .local()
+                                                                                .format(
+                                                                                  "YYYY-MM-DD"
+                                                                                )
+                                                                            : "",
+                                                                        startTime:
+                                                                          regTrainee?.startTime
+                                                                            ? moment
+                                                                                .utc(
+                                                                                  regTrainee.startTime
+                                                                                )
+                                                                                .local()
+                                                                                .format(
+                                                                                  "HH:mm"
+                                                                                )
+                                                                            : "",
+                                                                        tillTime:
+                                                                          regTrainee?.tillTime
+                                                                            ? moment
+                                                                                .utc(
+                                                                                  regTrainee.tillTime
+                                                                                )
+                                                                                .local()
+                                                                                .format(
+                                                                                  "HH:mm"
+                                                                                )
+                                                                            : "",
+                                                                        arLectureTitle:
+                                                                          regTrainee?.arLectureTitle ||
+                                                                          "",
+                                                                        enLectureTitle:
+                                                                          regTrainee?.enLectureTitle ||
+                                                                          "",
+                                                                        lectureOrder:
+                                                                          regTrainee?.lectureOrder ||
+                                                                          "",
+                                                                        weekOrder:
+                                                                          regTrainee?.weekOrder ||
+                                                                          "",
+                                                                        hallId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.hallName) ||
+                                                                          "",
+                                                                        altHallId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.altHallName) ||
+                                                                          "",
+                                                                        instructorId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.instructorName) ||
+                                                                          "",
+                                                                        altInstructorId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.altInstructorName) ||
+                                                                          "",
+                                                                        instAttend:
+                                                                          regTrainee?.instAttend ||
+                                                                          selectedInstAttend,
+                                                                        altInstAttend:
+                                                                          regTrainee?.altInstAttend ||
+                                                                          selectedAltInstAttend,
+                                                                        online:
+                                                                          regTrainee?.online ||
+                                                                          selectedOnline,
+                                                                        additional:
+                                                                          regTrainee?.additional ||
+                                                                          selectedAdditional,
+                                                                        canceled:
+                                                                          regTrainee?.canceled ||
+                                                                          selectedCanceled,
+                                                                        closeLecture:
+                                                                          regTrainee?.closeLecture ||
+                                                                          selectedCloseLecture,
+                                                                      }}
+                                                                      validationSchema={Yup.object().shape(
+                                                                        {
+                                                                          arTitle:
+                                                                            Yup.string().required(
+                                                                              t(
+                                                                                "Course Name (ar) is required"
+                                                                              )
+                                                                            ),
+                                                                        }
+                                                                      )}
+                                                                    >
+                                                                      {({
+                                                                        errors,
+                                                                        status,
+                                                                        touched,
+                                                                        values,
+                                                                        handleChange,
+                                                                        handleBlur,
+                                                                        setFieldValue,
+                                                                      }) => (
+                                                                        <Form>
+                                                                          <Card className="mt-3">
+                                                                            <CardHeader className="card-header text-center">
+                                                                              <h4>
+                                                                                {t(
+                                                                                  "Update Lecture"
+                                                                                )}
+                                                                              </h4>
+                                                                            </CardHeader>
+                                                                            <CardBody className="cardBody">
+                                                                              <Row className="mb-3">
+                                                                                <Col className="col-2">
+                                                                                  <Label for="lectureDate">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Date"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Field
+                                                                                    name="lectureDate"
+                                                                                    className={`form-control ${
+                                                                                      lectureDateError
+                                                                                        ? "is-invalid"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                    type="date"
+                                                                                    value={
+                                                                                      values.lectureDate
+                                                                                        ? new Date(
+                                                                                            values.lectureDate
+                                                                                          )
+                                                                                            .toISOString()
+                                                                                            .split(
+                                                                                              "T"
+                                                                                            )[0]
+                                                                                        : ""
+                                                                                    }
+                                                                                    onChange={
+                                                                                      handleChange
+                                                                                    }
+                                                                                    onBlur={
+                                                                                      handleBlur
+                                                                                    }
+                                                                                    id="arbirthdate-date-input"
+                                                                                  />
+                                                                                  {lectureDateError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Lecture Date is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                </Col>
+
+                                                                                <Col className="col-2">
+                                                                                  <Label for="startTime">
+                                                                                    {this.props.t(
+                                                                                      "Start Time "
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Field
+                                                                                    name="startTime"
+                                                                                    className={`form-control ${
+                                                                                      startTimeError
+                                                                                        ? "is-invalid"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                    type="time"
+                                                                                    value={
+                                                                                      values.startTime
+                                                                                        ? values.startTime
+                                                                                        : ""
+                                                                                    }
+                                                                                    onChange={
+                                                                                      handleChange
+                                                                                    }
+                                                                                    onBlur={
+                                                                                      handleBlur
+                                                                                    }
+                                                                                    id="lstartTime-input"
+                                                                                  />
+                                                                                  {startTimeError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Start Time is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                </Col>
+
+                                                                                <Col className="col-2">
+                                                                                  <Label for="tillTime">
+                                                                                    {this.props.t(
+                                                                                      "Till Time"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Field
+                                                                                    name="tillTime"
+                                                                                    className={`form-control ${
+                                                                                      tillTimeError
+                                                                                        ? "is-invalid"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                    type="time"
+                                                                                    value={
+                                                                                      values.tillTime
+                                                                                        ? values.tillTime
+                                                                                        : ""
+                                                                                    }
+                                                                                    onChange={
+                                                                                      handleChange
+                                                                                    }
+                                                                                    onBlur={
+                                                                                      handleBlur
+                                                                                    }
+                                                                                    id="tillTime-input"
+                                                                                  />
+                                                                                  {tillTimeError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Till Time is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row className="mb-3">
+                                                                                <Col className="col-2">
+                                                                                  <Label for="arLectureTitle">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Title(Ar)"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="arLectureTitle"
+                                                                                    id="arLectureTitle"
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      ((errors.arLectureTitle &&
+                                                                                        touched.arLectureTitle) ||
+                                                                                      arLectureTitleError
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                  />
+
+                                                                                  {arLectureTitleError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Lecture Title (Ar) is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                  <ErrorMessage
+                                                                                    name="arLectureTitle"
+                                                                                    component="div"
+                                                                                    className="invalid-feedback"
+                                                                                  />
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Label for="lectureOrder">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Order"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="lectureOrder"
+                                                                                    id="lectureOrder"
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                  />
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row className="mb-3">
+                                                                                <Col className="col-2">
+                                                                                  <Label for="enLectureTitle">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Title(En)"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="enLectureTitle"
+                                                                                    id="enLectureTitle"
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      ((errors.enLectureTitle &&
+                                                                                        touched.enLectureTitle) ||
+                                                                                      enLectureTitleError
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                  />
+
+                                                                                  {enLectureTitleError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Lecture Title (En) is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                  <ErrorMessage
+                                                                                    name="enLectureTitle"
+                                                                                    component="div"
+                                                                                    className="invalid-feedback"
+                                                                                  />
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Label for="weekOrder">
+                                                                                    {this.props.t(
+                                                                                      "Week Order"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="weekOrder"
+                                                                                    id="weekOrder"
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                  />
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row>
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="inst">
+                                                                                    {t(
+                                                                                      "Instructor"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="instructorId"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      (errors.instructorId &&
+                                                                                      touched.instructorId
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                    value={
+                                                                                      employeesNames.find(
+                                                                                        empl =>
+                                                                                          empl.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedInstructorId
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedInstructor =
+                                                                                        employeesNames.find(
+                                                                                          empl =>
+                                                                                            empl.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedInstructor
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedInstructorId:
+                                                                                              selectedInstructor.key,
+                                                                                            defaultInstructorName:
+                                                                                              selectedInstructor.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedInstructorId:
+                                                                                              null,
+                                                                                            defaultInstructorName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="instructorIdList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="instructorIdList">
+                                                                                    {employeesNames.map(
+                                                                                      employee => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            employee.key
+                                                                                          }
+                                                                                          value={
+                                                                                            employee.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="room">
+                                                                                    {t(
+                                                                                      "Room"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="hallId"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      (errors.hallId &&
+                                                                                      touched.hallId
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                    value={
+                                                                                      halls.find(
+                                                                                        h =>
+                                                                                          h.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedHallKey
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedHall =
+                                                                                        halls.find(
+                                                                                          h =>
+                                                                                            h.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedHall
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedHallKey:
+                                                                                              selectedHall.key,
+                                                                                            defaultHallName:
+                                                                                              selectedHall.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedHallKey:
+                                                                                              null,
+                                                                                            defaultHallName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="hallIdList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="hallIdList">
+                                                                                    {halls.map(
+                                                                                      hall => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            hall.key
+                                                                                          }
+                                                                                          value={
+                                                                                            hall.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="altInst">
+                                                                                    {t(
+                                                                                      "Alt.Instructor"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="altInstructor"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                    value={
+                                                                                      employeesNames.find(
+                                                                                        e =>
+                                                                                          e.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedAltInstructorId
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedAltInstructor =
+                                                                                        employeesNames.find(
+                                                                                          e =>
+                                                                                            e.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedAltInstructor
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltInstructorId:
+                                                                                              selectedAltInstructor.key,
+                                                                                            defaultAltInstructorName:
+                                                                                              selectedAltInstructor.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltInstructorId:
+                                                                                              null,
+                                                                                            defaultAltInstructorName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="altInstructorList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="altInstructorList">
+                                                                                    {employeesNames.map(
+                                                                                      altEmp => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            altEmp.key
+                                                                                          }
+                                                                                          value={
+                                                                                            altEmp.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="altroom">
+                                                                                    {t(
+                                                                                      "Alt Room"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="altHallId"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                    value={
+                                                                                      halls.find(
+                                                                                        h =>
+                                                                                          h.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedAltHallKey
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedAltHall =
+                                                                                        halls.find(
+                                                                                          h =>
+                                                                                            h.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedAltHall
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltHallKey:
+                                                                                              selectedAltHall.key,
+                                                                                            defaultAltHallName:
+                                                                                              selectedAltHall.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltHallKey:
+                                                                                              null,
+                                                                                            defaultAltHallName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="altHallIdList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="altHallIdList">
+                                                                                    {halls.map(
+                                                                                      althall => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            althall.key
+                                                                                          }
+                                                                                          value={
+                                                                                            althall.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row>
+                                                                                <div className="mb-3">
+                                                                                  <Row>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="instAttend">
+                                                                                            {this.props.t(
+                                                                                              "Inst. Attend"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedInstAttend ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedInstAttend",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedInstAttend ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedInstAttend",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="online">
+                                                                                            {this.props.t(
+                                                                                              "Online"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedOnline ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedOnline",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedOnline ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedOnline",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="additional">
+                                                                                            {this.props.t(
+                                                                                              "Additional"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAdditional ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAdditional",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAdditional ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAdditional",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                  </Row>
+                                                                                </div>
+                                                                                <div className="mb-3">
+                                                                                  <Row>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="altInstAttend">
+                                                                                            {this.props.t(
+                                                                                              "Alt. Inst. Attend"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAltInstAttend ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAltInstAttend",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAltInstAttend ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAltInstAttend",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="canceled">
+                                                                                            {this.props.t(
+                                                                                              "Canceled"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCanceled ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCanceled",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCanceled ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCanceled",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="closeLecture">
+                                                                                            {this.props.t(
+                                                                                              "Close Lecture"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCloseLecture ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCloseLecture",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCloseLecture ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCloseLecture",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                  </Row>
+                                                                                </div>
+                                                                              </Row>
+                                                                              <Row>
+                                                                                <Col>
+                                                                                  <div className="text-center">
+                                                                                    <Link
+                                                                                      to="#"
+                                                                                      className="btn btn-primary me-2"
+                                                                                      onClick={() => {
+                                                                                        this.handleSave(
+                                                                                          values
+                                                                                        );
+                                                                                      }}
+                                                                                    >
+                                                                                      {t(
+                                                                                        "Save"
+                                                                                      )}
+                                                                                    </Link>
+                                                                                  </div>
+                                                                                </Col>
+                                                                              </Row>
+                                                                            </CardBody>
+                                                                          </Card>
+                                                                        </Form>
+                                                                      )}
+                                                                    </Formik>
+                                                                  </ModalBody>
+                                                                </Modal>
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal4
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle4
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isView1
+                                                                      ? this.props.t(
+                                                                          "Electronic Content"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
+                                                                  <Row>
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
+                                                                            }
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
+                                                                  </Row>
+                                                                  <ModalBody>
+                                                                    <Card>
+                                                                      <CardTitle id="course_header">
+                                                                        {
+                                                                          "Lecture"
+                                                                        }
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        <Card>
+                                                                          <CardTitle id="course_header">
+                                                                            {t(
+                                                                              "Course Sessions"
+                                                                            )}
+                                                                          </CardTitle>
+                                                                          <CardBody>
+                                                                            <Card>
+                                                                              <CardTitle id="course_header">
+                                                                                {t(
+                                                                                  "Lecture"
+                                                                                )}
+                                                                              </CardTitle>
+                                                                              <CardBody></CardBody>
+                                                                            </Card>
+                                                                          </CardBody>
+                                                                        </Card>
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </ModalBody>{" "}
+                                                                </Modal>
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal2
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle2
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isOpen1
+                                                                      ? this.props.t(
+                                                                          "Register Absence"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
+                                                                  <Row>
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
+                                                                            }
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
+                                                                  </Row>
+                                                                  <ModalBody>
+                                                                    <Card>
+                                                                      <CardBody>
+                                                                        {selectedShowTrainees ===
+                                                                        1 ? (
+                                                                          ""
+                                                                        ) : //Stop until the information is clear //mays
+                                                                        // <Row>
+                                                                        //   {employeesNames.map(
+                                                                        //     empl => (
+                                                                        //       <Col
+                                                                        //         key={
+                                                                        //           empl.Id
+                                                                        //         }
+                                                                        //         md={
+                                                                        //           4
+                                                                        //         }
+                                                                        //       >
+                                                                        //         <Card>
+                                                                        //           <CardTitle className="card-header text-center">
+                                                                        //             <div>
+                                                                        //               <Row>
+                                                                        //                 <Col lg="9">
+                                                                        //                   {
+                                                                        //                     empl.value
+                                                                        //                   }
+                                                                        //                 </Col>
+                                                                        //                 <Col lg="3">
+                                                                        //                   <div className="text-sm-end">
+                                                                        //                     <Tooltip
+                                                                        //                       title={this.props.t(
+                                                                        //                         "edit"
+                                                                        //                       )}
+                                                                        //                       placement="top"
+                                                                        //                     >
+                                                                        //                       <IconButton
+                                                                        //                         color="primary"
+                                                                        //                         onClick={() =>
+                                                                        //                           this.handleEditCourseLectures(
+                                                                        //                             empl
+                                                                        //                           )
+                                                                        //                         }
+                                                                        //                         style={{
+                                                                        //                           marginLeft:
+                                                                        //                             "10px",
+                                                                        //                           padding:
+                                                                        //                             "0",
+                                                                        //                           verticalAlign:
+                                                                        //                             "middle",
+                                                                        //                         }}
+                                                                        //                       >
+                                                                        //                         <i className="mdi mdi-pencil font-size-18" />
+                                                                        //                       </IconButton>
+                                                                        //                     </Tooltip>
+                                                                        //                   </div>
+                                                                        //                 </Col>
+                                                                        //               </Row>
+                                                                        //             </div>
+                                                                        //           </CardTitle>
+                                                                        //           <CardBody className="cardBody">
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Group Code"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Lecture Type"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Lecture Title"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Trainees Count"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Grad. Count"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <Row>
+                                                                        //               <Col lg="3">
+                                                                        //                 <div className="text-center">
+                                                                        //                   <Link
+                                                                        //                     to="#"
+                                                                        //                     className="btn btn-primary me-2"
+                                                                        //                     onClick={() => {
+                                                                        //                       this.handleEContent(
+                                                                        //                         empl
+                                                                        //                       );
+                                                                        //                     }}
+                                                                        //                   >
+                                                                        //                     {t(
+                                                                        //                       "eContent"
+                                                                        //                     )}
+                                                                        //                   </Link>
+                                                                        //                 </div>
+                                                                        //               </Col>
+                                                                        //               <Col
+                                                                        //                 Col
+                                                                        //                 lg="8"
+                                                                        //               >
+                                                                        //                 <div className="text-center">
+                                                                        //                   <Link
+                                                                        //                     to="#"
+                                                                        //                     className="btn btn-primary me-2"
+                                                                        //                     onClick={() => {
+                                                                        //                       this.handleRegisterAbsence(
+                                                                        //                         empl
+                                                                        //                       );
+                                                                        //                     }}
+                                                                        //                   >
+                                                                        //                     {t(
+                                                                        //                       "Register Absence"
+                                                                        //                     )}
+                                                                        //                   </Link>
+                                                                        //                 </div>
+                                                                        //               </Col>
+                                                                        //             </Row>
+                                                                        //           </CardBody>
+                                                                        //         </Card>
+                                                                        //       </Col>
+                                                                        //     )
+                                                                        //   )}
+                                                                        // </Row>
+                                                                        selectedShowTrainees ===
+                                                                          0 ? (
+                                                                          // ---- Table ----
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              registerAbsenceColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Relatives Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        ) : null}
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </ModalBody>{" "}
+                                                                </Modal>
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal3
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle3
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isView
+                                                                      ? this.props.t(
+                                                                          "Trainee Absent Details"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
+                                                                  <Row>
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
+                                                                            }
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
+                                                                  </Row>
+                                                                  <ModalBody>
+                                                                    <Card>
+                                                                      <CardTitle id="course_header">
+                                                                        {t(
+                                                                          "Absent Statistics"
+                                                                        )}
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        {" "}
+                                                                        <Row>
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              absentStatisicsColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Absent Statistics Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        </Row>
+                                                                      </CardBody>
+                                                                      <CardTitle id="course_header">
+                                                                        {t(
+                                                                          "Decrees"
+                                                                        )}
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        {" "}
+                                                                        <Row>
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              decreesColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Decrees Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        </Row>{" "}
+                                                                      </CardBody>
+                                                                      <CardTitle id="course_header">
+                                                                        {t(
+                                                                          "Absence Details"
+                                                                        )}
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        <Row>
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              absenceDetailsColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Absence Details Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        </Row>
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </ModalBody>{" "}
+                                                                </Modal>
                                                                 <div className="mb-3">
                                                                   <Row>
                                                                     <Col className="col-6">
@@ -1860,73 +3788,9 @@ class RegisterTraineesAttendance extends Component {
                                                                         </Col>
                                                                       </Row>
                                                                     </Col>
-                                                                    <Col className="col-6">
-                                                                      <Row>
-                                                                        <Col className="col-4">
-                                                                          <Label for="showInstructor">
-                                                                            {this.props.t(
-                                                                              "show Instructor Info"
-                                                                            )}
-                                                                          </Label>
-                                                                        </Col>
-                                                                        <Col className="col-8">
-                                                                          <div
-                                                                            className={
-                                                                              "btn-group"
-                                                                              // +
-                                                                              // (NeedSectionError
-                                                                              //   ? " border border-danger rounded p-1"
-                                                                              //   : "")
-                                                                            }
-                                                                          >
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedshowInstructor ===
-                                                                                1
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedshowInstructor",
-                                                                                  1
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "Yes"
-                                                                              )}
-                                                                            </button>
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedshowInstructor ===
-                                                                                0
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedshowInstructor",
-                                                                                  0
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "No"
-                                                                              )}
-                                                                            </button>
-                                                                          </div>
-                                                                        </Col>
-                                                                      </Row>
-                                                                    </Col>
                                                                   </Row>
                                                                 </div>
+
                                                                 <div className="mb-3">
                                                                   <Row>
                                                                     <Col className="col-6">
@@ -2064,363 +3928,234 @@ class RegisterTraineesAttendance extends Component {
                                                               </CardBody>
                                                             </Card>
                                                           </Row>
+
+                                                          <Row>
+                                                            <Card className="mt-3">
+                                                              <CardTitle id="course_header">
+                                                                {t(
+                                                                  "Lecture Of Date"
+                                                                )}
+                                                                {""} - {""}
+                                                                <small>
+                                                                  {currentTime.toLocaleDateString()}{" "}
+                                                                  -{" "}
+                                                                  {currentTime.toLocaleTimeString()}
+                                                                </small>
+                                                              </CardTitle>
+                                                              <CardBody className="cardBody">
+                                                                {selectedShowLecture ===
+                                                                1 ? (
+                                                                  <Row>
+                                                                    {employeesNames.map(
+                                                                      empl => (
+                                                                        <Col
+                                                                          key={
+                                                                            empl.Id
+                                                                          }
+                                                                          md={4}
+                                                                        >
+                                                                          <Card>
+                                                                            <CardTitle className="card-header text-center">
+                                                                              <div>
+                                                                                <Row>
+                                                                                  <Col lg="9">
+                                                                                    {
+                                                                                      empl.value
+                                                                                    }
+                                                                                  </Col>
+                                                                                  <Col lg="3">
+                                                                                    <div className="text-sm-end">
+                                                                                      <Tooltip
+                                                                                        title={this.props.t(
+                                                                                          "edit"
+                                                                                        )}
+                                                                                        placement="top"
+                                                                                      >
+                                                                                        <IconButton
+                                                                                          color="primary"
+                                                                                          onClick={() =>
+                                                                                            this.handleEditCourseLectures(
+                                                                                              empl
+                                                                                            )
+                                                                                          }
+                                                                                          style={{
+                                                                                            marginLeft:
+                                                                                              "10px",
+                                                                                            padding:
+                                                                                              "0",
+                                                                                            verticalAlign:
+                                                                                              "middle",
+                                                                                          }}
+                                                                                        >
+                                                                                          <i className="mdi mdi-pencil font-size-18" />
+                                                                                        </IconButton>
+                                                                                      </Tooltip>
+                                                                                    </div>
+                                                                                  </Col>
+                                                                                </Row>
+                                                                              </div>
+                                                                            </CardTitle>
+                                                                            <CardBody className="cardBody">
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Group Code"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Lecture Type"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Lecture Title"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Trainees Count"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Grad. Count"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <Row>
+                                                                                <Col lg="3">
+                                                                                  <div className="text-center">
+                                                                                    <Link
+                                                                                      to="#"
+                                                                                      className="btn btn-primary me-2"
+                                                                                      onClick={() => {
+                                                                                        this.handleEContent(
+                                                                                          empl
+                                                                                        );
+                                                                                      }}
+                                                                                    >
+                                                                                      {t(
+                                                                                        "eContent"
+                                                                                      )}
+                                                                                    </Link>
+                                                                                  </div>
+                                                                                </Col>
+                                                                                <Col
+                                                                                  Col
+                                                                                  lg="8"
+                                                                                >
+                                                                                  <div className="text-center">
+                                                                                    <Link
+                                                                                      to="#"
+                                                                                      className="btn btn-primary me-2"
+                                                                                      onClick={() => {
+                                                                                        this.handleRegisterAbsence(
+                                                                                          empl
+                                                                                        );
+                                                                                      }}
+                                                                                    >
+                                                                                      {t(
+                                                                                        "Register Absence"
+                                                                                      )}
+                                                                                    </Link>
+                                                                                  </div>
+                                                                                </Col>
+                                                                              </Row>
+                                                                            </CardBody>
+                                                                          </Card>
+                                                                        </Col>
+                                                                      )
+                                                                    )}
+                                                                  </Row>
+                                                                ) : selectedShowLecture ===
+                                                                  0 ? (
+                                                                  // ---- Table ----
+                                                                  <BootstrapTable
+                                                                    keyField="Id"
+                                                                    data={
+                                                                      regTrainees
+                                                                    }
+                                                                    columns={
+                                                                      lectureColumns
+                                                                    }
+                                                                    cellEdit={cellEditFactory(
+                                                                      {
+                                                                        mode: "dbclick",
+                                                                        blurToSave: true,
+                                                                      }
+                                                                    )}
+                                                                    noDataIndication={t(
+                                                                      "There are no lecture , the first lecture will be on"
+                                                                    )}
+                                                                    defaultSorted={
+                                                                      defaultSorting
+                                                                    }
+                                                                  />
+                                                                ) : null}
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Row>
                                                         </CardBody>
                                                       </Card>
-
-                                                      <Row>
-                                                        <Card className="mt-3">
-                                                          <CardTitle id="course_header">
-                                                            {t(
-                                                              "Lecture Of Date"
-                                                            )}
-                                                            {""} - {""}
-                                                            <small>
-                                                              {currentTime.toLocaleDateString()}{" "}
-                                                              -{" "}
-                                                              {currentTime.toLocaleTimeString()}
-                                                            </small>
-                                                          </CardTitle>
-                                                          <CardBody className="cardBody">
-                                                            <div className="mb-3">
-                                                              <Row>
-                                                                <Col className="col-6">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="showAbsent">
-                                                                        {this.props.t(
-                                                                          "Show Absent"
-                                                                        )}
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <div
-                                                                        className={
-                                                                          "btn-group"
-                                                                          // +
-                                                                          // (NeedSectionError
-                                                                          //   ? " border border-danger rounded p-1"
-                                                                          //   : "")
-                                                                        }
-                                                                      >
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedShowAbsent ===
-                                                                            1
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedShowAbsent",
-                                                                              1
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "Dialog"
-                                                                          )}
-                                                                        </button>
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedShowAbsent ===
-                                                                            0
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedShowAbsent",
-                                                                              0
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "Same Page"
-                                                                          )}
-                                                                        </button>
-                                                                      </div>
-                                                                    </Col>
-                                                                  </Row>
-                                                                </Col>
-                                                              </Row>
-                                                            </div>
-                                                            <div className="mb-3">
-                                                              <Row>
-                                                                <Col className="col-6">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="showLecture">
-                                                                        {this.props.t(
-                                                                          "Show Lecture"
-                                                                        )}
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <div
-                                                                        className={
-                                                                          "btn-group"
-                                                                          // +
-                                                                          // (NeedSectionError
-                                                                          //   ? " border border-danger rounded p-1"
-                                                                          //   : "")
-                                                                        }
-                                                                      >
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedShowLecture ===
-                                                                            1
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedShowLecture",
-                                                                              1
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "Cards"
-                                                                          )}
-                                                                        </button>
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedShowLecture ===
-                                                                            0
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedShowLecture",
-                                                                              0
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "List"
-                                                                          )}
-                                                                        </button>
-                                                                      </div>
-                                                                    </Col>
-                                                                  </Row>
-                                                                </Col>
-                                                                <Col className="col-6">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="showInstructor">
-                                                                        {this.props.t(
-                                                                          "show Instructor Info"
-                                                                        )}
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <div
-                                                                        className={
-                                                                          "btn-group"
-                                                                          // +
-                                                                          // (NeedSectionError
-                                                                          //   ? " border border-danger rounded p-1"
-                                                                          //   : "")
-                                                                        }
-                                                                      >
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedshowInstructor ===
-                                                                            1
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedshowInstructor",
-                                                                              1
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "Yes"
-                                                                          )}
-                                                                        </button>
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedshowInstructor ===
-                                                                            0
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedshowInstructor",
-                                                                              0
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "No"
-                                                                          )}
-                                                                        </button>
-                                                                      </div>
-                                                                    </Col>
-                                                                  </Row>
-                                                                </Col>
-                                                              </Row>
-                                                            </div>
-                                                            <div className="mb-3">
-                                                              <Row>
-                                                                <Col className="col-6">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="showTrainees">
-                                                                        {this.props.t(
-                                                                          "Show Trainees"
-                                                                        )}
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <div
-                                                                        className={
-                                                                          "btn-group"
-                                                                          // +
-                                                                          // (NeedSectionError
-                                                                          //   ? " border border-danger rounded p-1"
-                                                                          //   : "")
-                                                                        }
-                                                                      >
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedShowTrainees ===
-                                                                            1
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedShowTrainees",
-                                                                              1
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "Cards"
-                                                                          )}
-                                                                        </button>
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedShowTrainees ===
-                                                                            0
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedShowTrainees",
-                                                                              0
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "List"
-                                                                          )}
-                                                                        </button>
-                                                                      </div>
-                                                                    </Col>
-                                                                  </Row>
-                                                                </Col>
-                                                                <Col className="col-6">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="showLectureInfo">
-                                                                        {this.props.t(
-                                                                          "Show Lecture Info"
-                                                                        )}
-                                                                      </Label>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <div
-                                                                        className={
-                                                                          "btn-group"
-                                                                          // +
-                                                                          // (NeedSectionError
-                                                                          //   ? " border border-danger rounded p-1"
-                                                                          //   : "")
-                                                                        }
-                                                                      >
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedShowLectureInfo ===
-                                                                            1
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedShowLectureInfo",
-                                                                              1
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "Yes"
-                                                                          )}
-                                                                        </button>
-                                                                        <button
-                                                                          type="button"
-                                                                          className={`btn ${
-                                                                            this
-                                                                              .state
-                                                                              .selectedShowLectureInfo ===
-                                                                            0
-                                                                              ? "btn-primary"
-                                                                              : "btn-outline-secondary"
-                                                                          }`}
-                                                                          onClick={() =>
-                                                                            this.handleToggleChange(
-                                                                              "selectedShowLectureInfo",
-                                                                              0
-                                                                            )
-                                                                          }
-                                                                        >
-                                                                          {this.props.t(
-                                                                            "No"
-                                                                          )}
-                                                                        </button>
-                                                                      </div>
-                                                                    </Col>
-                                                                  </Row>
-                                                                </Col>
-                                                              </Row>
-                                                            </div>
-                                                          </CardBody>
-                                                        </Card>
-                                                      </Row>
                                                     </Form>
                                                   )}
                                                 </Formik>
@@ -2473,11 +4208,17 @@ class RegisterTraineesAttendance extends Component {
                                                     setFieldValue,
                                                   }) => (
                                                     <Form>
-                                                      <Card className="mt-3">
+                                                      <Card
+                                                        className="mt-3"
+                                                        style={{
+                                                          position: "relative",
+                                                          marginRight: "30px",
+                                                        }}
+                                                      >
                                                         <CardHeader className="card-header text-center">
                                                           <h4>
                                                             {t(
-                                                              "Current Leacture"
+                                                              "Today's Leacture"
                                                             )}
                                                           </h4>
                                                         </CardHeader>
@@ -2490,75 +4231,1722 @@ class RegisterTraineesAttendance extends Component {
                                                                 )}
                                                               </CardTitle>
                                                               <CardBody className="cardBody">
-                                                                <div className="mb-3">
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal1
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle1
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isOpen
+                                                                      ? this.props.t(
+                                                                          "Update Lecture"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
                                                                   <Row>
-                                                                    <Col className="col-6">
-                                                                      <Row>
-                                                                        <Col className="col-4">
-                                                                          <Label for="showAbsent">
-                                                                            {this.props.t(
-                                                                              "Show Absent"
-                                                                            )}
-                                                                          </Label>
-                                                                        </Col>
-                                                                        <Col className="col-8">
-                                                                          <div
-                                                                            className={
-                                                                              "btn-group"
-                                                                              // +
-                                                                              // (NeedSectionError
-                                                                              //   ? " border border-danger rounded p-1"
-                                                                              //   : "")
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
                                                                             }
-                                                                          >
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedShowAbsent ===
-                                                                                1
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedShowAbsent",
-                                                                                  1
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "Dialog"
-                                                                              )}
-                                                                            </button>
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedShowAbsent ===
-                                                                                0
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedShowAbsent",
-                                                                                  0
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "Same Page"
-                                                                              )}
-                                                                            </button>
-                                                                          </div>
-                                                                        </Col>
-                                                                      </Row>
-                                                                    </Col>
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
                                                                   </Row>
-                                                                </div>
+                                                                  <ModalBody>
+                                                                    <Formik
+                                                                      enableReinitialize={
+                                                                        true
+                                                                      }
+                                                                      initialValues={{
+                                                                        ...(isEdit &&
+                                                                          regTrainee && {
+                                                                            Id: regTrainee.Id,
+                                                                          }),
+                                                                        lectureDate:
+                                                                          regTrainee?.lectureDate
+                                                                            ? moment
+                                                                                .utc(
+                                                                                  regTrainee.lectureDate
+                                                                                )
+                                                                                .local()
+                                                                                .format(
+                                                                                  "YYYY-MM-DD"
+                                                                                )
+                                                                            : "",
+                                                                        startTime:
+                                                                          regTrainee?.startTime
+                                                                            ? moment
+                                                                                .utc(
+                                                                                  regTrainee.startTime
+                                                                                )
+                                                                                .local()
+                                                                                .format(
+                                                                                  "HH:mm"
+                                                                                )
+                                                                            : "",
+                                                                        tillTime:
+                                                                          regTrainee?.tillTime
+                                                                            ? moment
+                                                                                .utc(
+                                                                                  regTrainee.tillTime
+                                                                                )
+                                                                                .local()
+                                                                                .format(
+                                                                                  "HH:mm"
+                                                                                )
+                                                                            : "",
+                                                                        arLectureTitle:
+                                                                          regTrainee?.arLectureTitle ||
+                                                                          "",
+                                                                        enLectureTitle:
+                                                                          regTrainee?.enLectureTitle ||
+                                                                          "",
+                                                                        lectureOrder:
+                                                                          regTrainee?.lectureOrder ||
+                                                                          "",
+                                                                        weekOrder:
+                                                                          regTrainee?.weekOrder ||
+                                                                          "",
+                                                                        hallId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.hallName) ||
+                                                                          "",
+                                                                        altHallId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.altHallName) ||
+                                                                          "",
+                                                                        instructorId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.instructorName) ||
+                                                                          "",
+                                                                        altInstructorId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.altInstructorName) ||
+                                                                          "",
+                                                                        instAttend:
+                                                                          regTrainee?.instAttend ||
+                                                                          selectedInstAttend,
+                                                                        altInstAttend:
+                                                                          regTrainee?.altInstAttend ||
+                                                                          selectedAltInstAttend,
+                                                                        online:
+                                                                          regTrainee?.online ||
+                                                                          selectedOnline,
+                                                                        additional:
+                                                                          regTrainee?.additional ||
+                                                                          selectedAdditional,
+                                                                        canceled:
+                                                                          regTrainee?.canceled ||
+                                                                          selectedCanceled,
+                                                                        closeLecture:
+                                                                          regTrainee?.closeLecture ||
+                                                                          selectedCloseLecture,
+                                                                      }}
+                                                                      validationSchema={Yup.object().shape(
+                                                                        {
+                                                                          arTitle:
+                                                                            Yup.string().required(
+                                                                              t(
+                                                                                "Course Name (ar) is required"
+                                                                              )
+                                                                            ),
+                                                                        }
+                                                                      )}
+                                                                    >
+                                                                      {({
+                                                                        errors,
+                                                                        status,
+                                                                        touched,
+                                                                        values,
+                                                                        handleChange,
+                                                                        handleBlur,
+                                                                        setFieldValue,
+                                                                      }) => (
+                                                                        <Form>
+                                                                          <Card className="mt-3">
+                                                                            <CardHeader className="card-header text-center">
+                                                                              <h4>
+                                                                                {t(
+                                                                                  "Update Lecture"
+                                                                                )}
+                                                                              </h4>
+                                                                            </CardHeader>
+                                                                            <CardBody className="cardBody">
+                                                                              <Row className="mb-3">
+                                                                                <Col className="col-2">
+                                                                                  <Label for="lectureDate">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Date"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Field
+                                                                                    name="lectureDate"
+                                                                                    className={`form-control ${
+                                                                                      lectureDateError
+                                                                                        ? "is-invalid"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                    type="date"
+                                                                                    value={
+                                                                                      values.lectureDate
+                                                                                        ? new Date(
+                                                                                            values.lectureDate
+                                                                                          )
+                                                                                            .toISOString()
+                                                                                            .split(
+                                                                                              "T"
+                                                                                            )[0]
+                                                                                        : ""
+                                                                                    }
+                                                                                    onChange={
+                                                                                      handleChange
+                                                                                    }
+                                                                                    onBlur={
+                                                                                      handleBlur
+                                                                                    }
+                                                                                    id="arbirthdate-date-input"
+                                                                                  />
+                                                                                  {lectureDateError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Lecture Date is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                </Col>
+
+                                                                                <Col className="col-2">
+                                                                                  <Label for="startTime">
+                                                                                    {this.props.t(
+                                                                                      "Start Time"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Field
+                                                                                    name="startTime"
+                                                                                    className={`form-control ${
+                                                                                      startTimeError
+                                                                                        ? "is-invalid"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                    type="time"
+                                                                                    value={
+                                                                                      values.startTime
+                                                                                        ? values.startTime
+                                                                                        : ""
+                                                                                    }
+                                                                                    onChange={
+                                                                                      handleChange
+                                                                                    }
+                                                                                    onBlur={
+                                                                                      handleBlur
+                                                                                    }
+                                                                                    id="lstartTime-input"
+                                                                                  />
+                                                                                  {startTimeError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Start Time is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                </Col>
+
+                                                                                <Col className="col-2">
+                                                                                  <Label for="tillTime">
+                                                                                    {this.props.t(
+                                                                                      "Till Time"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Field
+                                                                                    name="tillTime"
+                                                                                    className={`form-control ${
+                                                                                      tillTimeError
+                                                                                        ? "is-invalid"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                    type="time"
+                                                                                    value={
+                                                                                      values.tillTime
+                                                                                        ? values.tillTime
+                                                                                        : ""
+                                                                                    }
+                                                                                    onChange={
+                                                                                      handleChange
+                                                                                    }
+                                                                                    onBlur={
+                                                                                      handleBlur
+                                                                                    }
+                                                                                    id="tillTime-input"
+                                                                                  />
+                                                                                  {tillTimeError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Till Time is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row className="mb-3">
+                                                                                <Col className="col-2">
+                                                                                  <Label for="arLectureTitle">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Title(Ar)"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="arLectureTitle"
+                                                                                    id="arLectureTitle"
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      ((errors.arLectureTitle &&
+                                                                                        touched.arLectureTitle) ||
+                                                                                      arLectureTitleError
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                  />
+
+                                                                                  {arLectureTitleError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Lecture Title (Ar) is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                  <ErrorMessage
+                                                                                    name="arLectureTitle"
+                                                                                    component="div"
+                                                                                    className="invalid-feedback"
+                                                                                  />
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Label for="lectureOrder">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Order"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="lectureOrder"
+                                                                                    id="lectureOrder"
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                  />
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row className="mb-3">
+                                                                                <Col className="col-2">
+                                                                                  <Label for="enLectureTitle">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Title(En)"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="enLectureTitle"
+                                                                                    id="enLectureTitle"
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      ((errors.enLectureTitle &&
+                                                                                        touched.enLectureTitle) ||
+                                                                                      enLectureTitleError
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                  />
+
+                                                                                  {enLectureTitleError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Lecture Title (En) is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                  <ErrorMessage
+                                                                                    name="enLectureTitle"
+                                                                                    component="div"
+                                                                                    className="invalid-feedback"
+                                                                                  />
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Label for="weekOrder">
+                                                                                    {this.props.t(
+                                                                                      "Week Order"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="weekOrder"
+                                                                                    id="weekOrder"
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                  />
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row>
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="inst">
+                                                                                    {t(
+                                                                                      "Instructor"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="instructorId"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      (errors.instructorId &&
+                                                                                      touched.instructorId
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                    value={
+                                                                                      employeesNames.find(
+                                                                                        empl =>
+                                                                                          empl.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedInstructorId
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedInstructor =
+                                                                                        employeesNames.find(
+                                                                                          empl =>
+                                                                                            empl.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedInstructor
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedInstructorId:
+                                                                                              selectedInstructor.key,
+                                                                                            defaultInstructorName:
+                                                                                              selectedInstructor.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedInstructorId:
+                                                                                              null,
+                                                                                            defaultInstructorName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="instructorIdList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="instructorIdList">
+                                                                                    {employeesNames.map(
+                                                                                      employee => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            employee.key
+                                                                                          }
+                                                                                          value={
+                                                                                            employee.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="room">
+                                                                                    {t(
+                                                                                      "Room"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="hallId"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      (errors.hallId &&
+                                                                                      touched.hallId
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                    value={
+                                                                                      halls.find(
+                                                                                        h =>
+                                                                                          h.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedHallKey
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedHall =
+                                                                                        halls.find(
+                                                                                          h =>
+                                                                                            h.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedHall
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedHallKey:
+                                                                                              selectedHall.key,
+                                                                                            defaultHallName:
+                                                                                              selectedHall.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedHallKey:
+                                                                                              null,
+                                                                                            defaultHallName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="hallIdList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="hallIdList">
+                                                                                    {halls.map(
+                                                                                      hall => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            hall.key
+                                                                                          }
+                                                                                          value={
+                                                                                            hall.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="altInst">
+                                                                                    {t(
+                                                                                      "Alt.Instructor"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="altInstructor"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                    value={
+                                                                                      employeesNames.find(
+                                                                                        e =>
+                                                                                          e.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedAltInstructorId
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedAltInstructor =
+                                                                                        employeesNames.find(
+                                                                                          e =>
+                                                                                            e.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedAltInstructor
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltInstructorId:
+                                                                                              selectedAltInstructor.key,
+                                                                                            defaultAltInstructorName:
+                                                                                              selectedAltInstructor.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltInstructorId:
+                                                                                              null,
+                                                                                            defaultAltInstructorName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="altInstructorList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="altInstructorList">
+                                                                                    {employeesNames.map(
+                                                                                      altEmp => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            altEmp.key
+                                                                                          }
+                                                                                          value={
+                                                                                            altEmp.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="altroom">
+                                                                                    {t(
+                                                                                      "Alt Room"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="altHallId"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                    value={
+                                                                                      halls.find(
+                                                                                        h =>
+                                                                                          h.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedAltHallKey
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedAltHall =
+                                                                                        halls.find(
+                                                                                          h =>
+                                                                                            h.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedAltHall
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltHallKey:
+                                                                                              selectedAltHall.key,
+                                                                                            defaultAltHallName:
+                                                                                              selectedAltHall.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltHallKey:
+                                                                                              null,
+                                                                                            defaultAltHallName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="altHallIdList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="altHallIdList">
+                                                                                    {halls.map(
+                                                                                      althall => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            althall.key
+                                                                                          }
+                                                                                          value={
+                                                                                            althall.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row>
+                                                                                <div className="mb-3">
+                                                                                  <Row>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="instAttend">
+                                                                                            {this.props.t(
+                                                                                              "Inst. Attend"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedInstAttend ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedInstAttend",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedInstAttend ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedInstAttend",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="online">
+                                                                                            {this.props.t(
+                                                                                              "Online"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedOnline ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedOnline",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedOnline ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedOnline",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="additional">
+                                                                                            {this.props.t(
+                                                                                              "Additional"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAdditional ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAdditional",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAdditional ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAdditional",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                  </Row>
+                                                                                </div>
+                                                                                <div className="mb-3">
+                                                                                  <Row>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="altInstAttend">
+                                                                                            {this.props.t(
+                                                                                              "Alt. Inst. Attend"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAltInstAttend ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAltInstAttend",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAltInstAttend ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAltInstAttend",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="canceled">
+                                                                                            {this.props.t(
+                                                                                              "Canceled"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCanceled ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCanceled",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCanceled ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCanceled",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="closeLecture">
+                                                                                            {this.props.t(
+                                                                                              "Close Lecture"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCloseLecture ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCloseLecture",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCloseLecture ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCloseLecture",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                  </Row>
+                                                                                </div>
+                                                                              </Row>
+                                                                              <Row>
+                                                                                <Col>
+                                                                                  <div className="text-center">
+                                                                                    <Link
+                                                                                      to="#"
+                                                                                      className="btn btn-primary me-2"
+                                                                                      onClick={() => {
+                                                                                        this.handleSave(
+                                                                                          values
+                                                                                        );
+                                                                                      }}
+                                                                                    >
+                                                                                      {t(
+                                                                                        "Save"
+                                                                                      )}
+                                                                                    </Link>
+                                                                                  </div>
+                                                                                </Col>
+                                                                              </Row>
+                                                                            </CardBody>
+                                                                          </Card>
+                                                                        </Form>
+                                                                      )}
+                                                                    </Formik>
+                                                                  </ModalBody>
+                                                                </Modal>
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal4
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle4
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isView1
+                                                                      ? this.props.t(
+                                                                          "Electronic Content"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
+                                                                  <Row>
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
+                                                                            }
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
+                                                                  </Row>
+                                                                  <ModalBody>
+                                                                    <Card>
+                                                                      <CardTitle id="course_header">
+                                                                        {
+                                                                          "lecture"
+                                                                        }
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        <Card>
+                                                                          <CardTitle id="course_header">
+                                                                            {t(
+                                                                              "Course Sessions"
+                                                                            )}
+                                                                          </CardTitle>
+                                                                          <CardBody>
+                                                                            <Card>
+                                                                              <CardTitle id="course_header">
+                                                                                {t(
+                                                                                  "lecture"
+                                                                                )}
+                                                                              </CardTitle>
+                                                                              <CardBody></CardBody>
+                                                                            </Card>
+                                                                          </CardBody>
+                                                                        </Card>
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </ModalBody>{" "}
+                                                                </Modal>
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal2
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle2
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isOpen1
+                                                                      ? this.props.t(
+                                                                          "Register Absence"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
+                                                                  <Row>
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
+                                                                            }
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
+                                                                  </Row>
+                                                                  <ModalBody>
+                                                                    <Card>
+                                                                      <CardBody>
+                                                                        {selectedShowTrainees ===
+                                                                        1 ? (
+                                                                          ""
+                                                                        ) : //Stop until the information is clear //mays
+                                                                        // <Row>
+                                                                        //   {employeesNames.map(
+                                                                        //     empl => (
+                                                                        //       <Col
+                                                                        //         key={
+                                                                        //           empl.Id
+                                                                        //         }
+                                                                        //         md={
+                                                                        //           4
+                                                                        //         }
+                                                                        //       >
+                                                                        //         <Card>
+                                                                        //           <CardTitle className="card-header text-center">
+                                                                        //             <div>
+                                                                        //               <Row>
+                                                                        //                 <Col lg="9">
+                                                                        //                   {
+                                                                        //                     empl.value
+                                                                        //                   }
+                                                                        //                 </Col>
+                                                                        //                 <Col lg="3">
+                                                                        //                   <div className="text-sm-end">
+                                                                        //                     <Tooltip
+                                                                        //                       title={this.props.t(
+                                                                        //                         "edit"
+                                                                        //                       )}
+                                                                        //                       placement="top"
+                                                                        //                     >
+                                                                        //                       <IconButton
+                                                                        //                         color="primary"
+                                                                        //                         onClick={() =>
+                                                                        //                           this.handleEditCourseLectures(
+                                                                        //                             empl
+                                                                        //                           )
+                                                                        //                         }
+                                                                        //                         style={{
+                                                                        //                           marginLeft:
+                                                                        //                             "10px",
+                                                                        //                           padding:
+                                                                        //                             "0",
+                                                                        //                           verticalAlign:
+                                                                        //                             "middle",
+                                                                        //                         }}
+                                                                        //                       >
+                                                                        //                         <i className="mdi mdi-pencil font-size-18" />
+                                                                        //                       </IconButton>
+                                                                        //                     </Tooltip>
+                                                                        //                   </div>
+                                                                        //                 </Col>
+                                                                        //               </Row>
+                                                                        //             </div>
+                                                                        //           </CardTitle>
+                                                                        //           <CardBody className="cardBody">
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Group Code"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Lecture Type"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Lecture Title"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Trainees Count"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Grad. Count"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <Row>
+                                                                        //               <Col lg="3">
+                                                                        //                 <div className="text-center">
+                                                                        //                   <Link
+                                                                        //                     to="#"
+                                                                        //                     className="btn btn-primary me-2"
+                                                                        //                     onClick={() => {
+                                                                        //                       this.handleEContent(
+                                                                        //                         empl
+                                                                        //                       );
+                                                                        //                     }}
+                                                                        //                   >
+                                                                        //                     {t(
+                                                                        //                       "eContent"
+                                                                        //                     )}
+                                                                        //                   </Link>
+                                                                        //                 </div>
+                                                                        //               </Col>
+                                                                        //               <Col
+                                                                        //                 Col
+                                                                        //                 lg="8"
+                                                                        //               >
+                                                                        //                 <div className="text-center">
+                                                                        //                   <Link
+                                                                        //                     to="#"
+                                                                        //                     className="btn btn-primary me-2"
+                                                                        //                     onClick={() => {
+                                                                        //                       this.handleRegisterAbsence(
+                                                                        //                         empl
+                                                                        //                       );
+                                                                        //                     }}
+                                                                        //                   >
+                                                                        //                     {t(
+                                                                        //                       "Register Absence"
+                                                                        //                     )}
+                                                                        //                   </Link>
+                                                                        //                 </div>
+                                                                        //               </Col>
+                                                                        //             </Row>
+                                                                        //           </CardBody>
+                                                                        //         </Card>
+                                                                        //       </Col>
+                                                                        //     )
+                                                                        //   )}
+                                                                        // </Row>
+                                                                        selectedShowTrainees ===
+                                                                          0 ? (
+                                                                          // ---- Table ----
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              registerAbsenceColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Relatives Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        ) : null}
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </ModalBody>{" "}
+                                                                </Modal>
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal3
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle3
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isView
+                                                                      ? this.props.t(
+                                                                          "Trainee Absent Details"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
+                                                                  <Row>
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
+                                                                            }
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
+                                                                  </Row>
+                                                                  <ModalBody>
+                                                                    <Card>
+                                                                      <CardTitle id="course_header">
+                                                                        {t(
+                                                                          "Absent Statistics"
+                                                                        )}
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        {" "}
+                                                                        <Row>
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              absentStatisicsColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Absent Statistics Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        </Row>
+                                                                      </CardBody>
+                                                                      <CardTitle id="course_header">
+                                                                        {t(
+                                                                          "Decrees"
+                                                                        )}
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        {" "}
+                                                                        <Row>
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              decreesColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Decrees Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        </Row>{" "}
+                                                                      </CardBody>
+                                                                      <CardTitle id="course_header">
+                                                                        {t(
+                                                                          "Absence Details"
+                                                                        )}
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        <Row>
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              absenceDetailsColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Absence Details Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        </Row>
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </ModalBody>{" "}
+                                                                </Modal>
                                                                 <div className="mb-3">
                                                                   <Row>
                                                                     <Col className="col-6">
@@ -2626,73 +6014,9 @@ class RegisterTraineesAttendance extends Component {
                                                                         </Col>
                                                                       </Row>
                                                                     </Col>
-                                                                    <Col className="col-6">
-                                                                      <Row>
-                                                                        <Col className="col-4">
-                                                                          <Label for="showInstructor">
-                                                                            {this.props.t(
-                                                                              "show Instructor Info"
-                                                                            )}
-                                                                          </Label>
-                                                                        </Col>
-                                                                        <Col className="col-8">
-                                                                          <div
-                                                                            className={
-                                                                              "btn-group"
-                                                                              // +
-                                                                              // (NeedSectionError
-                                                                              //   ? " border border-danger rounded p-1"
-                                                                              //   : "")
-                                                                            }
-                                                                          >
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedshowInstructor ===
-                                                                                1
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedshowInstructor",
-                                                                                  1
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "Yes"
-                                                                              )}
-                                                                            </button>
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedshowInstructor ===
-                                                                                0
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedshowInstructor",
-                                                                                  0
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "No"
-                                                                              )}
-                                                                            </button>
-                                                                          </div>
-                                                                        </Col>
-                                                                      </Row>
-                                                                    </Col>
                                                                   </Row>
                                                                 </div>
+
                                                                 <div className="mb-3">
                                                                   <Row>
                                                                     <Col className="col-6">
@@ -2830,29 +6154,232 @@ class RegisterTraineesAttendance extends Component {
                                                               </CardBody>
                                                             </Card>
                                                           </Row>
+
+                                                          <Row>
+                                                            <Card className="mt-3">
+                                                              <CardTitle id="course_header">
+                                                                {t(
+                                                                  "Lecture Of Date"
+                                                                )}
+                                                                {""} - {""}
+                                                                <small>
+                                                                  {currentTime.toLocaleDateString()}{" "}
+                                                                </small>
+                                                              </CardTitle>
+                                                              <CardBody className="cardBody">
+                                                                {selectedShowLecture ===
+                                                                1 ? (
+                                                                  <Row>
+                                                                    {employeesNames.map(
+                                                                      empl => (
+                                                                        <Col
+                                                                          key={
+                                                                            empl.Id
+                                                                          }
+                                                                          md={4}
+                                                                        >
+                                                                          <Card>
+                                                                            <CardTitle className="card-header text-center">
+                                                                              <div>
+                                                                                <Row>
+                                                                                  <Col lg="9">
+                                                                                    {
+                                                                                      empl.value
+                                                                                    }
+                                                                                  </Col>
+                                                                                  <Col lg="3">
+                                                                                    <div className="text-sm-end">
+                                                                                      <Tooltip
+                                                                                        title={this.props.t(
+                                                                                          "edit"
+                                                                                        )}
+                                                                                        placement="top"
+                                                                                      >
+                                                                                        <IconButton
+                                                                                          color="primary"
+                                                                                          onClick={() =>
+                                                                                            this.handleEditCourseLectures(
+                                                                                              empl
+                                                                                            )
+                                                                                          }
+                                                                                          style={{
+                                                                                            marginLeft:
+                                                                                              "10px",
+                                                                                            padding:
+                                                                                              "0",
+                                                                                            verticalAlign:
+                                                                                              "middle",
+                                                                                          }}
+                                                                                        >
+                                                                                          <i className="mdi mdi-pencil font-size-18" />
+                                                                                        </IconButton>
+                                                                                      </Tooltip>
+                                                                                    </div>
+                                                                                  </Col>
+                                                                                </Row>
+                                                                              </div>
+                                                                            </CardTitle>
+                                                                            <CardBody className="cardBody">
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Group Code"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Lecture Type"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Lecture Title"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Trainees Count"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Grad. Count"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <Row>
+                                                                                <Col lg="3">
+                                                                                  <div className="text-center">
+                                                                                    <Link
+                                                                                      to="#"
+                                                                                      className="btn btn-primary me-2"
+                                                                                      onClick={() => {
+                                                                                        this.handleEContent(
+                                                                                          empl
+                                                                                        );
+                                                                                      }}
+                                                                                    >
+                                                                                      {t(
+                                                                                        "eContent"
+                                                                                      )}
+                                                                                    </Link>
+                                                                                  </div>
+                                                                                </Col>
+                                                                                <Col
+                                                                                  Col
+                                                                                  lg="8"
+                                                                                >
+                                                                                  <div className="text-center">
+                                                                                    <Link
+                                                                                      to="#"
+                                                                                      className="btn btn-primary me-2"
+                                                                                      onClick={() => {
+                                                                                        this.handleRegisterAbsence(
+                                                                                          empl
+                                                                                        );
+                                                                                      }}
+                                                                                    >
+                                                                                      {t(
+                                                                                        "Register Absence"
+                                                                                      )}
+                                                                                    </Link>
+                                                                                  </div>
+                                                                                </Col>
+                                                                              </Row>
+                                                                            </CardBody>
+                                                                          </Card>
+                                                                        </Col>
+                                                                      )
+                                                                    )}
+                                                                  </Row>
+                                                                ) : selectedShowLecture ===
+                                                                  0 ? (
+                                                                  // ---- Table ----
+                                                                  <BootstrapTable
+                                                                    keyField="Id"
+                                                                    data={
+                                                                      regTrainees
+                                                                    }
+                                                                    columns={
+                                                                      lectureColumns
+                                                                    }
+                                                                    cellEdit={cellEditFactory(
+                                                                      {
+                                                                        mode: "dbclick",
+                                                                        blurToSave: true,
+                                                                      }
+                                                                    )}
+                                                                    noDataIndication={t(
+                                                                      "There are no lecture , the first lecture will be on"
+                                                                    )}
+                                                                    defaultSorted={
+                                                                      defaultSorting
+                                                                    }
+                                                                  />
+                                                                ) : null}
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Row>
                                                         </CardBody>
                                                       </Card>
-
-                                                      <Row>
-                                                        <Card className="mt-3">
-                                                          <CardTitle id="course_header">
-                                                            {t(
-                                                              "Lecture Of Date"
-                                                            )}
-                                                            {""} - {""}
-                                                            <small>
-                                                              {currentTime.toLocaleDateString()}{" "}
-                                                            </small>
-                                                          </CardTitle>
-                                                          <CardBody className="cardBody">
-                                                            <div className="mb-3">
-                                                              <Row>
-                                                                <Col className="col-6"></Col>
-                                                              </Row>
-                                                            </div>
-                                                          </CardBody>
-                                                        </Card>
-                                                      </Row>
                                                     </Form>
                                                   )}
                                                 </Formik>
@@ -2904,11 +6431,17 @@ class RegisterTraineesAttendance extends Component {
                                                     setFieldValue,
                                                   }) => (
                                                     <Form>
-                                                      <Card className="mt-3">
+                                                      <Card
+                                                        className="mt-3"
+                                                        style={{
+                                                          position: "relative",
+                                                          marginRight: "30px",
+                                                        }}
+                                                      >
                                                         <CardHeader className="card-header text-center">
                                                           <h4>
                                                             {t(
-                                                              "Current Leacture"
+                                                              "Week's Leacture"
                                                             )}
                                                           </h4>
                                                         </CardHeader>
@@ -2921,75 +6454,1722 @@ class RegisterTraineesAttendance extends Component {
                                                                 )}
                                                               </CardTitle>
                                                               <CardBody className="cardBody">
-                                                                <div className="mb-3">
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal1
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle1
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isOpen
+                                                                      ? this.props.t(
+                                                                          "Update Lecture"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
                                                                   <Row>
-                                                                    <Col className="col-6">
-                                                                      <Row>
-                                                                        <Col className="col-4">
-                                                                          <Label for="showAbsent">
-                                                                            {this.props.t(
-                                                                              "Show Absent"
-                                                                            )}
-                                                                          </Label>
-                                                                        </Col>
-                                                                        <Col className="col-8">
-                                                                          <div
-                                                                            className={
-                                                                              "btn-group"
-                                                                              // +
-                                                                              // (NeedSectionError
-                                                                              //   ? " border border-danger rounded p-1"
-                                                                              //   : "")
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
                                                                             }
-                                                                          >
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedShowAbsent ===
-                                                                                1
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedShowAbsent",
-                                                                                  1
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "Dialog"
-                                                                              )}
-                                                                            </button>
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedShowAbsent ===
-                                                                                0
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedShowAbsent",
-                                                                                  0
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "Same Page"
-                                                                              )}
-                                                                            </button>
-                                                                          </div>
-                                                                        </Col>
-                                                                      </Row>
-                                                                    </Col>
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
                                                                   </Row>
-                                                                </div>
+                                                                  <ModalBody>
+                                                                    <Formik
+                                                                      enableReinitialize={
+                                                                        true
+                                                                      }
+                                                                      initialValues={{
+                                                                        ...(isEdit &&
+                                                                          regTrainee && {
+                                                                            Id: regTrainee.Id,
+                                                                          }),
+                                                                        lectureDate:
+                                                                          regTrainee?.lectureDate
+                                                                            ? moment
+                                                                                .utc(
+                                                                                  regTrainee.lectureDate
+                                                                                )
+                                                                                .local()
+                                                                                .format(
+                                                                                  "YYYY-MM-DD"
+                                                                                )
+                                                                            : "",
+                                                                        startTime:
+                                                                          regTrainee?.startTime
+                                                                            ? moment
+                                                                                .utc(
+                                                                                  regTrainee.startTime
+                                                                                )
+                                                                                .local()
+                                                                                .format(
+                                                                                  "HH:mm"
+                                                                                )
+                                                                            : "",
+                                                                        tillTime:
+                                                                          regTrainee?.tillTime
+                                                                            ? moment
+                                                                                .utc(
+                                                                                  regTrainee.tillTime
+                                                                                )
+                                                                                .local()
+                                                                                .format(
+                                                                                  "HH:mm"
+                                                                                )
+                                                                            : "",
+                                                                        arLectureTitle:
+                                                                          regTrainee?.arLectureTitle ||
+                                                                          "",
+                                                                        enLectureTitle:
+                                                                          regTrainee?.enLectureTitle ||
+                                                                          "",
+                                                                        lectureOrder:
+                                                                          regTrainee?.lectureOrder ||
+                                                                          "",
+                                                                        weekOrder:
+                                                                          regTrainee?.weekOrder ||
+                                                                          "",
+                                                                        hallId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.hallName) ||
+                                                                          "",
+                                                                        altHallId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.altHallName) ||
+                                                                          "",
+                                                                        instructorId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.instructorName) ||
+                                                                          "",
+                                                                        altInstructorId:
+                                                                          (regTrainee &&
+                                                                            regTrainee.altInstructorName) ||
+                                                                          "",
+                                                                        instAttend:
+                                                                          regTrainee?.instAttend ||
+                                                                          selectedInstAttend,
+                                                                        altInstAttend:
+                                                                          regTrainee?.altInstAttend ||
+                                                                          selectedAltInstAttend,
+                                                                        online:
+                                                                          regTrainee?.online ||
+                                                                          selectedOnline,
+                                                                        additional:
+                                                                          regTrainee?.additional ||
+                                                                          selectedAdditional,
+                                                                        canceled:
+                                                                          regTrainee?.canceled ||
+                                                                          selectedCanceled,
+                                                                        closeLecture:
+                                                                          regTrainee?.closeLecture ||
+                                                                          selectedCloseLecture,
+                                                                      }}
+                                                                      validationSchema={Yup.object().shape(
+                                                                        {
+                                                                          arTitle:
+                                                                            Yup.string().required(
+                                                                              t(
+                                                                                "Course Name (ar) is required"
+                                                                              )
+                                                                            ),
+                                                                        }
+                                                                      )}
+                                                                    >
+                                                                      {({
+                                                                        errors,
+                                                                        status,
+                                                                        touched,
+                                                                        values,
+                                                                        handleChange,
+                                                                        handleBlur,
+                                                                        setFieldValue,
+                                                                      }) => (
+                                                                        <Form>
+                                                                          <Card className="mt-3">
+                                                                            <CardHeader className="card-header text-center">
+                                                                              <h4>
+                                                                                {t(
+                                                                                  "Update Lecture"
+                                                                                )}
+                                                                              </h4>
+                                                                            </CardHeader>
+                                                                            <CardBody className="cardBody">
+                                                                              <Row className="mb-3">
+                                                                                <Col className="col-2">
+                                                                                  <Label for="lectureDate">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Date"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Field
+                                                                                    name="lectureDate"
+                                                                                    className={`form-control ${
+                                                                                      lectureDateError
+                                                                                        ? "is-invalid"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                    type="date"
+                                                                                    value={
+                                                                                      values.lectureDate
+                                                                                        ? new Date(
+                                                                                            values.lectureDate
+                                                                                          )
+                                                                                            .toISOString()
+                                                                                            .split(
+                                                                                              "T"
+                                                                                            )[0]
+                                                                                        : ""
+                                                                                    }
+                                                                                    onChange={
+                                                                                      handleChange
+                                                                                    }
+                                                                                    onBlur={
+                                                                                      handleBlur
+                                                                                    }
+                                                                                    id="arbirthdate-date-input"
+                                                                                  />
+                                                                                  {lectureDateError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Lecture Date is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                </Col>
+
+                                                                                <Col className="col-2">
+                                                                                  <Label for="startTime">
+                                                                                    {this.props.t(
+                                                                                      "Start Time"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Field
+                                                                                    name="startTime"
+                                                                                    className={`form-control ${
+                                                                                      startTimeError
+                                                                                        ? "is-invalid"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                    type="time"
+                                                                                    value={
+                                                                                      values.startTime
+                                                                                        ? values.startTime
+                                                                                        : ""
+                                                                                    }
+                                                                                    onChange={
+                                                                                      handleChange
+                                                                                    }
+                                                                                    onBlur={
+                                                                                      handleBlur
+                                                                                    }
+                                                                                    id="lstartTime-input"
+                                                                                  />
+                                                                                  {startTimeError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Start Time is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                </Col>
+
+                                                                                <Col className="col-2">
+                                                                                  <Label for="tillTime">
+                                                                                    {this.props.t(
+                                                                                      "Till Time"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Field
+                                                                                    name="tillTime"
+                                                                                    className={`form-control ${
+                                                                                      tillTimeError
+                                                                                        ? "is-invalid"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                    type="time"
+                                                                                    value={
+                                                                                      values.tillTime
+                                                                                        ? values.tillTime
+                                                                                        : ""
+                                                                                    }
+                                                                                    onChange={
+                                                                                      handleChange
+                                                                                    }
+                                                                                    onBlur={
+                                                                                      handleBlur
+                                                                                    }
+                                                                                    id="tillTime-input"
+                                                                                  />
+                                                                                  {tillTimeError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Till Time is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row className="mb-3">
+                                                                                <Col className="col-2">
+                                                                                  <Label for="arLectureTitle">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Title(Ar)"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="arLectureTitle"
+                                                                                    id="arLectureTitle"
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      ((errors.arLectureTitle &&
+                                                                                        touched.arLectureTitle) ||
+                                                                                      arLectureTitleError
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                  />
+
+                                                                                  {arLectureTitleError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Lecture Title (Ar) is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                  <ErrorMessage
+                                                                                    name="arLectureTitle"
+                                                                                    component="div"
+                                                                                    className="invalid-feedback"
+                                                                                  />
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Label for="lectureOrder">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Order"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="lectureOrder"
+                                                                                    id="lectureOrder"
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                  />
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row className="mb-3">
+                                                                                <Col className="col-2">
+                                                                                  <Label for="enLectureTitle">
+                                                                                    {this.props.t(
+                                                                                      "Lecture Title(En)"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="enLectureTitle"
+                                                                                    id="enLectureTitle"
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      ((errors.enLectureTitle &&
+                                                                                        touched.enLectureTitle) ||
+                                                                                      enLectureTitleError
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                  />
+
+                                                                                  {enLectureTitleError && (
+                                                                                    <div className="invalid-feedback">
+                                                                                      {this.props.t(
+                                                                                        "Lecture Title (En) is required"
+                                                                                      )}
+                                                                                    </div>
+                                                                                  )}
+                                                                                  <ErrorMessage
+                                                                                    name="enLectureTitle"
+                                                                                    component="div"
+                                                                                    className="invalid-feedback"
+                                                                                  />
+                                                                                </Col>
+                                                                                <Col className="col-2">
+                                                                                  <Label for="weekOrder">
+                                                                                    {this.props.t(
+                                                                                      "Week Order"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    type="text"
+                                                                                    name="weekOrder"
+                                                                                    id="weekOrder"
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                  />
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row>
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="inst">
+                                                                                    {t(
+                                                                                      "Instructor"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="instructorId"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      (errors.instructorId &&
+                                                                                      touched.instructorId
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                    value={
+                                                                                      employeesNames.find(
+                                                                                        empl =>
+                                                                                          empl.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedInstructorId
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedInstructor =
+                                                                                        employeesNames.find(
+                                                                                          empl =>
+                                                                                            empl.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedInstructor
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedInstructorId:
+                                                                                              selectedInstructor.key,
+                                                                                            defaultInstructorName:
+                                                                                              selectedInstructor.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedInstructorId:
+                                                                                              null,
+                                                                                            defaultInstructorName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="instructorIdList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="instructorIdList">
+                                                                                    {employeesNames.map(
+                                                                                      employee => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            employee.key
+                                                                                          }
+                                                                                          value={
+                                                                                            employee.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="room">
+                                                                                    {t(
+                                                                                      "Room"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                  <span className="text-danger">
+                                                                                    *
+                                                                                  </span>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="hallId"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control" +
+                                                                                      (errors.hallId &&
+                                                                                      touched.hallId
+                                                                                        ? " is-invalid"
+                                                                                        : "")
+                                                                                    }
+                                                                                    value={
+                                                                                      halls.find(
+                                                                                        h =>
+                                                                                          h.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedHallKey
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedHall =
+                                                                                        halls.find(
+                                                                                          h =>
+                                                                                            h.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedHall
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedHallKey:
+                                                                                              selectedHall.key,
+                                                                                            defaultHallName:
+                                                                                              selectedHall.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedHallKey:
+                                                                                              null,
+                                                                                            defaultHallName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="hallIdList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="hallIdList">
+                                                                                    {halls.map(
+                                                                                      hall => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            hall.key
+                                                                                          }
+                                                                                          value={
+                                                                                            hall.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="altInst">
+                                                                                    {t(
+                                                                                      "Alt.Instructor"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="altInstructor"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                    value={
+                                                                                      employeesNames.find(
+                                                                                        e =>
+                                                                                          e.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedAltInstructorId
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedAltInstructor =
+                                                                                        employeesNames.find(
+                                                                                          e =>
+                                                                                            e.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedAltInstructor
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltInstructorId:
+                                                                                              selectedAltInstructor.key,
+                                                                                            defaultAltInstructorName:
+                                                                                              selectedAltInstructor.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltInstructorId:
+                                                                                              null,
+                                                                                            defaultAltInstructorName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="altInstructorList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="altInstructorList">
+                                                                                    {employeesNames.map(
+                                                                                      altEmp => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            altEmp.key
+                                                                                          }
+                                                                                          value={
+                                                                                            altEmp.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+                                                                                <Col className="col-2 mb-3">
+                                                                                  <Label for="altroom">
+                                                                                    {t(
+                                                                                      "Alt Room"
+                                                                                    )}
+                                                                                  </Label>
+                                                                                </Col>
+                                                                                <Col className="col-4">
+                                                                                  <Field
+                                                                                    name="altHallId"
+                                                                                    as="input"
+                                                                                    type="text"
+                                                                                    placeholder="Search..."
+                                                                                    className={
+                                                                                      "form-control"
+                                                                                    }
+                                                                                    value={
+                                                                                      halls.find(
+                                                                                        h =>
+                                                                                          h.key ===
+                                                                                          this
+                                                                                            .state
+                                                                                            .selectedAltHallKey
+                                                                                      )
+                                                                                        ?.value ||
+                                                                                      ""
+                                                                                    }
+                                                                                    onChange={e => {
+                                                                                      const newValue =
+                                                                                        e
+                                                                                          .target
+                                                                                          .value;
+
+                                                                                      const selectedAltHall =
+                                                                                        halls.find(
+                                                                                          h =>
+                                                                                            h.value ===
+                                                                                            newValue
+                                                                                        );
+
+                                                                                      if (
+                                                                                        selectedAltHall
+                                                                                      ) {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltHallKey:
+                                                                                              selectedAltHall.key,
+                                                                                            defaultAltHallName:
+                                                                                              selectedAltHall.value,
+                                                                                          }
+                                                                                        );
+                                                                                      } else {
+                                                                                        this.setState(
+                                                                                          {
+                                                                                            selectedAltHallKey:
+                                                                                              null,
+                                                                                            defaultAltHallName:
+                                                                                              newValue,
+                                                                                          }
+                                                                                        );
+                                                                                      }
+                                                                                    }}
+                                                                                    list="altHallIdList"
+                                                                                    autoComplete="off"
+                                                                                  />
+
+                                                                                  <datalist id="altHallIdList">
+                                                                                    {halls.map(
+                                                                                      althall => (
+                                                                                        <option
+                                                                                          key={
+                                                                                            althall.key
+                                                                                          }
+                                                                                          value={
+                                                                                            althall.value
+                                                                                          }
+                                                                                        />
+                                                                                      )
+                                                                                    )}
+                                                                                  </datalist>
+                                                                                </Col>
+                                                                              </Row>
+                                                                              <Row>
+                                                                                <div className="mb-3">
+                                                                                  <Row>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="instAttend">
+                                                                                            {this.props.t(
+                                                                                              "Inst. Attend"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedInstAttend ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedInstAttend",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedInstAttend ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedInstAttend",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="online">
+                                                                                            {this.props.t(
+                                                                                              "Online"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedOnline ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedOnline",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedOnline ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedOnline",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="additional">
+                                                                                            {this.props.t(
+                                                                                              "Additional"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAdditional ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAdditional",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAdditional ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAdditional",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                  </Row>
+                                                                                </div>
+                                                                                <div className="mb-3">
+                                                                                  <Row>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="altInstAttend">
+                                                                                            {this.props.t(
+                                                                                              "Alt. Inst. Attend"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAltInstAttend ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAltInstAttend",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedAltInstAttend ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedAltInstAttend",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="canceled">
+                                                                                            {this.props.t(
+                                                                                              "Canceled"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCanceled ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCanceled",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCanceled ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCanceled",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                    <Col className="col-4">
+                                                                                      <Row>
+                                                                                        <Col className="col-6">
+                                                                                          <Label for="closeLecture">
+                                                                                            {this.props.t(
+                                                                                              "Close Lecture"
+                                                                                            )}
+                                                                                          </Label>
+                                                                                        </Col>
+                                                                                        <Col className="col-6">
+                                                                                          <div
+                                                                                            className={
+                                                                                              "btn-group"
+                                                                                              // +
+                                                                                              // (NeedSectionError
+                                                                                              //   ? " border border-danger rounded p-1"
+                                                                                              //   : "")
+                                                                                            }
+                                                                                          >
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCloseLecture ===
+                                                                                                1
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCloseLecture",
+                                                                                                  1
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "Yes"
+                                                                                              )}
+                                                                                            </button>
+                                                                                            <button
+                                                                                              type="button"
+                                                                                              className={`btn ${
+                                                                                                this
+                                                                                                  .state
+                                                                                                  .selectedCloseLecture ===
+                                                                                                0
+                                                                                                  ? "btn-primary"
+                                                                                                  : "btn-outline-secondary"
+                                                                                              }`}
+                                                                                              onClick={() =>
+                                                                                                this.handleToggleChange(
+                                                                                                  "selectedCloseLecture",
+                                                                                                  0
+                                                                                                )
+                                                                                              }
+                                                                                            >
+                                                                                              {this.props.t(
+                                                                                                "No"
+                                                                                              )}
+                                                                                            </button>
+                                                                                          </div>
+                                                                                        </Col>
+                                                                                      </Row>
+                                                                                    </Col>
+                                                                                  </Row>
+                                                                                </div>
+                                                                              </Row>
+                                                                              <Row>
+                                                                                <Col>
+                                                                                  <div className="text-center">
+                                                                                    <Link
+                                                                                      to="#"
+                                                                                      className="btn btn-primary me-2"
+                                                                                      onClick={() => {
+                                                                                        this.handleSave(
+                                                                                          values
+                                                                                        );
+                                                                                      }}
+                                                                                    >
+                                                                                      {t(
+                                                                                        "Save"
+                                                                                      )}
+                                                                                    </Link>
+                                                                                  </div>
+                                                                                </Col>
+                                                                              </Row>
+                                                                            </CardBody>
+                                                                          </Card>
+                                                                        </Form>
+                                                                      )}
+                                                                    </Formik>
+                                                                  </ModalBody>
+                                                                </Modal>
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal4
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle4
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isView1
+                                                                      ? this.props.t(
+                                                                          "Electronic Content"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
+                                                                  <Row>
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
+                                                                            }
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
+                                                                  </Row>
+                                                                  <ModalBody>
+                                                                    <Card>
+                                                                      <CardTitle id="course_header">
+                                                                        {
+                                                                          "lecture"
+                                                                        }
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        <Card>
+                                                                          <CardTitle id="course_header">
+                                                                            {t(
+                                                                              "Course Sessions"
+                                                                            )}
+                                                                          </CardTitle>
+                                                                          <CardBody>
+                                                                            <Card>
+                                                                              <CardTitle id="course_header">
+                                                                                {t(
+                                                                                  "lecture"
+                                                                                )}
+                                                                              </CardTitle>
+                                                                              <CardBody></CardBody>
+                                                                            </Card>
+                                                                          </CardBody>
+                                                                        </Card>
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </ModalBody>{" "}
+                                                                </Modal>
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal2
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle2
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isOpen1
+                                                                      ? this.props.t(
+                                                                          "Register Absence"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
+                                                                  <Row>
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
+                                                                            }
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
+                                                                  </Row>
+                                                                  <ModalBody>
+                                                                    <Card>
+                                                                      <CardBody>
+                                                                        {selectedShowTrainees ===
+                                                                        1 ? (
+                                                                          ""
+                                                                        ) : //Stop until the information is clear //mays
+                                                                        // <Row>
+                                                                        //   {employeesNames.map(
+                                                                        //     empl => (
+                                                                        //       <Col
+                                                                        //         key={
+                                                                        //           empl.Id
+                                                                        //         }
+                                                                        //         md={
+                                                                        //           4
+                                                                        //         }
+                                                                        //       >
+                                                                        //         <Card>
+                                                                        //           <CardTitle className="card-header text-center">
+                                                                        //             <div>
+                                                                        //               <Row>
+                                                                        //                 <Col lg="9">
+                                                                        //                   {
+                                                                        //                     empl.value
+                                                                        //                   }
+                                                                        //                 </Col>
+                                                                        //                 <Col lg="3">
+                                                                        //                   <div className="text-sm-end">
+                                                                        //                     <Tooltip
+                                                                        //                       title={this.props.t(
+                                                                        //                         "edit"
+                                                                        //                       )}
+                                                                        //                       placement="top"
+                                                                        //                     >
+                                                                        //                       <IconButton
+                                                                        //                         color="primary"
+                                                                        //                         onClick={() =>
+                                                                        //                           this.handleEditCourseLectures(
+                                                                        //                             empl
+                                                                        //                           )
+                                                                        //                         }
+                                                                        //                         style={{
+                                                                        //                           marginLeft:
+                                                                        //                             "10px",
+                                                                        //                           padding:
+                                                                        //                             "0",
+                                                                        //                           verticalAlign:
+                                                                        //                             "middle",
+                                                                        //                         }}
+                                                                        //                       >
+                                                                        //                         <i className="mdi mdi-pencil font-size-18" />
+                                                                        //                       </IconButton>
+                                                                        //                     </Tooltip>
+                                                                        //                   </div>
+                                                                        //                 </Col>
+                                                                        //               </Row>
+                                                                        //             </div>
+                                                                        //           </CardTitle>
+                                                                        //           <CardBody className="cardBody">
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Group Code"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Lecture Type"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Lecture Title"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Trainees Count"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <div className="mb-2">
+                                                                        //               <Label for="arfatherName">
+                                                                        //                 {this.props.t(
+                                                                        //                   "Grad. Count"
+                                                                        //                 )}
+                                                                        //                 {
+                                                                        //                   ""
+                                                                        //                 }
+
+                                                                        //                 :
+                                                                        //               </Label>
+                                                                        //               <Label className="left-label">
+                                                                        //                 {
+                                                                        //                   empl.value
+                                                                        //                 }
+                                                                        //               </Label>
+                                                                        //             </div>
+                                                                        //             <Row>
+                                                                        //               <Col lg="3">
+                                                                        //                 <div className="text-center">
+                                                                        //                   <Link
+                                                                        //                     to="#"
+                                                                        //                     className="btn btn-primary me-2"
+                                                                        //                     onClick={() => {
+                                                                        //                       this.handleEContent(
+                                                                        //                         empl
+                                                                        //                       );
+                                                                        //                     }}
+                                                                        //                   >
+                                                                        //                     {t(
+                                                                        //                       "eContent"
+                                                                        //                     )}
+                                                                        //                   </Link>
+                                                                        //                 </div>
+                                                                        //               </Col>
+                                                                        //               <Col
+                                                                        //                 Col
+                                                                        //                 lg="8"
+                                                                        //               >
+                                                                        //                 <div className="text-center">
+                                                                        //                   <Link
+                                                                        //                     to="#"
+                                                                        //                     className="btn btn-primary me-2"
+                                                                        //                     onClick={() => {
+                                                                        //                       this.handleRegisterAbsence(
+                                                                        //                         empl
+                                                                        //                       );
+                                                                        //                     }}
+                                                                        //                   >
+                                                                        //                     {t(
+                                                                        //                       "Register Absence"
+                                                                        //                     )}
+                                                                        //                   </Link>
+                                                                        //                 </div>
+                                                                        //               </Col>
+                                                                        //             </Row>
+                                                                        //           </CardBody>
+                                                                        //         </Card>
+                                                                        //       </Col>
+                                                                        //     )
+                                                                        //   )}
+                                                                        // </Row>
+                                                                        selectedShowTrainees ===
+                                                                          0 ? (
+                                                                          // ---- Table ----
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              registerAbsenceColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Relatives Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        ) : null}
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </ModalBody>{" "}
+                                                                </Modal>
+                                                                <Modal
+                                                                  isOpen={
+                                                                    this.state
+                                                                      .modal3
+                                                                  }
+                                                                  className={
+                                                                    this.props
+                                                                      .className
+                                                                  }
+                                                                  size="xl"
+                                                                >
+                                                                  <ModalHeader
+                                                                    toggle={
+                                                                      this
+                                                                        .toggle3
+                                                                    }
+                                                                    tag="h4"
+                                                                  >
+                                                                    {!!isView
+                                                                      ? this.props.t(
+                                                                          "Trainee Absent Details"
+                                                                        )
+                                                                      : ""}
+                                                                  </ModalHeader>
+                                                                  <Row>
+                                                                    <div>
+                                                                      {errorMessage && (
+                                                                        <Alert
+                                                                          color="danger"
+                                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                          role="alert"
+                                                                        >
+                                                                          {
+                                                                            errorMessage
+                                                                          }
+                                                                          <button
+                                                                            type="button"
+                                                                            className="btn-close"
+                                                                            aria-label="Close"
+                                                                            onClick={
+                                                                              this
+                                                                                .handleErrorClose
+                                                                            }
+                                                                          ></button>
+                                                                        </Alert>
+                                                                      )}
+                                                                    </div>
+                                                                  </Row>
+                                                                  <ModalBody>
+                                                                    <Card>
+                                                                      <CardTitle id="course_header">
+                                                                        {t(
+                                                                          "Absent Statistics"
+                                                                        )}
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        {" "}
+                                                                        <Row>
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              absentStatisicsColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Absent Statistics Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        </Row>
+                                                                      </CardBody>
+                                                                      <CardTitle id="course_header">
+                                                                        {t(
+                                                                          "Decrees"
+                                                                        )}
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        {" "}
+                                                                        <Row>
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              decreesColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Decrees Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        </Row>{" "}
+                                                                      </CardBody>
+                                                                      <CardTitle id="course_header">
+                                                                        {t(
+                                                                          "Absence Details"
+                                                                        )}
+                                                                      </CardTitle>
+                                                                      <CardBody>
+                                                                        <Row>
+                                                                          <BootstrapTable
+                                                                            keyField="Id"
+                                                                            data={
+                                                                              regTrainees
+                                                                            }
+                                                                            columns={
+                                                                              absenceDetailsColumns
+                                                                            }
+                                                                            cellEdit={cellEditFactory(
+                                                                              {
+                                                                                mode: "dbclick",
+                                                                                blurToSave: true,
+                                                                                // afterSaveCell: (
+                                                                                //   oldValue,
+                                                                                //   newValue,
+                                                                                //   row,
+                                                                                //   column
+                                                                                // ) => {
+                                                                                //   this.handleParentsDataChange(
+                                                                                //     row.Id,
+                                                                                //     column.dataField,
+                                                                                //     newValue
+                                                                                //   );
+                                                                                // },
+                                                                              }
+                                                                            )}
+                                                                            noDataIndication={t(
+                                                                              "No Absence Details Found"
+                                                                            )}
+                                                                            defaultSorted={
+                                                                              defaultSorting
+                                                                            }
+                                                                          />
+                                                                        </Row>
+                                                                      </CardBody>
+                                                                    </Card>
+                                                                  </ModalBody>{" "}
+                                                                </Modal>
                                                                 <div className="mb-3">
                                                                   <Row>
                                                                     <Col className="col-6">
@@ -3057,73 +8237,9 @@ class RegisterTraineesAttendance extends Component {
                                                                         </Col>
                                                                       </Row>
                                                                     </Col>
-                                                                    <Col className="col-6">
-                                                                      <Row>
-                                                                        <Col className="col-4">
-                                                                          <Label for="showInstructor">
-                                                                            {this.props.t(
-                                                                              "show Instructor Info"
-                                                                            )}
-                                                                          </Label>
-                                                                        </Col>
-                                                                        <Col className="col-8">
-                                                                          <div
-                                                                            className={
-                                                                              "btn-group"
-                                                                              // +
-                                                                              // (NeedSectionError
-                                                                              //   ? " border border-danger rounded p-1"
-                                                                              //   : "")
-                                                                            }
-                                                                          >
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedshowInstructor ===
-                                                                                1
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedshowInstructor",
-                                                                                  1
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "Yes"
-                                                                              )}
-                                                                            </button>
-                                                                            <button
-                                                                              type="button"
-                                                                              className={`btn ${
-                                                                                this
-                                                                                  .state
-                                                                                  .selectedshowInstructor ===
-                                                                                0
-                                                                                  ? "btn-primary"
-                                                                                  : "btn-outline-secondary"
-                                                                              }`}
-                                                                              onClick={() =>
-                                                                                this.handleToggleChange(
-                                                                                  "selectedshowInstructor",
-                                                                                  0
-                                                                                )
-                                                                              }
-                                                                            >
-                                                                              {this.props.t(
-                                                                                "No"
-                                                                              )}
-                                                                            </button>
-                                                                          </div>
-                                                                        </Col>
-                                                                      </Row>
-                                                                    </Col>
                                                                   </Row>
                                                                 </div>
+
                                                                 <div className="mb-3">
                                                                   <Row>
                                                                     <Col className="col-6">
@@ -3261,32 +8377,235 @@ class RegisterTraineesAttendance extends Component {
                                                               </CardBody>
                                                             </Card>
                                                           </Row>
+
+                                                          <Row>
+                                                            <Card className="mt-3">
+                                                              <CardTitle id="course_header">
+                                                                {t(
+                                                                  " Lecture Of Week Day"
+                                                                )}
+                                                                {""} - {""}
+                                                                <small>
+                                                                  Day{" "}
+                                                                  {this.getDayNumber(
+                                                                    currentTime
+                                                                  )}
+                                                                </small>
+                                                              </CardTitle>
+                                                              <CardBody className="cardBody">
+                                                                {selectedShowLecture ===
+                                                                1 ? (
+                                                                  <Row>
+                                                                    {employeesNames.map(
+                                                                      empl => (
+                                                                        <Col
+                                                                          key={
+                                                                            empl.Id
+                                                                          }
+                                                                          md={4}
+                                                                        >
+                                                                          <Card>
+                                                                            <CardTitle className="card-header text-center">
+                                                                              <div>
+                                                                                <Row>
+                                                                                  <Col lg="9">
+                                                                                    {
+                                                                                      empl.value
+                                                                                    }
+                                                                                  </Col>
+                                                                                  <Col lg="3">
+                                                                                    <div className="text-sm-end">
+                                                                                      <Tooltip
+                                                                                        title={this.props.t(
+                                                                                          "edit"
+                                                                                        )}
+                                                                                        placement="top"
+                                                                                      >
+                                                                                        <IconButton
+                                                                                          color="primary"
+                                                                                          onClick={() =>
+                                                                                            this.handleEditCourseLectures(
+                                                                                              empl
+                                                                                            )
+                                                                                          }
+                                                                                          style={{
+                                                                                            marginLeft:
+                                                                                              "10px",
+                                                                                            padding:
+                                                                                              "0",
+                                                                                            verticalAlign:
+                                                                                              "middle",
+                                                                                          }}
+                                                                                        >
+                                                                                          <i className="mdi mdi-pencil font-size-18" />
+                                                                                        </IconButton>
+                                                                                      </Tooltip>
+                                                                                    </div>
+                                                                                  </Col>
+                                                                                </Row>
+                                                                              </div>
+                                                                            </CardTitle>
+                                                                            <CardBody className="cardBody">
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Group Code"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Lecture Type"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Lecture Title"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Trainees Count"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <div className="mb-2">
+                                                                                <Label for="arfatherName">
+                                                                                  {this.props.t(
+                                                                                    "Grad. Count"
+                                                                                  )}
+                                                                                  {
+                                                                                    ""
+                                                                                  }
+
+                                                                                  :
+                                                                                </Label>
+                                                                                <Label className="left-label">
+                                                                                  {
+                                                                                    empl.value
+                                                                                  }
+                                                                                </Label>
+                                                                              </div>
+                                                                              <Row>
+                                                                                <Col lg="3">
+                                                                                  <div className="text-center">
+                                                                                    <Link
+                                                                                      to="#"
+                                                                                      className="btn btn-primary me-2"
+                                                                                      onClick={() => {
+                                                                                        this.handleEContent(
+                                                                                          empl
+                                                                                        );
+                                                                                      }}
+                                                                                    >
+                                                                                      {t(
+                                                                                        "eContent"
+                                                                                      )}
+                                                                                    </Link>
+                                                                                  </div>
+                                                                                </Col>
+                                                                                <Col
+                                                                                  Col
+                                                                                  lg="8"
+                                                                                >
+                                                                                  <div className="text-center">
+                                                                                    <Link
+                                                                                      to="#"
+                                                                                      className="btn btn-primary me-2"
+                                                                                      onClick={() => {
+                                                                                        this.handleRegisterAbsence(
+                                                                                          empl
+                                                                                        );
+                                                                                      }}
+                                                                                    >
+                                                                                      {t(
+                                                                                        "Register Absence"
+                                                                                      )}
+                                                                                    </Link>
+                                                                                  </div>
+                                                                                </Col>
+                                                                              </Row>
+                                                                            </CardBody>
+                                                                          </Card>
+                                                                        </Col>
+                                                                      )
+                                                                    )}
+                                                                  </Row>
+                                                                ) : selectedShowLecture ===
+                                                                  0 ? (
+                                                                  // ---- Table ----
+                                                                  <BootstrapTable
+                                                                    keyField="Id"
+                                                                    data={
+                                                                      regTrainees
+                                                                    }
+                                                                    columns={
+                                                                      lectureColumns
+                                                                    }
+                                                                    cellEdit={cellEditFactory(
+                                                                      {
+                                                                        mode: "dbclick",
+                                                                        blurToSave: true,
+                                                                      }
+                                                                    )}
+                                                                    noDataIndication={t(
+                                                                      "There are no lecture , the first lecture will be on"
+                                                                    )}
+                                                                    defaultSorted={
+                                                                      defaultSorting
+                                                                    }
+                                                                  />
+                                                                ) : null}
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Row>
                                                         </CardBody>
                                                       </Card>
-
-                                                      <Row>
-                                                        <Card className="mt-3">
-                                                          <CardTitle id="course_header">
-                                                            {t(
-                                                              " Lecture Of Week Day"
-                                                            )}
-                                                            {""} - {""}
-                                                            <small>
-                                                              Day{" "}
-                                                              {this.getDayNumber(
-                                                                currentTime
-                                                              )}
-                                                            </small>
-                                                          </CardTitle>
-                                                          <CardBody className="cardBody">
-                                                            <div className="mb-3">
-                                                              <Row>
-                                                                <Col className="col-6"></Col>
-                                                              </Row>
-                                                            </div>
-                                                          </CardBody>
-                                                        </Card>
-                                                      </Row>
                                                     </Form>
                                                   )}
                                                 </Formik>
@@ -3296,9 +8615,9 @@ class RegisterTraineesAttendance extends Component {
                                             {showCourseLectures && (
                                               <div>
                                                 <Card className="bordered">
-                                                  <CardHeader className="card-header">
+                                                  <CardHeader className="card-header text-center">
                                                     <h4>
-                                                      {t(" Course's Lectures")}
+                                                      {t("Course's Lectures")}
                                                     </h4>
                                                   </CardHeader>
                                                   <CardBody>
@@ -3489,7 +8808,7 @@ class RegisterTraineesAttendance extends Component {
                                                                 <CardHeader className="card-header text-center">
                                                                   <h4>
                                                                     {t(
-                                                                      "Update Leacture"
+                                                                      "Update Lecture"
                                                                     )}
                                                                   </h4>
                                                                 </CardHeader>
@@ -4518,7 +9837,7 @@ class RegisterTraineesAttendance extends Component {
                                                       >
                                                         {!!isOpen1
                                                           ? this.props.t(
-                                                              "Attendance Recording"
+                                                              "Register Absence"
                                                             )
                                                           : ""}
                                                       </ModalHeader>
@@ -4549,7 +9868,7 @@ class RegisterTraineesAttendance extends Component {
                                                           keyField="Id"
                                                           data={regTrainees}
                                                           columns={
-                                                            attendRecordingColumns
+                                                            registerAbsenceColumns
                                                           }
                                                           cellEdit={cellEditFactory(
                                                             {
@@ -4591,7 +9910,7 @@ class RegisterTraineesAttendance extends Component {
                                                       >
                                                         {!!isView
                                                           ? this.props.t(
-                                                              "Trainee Abesent Details"
+                                                              "Trainee Absent Details"
                                                             )
                                                           : ""}
                                                       </ModalHeader>
@@ -4618,39 +9937,182 @@ class RegisterTraineesAttendance extends Component {
                                                         </div>
                                                       </Row>
                                                       <ModalBody>
-                                                        <BootstrapTable
-                                                          keyField="Id"
-                                                          data={regTrainees}
-                                                          columns={
-                                                            attendRecordingColumns
-                                                          }
-                                                          cellEdit={cellEditFactory(
-                                                            {
-                                                              mode: "dbclick",
-                                                              blurToSave: true,
-                                                              // afterSaveCell: (
-                                                              //   oldValue,
-                                                              //   newValue,
-                                                              //   row,
-                                                              //   column
-                                                              // ) => {
-                                                              //   this.handleParentsDataChange(
-                                                              //     row.Id,
-                                                              //     column.dataField,
-                                                              //     newValue
-                                                              //   );
-                                                              // },
-                                                            }
-                                                          )}
-                                                          noDataIndication={t(
-                                                            "No Relatives Found"
-                                                          )}
-                                                          defaultSorted={
-                                                            defaultSorting
-                                                          }
-                                                        />
+                                                        <Card>
+                                                          <CardTitle id="course_header">
+                                                            {t(
+                                                              "Absent Statistics"
+                                                            )}
+                                                          </CardTitle>
+                                                          <CardBody>
+                                                            {" "}
+                                                            <Row>
+                                                              <BootstrapTable
+                                                                keyField="Id"
+                                                                data={
+                                                                  regTrainees
+                                                                }
+                                                                columns={
+                                                                  absentStatisicsColumns
+                                                                }
+                                                                cellEdit={cellEditFactory(
+                                                                  {
+                                                                    mode: "dbclick",
+                                                                    blurToSave: true,
+                                                                    // afterSaveCell: (
+                                                                    //   oldValue,
+                                                                    //   newValue,
+                                                                    //   row,
+                                                                    //   column
+                                                                    // ) => {
+                                                                    //   this.handleParentsDataChange(
+                                                                    //     row.Id,
+                                                                    //     column.dataField,
+                                                                    //     newValue
+                                                                    //   );
+                                                                    // },
+                                                                  }
+                                                                )}
+                                                                noDataIndication={t(
+                                                                  "No Absent Statistics Found"
+                                                                )}
+                                                                defaultSorted={
+                                                                  defaultSorting
+                                                                }
+                                                              />
+                                                            </Row>
+                                                          </CardBody>
+                                                          <CardTitle id="course_header">
+                                                            {t("Decrees")}
+                                                          </CardTitle>
+                                                          <CardBody>
+                                                            {" "}
+                                                            <Row>
+                                                              <BootstrapTable
+                                                                keyField="Id"
+                                                                data={
+                                                                  regTrainees
+                                                                }
+                                                                columns={
+                                                                  decreesColumns
+                                                                }
+                                                                cellEdit={cellEditFactory(
+                                                                  {
+                                                                    mode: "dbclick",
+                                                                    blurToSave: true,
+                                                                    // afterSaveCell: (
+                                                                    //   oldValue,
+                                                                    //   newValue,
+                                                                    //   row,
+                                                                    //   column
+                                                                    // ) => {
+                                                                    //   this.handleParentsDataChange(
+                                                                    //     row.Id,
+                                                                    //     column.dataField,
+                                                                    //     newValue
+                                                                    //   );
+                                                                    // },
+                                                                  }
+                                                                )}
+                                                                noDataIndication={t(
+                                                                  "No Decrees Found"
+                                                                )}
+                                                                defaultSorted={
+                                                                  defaultSorting
+                                                                }
+                                                              />
+                                                            </Row>{" "}
+                                                          </CardBody>
+                                                          <CardTitle id="course_header">
+                                                            {t(
+                                                              "Absence Details"
+                                                            )}
+                                                          </CardTitle>
+                                                          <CardBody>
+                                                            <Row>
+                                                              <BootstrapTable
+                                                                keyField="Id"
+                                                                data={
+                                                                  regTrainees
+                                                                }
+                                                                columns={
+                                                                  absenceDetailsColumns
+                                                                }
+                                                                cellEdit={cellEditFactory(
+                                                                  {
+                                                                    mode: "dbclick",
+                                                                    blurToSave: true,
+                                                                    // afterSaveCell: (
+                                                                    //   oldValue,
+                                                                    //   newValue,
+                                                                    //   row,
+                                                                    //   column
+                                                                    // ) => {
+                                                                    //   this.handleParentsDataChange(
+                                                                    //     row.Id,
+                                                                    //     column.dataField,
+                                                                    //     newValue
+                                                                    //   );
+                                                                    // },
+                                                                  }
+                                                                )}
+                                                                noDataIndication={t(
+                                                                  "No Absence Details Found"
+                                                                )}
+                                                                defaultSorted={
+                                                                  defaultSorting
+                                                                }
+                                                              />
+                                                            </Row>
+                                                          </CardBody>
+                                                        </Card>
                                                       </ModalBody>{" "}
                                                     </Modal>
+                                                  </CardBody>
+                                                </Card>
+                                              </div>
+                                            )}
+                                            {showRecordedLectures && (
+                                              <div>
+                                                <Card className="bordered">
+                                                  <CardHeader className="card-header text-center">
+                                                    <h4>
+                                                      {t("Recorded Lectures")}
+                                                    </h4>
+                                                  </CardHeader>
+                                                  <CardBody>
+                                                    <div>
+                                                      <BootstrapTable
+                                                        keyField="Id"
+                                                        data={regTrainees}
+                                                        columns={
+                                                          recordedLecturesColumns
+                                                        }
+                                                        cellEdit={cellEditFactory(
+                                                          {
+                                                            mode: "dbclick",
+                                                            blurToSave: true,
+                                                            // afterSaveCell: (
+                                                            //   oldValue,
+                                                            //   newValue,
+                                                            //   row,
+                                                            //   column
+                                                            // ) => {
+                                                            //   this.handleParentsDataChange(
+                                                            //     row.Id,
+                                                            //     column.dataField,
+                                                            //     newValue
+                                                            //   );
+                                                            // },
+                                                          }
+                                                        )}
+                                                        noDataIndication={t(
+                                                          "No Recorded Lectures Found"
+                                                        )}
+                                                        defaultSorted={
+                                                          defaultSorting
+                                                        }
+                                                      />
+                                                    </div>
                                                   </CardBody>
                                                 </Card>
                                               </div>
