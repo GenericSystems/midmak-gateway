@@ -312,6 +312,9 @@ import studentsRequests from "./students-requests/reducer";
 //contract
 import contracts from "./HR/contracts/reducer";
 
+//justifyTraineesAbsence
+import justifyTraineesAbsence from "./justifyTraineeAbsence/reducer";
+
 //ExamsAttendance
 import examsAttendance from "./examAttendance/reducer";
 
@@ -358,7 +361,6 @@ import diplomalevels from "./diploma-level/reducer";
 //HighStudyType
 import highstudytypes from "./high-study-types/reducer";
 
-
 const rootReducer = combineReducers({
   // public
   genders,
@@ -387,7 +389,6 @@ const rootReducer = combineReducers({
   absencesTypes,
   absencesJustifications,
   absencePercents,
-  
 
   certificateTypes,
   studentManagements,
@@ -464,6 +465,7 @@ const rootReducer = combineReducers({
   workClassifications,
   employees,
   contracts,
+  justifyTraineesAbsence,
   examsAttendance,
   attendanceObservers,
   hallSchedules,

@@ -105,10 +105,8 @@ export * from "./absenceType/actions";
 //absenceJustification
 export * from "./absenceJustification/actions";
 
-
 //absencePercent
 export * from "./absencePercents/actions";
-
 
 //gradesVersions
 export * from "./gradesVersions/actions";
@@ -305,6 +303,10 @@ export * from "./students-requests/actions";
 //Contract
 
 export * from "./HR/contracts/actions";
+
+//Contract
+
+export * from "./justifyTraineeAbsence/actions";
 
 //ExamAttendance
 

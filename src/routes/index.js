@@ -225,6 +225,9 @@ import DecisionsList from "../pages/HR/decisions/decisions";
 //Contracts
 import ContractsList from "../pages/HR/contracts/contracts";
 
+//justify TraineeAbsence
+import JustifyTraineeAbsenceList from "../pages/TraineeAttendence/JustifyTraineeAbsence/justifyTraineeAbsence";
+
 //ExamsAttendance
 import ExamsAttendance from "../pages/Exam/ExamAttendance/examAttendance";
 
@@ -373,7 +376,7 @@ const authProtectedRoutes = [
   //absenceJustifications
   { path: "/absenceJustifications", component: AbsencesJustificationsList },
   //absencePercents
-  { path:"/absencePercents",component:AbsencePercentsList},
+  { path: "/absencePercents", component: AbsencePercentsList },
 
   // TraineesReport
 
@@ -401,6 +404,10 @@ const authProtectedRoutes = [
   // contracts
 
   { path: "/contracts", component: ContractsList },
+
+  // contracts
+
+  { path: "/justifyTraineeAbsence", component: JustifyTraineeAbsenceList },
 
   // ExamsAttendance
 

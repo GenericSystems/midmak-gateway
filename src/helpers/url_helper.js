@@ -1027,10 +1027,6 @@ export const ADD_NEW_ABSENCE_PERCENT = "/add/absencePercent";
 export const UPDATE_ABSENCE_PERCENT = "/update/absencePercent";
 export const DELETE_ABSENCE_PERCENT = "/delete/absencePercent";
 
-
-
-
-
 //qualificaqtion_track
 export const GET_QUALIFICATIONS_TRACKS = "/qualificationTracks";
 export const GET_QUALIFICATION_TRACK_DELETED_VALUE = "/deleted";
@@ -1128,6 +1124,13 @@ export const GET_CONTRACT_DELETED_VALUE = "/deleted";
 export const ADD_NEW_CONTRACT = "/add/contract";
 export const UPDATE_CONTRACT = "/update/contract";
 export const DELETE_CONTRACT = "/deleted/contract";
+
+//JustifyTraineeAbsence
+export const GET_JUSTIFY_TRAINEES_ABSENCE = "/justifyTraineesAbsence";
+export const GET_JUSTIFY_TRAINEE_ABSENCE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_JUSTIFY_TRAINEE_ABSENCE = "/add/justifyTraineeAbsence";
+export const UPDATE_JUSTIFY_TRAINEE_ABSENCE = "/update/justifyTraineeAbsence";
+export const DELETE_JUSTIFY_TRAINEE_ABSENCE = "/deleted/justifyTraineeAbsence";
 
 //attend status
 export const GET_ATTEND_STATUS = "/attendStatus";

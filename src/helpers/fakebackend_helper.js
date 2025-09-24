@@ -2088,10 +2088,8 @@ export const updateQualificationTrack = data =>
 export const deleteQualificationTrack = data =>
   post(url.DELETE_QUALIFICATION_TRACK, data);
 
-
 //ABSENCE_PERCENT
-export const getAbsencePercents = data =>
-  post(url.GET_ABSENCES_PERCENTS, data);
+export const getAbsencePercents = data => post(url.GET_ABSENCES_PERCENTS, data);
 
 // add
 export const addNewAbsencePercent = data =>
@@ -2106,9 +2104,6 @@ export const updateAbsencePercent = data =>
 //delete
 export const deleteAbsencePercent = data =>
   post(url.DELETE_ABSENCE_PERCENT, data);
-
-
-
 
 //GRADE_VERSION
 export const getGradesVersions = data => post(url.GET_GRADES_VERSIONS, data);
@@ -2299,6 +2294,28 @@ export const updateContract = data => post(url.UPDATE_CONTRACT, data);
 
 //delete Contract
 export const deleteContract = data => post(url.DELETE_CONTRACT, data);
+
+//JustifyTraineeAbsence
+
+export const getJustifyTraineesAbsence = data =>
+  post(url.GET_JUSTIFY_TRAINEES_ABSENCE, data);
+
+// add JustifyTraineeAbsence
+
+export const addNewJustifyTraineeAbsence = data =>
+  post(url.ADD_NEW_JUSTIFY_TRAINEE_ABSENCE, data);
+
+//JUSTIFY_TRAINEE_ABSENCE
+export const getJustifyTraineeAbsenceDeletedValue = () =>
+  get(url.GET_JUSTIFY_TRAINEE_ABSENCE_DELETED_VALUE);
+
+//update JustifyTraineeAbsence
+export const updateJustifyTraineeAbsence = data =>
+  post(url.UPDATE_JUSTIFY_TRAINEE_ABSENCE, data);
+
+//delete JustifyTraineeAbsence
+export const deleteJustifyTraineeAbsence = data =>
+  post(url.DELETE_JUSTIFY_TRAINEE_ABSENCE, data);
 
 //attend status
 export const getAttendStatus = data => post(url.GET_ATTEND_STATUS, data);
