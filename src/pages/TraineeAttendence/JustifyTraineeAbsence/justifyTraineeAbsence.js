@@ -42,6 +42,7 @@ import {
   deleteJustifyTraineeAbsence,
   getJustifyTraineeAbsenceDeletedValue,
 } from "store/justifyTraineeAbsence/actions";
+import { uploadFile } from "store/new-Trainee/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -315,6 +316,112 @@ class JustifyTraineesAbsenceList extends Component {
 
   handleToggleChange = (field, value) => {
     this.setState({ [field]: value });
+  };
+
+  handleFileChange = event => {
+    const { onUploadFile } = this.props;
+    const file = event.target.files[0];
+    onUploadFile(file);
+
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.setState({ filePreview: reader.result });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.setState({ filePreview: file.name });
+    }
+  };
+
+  handleSave = values => {
+    console.log("values", values);
+
+    const { onAddNewJustifyTraineeAbsence, onUpdateJustifyTraineeAbsence } =
+      this.props;
+    const { selectedReasonId, selectedJustifiedId } = this.state;
+
+    values["reasonId"] = selectedReasonId;
+    values["justifiedId"] = selectedJustifiedId;
+    if (
+      values.fullName === "" ||
+      values.TraineeNum === "" ||
+      values.courseName === "" ||
+      values.absenceType === "" ||
+      values.lecture === "" ||
+      values.lectureDate === "" ||
+      (values.reasonId === "" && selectedReasonId === "")
+    ) {
+      this.setState({ fullNameError: true, saveError: true });
+
+      this.setState({ TraineeNumError: true, saveError: true });
+
+      this.setState({ courseNameError: true, saveError: true });
+
+      this.setState({ absenceTypeError: true, saveError: true });
+
+      this.setState({ lectureError: true, saveError: true });
+
+      this.setState({ lectureDateError: true, saveError: true });
+
+      this.setState({ reasonIdError: true, saveError: true });
+
+      const emptyError = this.props.t("Fill the Required Fields to Save");
+
+      this.setState({ emptyError: emptyError });
+    } else {
+      this.setState({ fullNameError: false, saveError: false });
+      this.setState({ TraineeNumError: false, saveError: false });
+      this.setState({ courseNameError: false, saveError: false });
+      this.setState({ absenceTypeError: false, saveError: false });
+      this.setState({ lectureError: false, saveError: false });
+      this.setState({ lectureDateError: false, saveError: false });
+      this.setState({ reasonIdError: false, saveError: false });
+
+      let justifyTraineeInfo = {};
+
+      Object.keys(values).forEach(function (key) {
+        if (
+          values[key] != undefined &&
+          values[key] !== null &&
+          (values[key].length > 0 || values[key] != "")
+        )
+          justifyTraineeInfo[key] = values[key];
+      });
+      justifyTraineeInfo["reasonId"] = selectedReasonId;
+      justifyTraineeInfo["justifiedId"] = selectedJustifiedId;
+      console.log("justifyTraineeInfo", justifyTraineeInfo);
+
+      this.setState({
+        errorMessages: {},
+      });
+
+      // onUpdateSectionLabDetail(justifyTraineeInfo);
+
+      const saveMessage = "Saved successfully ";
+      this.setState({
+        successMessage: saveMessage,
+      });
+
+      this.toggle1();
+    }
+  };
+
+  handleSelectChange = (fieldName, selectedValue, values) => {
+    console.log("selectedValue", selectedValue);
+    const { absencesJustifications } = this.props;
+
+    if (fieldName == "reasonId") {
+      const name = absencesJustifications.find(
+        justify => justify.value === selectedValue
+      );
+
+      this.setState({
+        selectedReasonId: selectedValue,
+        reasonId: name.label,
+        justifyTraineeAbsence: values,
+      });
+    }
   };
 
   render() {
@@ -1046,14 +1153,11 @@ class JustifyTraineesAbsenceList extends Component {
                                                         </Row>
                                                         <Row className="mb-2">
                                                           <Col className="col-2">
-                                                            <Label for="week">
+                                                            <Label for="lectureType">
                                                               {this.props.t(
-                                                                "Week"
+                                                                "Lecture Type"
                                                               )}
                                                             </Label>
-                                                            <span className="text-danger">
-                                                              *
-                                                            </span>
                                                           </Col>
                                                           <Col className="col-4">
                                                             <Field
@@ -1216,6 +1320,79 @@ class JustifyTraineesAbsenceList extends Component {
                                                             </div>
                                                           </Col>
                                                         </Row>
+                                                        <Row>
+                                                          <div
+                                                            className="upload-box"
+                                                            onClick={() =>
+                                                              document
+                                                                .getElementById(
+                                                                  "fileInput"
+                                                                )
+                                                                .click()
+                                                            }
+                                                          >
+                                                            <div className="upload-content text-center">
+                                                              <div className="upload-icon-wrapper">
+                                                                <i className="bx bx-upload upload-icon"></i>
+                                                              </div>
+                                                              <p className="upload-text">
+                                                                {this.props.t(
+                                                                  "Click to upload"
+                                                                )}
+                                                              </p>
+                                                            </div>
+
+                                                            <input
+                                                              id="fileInput"
+                                                              name="file"
+                                                              type="file"
+                                                              className="d-none"
+                                                              onChange={
+                                                                this
+                                                                  .handleFileChange
+                                                              }
+                                                            />
+                                                            {this.state
+                                                              .filePreview &&
+                                                              (typeof this.state
+                                                                .filePreview ===
+                                                                "string" &&
+                                                              this.state.filePreview.startsWith(
+                                                                "data:"
+                                                              ) ? (
+                                                                <img
+                                                                  src={
+                                                                    this.state
+                                                                      .filePreview
+                                                                  }
+                                                                  alt="Preview"
+                                                                  style={{
+                                                                    width: 100,
+                                                                  }}
+                                                                />
+                                                              ) : (
+                                                                this.state
+                                                                  .filePreview
+                                                              ))}
+                                                          </div>
+                                                        </Row>
+                                                      </Col>
+                                                    </Row>
+                                                    <Row>
+                                                      <Col>
+                                                        <div className="text-center">
+                                                          <Link
+                                                            to="#"
+                                                            className="btn btn-primary me-2"
+                                                            onClick={() => {
+                                                              this.handleSave(
+                                                                values
+                                                              );
+                                                            }}
+                                                          >
+                                                            {t("Save")}
+                                                          </Link>
+                                                        </div>
                                                       </Col>
                                                     </Row>
                                                   </CardBody>
@@ -1269,6 +1446,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteJustifyTraineeAbsence(justifyTraineeAbsence)),
   onGetJustifyTraineeAbsenceDeletedValue: () =>
     dispatch(getJustifyTraineeAbsenceDeletedValue()),
+  onUploadFile: fileData => dispatch(uploadFile(fileData)),
 });
 
 export default connect(
