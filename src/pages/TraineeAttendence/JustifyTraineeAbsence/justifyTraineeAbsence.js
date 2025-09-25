@@ -540,7 +540,7 @@ class JustifyTraineesAbsenceList extends Component {
 
       {
         dataField: "Update",
-        text: "Update",
+        text: t("Update"),
         isDummyField: true,
         editable: false,
         //  hidden: !showDeleteButton,
@@ -583,17 +583,9 @@ class JustifyTraineesAbsenceList extends Component {
               setFieldValue,
             }) => (
               <Form>
-                <Card
-                  className="mt-3"
-                  style={{
-                    position: "relative",
-                    marginRight: "30px",
-                  }}
-                >
-                  <CardHeader className="card-header text-center">
-                    <h4>{""}</h4>
-                  </CardHeader>
-                  <CardBody className="cardBody">
+                <Card>
+                  <CardHeader></CardHeader>
+                  <CardBody>
                     <Row>
                       <Card className="mt-3">
                         <CardTitle id="course_header">{""}</CardTitle>
@@ -814,91 +806,6 @@ class JustifyTraineesAbsenceList extends Component {
                                                 selectedJustifiedId,
                                               file: null,
                                             }}
-                                            validationSchema={Yup.object().shape(
-                                              {
-                                                firstName: Yup.string()
-                                                  .matches(/^[أ-ي]+$/)
-                                                  .required(
-                                                    "Please Enter Your First Name"
-                                                  ),
-                                                lastName: Yup.string()
-                                                  .matches(/^[أ-ي]+$/)
-                                                  .required(
-                                                    "Please Enter Your Last Name"
-                                                  ),
-                                                fatherName: Yup.string()
-                                                  .matches(/^[أ-ي]+$/)
-                                                  .required(
-                                                    "Please Enter Your Father Name"
-                                                  ),
-                                                grandFatherName: Yup.string()
-                                                  .matches(/^[أ-ي]+$/)
-                                                  .required(
-                                                    "Please Enter Your Grandfather Name"
-                                                  ),
-
-                                                motherName: Yup.string()
-                                                  .matches(/^[أ-ي]+$/)
-                                                  .required(
-                                                    "Please Enter Your Mother Name"
-                                                  ),
-                                                birthLocation: Yup.string()
-                                                  .matches(/^[أ-ي]+$/)
-                                                  .required(
-                                                    "Please Enter Your Birth Location"
-                                                  ),
-                                                firstNameE:
-                                                  Yup.string().matches(
-                                                    /^[a-zA-Z]+$/
-                                                  ),
-                                                lastNameE:
-                                                  Yup.string().matches(
-                                                    /^[a-zA-Z]+$/
-                                                  ),
-                                                fatherNameE:
-                                                  Yup.string().matches(
-                                                    /^[a-zA-Z]+$/
-                                                  ),
-                                                grandFatherNameE:
-                                                  Yup.string().matches(
-                                                    /^[a-zA-Z]+$/
-                                                  ),
-                                                motherNameE:
-                                                  Yup.string().matches(
-                                                    /^[a-zA-Z]+$/
-                                                  ),
-                                                email: Yup.string().email(
-                                                  "Must be a valid Email"
-                                                ),
-                                                phoneNumber: Yup.string()
-                                                  .notRequired()
-                                                  .test(
-                                                    "is-numeric-or-empty",
-                                                    "Phone number must contain digits only",
-                                                    value =>
-                                                      !value ||
-                                                      /^\d+$/.test(value)
-                                                  ),
-                                                mobileNumber: Yup.string()
-                                                  .notRequired()
-                                                  .test(
-                                                    "is-numeric-or-empty",
-                                                    "Mobile number must contain digits only",
-                                                    value =>
-                                                      !value ||
-                                                      /^\d+$/.test(value)
-                                                  ),
-                                                whatsAppNumber: Yup.string()
-                                                  .notRequired()
-                                                  .test(
-                                                    "is-numeric-or-empty",
-                                                    " WhatsApp number must contain digits only",
-                                                    value =>
-                                                      !value ||
-                                                      /^\d+$/.test(value)
-                                                  ),
-                                              }
-                                            )}
                                           >
                                             {({
                                               errors,

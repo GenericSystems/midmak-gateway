@@ -721,5 +721,11 @@
   "Lecture": "المحاضرة",
   "Close": "مغلقة",
   "Record Order": "رقم التسجيل",
+  "Confirm": "تأكيد",
+  "Absence Type": "حالة الحضور",
+  "Reason": "سبب الغياب",
+  "Justified": "مبرر",
+  "Justify Document": "وثيقة التبرير",
+  "Update Trainee Absent Justify": "تأكيد",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }
