@@ -581,6 +581,16 @@ class DefineExamDatesList extends Component {
     this.setState({ periods: newPeriods });
   };
 
+  formatTime = time => {
+    if (!time) return "";
+    const date = new Date(`1970-01-01T${time}`);
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   render() {
     const defineExamDate = this.state.defineExamDate;
 
@@ -841,6 +851,91 @@ class DefineExamDatesList extends Component {
             // disabled={!showEditButton}
           />
         ),
+      },
+    ];
+
+    const conflictsByDateColumns = [
+      { dataField: "Id", text: t("ID"), hidden: true },
+      {
+        dataField: "traineeNum",
+        text: t("Trainee Num"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "traineeName",
+        text: t("Trainee Name"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "examDate",
+        text: t("Exam Date"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "examCounts",
+        text: t("Exam Counts"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "exams",
+        text: t("Exams"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "schedules",
+        text: t("Schedules"),
+        sort: true,
+        // editable: true,
+      },
+    ];
+    const conflictsByPeriodColumns = [
+      { dataField: "Id", text: t("ID"), hidden: true },
+      {
+        dataField: "traineeNum",
+        text: t("Trainee Num"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "traineeName",
+        text: t("Trainee Name"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "examDate",
+        text: t("Exam Date"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "startTime",
+        text: t("Start Time"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "examCounts",
+        text: t("Exam Counts"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "exams",
+        text: t("Exams"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "schedules",
+        text: t("Schedules"),
+        sort: true,
+        // editable: true,
       },
     ];
 
@@ -1878,89 +1973,116 @@ class DefineExamDatesList extends Component {
                                                   </div>
                                                 )}
                                               </Droppable> */}
-                                              {Array.isArray(examPeriods) &&
-                                                examPeriods.map(period => (
-                                                  <Card
-                                                    key={period.Id}
-                                                    className="mb-3"
-                                                  >
-                                                    <CardHeader>
-                                                      {period.startTime}
-                                                      {period.endTime}
-                                                    </CardHeader>
-                                                    <CardBody>
-                                                      <Droppable
-                                                        droppableId={period.Id}
-                                                      >
-                                                        {provided => (
-                                                          <div
-                                                            ref={
-                                                              provided.innerRef
-                                                            }
-                                                            {...provided.droppableProps}
-                                                            style={{
-                                                              maxHeight:
-                                                                "200px",
-                                                              overflowY: "auto",
-                                                              padding: "10px",
-                                                              border:
-                                                                "1px solid #ddd",
-                                                              borderRadius:
-                                                                "5px",
-                                                            }}
+                                              <Card className="mt-3">
+                                                <CardTitle id="course_header">
+                                                  {t("Periods")}
+                                                </CardTitle>
+
+                                                <CardBody className="cardBody">
+                                                  <Row>
+                                                    {Array.isArray(
+                                                      examPeriods
+                                                    ) &&
+                                                      examPeriods.map(
+                                                        period => (
+                                                          <Col
+                                                            key={period.Id}
+                                                            md={4}
                                                           >
-                                                            {Array.isArray(
-                                                              examPeriods
-                                                            ) &&
-                                                              examPeriods.map(
-                                                                (
-                                                                  course,
-                                                                  index
-                                                                ) => (
-                                                                  <Draggable
-                                                                    key={
-                                                                      course.value
-                                                                    }
-                                                                    draggableId={String(
-                                                                      course.value
-                                                                    )}
-                                                                    index={
-                                                                      index
-                                                                    }
-                                                                  >
-                                                                    {(
-                                                                      provided,
-                                                                      snapshot
-                                                                    ) => (
-                                                                      <div
-                                                                        ref={
-                                                                          provided.innerRef
-                                                                        }
-                                                                        {...provided.draggableProps}
-                                                                        {...provided.dragHandleProps}
-                                                                        className={`btn btn-success m-1 ${
-                                                                          snapshot.isDragging
-                                                                            ? "dragging"
-                                                                            : ""
-                                                                        }`}
-                                                                      >
-                                                                        {
-                                                                          course.label
-                                                                        }
-                                                                      </div>
-                                                                    )}
-                                                                  </Draggable>
-                                                                )
-                                                              )}
-                                                            {
-                                                              provided.placeholder
-                                                            }
-                                                          </div>
-                                                        )}
-                                                      </Droppable>
-                                                    </CardBody>
-                                                  </Card>
-                                                ))}
+                                                            <Card>
+                                                              <CardTitle className="card-header text-center">
+                                                                <span>
+                                                                  {this.formatTime(
+                                                                    period.startTime
+                                                                  )}{" "}
+                                                                  -{" "}
+                                                                  {this.formatTime(
+                                                                    period.endTime
+                                                                  )}
+                                                                </span>
+                                                              </CardTitle>
+                                                              <CardBody className="cardBody">
+                                                                <Droppable
+                                                                  droppableId={
+                                                                    period.Id
+                                                                  }
+                                                                >
+                                                                  {provided => (
+                                                                    <div
+                                                                      ref={
+                                                                        provided.innerRef
+                                                                      }
+                                                                      {...provided.droppableProps}
+                                                                      style={{
+                                                                        maxHeight:
+                                                                          "200px",
+                                                                        overflowY:
+                                                                          "auto",
+                                                                        padding:
+                                                                          "10px",
+                                                                        border:
+                                                                          "1px solid #ddd",
+                                                                        borderRadius:
+                                                                          "5px",
+                                                                      }}
+                                                                    >
+                                                                      {Array.isArray(
+                                                                        examPeriods
+                                                                      ) &&
+                                                                        examPeriods.map(
+                                                                          (
+                                                                            course,
+                                                                            index
+                                                                          ) => (
+                                                                            <Draggable
+                                                                              key={
+                                                                                course.value
+                                                                              }
+                                                                              draggableId={String(
+                                                                                course.value
+                                                                              )}
+                                                                              index={
+                                                                                index
+                                                                              }
+                                                                            >
+                                                                              {(
+                                                                                provided,
+                                                                                snapshot
+                                                                              ) => (
+                                                                                <div
+                                                                                  ref={
+                                                                                    provided.innerRef
+                                                                                  }
+                                                                                  {...provided.draggableProps}
+                                                                                  {...provided.dragHandleProps}
+                                                                                  className={`btn btn-success m-1 ${
+                                                                                    snapshot.isDragging
+                                                                                      ? "dragging"
+                                                                                      : ""
+                                                                                  }`}
+                                                                                >
+                                                                                  {
+                                                                                    course.label
+                                                                                  }
+                                                                                </div>
+                                                                              )}
+                                                                            </Draggable>
+                                                                          )
+                                                                        )}
+                                                                      {
+                                                                        provided.placeholder
+                                                                      }
+                                                                    </div>
+                                                                  )}
+                                                                </Droppable>
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Col>
+                                                        )
+                                                      )}
+                                                  </Row>
+                                                </CardBody>
+                                              </Card>
                                             </DragDropContext>
                                             {/* <Card>
                                               <CardTitle>
@@ -2034,6 +2156,65 @@ class DefineExamDatesList extends Component {
                                               </CardTitle>
                                               <CardBody></CardBody>
                                             </Card> */}
+                                            <Card id="employee-card">
+                                              <CardTitle id="course_header">
+                                                {t("Conflicts")}
+                                              </CardTitle>
+                                              <CardBody className="cardBody">
+                                                <BootstrapTable
+                                                  keyField="Id"
+                                                  {...toolkitprops.baseProps}
+                                                  {...paginationTableProps}
+                                                  data={defineExamDates}
+                                                  columns={
+                                                    conflictsByDateColumns
+                                                  }
+                                                  cellEdit={cellEditFactory({
+                                                    mode: "dbclick",
+                                                    blurToSave: true,
+                                                    afterSaveCell: (
+                                                      oldValue,
+                                                      newValue,
+                                                      row,
+                                                      column
+                                                    ) => {
+                                                      this.handleExamPeriodDataChange(
+                                                        row.Id,
+                                                        column.dataField,
+                                                        newValue
+                                                      );
+                                                    },
+                                                  })}
+                                                  defaultSorted={defaultSorting}
+                                                />
+                                                <BootstrapTable
+                                                  keyField="Id"
+                                                  {...toolkitprops.baseProps}
+                                                  {...paginationTableProps}
+                                                  data={defineExamDates}
+                                                  columns={
+                                                    conflictsByPeriodColumns
+                                                  }
+                                                  cellEdit={cellEditFactory({
+                                                    mode: "dbclick",
+                                                    blurToSave: true,
+                                                    afterSaveCell: (
+                                                      oldValue,
+                                                      newValue,
+                                                      row,
+                                                      column
+                                                    ) => {
+                                                      this.handleExamPeriodDataChange(
+                                                        row.Id,
+                                                        column.dataField,
+                                                        newValue
+                                                      );
+                                                    },
+                                                  })}
+                                                  defaultSorted={defaultSorting}
+                                                />
+                                              </CardBody>
+                                            </Card>
                                           </Form>
                                         )}
                                       </Formik>
