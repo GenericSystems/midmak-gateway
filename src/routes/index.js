@@ -373,8 +373,8 @@ const authProtectedRoutes = [
 
   //absenceTypes
   { path: "/absenceTypes", component: AbsencesTypesList },
-  //absenceJustifications
-  { path: "/absenceJustifications", component: AbsencesJustificationsList },
+  //absenceJustification
+  { path: "/absenceJustification", component: AbsencesJustificationsList },
   //absencePercents
   { path: "/absencePercents", component: AbsencePercentsList },
 

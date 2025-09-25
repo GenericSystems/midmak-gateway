@@ -29,6 +29,11 @@ import {
   getEmployeesNamesFail,
 } from "../HR/employees/actions";
 
+import {
+  getAbsencesJustificationsSuccess,
+  getAbsencesJustificationsFail,
+} from "../absenceJustification/actions";
+
 //Include Both Helper File with needed methods
 import {
   getJustifyTraineesAbsence,
@@ -38,6 +43,7 @@ import {
   deleteJustifyTraineeAbsence,
   getEmployeesNames,
   getTraineesOpt,
+  getAbsencesJustifications,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchJustifyTraineesAbsence() {
@@ -71,6 +77,19 @@ function* fetchJustifyTraineesAbsence() {
     yield put(getTraineesOptSuccess(response));
   } catch (error) {
     yield put(getTraineesOptFail(error));
+  }
+  const get_reason_opt = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_AbsenceReason",
+    fields: `Id,arTitle`,
+  };
+  try {
+    const response = yield call(getAbsencesJustifications, get_reason_opt);
+    yield put(getAbsencesJustificationsSuccess(response));
+  } catch (error) {
+    yield put(getAbsencesJustificationsFail(error));
   }
 }
 
