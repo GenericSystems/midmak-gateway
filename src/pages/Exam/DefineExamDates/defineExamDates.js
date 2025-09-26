@@ -550,11 +550,11 @@ class DefineExamDatesList extends Component {
 
     if (!destination) return;
 
-    const sourcePeriodIndex = this.state.periods.findIndex(
-      p => p.id === source.droppableId
+    const sourcePeriodIndex = this.state.examPeriods.findIndex(
+      p => p.Id === source.droppableId
     );
-    const destPeriodIndex = this.state.periods.findIndex(
-      p => p.id === destination.droppableId
+    const destPeriodIndex = this.state.examPeriods.findIndex(
+      p => p.Id === destination.droppableId
     );
 
     if (sourcePeriodIndex === -1 || destPeriodIndex === -1) return;
@@ -578,7 +578,7 @@ class DefineExamDatesList extends Component {
       courses: destCourses,
     };
 
-    this.setState({ periods: newPeriods });
+    this.setState({ examPeriods: newPeriods });
   };
 
   formatTime = time => {
@@ -1984,101 +1984,124 @@ class DefineExamDatesList extends Component {
                                                       examPeriods
                                                     ) &&
                                                       examPeriods.map(
-                                                        period => (
-                                                          <Col
-                                                            key={period.Id}
-                                                            md={4}
-                                                          >
-                                                            <Card>
-                                                              <CardTitle className="card-header text-center">
-                                                                <span>
-                                                                  {this.formatTime(
-                                                                    period.startTime
-                                                                  )}{" "}
-                                                                  -{" "}
-                                                                  {this.formatTime(
-                                                                    period.endTime
-                                                                  )}
-                                                                </span>
-                                                              </CardTitle>
-                                                              <CardBody className="cardBody">
-                                                                <Droppable
-                                                                  droppableId={
-                                                                    period.Id
+                                                        period => {
+                                                          const formattedTimeALL =
+                                                            this.formatTime(
+                                                              period.startTime
+                                                            ) +
+                                                            " - " +
+                                                            this.formatTime(
+                                                              period.endTime
+                                                            );
+                                                          // const attendance = `${
+                                                          //   period.attended
+                                                          // }/${period.capacity.toLocaleString()}`;
+
+                                                          return (
+                                                            <Col
+                                                              key={period.Id}
+                                                              md={4}
+                                                            >
+                                                              <Card>
+                                                                <CardTitle className="card-header text-center">
+                                                                  (
+                                                                  {/* {attendance}{" "} */}
+                                                                  {
+                                                                    formattedTimeALL
                                                                   }
-                                                                >
-                                                                  {provided => (
-                                                                    <div
-                                                                      ref={
-                                                                        provided.innerRef
-                                                                      }
-                                                                      {...provided.droppableProps}
-                                                                      style={{
-                                                                        maxHeight:
-                                                                          "200px",
-                                                                        overflowY:
-                                                                          "auto",
-                                                                        padding:
-                                                                          "10px",
-                                                                        border:
-                                                                          "1px solid #ddd",
-                                                                        borderRadius:
-                                                                          "5px",
-                                                                      }}
-                                                                    >
-                                                                      {Array.isArray(
-                                                                        examPeriods
-                                                                      ) &&
-                                                                        examPeriods.map(
-                                                                          (
-                                                                            course,
-                                                                            index
-                                                                          ) => (
-                                                                            <Draggable
-                                                                              key={
-                                                                                course.value
-                                                                              }
-                                                                              draggableId={String(
-                                                                                course.value
-                                                                              )}
-                                                                              index={
-                                                                                index
-                                                                              }
-                                                                            >
-                                                                              {(
-                                                                                provided,
-                                                                                snapshot
-                                                                              ) => (
-                                                                                <div
-                                                                                  ref={
-                                                                                    provided.innerRef
-                                                                                  }
-                                                                                  {...provided.draggableProps}
-                                                                                  {...provided.dragHandleProps}
-                                                                                  className={`btn btn-success m-1 ${
-                                                                                    snapshot.isDragging
-                                                                                      ? "dragging"
-                                                                                      : ""
-                                                                                  }`}
-                                                                                >
-                                                                                  {
-                                                                                    course.label
-                                                                                  }
-                                                                                </div>
-                                                                              )}
-                                                                            </Draggable>
+                                                                  )
+                                                                </CardTitle>
+                                                                <CardBody className="cardBody">
+                                                                  <Droppable
+                                                                    droppableId={String(
+                                                                      period.Id
+                                                                    )}
+                                                                  >
+                                                                    {provided => (
+                                                                      <div
+                                                                        ref={
+                                                                          provided.innerRef
+                                                                        }
+                                                                        {...provided.droppableProps}
+                                                                        style={{
+                                                                          maxHeight:
+                                                                            "200px",
+                                                                          overflowY:
+                                                                            "auto",
+                                                                          padding:
+                                                                            "10px",
+                                                                          border:
+                                                                            "1px solid #ddd",
+                                                                          borderRadius:
+                                                                            "5px",
+                                                                        }}
+                                                                      >
+                                                                        {Array.isArray(
+                                                                          period.courses
+                                                                        ) &&
+                                                                        period
+                                                                          .courses
+                                                                          .length >
+                                                                          0 ? (
+                                                                          period.courses.map(
+                                                                            (
+                                                                              course,
+                                                                              index
+                                                                            ) => (
+                                                                              <Draggable
+                                                                                key={
+                                                                                  course.value
+                                                                                }
+                                                                                draggableId={String(
+                                                                                  course.value
+                                                                                )}
+                                                                                index={
+                                                                                  index
+                                                                                }
+                                                                              >
+                                                                                {(
+                                                                                  provided,
+                                                                                  snapshot
+                                                                                ) => (
+                                                                                  <div
+                                                                                    ref={
+                                                                                      provided.innerRef
+                                                                                    }
+                                                                                    {...provided.draggableProps}
+                                                                                    {...provided.dragHandleProps}
+                                                                                    className={`btn btn-success m-1 ${
+                                                                                      snapshot.isDragging
+                                                                                        ? "dragging"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                  >
+                                                                                    {
+                                                                                      course.label
+                                                                                    }
+                                                                                  </div>
+                                                                                )}
+                                                                              </Draggable>
+                                                                            )
                                                                           )
+                                                                        ) : (
+                                                                          <div className="text-muted">
+                                                                            No
+                                                                            Courses
+                                                                            Found
+                                                                          </div>
                                                                         )}
-                                                                      {
-                                                                        provided.placeholder
-                                                                      }
-                                                                    </div>
-                                                                  )}
-                                                                </Droppable>
-                                                              </CardBody>
-                                                            </Card>
-                                                          </Col>
-                                                        )
+
+                                                                        {
+                                                                          provided.placeholder
+                                                                        }
+                                                                      </div>
+                                                                    )}
+                                                                  </Droppable>
+                                                                </CardBody>
+                                                              </Card>
+                                                            </Col>
+                                                          );
+                                                        }
                                                       )}
                                                   </Row>
                                                 </CardBody>

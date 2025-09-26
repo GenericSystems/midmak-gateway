@@ -1357,7 +1357,7 @@ class RegistrationList extends Component {
               <ModalBody>
                 <Row>
                   <Col md="2">
-                    <Nav pills className="flex-column" id="margTop1">
+                    <Nav pills className="flex-column" id="margTop">
                       <NavItem>
                         <NavLink
                           id="horizontal-home-link"
@@ -1664,7 +1664,7 @@ class RegistrationList extends Component {
                         </Row>
                       </TabPane>
                       <TabPane tabId="6">
-                        <Row>
+                        <Row className="mt-3">
                           <Col>
                             <Col lg="4">
                               <h5 className="header pt-2 ms-3" id="title">
