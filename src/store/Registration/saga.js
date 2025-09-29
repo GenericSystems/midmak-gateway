@@ -357,7 +357,7 @@ function* onDeleteAllNonActiveStdCurr({ payload }) {
     yield put(deleteAllNonActiveStdCurrFail(error));
   }
   if (payload.flag === "reset") {
-    yield call(fetchTempStdSchedules, {
+    yield call(fetchTraineeSchedules, {
       payload: { traineeId: payload.traineeId },
     });
     yield call(fetchNonActiveStdCurr, {
@@ -386,7 +386,7 @@ function* onSaveAllNonActiveStdCurr({ payload }) {
     yield put(saveAllNonActiveStdCurrFail(error));
   }
   yield fetchAvailableCourses(theObj);
-  yield call(fetchTempStdSchedules, {
+  yield call(fetchTraineeSchedules, {
     payload: { traineeId: payload.traineeId },
   });
   yield call(fetchNonActiveStdCurr, {

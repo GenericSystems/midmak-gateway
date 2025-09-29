@@ -82,6 +82,7 @@ class DefineExamDatesList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      activeTable: "first",
     };
     this.state = {
       languageState: "",
@@ -93,9 +94,11 @@ class DefineExamDatesList extends Component {
       modal: false,
       deleteModal1: false,
       modal2: false,
+      modal3: false,
       isEdit: false,
       isOpen: false,
       isOpen1: false,
+      isOpen2: false,
       isAdd: false,
       selectedExamType: "",
       selectedDay: null,
@@ -253,6 +256,12 @@ class DefineExamDatesList extends Component {
   toggle2 = () => {
     this.setState(prevState => ({
       modal2: !prevState.modal2,
+    }));
+  };
+
+  toggle3 = () => {
+    this.setState(prevState => ({
+      modal3: !prevState.modal3,
     }));
   };
 
@@ -591,6 +600,12 @@ class DefineExamDatesList extends Component {
     });
   };
 
+  handleConflicts = arg => {
+    console.log("arg", arg);
+    this.setState({ isOpen2: true });
+    this.toggle3();
+  };
+
   render() {
     const defineExamDate = this.state.defineExamDate;
 
@@ -605,6 +620,7 @@ class DefineExamDatesList extends Component {
       coursesOffering,
     } = this.props;
     const {
+      activeTable,
       examPeriods,
       modal1,
       languageState,
@@ -615,8 +631,10 @@ class DefineExamDatesList extends Component {
       deleteModal1,
       modal,
       modal2,
+      modal3,
       isEdit,
       isOpen1,
+      isOpen2,
       isOpen,
       emptyError,
       showAlert,
@@ -689,7 +707,7 @@ class DefineExamDatesList extends Component {
         editable: false,
         //  hidden: !showDeleteButton,
         formatter: (cellContent, defineExamDate) => (
-          <div className="d-flex gap-4">
+          <div className="d-flex justify-content-evenly">
             <Tooltip title={this.props.t("Edit")} placement="top">
               <Link className="text-sm-end" to="#">
                 <i
@@ -717,6 +735,15 @@ class DefineExamDatesList extends Component {
                   className="fas fa-calendar-alt"
                   id="examtooltip"
                   onClick={() => this.handleExamSchedule(defineExamDate)}
+                ></i>
+              </Link>
+            </Tooltip>
+            <Tooltip title={this.props.t("Exam Conflicts")} placement="top">
+              <Link className="text-sm-end" to="#">
+                <i
+                  className="fas fa-exclamation-triangle"
+                  id="conflicttooltip"
+                  onClick={() => this.handleConflicts(defineExamDate)}
                 ></i>
               </Link>
             </Tooltip>
@@ -1740,6 +1767,108 @@ class DefineExamDatesList extends Component {
                                     </ModalBody>
                                   </Modal>
                                   <Modal
+                                    isOpen={modal3}
+                                    toggle={this.toggle3}
+                                    // className={"modal-fullscreen"}
+                                    size="lg"
+                                  >
+                                    <ModalHeader toggle={this.toggle3} tag="h4">
+                                      {!!isOpen2 ? t("Exam Conflicts") : ""}
+                                    </ModalHeader>
+                                    <ModalBody>
+                                      <Card id="employee-card">
+                                        <CardTitle id="course_header">
+                                          {t("Conflicts")}
+                                        </CardTitle>
+                                        <CardBody className="cardBody">
+                                          <div className="mb-3 d-flex gap-3">
+                                            <button
+                                              className={`btn ${
+                                                activeTable === "first"
+                                                  ? "btn-primary"
+                                                  : "btn-outline-primary"
+                                              }`}
+                                              onClick={() =>
+                                                this.setState({
+                                                  activeTable: "first",
+                                                })
+                                              }
+                                            >
+                                              {t("Conflicts By Date")}
+                                            </button>
+
+                                            <button
+                                              className={`btn ${
+                                                activeTable === "second"
+                                                  ? "btn-primary"
+                                                  : "btn-outline-primary"
+                                              }`}
+                                              onClick={() =>
+                                                this.setState({
+                                                  activeTable: "second",
+                                                })
+                                              }
+                                            >
+                                              {t("Conflicts By Period")}
+                                            </button>
+                                          </div>
+                                          {activeTable === "first" && (
+                                            <BootstrapTable
+                                              keyField="Id"
+                                              {...toolkitprops.baseProps}
+                                              {...paginationTableProps}
+                                              data={defineExamDates}
+                                              columns={conflictsByDateColumns}
+                                              cellEdit={cellEditFactory({
+                                                mode: "dbclick",
+                                                blurToSave: true,
+                                                afterSaveCell: (
+                                                  oldValue,
+                                                  newValue,
+                                                  row,
+                                                  column
+                                                ) => {
+                                                  this.handleExamPeriodDataChange(
+                                                    row.Id,
+                                                    column.dataField,
+                                                    newValue
+                                                  );
+                                                },
+                                              })}
+                                              defaultSorted={defaultSorting}
+                                            />
+                                          )}
+                                          {activeTable === "second" && (
+                                            <BootstrapTable
+                                              keyField="Id"
+                                              {...toolkitprops.baseProps}
+                                              {...paginationTableProps}
+                                              data={defineExamDates}
+                                              columns={conflictsByPeriodColumns}
+                                              cellEdit={cellEditFactory({
+                                                mode: "dbclick",
+                                                blurToSave: true,
+                                                afterSaveCell: (
+                                                  oldValue,
+                                                  newValue,
+                                                  row,
+                                                  column
+                                                ) => {
+                                                  this.handleExamPeriodDataChange(
+                                                    row.Id,
+                                                    column.dataField,
+                                                    newValue
+                                                  );
+                                                },
+                                              })}
+                                              defaultSorted={defaultSorting}
+                                            />
+                                          )}
+                                        </CardBody>
+                                      </Card>
+                                    </ModalBody>
+                                  </Modal>
+                                  <Modal
                                     isOpen={modal2}
                                     toggle={this.toggle2}
                                     className={"modal-fullscreen"}
@@ -2179,65 +2308,6 @@ class DefineExamDatesList extends Component {
                                               </CardTitle>
                                               <CardBody></CardBody>
                                             </Card> */}
-                                            <Card id="employee-card">
-                                              <CardTitle id="course_header">
-                                                {t("Conflicts")}
-                                              </CardTitle>
-                                              <CardBody className="cardBody">
-                                                <BootstrapTable
-                                                  keyField="Id"
-                                                  {...toolkitprops.baseProps}
-                                                  {...paginationTableProps}
-                                                  data={defineExamDates}
-                                                  columns={
-                                                    conflictsByDateColumns
-                                                  }
-                                                  cellEdit={cellEditFactory({
-                                                    mode: "dbclick",
-                                                    blurToSave: true,
-                                                    afterSaveCell: (
-                                                      oldValue,
-                                                      newValue,
-                                                      row,
-                                                      column
-                                                    ) => {
-                                                      this.handleExamPeriodDataChange(
-                                                        row.Id,
-                                                        column.dataField,
-                                                        newValue
-                                                      );
-                                                    },
-                                                  })}
-                                                  defaultSorted={defaultSorting}
-                                                />
-                                                <BootstrapTable
-                                                  keyField="Id"
-                                                  {...toolkitprops.baseProps}
-                                                  {...paginationTableProps}
-                                                  data={defineExamDates}
-                                                  columns={
-                                                    conflictsByPeriodColumns
-                                                  }
-                                                  cellEdit={cellEditFactory({
-                                                    mode: "dbclick",
-                                                    blurToSave: true,
-                                                    afterSaveCell: (
-                                                      oldValue,
-                                                      newValue,
-                                                      row,
-                                                      column
-                                                    ) => {
-                                                      this.handleExamPeriodDataChange(
-                                                        row.Id,
-                                                        column.dataField,
-                                                        newValue
-                                                      );
-                                                    },
-                                                  })}
-                                                  defaultSorted={defaultSorting}
-                                                />
-                                              </CardBody>
-                                            </Card>
                                           </Form>
                                         )}
                                       </Formik>

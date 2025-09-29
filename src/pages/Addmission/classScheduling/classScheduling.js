@@ -585,7 +585,7 @@ class ClassSchedulingList extends Component {
     this.setState({
       selectedCourseRow: null,
       deleteModal2: false,
-      // showAlert: true,
+      showAlert: true,
     });
   };
 
@@ -1835,6 +1835,7 @@ class ClassSchedulingList extends Component {
                                               })
                                             }
                                           />
+
                                           <Modal
                                             isOpen={isModalOpen}
                                             toggle={this.toggle}

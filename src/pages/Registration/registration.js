@@ -518,22 +518,20 @@ class RegistrationList extends Component {
   };
   resetAllNonActiveStdCurrs = () => {
     const { traineeEdit } = this.state;
-    const { onDeleteAllNonActiveStdCurr, currentSemester } = this.props;
+    const { onDeleteAllNonActiveStdCurr } = this.props;
     let ob = {};
     ob["traineeId"] = traineeEdit.TraineeNum;
     ob["flag"] = "reset";
-    ob["semesterYearId"] = currentSemester.cuYearSemesterId;
     onDeleteAllNonActiveStdCurr(ob);
     this.setState({ timings: [] });
   };
   deleteAllNonActiveStdCurrs = () => {
     this.resetAllNonActiveStdCurrs();
     const { traineeEdit } = this.state;
-    const { onDeleteAllNonActiveStdCurr, currentSemester } = this.props;
+    const { onDeleteAllNonActiveStdCurr } = this.props;
     let ob = {};
     ob["traineeId"] = traineeEdit.TraineeNum;
     ob["flag"] = "delete";
-    ob["semesterYearId"] = currentSemester.cuYearSemesterId;
 
     onDeleteAllNonActiveStdCurr(ob);
   };
@@ -550,41 +548,29 @@ class RegistrationList extends Component {
       traineeRegisterInfo,
       nonActiveStdCurrs,
       onSaveAllNonActiveStdCurr,
-      currentSemester,
     } = this.props;
-    const { totalHours, traineeEdit } = this.state;
-    const minHours =
-      traineeRegisterInfo &&
-      traineeRegisterInfo[0] &&
-      traineeRegisterInfo[0].minRegisteredHour;
+    const { traineeEdit } = this.state;
+
     let errors = [];
     let ob = {};
     ob["traineeId"] = traineeEdit.TraineeNum;
-    ob["yearSemesterId"] = currentSemester.cuYearSemesterId;
 
-    if (minHours > totalHours) {
-      errors.push("Minimum registered hours requirement not met.");
-      this.setState({
-        duplicateError: "Minimum registered hours requirement not met.",
-      });
-    } else {
-      nonActiveStdCurrs.forEach(trainee => {
-        if (!trainee.SectionId) {
-          errors.push(`SectionId is empty for trainee: ${trainee.code}`);
-          this.setState({ duplicateError: "Fill the options" });
-        }
-        if (trainee.hasLab === 1 && !trainee.LabId) {
-          errors.push(`LabId is empty for trainee: ${trainee.code}`);
-          this.setState({ duplicateError: "Fill the options" });
-        }
-      });
-    }
+    nonActiveStdCurrs.forEach(trainee => {
+      if (!trainee.SectionId) {
+        errors.push(`SectionId is empty for trainee: ${trainee.Code}`);
+        this.setState({ duplicateError: "Fill the options" });
+      }
+      if (trainee.hasLab === 1 && !trainee.LabId) {
+        errors.push(`LabId is empty for trainee: ${trainee.Code}`);
+        this.setState({ duplicateError: "Fill the options" });
+      }
+    });
 
     if (errors.length > 0) {
       console.error("Errors occurred:", errors);
     } else {
       onSaveAllNonActiveStdCurr(ob);
-      this.setState({ totalHours: 0, timings: [], duplicateError: null });
+      this.setState({ timings: [], duplicateError: null });
       this.setState({ successMessage: "Data filled in successfully" });
       setTimeout(() => {
         this.toggleMainTab("6");
@@ -1818,17 +1804,17 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addNewAvailableCourse(availableCourse)),
   onGetNonActiveStdCurr: (active, traineeId) =>
     dispatch(getNonActiveStdCurr(active, traineeId)),
-  // onUpdateNonActiveStdCurr: (nonActiveStdCurrs, active) =>
-  //   dispatch(updateNonActiveStdCurr(nonActiveStdCurrs, active)),
+  onUpdateNonActiveStdCurr: (nonActiveStdCurrs, active) =>
+    dispatch(updateNonActiveStdCurr(nonActiveStdCurrs, active)),
   onDeleteNonActiveStdCurr: nonActiveStdCurrs =>
     dispatch(deleteNonActiveStdCurr(nonActiveStdCurrs)),
 
   // onGetTempStdSchedules: traineeId => dispatch(getTempStdSchedules(traineeId)),
   // onGetAchievedCourses: traineeId => dispatch(getAchievedCourses(traineeId)),
-  // onDeleteAllNonActiveStdCurr: nonActiveStdCurrs =>
-  //   dispatch(deleteAllNonActiveStdCurr(nonActiveStdCurrs)),
-  // onSaveAllNonActiveStdCurr: nonActiveStdCurrs =>
-  //   dispatch(saveAllNonActiveStdCurr(nonActiveStdCurrs)),
+  onDeleteAllNonActiveStdCurr: nonActiveStdCurrs =>
+    dispatch(deleteAllNonActiveStdCurr(nonActiveStdCurrs)),
+  onSaveAllNonActiveStdCurr: nonActiveStdCurrs =>
+    dispatch(saveAllNonActiveStdCurr(nonActiveStdCurrs)),
 });
 
 export default connect(

@@ -120,7 +120,6 @@ class JustifyTraineesAbsenceList extends Component {
       traineesOpt,
     });
     this.setState({ deleted });
-    console.log("rsssssssssssssss", justifyTraineesAbsence);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -287,6 +286,7 @@ class JustifyTraineesAbsenceList extends Component {
   };
 
   handleEditTrainee = arg => {
+    console.log("arg", arg);
     this.setState({
       justifyTraineeAbsence: arg,
       isEdit: true,
@@ -408,7 +408,6 @@ class JustifyTraineesAbsenceList extends Component {
   };
 
   handleSelectChange = (fieldName, selectedValue, values) => {
-    console.log("selectedValue", selectedValue);
     const { absencesJustifications } = this.props;
 
     if (fieldName == "reasonId") {
@@ -460,7 +459,6 @@ class JustifyTraineesAbsenceList extends Component {
       absenceTypeError,
       reasonError,
     } = this.state;
-    console.log("traineesOpttraineesOpt", traineesOpt);
     const traineesArray = Object.values(traineesOpt);
     const { SearchBar } = Search;
     const alertMessage =
@@ -840,6 +838,7 @@ class JustifyTraineesAbsenceList extends Component {
                                                       type="text"
                                                       name="fullName"
                                                       id="fullName"
+                                                      readOnly
                                                       className={
                                                         "form-control" +
                                                         ((errors.fullName &&
@@ -927,6 +926,7 @@ class JustifyTraineesAbsenceList extends Component {
                                                         ? " is-invalid"
                                                         : "")
                                                     }
+                                                    readOnly
                                                   />
 
                                                   {courseNameError && (

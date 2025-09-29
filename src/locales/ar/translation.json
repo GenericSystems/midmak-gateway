@@ -354,7 +354,7 @@
   "Edit Floor": "تعديل الطابق",
   "Edit Hall": "تعديل القاعة",
   "Trainee Name": "اسم المتدرب",
-  "Course Name": "اسم المقرر",
+  "Course Name": "اسم الدورة",
   "Archive Detailes": "التفاصيل",
   "Operation Needed": "العملية المطلوبة",
   "Applyning Date": "تاريخ التقديم",
@@ -727,5 +727,11 @@
   "Justified": "مبرر",
   "Justify Document": "وثيقة التبرير",
   "Update Trainee Absent Justify": "تأكيد",
+  "Exam Counts": "تأكيد",
+  "Schedules": "تأكيد",
+  "Conflicts By Period": "تعارضات الفترات",
+  "Conflicts By Date": "تعارضات الأيام",
+  "Exam Conflicts": "تعارضات الامتحان",
+  "Conflicts": "تعارضات",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }
