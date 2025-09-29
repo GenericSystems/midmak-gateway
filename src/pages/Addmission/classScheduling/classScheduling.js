@@ -153,6 +153,7 @@ class ClassSchedulingList extends Component {
       selectedScheduleRow: null,
       selectedCourseRow: null,
       showAll: false,
+      selectedInstructor: [],
     };
     this.toggle1 = this.toggle1.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -369,7 +370,7 @@ class ClassSchedulingList extends Component {
   handleCourseOfferingClick = row => {
     console.log("branch", row);
     this.setState({
-      courseOffering: "",
+      courseOffering: row,
       selectedCourseId: row.courseId,
       isOpen: true,
     });
@@ -430,39 +431,65 @@ class ClassSchedulingList extends Component {
     // onGetHallTimings(0);
     this.setState({ selectedRow: null, selectedType: "" });
   }
-  toggleNestedModal = () => {
-    const { isEdit, selectedOption } = this.state;
-    if (selectedOption === "Section") {
-      if (isEdit) {
-        this.setState({
-          sectionLabData: {
-            Capacity: "",
-            SectionNumber: "",
-          },
-          isEdit: false,
-          selectedOption: "",
-        });
-      }
-    } else {
-      if (isEdit) {
-        this.setState({
-          sectionLabData: {
-            Capacity: "",
-            LabNumber: "",
-          },
-          isEdit: false,
-          selectedOption: "",
-        });
-      }
-    }
+  // toggleNestedModal = () => {
+  //   const { isEdit, selectedOption, selectedRowData } = this.state;
+  //   const defaultData = {};
 
+  //   console.log("selectedRowDataselectedRowData", defaultData);
+  //   if (selectedOption === "Section") {
+  //     if (isEdit) {
+  //       this.setState({
+  //         sectionLabData: selectedRowData,
+  //         isEdit: false,
+  //         selectedOption: "",
+  //       });
+  //     }
+  //   } else {
+  //     if (isEdit) {
+  //       this.setState({
+  //         sectionLabData: {
+  //           Capacity: "",
+  //           SectionNumber: "",
+  //           startDate: selectedRowData.startDate,
+  //           endDate: selectedRowData.endDate,
+  //         },
+  //         isEdit: false,
+  //         selectedOption: "",
+  //       });
+  //     }
+  //   }
+
+  // this.setState(prevState => ({
+  //   isNestedModalOpen: !prevState.isNestedModalOpen,
+  // }));
+  //   this.setState({
+  //     selectedRowSectionLab: null,
+  //   });
+  // };
+
+  toggleNestedModal = () => {
+    const { selectedRowData } = this.state;
+    if (!selectedRowData) return;
+
+    const defaultData = {
+      SectionNumber: selectedRowData.SectionNumber || "",
+      LabNumber: selectedRowData.LabNumber || "",
+      Capacity: selectedRowData.Capacity || "",
+      startDate: selectedRowData.startDate,
+      endDate: selectedRowData.endDate,
+    };
+
+    this.setState(
+      {
+        sectionLabData: defaultData,
+      },
+      () => console.log("sectionLabData", this.state.sectionLabData)
+    );
     this.setState(prevState => ({
       isNestedModalOpen: !prevState.isNestedModalOpen,
     }));
-    this.setState({
-      selectedRowSectionLab: null,
-    });
   };
+
   toggleHallModal = () => {
     this.setState(prevState => ({
       isHallModalOpen: !prevState.isHallModalOpen,
@@ -603,12 +630,14 @@ class ClassSchedulingList extends Component {
 
   handleEditScheduleTiming = SLD => {
     console.log("ssssssssld", SLD);
+    const instructorsArray = SLD.instructors ? JSON.parse(SLD.instructors) : [];
     this.setState({
       // defaultHallName: SLD.hallName,
       isEdit1: true,
       sectionLabDetails: SLD,
       Id: SLD.Id,
-      instructorsArray: SLD.instructorsId,
+      instructorsArray,
+      instructorsId: instructorsArray.map(i => i.value),
       selectedHallKey: SLD.hallId,
       defaultHallName: SLD.hallName,
     });
@@ -1152,8 +1181,12 @@ class ClassSchedulingList extends Component {
     // });
 
     if (fieldName === "instructorsId") {
+      const selectedIds = selectedMulti
+        ? selectedMulti.map(option => option.value)
+        : [];
       this.setState({
         instructorsArray: selectedMulti || [],
+        instructorsId: selectedIds,
       });
     }
   };
@@ -1162,6 +1195,8 @@ class ClassSchedulingList extends Component {
       sectionLabDetails: "",
       selectedHallKey: null,
       defaultHallName: "",
+      instructorsArray: [],
+      instructorsId: [],
       isEdit1: false,
     });
     this.toggle3();
@@ -1250,7 +1285,15 @@ class ClassSchedulingList extends Component {
       isScheduleEditable,
       instructorsArray,
     } = this.state;
+    console.log("sectionLabDatasectionLabData", sectionLabData);
 
+    const defaultStartDate = sectionLabData?.startDate
+      ? moment.utc(sectionLabData.startDate).local().format("YYYY-MM-DD")
+      : "";
+
+    const defaultEndDate = sectionLabData?.endDate
+      ? moment.utc(sectionLabData.endDate).local().format("YYYY-MM-DD")
+      : "";
     const selectRow = {
       mode: "checkbox",
       clickToSelect: false,
@@ -1480,7 +1523,7 @@ class ClassSchedulingList extends Component {
       },
       {
         dataField: "NumOfRegStud",
-        text: t("Number Of Registered Students"),
+        text: t("Number Of Registered Trainees"),
         editable: false,
         sort: true,
       },
@@ -1857,7 +1900,14 @@ class ClassSchedulingList extends Component {
                                                   <Form>
                                                     <Card id="employee-card">
                                                       <CardTitle id="course_header">
-                                                        {t("Course Offering")}
+                                                        {`${t(
+                                                          "Course Offering"
+                                                        )} - ${
+                                                          this.props.i18n
+                                                            .language === "ar"
+                                                            ? courseOffering.arTitle
+                                                            : courseOffering.enTitle
+                                                        }`}
                                                       </CardTitle>
                                                       <CardBody className="cardBody">
                                                         {emptyError && (
@@ -2995,13 +3045,20 @@ class ClassSchedulingList extends Component {
                                                   sectionLabData.Capacity) ||
                                                 "",
                                               startDate:
-                                                (sectionLabData &&
-                                                  sectionLabData.startDate) ||
-                                                "",
-                                              endDate:
-                                                (sectionLabData &&
-                                                  sectionLabData.endDate) ||
-                                                "",
+                                                sectionLabData?.startDate
+                                                  ? moment
+                                                      .utc(
+                                                        sectionLabData.startDate
+                                                      )
+                                                      .local()
+                                                      .format("YYYY-MM-DD")
+                                                  : "",
+                                              endDate: sectionLabData?.endDate
+                                                ? moment
+                                                    .utc(sectionLabData.endDate)
+                                                    .local()
+                                                    .format("YYYY-MM-DD")
+                                                : "",
                                             }}
                                             validationSchema={Yup.object().shape(
                                               {
@@ -3166,6 +3223,13 @@ class ClassSchedulingList extends Component {
                                                                           )[0]
                                                                       : ""
                                                                   }
+                                                                  min={
+                                                                    defaultStartDate
+                                                                  }
+                                                                  max={
+                                                                    values.endDate ||
+                                                                    defaultEndDate
+                                                                  }
                                                                   onChange={
                                                                     handleChange
                                                                   }
@@ -3220,6 +3284,13 @@ class ClassSchedulingList extends Component {
                                                                           )[0]
                                                                       : ""
                                                                   }
+                                                                  min={
+                                                                    values.startDate ||
+                                                                    defaultStartDate
+                                                                  }
+                                                                  max={
+                                                                    defaultEndDate
+                                                                  }
                                                                   onChange={
                                                                     handleChange
                                                                   }
@@ -3241,17 +3312,17 @@ class ClassSchedulingList extends Component {
                                                     </Row>
                                                     <Row></Row>
                                                   </div>
-                                                  <div className="bordered">
+                                                  {/* <div className="bordered">
                                                     <h5
                                                       className="header pt-2"
                                                       id="title"
                                                     >
                                                       {this.props.t(
-                                                        "Specific Students"
+                                                        "Specific Trainees"
                                                       )}
                                                     </h5>
-                                                    <Row>
-                                                      {/* <Col md="12">
+                                                    <Row> */}
+                                                  {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3319,10 +3390,10 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup>
                                                   </Col> */}
-                                                    </Row>
+                                                  {/* </Row>
 
-                                                    <Row>
-                                                      {/* <Col md="12">
+                                                    <Row> */}
+                                                  {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3364,8 +3435,8 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup>
                                                   </Col> */}
-                                                    </Row>
-                                                  </div>
+                                                  {/* </Row>
+                                                  </div> */}
                                                   <Row className="justify-content-center">
                                                     <Col
                                                       lg="3"
@@ -3404,13 +3475,20 @@ class ClassSchedulingList extends Component {
                                                   sectionLabData.Capacity) ||
                                                 "",
                                               startDate:
-                                                (sectionLabData &&
-                                                  sectionLabData.startDate) ||
-                                                "",
-                                              endDate:
-                                                (sectionLabData &&
-                                                  sectionLabData.endDate) ||
-                                                "",
+                                                sectionLabData?.startDate
+                                                  ? moment
+                                                      .utc(
+                                                        sectionLabData.startDate
+                                                      )
+                                                      .local()
+                                                      .format("YYYY-MM-DD")
+                                                  : "",
+                                              endDate: sectionLabData?.endDate
+                                                ? moment
+                                                    .utc(sectionLabData.endDate)
+                                                    .local()
+                                                    .format("YYYY-MM-DD")
+                                                : "",
                                             }}
                                             validationSchema={Yup.object().shape(
                                               {
@@ -3570,6 +3648,13 @@ class ClassSchedulingList extends Component {
                                                                           )[0]
                                                                       : ""
                                                                   }
+                                                                  min={
+                                                                    defaultStartDate
+                                                                  }
+                                                                  max={
+                                                                    values.endDate ||
+                                                                    defaultEndDate
+                                                                  }
                                                                   onChange={
                                                                     handleChange
                                                                   }
@@ -3624,6 +3709,13 @@ class ClassSchedulingList extends Component {
                                                                           )[0]
                                                                       : ""
                                                                   }
+                                                                  min={
+                                                                    values.startDate ||
+                                                                    defaultStartDate
+                                                                  }
+                                                                  max={
+                                                                    defaultEndDate
+                                                                  }
                                                                   onChange={
                                                                     handleChange
                                                                   }
@@ -3644,17 +3736,17 @@ class ClassSchedulingList extends Component {
                                                       </Col>
                                                     </Row>
                                                   </div>
-                                                  <div className="bordered">
+                                                  {/* <div className="bordered">
                                                     <h5
                                                       className="header pt-2"
                                                       id="title"
                                                     >
                                                       {this.props.t(
-                                                        "Specific Students"
+                                                        "Specific Trainees"
                                                       )}
                                                     </h5>
-                                                    <Row>
-                                                      {/* <Col md="12">
+                                                    <Row> */}
+                                                  {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3706,10 +3798,10 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup>
                                                   </Col> */}
-                                                    </Row>
+                                                  {/* </Row>
 
-                                                    <Row>
-                                                      {/* <Col md="12">
+                                                    <Row> */}
+                                                  {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3753,8 +3845,8 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup> 
                                                   </Col>*/}
-                                                    </Row>
-                                                  </div>
+                                                  {/* </Row>
+                                                  </div> */}
                                                   <Row className="justify-content-center">
                                                     <Col
                                                       lg="3"
