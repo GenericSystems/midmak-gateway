@@ -13,27 +13,27 @@ import {
   GET_AVAILABLE_COURSES_SUCCESS,
   ADD_AVAILABLE_COURSE_SUCCESS,
   ADD_AVAILABLE_COURSE_FAIL,
-  GET_NON_ACTIVE_STD_CURRS_SUCCESS,
-  GET_NON_ACTIVE_STD_CURRS_FAIL,
-  UPDATE_NON_ACTIVE_STD_CURR_SUCCESS,
-  UPDATE_NON_ACTIVE_STD_CURR_FAIL,
-  DELETE_NON_ACTIVE_STD_CURR_SUCCESS,
-  DELETE_NON_ACTIVE_STD_CURR_FAIL,
-  GET_TEMP_STD_SCHEDULES_SUCCESS,
-  GET_TEMP_STD_SCHEDULES_FAIL,
-  DELETE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-  DELETE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+  GET_NON_ACTIVE_CURRS_SUCCESS,
+  GET_NON_ACTIVE_CURRS_FAIL,
+  UPDATE_NON_ACTIVE_CURR_SUCCESS,
+  UPDATE_NON_ACTIVE_CURR_FAIL,
+  DELETE_NON_ACTIVE_CURR_SUCCESS,
+  DELETE_NON_ACTIVE_CURR_FAIL,
+  GET_TRAINEE_SCHEDULES_SUCCESS,
+  GET_TRAINEE_SCHEDULES_FAIL,
+  DELETE_ALL_NON_ACTIVE_CURR_SUCCESS,
+  DELETE_ALL_NON_ACTIVE_CURR_FAIL,
   GET_ACHIEVED_COURSES_FAIL,
   GET_ACHIEVED_COURSES_SUCCESS,
-  SAVE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-  SAVE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+  SAVE_ALL_NON_ACTIVE_CURR_SUCCESS,
+  SAVE_ALL_NON_ACTIVE_CURR_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   registrations: [],
   availableCourses: [],
-  nonActiveStdCurrs: [],
-  tempStdSchedules: [],
+  nonActiveCurrs: [],
+  traineeSchedules: [],
   error: {},
   achievedCourses: [],
   studentRegisterInfo: [],
@@ -98,7 +98,7 @@ const registrations = (state = INIT_STATE, action) => {
 
       return {
         ...state,
-        nonActiveStdCurrs: [...state.nonActiveStdCurrs, parsedPayload],
+        nonActiveCurrs: [...state.nonActiveCurrs, parsedPayload],
       };
 
     case ADD_AVAILABLE_COURSE_FAIL:
@@ -149,8 +149,8 @@ const registrations = (state = INIT_STATE, action) => {
         error: action.payload,
       };
 
-    case GET_NON_ACTIVE_STD_CURRS_SUCCESS:
-      const updatedNonActiveStdCurrs = action.payload.map(row => ({
+    case GET_NON_ACTIVE_CURRS_SUCCESS:
+      const updatedNonActiveCurrs = action.payload.map(row => ({
         ...row,
         sections: row.sections.map(section => ({
           ...section,
@@ -171,54 +171,54 @@ const registrations = (state = INIT_STATE, action) => {
 
       return {
         ...state,
-        nonActiveStdCurrs: updatedNonActiveStdCurrs,
+        nonActiveCurrs: updatedNonActiveCurrs,
       };
-    case GET_NON_ACTIVE_STD_CURRS_FAIL:
+    case GET_NON_ACTIVE_CURRS_FAIL:
       return {
         ...state,
         error: action.payload,
       };
-    case UPDATE_NON_ACTIVE_STD_CURR_SUCCESS:
+    case UPDATE_NON_ACTIVE_CURR_SUCCESS:
       return {
         ...state,
-        nonActiveStdCurrs: state.nonActiveStdCurrs.map(nonActiveStdCurr =>
-          nonActiveStdCurr.Id.toString() === action.payload.Id.toString()
+        nonActiveCurrs: state.nonActiveCurrs.map(nonActiveCurr =>
+          nonActiveCurr.Id.toString() === action.payload.Id.toString()
             ? {
-                nonActiveStdCurr,
+                nonActiveCurr,
                 ...action.payload,
                 labs: JSON.parse(action.payload.labs),
                 sections: JSON.parse(action.payload.sections),
               }
-            : nonActiveStdCurr
+            : nonActiveCurr
         ),
       };
 
-    case UPDATE_NON_ACTIVE_STD_CURR_FAIL:
+    case UPDATE_NON_ACTIVE_CURR_FAIL:
       return {
         ...state,
         error: action.payload,
       };
-    case DELETE_NON_ACTIVE_STD_CURR_SUCCESS:
+    case DELETE_NON_ACTIVE_CURR_SUCCESS:
       return {
         ...state,
-        nonActiveStdCurrs: state.nonActiveStdCurrs.filter(
-          nonActiveStdCurrs =>
-            nonActiveStdCurrs.Id.toString() !== action.payload.Id.toString()
+        nonActiveCurrs: state.nonActiveCurrs.filter(
+          nonActiveCurrs =>
+            nonActiveCurrs.Id.toString() !== action.payload.Id.toString()
         ),
       };
 
-    case DELETE_NON_ACTIVE_STD_CURR_FAIL:
+    case DELETE_NON_ACTIVE_CURR_FAIL:
       return {
         ...state,
         error: action.payload,
       };
-    case GET_TEMP_STD_SCHEDULES_SUCCESS:
+    case GET_TRAINEE_SCHEDULES_SUCCESS:
       return {
         ...state,
-        tempStdSchedules: action.payload,
+        traineeSchedules: action.payload,
       };
 
-    case GET_TEMP_STD_SCHEDULES_FAIL:
+    case GET_TRAINEE_SCHEDULES_FAIL:
       return {
         ...state,
         error: action.payload,
@@ -234,24 +234,24 @@ const registrations = (state = INIT_STATE, action) => {
         ...state,
         error: action.payload,
       };
-    case DELETE_ALL_NON_ACTIVE_STD_CURR_SUCCESS:
+    case DELETE_ALL_NON_ACTIVE_CURR_SUCCESS:
       return {
         ...state,
-        nonActiveStdCurrs: action.payload,
+        nonActiveCurrs: action.payload,
       };
 
-    case DELETE_ALL_NON_ACTIVE_STD_CURR_FAIL:
+    case DELETE_ALL_NON_ACTIVE_CURR_FAIL:
       return {
         ...state,
         error: action.payload,
       };
-    case SAVE_ALL_NON_ACTIVE_STD_CURR_SUCCESS:
+    case SAVE_ALL_NON_ACTIVE_CURR_SUCCESS:
       return {
         ...state,
-        nonActiveStdCurrs: action.payload,
+        nonActiveCurrs: action.payload,
       };
 
-    case SAVE_ALL_NON_ACTIVE_STD_CURR_FAIL:
+    case SAVE_ALL_NON_ACTIVE_CURR_FAIL:
       return {
         ...state,
         error: action.payload,

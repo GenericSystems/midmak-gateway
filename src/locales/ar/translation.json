@@ -733,5 +733,11 @@
   "Conflicts By Date": "تعارضات الأيام",
   "Exam Conflicts": "تعارضات الامتحان",
   "Conflicts": "تعارضات",
+  "Justify Trainee Absence": "تبرير غياب متدرب",
+  "Trainee Attendance": "دوام المتدربين",
+  "Attendance Settings": "الاعدادات",
+  "Absence Types": "انواع الغياب",
+  "Absence Justification": "مبررات الغياب",
+  "Define Allowed Absence Percents": "تحديد نسب الغياب المسموحة",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

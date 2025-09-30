@@ -20,27 +20,27 @@ import {
   ADD_NEW_AVAILABLE_COURSE,
   ADD_AVAILABLE_COURSE_SUCCESS,
   ADD_AVAILABLE_COURSE_FAIL,
-  GET_NON_ACTIVE_STD_CURRS,
-  GET_NON_ACTIVE_STD_CURRS_SUCCESS,
-  GET_NON_ACTIVE_STD_CURRS_FAIL,
-  UPDATE_NON_ACTIVE_STD_CURR,
-  UPDATE_NON_ACTIVE_STD_CURR_SUCCESS,
-  UPDATE_NON_ACTIVE_STD_CURR_FAIL,
-  DELETE_NON_ACTIVE_STD_CURR,
-  DELETE_NON_ACTIVE_STD_CURR_SUCCESS,
-  DELETE_NON_ACTIVE_STD_CURR_FAIL,
-  GET_TEMP_STD_SCHEDULES,
-  GET_TEMP_STD_SCHEDULES_SUCCESS,
-  GET_TEMP_STD_SCHEDULES_FAIL,
-  DELETE_ALL_NON_ACTIVE_STD_CURR,
-  DELETE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-  DELETE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+  GET_NON_ACTIVE_CURRS,
+  GET_NON_ACTIVE_CURRS_SUCCESS,
+  GET_NON_ACTIVE_CURRS_FAIL,
+  UPDATE_NON_ACTIVE_CURR,
+  UPDATE_NON_ACTIVE_CURR_SUCCESS,
+  UPDATE_NON_ACTIVE_CURR_FAIL,
+  DELETE_NON_ACTIVE_CURR,
+  DELETE_NON_ACTIVE_CURR_SUCCESS,
+  DELETE_NON_ACTIVE_CURR_FAIL,
+  GET_TRAINEE_SCHEDULES,
+  GET_TRAINEE_SCHEDULES_SUCCESS,
+  GET_TRAINEE_SCHEDULES_FAIL,
+  DELETE_ALL_NON_ACTIVE_CURR,
+  DELETE_ALL_NON_ACTIVE_CURR_SUCCESS,
+  DELETE_ALL_NON_ACTIVE_CURR_FAIL,
   GET_ACHIEVED_COURSES,
   GET_ACHIEVED_COURSES_FAIL,
   GET_ACHIEVED_COURSES_SUCCESS,
-  SAVE_ALL_NON_ACTIVE_STD_CURR,
-  SAVE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-  SAVE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+  SAVE_ALL_NON_ACTIVE_CURR,
+  SAVE_ALL_NON_ACTIVE_CURR_SUCCESS,
+  SAVE_ALL_NON_ACTIVE_CURR_FAIL,
 } from "./actionTypes";
 
 export const getRegistrations = () => ({
@@ -57,9 +57,9 @@ export const getRegistrationsFail = error => ({
   payload: error,
 });
 
-// export const getStudentRegisterInfo = studentId => ({
+// export const getStudentRegisterInfo = traineeId => ({
 //   type: GET_STUDENT_REGISTER_INFO,
-//   payload: studentId,
+//   payload: traineeId,
 // });
 
 // export const getStudentRegisterInfoSuccess = studentRegisterInfos => ({
@@ -147,102 +147,102 @@ export const addAvailableCourseFail = error => ({
   type: ADD_AVAILABLE_COURSE_FAIL,
   payload: error,
 });
-export const getNonActiveStdCurr = (active, traineeId) => ({
-  type: GET_NON_ACTIVE_STD_CURRS,
+export const getNonActiveCurr = (active, traineeId) => ({
+  type: GET_NON_ACTIVE_CURRS,
   payload: {
     active,
     traineeId,
   },
 });
 
-export const getNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: GET_NON_ACTIVE_STD_CURRS_SUCCESS,
-  payload: nonActiveStdCurr,
+export const getNonActiveCurrSuccess = nonActiveCurr => ({
+  type: GET_NON_ACTIVE_CURRS_SUCCESS,
+  payload: nonActiveCurr,
 });
 
-export const getNonActiveStdCurrFail = error => ({
-  type: GET_NON_ACTIVE_STD_CURRS_FAIL,
+export const getNonActiveCurrFail = error => ({
+  type: GET_NON_ACTIVE_CURRS_FAIL,
   payload: error,
 });
 
-export const updateNonActiveStdCurr = (nonActiveStdCurr, active) => ({
-  type: UPDATE_NON_ACTIVE_STD_CURR,
-  payload: { nonActiveStdCurr, active },
+export const updateNonActiveCurr = (nonActiveCurr, active) => ({
+  type: UPDATE_NON_ACTIVE_CURR,
+  payload: { nonActiveCurr, active },
 });
 
-export const updateNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: UPDATE_NON_ACTIVE_STD_CURR_SUCCESS,
-  payload: nonActiveStdCurr,
+export const updateNonActiveCurrSuccess = nonActiveCurr => ({
+  type: UPDATE_NON_ACTIVE_CURR_SUCCESS,
+  payload: nonActiveCurr,
 });
 
-export const updateNonActiveStdCurrFail = error => ({
-  type: UPDATE_NON_ACTIVE_STD_CURR_FAIL,
+export const updateNonActiveCurrFail = error => ({
+  type: UPDATE_NON_ACTIVE_CURR_FAIL,
   payload: error,
 });
 
-export const deleteNonActiveStdCurr = nonActiveStdCurr => ({
-  type: DELETE_NON_ACTIVE_STD_CURR,
-  payload: nonActiveStdCurr,
+export const deleteNonActiveCurr = nonActiveCurr => ({
+  type: DELETE_NON_ACTIVE_CURR,
+  payload: nonActiveCurr,
 });
 
-export const deleteNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: DELETE_NON_ACTIVE_STD_CURR_SUCCESS,
-  payload: nonActiveStdCurr,
+export const deleteNonActiveCurrSuccess = nonActiveCurr => ({
+  type: DELETE_NON_ACTIVE_CURR_SUCCESS,
+  payload: nonActiveCurr,
 });
 
-export const deleteNonActiveStdCurrFail = error => ({
-  type: DELETE_NON_ACTIVE_STD_CURR_FAIL,
+export const deleteNonActiveCurrFail = error => ({
+  type: DELETE_NON_ACTIVE_CURR_FAIL,
   payload: error,
 });
 
-export const getTempStdSchedules = studentId => ({
-  type: GET_TEMP_STD_SCHEDULES,
-  payload: { studentId },
+export const getTraineeSchedules = traineeId => ({
+  type: GET_TRAINEE_SCHEDULES,
+  payload: { traineeId },
 });
 
-export const getTempStdSchedulesSuccess = tempStdSchedules => ({
-  type: GET_TEMP_STD_SCHEDULES_SUCCESS,
-  payload: tempStdSchedules,
+export const getTraineeSchedulesSuccess = traineeSchedules => ({
+  type: GET_TRAINEE_SCHEDULES_SUCCESS,
+  payload: traineeSchedules,
 });
 
-export const getTempStdSchedulesFail = error => ({
-  type: GET_TEMP_STD_SCHEDULES_FAIL,
+export const getTraineeSchedulesFail = error => ({
+  type: GET_TRAINEE_SCHEDULES_FAIL,
   payload: error,
 });
 
-export const deleteAllNonActiveStdCurr = nonActiveStdCurr => ({
-  type: DELETE_ALL_NON_ACTIVE_STD_CURR,
-  payload: nonActiveStdCurr,
+export const deleteAllNonActiveCurr = nonActiveCurr => ({
+  type: DELETE_ALL_NON_ACTIVE_CURR,
+  payload: nonActiveCurr,
 });
 
-export const deleteAllNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: DELETE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-  payload: nonActiveStdCurr,
+export const deleteAllNonActiveCurrSuccess = nonActiveCurr => ({
+  type: DELETE_ALL_NON_ACTIVE_CURR_SUCCESS,
+  payload: nonActiveCurr,
 });
 
-export const deleteAllNonActiveStdCurrFail = error => ({
-  type: DELETE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+export const deleteAllNonActiveCurrFail = error => ({
+  type: DELETE_ALL_NON_ACTIVE_CURR_FAIL,
   payload: error,
 });
 
-export const saveAllNonActiveStdCurr = nonActiveStdCurr => ({
-  type: SAVE_ALL_NON_ACTIVE_STD_CURR,
-  payload: nonActiveStdCurr,
+export const saveAllNonActiveCurr = nonActiveCurr => ({
+  type: SAVE_ALL_NON_ACTIVE_CURR,
+  payload: nonActiveCurr,
 });
 
-export const saveAllNonActiveStdCurrSuccess = nonActiveStdCurr => ({
-  type: SAVE_ALL_NON_ACTIVE_STD_CURR_SUCCESS,
-  payload: nonActiveStdCurr,
+export const saveAllNonActiveCurrSuccess = nonActiveCurr => ({
+  type: SAVE_ALL_NON_ACTIVE_CURR_SUCCESS,
+  payload: nonActiveCurr,
 });
 
-export const saveAllNonActiveStdCurrFail = error => ({
-  type: SAVE_ALL_NON_ACTIVE_STD_CURR_FAIL,
+export const saveAllNonActiveCurrFail = error => ({
+  type: SAVE_ALL_NON_ACTIVE_CURR_FAIL,
   payload: error,
 });
 
-export const getAchievedCourses = studentId => ({
+export const getAchievedCourses = traineeId => ({
   type: GET_ACHIEVED_COURSES,
-  payload: { studentId },
+  payload: { traineeId },
 });
 
 export const getAchievedCoursesSuccess = achievedCourse => ({

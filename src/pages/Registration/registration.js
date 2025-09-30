@@ -38,14 +38,14 @@ import {
   deleteRegistration,
   getAvailableCourses,
   addNewAvailableCourse,
-  getNonActiveStdCurr,
-  updateNonActiveStdCurr,
-  deleteNonActiveStdCurr,
-  getTempStdSchedules,
-  deleteAllNonActiveStdCurr,
+  getNonActiveCurr,
+  updateNonActiveCurr,
+  deleteNonActiveCurr,
+  getTraineeSchedules,
+  deleteAllNonActiveCurr,
   getAchievedCourses,
   getTraineeRegisterInfo,
-  saveAllNonActiveStdCurr,
+  saveAllNonActiveCurr,
 } from "store/Registration/actions";
 import { fetchYearsSemesters } from "store/general-management/actions";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
@@ -143,7 +143,7 @@ class RegistrationList extends Component {
     }
   }
   toggleTab(tab) {
-    // const { onGetAvailableCourses, onGetTempStdSchedules } = this.props;
+    // const { onGetAvailableCourses, onGetTraineeSchedules } = this.props;
     const { traineeEdit } = this.state;
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -154,7 +154,7 @@ class RegistrationList extends Component {
   }
   toggleMainTab(tab) {
     const { traineeEdit } = this.state;
-    const { onGetNonActiveStdCurr } = this.props;
+    const { onGetNonActiveCurr } = this.props;
     if (this.state.mainTab !== tab) {
       this.setState({
         mainTab: tab,
@@ -163,9 +163,9 @@ class RegistrationList extends Component {
         successMessage: null,
       });
       if (tab === "6") {
-        onGetNonActiveStdCurr(1, traineeEdit.TraineeNum);
+        onGetNonActiveCurr(1, traineeEdit.Id);
       } else {
-        onGetNonActiveStdCurr(0, traineeEdit.TraineeNum);
+        onGetNonActiveCurr(0, traineeEdit.Id);
       }
     }
   }
@@ -177,17 +177,14 @@ class RegistrationList extends Component {
     }
   }
   calculateTotalHours = () => {
-    const { nonActiveStdCurrs } = this.props;
-    const total = nonActiveStdCurrs.reduce(
-      (acc, item) => acc + item.nbHours,
-      0
-    );
+    const { nonActiveCurrs } = this.props;
+    const total = nonActiveCurrs.reduce((acc, item) => acc + item.nbHours, 0);
     return total;
   };
   componentDidUpdate(prevProps, prevState) {
     const { timings } = this.state;
-    const { nonActiveStdCurrs } = this.props;
-    if (prevProps.nonActiveStdCurrs !== this.props.nonActiveStdCurrs) {
+    const { nonActiveCurrs } = this.props;
+    if (prevProps.nonActiveCurrs !== this.props.nonActiveCurrs) {
       const totalHours = this.calculateTotalHours();
       this.setState({ totalHours });
     }
@@ -241,9 +238,9 @@ class RegistrationList extends Component {
 
   generateRandomColor() {
     const { colorsArray } = this.state;
-    const { nonActiveStdCurrs } = this.props;
+    const { nonActiveCurrs } = this.props;
 
-    const usedColors = nonActiveStdCurrs.map(course => course.color);
+    const usedColors = nonActiveCurrs.map(course => course.color);
 
     const availableColors = colorsArray.filter(
       color => !usedColors.includes(color)
@@ -330,16 +327,16 @@ class RegistrationList extends Component {
   handleEditTrainee = trainee => {
     const { traineeEdit } = this.state;
     const {
-      onGetNonActiveStdCurr,
-      onGetTempStdSchedules,
+      onGetNonActiveCurr,
+      onGetTraineeSchedules,
       onGetAchievedCourses,
       onGetReqTypes,
       onGetAvailableCourses,
     } = this.props;
     console.log("trainees", trainee);
-    onGetNonActiveStdCurr(0, trainee.Id);
+    onGetNonActiveCurr(0, trainee.Id);
     this.setState({ traineeEdit: trainee });
-    // onGetTempStdSchedules(academyTrainee.TraineeNum);
+    onGetTraineeSchedules(trainee.Id);
     onGetAvailableCourses(trainee.Id);
     this.toggle();
   };
@@ -348,18 +345,18 @@ class RegistrationList extends Component {
     this.setState({ nonActiveCourse: row, active: active });
     this.setState({ deleteModal: true });
   };
-  handleDeleteNonActiveStdCurr = () => {
-    const { onDeleteNonActiveStdCurr } = this.props;
+  handleDeleteNonActiveCurr = () => {
+    const { onDeleteNonActiveCurr } = this.props;
     const { nonActiveCourse, active } = this.state;
     console.log(
       "nonActiveCoursenonActiveCoursenonActiveCourse",
       nonActiveCourse
     );
     if (active == 0) {
-      this.resetNonActiveStdCurrs(nonActiveCourse);
+      this.resetNonActiveCurrs(nonActiveCourse);
     }
-    let del = { Id: nonActiveCourse.Id };
-    onDeleteNonActiveStdCurr(del);
+    let del = { Id: nonActiveCourse.traineeId };
+    onDeleteNonActiveCurr(del);
     this.setState({ deleteModal: false });
   };
   handleAddToAddedCourses = (row, currentStatus, fieldName) => {
@@ -377,10 +374,10 @@ class RegistrationList extends Component {
   };
 
   handleActiveSelectChange = (rowId, fieldName, selectedValue, oldValue) => {
-    const { onUpdateNonActiveStdCurr, nonActiveStdCurrs } = this.props;
+    const { onUpdateNonActiveCurr, nonActiveCurrs } = this.props;
     const { traineeEdit } = this.state;
     let onUpdate = { Id: rowId };
-    onUpdate["traineeId"] = traineeEdit.traineeId;
+    onUpdate["traineeId"] = traineeEdit.Id;
     const checkOverlap = (interval1, interval2) => {
       return (
         interval1.startTimeValue < interval2.endTimeValue &&
@@ -419,7 +416,7 @@ class RegistrationList extends Component {
 
     const selectedDetails = [];
 
-    nonActiveStdCurrs.forEach(course => {
+    nonActiveCurrs.forEach(course => {
       if (course.sections) {
         course.sections.forEach(section => {
           if (course.SectionId && section.value === course.SectionId) {
@@ -460,7 +457,7 @@ class RegistrationList extends Component {
         onUpdate["LabId"] = selectedValue.value;
       }
 
-      onUpdateNonActiveStdCurr(onUpdate, 1);
+      onUpdateNonActiveCurr(onUpdate, 1);
       this.setState({ duplicateTrainee: null });
     }
   };
@@ -478,10 +475,11 @@ class RegistrationList extends Component {
   };
 
   handleSelectChange = (row, fieldName, selectedValue) => {
+    console.log("im here");
     const { traineeEdit, timings } = this.state;
-    const { onUpdateNonActiveStdCurr } = this.props;
+    const { onUpdateNonActiveCurr } = this.props;
     let onUpdate = { Id: row.Id };
-    onUpdate["traineeId"] = traineeEdit.TraineeNum;
+    onUpdate["traineeId"] = traineeEdit.Id;
     if (fieldName === "section") {
       const selectedSection = row.sections.find(
         section => section.value === selectedValue
@@ -511,29 +509,30 @@ class RegistrationList extends Component {
       }
       this.setState({ timings: newTimings });
     }
-    onUpdateNonActiveStdCurr(onUpdate, 0);
+    onUpdateNonActiveCurr(onUpdate, 0);
   };
   handleRadioChange = value => {
     this.setState({ selectedEducation: value });
   };
-  resetAllNonActiveStdCurrs = () => {
+  resetAllNonActiveCurrs = () => {
     const { traineeEdit } = this.state;
-    const { onDeleteAllNonActiveStdCurr } = this.props;
+    const { onDeleteAllNonActiveCurr } = this.props;
     let ob = {};
-    ob["traineeId"] = traineeEdit.TraineeNum;
+    ob["traineeId"] = traineeEdit.Id;
     ob["flag"] = "reset";
-    onDeleteAllNonActiveStdCurr(ob);
+    onDeleteAllNonActiveCurr(ob);
     this.setState({ timings: [] });
   };
-  deleteAllNonActiveStdCurrs = () => {
-    this.resetAllNonActiveStdCurrs();
+  deleteAllNonActiveCurrs = () => {
+    this.resetAllNonActiveCurrs();
     const { traineeEdit } = this.state;
-    const { onDeleteAllNonActiveStdCurr } = this.props;
+    const { onDeleteAllNonActiveCurr } = this.props;
+    console.log("traineeEdittraineeEdit", traineeEdit);
     let ob = {};
-    ob["traineeId"] = traineeEdit.TraineeNum;
+    ob["traineeId"] = traineeEdit.Id;
     ob["flag"] = "delete";
-
-    onDeleteAllNonActiveStdCurr(ob);
+    console.log("ooooooooooooooooooooooob", ob);
+    onDeleteAllNonActiveCurr(ob);
   };
   handleActiveFailed = course => {
     if (course === "failedOnly") {
@@ -544,18 +543,15 @@ class RegistrationList extends Component {
     }
   };
   saveTrainee = () => {
-    const {
-      traineeRegisterInfo,
-      nonActiveStdCurrs,
-      onSaveAllNonActiveStdCurr,
-    } = this.props;
+    const { traineeRegisterInfo, nonActiveCurrs, onSaveAllNonActiveCurr } =
+      this.props;
     const { traineeEdit } = this.state;
 
     let errors = [];
     let ob = {};
-    ob["traineeId"] = traineeEdit.TraineeNum;
+    ob["traineeId"] = traineeEdit.Id;
 
-    nonActiveStdCurrs.forEach(trainee => {
+    nonActiveCurrs.forEach(trainee => {
       if (!trainee.SectionId) {
         errors.push(`SectionId is empty for trainee: ${trainee.Code}`);
         this.setState({ duplicateError: "Fill the options" });
@@ -569,7 +565,7 @@ class RegistrationList extends Component {
     if (errors.length > 0) {
       console.error("Errors occurred:", errors);
     } else {
-      onSaveAllNonActiveStdCurr(ob);
+      onSaveAllNonActiveCurr(ob);
       this.setState({ timings: [], duplicateError: null });
       this.setState({ successMessage: "Data filled in successfully" });
       setTimeout(() => {
@@ -577,9 +573,9 @@ class RegistrationList extends Component {
       }, 1000);
     }
   };
-  resetNonActiveStdCurrs = row => {
+  resetNonActiveCurrs = row => {
     const { traineeEdit, timings } = this.state;
-    // const { onUpdateNonActiveStdCurr, onGetNonActiveStdCurr } = this.props;
+    const { onUpdateNonActiveCurr, onGetNonActiveCurr } = this.props;
 
     const newTimings = timings.filter(timing => timing.rowId !== row.Id);
 
@@ -589,9 +585,9 @@ class RegistrationList extends Component {
       Id: row.Id,
       LabId: null,
       SectionId: null,
-      traineeId: traineeEdit.TraineeNum,
+      traineeId: traineeEdit.Id,
     };
-    // onUpdateNonActiveStdCurr(ob, 0);
+    onUpdateNonActiveCurr(ob, 0);
   };
   shuffleColors = () => {
     for (let i = this.colors.length - 1; i > 0; i--) {
@@ -616,15 +612,15 @@ class RegistrationList extends Component {
   };
   render() {
     const {
-      nonActiveStdCurrs,
+      nonActiveCurrs,
       registrations,
       t,
       weekDays,
       lecturePeriods,
       reqTypes,
       availableCourses,
-      tempStdSchedules,
-      onGetTempStdSchedules,
+      traineeSchedules,
+      onGetTraineeSchedules,
       currentYear,
       years,
       achievedCourses,
@@ -657,7 +653,7 @@ class RegistrationList extends Component {
       this.props.t(weekday.enTitle)
     );
     console.log("registrations", registrations);
-    console.log("nonActiveStdCurrs", nonActiveStdCurrs);
+    console.log("nonActiveCurrs", nonActiveCurrs);
 
     console.log("labs", labs);
     console.log("timings", timings);
@@ -823,9 +819,8 @@ class RegistrationList extends Component {
           <div
             className="colorNonActiveCourses"
             style={{
-              backgroundColor: nonActiveStdCurrs.find(
-                item => item.Id === row.Id
-              )?.color,
+              backgroundColor: nonActiveCurrs.find(item => item.Id === row.Id)
+                ?.color,
             }}
           ></div>
         ),
@@ -843,7 +838,7 @@ class RegistrationList extends Component {
         sort: true,
         formatter: (cell, row) => {
           const curriculum =
-            nonActiveStdCurrs.find(item => item.Id === row.Id) || {};
+            nonActiveCurrs.find(item => item.Id === row.Id) || {};
 
           const checkOverlap = (newTimingDetails, rowId, type) => {
             if (
@@ -889,8 +884,8 @@ class RegistrationList extends Component {
           );
           return filteredSections.length > 0 ? (
             <Select
-              name="facultyId"
-              key={`faculty_select_${row.Id}`}
+              name="secLabId"
+              key={`secLab_select_${row.Id}`}
               options={filteredSections}
               onChange={newValue => {
                 this.handleSelectChange(row, "section", newValue.value);
@@ -900,7 +895,7 @@ class RegistrationList extends Component {
                   section => section.value === row.SectionId
                 ) || null
               }
-              isDisabled={nonActiveStdCurrs[0].nonActiveNbhours < minHours}
+              isDisabled={nonActiveCurrs[0].nonActiveNbhours < minHours}
             />
           ) : null;
         },
@@ -914,7 +909,7 @@ class RegistrationList extends Component {
             return null;
           }
           const curriculum =
-            nonActiveStdCurrs.find(item => item.Id === row.Id) || {};
+            nonActiveCurrs.find(item => item.Id === row.Id) || {};
 
           const checkOverlap = (newTimingDetails, rowId, type) => {
             if (
@@ -961,13 +956,13 @@ class RegistrationList extends Component {
           );
           return filteredLabs.length > 0 ? (
             <Select
-              name="facultyId"
-              key={`faculty_select_${row.Id}`}
+              name="secLabId"
+              key={`secLab_select_${row.Id}`}
               options={filteredLabs}
               onChange={newValue => {
                 this.handleSelectChange(row, "lab", newValue.value);
               }}
-              isDisabled={nonActiveStdCurrs[0].nonActiveNbhours < minHours}
+              isDisabled={nonActiveCurrs[0].nonActiveNbhours < minHours}
               value={filteredLabs.find(lab => lab.value === row.LabId) || null}
             />
           ) : null;
@@ -992,7 +987,7 @@ class RegistrationList extends Component {
           <div className="d-flex gap-3">
             <IconButton
               color="primary"
-              onClick={() => this.resetNonActiveStdCurrs(row)}
+              onClick={() => this.resetNonActiveCurrs(row)}
               id="TooltipTop"
               disabled={
                 (row.LabId === null && row.SectionId === null) ||
@@ -1026,10 +1021,10 @@ class RegistrationList extends Component {
         sort: true,
         formatter: (cell, row) => (
           <Select
-            name="facultyId"
-            key={`faculty_select`}
+            name="secLabId"
+            key={`secLab_select`}
             options={
-              (nonActiveStdCurrs.find(item => item.Id === row.Id) || {})
+              (nonActiveCurrs.find(item => item.Id === row.Id) || {})
                 .sections || []
             }
             onChange={newValue => {
@@ -1042,7 +1037,7 @@ class RegistrationList extends Component {
             }}
             value={
               (
-                (nonActiveStdCurrs.find(item => item.Id === row.Id) || {})
+                (nonActiveCurrs.find(item => item.Id === row.Id) || {})
                   .sections || []
               ).find(section => section.value === row.SectionId) || null
             }
@@ -1059,8 +1054,7 @@ class RegistrationList extends Component {
           }
 
           const rowLabs =
-            (nonActiveStdCurrs.find(item => item.Id === row.Id) || {}).labs ||
-            [];
+            (nonActiveCurrs.find(item => item.Id === row.Id) || {}).labs || [];
 
           if (rowLabs.length === 0) {
             return null;
@@ -1068,8 +1062,8 @@ class RegistrationList extends Component {
 
           return (
             <Select
-              name="facultyId"
-              key={`faculty_select`}
+              name="secLabId"
+              key={`secLab_select`}
               options={rowLabs}
               onChange={newValue => {
                 this.handleActiveSelectChange(
@@ -1143,7 +1137,7 @@ class RegistrationList extends Component {
       <React.Fragment>
         <DeleteModal
           show={deleteModal}
-          onDeleteClick={this.handleDeleteNonActiveStdCurr}
+          onDeleteClick={this.handleDeleteNonActiveCurr}
           onCloseClick={() =>
             this.setState({ deleteModal: false, selectedRowId: null })
           }
@@ -1194,11 +1188,11 @@ class RegistrationList extends Component {
                         </h5>
                       </Col>
                       <Col>
-                        <p className="text-muted fw-medium">Faculty</p>
+                        <p className="text-muted fw-medium">secLab</p>
                         <h5 className="mb-0 blue-noti-icon">
                           {traineeRegisterInfo &&
                             traineeRegisterInfo[0] &&
-                            traineeRegisterInfo[0].facultyName}
+                            traineeRegisterInfo[0].secLabName}
                         </h5>
                       </Col>
                       <Col>
@@ -1523,7 +1517,7 @@ class RegistrationList extends Component {
                                       <IconButton
                                         color="primary"
                                         onClick={() =>
-                                          this.resetAllNonActiveStdCurrs()
+                                          this.resetAllNonActiveCurrs()
                                         }
                                         id="TooltipTop"
                                         className="p-0"
@@ -1545,7 +1539,7 @@ class RegistrationList extends Component {
                                       <IconButton
                                         id="deletetooltip"
                                         onClick={() =>
-                                          this.deleteAllNonActiveStdCurrs()
+                                          this.deleteAllNonActiveCurrs()
                                         }
                                         className="p-0 text-danger"
                                       >
@@ -1584,7 +1578,7 @@ class RegistrationList extends Component {
                                 </div>
                                 <BootstrapTable
                                   keyField="Id"
-                                  data={nonActiveStdCurrs.filter(
+                                  data={nonActiveCurrs.filter(
                                     item => item.active === 0
                                   )}
                                   columns={columnToBeRegistered}
@@ -1618,7 +1612,7 @@ class RegistrationList extends Component {
                                         </td>
                                         {weekDays.map((weekday, cellIndex) => {
                                           const schedule =
-                                            tempStdSchedules.find(
+                                            traineeSchedules.find(
                                               item =>
                                                 item.dayOrder ===
                                                   weekday.dayOrder &&
@@ -1680,7 +1674,7 @@ class RegistrationList extends Component {
                                 keyField="Id"
                                 columns={columns2}
                                 defaultSorted={defaultSorting}
-                                data={nonActiveStdCurrs.filter(
+                                data={nonActiveCurrs.filter(
                                   item => item.active === 1
                                 )}
                               />
@@ -1780,8 +1774,8 @@ const mapStateToProps = ({
   lecturePeriods: lecturePeriods.lecturePeriods,
   // reqTypes: reqTypes.reqTypes,
   availableCourses: registrations.availableCourses,
-  nonActiveStdCurrs: registrations.nonActiveStdCurrs,
-  tempStdSchedules: registrations.tempStdSchedules,
+  nonActiveCurrs: registrations.nonActiveCurrs,
+  traineeSchedules: registrations.traineeSchedules,
   achievedCourses: registrations.achievedCourses,
   // traineeRegisterInfo: registrations.traineeRegisterInfo,
   user_menu: menu_items.user_menu || [],
@@ -1802,19 +1796,19 @@ const mapDispatchToProps = dispatch => ({
 
   onAddNewAvailableCourse: availableCourse =>
     dispatch(addNewAvailableCourse(availableCourse)),
-  onGetNonActiveStdCurr: (active, traineeId) =>
-    dispatch(getNonActiveStdCurr(active, traineeId)),
-  onUpdateNonActiveStdCurr: (nonActiveStdCurrs, active) =>
-    dispatch(updateNonActiveStdCurr(nonActiveStdCurrs, active)),
-  onDeleteNonActiveStdCurr: nonActiveStdCurrs =>
-    dispatch(deleteNonActiveStdCurr(nonActiveStdCurrs)),
+  onGetNonActiveCurr: (active, traineeId) =>
+    dispatch(getNonActiveCurr(active, traineeId)),
+  onUpdateNonActiveCurr: (nonActiveCurrs, active) =>
+    dispatch(updateNonActiveCurr(nonActiveCurrs, active)),
+  onDeleteNonActiveCurr: nonActiveCurrs =>
+    dispatch(deleteNonActiveCurr(nonActiveCurrs)),
 
-  // onGetTempStdSchedules: traineeId => dispatch(getTempStdSchedules(traineeId)),
+  onGetTraineeSchedules: traineeId => dispatch(getTraineeSchedules(traineeId)),
   // onGetAchievedCourses: traineeId => dispatch(getAchievedCourses(traineeId)),
-  onDeleteAllNonActiveStdCurr: nonActiveStdCurrs =>
-    dispatch(deleteAllNonActiveStdCurr(nonActiveStdCurrs)),
-  onSaveAllNonActiveStdCurr: nonActiveStdCurrs =>
-    dispatch(saveAllNonActiveStdCurr(nonActiveStdCurrs)),
+  onDeleteAllNonActiveCurr: nonActiveCurrs =>
+    dispatch(deleteAllNonActiveCurr(nonActiveCurrs)),
+  onSaveAllNonActiveCurr: nonActiveCurrs =>
+    dispatch(saveAllNonActiveCurr(nonActiveCurrs)),
 });
 
 export default connect(

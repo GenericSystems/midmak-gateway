@@ -163,13 +163,13 @@ export const GET_LEVELING_DECISION_DELETED_VALUE = "/deleted";
 //COPY FACUTLY
 export const COPY_FACULTY = "/Copy/copyFaculty";
 
-//NON_ACTIVE_STD_CURRS
-export const GET_NON_ACTIVE_STD_CURRS = "/nonActiveStdCurrs";
-export const UPDATE_NON_ACTIVE_STD_CURR = "/update/nonActiveStdCurr";
-export const DELETE_NON_ACTIVE_STD_CURR = "/delete/nonActiveStdCurr";
+//NON_ACTIVE_CURRS
+export const GET_NON_ACTIVE_CURRS = "/nonActiveCurrs";
+export const UPDATE_NON_ACTIVE_CURR = "/update/nonActiveCurr";
+export const DELETE_NON_ACTIVE_CURR = "/delete/nonActiveCurr";
 
-export const DELETE_ALL_NON_ACTIVE_STD_CURR = "/deleteAll/nonActiveStdCurr";
-export const SAVE_ALL_NON_ACTIVE_STD_CURR = "/saveAll/nonActiveStdCurr";
+export const DELETE_ALL_NON_ACTIVE_CURR = "/deleteAll/nonActiveCurr";
+export const SAVE_ALL_NON_ACTIVE_CURR = "/saveAll/nonActiveCurr";
 //REGISTRATIONS
 export const GET_REGISTRATIONS = "/registration";
 export const GET_STUDENT_REGISTER_INFO = "/StudentRegisterInfo";
@@ -178,7 +178,7 @@ export const UPDATE_REGISTRATION = "/update/registration";
 export const DELETE_REGISTRATION = "/delete/registration";
 
 //TEMP_STD_SCHEDULES
-export const GET_TEMP_STD_SCHEDULES = "/tempStdSchedules";
+export const GET_TRAINEE_SCHEDULES = "/traineeSchedules";
 
 //ACHIEVED_COURSES
 export const GET_ACHIEVED_COURSES = "/achievedCourses";

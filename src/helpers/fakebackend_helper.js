@@ -369,22 +369,21 @@ export const updateCurrSemMan = data => post(url.UPDATE_CURR_SEM_MAN, data);
 //delete CurrSemMan
 export const deleteCurrSemMan = data => post(url.DELETE_CURR_SEM_MAN, data);
 
-// get NonActiveStdCurrs
-export const getNonActiveStdCurrs = data =>
-  post(url.GET_NON_ACTIVE_STD_CURRS, data);
-//update NonActiveStdCurr
-export const updateNonActiveStdCurr = data =>
-  post(url.UPDATE_NON_ACTIVE_STD_CURR, data);
+// get NonActiveCurrs
+export const getNonActiveCurrs = data => post(url.GET_NON_ACTIVE_CURRS, data);
+//update NonActiveCurr
+export const updateNonActiveCurr = data =>
+  post(url.UPDATE_NON_ACTIVE_CURR, data);
 
-export const deleteAllNonActiveStdCurr = data =>
-  post(url.DELETE_ALL_NON_ACTIVE_STD_CURR, data);
+export const deleteAllNonActiveCurr = data =>
+  post(url.DELETE_ALL_NON_ACTIVE_CURR, data);
 
-export const saveAllNonActiveStdCurr = data =>
-  post(url.SAVE_ALL_NON_ACTIVE_STD_CURR, data);
+export const saveAllNonActiveCurr = data =>
+  post(url.SAVE_ALL_NON_ACTIVE_CURR, data);
 
-//delete NonActiveStdCurr
-export const deleteNonActiveStdCurr = data =>
-  post(url.DELETE_NON_ACTIVE_STD_CURR, data);
+//delete NonActiveCurr
+export const deleteNonActiveCurr = data =>
+  post(url.DELETE_NON_ACTIVE_CURR, data);
 
 // get Registration
 export const getRegistrations = data => post(url.GET_REGISTRATIONS, data);
@@ -404,9 +403,9 @@ export const getAvailableCourses = data =>
 export const addNewAvailableCourse = data =>
   post(url.ADD_NEW_AVAILABLE_COURSE, data);
 
-// get TempStdSchedules
-export const getTempStdSchedules = data =>
-  post(url.GET_TEMP_STD_SCHEDULES, data);
+// get TraineeSchedules
+export const getTraineeSchedules = data =>
+  post(url.GET_TRAINEE_SCHEDULES, data);
 
 // get AchievedCourses
 export const getAchievedCourses = data => post(url.GET_ACHIEVED_COURSES, data);
