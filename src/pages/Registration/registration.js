@@ -659,7 +659,7 @@ class RegistrationList extends Component {
     console.log("timings", timings);
     const traineeListColumns = [
       {
-        text: "Trainee Num",
+        text: t("Trainee Num"),
         // key: "TraineeNum",
         dataField: "TraineeNum",
         sort: true,

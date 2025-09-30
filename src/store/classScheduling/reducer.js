@@ -219,7 +219,6 @@ const classScheduling = (state = INIT_STATE, action) => {
       };
 
     case UPDATE_SECTION_LAB_DETAIL_SUCCESS:
-      console.log("Reducer handled upppp:", action.payload);
       return {
         ...state,
         sectionLabDetails: state.sectionLabDetails.map(sectionLabDetail =>

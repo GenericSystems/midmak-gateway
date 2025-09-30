@@ -631,10 +631,12 @@ function* onUpdateSectionLabDetail({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["queryname"] = "Common_TeachingSchedule";
+  payload["tablename"] = "Common_TeachingSchedule";
+  payload["queryname"] = "_scheduleTimingsDescription";
 
   try {
     const respupdate = yield call(updateSectionLabDetail, payload);
+    console.log("respoonseupadte", respupdate);
     yield put(updateSectionLabDetailSuccess(respupdate[0]));
   } catch (error) {
     yield put(updateSectionLabDetailFail(error));

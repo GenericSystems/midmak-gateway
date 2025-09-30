@@ -431,63 +431,43 @@ class ClassSchedulingList extends Component {
     // onGetHallTimings(0);
     this.setState({ selectedRow: null, selectedType: "" });
   }
-  // toggleNestedModal = () => {
-  //   const { isEdit, selectedOption, selectedRowData } = this.state;
-  //   const defaultData = {};
-
-  //   console.log("selectedRowDataselectedRowData", defaultData);
-  //   if (selectedOption === "Section") {
-  //     if (isEdit) {
-  //       this.setState({
-  //         sectionLabData: selectedRowData,
-  //         isEdit: false,
-  //         selectedOption: "",
-  //       });
-  //     }
-  //   } else {
-  //     if (isEdit) {
-  //       this.setState({
-  //         sectionLabData: {
-  //           Capacity: "",
-  //           SectionNumber: "",
-  //           startDate: selectedRowData.startDate,
-  //           endDate: selectedRowData.endDate,
-  //         },
-  //         isEdit: false,
-  //         selectedOption: "",
-  //       });
-  //     }
-  //   }
-
-  // this.setState(prevState => ({
-  //   isNestedModalOpen: !prevState.isNestedModalOpen,
-  // }));
-  //   this.setState({
-  //     selectedRowSectionLab: null,
-  //   });
-  // };
 
   toggleNestedModal = () => {
-    const { selectedRowData } = this.state;
-    if (!selectedRowData) return;
+    const { isEdit, selectedOption, selectedSchedule } = this.state;
+    const { onGetScheduleTimings, onGetScheduleTimingDescs, onGetHallTimings } =
+      this.props;
+    console.log("isEdit", isEdit);
+    if (selectedOption === "Section") {
+      if (isEdit) {
+        this.setState({
+          sectionLabData: {
+            Capacity: "",
+            SectionNumber: "",
+          },
+          isEdit: false,
+          selectedOption: "",
+        });
+      }
+    } else {
+      if (isEdit) {
+        this.setState({
+          sectionLabData: {
+            Capacity: "",
+            LabNumber: "",
+          },
+          isEdit: false,
+          selectedOption: "",
+        });
+      }
+      this.setState({ selectedRow: null, selectedType: "" });
+    }
 
-    const defaultData = {
-      SectionNumber: selectedRowData.SectionNumber || "",
-      LabNumber: selectedRowData.LabNumber || "",
-      Capacity: selectedRowData.Capacity || "",
-      startDate: selectedRowData.startDate,
-      endDate: selectedRowData.endDate,
-    };
-
-    this.setState(
-      {
-        sectionLabData: defaultData,
-      },
-      () => console.log("sectionLabData", this.state.sectionLabData)
-    );
     this.setState(prevState => ({
       isNestedModalOpen: !prevState.isNestedModalOpen,
     }));
+    this.setState({
+      selectedRowSectionLab: null,
+    });
   };
 
   toggleHallModal = () => {
@@ -576,8 +556,6 @@ class ClassSchedulingList extends Component {
   handleDeleteCourseOffering = () => {
     const { onDeleteCourseOffering } = this.props;
     const { selectedCourseRow } = this.state;
-
-    console.log("selectedScheduleRowselectedScheduleRow", selectedCourseRow);
     // if (selectedCourseRow && selectedCourseRow.Id !== undefined) {
     let onDelete = { Id: selectedCourseRow.Id };
     onDeleteCourseOffering(onDelete);
@@ -633,13 +611,12 @@ class ClassSchedulingList extends Component {
     const instructorsArray = SLD.instructors ? JSON.parse(SLD.instructors) : [];
     this.setState({
       // defaultHallName: SLD.hallName,
-      isEdit1: true,
       sectionLabDetails: SLD,
-      Id: SLD.Id,
       instructorsArray,
       instructorsId: instructorsArray.map(i => i.value),
       selectedHallKey: SLD.hallId,
       defaultHallName: SLD.hallName,
+      isEdit1: true,
     });
 
     this.toggle3();
@@ -722,7 +699,6 @@ class ClassSchedulingList extends Component {
       // onGetScheduleTimingDescs,
     } = this.props;
     const { selectedScheduleRow, selectedRowSectionLab } = this.state;
-    console.log("selectedScheduleRow", selectedScheduleRow);
     // onGetScheduleMsgValue();
     this.setState({
       isDragging: true,
@@ -1040,6 +1016,7 @@ class ClassSchedulingList extends Component {
       selectedInstructor,
       oldHallId,
       newHallId,
+      selectedScheduleRow,
     } = this.state;
 
     const { onAddNewSectionLabDetail, onUpdateSectionLabDetail } = this.props;
@@ -1082,7 +1059,9 @@ class ClassSchedulingList extends Component {
     //   instructorsArray?.map(item => ({
     //     value: item.value,
     //   })) || [];
-
+    console.log("selectedSchedule in save", selectedScheduleRow);
+    console.log("selectedRowSectionLab in save", selectedRowSectionLab);
+    values["Id"] = selectedScheduleRow.Id;
     values["type"] = selectedRowSectionLab.type;
     values["sectionLabId"] = selectedRowSectionLab.Id;
     values["hallId"] = this.state.selectedHallKey;
@@ -2815,6 +2794,9 @@ class ClassSchedulingList extends Component {
                                   <ModalBody>
                                     <Formik
                                       initialValues={{
+                                        ...(isEdit1 && {
+                                          Id: sectionLabDetails.Id,
+                                        }),
                                         instructorsId:
                                           (sectionLabDetails &&
                                             sectionLabDetails.instructorName) ||
