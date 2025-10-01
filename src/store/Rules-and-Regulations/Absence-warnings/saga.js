@@ -60,7 +60,7 @@ function* onAddNewAbsenceWarning({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_AbsenceWarning";
+  payload["tablename"] = "Common_AbsenceWarnings";
 
   try {
     const response = yield call(addNewAbsenceWarning, payload);
@@ -74,7 +74,7 @@ function* onUpdateAbsenceWarning({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_AbsenceWarning";
+  payload["tablename"] = "Common_AbsenceWarnings";
 
   try {
     const response = yield call(updateAbsenceWarning, payload);
@@ -88,7 +88,7 @@ function* onDeleteAbsenceWarning({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_AbsenceWarning";
+  payload["tablename"] = "Common_AbsenceWarnings";
 
   try {
     const response = yield call(deleteAbsenceWarning, payload);

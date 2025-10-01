@@ -108,7 +108,7 @@ class EmployeesList extends Component {
       isAdd: false,
       isOpen: false,
       isView: false,
-      selectedGender: "",
+      selectedGender: null,
       selectedBirthDate: "",
       selectedPassportExpirationDate: "",
       selectedPassportGrantDate: "",
@@ -116,19 +116,22 @@ class EmployeesList extends Component {
       selectedResidenceGrantedDate: "",
       selectedCardExpirationDate: "",
       selectedCardGrantDate: "",
-      // selectedCorporateNode: "",
-      // selectedAdministrativeSupervisors: "",
-      // selectedPhysicalWorkLocations: "",
-      selectedWorkClassification: "",
-      selectedJobTitle: "",
-      selectedCostCenter: "",
-      selectedJobRank: "",
-      selectedCountryId: "",
-      selectedCityId: "",
-      selectedStateId: "",
-      selectedHasMinistryApprove: "",
-      selectedGovernmentWorker: "",
+      // selectedCorporateNode: null,
+      // selectedAdministrativeSupervisors: null,
+      // selectedPhysicalWorkLocations: null,
+      selectedWorkClassification: null,
+      selectedJobTitle: null,
+      selectedCostCenter: null,
+      selectedJobRank: null,
+      selectedCountryId: null,
+      selectedCityId: null,
+      selectedStateId: null,
+      selectedHasMinistryApprove: null,
+      selectedGovernmentWorker: null,
       selectedNationality: 0,
+      countryName: "",
+      cityName: "",
+      stateName: "",
       birthdateError: false,
       nationalityError: false,
       signatureDateError: false,
@@ -324,9 +327,12 @@ class EmployeesList extends Component {
       // amanaNum: arg.amanaNum,
       selectedGender: arg.genderId,
       selectedNationality: arg.nationalityId,
-      // selectedStateId: arg.stateId,
-      // selectedCountryId: arg.countryId,
-      // selectedCityId: arg.cityId,
+      selectedStateId: arg.stateId,
+      stateName: arg.stateName,
+      selectedCountryId: arg.countryId,
+      countryName: arg.countryName,
+      selectedCityId: arg.cityId,
+      cityName: arg.cityName,
       isEdit: true,
     });
     this.toggle();
@@ -430,7 +436,7 @@ class EmployeesList extends Component {
       this.setState({ fatherNameError: false, saveError: false });
       this.setState({ motherNameError: false, saveError: false });
       this.setState({ birthLocError: false, saveError: false });
-      this.setState({ birthdateError: false, saveError: false });
+      this.setState({ birthDateError: false, saveError: false });
       this.setState({ nationalityError: false, saveError: false });
       this.setState({ grandFatherNameError: false, saveError: false });
 
@@ -443,7 +449,9 @@ class EmployeesList extends Component {
         )
           employeeinfo[key] = values[key];
       });
-
+      employeeinfo.countryId = this.state.selectedCountryId;
+      employeeinfo.cityId = this.state.selectedCityId;
+      employeeinfo.stateId = this.state.selectedStateId;
       this.setState({
         errorMessages: {},
       });
@@ -483,24 +491,6 @@ class EmployeesList extends Component {
 
       if (selectedResidenceGrantedDate) {
         employeeinfo["residenceGrantedDate"] = selectedResidenceGrantedDate;
-      }
-
-      if (values.countryId) {
-        const countryObject = countries.find(
-          country => country.value === values.DiplomaCountryId
-        );
-        employeeinfo["countryId"] = countryObject.key;
-      }
-      if (values.stateId) {
-        const governorateObject = governorates.find(
-          governorate => governorate.value === values.stateId
-        );
-        employeeinfo["stateId"] = governorateObject.key;
-      }
-
-      if (values.cityId) {
-        const cityObject = cities.find(city => city.value === values.cityId);
-        employeeinfo["cityId"] = cityObject.key;
       }
 
       if (isEdit) {
@@ -2553,27 +2543,67 @@ class EmployeesList extends Component {
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
+                                                                    <Field
                                                                       name="countryId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="countriesId"
-                                                                      id="countryId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      // value={
-                                                                      //   values.countryId
-                                                                      // }
-                                                                      onChange={e =>
-                                                                        this.handleSelectChange(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values
-                                                                        )
+                                                                      as="input"
+                                                                      id="country-Id"
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.countryId &&
+                                                                        touched.countryId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        countries.find(
+                                                                          country =>
+                                                                            country.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedCountryId
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedCountry =
+                                                                          countries.find(
+                                                                            country =>
+                                                                              country.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedCountry
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCountryId:
+                                                                                selectedCountry.key,
+                                                                              countryName:
+                                                                                selectedCountry.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCountryId:
+                                                                                null,
+                                                                              countryName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="countriesId"
+                                                                      autoComplete="off"
                                                                     />
                                                                     <datalist id="countriesId">
                                                                       {countries.map(
@@ -2604,27 +2634,67 @@ class EmployeesList extends Component {
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
+                                                                    <Field
                                                                       name="stateId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="statesId"
-                                                                      id="stateId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      // value={
-                                                                      //   values.stateId
-                                                                      // }
-                                                                      onChange={e =>
-                                                                        this.handleSelectChange(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values
-                                                                        )
+                                                                      as="input"
+                                                                      id="state-Id"
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.stateId &&
+                                                                        touched.stateId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        governorates.find(
+                                                                          governorate =>
+                                                                            governorate.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedStateId
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedGovernorate =
+                                                                          governorates.find(
+                                                                            governorate =>
+                                                                              governorate.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedGovernorate
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedStateId:
+                                                                                selectedGovernorate.key,
+                                                                              stateName:
+                                                                                selectedGovernorate.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedStateId:
+                                                                                null,
+                                                                              stateName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="statesId"
+                                                                      autoComplete="off"
                                                                     />
                                                                     <datalist id="statesId">
                                                                       {governorates.map(
@@ -2655,26 +2725,69 @@ class EmployeesList extends Component {
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
+                                                                    <Field
                                                                       name="cityId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="citiesId"
-                                                                      id="cityId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      onChange={e =>
-                                                                        this.handleSelectChange(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values,
-                                                                          values
-                                                                        )
+                                                                      as="input"
+                                                                      id="cityId-Id"
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.cityId &&
+                                                                        touched.cityId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        cities.find(
+                                                                          city =>
+                                                                            city.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedCityId
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedCity =
+                                                                          cities.find(
+                                                                            city =>
+                                                                              city.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedCity
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCityId:
+                                                                                selectedCity.key,
+                                                                              cityName:
+                                                                                selectedCity.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCityId:
+                                                                                null,
+                                                                              cityName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="citiesId"
+                                                                      autoComplete="off"
                                                                     />
+
                                                                     <datalist id="citiesId">
                                                                       {cities.map(
                                                                         cityOpt => (
@@ -3243,34 +3356,78 @@ class EmployeesList extends Component {
                                                                     </span>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="jobTitles"
+                                                                    <Field
                                                                       name="jobTitleId"
+                                                                      as="input"
                                                                       id="jobTitleId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      onChange={e =>
-                                                                        this.handleSelect(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values
-                                                                        )
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.jobTitleId &&
+                                                                        touched.jobTitleId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        jobTitlesOpt.find(
+                                                                          job =>
+                                                                            job.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedJobTitle
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedJob =
+                                                                          jobTitlesOpt.find(
+                                                                            job =>
+                                                                              job.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedJob
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedJobTitle:
+                                                                                selectedJob.key,
+                                                                              jobTitleName:
+                                                                                selectedJob.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedJobTitle:
+                                                                                null,
+                                                                              jobTitleName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="jobTitles"
+                                                                      autoComplete="off"
                                                                     />
+
                                                                     <datalist id="jobTitles">
                                                                       {jobTitlesOpt.map(
-                                                                        jobTitleOpt => (
+                                                                        jobTitle => (
                                                                           <option
                                                                             key={
-                                                                              jobTitleOpt.Id
+                                                                              jobTitle.key
                                                                             }
                                                                             value={
-                                                                              jobTitleOpt.arTitle
+                                                                              jobTitle.value
                                                                             }
                                                                           />
                                                                         )
@@ -3436,34 +3593,78 @@ class EmployeesList extends Component {
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
+                                                                    <Field
                                                                       name="academicYearId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="academicYearsId"
+                                                                      as="input"
                                                                       id="academicYearId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      onChange={e =>
-                                                                        this.handleSelect(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values
-                                                                        )
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.academicYearId &&
+                                                                        touched.academicYearId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        academicYearsOpt.find(
+                                                                          academic =>
+                                                                            academic.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedAcademicYearId
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedAcademic =
+                                                                          academicYearsOpt.find(
+                                                                            academic =>
+                                                                              academic.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedAcademic
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedAcademicYearId:
+                                                                                selectedAcademic.key,
+                                                                              academicYear:
+                                                                                selectedAcademic.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedAcademicYearId:
+                                                                                null,
+                                                                              academicYear:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="academicYearsId"
+                                                                      autoComplete="off"
                                                                     />
+
                                                                     <datalist id="academicYearsId">
                                                                       {academicYearsOpt.map(
-                                                                        academicYearOpt => (
+                                                                        academicYear => (
                                                                           <option
                                                                             key={
-                                                                              academicYearOpt.Id
+                                                                              academicYear.key
                                                                             }
                                                                             value={
-                                                                              academicYearOpt.arTitle
+                                                                              academicYear.value
                                                                             }
                                                                           />
                                                                         )

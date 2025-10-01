@@ -555,39 +555,45 @@ class DefineExamDatesList extends Component {
   };
 
   onDragEnd = result => {
-    const { source, destination } = result;
-
+    const { source, destination, draggableId } = result;
     if (!destination) return;
 
-    const sourcePeriodIndex = this.state.examPeriods.findIndex(
-      p => p.Id === source.droppableId
-    );
-    const destPeriodIndex = this.state.examPeriods.findIndex(
-      p => p.Id === destination.droppableId
-    );
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    )
+      return;
 
-    if (sourcePeriodIndex === -1 || destPeriodIndex === -1) return;
+    const newCourses = Array.from(this.props.coursesOffering);
+    const newPeriods = this.state.examPeriods.map(p => ({
+      ...p,
+      courses: [...p.courses],
+    }));
 
-    const sourceCourses = Array.from(
-      this.state.periods[sourcePeriodIndex].courses
-    );
-    const destCourses = Array.from(this.state.periods[destPeriodIndex].courses);
+    let movedCourse;
 
-    const [movedCourse] = sourceCourses.splice(source.index, 1);
+    if (source.droppableId === "courses") {
+      movedCourse = newCourses.splice(source.index, 1)[0];
+    } else {
+      const sourcePeriod = newPeriods.find(p => p.Id === source.droppableId);
+      movedCourse = sourcePeriod.courses.splice(source.index, 1)[0];
+    }
 
-    destCourses.splice(destination.index, 0, movedCourse);
+    if (destination.droppableId === "courses") {
+      newCourses.splice(destination.index, 0, movedCourse);
+    } else {
+      const destPeriod = newPeriods.find(p => p.Id === destination.droppableId);
+      destPeriod.courses.splice(destination.index, 0, movedCourse);
+    }
 
-    const newPeriods = [...this.state.periods];
-    newPeriods[sourcePeriodIndex] = {
-      ...newPeriods[sourcePeriodIndex],
-      courses: sourceCourses,
-    };
-    newPeriods[destPeriodIndex] = {
-      ...newPeriods[destPeriodIndex],
-      courses: destCourses,
-    };
+    this.setState({
+      coursesOffering: newCourses,
+      examPeriods: newPeriods,
+    });
+  };
 
-    this.setState({ examPeriods: newPeriods });
+  onDragStart = start => {
+    this.setState({ currentlyDragging: start.draggableId });
   };
 
   formatTime = time => {
@@ -2003,53 +2009,63 @@ class DefineExamDatesList extends Component {
                                               </CardBody>
                                             </Card>
                                             <DragDropContext
+                                              onDragStart={this.onDragStart}
                                               onDragEnd={this.onDragEnd}
                                             >
                                               {/* Courses List from Props */}
                                               <Droppable droppableId="courses">
                                                 {provided => (
-                                                  <Card
-                                                    innerRef={provided.innerRef}
+                                                  <div
+                                                    ref={provided.innerRef}
                                                     {...provided.droppableProps}
                                                   >
-                                                    <CardTitle>
-                                                      {t("Courses")}
-                                                    </CardTitle>
-                                                    <CardBody>
-                                                      {coursesOffering.map(
-                                                        (course, index) => (
-                                                          <Draggable
-                                                            key={course.value}
-                                                            draggableId={String(
-                                                              course.value
-                                                            )}
-                                                            index={index}
-                                                          >
-                                                            {(
-                                                              provided,
-                                                              snapshot
-                                                            ) => (
-                                                              <div
-                                                                ref={
-                                                                  provided.innerRef
+                                                    <Card>
+                                                      <CardTitle>
+                                                        {t("Courses")}
+                                                      </CardTitle>
+                                                      <CardBody>
+                                                        {Array.isArray(
+                                                          coursesOffering
+                                                        ) &&
+                                                          coursesOffering.map(
+                                                            (course, index) => (
+                                                              <Draggable
+                                                                key={
+                                                                  course.value
                                                                 }
-                                                                {...provided.draggableProps}
-                                                                {...provided.dragHandleProps}
-                                                                className={`btn btn-outline-primary m-1 ${
-                                                                  snapshot.isDragging
-                                                                    ? "dragging"
-                                                                    : ""
-                                                                }`}
+                                                                draggableId={String(
+                                                                  course.value
+                                                                )}
+                                                                index={index}
                                                               >
-                                                                {course.label}
-                                                              </div>
-                                                            )}
-                                                          </Draggable>
-                                                        )
-                                                      )}
-                                                      {provided.placeholder}
-                                                    </CardBody>
-                                                  </Card>
+                                                                {(
+                                                                  provided,
+                                                                  snapshot
+                                                                ) => (
+                                                                  <div
+                                                                    ref={
+                                                                      provided.innerRef
+                                                                    }
+                                                                    {...provided.draggableProps}
+                                                                    {...provided.dragHandleProps}
+                                                                    className={`btn btn-outline-primary m-1 ${
+                                                                      snapshot.isDragging
+                                                                        ? "dragging"
+                                                                        : ""
+                                                                    }`}
+                                                                  >
+                                                                    {
+                                                                      course.label
+                                                                    }
+                                                                  </div>
+                                                                )}
+                                                              </Draggable>
+                                                            )
+                                                          )}
+                                                        {provided.placeholder}
+                                                      </CardBody>
+                                                    </Card>
+                                                  </div>
                                                 )}
                                               </Droppable>
                                               {/* <Droppable droppableId="period">
@@ -2178,12 +2194,8 @@ class DefineExamDatesList extends Component {
                                                                               index
                                                                             ) => (
                                                                               <Draggable
-                                                                                key={
-                                                                                  course.value
-                                                                                }
-                                                                                draggableId={String(
-                                                                                  course.value
-                                                                                )}
+                                                                                draggableId={`${period.Id}-${course.value}`}
+                                                                                key={`${period.Id}-${course.value}`}
                                                                                 index={
                                                                                   index
                                                                                 }

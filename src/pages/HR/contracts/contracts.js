@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as moment from "moment";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import * as Yup from "yup";
 import Select from "react-select";
@@ -61,6 +62,7 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+import academicLoadSaga from "store/academicloads/saga";
 class ContractsList extends Component {
   constructor(props) {
     super(props);
@@ -85,13 +87,16 @@ class ContractsList extends Component {
       isEdit: false,
       isOpen: false,
       isAdd: false,
-      selectedWorkClassification: "",
-      selectedJobTitle: "",
-      selectedCostCenter: "",
-      selectedJobRank: "",
-      selectedHasMinistryApprove: "",
-      selectedGovernmentWorker: "",
-      selectedFullName: "",
+      selectedWorkClassification: null,
+      selectedJobTitle: null,
+      jobTitleName: "",
+      selectedCostCenter: null,
+      selectedJobRank: null,
+      selectedHasMinistryApprove: null,
+      selectedGovernmentWorker: null,
+      selectedFullName: null,
+      selectedContractType: null,
+      employeeFullName: "",
       signatureDateError: false,
       hireDateError: false,
       fullNameError: false,
@@ -250,7 +255,8 @@ class ContractsList extends Component {
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
-      onDeleteContract(selectedRowId);
+      let onDelete = { Id: selectedRowId.Id };
+      onDeleteContract(onDelete);
 
       this.setState({
         selectedRowId: null,
@@ -304,7 +310,7 @@ class ContractsList extends Component {
     values["jobTitleId"] = selectedJobTitle;
     // values["corporateNodeId"] = selectedCorporateNode;
     values["contractTypeId"] = selectedContractType;
-    values["fullNameId"] = selectedFullName;
+    values["employeeId"] = selectedFullName;
     values["employmentCaseId"] = selectedEmploymentCase;
     values["hasMinistryApprove"] = selectedHasMinistryApprove;
     values["governmentWorker"] = selectedGovernmentWorker;
@@ -313,12 +319,12 @@ class ContractsList extends Component {
     console.log("valuesssssssssssssssssssss", values);
 
     let contractInfo = {};
-    // if (values.fullNameId) {
+    // if (values.employeeId) {
     //   const nameObject = fullNamesOpt.find(
-    //     fullName => fullName.value === values.fullNameId
+    //     fullName => fullName.value === values.employeeId
     //   );
     //   console.log("nameObject", nameObject);
-    //   values["fullNameId"] = nameObject.key;
+    //   values["employeeId"] = nameObject.key;
     // }
     // console.log("valuesssssssssssssssssssss", values);
     if (
@@ -408,6 +414,7 @@ class ContractsList extends Component {
         selectedPhysicalWorkLocations: selectedValue,
       });
     } */
+
     if (fieldName == "jobRankId") {
       this.setState({
         selectedJobRank: selectedValue,
@@ -428,41 +435,6 @@ class ContractsList extends Component {
         selectedWorkClassification: selectedValue,
       });
     }
-    if (fieldName === "jobTitleId") {
-      const selected = this.state.jobTitlesOpt.find(
-        job => job.arTitle === selectedValue
-      );
-
-      this.setState({
-        selectedJobTitle: selected ? selected.Id : null,
-      });
-      return;
-    }
-
-    if (fieldName === "fullNameId") {
-      const selected = this.state.employeesNames.find(
-        employeeName => employeeName.value === selectedValue
-      );
-
-      this.setState({
-        selectedFullName: selected ? selected.key : null,
-      });
-      return;
-    }
-
-    if (fieldName === "academicYearId") {
-      const selected = this.state.academicYearsOpt.find(
-        academicYear =>
-          academicYear.arTitle.trim().toLowerCase() ===
-          selectedValue.trim().toLowerCase()
-      );
-      this.setState({
-        selectedAcademicYearId: selected ? selected.Id : null,
-      });
-
-      return;
-    }
-
     // if (fieldName == "corporateNodeId") {
     //   this.setState({
     //     selectedCorporateNode: selectedValue,
@@ -473,6 +445,43 @@ class ContractsList extends Component {
     //     selectedAcademicYearId: selectedValue,
     //   });
     // }
+  };
+
+  handleSelectDatalist = e => {
+    const selectedValue = e.target.value;
+    if (fieldName === "jobTitleId") {
+      const selected = this.props.jobTitlesOpt.find(
+        job => job.value === selectedValue
+      );
+
+      this.setState({
+        selectedJobTitle: selected ? selected.key : null,
+        jobTitleName: selectedValue,
+      });
+    }
+
+    if (fieldName === "employeeId") {
+      const selected = this.props.employeesNames.find(
+        employeeName => employeeName.value === selectedValue
+      );
+
+      this.setState({
+        selectedFullName: selected ? selected.key : null,
+        employeeFullName: selectedValue,
+      });
+    }
+
+    if (fieldName === "academicYearId") {
+      const selected = this.props.academicYearsOpt.find(
+        aYear => aYear.value === selectedValue
+      );
+      this.setState({
+        selectedAcademicYearId: selected ? selected.key : null,
+        academicYear: selectedValue,
+      });
+
+      return;
+    }
   };
 
   handleAlertClose = () => {
@@ -496,8 +505,11 @@ class ContractsList extends Component {
 
     this.setState({
       contract: arg,
+      selectedFullName: arg.employeeId,
+      employeeFullName: arg.employeeName,
       selectedJobRank: arg.jobRankId,
       selectedJobTitle: arg.jobTitleId,
+      jobTitleName: arg.jobTitle,
       selectedCorporateNode: arg.corporateNodeId,
       selectedContractType: arg.contractTypeId,
       selectedEmploymentCase: arg.employmentCaseId,
@@ -505,6 +517,7 @@ class ContractsList extends Component {
       selectedGovernmentWorker: arg.governmentWorker,
       selectedWorkClassification: arg.workClassificationId,
       selectedAcademicYearId: arg.academicYearId,
+      academicYear: arg.academicYear,
       isEdit: true,
       isOpen: false,
     });
@@ -523,6 +536,11 @@ class ContractsList extends Component {
   };
   testselected = val => {
     console.log(val, "vvvvvvvvvvvvvvvvvv");
+  };
+
+  handleValidDate = date => {
+    const date1 = moment(new Date(date)).format("DD /MM/ Y");
+    return date1;
   };
 
   render() {
@@ -566,6 +584,9 @@ class ContractsList extends Component {
       selectedFullName,
       selectedJobTitle,
       selectedAcademicYearId,
+      selectedContractType,
+      selectedWorkClassification,
+      selectedEmploymentCase,
       hireDateError,
       fullNameError,
       ncsDateError,
@@ -602,6 +623,7 @@ class ContractsList extends Component {
         text: this.props.t("NCS Date"),
         sort: true,
         editable: false,
+        formatter: (cellContent, row) => this.handleValidDate(row.ncsDate),
       },
       {
         dataField: "employeeName",
@@ -847,8 +869,8 @@ class ContractsList extends Component {
                                           contract && {
                                             Id: contract.Id,
                                           }),
-                                        fullNameId:
-                                          (contract && contract.fullNameId) ||
+                                        employeeId:
+                                          (contract && contract.employeeId) ||
                                           selectedFullName,
                                         jobNumber:
                                           (contract && contract.jobNumber) ||
@@ -860,7 +882,7 @@ class ContractsList extends Component {
                                         contractTypeId:
                                           (contract &&
                                             contract.contractTypeId) ||
-                                          "",
+                                          selectedContractType,
                                         contractNumber:
                                           (contract &&
                                             contract.contractNumber) ||
@@ -882,16 +904,33 @@ class ContractsList extends Component {
                                           (contract &&
                                             contract.sequenceInWorkplace) ||
                                           "",
-                                        hireDate:
-                                          (contract && contract.hireDate) || "",
-                                        signatureDate:
-                                          (contract &&
-                                            contract.signatureDate) ||
-                                          "",
-                                        endDate:
-                                          (contract && contract.endDate) || "",
-                                        ncsDate:
-                                          (contract && contract.ncsDate) || "",
+                                        hireDate: contract?.hireDate
+                                          ? moment
+                                              .utc(contract.hireDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+                                        signatureDate: contract?.signatureDate
+                                          ? moment
+                                              .utc(contract.signatureDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+
+                                        endDate: contract?.endDate
+                                          ? moment
+                                              .utc(contract.endDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+
+                                        ncsDate: contract?.ncsDate
+                                          ? moment
+                                              .utc(contract.ncsDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+
                                         // administrativeSupervisor:
                                         //   (contract &&
                                         //     contract.administrativeSupervisor) ||
@@ -900,7 +939,7 @@ class ContractsList extends Component {
                                         workClassificationId:
                                           (contract &&
                                             contract.workClassificationId) ||
-                                          "",
+                                          selectedWorkClassification,
                                         academicYearId:
                                           (contract &&
                                             contract.academicYearId) ||
@@ -916,7 +955,7 @@ class ContractsList extends Component {
                                         employmentCaseId:
                                           (contract &&
                                             contract.employmentCaseId) ||
-                                          "",
+                                          selectedEmploymentCase,
                                       }}
                                       validationSchema={Yup.object().shape({
                                         contratType: Yup.string()
@@ -992,29 +1031,69 @@ class ContractsList extends Component {
                                                         </span>
                                                       </Col>
                                                       <Col className="col-8">
-                                                        <input
-                                                          className={`form-control ${this.state.inputClass}`}
-                                                          list="fullNames"
-                                                          name="fullNameId"
+                                                        <Field
+                                                          name="employeeId"
+                                                          as="input"
                                                           id="fullName-Id"
-                                                          placeholder="Type to search..."
-                                                          autoComplete="off"
-                                                          onChange={e =>
-                                                            this.handleSelect(
-                                                              e.target.name,
-                                                              e.target.value
-                                                            )
+                                                          type="text"
+                                                          placeholder="Search..."
+                                                          className={
+                                                            "form-control" +
+                                                            (errors.employeeId &&
+                                                            touched.employeeId
+                                                              ? " is-invalid"
+                                                              : "")
                                                           }
+                                                          value={
+                                                            employeesNames.find(
+                                                              empl =>
+                                                                empl.key ===
+                                                                this.state
+                                                                  .selectedFullName
+                                                            )?.value || ""
+                                                          }
+                                                          onChange={e => {
+                                                            const newValue =
+                                                              e.target.value;
+
+                                                            const selectedEmployee =
+                                                              employeesNames.find(
+                                                                empl =>
+                                                                  empl.value ===
+                                                                  newValue
+                                                              );
+
+                                                            if (
+                                                              selectedEmployee
+                                                            ) {
+                                                              this.setState({
+                                                                selectedFullName:
+                                                                  selectedEmployee.key,
+                                                                employeeFullName:
+                                                                  selectedEmployee.value,
+                                                              });
+                                                            } else {
+                                                              this.setState({
+                                                                selectedFullName:
+                                                                  null,
+                                                                employeeFullName:
+                                                                  newValue,
+                                                              });
+                                                            }
+                                                          }}
+                                                          list="fullNames"
+                                                          autoComplete="off"
                                                         />
+
                                                         <datalist id="fullNames">
                                                           {employeesNames.map(
-                                                            employeeName => (
+                                                            employeesName => (
                                                               <option
                                                                 key={
-                                                                  employeeName.key
+                                                                  employeesName.key
                                                                 }
                                                                 value={
-                                                                  employeeName.value
+                                                                  employeesName.value
                                                                 }
                                                               />
                                                             )
@@ -1238,7 +1317,7 @@ class ContractsList extends Component {
                                                               <div className="mb-3">
                                                                 <Row>
                                                                   <Col className="col-4">
-                                                                    <Label for="Id">
+                                                                    <Label for="jobTitleId">
                                                                       {this.props.t(
                                                                         "Job Title"
                                                                       )}
@@ -1248,33 +1327,78 @@ class ContractsList extends Component {
                                                                     </span>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="jobTitles"
+                                                                    <Field
                                                                       name="jobTitleId"
+                                                                      as="input"
                                                                       id="jobTitleId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      onChange={e =>
-                                                                        this.handleSelect(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value
-                                                                        )
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.jobTitleId &&
+                                                                        touched.jobTitleId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        jobTitlesOpt.find(
+                                                                          job =>
+                                                                            job.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedJobTitle
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedJob =
+                                                                          jobTitlesOpt.find(
+                                                                            job =>
+                                                                              job.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedJob
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedJobTitle:
+                                                                                selectedJob.key,
+                                                                              jobTitleName:
+                                                                                selectedJob.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedJobTitle:
+                                                                                null,
+                                                                              jobTitleName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="jobTitles"
+                                                                      autoComplete="off"
                                                                     />
+
                                                                     <datalist id="jobTitles">
                                                                       {jobTitlesOpt.map(
-                                                                        jobTitleOpt => (
+                                                                        jobTitle => (
                                                                           <option
                                                                             key={
-                                                                              jobTitleOpt.Id
+                                                                              jobTitle.key
                                                                             }
                                                                             value={
-                                                                              jobTitleOpt.arTitle
+                                                                              jobTitle.value
                                                                             }
                                                                           />
                                                                         )
@@ -1372,7 +1496,7 @@ class ContractsList extends Component {
                                                                       defaultValue={workClassifications.find(
                                                                         opt =>
                                                                           opt.value ===
-                                                                          contract?.workClassification
+                                                                          contract?.workClassificationId
                                                                       )}
                                                                     />
                                                                   </Col>
@@ -1438,33 +1562,78 @@ class ContractsList extends Component {
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
+                                                                    <Field
                                                                       name="academicYearId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="academicYearsId"
+                                                                      as="input"
                                                                       id="academicYearId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      onChange={e =>
-                                                                        this.handleSelect(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value
-                                                                        )
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.academicYearId &&
+                                                                        touched.academicYearId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        academicYearsOpt.find(
+                                                                          academic =>
+                                                                            academic.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedAcademicYearId
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedAcademic =
+                                                                          academicYearsOpt.find(
+                                                                            academic =>
+                                                                              academic.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedAcademic
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedAcademicYearId:
+                                                                                selectedAcademic.key,
+                                                                              academicYear:
+                                                                                selectedAcademic.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedAcademicYearId:
+                                                                                null,
+                                                                              academicYear:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="academicYearsId"
+                                                                      autoComplete="off"
                                                                     />
+
                                                                     <datalist id="academicYearsId">
                                                                       {academicYearsOpt.map(
-                                                                        academicYearOpt => (
+                                                                        academicYear => (
                                                                           <option
                                                                             key={
-                                                                              academicYearOpt.Id
+                                                                              academicYear.key
                                                                             }
                                                                             value={
-                                                                              academicYearOpt.arTitle
+                                                                              academicYear.value
                                                                             }
                                                                           />
                                                                         )

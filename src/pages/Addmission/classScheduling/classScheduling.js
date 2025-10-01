@@ -686,6 +686,7 @@ class ClassSchedulingList extends Component {
       selectedRow: sectionLabData.Id,
       selectedType: sectionLabData.type,
     });
+    this.props.onGetScheduleTimings(0);
   };
 
   handleMouseDown = (cellIndex, lectureId, weekdayId) => {
@@ -762,6 +763,8 @@ class ClassSchedulingList extends Component {
     if (scheduledTiming) {
       onDeleteScheduleTiming(scheduledTiming);
       onGetScheduleTimings(selectedScheduleRow);
+      onGetSectionLabDetails(this.state.selectedRowSectionLab);
+
       // onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
@@ -1061,7 +1064,6 @@ class ClassSchedulingList extends Component {
     //   })) || [];
     console.log("selectedSchedule in save", selectedScheduleRow);
     console.log("selectedRowSectionLab in save", selectedRowSectionLab);
-    values["Id"] = selectedScheduleRow.Id;
     values["type"] = selectedRowSectionLab.type;
     values["sectionLabId"] = selectedRowSectionLab.Id;
     values["hallId"] = this.state.selectedHallKey;
@@ -1134,6 +1136,7 @@ class ClassSchedulingList extends Component {
     // scheduleTimingInfo["type"] = selectedRowSectionLab.type;
     // scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
     if (isEdit1) {
+      scheduleTimingInfo["Id"] = selectedScheduleRow.Id;
       onUpdateSectionLabDetail(scheduleTimingInfo);
       this.toggle3();
     } else {

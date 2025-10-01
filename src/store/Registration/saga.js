@@ -343,7 +343,7 @@ function* onDeleteAllNonActiveCurr({ payload }) {
   payload["tablename"] = "Common_Curriculalines";
   payload["queryname"] = "_Current_Common_TrianeeCurriculalines";
   payload["flag"] = payload.flag;
-  payload["filter"] = `traineeId=${payload.traineeId}`;
+  payload["filter"] = `traineeId=${payload.traineeId} and active=0`;
   try {
     const respupdate = yield call(deleteAllNonActiveCurr, payload);
     respupdate.map(resp => {

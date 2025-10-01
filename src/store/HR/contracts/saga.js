@@ -159,7 +159,7 @@ function* fetchContracts() {
 
   const get_AcademicYears_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_Years",
     fields: "Id,arTitle",
@@ -188,7 +188,7 @@ function* fetchContracts() {
 
   const get_JobTitles_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_JobTitles",
     fields: "Id,arTitle",
@@ -276,7 +276,7 @@ function* onDeleteContract({ payload, contract }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "_Common_Contract";
+  payload["tablename"] = "Common_Contract";
 
   try {
     const response = yield call(deleteContract, payload);

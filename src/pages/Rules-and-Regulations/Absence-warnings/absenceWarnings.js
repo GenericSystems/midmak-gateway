@@ -163,7 +163,7 @@ class AbsenceWarningsList extends Component {
       this.node.current.props.pagination.options.onPageChange(page);
     }
   };
-   toggleDeleteModal = () => {
+  toggleDeleteModal = () => {
     this.setState(prevState => ({
       deleteModal: !prevState.deleteModal,
     }));
@@ -292,15 +292,15 @@ class AbsenceWarningsList extends Component {
       },
       {
         dataField: "TraineeNum",
-        text: t("Student Num"),
+        text: t("Trainee Num"),
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
       {
-        dataField: "TraineeName",
-        text: t("Student Name"),
+        dataField: "traineeName",
+        text: t("Trainee Name"),
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -308,7 +308,7 @@ class AbsenceWarningsList extends Component {
       },
 
       {
-        dataField: "applyingDate",
+        dataField: "ApplyingDate",
         text: t("Applying Date"),
         sort: true,
         filter: textFilter({
@@ -316,7 +316,7 @@ class AbsenceWarningsList extends Component {
         }),
       },
       {
-        dataField: "CourseStartDate",
+        dataField: "StartDate",
         text: t("Start Date"),
         sort: true,
         filter: textFilter({
@@ -324,7 +324,7 @@ class AbsenceWarningsList extends Component {
         }),
       },
       {
-        dataField: "courseID",
+        dataField: "courseName",
         text: t("Course"),
         sort: true,
         filter: textFilter({
@@ -332,7 +332,7 @@ class AbsenceWarningsList extends Component {
         }),
       },
       {
-        dataField: "decreeStatus",
+        dataField: "DecreeStatus",
         text: t("Decree Status"),
         sort: true,
         filter: textFilter({

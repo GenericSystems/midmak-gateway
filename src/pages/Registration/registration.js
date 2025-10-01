@@ -355,7 +355,7 @@ class RegistrationList extends Component {
     if (active == 0) {
       this.resetNonActiveCurrs(nonActiveCourse);
     }
-    let del = { Id: nonActiveCourse.traineeId };
+    let del = { Id: nonActiveCourse.Id };
     onDeleteNonActiveCurr(del);
     this.setState({ deleteModal: false });
   };
@@ -1651,23 +1651,6 @@ class RegistrationList extends Component {
                                 {this.props.t("Trainee Courses")}
                               </h5>
                             </Col>
-                            <div>
-                              {duplicateTrainee && (
-                                <Alert
-                                  color="danger"
-                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                  role="alert"
-                                >
-                                  {duplicateTrainee}
-                                  <button
-                                    type="button"
-                                    className="btn-close"
-                                    aria-label="Close"
-                                    onClick={this.handleAlertClose}
-                                  ></button>
-                                </Alert>
-                              )}
-                            </div>
 
                             <div className="bordered mt-1">
                               <BootstrapTable
