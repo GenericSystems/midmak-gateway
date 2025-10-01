@@ -7,7 +7,6 @@ import {
   ADD_NEW_ABSENCE_PERCENT,
   DELETE_ABSENCE_PERCENT,
   UPDATE_ABSENCE_PERCENT,
-  
 } from "./actionTypes";
 
 import {
@@ -18,7 +17,6 @@ import {
   addAbsencePercentFail,
   addAbsencePercentSuccess,
   updateAbsencePercentSuccess,
- 
   updateAbsencePercentFail,
   deleteAbsencePercentSuccess,
   deleteAbsencePercentFail,
@@ -37,7 +35,6 @@ import {
   updateAbsencePercent,
   deleteAbsencePercent,
   getCoursesOffering,
- 
 } from "../../helpers/fakebackend_helper";
 
 function* fetchabsencePercents() {
@@ -45,7 +42,7 @@ function* fetchabsencePercents() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_AbsencePercents ",
+    tablename: "_Settings_AbsencePercent ",
   };
   try {
     const response = yield call(getAbsencePercents, get_settings_req);
@@ -60,8 +57,6 @@ function* fetchabsencePercents() {
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_CourseOffering",
     fields: "Id,arTitle,Code,totalTrainingHours",
-
-
   };
   try {
     const response = yield call(getCoursesOffering, get_courses_req);
@@ -86,7 +81,7 @@ function* onAddNewAbsencePercent({ payload, absencePercent }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_AbsencePercents";
+  payload["tablename"] = "Settings_AbsencePercent";
   try {
     const response = yield call(addNewAbsencePercent, payload);
     console.log("payload", payload);
@@ -97,12 +92,11 @@ function* onAddNewAbsencePercent({ payload, absencePercent }) {
   }
 }
 
-
 function* onUpdateabsencePercent({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_AbsencePercents";
+  payload["tablename"] = "Settings_AbsencePercent";
   try {
     const respupdate = yield call(updateAbsencePercent, payload);
     console.log("999999999999999", respupdate);
@@ -116,7 +110,7 @@ function* onDeleteabsencePercent({ payload, absencePercent }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_AbsencePercents";
+  payload["tablename"] = "Settings_AbsencePercent";
   try {
     const respdelete = yield call(deleteAbsencePercent, payload);
     yield put(deleteAbsencePercentSuccess(respdelete[0]));
@@ -127,11 +121,13 @@ function* onDeleteabsencePercent({ payload, absencePercent }) {
 
 function* absencePercentsSaga() {
   yield takeEvery(GET_ABSENCE_PERCENTS, fetchabsencePercents);
-  yield takeEvery(GET_ABSENCE_PERCENT_DELETED_VALUE, onGetabsencePercentDeletedValue);
+  yield takeEvery(
+    GET_ABSENCE_PERCENT_DELETED_VALUE,
+    onGetabsencePercentDeletedValue
+  );
   yield takeEvery(ADD_NEW_ABSENCE_PERCENT, onAddNewAbsencePercent);
   yield takeEvery(UPDATE_ABSENCE_PERCENT, onUpdateabsencePercent);
   yield takeEvery(DELETE_ABSENCE_PERCENT, onDeleteabsencePercent);
-
 }
 
 export default absencePercentsSaga;
