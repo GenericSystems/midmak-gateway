@@ -829,7 +829,7 @@
 }
 
 .card-header {
-  background-color: #b4d2ec;
+  background-color: #a3d2e7;
   align-items: center;
   height: 40px;
   padding-top: 10px !important;
@@ -837,6 +837,7 @@
   margin-top: -10px;
   margin-left: -10px;
   margin-right: -10px;
+  color: white;
   h4 {
     color: white;
     font-size: 15px;
@@ -1155,4 +1156,15 @@
 .card-sidebar {
   position: "relative";
   margin-right: "30px";
+}
+
+.header-table {
+  background-color: #114290;
+  color: white;
+  border: 1px solid white;
+  padding: 8px;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 0;
+  border-radius: 0;
 }

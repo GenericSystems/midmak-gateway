@@ -16,6 +16,8 @@ import {
   NavItem,
   NavLink,
   Label,
+  Table,
+  CardHeader,
 } from "reactstrap";
 import Select from "react-select";
 import classnames from "classnames";
@@ -70,10 +72,10 @@ class RegistrationList extends Component {
       years: [],
       selectedYear: null,
       currentYearObj: {},
-      activeTab1: "5",
+      activeTab1: "1",
       activeTab: "0",
       activeTab2: "0",
-      mainTab: "5",
+      mainTab: "1",
       duplicateError: null,
       duplicateTrainee: null,
       successMessage: null,
@@ -162,7 +164,7 @@ class RegistrationList extends Component {
         duplicateTrainee: null,
         successMessage: null,
       });
-      if (tab === "6") {
+      if (tab === "2") {
         onGetNonActiveCurr(1, traineeEdit.Id);
       } else {
         onGetNonActiveCurr(0, traineeEdit.Id);
@@ -373,94 +375,100 @@ class RegistrationList extends Component {
     onAddNewAvailableCourse(newRow);
   };
 
-  handleActiveSelectChange = (rowId, fieldName, selectedValue, oldValue) => {
-    const { onUpdateNonActiveCurr, nonActiveCurrs } = this.props;
-    const { traineeEdit } = this.state;
-    let onUpdate = { Id: rowId };
-    onUpdate["traineeId"] = traineeEdit.Id;
-    const checkOverlap = (interval1, interval2) => {
-      return (
-        interval1.startTimeValue < interval2.endTimeValue &&
-        interval1.endTimeValue > interval2.startTimeValue
-      );
-    };
+  // handleActiveSelectChange = (rowId, fieldName, selectedValue, oldValue) => {
+  //   console.log("56666656565656666", selectedValue);
+  //   const { onUpdateNonActiveCurr, nonActiveCurrs } = this.props;
+  //   const { traineeEdit } = this.state;
+  //   let onUpdate = { Id: rowId };
+  //   onUpdate["traineeId"] = traineeEdit.Id;
+  //   const checkOverlap = (interval1, interval2) => {
+  //     return (
+  //       interval1.startTimeValue < interval2.endTimeValue &&
+  //       interval1.endTimeValue > interval2.startTimeValue
+  //     );
+  //   };
+  //   console.log("11111111111111111111111", checkOverlap);
 
-    const checkOverlapWithSelected = selectedValue => {
-      const overlaps = [];
-      const selectedIntervals = selectedValue.details.map(detail => ({
-        startTimeValue: detail.startTimeValue,
-        endTimeValue: detail.endTimeValue,
-      }));
+  //   const checkOverlapWithSelected = selectedValue => {
+  //     const overlaps = [];
+  //     const selectedIntervals = selectedValue.details.map(detail => ({
+  //       startTimeValue: detail.startTimeValue,
+  //       endTimeValue: detail.endTimeValue,
+  //     }));
 
-      selectedIntervals.forEach(selectedInterval => {
-        selectedDetails.forEach(detail => {
-          if (
-            detail.type === selectedValue.type &&
-            detail.rowId === selectedValue.rowId
-          ) {
-            return;
-          }
+  //     console.log("333333333333333", selectedIntervals);
 
-          const detailInterval = {
-            startTimeValue: detail.startTimeValue,
-            endTimeValue: detail.endTimeValue,
-          };
-          if (checkOverlap(selectedInterval, detailInterval)) {
-            overlaps.push(detail);
-          }
-        });
-      });
+  //     selectedIntervals.forEach(selectedInterval => {
+  //       selectedDetails.forEach(detail => {
+  //         if (
+  //           detail.type === selectedValue.type &&
+  //           detail.rowId === selectedValue.rowId
+  //         ) {
+  //           return;
+  //         }
 
-      return overlaps;
-    };
+  //         const detailInterval = {
+  //           startTimeValue: detail.startTimeValue,
+  //           endTimeValue: detail.endTimeValue,
+  //         };
+  //         if (checkOverlap(selectedInterval, detailInterval)) {
+  //           overlaps.push(detail);
+  //         }
+  //       });
+  //     });
 
-    const selectedDetails = [];
+  //     return overlaps;
+  //   };
 
-    nonActiveCurrs.forEach(course => {
-      if (course.sections) {
-        course.sections.forEach(section => {
-          if (course.SectionId && section.value === course.SectionId) {
-            section.details.forEach(detail => {
-              selectedDetails.push({
-                ...detail,
-                type: "section",
-                rowId: course.Id,
-              });
-            });
-          }
-        });
-      }
+  //   const selectedDetails = [];
 
-      if (course.labs) {
-        course.labs.forEach(lab => {
-          if (course.LabId && lab.value === course.LabId) {
-            lab.details.forEach(detail => {
-              selectedDetails.push({
-                ...detail,
-                type: "lab",
-                rowId: course.Id,
-              });
-            });
-          }
-        });
-      }
-    });
+  //   nonActiveCurrs.forEach(course => {
+  //     if (course.sections) {
+  //       course.sections.forEach(section => {
+  //         if (course.SectionId && section.value === course.SectionId) {
+  //           section.details.forEach(detail => {
+  //             selectedDetails.push({
+  //               ...detail,
+  //               type: "section",
+  //               rowId: course.Id,
+  //               selected: String(section.value) === String(course.SectionId),
+  //             });
+  //             console.log(selectedDetails, "selectedDetailsselectedDetails");
+  //           });
+  //         }
+  //       });
+  //     }
 
-    const overlaps = checkOverlapWithSelected(selectedValue);
+  //     if (course.labs) {
+  //       course.labs.forEach(lab => {
+  //         if (course.LabId && lab.value === course.LabId) {
+  //           lab.details.forEach(detail => {
+  //             selectedDetails.push({
+  //               ...detail,
+  //               type: "lab",
+  //               rowId: course.Id,
+  //             });
+  //           });
+  //         }
+  //       });
+  //     }
+  //   });
 
-    if (overlaps.length > 0) {
-      this.setState({ duplicateTrainee: "There is a time conflict" });
-    } else {
-      if (fieldName === "section") {
-        onUpdate["SectionId"] = selectedValue.value;
-      } else {
-        onUpdate["LabId"] = selectedValue.value;
-      }
+  //   const overlaps = checkOverlapWithSelected(selectedValue);
 
-      onUpdateNonActiveCurr(onUpdate, 1);
-      this.setState({ duplicateTrainee: null });
-    }
-  };
+  //   if (overlaps.length > 0) {
+  //     this.setState({ duplicateTrainee: "There is a time conflict" });
+  //   } else {
+  //     if (fieldName === "section") {
+  //       onUpdate["SectionId"] = selectedValue.value;
+  //     } else {
+  //       onUpdate["LabId"] = selectedValue.value;
+  //     }
+
+  //     onUpdateNonActiveCurr(onUpdate, 1);
+  //     this.setState({ duplicateTrainee: null });
+  //   }
+  // };
 
   handleSelectYear = (name, value) => {
     const { onGetRegistrations } = this.props;
@@ -511,6 +519,7 @@ class RegistrationList extends Component {
     }
     onUpdateNonActiveCurr(onUpdate, 0);
   };
+
   handleRadioChange = value => {
     this.setState({ selectedEducation: value });
   };
@@ -569,7 +578,7 @@ class RegistrationList extends Component {
       this.setState({ timings: [], duplicateError: null });
       this.setState({ successMessage: "Data filled in successfully" });
       setTimeout(() => {
-        this.toggleMainTab("6");
+        this.toggleMainTab("2");
       }, 1000);
     }
   };
@@ -720,7 +729,6 @@ class RegistrationList extends Component {
       },
     ];
     console.log("achieved courses", achievedCourses);
-    const col = [];
     const columns = [
       { dataField: "courseId", text: this.props.t("ID"), hidden: true },
       {
@@ -1112,6 +1120,68 @@ class RegistrationList extends Component {
         order: "desc",
       },
     ];
+    const columns3 = [
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex) => rowIndex + 1,
+      },
+      { dataField: "Id", text: t("ID"), hidden: true },
+
+      { dataField: "courseName", text: t("Course Name"), sort: true },
+      { dataField: "courseCode", text: t("Course Code"), sort: true },
+      { dataField: "creditsCount", text: t("Credits Count"), sort: true },
+      {
+        dataField: "theoreticalGroup",
+        text: t("Theoretical Group"),
+        sort: true,
+      },
+      { dataField: "practicalGroup", text: t("Practical Group"), sort: true },
+      { dataField: "clinicalGroup", text: t("Clinical Group"), sort: true },
+
+      { dataField: "saturday", text: t("Saturday"), sort: true },
+      { dataField: "sunday", text: t("Sunday"), sort: true },
+      { dataField: "monday", text: t("Monday"), sort: true },
+      { dataField: "tuesday", text: t("Tuesday"), sort: true },
+      { dataField: "wednesday", text: t("Wednesday"), sort: true },
+      { dataField: "thursday", text: t("Thursday"), sort: true },
+      { dataField: "friday", text: t("Friday"), sort: true },
+    ];
+    const columns4 = [
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex) => rowIndex + 1,
+      },
+      { dataField: "Id", text: t("ID"), hidden: true },
+      { dataField: "courseName", text: t("Course Name"), sort: true },
+      { dataField: "courseCode", text: t("Course Code"), sort: true },
+      { dataField: "creditsCount", text: t("Credits Count"), sort: true },
+      { dataField: "registerStatus", text: t("Register Status"), sort: true },
+      { dataField: "date", text: t("Date"), sort: true },
+      { dataField: "time", text: t("Time"), sort: true },
+
+      { dataField: "roomName", text: t("Room Name"), sort: true },
+      { dataField: "seat", text: t("Seat"), sort: true },
+    ];
+    const columns5 = [
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex) => rowIndex + 1,
+      },
+      { dataField: "Id", text: t("ID"), hidden: true },
+      { dataField: "week", text: t("Week"), sort: true },
+      { dataField: "lecture", text: t("Lecture"), sort: true },
+      { dataField: "lectureDate", text: t("Lecture Date"), sort: true },
+      { dataField: "startTime", text: t("Start Time"), sort: true },
+      { dataField: "endTime", text: t("End Time"), sort: true },
+      { dataField: "absenceType", text: t("Absence Type"), sort: true },
+
+      { dataField: "reason", text: t("Reason"), sort: true },
+      { dataField: "justified", text: t("Justified"), sort: true },
+      { dataField: "justifyDocument", text: t("Justify Document"), sort: true },
+    ];
 
     const pageOptions = {
       sizePerPage: 10,
@@ -1343,13 +1413,13 @@ class RegistrationList extends Component {
                           id="horizontal-home-link"
                           style={{ cursor: "pointer" }}
                           className={classnames({
-                            active: this.state.mainTab === "5",
+                            active: this.state.mainTab === "1",
                           })}
                           onClick={() => {
-                            this.toggleMainTab("5");
+                            this.toggleMainTab("1");
                           }}
                         >
-                          {this.props.t("Certificate Requirements")}
+                          {this.props.t("Courses Register")}
                         </NavLink>
                       </NavItem>
                       <NavItem>
@@ -1357,13 +1427,55 @@ class RegistrationList extends Component {
                           id="horizontal-home-link"
                           style={{ cursor: "pointer" }}
                           className={classnames({
-                            active: this.state.mainTab === "6",
+                            active: this.state.mainTab === "2",
                           })}
                           onClick={() => {
-                            this.toggleMainTab("6");
+                            this.toggleMainTab("2");
                           }}
                         >
                           {this.props.t("Trainee Registered Courses")}
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          id="horizontal-home-link"
+                          style={{ cursor: "pointer" }}
+                          className={classnames({
+                            active: this.state.mainTab === "3",
+                          })}
+                          onClick={() => {
+                            this.toggleMainTab("3");
+                          }}
+                        >
+                          {this.props.t("Trainee Lectures")}
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          id="horizontal-home-link"
+                          style={{ cursor: "pointer" }}
+                          className={classnames({
+                            active: this.state.mainTab === "4",
+                          })}
+                          onClick={() => {
+                            this.toggleMainTab("4");
+                          }}
+                        >
+                          {this.props.t("Trainee Exams Schedule")}
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          id="horizontal-home-link"
+                          style={{ cursor: "pointer" }}
+                          className={classnames({
+                            active: this.state.mainTab === "5",
+                          })}
+                          onClick={() => {
+                            this.toggleMainTab("5");
+                          }}
+                        >
+                          {this.props.t("Trainee Attendance")}
                         </NavLink>
                       </NavItem>
                     </Nav>
@@ -1375,7 +1487,7 @@ class RegistrationList extends Component {
                       className="p-3 text-muted"
                       id="verticalTabContent"
                     >
-                      <TabPane tabId="5">
+                      <TabPane tabId="1">
                         <Row className="mt-3">
                           <Col lg="7">
                             <Row>
@@ -1443,7 +1555,7 @@ class RegistrationList extends Component {
                                     className="p-3 text-muted"
                                     id="verticalTabContent"
                                   >
-                                    <TabPane key={5} tabId="5">
+                                    <TabPane key={5} tabId="1">
                                       <BootstrapTable
                                         keyField="Id"
                                         data={registrations}
@@ -1451,7 +1563,7 @@ class RegistrationList extends Component {
                                         defaultSorted={defaultSorting}
                                       />
                                     </TabPane>
-                                    <TabPane key={6} tabId="6">
+                                    <TabPane key={6} tabId="2">
                                       <BootstrapTable
                                         keyField="Id"
                                         data={registrations}
@@ -1643,7 +1755,7 @@ class RegistrationList extends Component {
                           </Col>
                         </Row>
                       </TabPane>
-                      <TabPane tabId="6">
+                      <TabPane tabId="2">
                         <Row className="mt-3">
                           <Col>
                             <Col lg="4">
@@ -1663,6 +1775,83 @@ class RegistrationList extends Component {
                               />
                             </div>
                           </Col>
+                        </Row>
+                      </TabPane>
+                      <TabPane tabId="3">
+                        <Row className="mt-3">
+                          <Card>
+                            <CardHeader className="card-header">
+                              {t("Trainee Lectures")}
+                            </CardHeader>
+                            <CardBody className="cardBody">
+                              <Col>
+                                <Row className="mt-4">
+                                  <Col lg="12">
+                                    <Row>
+                                      <Col lg="6">
+                                        <h5 className="header-table text-center mb-2">
+                                          {t("Study Courses")}
+                                        </h5>
+                                      </Col>
+                                      <Col lg="6">
+                                        <h5 className="header-table text-center mb-2">
+                                          {t("Lecture Dates")}
+                                        </h5>
+                                      </Col>
+                                    </Row>
+                                    <BootstrapTable
+                                      keyField="Id"
+                                      columns={columns3}
+                                      defaultSorted={defaultSorting}
+                                      data={registrations}
+                                    />
+                                  </Col>
+                                </Row>
+                              </Col>
+                            </CardBody>
+                          </Card>
+                        </Row>
+                      </TabPane>
+                      <TabPane tabId="4">
+                        <Row className="mt-3">
+                          <Card>
+                            <CardHeader className="card-header">
+                              {t("Trainee Exams Schedule")}
+                            </CardHeader>
+                            <CardBody className="cardBody">
+                              <Col>
+                                <div className="bordered mt-1">
+                                  <BootstrapTable
+                                    keyField="Id"
+                                    columns={columns4}
+                                    defaultSorted={defaultSorting}
+                                    data={registrations}
+                                  />
+                                </div>
+                              </Col>
+                            </CardBody>
+                          </Card>
+                        </Row>
+                      </TabPane>
+                      <TabPane tabId="5">
+                        <Row className="mt-3">
+                          <Card>
+                            <CardHeader className="card-header">
+                              {t("Trainee Attendance")}
+                            </CardHeader>
+                            <CardBody className="cardBody">
+                              <Col>
+                                <div className="bordered mt-1">
+                                  <BootstrapTable
+                                    keyField="Id"
+                                    columns={columns5}
+                                    defaultSorted={defaultSorting}
+                                    data={registrations}
+                                  />
+                                </div>
+                              </Col>
+                            </CardBody>
+                          </Card>
                         </Row>
                       </TabPane>
                     </TabContent>
