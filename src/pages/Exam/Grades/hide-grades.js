@@ -170,11 +170,11 @@ class HiddenGradesList extends Component {
     // console.log("hiddenGrades", hiddenGrades);
 
     // const newRow = {
-    //   courseId: 0,
+    //   courseOfferingId: 0,
     // };
     // console.log("neww roww", newRow);
 
-    // const hasEmptyRow = hiddenGrades.some(row => row.courseId === null);
+    // const hasEmptyRow = hiddenGrades.some(row => row.courseOfferingId === null);
 
     // if (hasEmptyRow) {
     //   const errorMessage = this.props.t("Fill in the empty row first");
@@ -214,7 +214,7 @@ class HiddenGradesList extends Component {
 
   this.setState({
     hiddenGrade: hiddenGrade, // full object for Formik or modal
-    selectedCourseId: hiddenGrade.courseId,
+    selectedCourseId: hiddenGrade.courseOfferingId,
     courseCode: hiddenGrade.courseCode,
     selectedHideReason: hiddenGrade.hideReasonId,
     fromDate: hiddenGrade.fromDate,
@@ -232,7 +232,7 @@ class HiddenGradesList extends Component {
 
     const { onAddNewHiddenGrade, onUpdateHiddenGrade } = this.props;
 
-    values["courseId"] = selectedCourseId;
+    values["courseOfferingId"] = selectedCourseId;
     // values["courseCode"] = courseCode;
     values["hideReasonId"] = selectedHideReasonId;
 
@@ -241,7 +241,7 @@ class HiddenGradesList extends Component {
     let hiddenGradeInfo = {};
 
     // if (
-    //   values.courseId &&
+    //   values.courseOfferingId &&
     //   values.courseCode &&
     //   values.hideReasonId &&
     //   values.fromDate &&
@@ -289,10 +289,10 @@ class HiddenGradesList extends Component {
   };
   handleSelectChange = (fieldName, selectedValue, values) => {
     console.log("selectedValueselectedValue", selectedValue);
-    if (fieldName === "courseId") {
+    if (fieldName === "courseOfferingId") {
       this.setState({
         selectedCourseId: selectedValue.value,
-        courseId: selectedValue.value,
+        courseOfferingId: selectedValue.value,
         courseCode: selectedValue.Code,
         hiddenGrade: values,
       });
@@ -312,10 +312,10 @@ class HiddenGradesList extends Component {
     console.log("selectedValueselectedValue", selectedValue);
     const { onUpdateHiddenGrade } = this.props;
     let onUpdate;
-    if (fieldName === "courseId") {
+    if (fieldName === "courseOfferingId") {
       onUpdate = {
         Id: rowId,
-        courseId: selectedValue.value,
+        courseOfferingId: selectedValue.value,
         courseCode: selectedValue.Code || "", // auto-fill
       };
       // console.log("onUpdate",onUpdate)
@@ -419,20 +419,14 @@ class HiddenGradesList extends Component {
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
 
       {
-        dataField: "courseId",
+        dataField: "courseNameAr",
         text: this.props.t("Course Name"),
         sort: true,
         editable: false,
-        // formatter: (cell, row) => {
-        //   const course = coursesOffering.find(
-        //     opt => opt.value === row.courseId
-        //   );
-        //   return course ? course.label : "";
-        // },
       },
 
       {
-        dataField: "courseCode",
+        dataField: "Code",
         text: this.props.t("Course Code"),
         sort: true,
         editable: false,
@@ -693,8 +687,8 @@ class HiddenGradesList extends Component {
                 ...(isEdit && {
                   Id: hiddenGrade.Id,
                 }),
-                courseId:
-                  (hiddenGrade && hiddenGrade.courseId) || selectedCourseId,
+                courseOfferingId:
+                  (hiddenGrade && hiddenGrade.courseOfferingId) || selectedCourseId,
                 hideReasonId:
                   (hiddenGrade && hiddenGrade.hideReasonId) ||
                   selectedHideReasonId,
@@ -732,7 +726,7 @@ class HiddenGradesList extends Component {
                           <Col lg="6">
                             <Row>
                               <Col>
-                                <Label for="courseId">
+                                <Label for="courseOfferingId">
                                   {this.props.t("Course Name")}
                                 </Label>
                               </Col>
@@ -741,19 +735,19 @@ class HiddenGradesList extends Component {
                               <Col>
                                 <Select
                                   // className={`form-control`}
-                                  name="courseId"
-                                  id="courseId"
+                                  name="courseOfferingId"
+                                  id="courseOfferingId"
                                   key="_course_select_"
                                   options={coursesOffering}
                                   onChange={newValue =>
                                     this.handleSelectChange(
-                                      "courseId",
+                                      "courseOfferingId",
                                       newValue,
                                       values
                                     )
                                   }
                                   defaultValue={coursesOffering.find(
-                                    opt => opt.value === hiddenGrade?.courseId
+                                    opt => opt.value === hiddenGrade?.courseOfferingId
                                   )}
                                 />
                               </Col>

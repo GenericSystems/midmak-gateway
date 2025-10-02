@@ -46,7 +46,7 @@ function* fetchhiddenGrades() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_HiddenGrades ",
+    tablename: "_Common_HiddenGrades ",
   };
   try {
     const response = yield call(getHiddenGrades, get_settings_req);

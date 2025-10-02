@@ -163,11 +163,11 @@ class AbsencePercentsList extends Component {
     // console.log("absencePercents", absencePercents);
 
     // const newRow = {
-    //   courseId: 0,
+    //   courseOfferingId: 0,
     // };
     // console.log("neww roww", newRow);
 
-    // const hasEmptyRow = absencePercents.some(row => row.courseId === null);
+    // const hasEmptyRow = absencePercents.some(row => row.courseOfferingId === null);
 
     // if (hasEmptyRow) {
     //   const errorMessage = this.props.t("Fill in the empty row first");
@@ -207,9 +207,9 @@ class AbsencePercentsList extends Component {
 
     this.setState({
       absencePercent: absencePercent,
-      selectedCourseId: absencePercent.courseId,
-      courseCode: absencePercent.courseCode,
-      courseCredit: absencePercent.courseCredit,
+      selectedCourseId: absencePercent.courseOfferingId,
+      courseCode: absencePercent.Code,
+      courseCredit: absencePercent.totalTrainingHours,
       warningPercent: absencePercent.warningPercent,
       toDate: absencePercent.toDate,
       isEdit: true,
@@ -224,7 +224,7 @@ class AbsencePercentsList extends Component {
 
     const { onAddNewAbsencePercent, onUpdateAbsencePercent } = this.props;
 
-    values["courseId"] = selectedCourseId;
+    values["courseOfferingId"] = selectedCourseId;
     // values["courseCode"] = courseCode;
     //values["courseCredit"]=courseCredit;
 
@@ -233,7 +233,7 @@ class AbsencePercentsList extends Component {
     let absencePercentInfo = {};
 
     // if (
-    //   values.courseId &&
+    //   values.courseOfferingId &&
     //   values.courseCode &&
     //   values.warningPercent &&
     //   values.toDate
@@ -247,6 +247,7 @@ class AbsencePercentsList extends Component {
         absencePercentInfo[key] = values[key];
       }
     });
+    console.log("absencePercentInfoabsencePercentInfo", absencePercentInfo);
 
     if (isEdit) {
       console.log("3333333333333333333", absencePercentInfo);
@@ -255,7 +256,7 @@ class AbsencePercentsList extends Component {
     } else {
       console.log("222222222222222222", absencePercentInfo);
 
-      onAddNewAbsencePercent(absencePercentInfo);
+      // onAddNewAbsencePercent(absencePercentInfo);
     }
 
     this.setState({
@@ -280,10 +281,10 @@ class AbsencePercentsList extends Component {
   };
   handleSelectChange = (fieldName, selectedValue, values) => {
     console.log("selectedValueselectedValue", selectedValue);
-    if (fieldName === "courseId") {
+    if (fieldName === "courseOfferingId") {
       this.setState({
         selectedCourseId: selectedValue.value,
-        courseId: selectedValue.value,
+        courseOfferingId: selectedValue.value,
         courseCode: selectedValue.Code,
         courseCredit: selectedValue.totalTrainingHours,
         absencePercent: values,
@@ -295,10 +296,10 @@ class AbsencePercentsList extends Component {
     console.log("selectedValueselectedValue", selectedValue);
     const { onUpdateAbsencePercent } = this.props;
     let onUpdate;
-    if (fieldName === "courseId") {
+    if (fieldName === "courseOfferingId") {
       onUpdate = {
         Id: rowId,
-        courseId: selectedValue.value,
+        courseOfferingId: selectedValue.value,
         courseCode: selectedValue.Code || "",
         courseCredit: selectedValue.totalTrainingHours || "",
       };
@@ -395,27 +396,27 @@ class AbsencePercentsList extends Component {
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
 
       {
-        dataField: "courseId",
+        dataField: "courseNameEn",
         text: this.props.t("Course Name"),
         sort: true,
         editable: false,
         // formatter: (cell, row) => {
         //   const course = coursesOffering.find(
-        //     opt => opt.value === row.courseId
+        //     opt => opt.value === row.courseOfferingId
         //   );
         //   return course ? course.label : "";
         // },
       },
 
       {
-        dataField: "courseCode",
+        dataField: "Code",
         text: this.props.t("Course Code"),
         sort: true,
         editable: false,
       },
 
       {
-        dataField: "courseCredit",
+        dataField: "totalTrainingHours",
         text: this.props.t("Course Credit"),
         sort: true,
         editable: false,
@@ -649,8 +650,8 @@ class AbsencePercentsList extends Component {
                 ...(isEdit && {
                   Id: absencePercent.Id,
                 }),
-                courseId:
-                  (absencePercent && absencePercent.courseId) ||
+                courseOfferingId:
+                  (absencePercent && absencePercent.courseOfferingId) ||
                   selectedCourseId,
 
                 warningPercent:
@@ -680,7 +681,7 @@ class AbsencePercentsList extends Component {
                         <Col lg="6">
                           <Row>
                             <Col>
-                              <Label for="courseId">
+                              <Label for="courseOfferingId">
                                 {this.props.t("Course Name")}
                               </Label>
                             </Col>
@@ -689,19 +690,21 @@ class AbsencePercentsList extends Component {
                             <Col>
                               <Select
                                 className={`form-control`}
-                                name="courseId"
-                                id="courseId"
+                                name="courseOfferingId"
+                                id="courseOfferingId"
                                 key="_course_select_"
                                 options={coursesOffering}
                                 onChange={newValue =>
                                   this.handleSelectChange(
-                                    "courseId",
+                                    "courseOfferingId",
                                     newValue,
                                     values
                                   )
                                 }
                                 defaultValue={coursesOffering.find(
-                                  opt => opt.value === absencePercent?.courseId
+                                  opt =>
+                                    opt.value ===
+                                    absencePercent?.courseOfferingId
                                 )}
                               />
                             </Col>
