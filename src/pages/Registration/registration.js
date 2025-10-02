@@ -375,100 +375,100 @@ class RegistrationList extends Component {
     onAddNewAvailableCourse(newRow);
   };
 
-  // handleActiveSelectChange = (rowId, fieldName, selectedValue, oldValue) => {
-  //   console.log("56666656565656666", selectedValue);
-  //   const { onUpdateNonActiveCurr, nonActiveCurrs } = this.props;
-  //   const { traineeEdit } = this.state;
-  //   let onUpdate = { Id: rowId };
-  //   onUpdate["traineeId"] = traineeEdit.Id;
-  //   const checkOverlap = (interval1, interval2) => {
-  //     return (
-  //       interval1.startTimeValue < interval2.endTimeValue &&
-  //       interval1.endTimeValue > interval2.startTimeValue
-  //     );
-  //   };
-  //   console.log("11111111111111111111111", checkOverlap);
+  handleActiveSelectChange = (rowId, fieldName, selectedValue, oldValue) => {
+    console.log("56666656565656666", selectedValue);
+    const { onUpdateNonActiveCurr, nonActiveCurrs } = this.props;
+    const { traineeEdit } = this.state;
+    let onUpdate = { Id: rowId };
+    onUpdate["traineeId"] = traineeEdit.Id;
+    const checkOverlap = (interval1, interval2) => {
+      return (
+        interval1.startTimeValue < interval2.endTimeValue &&
+        interval1.endTimeValue > interval2.startTimeValue
+      );
+    };
+    console.log("11111111111111111111111", checkOverlap);
 
-  //   const checkOverlapWithSelected = selectedValue => {
-  //     const overlaps = [];
-  //     const selectedIntervals = selectedValue.details.map(detail => ({
-  //       startTimeValue: detail.startTimeValue,
-  //       endTimeValue: detail.endTimeValue,
-  //     }));
+    const checkOverlapWithSelected = selectedValue => {
+      const overlaps = [];
+      const selectedIntervals = selectedValue.details.map(detail => ({
+        startTimeValue: detail.startTimeValue,
+        endTimeValue: detail.endTimeValue,
+      }));
 
-  //     console.log("333333333333333", selectedIntervals);
+      console.log("333333333333333", selectedIntervals);
 
-  //     selectedIntervals.forEach(selectedInterval => {
-  //       selectedDetails.forEach(detail => {
-  //         if (
-  //           detail.type === selectedValue.type &&
-  //           detail.rowId === selectedValue.rowId
-  //         ) {
-  //           return;
-  //         }
+      selectedIntervals.forEach(selectedInterval => {
+        selectedDetails.forEach(detail => {
+          if (
+            detail.type === selectedValue.type &&
+            detail.rowId === selectedValue.rowId
+          ) {
+            return;
+          }
 
-  //         const detailInterval = {
-  //           startTimeValue: detail.startTimeValue,
-  //           endTimeValue: detail.endTimeValue,
-  //         };
-  //         if (checkOverlap(selectedInterval, detailInterval)) {
-  //           overlaps.push(detail);
-  //         }
-  //       });
-  //     });
+          const detailInterval = {
+            startTimeValue: detail.startTimeValue,
+            endTimeValue: detail.endTimeValue,
+          };
+          if (checkOverlap(selectedInterval, detailInterval)) {
+            overlaps.push(detail);
+          }
+        });
+      });
 
-  //     return overlaps;
-  //   };
+      return overlaps;
+    };
 
-  //   const selectedDetails = [];
+    const selectedDetails = [];
 
-  //   nonActiveCurrs.forEach(course => {
-  //     if (course.sections) {
-  //       course.sections.forEach(section => {
-  //         if (course.SectionId && section.value === course.SectionId) {
-  //           section.details.forEach(detail => {
-  //             selectedDetails.push({
-  //               ...detail,
-  //               type: "section",
-  //               rowId: course.Id,
-  //               selected: String(section.value) === String(course.SectionId),
-  //             });
-  //             console.log(selectedDetails, "selectedDetailsselectedDetails");
-  //           });
-  //         }
-  //       });
-  //     }
+    nonActiveCurrs.forEach(course => {
+      if (course.sections) {
+        course.sections.forEach(section => {
+          if (course.SectionId && section.value === course.SectionId) {
+            section.details.forEach(detail => {
+              selectedDetails.push({
+                ...detail,
+                type: "section",
+                rowId: course.Id,
+                selected: String(section.value) === String(course.SectionId),
+              });
+              console.log(selectedDetails, "selectedDetailsselectedDetails");
+            });
+          }
+        });
+      }
 
-  //     if (course.labs) {
-  //       course.labs.forEach(lab => {
-  //         if (course.LabId && lab.value === course.LabId) {
-  //           lab.details.forEach(detail => {
-  //             selectedDetails.push({
-  //               ...detail,
-  //               type: "lab",
-  //               rowId: course.Id,
-  //             });
-  //           });
-  //         }
-  //       });
-  //     }
-  //   });
+      if (course.labs) {
+        course.labs.forEach(lab => {
+          if (course.LabId && lab.value === course.LabId) {
+            lab.details.forEach(detail => {
+              selectedDetails.push({
+                ...detail,
+                type: "lab",
+                rowId: course.Id,
+              });
+            });
+          }
+        });
+      }
+    });
 
-  //   const overlaps = checkOverlapWithSelected(selectedValue);
+    const overlaps = checkOverlapWithSelected(selectedValue);
 
-  //   if (overlaps.length > 0) {
-  //     this.setState({ duplicateTrainee: "There is a time conflict" });
-  //   } else {
-  //     if (fieldName === "section") {
-  //       onUpdate["SectionId"] = selectedValue.value;
-  //     } else {
-  //       onUpdate["LabId"] = selectedValue.value;
-  //     }
+    if (overlaps.length > 0) {
+      this.setState({ duplicateTrainee: "There is a time conflict" });
+    } else {
+      if (fieldName === "section") {
+        onUpdate["SectionId"] = selectedValue.value;
+      } else {
+        onUpdate["LabId"] = selectedValue.value;
+      }
 
-  //     onUpdateNonActiveCurr(onUpdate, 1);
-  //     this.setState({ duplicateTrainee: null });
-  //   }
-  // };
+      onUpdateNonActiveCurr(onUpdate, 1);
+      this.setState({ duplicateTrainee: null });
+    }
+  };
 
   handleSelectYear = (name, value) => {
     const { onGetRegistrations } = this.props;
@@ -674,7 +674,6 @@ class RegistrationList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
         }),
       },
       {
@@ -684,7 +683,6 @@ class RegistrationList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
         }),
       },
 
@@ -695,7 +693,6 @@ class RegistrationList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
         }),
       },
       {
@@ -705,7 +702,6 @@ class RegistrationList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
         }),
       },
       {
@@ -737,7 +733,6 @@ class RegistrationList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
         }),
       },
       {
@@ -746,7 +741,6 @@ class RegistrationList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
         }),
       },
       {
@@ -755,7 +749,6 @@ class RegistrationList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
         }),
       },
       {
@@ -764,7 +757,6 @@ class RegistrationList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
         }),
       },
       {
@@ -773,7 +765,6 @@ class RegistrationList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
         }),
       },
       {
