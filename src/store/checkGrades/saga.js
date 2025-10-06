@@ -46,7 +46,7 @@ function* fetchCheckedGrades(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Current_Common_StudentsCurriculalinesCheck",
+    tablename: "_Current_Common_TrianeeCurriculalines",
     filter: course.filter,
   };
   try {
@@ -60,7 +60,7 @@ function* fetchCheckedGrades(obj) {
     source: "db",
     procedure: "getCourseStatistics",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_StudentsCurriculalinesCheck",
+    tablename: "Common_Curriculalines",
     filter: `courseId = ${course.courseId}`,
   };
   try {
@@ -84,22 +84,22 @@ function* fetchCheckedGrades(obj) {
   //   yield put(getCoursesOptFail(error));
   // }
 
-  // const get_courseContents = {
-  //   source: "db",
-  //   procedure: "SisApp_getData",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "_Common_DistributingMethods",
-  //   filter: `courseId = ${course.courseId} `,
-  // };
-  // try {
-  //   const response = yield call(
-  //     getCourseContentsEnteredGrades,
-  //     get_courseContents
-  //   );
-  //   yield put(getCourseContentsEnteredGradesSuccess(response));
-  // } catch (error) {
-  //   yield put(getCourseContentsEnteredGradesFail(error));
-  // }
+  const get_courseContents = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_DistributingMethods",
+    filter: `courseId = ${course.courseId} `,
+  };
+  try {
+    const response = yield call(
+      getCourseContentsEnteredGrades,
+      get_courseContents
+    );
+    yield put(getCourseContentsEnteredGradesSuccess(response));
+  } catch (error) {
+    yield put(getCourseContentsEnteredGradesFail(error));
+  }
 }
 
 function* onUpdateCheckedGrade({ payload }) {

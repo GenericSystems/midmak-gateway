@@ -563,11 +563,17 @@ class RegistrationList extends Component {
     nonActiveCurrs.forEach(trainee => {
       if (!trainee.SectionId) {
         errors.push(`SectionId is empty for trainee: ${trainee.Code}`);
-        this.setState({ duplicateError: "Fill the options" });
+        this.setState({
+          duplicateError:
+            "There is a conflict between the section and lab times. Please choose another section/lab.",
+        });
       }
       if (trainee.hasLab === 1 && !trainee.LabId) {
         errors.push(`LabId is empty for trainee: ${trainee.Code}`);
-        this.setState({ duplicateError: "Fill the options" });
+        this.setState({
+          duplicateError:
+            "There is a conflict between the section and lab times. Please choose another section/lab.",
+        });
       }
     });
 
@@ -1014,6 +1020,78 @@ class RegistrationList extends Component {
       { dataField: "CourseName", text: t("Course Name"), sort: true },
       { dataField: "hasLab", text: this.props.t("Has Lab"), hidden: true },
       { dataField: "code", text: this.props.t("Course Code"), sort: true },
+      // {
+      //   dataField: "sections",
+      //   text: this.props.t("Section"),
+      //   sort: true,
+      //   formatter: (cell, row) => (
+      //     <Select
+      //       name="secLabId"
+      //       key={`secLab_select`}
+      //       options={
+      //         (nonActiveCurrs.find(item => item.Id === row.Id) || {})
+      //           .sections || []
+      //       }
+      //       onChange={newValue => {
+      //         this.handleActiveSelectChange(
+      //           row.Id,
+      //           "section",
+      //           newValue,
+      //           row.SectionId
+      //         );
+      //       }}
+      //       value={
+      //         (
+      //           (nonActiveCurrs.find(item => item.Id === row.Id) || {})
+      //             .sections || []
+      //         ).find(section => section.value === row.SectionId) || null
+      //       }
+      //     />
+      //   ),
+      // },
+      // {
+      //   dataField: "labs",
+      //   text: this.props.t("Lab"),
+      //   sort: true,
+      //   formatter: (cell, row) => {
+      //     if (row.hasLab === 0) {
+      //       return null;
+      //     }
+
+      //     const rowLabs =
+      //       (nonActiveCurrs.find(item => item.Id === row.Id) || {}).labs || [];
+
+      //     if (rowLabs.length === 0) {
+      //       return null;
+      //     }
+
+      //     return (
+      //       <Select
+      //         name="secLabId"
+      //         key={`secLab_select`}
+      //         options={rowLabs}
+      //         onChange={newValue => {
+      //           this.handleActiveSelectChange(
+      //             row.Id,
+      //             "lab",
+      //             newValue,
+      //             row.LabId
+      //           );
+      //         }}
+      //         value={rowLabs.find(lab => lab.value === row.LabId) || null}
+      //       />
+      //     );
+      //   },
+      //   style: (cell, row) => {
+      //     return {
+      //       backgroundImage:
+      //         row.hasLab === 0
+      //           ? "linear-gradient(45deg, #FFFFFF 25%, #DFDFDF 25%, #A1A1A1 50%, #FFFFFF 50%, #FFFFFF 75%, #CFCFCF 75%)"
+      //           : "none",
+      //       backgroundSize: "8px 8px",
+      //     };
+      //   },
+      // },
       {
         dataField: "sections",
         text: this.props.t("Section"),
@@ -1026,20 +1104,13 @@ class RegistrationList extends Component {
               (nonActiveCurrs.find(item => item.Id === row.Id) || {})
                 .sections || []
             }
-            onChange={newValue => {
-              this.handleActiveSelectChange(
-                row.Id,
-                "section",
-                newValue,
-                row.SectionId
-              );
-            }}
             value={
               (
                 (nonActiveCurrs.find(item => item.Id === row.Id) || {})
                   .sections || []
               ).find(section => section.value === row.SectionId) || null
             }
+            isDisabled
           />
         ),
       },
@@ -1048,31 +1119,20 @@ class RegistrationList extends Component {
         text: this.props.t("Lab"),
         sort: true,
         formatter: (cell, row) => {
-          if (row.hasLab === 0) {
-            return null;
-          }
+          if (row.hasLab === 0) return null;
 
           const rowLabs =
             (nonActiveCurrs.find(item => item.Id === row.Id) || {}).labs || [];
 
-          if (rowLabs.length === 0) {
-            return null;
-          }
+          if (rowLabs.length === 0) return null;
 
           return (
             <Select
               name="secLabId"
               key={`secLab_select`}
               options={rowLabs}
-              onChange={newValue => {
-                this.handleActiveSelectChange(
-                  row.Id,
-                  "lab",
-                  newValue,
-                  row.LabId
-                );
-              }}
               value={rowLabs.find(lab => lab.value === row.LabId) || null}
+              isDisabled
             />
           );
         },
@@ -1086,7 +1146,6 @@ class RegistrationList extends Component {
           };
         },
       },
-
       {
         dataField: "delete",
         text: "",

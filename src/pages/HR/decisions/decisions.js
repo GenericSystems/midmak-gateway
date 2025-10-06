@@ -68,16 +68,19 @@ class DecisionsList extends Component {
       decision: "",
       decisionsTypes: [],
       selectedDecisionMaker: "",
+      decisionMakerName: null,
       selectedApplyDecisionTo: "",
-      selectedEmployeeName: "",
-      selectedDecisionType: "",
-      selectedCorporateNode: "",
-      selectedDecisionStatus: "",
+      selectedEmployeeName: null,
+      employeeName: "",
+      employeesArray: [],
+      selectedDecisionType: null,
+      selectedCorporateNode: null,
+      corporateNodeName: "",
+      selectedDecisionStatus: null,
       decisionNumberError: null,
-      decisionDateError: null,
-      decisionReasonError: null,
-      decisionMakerError: null,
-      applyDecisionToError: null,
+      decisionDateError: false,
+      decisionMakerError: false,
+      applyDecisionToError: false,
       showAlert: null,
       showAddButton: false,
       showDeleteButton: false,
@@ -213,6 +216,12 @@ class DecisionsList extends Component {
   handleAddRow = () => {
     this.setState({
       decision: "",
+      selectedDecisionMaker: null,
+      selectedApplyDecisionTo: null,
+      selectedCorporateNode: null,
+      corporateNodeName: "",
+      employeesArray: [],
+      employeesId: [],
       isEdit: false,
     });
     this.addToggle();
@@ -220,13 +229,18 @@ class DecisionsList extends Component {
 
   handleDecisionClick = arg => {
     console.log("arg", arg);
-
+    const employeesArray = arg.employees ? JSON.parse(arg.employees) : [];
     this.setState({
       decision: arg,
       selectedDecisionMaker: arg.decisionMakerId,
+      decisionMakerName: arg.decisionMakerName,
       selectedApplyDecisionTo: arg.applyDecisionToId,
-      // selectedCorporateNode: arg.corporateId,
+      selectedCorporateNode: arg.corporateId,
+      corporateNodeName: arg.corporateNodeName,
       // selectedEmployeeName: arg.employeesId,
+      // employeeName: arg.employeeName,
+      employeesArray,
+      employeesId: employeesArray.map(i => i.value),
       selectedDecisionType: arg.decisionTypeId,
       selectedDecisionStatus: arg.decisionStatusId,
       isEdit: true,
@@ -250,8 +264,8 @@ class DecisionsList extends Component {
     this.toggle();
   };
 
-  handleAlertClose = () => {
-    this.setState({ duplicateError: null });
+  handleAlertClose = alertName => {
+    this.setState({ [alertName]: null });
   };
 
   handleSuccessClose = () => {
@@ -308,6 +322,7 @@ class DecisionsList extends Component {
   };
 
   handleSave = values => {
+    console.log("values", values);
     const {
       selectedEmployeeName,
       selectedCorporateNode,
@@ -316,14 +331,23 @@ class DecisionsList extends Component {
       selectedDecisionMaker,
       selectedDecisionType,
       selectedDecisionStatus,
+      employeesArray,
     } = this.state;
 
     const { onAddNewDecision, onUpdateDecision } = this.props;
+
+    const formattedEmployees =
+      employeesArray?.map(item => ({
+        label: item.label,
+        value: item.value,
+      })) || [];
 
     values.decisionMakerId = selectedDecisionMaker;
     values.applyDecisionToId = selectedApplyDecisionTo;
     values.decisionTypeId = selectedDecisionType;
     values.decisionStatusId = isEdit ? selectedDecisionStatus : 4;
+    values["corporateId"] = selectedCorporateNode;
+    values["employeesId"] = formattedEmployees;
     console.log("selectedDecisionStatus at save:", selectedDecisionStatus);
 
     if (isEdit) {
@@ -335,40 +359,80 @@ class DecisionsList extends Component {
         values.isExecute = 0;
       }
     }
+    if (
+      values.decisionNumber === "" ||
+      values.decisionMakerId === "" ||
+      values.decisionDate === "" ||
+      (values.applyDecisionToId === "" && selectedApplyDecisionTo === "")
+    ) {
+      this.setState({ decisionNumberError: true, saveError: true });
 
-    if (selectedApplyDecisionTo === 1) {
-      delete values.corporateId;
-      delete values.employeesId;
-    } else if (selectedApplyDecisionTo === 2) {
-      values.corporateId = selectedCorporateNode;
-      delete values.employeesId;
-      if (values.corporateId === "") delete values.corporateId;
-    } else if (selectedApplyDecisionTo === 3) {
-      values.employeesId = selectedEmployeeName;
-      delete values.corporateId;
-    }
-    Object.keys(values).forEach(key => {
-      if (typeof values[key] === "string" && values[key].trim() === "") {
-        delete values[key];
-      }
-    });
+      this.setState({ decisionMakerError: true, saveError: true });
 
-    let decisionInfo = {};
-    Object.keys(values).forEach(key => {
-      const val = values[key];
-      if (val !== undefined && val !== null) {
-        decisionInfo[key] = val;
-      }
-    });
-    if (isEdit) {
-      onUpdateDecision(decisionInfo);
-      this.toggle();
+      this.setState({ decisionDateError: true, saveError: true });
+
+      this.setState({ applyDecisionToError: true, saveError: true });
+
+      const emptyError = this.props.t(
+        "Fill the Required Fields to Save Decision"
+      );
+
+      this.setState({ emptyError: emptyError });
     } else {
-      onAddNewDecision(decisionInfo);
-      this.addToggle();
-    }
+      this.setState({ decisionNumberError: false, saveError: false });
 
-    this.setState({ errorMessages: {} });
+      this.setState({ decisionMakerError: false, saveError: false });
+
+      this.setState({ decisionDateError: false, saveError: false });
+
+      this.setState({ applyDecisionToError: false, saveError: false });
+      let decisionInfo = {};
+      Object.keys(values).forEach(function (key) {
+        if (
+          values[key] != undefined &&
+          (values[key].length > 0 || values[key] != "")
+        )
+          decisionInfo[key] = values[key];
+      });
+
+      if (values.corporateId) {
+        const corporateObject = this.props.corporateNodesOpt.find(
+          corporate => String(corporate.value) === String(values.corporateId)
+        );
+
+        console.log("corporateObject", corporateObject);
+
+        if (corporateObject) {
+          decisionInfo["corporateId"] = corporateObject.key;
+        } else {
+          console.warn("No corporate found for", values.corporateId);
+        }
+      }
+
+      if (values.employeesId) {
+        decisionInfo["employeesId"] = formattedEmployees;
+      }
+
+      this.setState({
+        errorMessages: {},
+      });
+
+      if (isEdit) {
+        onUpdateDecision(decisionInfo);
+        const saveDecisionMessage = "Saved successfully ";
+        this.setState({
+          successMessage: saveDecisionMessage,
+        });
+        this.toggle();
+      } else {
+        onAddNewDecision(decisionInfo);
+        const saveDecisionMessage = "Saved successfully ";
+        this.setState({
+          successMessage: saveDecisionMessage,
+        });
+        this.addToggle();
+      }
+    }
   };
 
   handleSelect = (fieldName, selectedValue) => {
@@ -380,15 +444,20 @@ class DecisionsList extends Component {
   };
 
   handleValidDate = date => {
-    if (
-      !date ||
-      date === "1970-01-01" ||
-      date === "0000-00-00" ||
-      moment(date).year() === 1970
-    ) {
-      return "";
+    const date1 = moment(new Date(date)).format("DD /MM/ Y");
+    return date1;
+  };
+
+  handleMultiEmployees = (fieldName, selectedMulti) => {
+    if (fieldName === "employeesId") {
+      const selectedIds = selectedMulti
+        ? selectedMulti.map(option => option.value)
+        : [];
+      this.setState({
+        employeesArray: selectedMulti || [],
+        employeesId: selectedIds,
+      });
     }
-    return moment(date).format("DD-MM-YYYY");
   };
 
   render() {
@@ -426,7 +495,7 @@ class DecisionsList extends Component {
       decisionReasonError,
       decisionMakerError,
       applyDecisionToError,
-      onGetDecisionMakers,
+      employeesArray,
     } = this.state;
     console.log("decisionMakers:", decisionMakers);
 
@@ -681,10 +750,12 @@ class DecisionsList extends Component {
                                               (decision &&
                                                 decision.decisionNumber) ||
                                               "",
-                                            decisionDate:
-                                              (decision &&
-                                                decision.decisionDate) ||
-                                              "",
+                                            decisionDate: decision?.decisionDate
+                                              ? moment
+                                                  .utc(decision.decisionDate)
+                                                  .local()
+                                                  .format("YYYY-MM-DD")
+                                              : "",
                                             decisionMakerId:
                                               (decision &&
                                                 decision.decisionMakerId) ||
@@ -765,9 +836,10 @@ class DecisionsList extends Component {
                                                           type="button"
                                                           className="btn-close"
                                                           aria-label="Close"
-                                                          onClick={
-                                                            this
-                                                              .handleAlertClose
+                                                          onClick={() =>
+                                                            this.handleAlertClose(
+                                                              "emptyError"
+                                                            )
                                                           }
                                                         ></button>
                                                       </Alert>
@@ -832,20 +904,63 @@ class DecisionsList extends Component {
                                                               </Label>
                                                             </Col>
                                                             <Col lg="8">
-                                                              <input
-                                                                type="text"
-                                                                id="decisionMaker-Id"
+                                                              <Field
                                                                 name="decisionMakerId"
-                                                                list="decisionMakerList"
-                                                                className={`form-control ${this.state.inputClass}`}
+                                                                as="input"
+                                                                id="decisionMaker-Id"
+                                                                type="text"
+                                                                placeholder="Search..."
+                                                                className={
+                                                                  "form-control" +
+                                                                  (errors.decisionMakerId &&
+                                                                  touched.decisionMakerId
+                                                                    ? " is-invalid"
+                                                                    : "")
+                                                                }
+                                                                value={
+                                                                  decisionMakers.find(
+                                                                    decisionMaker =>
+                                                                      decisionMaker.key ===
+                                                                      this.state
+                                                                        .selectedDecisionMaker
+                                                                  )?.value || ""
+                                                                }
                                                                 onChange={e => {
-                                                                  this.handleDataListChange(
+                                                                  const newValue =
                                                                     e.target
-                                                                      .name,
-                                                                    e.target
-                                                                      .value
-                                                                  );
+                                                                      .value;
+
+                                                                  const selectedMaker =
+                                                                    decisionMakers.find(
+                                                                      decisionMaker =>
+                                                                        decisionMaker.value ===
+                                                                        newValue
+                                                                    );
+
+                                                                  if (
+                                                                    selectedMaker
+                                                                  ) {
+                                                                    this.setState(
+                                                                      {
+                                                                        selectedDecisionMaker:
+                                                                          selectedMaker.key,
+                                                                        decisionMakerName:
+                                                                          selectedMaker.value,
+                                                                      }
+                                                                    );
+                                                                  } else {
+                                                                    this.setState(
+                                                                      {
+                                                                        selectedDecisionMaker:
+                                                                          null,
+                                                                        decisionMakerName:
+                                                                          newValue,
+                                                                      }
+                                                                    );
+                                                                  }
                                                                 }}
+                                                                list="decisionMakerList"
+                                                                autoComplete="off"
                                                               />
                                                               <datalist id="decisionMakerList">
                                                                 {decisionMakers.map(
@@ -878,7 +993,7 @@ class DecisionsList extends Component {
                                                         </div>
                                                         {showEmployee && (
                                                           <FormGroup>
-                                                            <div className="mb-3">
+                                                            {/* <div className="mb-3">
                                                               <Row>
                                                                 <Col className="col-4">
                                                                   <Label for="employee-Id">
@@ -891,21 +1006,66 @@ class DecisionsList extends Component {
                                                                   </span>
                                                                 </Col>
                                                                 <Col className="col-8">
-                                                                  <input
-                                                                    className={`form-control ${this.state.inputClass}`}
-                                                                    list="employeeNameDatalist"
+                                                                  <Field
                                                                     name="employeesId"
+                                                                    as="input"
                                                                     id="employee-Id"
-                                                                    placeholder="Type to search..."
-                                                                    autoComplete="off"
-                                                                    onChange={e =>
-                                                                      this.handleDataListChange(
-                                                                        e.target
-                                                                          .name,
-                                                                        e.target
-                                                                          .value
-                                                                      )
+                                                                    type="text"
+                                                                    placeholder="Search..."
+                                                                    className={
+                                                                      "form-control" +
+                                                                      (errors.employeesId &&
+                                                                      touched.employeesId
+                                                                        ? " is-invalid"
+                                                                        : "")
                                                                     }
+                                                                    value={
+                                                                      employeesNames.find(
+                                                                        empl =>
+                                                                          empl.key ===
+                                                                          this
+                                                                            .state
+                                                                            .selectedEmployeeName
+                                                                      )
+                                                                        ?.value ||
+                                                                      ""
+                                                                    }
+                                                                    onChange={e => {
+                                                                      const newValue =
+                                                                        e.target
+                                                                          .value;
+
+                                                                      const selectedEmployee =
+                                                                        employeesNames.find(
+                                                                          empl =>
+                                                                            empl.value ===
+                                                                            newValue
+                                                                        );
+
+                                                                      if (
+                                                                        selectedEmployee
+                                                                      ) {
+                                                                        this.setState(
+                                                                          {
+                                                                            selectedEmployeeName:
+                                                                              selectedEmployee.key,
+                                                                            employeeName:
+                                                                              selectedEmployee.value,
+                                                                          }
+                                                                        );
+                                                                      } else {
+                                                                        this.setState(
+                                                                          {
+                                                                            selectedEmployeeName:
+                                                                              null,
+                                                                            employeeName:
+                                                                              newValue,
+                                                                          }
+                                                                        );
+                                                                      }
+                                                                    }}
+                                                                    list="employeeNameDatalist"
+                                                                    autoComplete="off"
                                                                   />
                                                                   <datalist id="employeeNameDatalist">
                                                                     {employeesNames.map(
@@ -923,6 +1083,39 @@ class DecisionsList extends Component {
                                                                   </datalist>
                                                                 </Col>
                                                               </Row>
+                                                            </div> */}
+                                                            <div className="mb-3">
+                                                              <Row>
+                                                                <Col className="col-4">
+                                                                  <Label for="employee-Id">
+                                                                    {this.props.t(
+                                                                      "Employees"
+                                                                    )}
+                                                                  </Label>
+                                                                </Col>
+
+                                                                <Col className="col-8">
+                                                                  <Select
+                                                                    classNamePrefix="select2-selection"
+                                                                    id="employee-Id"
+                                                                    name="employeesId"
+                                                                    key={`employeesId`}
+                                                                    options={
+                                                                      employeesNames
+                                                                    }
+                                                                    onChange={selectedOption =>
+                                                                      this.handleMultiEmployees(
+                                                                        "employeesId",
+                                                                        selectedOption
+                                                                      )
+                                                                    }
+                                                                    isMulti
+                                                                    value={
+                                                                      employeesArray
+                                                                    }
+                                                                  />
+                                                                </Col>
+                                                              </Row>{" "}
                                                             </div>
                                                           </FormGroup>
                                                         )}
@@ -944,21 +1137,66 @@ class DecisionsList extends Component {
                                                                   </Label>
                                                                 </Col>
                                                                 <Col lg="8">
-                                                                  <input
-                                                                    type="text"
-                                                                    id="corporate-Id"
+                                                                  <Field
                                                                     name="corporateId"
-                                                                    list="corporatesList"
-                                                                    className={`form-control ${this.state.inputClass}`}
-                                                                    placeholder="Type to search..."
+                                                                    as="input"
+                                                                    id="corporate-Id"
+                                                                    type="text"
+                                                                    placeholder="Search..."
+                                                                    className={
+                                                                      "form-control" +
+                                                                      (errors.corporateId &&
+                                                                      touched.corporateId
+                                                                        ? " is-invalid"
+                                                                        : "")
+                                                                    }
+                                                                    value={
+                                                                      corporateNodesOpt.find(
+                                                                        corporate =>
+                                                                          corporate.key ===
+                                                                          this
+                                                                            .state
+                                                                            .selectedCorporateNode
+                                                                      )
+                                                                        ?.value ||
+                                                                      ""
+                                                                    }
                                                                     onChange={e => {
-                                                                      this.handleDataListChange(
+                                                                      const newValue =
                                                                         e.target
-                                                                          .name,
-                                                                        e.target
-                                                                          .value
-                                                                      );
+                                                                          .value;
+
+                                                                      const selectedCorporate =
+                                                                        corporateNodesOpt.find(
+                                                                          corporate =>
+                                                                            corporate.value ===
+                                                                            newValue
+                                                                        );
+
+                                                                      if (
+                                                                        selectedCorporate
+                                                                      ) {
+                                                                        this.setState(
+                                                                          {
+                                                                            selectedCorporateNode:
+                                                                              selectedCorporate.key,
+                                                                            corporateNodeName:
+                                                                              selectedCorporate.value,
+                                                                          }
+                                                                        );
+                                                                      } else {
+                                                                        this.setState(
+                                                                          {
+                                                                            selectedCorporateNode:
+                                                                              null,
+                                                                            corporateNodeName:
+                                                                              newValue,
+                                                                          }
+                                                                        );
+                                                                      }
                                                                     }}
+                                                                    list="corporatesList"
+                                                                    autoComplete="off"
                                                                   />
                                                                   <datalist id="corporatesList">
                                                                     {corporateNodesOpt.map(
@@ -1047,8 +1285,7 @@ class DecisionsList extends Component {
                                                                     : ""
                                                                 }
                                                                 className={`form-control ${
-                                                                  errors.decisionDate &&
-                                                                  touched.decisionDate
+                                                                  decisionDateError
                                                                     ? "is-invalid"
                                                                     : ""
                                                                 }`}
@@ -1351,21 +1588,14 @@ class DecisionsList extends Component {
                                             decisionDate: Yup.date().required(
                                               "Decision Date is required"
                                             ),
-                                            decisionMakerId:
-                                              Yup.string().required(
+                                            decisionMakerId: Yup.string()
+                                              .matches(/^[\u0600-\u06FF\s]+$/)
+                                              .required(
                                                 "Decision Maker Is Required"
                                               ),
                                             applyDecisionToId:
                                               Yup.string().required(
                                                 "Apply The Decision To Is Required"
-                                              ),
-                                            decisionReason:
-                                              Yup.string().required(
-                                                "Decision Reason Is Required"
-                                              ),
-                                            decisionTypeId:
-                                              Yup.string().required(
-                                                "Decision Type Is Required"
                                               ),
                                           })}
                                           onSubmit={values => {
@@ -1401,9 +1631,10 @@ class DecisionsList extends Component {
                                                             type="button"
                                                             className="btn-close"
                                                             aria-label="Close"
-                                                            onClick={
-                                                              this
-                                                                .handleAlertClose
+                                                            onClick={() =>
+                                                              this.handleAlertClose(
+                                                                "duplicateError"
+                                                              )
                                                             }
                                                           ></button>
                                                         </Alert>
@@ -1469,21 +1700,66 @@ class DecisionsList extends Component {
                                                               </Label>
                                                             </Col>
                                                             <Col lg="8">
-                                                              <input
-                                                                type="text"
-                                                                id="decisionMaker-Id"
+                                                              <Field
                                                                 name="decisionMakerId"
-                                                                list="decisionMakerList"
-                                                                className={`form-control ${this.state.inputClass}`}
+                                                                as="input"
+                                                                id="decisionMaker-Id"
+                                                                type="text"
+                                                                placeholder="Search..."
+                                                                className={
+                                                                  "form-control" +
+                                                                  ((errors.decisionMakerId &&
+                                                                    touched.decisionMakerId) ||
+                                                                  decisionMakerError
+                                                                    ? " is-invalid"
+                                                                    : "")
+                                                                }
+                                                                value={
+                                                                  decisionMakers.find(
+                                                                    decisionMaker =>
+                                                                      decisionMaker.key ===
+                                                                      this.state
+                                                                        .selectedDecisionMaker
+                                                                  )?.value || ""
+                                                                }
                                                                 onChange={e => {
-                                                                  this.handleDataListChange(
+                                                                  const newValue =
                                                                     e.target
-                                                                      .name,
-                                                                    e.target
-                                                                      .value
-                                                                  );
+                                                                      .value;
+
+                                                                  const selectedMaker =
+                                                                    decisionMakers.find(
+                                                                      decisionMaker =>
+                                                                        decisionMaker.value ===
+                                                                        newValue
+                                                                    );
+
+                                                                  if (
+                                                                    selectedMaker
+                                                                  ) {
+                                                                    this.setState(
+                                                                      {
+                                                                        selectedDecisionMaker:
+                                                                          selectedMaker.key,
+                                                                        decisionMakerName:
+                                                                          selectedMaker.value,
+                                                                      }
+                                                                    );
+                                                                  } else {
+                                                                    this.setState(
+                                                                      {
+                                                                        selectedDecisionMaker:
+                                                                          null,
+                                                                        decisionMakerName:
+                                                                          newValue,
+                                                                      }
+                                                                    );
+                                                                  }
                                                                 }}
+                                                                list="decisionMakerList"
+                                                                autoComplete="off"
                                                               />
+
                                                               <datalist id="decisionMakerList">
                                                                 {decisionMakers.map(
                                                                   decisionMaker => (
@@ -1515,7 +1791,9 @@ class DecisionsList extends Component {
                                                         </div>
                                                         {showEmployee && (
                                                           <FormGroup>
-                                                            <div className="mb-3">
+                                                            {/* if you want datalist instead of multi select */}
+
+                                                            {/* <div className="mb-3">
                                                               <Row>
                                                                 <Col className="col-4">
                                                                   <Label for="employee-Id">
@@ -1528,22 +1806,68 @@ class DecisionsList extends Component {
                                                                   </span>
                                                                 </Col>
                                                                 <Col className="col-8">
-                                                                  <input
-                                                                    className={`form-control ${this.state.inputClass}`}
-                                                                    list="employeeNameDatalist"
+                                                                  <Field
                                                                     name="employeesId"
+                                                                    as="input"
                                                                     id="employee-Id"
-                                                                    placeholder="Type to search..."
-                                                                    autoComplete="off"
-                                                                    onChange={e =>
-                                                                      this.handleDataListChange(
-                                                                        e.target
-                                                                          .name,
-                                                                        e.target
-                                                                          .value
-                                                                      )
+                                                                    type="text"
+                                                                    placeholder="Search..."
+                                                                    className={
+                                                                      "form-control" +
+                                                                      (errors.employeesId &&
+                                                                      touched.employeesId
+                                                                        ? " is-invalid"
+                                                                        : "")
                                                                     }
+                                                                    value={
+                                                                      employeesNames.find(
+                                                                        empl =>
+                                                                          empl.key ===
+                                                                          this
+                                                                            .state
+                                                                            .selectedEmployeeName
+                                                                      )
+                                                                        ?.value ||
+                                                                      ""
+                                                                    }
+                                                                    onChange={e => {
+                                                                      const newValue =
+                                                                        e.target
+                                                                          .value;
+
+                                                                      const selectedEmployee =
+                                                                        employeesNames.find(
+                                                                          empl =>
+                                                                            empl.value ===
+                                                                            newValue
+                                                                        );
+
+                                                                      if (
+                                                                        selectedEmployee
+                                                                      ) {
+                                                                        this.setState(
+                                                                          {
+                                                                            selectedEmployeeName:
+                                                                              selectedEmployee.key,
+                                                                            employeeName:
+                                                                              selectedEmployee.value,
+                                                                          }
+                                                                        );
+                                                                      } else {
+                                                                        this.setState(
+                                                                          {
+                                                                            selectedEmployeeName:
+                                                                              null,
+                                                                            employeeName:
+                                                                              newValue,
+                                                                          }
+                                                                        );
+                                                                      }
+                                                                    }}
+                                                                    list="employeeNameDatalist"
+                                                                    autoComplete="off"
                                                                   />
+
                                                                   <datalist id="employeeNameDatalist">
                                                                     {employeesNames.map(
                                                                       employeeName => (
@@ -1560,6 +1884,39 @@ class DecisionsList extends Component {
                                                                   </datalist>
                                                                 </Col>
                                                               </Row>
+                                                            </div> */}
+                                                            <div className="mb-3">
+                                                              <Row>
+                                                                <Col className="col-4">
+                                                                  <Label for="employee-Id">
+                                                                    {this.props.t(
+                                                                      "Employees"
+                                                                    )}
+                                                                  </Label>
+                                                                </Col>
+
+                                                                <Col className="col-8">
+                                                                  <Select
+                                                                    classNamePrefix="select2-selection"
+                                                                    id="employee-Id"
+                                                                    name="employeesId"
+                                                                    key={`employeesId`}
+                                                                    options={
+                                                                      employeesNames
+                                                                    }
+                                                                    onChange={selectedOption =>
+                                                                      this.handleMultiEmployees(
+                                                                        "employeesId",
+                                                                        selectedOption
+                                                                      )
+                                                                    }
+                                                                    isMulti
+                                                                    value={
+                                                                      employeesArray
+                                                                    }
+                                                                  />
+                                                                </Col>
+                                                              </Row>{" "}
                                                             </div>
                                                           </FormGroup>
                                                         )}
@@ -1569,33 +1926,75 @@ class DecisionsList extends Component {
                                                               <Row>
                                                                 <Col lg="4">
                                                                   <Label
-                                                                    for="-Id"
+                                                                    for="corporate-Id"
                                                                     className="form-label d-flex"
                                                                   >
                                                                     {this.props.t(
                                                                       "Corporate"
                                                                     )}
-                                                                    <span className="text-danger">
-                                                                      *
-                                                                    </span>
                                                                   </Label>
                                                                 </Col>
                                                                 <Col lg="8">
-                                                                  <input
-                                                                    type="text"
-                                                                    id="corporate-Id"
+                                                                  <Field
                                                                     name="corporateId"
-                                                                    list="corporatesList"
-                                                                    className={`form-control ${this.state.inputClass}`}
-                                                                    placeholder="Type to search..."
+                                                                    as="input"
+                                                                    id="corporate-Id"
+                                                                    type="text"
+                                                                    placeholder="Search..."
+                                                                    className={
+                                                                      "form-control" +
+                                                                      (errors.corporateId &&
+                                                                      touched.corporateId
+                                                                        ? " is-invalid"
+                                                                        : "")
+                                                                    }
+                                                                    value={
+                                                                      corporateNodesOpt.find(
+                                                                        corporate =>
+                                                                          corporate.key ===
+                                                                          this
+                                                                            .state
+                                                                            .selectedCorporateNode
+                                                                      )
+                                                                        ?.value ||
+                                                                      ""
+                                                                    }
                                                                     onChange={e => {
-                                                                      this.handleDataListChange(
+                                                                      const newValue =
                                                                         e.target
-                                                                          .name,
-                                                                        e.target
-                                                                          .value
-                                                                      );
+                                                                          .value;
+
+                                                                      const selectedCorporate =
+                                                                        corporateNodesOpt.find(
+                                                                          corporate =>
+                                                                            corporate.value ===
+                                                                            newValue
+                                                                        );
+
+                                                                      if (
+                                                                        selectedCorporate
+                                                                      ) {
+                                                                        this.setState(
+                                                                          {
+                                                                            selectedCorporateNode:
+                                                                              selectedCorporate.key,
+                                                                            corporateNodeName:
+                                                                              selectedCorporate.value,
+                                                                          }
+                                                                        );
+                                                                      } else {
+                                                                        this.setState(
+                                                                          {
+                                                                            selectedCorporateNode:
+                                                                              null,
+                                                                            corporateNodeName:
+                                                                              newValue,
+                                                                          }
+                                                                        );
+                                                                      }
                                                                     }}
+                                                                    list="corporatesList"
+                                                                    autoComplete="off"
                                                                   />
                                                                   <datalist id="corporatesList">
                                                                     {corporateNodesOpt.map(
@@ -1684,8 +2083,7 @@ class DecisionsList extends Component {
                                                                     : ""
                                                                 }
                                                                 className={`form-control ${
-                                                                  errors.decisionDate &&
-                                                                  touched.decisionDate
+                                                                  decisionDateError
                                                                     ? "is-invalid"
                                                                     : ""
                                                                 }`}

@@ -138,13 +138,14 @@ function* fetchDecisions() {
   };
   try {
     const response = yield call(getDecisions, get_decisions_req);
+    console.log("732656", response);
     yield put(getDecisionsSuccess(response));
   } catch (error) {
     yield put(getDecisionsFail(error));
   }
   const get_employeeName_req = {
     source: "db",
-    procedure: "Generic_Optiondatalist",
+    procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_EmployeeOption",
     fields: "Id,fullName",

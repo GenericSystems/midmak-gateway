@@ -895,23 +895,23 @@ class DistributingCoursesMethods extends Component {
                                         <i className="mdi mdi-content-copy blue-noti-icon" />
                                       </IconButton>
                                     </Tooltip>
-                                    {showAddButton && (
-                                      <Tooltip
-                                        title={this.props.t(
-                                          "Create Distributing Method"
-                                        )}
-                                        placement="top"
+                                    {/* {showAddButton && ( */}
+                                    <Tooltip
+                                      title={this.props.t(
+                                        "Create Distributing Method"
+                                      )}
+                                      placement="top"
+                                    >
+                                      <IconButton
+                                        color="primary"
+                                        onClick={
+                                          this.handleAddDistributingMethodForm
+                                        }
                                       >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={
-                                            this.handleAddDistributingMethodForm
-                                          }
-                                        >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    )}
+                                        <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                      </IconButton>
+                                    </Tooltip>
+                                    {/* )} */}
                                   </div>
                                 </Col>
                               </Row>

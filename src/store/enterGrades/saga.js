@@ -65,7 +65,7 @@ function* fetchCourseStatistics({ payload }) {
     procedure: "getCourseStatistics",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_Curriculalines",
-    // filter: `courseId = ${payload.courseId}`,
+    filter: `courseId = ${payload.courseId}`,
     flag: payload.flag,
   };
   try {
@@ -95,7 +95,7 @@ function* fetchCourseContentsEnteredGrades({ payload }) {
 
 function* onUpdateEnteredGrade({ payload }) {
   payload["source"] = "db";
-  payload["procedure"] = "SC_SisApp_updateStudentGrade";
+  payload["procedure"] = "SC_SisApp_updateTraineeGrade";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_Curriculalines";
   payload["queryname"] = "_Current_Common_TrianeeCurriculalines";
