@@ -226,6 +226,7 @@ class EnterGradesList extends Component {
   };
 
   handleGradeDataChange = (row, fieldName, fieldValue) => {
+    console.log("rrrrrrrrrr", row);
     const { onUpdateGrade, enteredGrades, courseContentsEnteredGrades } =
       this.props;
 
@@ -252,20 +253,20 @@ class EnterGradesList extends Component {
           const matchingField = courseContentsEnteredGrades.find(
             field => field.dataField === termInput
           );
-
+          console.log("matchingFieldmatchingField", matchingField);
           if (matchingField) {
             const FieldToUpdate = `Ex${matchingField.orderContent}`;
             if (fieldValue == "") {
               const updateData = {
                 Id: row.Id,
-                traineeId: row.traineeId,
+                TraineeNum: row.TraineeNum,
                 [FieldToUpdate]: null,
               };
               onUpdateGrade(updateData);
             } else {
               const updateData = {
                 Id: row.Id,
-                traineeId: row.traineeId,
+                TraineeNum: row.TraineeNum,
                 [FieldToUpdate]: fieldValue,
               };
               onUpdateGrade(updateData);
@@ -333,7 +334,7 @@ class EnterGradesList extends Component {
         order: "desc",
       },
     ];
-
+    console.log("showEditButton", showEditButton);
     const generateColumns = () => {
       if (courseContentsEnteredGrades.length != 0) {
         const columns = courseContentsEnteredGrades.map(column => ({
@@ -341,7 +342,7 @@ class EnterGradesList extends Component {
           dataField: column.dataField,
           text: column.textField,
           editable: showEditButton
-            ? column.dataField !== "traineeId" &&
+            ? column.dataField !== "TraineeNum" &&
               column.dataField !== "traineeName" &&
               column.dataField !== "totalGrade" &&
               column.dataField !== "letter_grade"
@@ -369,7 +370,7 @@ class EnterGradesList extends Component {
 
           const mappedData = {
             Id: grade.Id || "",
-            traineeId: grade.traineeId || "",
+            TraineeNum: grade.TraineeNum || "",
             traineeName: grade.traineeName || "",
             totalGrade: grade.totalGrade || "",
             letter_grade: grade.letter_grade || "",
@@ -394,7 +395,7 @@ class EnterGradesList extends Component {
       } else {
         mappedDataArray.push({
           Id: "",
-          traineeId: "",
+          TraineeNum: "",
           traineeName: "",
           Total: "",
           Letter: "",
@@ -806,7 +807,7 @@ class EnterGradesList extends Component {
                                       data={selectedCourseData}
                                       columns={selectedCourseColumns}
                                       cellEdit={cellEditFactory({
-                                        mode: "click",
+                                        mode: "dbclick",
                                         blurToSave: true,
                                         afterSaveCell: (
                                           oldValue,

@@ -46,7 +46,7 @@ function* fetchCheckedGrades(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Current_Common_TrianeeCurriculalines",
+    tablename: "_Current_Common_TrianeeCurriculalinesCheck",
     filter: course.filter,
   };
   try {
@@ -60,7 +60,7 @@ function* fetchCheckedGrades(obj) {
     source: "db",
     procedure: "getCourseStatistics",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Curriculalines",
+    tablename: "Common_CurriculalinesCheck",
     filter: `courseId = ${course.courseId}`,
   };
   try {

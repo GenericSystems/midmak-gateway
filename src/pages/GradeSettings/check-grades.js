@@ -361,7 +361,7 @@ class CheckGradesList extends Component {
           dataField: column.dataField,
           text: column.textField,
           editable: showEditButton
-            ? column.dataField !== "traineeId" &&
+            ? column.dataField !== "TraineeNum" &&
               column.dataField !== "traineeName" &&
               column.dataField !== "totalGrade" &&
               column.dataField !== "letter_grade"
@@ -389,7 +389,7 @@ class CheckGradesList extends Component {
 
           const mappedData = {
             Id: grade.Id || "",
-            traineeId: grade.traineeId || "",
+            TraineeNum: grade.TraineeNum || "",
             traineeName: grade.traineeName || "",
             totalGrade: grade.totalGrade || "",
             letter_grade: grade.letter_grade || "",
@@ -414,7 +414,7 @@ class CheckGradesList extends Component {
       } else {
         mappedDataArray.push({
           Id: "",
-          traineeId: "",
+          TraineeNum: "",
           traineeName: "",
           Total: "",
           Letter: "",
