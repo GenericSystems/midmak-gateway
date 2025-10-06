@@ -382,7 +382,7 @@ class CheckGradesList extends Component {
       let mappedDataArray = [];
 
       if (checked_grades && checked_grades.length !== 0) {
-        courseContentsEnteredGrades.forEach(grade => {
+        checked_grades.forEach(grade => {
           const courseIdColumns = courseContentsEnteredGrades.filter(
             column => column.courseId === selectedCourseId
           );
