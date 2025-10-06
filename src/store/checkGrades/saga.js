@@ -70,19 +70,19 @@ function* fetchCheckedGrades(obj) {
     yield put(getCourseStatisticsFail(error));
   }
 
-  // const get_preReqCourse_opt = {
-  //   source: "db",
-  //   procedure: "Generic_Optiondatalist",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "_Common_CourseOfferingOnly",
-  //   fields: "CourseId,courseCode,courseName",
-  // };
-  // try {
-  //   const response = yield call(getCoursesOpt, get_preReqCourse_opt);
-  //   yield put(getCoursesOptSuccess(response));
-  // } catch (error) {
-  //   yield put(getCoursesOptFail(error));
-  // }
+  const get_preReqCourse_opt = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_CourseOfferingOnly",
+    fields: "CourseId,courseCode,courseName",
+  };
+  try {
+    const response = yield call(getCoursesOpt, get_preReqCourse_opt);
+    yield put(getCoursesOptSuccess(response));
+  } catch (error) {
+    yield put(getCoursesOptFail(error));
+  }
 
   const get_courseContents = {
     source: "db",
@@ -106,8 +106,8 @@ function* onUpdateCheckedGrade({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SC_SisApp_updateStudentGrade";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_StudentsCurriculalinesCheck";
-  payload["queryname"] = "_Current_Common_StudentsCurriculalinesCheck";
+  payload["tablename"] = "Common_CurriculalinesCheck";
+  payload["queryname"] = "_Current_Common_TrianeeCurriculalinesCheck";
 
   try {
     const respupdate = yield call(updateCheckedGrade, payload);
