@@ -988,39 +988,30 @@ class EmployeesList extends Component {
         formatter: (cellContent, employee, contract) => (
           <div className="d-flex gap-3">
             <Tooltip title={this.props.t("Add Contract")} placement="top">
-              <Link className="text-secondary" to="#">
-                <i
-                  className="mdi mdi-plus-circle blue-noti-icon"
-                  onClick={() => this.handleOnClick(employee)}
-                ></i>
-              </Link>
+              <IconButton onClick={() => this.handleOnClick(employee)}>
+                <i className="mdi mdi-plus-circle blue-noti-icon"></i>
+              </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("Edit")} placement="top">
-              <Link className="text-sm-end" to="#">
-                <i
-                  className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
-                  onClick={() => this.handleEmployeeClick(employee)}
-                ></i>
-              </Link>
+              <IconButton onClick={() => this.handleEmployeeClick(employee)}>
+                <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
+              </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("View Employee")} placement="top">
-              <IconButton>
+              <IconButton onClick={() => this.handleViewEmployee(employee)}>
                 <i
                   className="bx bxs-user font-size-18 text-secondary"
                   id="viewtooltip"
-                  onClick={() => this.handleViewEmployee(employee)}
                 ></i>
               </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("Delete")} placement="top">
-              <Link className="text-danger" to="#">
+              <IconButton onClick={() => this.onClickDelete(employee)}>
                 <i
                   className="mdi mdi-delete font-size-18"
                   id="deletetooltip"
-                  onClick={() => this.onClickDelete(employee)}
                 ></i>
-              </Link>
+              </IconButton>
             </Tooltip>
           </div>
         ),

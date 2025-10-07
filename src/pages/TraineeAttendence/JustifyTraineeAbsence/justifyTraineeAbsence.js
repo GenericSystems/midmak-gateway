@@ -638,7 +638,7 @@ class JustifyTraineesAbsenceList extends Component {
                           //     });
                           //   }
                           // }}
-                          value={this.state.searchText}
+                          value={this.state.searchText ?? ""}
                           onChange={e =>
                             this.handleTraineeSelectByName(e.target.value)
                           }
@@ -726,10 +726,8 @@ class JustifyTraineesAbsenceList extends Component {
                               centered
                             >
                               <ModalHeader toggle={this.toggle1} tag="h4">
-                                <h4>
-                                  {t("Update Trainee Absent Justify")} -{" "}
-                                  {selectedTrainee?.fullName || ""}
-                                </h4>
+                                {t("Update Trainee Absent Justify")} -{" "}
+                                {selectedTrainee?.fullName || ""}
                               </ModalHeader>
 
                               <ModalBody>

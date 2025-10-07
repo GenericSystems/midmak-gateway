@@ -46,10 +46,10 @@ class AcademyInfo extends Component {
         },
       ],
       AcademyNameError: "",
-      CountryError:"",
+      CountryError: "",
       AcademyNameEnError: "",
       successMessage: null,
-      errors:{},
+      errors: {},
     };
   }
 
@@ -82,7 +82,7 @@ class AcademyInfo extends Component {
         AcademyNameEn: academy.AcademyNameEn || "",
         Website: academy.Website || "",
         Email: academy.Email || "",
-        AcademyCountryInfo: countryInfo, 
+        AcademyCountryInfo: countryInfo,
       });
     }
   }
@@ -123,19 +123,17 @@ class AcademyInfo extends Component {
     const { academyInfo } = this.props;
     let errors = {};
 
-   this.state.AcademyCountryInfo.forEach((row, idx) => {
-     if (!row.CountryId) {
-       errors[`CountryId_${idx}`] = "Country is required";
-     }
-   });
-
+    this.state.AcademyCountryInfo.forEach((row, idx) => {
+      if (!row.CountryId) {
+        errors[`CountryId_${idx}`] = "Country is required";
+      }
+    });
 
     if (Object.keys(errors).length > 0) {
       this.setState({ errors, saveError: true });
       return; // stop submission if missing country
     }
-    console.log("errors", errors)
-
+    console.log("errors", errors);
 
     if (academyInfo && academyInfo.length > 0) {
       const formData = {
@@ -161,7 +159,7 @@ class AcademyInfo extends Component {
         console.log("1111");
         const updateMessage = this.props.t("Academy info updated successfully");
         this.setState({
-          errors:{},
+          errors: {},
           setErrormessage: null,
           saveError: false,
           successMessage: updateMessage,
@@ -226,9 +224,7 @@ class AcademyInfo extends Component {
         ...updatedCountries[idx],
         [name]: value,
       };
-        
-   
-      
+
       return { AcademyCountryInfo: updatedCountries };
     });
   };
@@ -376,7 +372,7 @@ class AcademyInfo extends Component {
                                       AcademyNameError ? "is-invalid" : ""
                                     }`}
                                     placeholder={t("Academy Name")}
-                                    value={AcademyName}
+                                    value={AcademyName || ""}
                                     onChange={this.handleInputChange}
                                   />
 
@@ -400,7 +396,7 @@ class AcademyInfo extends Component {
                                     name="Email"
                                     className="form-control"
                                     placeholder="Enter Email"
-                                    value={Email}
+                                    value={Email || ""}
                                     onChange={this.handleInputChange}
                                   />
                                 </Col>
@@ -435,7 +431,7 @@ class AcademyInfo extends Component {
                                       AcademyNameError ? "is-invalid" : ""
                                     }`}
                                     placeholder={t("Academy Name (en)")}
-                                    value={AcademyNameEn}
+                                    value={AcademyNameEn || ""}
                                     onChange={this.handleInputChange}
                                   />
 
@@ -459,7 +455,7 @@ class AcademyInfo extends Component {
                                     name="Website"
                                     className="form-control"
                                     placeholder="Enter Website"
-                                    value={Website}
+                                    value={Website || ""}
                                     onChange={this.handleInputChange}
                                   />
                                 </Col>
@@ -546,7 +542,7 @@ class AcademyInfo extends Component {
                                         type="text"
                                         name="Location"
                                         className="form-control"
-                                        value={row.Location}
+                                        value={row.Location || ""}
                                         onChange={e =>
                                           this.handleCountryChange(idx, e)
                                         }
@@ -561,7 +557,7 @@ class AcademyInfo extends Component {
                                         type="text"
                                         name="WhatsAppNumber"
                                         className="form-control"
-                                        value={row.WhatsAppNumber}
+                                        value={row.WhatsAppNumber || ""}
                                         onChange={e =>
                                           this.handleCountryChange(idx, e)
                                         }
@@ -581,7 +577,7 @@ class AcademyInfo extends Component {
                                         type="text"
                                         name="phoneAndWhatsappNumber"
                                         className="form-control"
-                                        value={row.phoneAndWhatsappNumber}
+                                        value={row.phoneAndWhatsappNumber || ""}
                                         onChange={e =>
                                           this.handleCountryChange(idx, e)
                                         }
@@ -596,7 +592,7 @@ class AcademyInfo extends Component {
                                         type="text"
                                         name="PhoneNumber"
                                         className="form-control"
-                                        value={row.PhoneNumber}
+                                        value={row.PhoneNumber || ""}
                                         onChange={e =>
                                           this.handleCountryChange(idx, e)
                                         }
@@ -611,7 +607,7 @@ class AcademyInfo extends Component {
                                         type="text"
                                         name="FaxNumber"
                                         className="form-control"
-                                        value={row.FaxNumber}
+                                        value={row.FaxNumber || ""}
                                         onChange={e =>
                                           this.handleCountryChange(idx, e)
                                         }

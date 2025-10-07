@@ -547,193 +547,9 @@ class RegisterTraineesAttendance extends Component {
     sidebar.classList.toggle("collapse-sidebar");
   };
 
-  handleSave = values => {
-    console.log("values", values);
-    let flag = 0;
-    const { isEdit1 } = this.state;
-
-    const { onAddNewSectionLabDetail, onUpdateSectionLabDetail } = this.props;
-
-    // values["type"] = selectedRowSectionLab.type;
-    // values["sectionLabId"] = selectedRowSectionLab.Id;
-    values["hallId"] = this.state.selectedHallKey;
-    values["altHallId"] = this.state.selectedAltHallKey;
-    values["altInstructorId"] = this.state.selectedAltInstructorId;
-    values["instructorId"] = this.state.selectedInstructorId;
-
-    let lectureInfo = {};
-
-    Object.keys(values).forEach(function (key) {
-      if (
-        values[key] != undefined &&
-        values[key] !== null &&
-        (values[key].length > 0 || values[key] != "")
-      )
-        lectureInfo[key] = values[key];
-    });
-    lectureInfo.hallId = this.state.selectedHallKey;
-
-    console.log("lectureInfo", lectureInfo);
-    const fieldErrors = {};
-    if (Object.keys(fieldErrors).length > 0) {
-      return fieldErrors;
-    }
-    if (isEdit1) {
-      // onUpdateSectionLabDetail(lectureInfo);
-      this.toggle1();
-    } else {
-      console.log("saaaaave", lectureInfo);
-      // onAddNewSectionLabDetail(lectureInfo);
-      this.toggle1();
-    }
-  };
-
   handleValidDate = date => {
     const date1 = moment(new Date(date)).format("DD /MM/ Y");
     return date1;
-  };
-
-  handelAddExperience = () => {
-    const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
-      this.props;
-    const {
-      profExperiencesArray,
-      lastUsedExperienceId,
-      isAdd,
-      selectedTraineeId,
-    } = this.state;
-    const emptyRowsExist = profExperiencesArray.some(
-      profExperiences => profExperiences.workType.trim() === ""
-    );
-    console.log("emptyRowsExist", emptyRowsExist);
-    console.log("selectedTraineeId", selectedTraineeId);
-    if (emptyRowsExist) {
-      const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateErrorProfExperiences: errorMessage });
-    } else {
-      const newExperience = {
-        Id: lastUsedExperienceId,
-        regTraineesId: isAdd ? lastAddedId : selectedTraineeId,
-        workType: "",
-        companyName: "",
-        workPlace: "",
-        workField: "",
-        duaration: "",
-      };
-      // onAddNewProfessionalExperience(newExperience);
-      this.setState({
-        duplicateErrorProfExperiences: null,
-        profExperiencesArray: [...profExperiencesArray, newExperience],
-        lastUsedExperienceId: lastUsedExperienceId + 1,
-      });
-    }
-  };
-
-  handleExperienceDataChange = (rowId, fieldName, fieldValue) => {
-    const { isEdit } = this.state;
-    // if (isEdit == true) {
-    this.setState(prevState => {
-      const updatedProfExperience = prevState.profExperiencesArray.map(
-        exper => {
-          if (exper.Id === rowId) {
-            return {
-              ...exper,
-              [fieldName]: fieldValue,
-            };
-          }
-          return exper;
-        }
-      );
-
-      return {
-        profExperiencesArray: updatedProfExperience,
-      };
-    });
-    // } else {
-    //   const { onUpdateProfessionalExperience, trnProfExperiences } = this.props;
-    //   const isDuplicate = trnProfExperiences.some(trnProfExperience => {
-    //     return (
-    //       trnProfExperience.Id !== rowId &&
-    //       trnProfExperience.workType.trim() === fieldValue.trim()
-    //     );
-    //   });
-
-    //   if (isDuplicate) {
-    //     const errorMessage = this.props.t("Value already exists");
-    //     this.setState({ duplicateErrorProfExperiences: errorMessage });
-    //   } else {
-    //     this.setState({ duplicateErrorProfExperiences: null });
-    //     let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-    //     onUpdateProfessionalExperience(onUpdate);
-    //   }
-    // }
-  };
-
-  handleRegReqDocDataChange = (rowId, fieldName, fieldValue) => {
-    this.setState(prevState => {
-      const updatedRegReqDocs = prevState.stdDocsArray.map(document => {
-        if (document.Id === rowId) {
-          return {
-            ...document,
-            [fieldName]: fieldValue,
-          };
-        }
-        return document;
-      });
-
-      return {
-        stdDocsArray: updatedRegReqDocs,
-      };
-    });
-  };
-
-  handleButtonClick = (fieldName, option) => {
-    if (fieldName == "ExaminationSession") {
-      this.setState({ selectedExaminationSession: option });
-    }
-  };
-
-  handleButtonClick2 = (fieldName, option, values) => {
-    // console.log("fieldName", fieldName);
-    // console.log("option", option);
-    // const { onGetTempTraineesDocuments } = this.props;
-    // let obj = { certificateLevelId: option };
-    // console.log("objobjobj", obj);
-    // onGetTempTraineesDocuments(obj);
-    if (fieldName == "registrationCertLevelId") {
-      this.setState({ selectedRegistrationCertLevelId: option });
-      this.setState({ tempTrainee: values });
-    }
-  };
-
-  handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
-    // const { onGetempTraineesDocuments } = this.props;
-    const { diplomalevels } = this.props;
-    const selectedValue = event.target.value;
-    console.log("selectedValue", selectedValue);
-
-    this.setState({
-      tempTrainee: values,
-    });
-
-    const diplomaObject = diplomalevels.find(
-      certificate => certificate.value === event.target.value
-    );
-    console.log(diplomaObject, "ollllllll");
-    // let obj = { certificateLevelId: diplomaObject.key };
-    // console.log("objobjobj", obj);
-    // onGetempTraineesDocuments(obj);
-    setFieldValue("diplomaId", selectedValue);
-
-    if (diplomaObject) {
-      this.setState({
-        selectedDiplomaId: diplomaObject.key,
-        selectedDiploma: selectedValue,
-        diplomaTypeName: diplomaObject.value,
-        diplomaError: false,
-        tempTrainee: values,
-      });
-    }
   };
 
   handleDropdownToggle = flag => {
@@ -1278,12 +1094,10 @@ class RegisterTraineesAttendance extends Component {
           <div className="d-flex justify-content-center gap-3">
             {/* {showDeleteButton && (*/}
             <Tooltip title={this.props.t("View Attendance")} placement="top">
-              <IconButton>
-                <i
-                  className="fa fa-history"
-                  id="veiwattendtooltip"
-                  onClick={() => this.handleTraineeAbsence(traineeAttend)}
-                ></i>
+              <IconButton
+                onClick={() => this.handleTraineeAbsence(traineeAttend)}
+              >
+                <i className="fa fa-history" id="veiwattendtooltip"></i>
               </IconButton>
             </Tooltip>
           </div>
@@ -1504,11 +1318,10 @@ class RegisterTraineesAttendance extends Component {
             )} */}
 
             <Tooltip title={this.props.t("View Trainee")} placement="top">
-              <IconButton>
+              <IconButton onClick={() => this.handleViewTrainee(regTrainees)}>
                 <i
                   className="bx bxs-user font-size-18 text-secondary"
                   id="deletetooltip"
-                  onClick={() => this.handleViewTrainee(regTrainees)}
                 ></i>
               </IconButton>
             </Tooltip>

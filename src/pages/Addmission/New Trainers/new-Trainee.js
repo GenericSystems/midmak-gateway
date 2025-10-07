@@ -5186,18 +5186,20 @@ class NewTrainee extends Component {
                                                                   )}
                                                                   placement="top"
                                                                 >
-                                                                  <IconButton
-                                                                    color="primary"
-                                                                    onClick={
-                                                                      this
-                                                                        .handelAddExperience
-                                                                    }
-                                                                    disabled={
-                                                                      !lastAddedId
-                                                                    }
-                                                                  >
-                                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                                                  </IconButton>
+                                                                  <span>
+                                                                    <IconButton
+                                                                      color="primary"
+                                                                      onClick={
+                                                                        this
+                                                                          .handelAddExperience
+                                                                      }
+                                                                      disabled={
+                                                                        !lastAddedId
+                                                                      }
+                                                                    >
+                                                                      <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                                    </IconButton>
+                                                                  </span>
                                                                 </Tooltip>
                                                               </div>
                                                             </Col>

@@ -397,7 +397,7 @@ const authProtectedRoutes = [
 
   { path: "/examRooms", component: ExamRoomsList },
 
-  // ExamRooms
+  // examObservers
 
   { path: "/examObservers", component: ExamObserversList },
 

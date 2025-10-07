@@ -1876,7 +1876,6 @@ class TraineesList extends Component {
 
     const { SearchBar } = Search;
 
-    console.log("trainees", trainees);
     const alertMessage =
       deleted == 0
         ? this.props.t("Can't Delete")
@@ -2997,11 +2996,10 @@ class TraineesList extends Component {
             )} */}
 
             <Tooltip title={this.props.t("View Trainee")} placement="top">
-              <IconButton>
+              <IconButton onClick={() => this.handleViewTrainee(trainee)}>
                 <i
                   className="bx bxs-user font-size-18 text-secondary"
                   id="deletetooltip"
-                  onClick={() => this.handleViewTrainee(trainee)}
                 ></i>
               </IconButton>
             </Tooltip>
@@ -9253,19 +9251,21 @@ class TraineesList extends Component {
                                                                                           )}
                                                                                           placement="top"
                                                                                         >
-                                                                                          <IconButton
-                                                                                            color="primary"
-                                                                                            onClick={
-                                                                                              this
-                                                                                                .handelAddExperience
-                                                                                            }
-                                                                                            disabled={
-                                                                                              !lastAddedId &&
-                                                                                              !isEdit
-                                                                                            }
-                                                                                          >
-                                                                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                                                                          </IconButton>
+                                                                                          <span>
+                                                                                            <IconButton
+                                                                                              color="primary"
+                                                                                              onClick={
+                                                                                                this
+                                                                                                  .handelAddExperience
+                                                                                              }
+                                                                                              disabled={
+                                                                                                !lastAddedId &&
+                                                                                                !isEdit
+                                                                                              }
+                                                                                            >
+                                                                                              <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                                                            </IconButton>
+                                                                                          </span>
                                                                                         </Tooltip>
                                                                                       </div>
                                                                                     </Col>

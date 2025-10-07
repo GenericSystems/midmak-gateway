@@ -2242,6 +2242,7 @@ class ApplicantsList extends Component {
       },
       {
         dataField: "menu",
+        text: "",
         isDummyField: true,
         editable: false,
         formatter: (cellContent, tempTrainee) => (
@@ -2748,6 +2749,7 @@ class ApplicantsList extends Component {
                                     <BootstrapTable
                                       {...toolkitprops.baseProps}
                                       {...paginationTableProps}
+                                      keyField="Id"
                                       selectRow={selectRow}
                                       defaultSorted={defaultSorted}
                                       classes={

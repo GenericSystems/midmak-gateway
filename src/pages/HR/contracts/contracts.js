@@ -679,31 +679,24 @@ class ContractsList extends Component {
               title={this.props.t("View Employee Information")}
               placement="top"
             >
-              <Link className="text-sm-end" to="#">
-                <i
-                  className="fas fa-male font-size-18"
-                  id="viewtooltip"
-                  onClick={() => this.handleEmployeeDataClick(contract)}
-                ></i>
-              </Link>
+              <IconButton
+                onClick={() => this.handleEmployeeDataClick(contract)}
+              >
+                <i className="fas fa-male font-size-18" id="viewtooltip"></i>
+              </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("Edit")} placement="top">
-              <Link className="text-sm-end" to="#">
-                <i
-                  className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
-                  onClick={() => this.handleContractClick(contract)}
-                ></i>
-              </Link>
+              <IconButton onClick={() => this.handleContractClick(contract)}>
+                <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
+              </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("Delete")} placement="top">
-              <Link className="text-danger" to="#">
+              <IconButton onClick={() => this.onClickDelete(contract)}>
                 <i
                   className="mdi mdi-delete font-size-18"
                   id="deletetooltip"
-                  onClick={() => this.onClickDelete(contract)}
                 ></i>
-              </Link>
+              </IconButton>
             </Tooltip>
           </div>
         ),

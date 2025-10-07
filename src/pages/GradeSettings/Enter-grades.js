@@ -259,14 +259,14 @@ class EnterGradesList extends Component {
             if (fieldValue == "") {
               const updateData = {
                 Id: row.Id,
-                TraineeNum: row.TraineeNum,
+                // TraineeNum: row.TraineeNum,
                 [FieldToUpdate]: null,
               };
               onUpdateGrade(updateData);
             } else {
               const updateData = {
                 Id: row.Id,
-                TraineeNum: row.TraineeNum,
+                // TraineeNum: row.TraineeNum,
                 [FieldToUpdate]: fieldValue,
               };
               onUpdateGrade(updateData);

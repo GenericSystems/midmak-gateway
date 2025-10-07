@@ -2135,7 +2135,7 @@ class ClassSchedulingList extends Component {
                                           </Col>
 
                                           <BootstrapTable
-                                            keyField="rowNumber"
+                                            keyField="Id"
                                             data={sectionLabs}
                                             columns={sectionLabColumns}
                                             cellEdit={cellEditFactory({

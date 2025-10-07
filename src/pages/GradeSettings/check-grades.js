@@ -10,6 +10,7 @@ import {
   Input,
   Label,
 } from "reactstrap";
+import Tooltip from "@mui/material/Tooltip";
 import { Dropdown, DropdownToggle, DropdownMenu } from "reactstrap";
 import Select from "react-select";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -49,10 +50,13 @@ import {
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
 import checkedGradesSaga from "store/checkGrades/saga";
+import checked_grades from "store/checkGrades/reducer";
 class CheckGradesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      checked_grades: {},
+      checked_grade: "",
       selectedRowId: null,
       selectedView: "",
       selectedSection: "",
@@ -199,9 +203,9 @@ class CheckGradesList extends Component {
         "filter"
       ] = `courseId = ${obj2.courseId} and code = ''''${obj2.CourseCode}'''' and active = ${obj2.active}`;
 
-      onGetFilteredSections(obj) &&
-        onGetCheckedGrades(obj2) &&
-        onGetCourseContentsGrades(obj3);
+      // onGetFilteredSections(obj) &&
+      //   onGetCheckedGrades(obj2) &&
+      //   onGetCourseContentsGrades(obj3);
     }
   };
 
@@ -226,7 +230,7 @@ class CheckGradesList extends Component {
     obj[
       "filter"
     ] = `courseId = ${obj.courseId} and code = ''''${obj.CourseCode}'''' and  SectionNumber = ${obj.SectionNumber} and active = ${obj.active}`;
-    onGetCheckedGrades(obj);
+    // onGetCheckedGrades(obj);
   };
 
   handleGradeDataChange = (row, dataField, fieldValue) => {
@@ -316,6 +320,30 @@ class CheckGradesList extends Component {
       sidebarOpen: !prevState.sidebarOpen,
     }));
   }
+
+  handleImport = () => {
+    const { onGetCheckedGrades } = this.props;
+    const { selectedSection, selectedCourseId, selectedCourseCode } =
+      this.state;
+
+    if (!selectedCourseId) {
+      alert("Please select a course first");
+      return;
+    }
+
+    const obj = {
+      courseId: selectedCourseId,
+      CourseCode: selectedCourseCode,
+      SectionNumber: selectedSection,
+      active: 1,
+    };
+
+    obj[
+      "filter"
+    ] = `courseId = ${obj.courseId} and code = ''''${obj.CourseCode}'''' and active = ${obj.active}`;
+
+    onGetCheckedGrades(obj);
+  };
 
   render() {
     const {
@@ -579,6 +607,19 @@ class CheckGradesList extends Component {
                                 />
                               </Col>
                             </Row>
+                          </div>
+                          <div className="text-sm-end">
+                            <Tooltip
+                              title={this.props.t("Import")}
+                              placement="top"
+                            >
+                              <IconButton
+                                color="primary"
+                                onClick={this.handleImport}
+                              >
+                                <i className="bx bx-upload blue-noti-icon fs-1 mx-2" />
+                              </IconButton>
+                            </Tooltip>
                           </div>
                         </CardBody>
                       </Card>
