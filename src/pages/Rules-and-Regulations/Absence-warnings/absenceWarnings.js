@@ -93,8 +93,14 @@ class AbsenceWarningsList extends Component {
   }
 
   componentDidMount() {
-    const { absenceWarnings, years, onGetAbsenceWarnings, user_menu, deleted } =
-      this.props;
+    const {
+      absenceWarnings,
+      decisionReasons,
+      years,
+      onGetAbsenceWarnings,
+      user_menu,
+      deleted,
+    } = this.props;
 
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -102,7 +108,7 @@ class AbsenceWarningsList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
 
     onGetAbsenceWarnings();
-    this.setState({ absenceWarnings, years, deleted });
+    this.setState({ absenceWarnings, decisionReasons, years, deleted });
   }
 
   componentDidUpdate(prevProps) {
@@ -257,7 +263,7 @@ class AbsenceWarningsList extends Component {
 
   handleAddRow = () => {
     this.setState({
-      contract: "",
+      absenceWarning: "",
       isEdit: false,
       isOpen: false,
       isAdd: true,
@@ -280,7 +286,7 @@ class AbsenceWarningsList extends Component {
       selectedSignatureDate,
       selectedWorkClassification,
       selectedAcademicYearId,
-      contract,
+      absenceWarning,
       isEdit,
       isAdd,
       selectEmpId,
@@ -299,7 +305,7 @@ class AbsenceWarningsList extends Component {
     values["jobRankId"] = selectedJobRank;
     values["yearId"] = selectedYearId;
     // values["corporateNodeId"] = selectedCorporateNode;
-    values["contractTypeId"] = selectedContractType;
+    values["absenceWarningTypeId"] = selectedContractType;
     values["employeeId"] = selectedFullName;
     values["employmentCaseId"] = selectedEmploymentCase;
     values["hasMinistryApprove"] = selectedHasMinistryApprove;
@@ -328,7 +334,7 @@ class AbsenceWarningsList extends Component {
         )
           warningInfo[key] = values[key];
       });
-      console.log("contractInfocontractInfo", warningInfo);
+      console.log("absenceWarningInfoabsenceWarningInfo", warningInfo);
       if (isEdit) {
         console.log("9999999", warningInfo);
         // onUpdateContract(warningInfo);
@@ -375,18 +381,18 @@ class AbsenceWarningsList extends Component {
     }
   };
 
-  handleContractClick = arg => {
+  handleAbsenceWarningEdit = arg => {
     console.log("arg", arg);
 
     this.setState({
-      contract: arg,
+      absenceWarning: arg,
       selectedYearId: arg.yearId,
       yearName: arg.yearName,
       // selectedJobRank: arg.jobRankId,
       // selectedJobTitle: arg.jobTitleId,
       // jobTitleName: arg.jobTitle,
       // selectedCorporateNode: arg.corporateNodeId,
-      // selectedContractType: arg.contractTypeId,
+      // selectedContractType: arg.absenceWarningTypeId,
       // selectedEmploymentCase: arg.employmentCaseId,
       // selectedHasMinistryApprove: arg.hasMinistryApprove,
       // selectedGovernmentWorker: arg.governmentWorker,
@@ -400,7 +406,8 @@ class AbsenceWarningsList extends Component {
   };
 
   render() {
-    const { absenceWarnings, years, t, trainees, deleted } = this.props;
+    const { absenceWarnings, years, decisionReasons, t, traineesOpt, deleted } =
+      this.props;
     const {
       modal,
       deleteModal,
@@ -653,7 +660,7 @@ class AbsenceWarningsList extends Component {
                                 <Modal
                                   isOpen={modal}
                                   toggle={this.toggle}
-                                  size="xl"
+                                  size="lg"
                                 >
                                   <ModalHeader toggle={this.toggle} tag="h4">
                                     {!!isEdit
@@ -845,7 +852,7 @@ class AbsenceWarningsList extends Component {
                                                           : "")
                                                       }
                                                       value={
-                                                        trainees.find(
+                                                        traineesOpt.find(
                                                           trainee =>
                                                             trainee.key ===
                                                             this.state
@@ -857,7 +864,7 @@ class AbsenceWarningsList extends Component {
                                                           e.target.value;
 
                                                         const selectedTrainee =
-                                                          trainees.find(
+                                                          traineesOpt.find(
                                                             trainee =>
                                                               trainee.value ===
                                                               newValue
@@ -879,11 +886,11 @@ class AbsenceWarningsList extends Component {
                                                           });
                                                         }
                                                       }}
-                                                      list="traineesId"
+                                                      list="traineesOptId"
                                                       autoComplete="off"
                                                     />
-                                                    <datalist id="traineesId">
-                                                      {trainees.map(
+                                                    <datalist id="traineesOptId">
+                                                      {traineesOpt.map(
                                                         traineeOpt => (
                                                           <option
                                                             key={traineeOpt.key}
@@ -901,16 +908,16 @@ class AbsenceWarningsList extends Component {
                                                 <Row>
                                                   <Col className="col-4">
                                                     <Label for="decisionReasonId">
-                                                      {this.props.t("Job Rank")}
+                                                      {this.props.t(
+                                                        "Decision Reason"
+                                                      )}
                                                     </Label>
                                                   </Col>
                                                   <Col className="col-8">
                                                     <Select
                                                       name="decisionReasonId"
                                                       key={`select_decisionReason`}
-                                                      options={
-                                                        decisionReasonsOpt
-                                                      }
+                                                      options={decisionReasons}
                                                       className={`form-control`}
                                                       onChange={newValue => {
                                                         this.handleSelect(
@@ -918,10 +925,10 @@ class AbsenceWarningsList extends Component {
                                                           newValue.value
                                                         );
                                                       }}
-                                                      defaultValue={decisionReasonsOpt.find(
+                                                      defaultValue={decisionReasons.find(
                                                         opt =>
                                                           opt.value ===
-                                                          contract?.decisionReasonId
+                                                          absenceWarning?.decisionReasonId
                                                       )}
                                                     />
                                                   </Col>
@@ -969,8 +976,9 @@ class AbsenceWarningsList extends Component {
 const mapStateToProps = ({ absenceWarnings, trainees, years, menu_items }) => ({
   absenceWarnings: absenceWarnings.absenceWarnings,
   deleted: absenceWarnings.deleted,
+  decisionReasons: absenceWarnings.decisionReasons,
   years: years.years,
-  trainees: trainees.trainees,
+  traineesOpt: trainees.traineesOpt,
   user_menu: menu_items.user_menu || [],
 });
 

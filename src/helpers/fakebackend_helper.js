@@ -2144,6 +2144,8 @@ export const getFinishStatus = data => post(url.GET_FINISH_STATUS, data);
 //ABSENCE WARNINGS
 export const getAbsenceWarnings = data => post(url.GET_ABSENCE_WARNINGS, data);
 
+export const getDecisionReason = data => post(url.GET_DECISION_REASONS, data);
+
 export const addNewAbsenceWarning = data =>
   post(url.ADD_NEW_ABSENCE_WARNING, data);
 

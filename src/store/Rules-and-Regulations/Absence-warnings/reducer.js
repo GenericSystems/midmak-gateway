@@ -1,3 +1,4 @@
+import { getDecisionReason } from "./actions";
 import {
   GET_ABSENCE_WARNINGS_SUCCESS,
   GET_ABSENCE_WARNINGS_FAIL,
@@ -9,10 +10,13 @@ import {
   DELETE_ABSENCE_WARNING_FAIL,
   GET_ABSENCE_WARNING_DELETED_VALUE_SUCCESS,
   GET_ABSENCE_WARNING_DELETED_VALUE_FAIL,
+  GET_DECISION_REASONS_FAIL,
+  GET_DECISION_REASONS_SUCCESS,
 } from "./actionTypes";
 
 const INIT_STATE = {
   absenceWarnings: [],
+  decisionReasons: [],
   deleted: {},
   error: {},
 };
@@ -82,6 +86,18 @@ const absenceWarnings = (state = INIT_STATE, action) => {
       };
 
     case GET_ABSENCE_WARNING_DELETED_VALUE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_DECISION_REASONS_SUCCESS:
+      return {
+        ...state,
+        decisionReasons: action.payload,
+      };
+
+    case GET_DECISION_REASONS_FAIL:
       return {
         ...state,
         error: action.payload,

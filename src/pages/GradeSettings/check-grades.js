@@ -293,7 +293,7 @@ class CheckGradesList extends Component {
                 // traineeId: row.traineeId,
                 [FieldToUpdate]: null,
               };
-              updateData["examType"] = `${FieldToUpdate}`;
+              // updateData["examType"] = `${FieldToUpdate}`;
               onUpdateCheckedGrade(updateData);
             } else {
               const updateData = {
@@ -301,7 +301,7 @@ class CheckGradesList extends Component {
                 // traineeId: row.traineeId,
                 [FieldToUpdate]: fieldValue,
               };
-              updateData["examType"] = `${FieldToUpdate}`;
+              // updateData["examType"] = `${FieldToUpdate}`;
 
               onUpdateCheckedGrade(updateData);
             }
@@ -853,7 +853,7 @@ class CheckGradesList extends Component {
                                       data={selectedCourseData}
                                       columns={selectedCourseColumns}
                                       cellEdit={cellEditFactory({
-                                        mode: "click",
+                                        mode: "dbclick",
                                         blurToSave: true,
                                         afterSaveCell: (
                                           oldValue,

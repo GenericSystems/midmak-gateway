@@ -2,9 +2,9 @@ import {
   GET_ABSENCE_WARNING_DELETED_VALUE,
   GET_ABSENCE_WARNING_DELETED_VALUE_FAIL,
   GET_ABSENCE_WARNING_DELETED_VALUE_SUCCESS,
-  // GET_ABSENCE_WARNINGS,
-  // GET_ABSENCE_WARNINGS_FAIL,
-  // GET_ABSENCE_WARNINGS_SUCCESS,
+  GET_ABSENCE_WARNINGS,
+  GET_ABSENCE_WARNINGS_FAIL,
+  GET_ABSENCE_WARNINGS_SUCCESS,
   GET_DECISION_REASONS,
   GET_DECISION_REASONS_FAIL,
   GET_DECISION_REASONS_SUCCESS,
@@ -92,16 +92,16 @@ export const deleteAbsenceWarningFail = error => ({
   payload: error,
 });
 
-// export const getDecisionReason = () => ({
-//   type: GET_DECISION_REASONS,
-// });
+export const getDecisionReason = () => ({
+  type: GET_DECISION_REASONS,
+});
 
-// export const getDecisionReasonSuccess = decisionReason => ({
-//   type: GET_DECISION_REASONS_SUCCESS,
-//   payload: decisionReason,
-// });
+export const getDecisionReasonSuccess = decisionReason => ({
+  type: GET_DECISION_REASONS_SUCCESS,
+  payload: decisionReason,
+});
 
-// export const getDecisionReasonFail = error => ({
-//   type: GET_DECISION_REASONS_FAIL,
-//   payload: error,
-// });
+export const getDecisionReasonFail = error => ({
+  type: GET_DECISION_REASONS_FAIL,
+  payload: error,
+});

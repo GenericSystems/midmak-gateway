@@ -1070,6 +1070,7 @@ export const GET_HIDE_REASONS = "/hideReasons";
 
 //ABSCENCE_WARNINGS
 export const GET_ABSENCE_WARNINGS = "/absenceWarnings";
+export const GET_DECISION_REASONS = "/decisionReasons";
 export const GET_ABSENCE_WARNING_DELETED_VALUE = "/deleted";
 export const ADD_NEW_ABSENCE_WARNING = "/add/absenceWarning";
 export const UPDATE_ABSENCE_WARNING = "/update/absenceWarning";

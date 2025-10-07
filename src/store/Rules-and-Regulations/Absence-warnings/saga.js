@@ -20,6 +20,8 @@ import {
   updateAbsenceWarningFail,
   deleteAbsenceWarningSuccess,
   deleteAbsenceWarningFail,
+  getDecisionReasonSuccess,
+  getDecisionReasonFail,
 } from "./actions";
 
 import { getYearsSuccess, getYearsFail } from "../../years/actions";
@@ -37,6 +39,7 @@ import {
   deleteAbsenceWarning,
   getYears,
   getTraineesOpt,
+  getDecisionReason,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchAbsenceWarnings() {
@@ -78,6 +81,19 @@ function* fetchAbsenceWarnings() {
     yield put(getTraineesOptSuccess(response));
   } catch (error) {
     yield put(getTraineesOptFail(error));
+  }
+  const get_decisionReasons_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_Trainee",
+    fields: "Id,fullName",
+  };
+  try {
+    const response = yield call(getDecisionReason, get_decisionReasons_req);
+    yield put(getDecisionReasonSuccess(response));
+  } catch (error) {
+    yield put(getDecisionReasonFail(error));
   }
 }
 
