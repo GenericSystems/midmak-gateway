@@ -2591,6 +2591,8 @@ export const getCertificateGradeDeletedValue = () =>
 //CheckedGrade
 export const updateCheckedGrade = data => post(url.UPDATE_CHECKED_GRADE, data);
 export const getCheckedGrades = data => post(url.GET_CHECKED_GRADES, data);
+export const importCheckedGrades = data =>
+  post(url.IMPORT_CHECKED_GRADES, data);
 
 //archived_grades
 

@@ -3,10 +3,15 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as moment from "moment";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
+import Select from "react-select";
+import * as Yup from "yup";
 import {
   Card,
   CardBody,
+  CardTitle,
   Col,
   Container,
   Row,
@@ -50,6 +55,7 @@ import {
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
 import absenceWarnings from "store/Rules-and-Regulations/Absence-warnings/reducer";
+import decisions from "pages/HR/decisions/decisions";
 
 class AbsenceWarningsList extends Component {
   constructor(props) {
@@ -65,38 +71,29 @@ class AbsenceWarningsList extends Component {
       showEditButton: false,
       showSearchButton: false,
       duplicateError: null,
-    };
-    this.state = {
       deleteModal: false,
       duplicateError: null,
       selectedRowId: null,
       modal: false,
-      modal2: false,
       isEdit: false,
-      isOpen: false,
       isAdd: false,
-      selectedWorkClassification: "",
-      selectedJobTitle: "",
-      selectedCostCenter: "",
-      selectedJobRank: "",
-      selectedHasMinistryApprove: "",
-      selectedGovernmentWorker: "",
-      selectedFullName: "",
-      signatureDateError: false,
-      hireDateError: false,
-      fullNameError: false,
-      contractTypeError: false,
-      academicYearsIdError: false,
-      jobTitleError: false,
+      selectedDecisionReason: null,
+      decisionReasonName: "",
+      selectedTraineeId: null,
+      traineeName: "",
+      selectedYearId: null,
+      yearName: "",
+      selectedCourseId: null,
+      courseName: "",
       errorMessage: null,
       successMessage: null,
       values: "",
-      modalContractValue: [],
     };
+    this.state = {};
   }
 
   componentDidMount() {
-    const { absenceWarnings, onGetAbsenceWarnings, user_menu, deleted } =
+    const { absenceWarnings, years, onGetAbsenceWarnings, user_menu, deleted } =
       this.props;
 
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -105,7 +102,7 @@ class AbsenceWarningsList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
 
     onGetAbsenceWarnings();
-    this.setState({ absenceWarnings, deleted });
+    this.setState({ absenceWarnings, years, deleted });
   }
 
   componentDidUpdate(prevProps) {
@@ -258,14 +255,165 @@ class AbsenceWarningsList extends Component {
     this.props.onGetAbsenceWarningDeletedValue();
   };
 
-  render() {
-    const { absenceWarnings, t, deleted } = this.props;
+  handleAddRow = () => {
+    this.setState({
+      contract: "",
+      isEdit: false,
+      isOpen: false,
+      isAdd: true,
+    });
+    this.toggle();
+  };
+
+  handleSubmit = values => {
     const {
+      // selectedAdministrativeSupervisor,
+      selectedPhysicalWorkLocations,
+      selectedJobRank,
+      selectedJobTitle,
+      selectedCorporateNode,
+      selectedContractType,
+      selectedEmploymentCase,
+      selectedNcsDate,
+      selectedEndDate,
+      selectedHireDate,
+      selectedSignatureDate,
+      selectedWorkClassification,
+      selectedAcademicYearId,
+      contract,
+      isEdit,
+      isAdd,
+      selectEmpId,
+      selectedHasMinistryApprove,
+      selectedGovernmentWorker,
+      selectedFullName,
+      fullNamesOpt,
+      selectedYearId,
+    } = this.state;
+    const { onAddNewContract, onUpdateContract } = this.props;
+
+    //values["administrativeSupervisor"] = selectedAdministrativeSupervisor;
+    // values["physicalWorkLocation"] = selectedPhysicalWorkLocations;
+    // values["employeeId"] = selectEmpId;
+
+    values["jobRankId"] = selectedJobRank;
+    values["yearId"] = selectedYearId;
+    // values["corporateNodeId"] = selectedCorporateNode;
+    values["contractTypeId"] = selectedContractType;
+    values["employeeId"] = selectedFullName;
+    values["employmentCaseId"] = selectedEmploymentCase;
+    values["hasMinistryApprove"] = selectedHasMinistryApprove;
+    values["governmentWorker"] = selectedGovernmentWorker;
+    values["workClassificationId"] = selectedWorkClassification;
+    values["academicYearId"] = selectedAcademicYearId;
+    console.log("valuesssssssssssssssssssss", values);
+
+    let warningInfo = {};
+    // if (values.employeeId) {
+    //   const nameObject = fullNamesOpt.find(
+    //     fullName => fullName.value === values.employeeId
+    //   );
+    //   console.log("nameObject", nameObject);
+    //   values["employeeId"] = nameObject.key;
+    // }
+    // console.log("valuesssssssssssssssssssss", values);
+    if (
+      // values.jobNumber &&
+      selectedYearId !== null
+    ) {
+      Object.keys(values).forEach(function (key) {
+        if (
+          values[key] != undefined &&
+          (values[key].length > 0 || values[key] != "")
+        )
+          warningInfo[key] = values[key];
+      });
+      console.log("contractInfocontractInfo", warningInfo);
+      if (isEdit) {
+        console.log("9999999", warningInfo);
+        // onUpdateContract(warningInfo);
+      } else {
+        // onAddNewContract(warningInfo);
+      }
+      this.setState({
+        errorMessages: {},
+      });
+      this.toggle();
+    } else {
+      let emptyError = "";
+      // if (selectedAdministrativeSupervisor === undefined) {
+      //   emptyError = "Fill the empty select";
+      // }
+      // if (selectedPhysicalWorkLocations === undefined) {
+      //   emptyError = "Fill the empty select";
+      // }
+      if (selectedJobTitle === undefined) {
+        emptyError = "Fill the empty select";
+      }
+      if (selectedNcsDate === undefined) {
+        emptyError = "Fill the empty select";
+      }
+      if (selectedContractType === undefined) {
+        emptyError = "Fill the empty select";
+      }
+      if (selectedAcademicYearId === undefined) {
+        emptyError = "Fill the empty select";
+      }
+      if (selectedHireDate === undefined) {
+        emptyError = "Fill the empty select";
+      }
+      if (selectedSignatureDate === undefined) {
+        emptyError = "Fill the empty select";
+      }
+      if (selectedFullName === undefined) {
+        emptyError = "Fill the empty select";
+      }
+      // if (selectedCorporateNode === undefined) {
+      //   emptyError = "Fill the empty select";
+      // }
+      this.setState({ emptyError: emptyError });
+    }
+  };
+
+  handleContractClick = arg => {
+    console.log("arg", arg);
+
+    this.setState({
+      contract: arg,
+      selectedYearId: arg.yearId,
+      yearName: arg.yearName,
+      // selectedJobRank: arg.jobRankId,
+      // selectedJobTitle: arg.jobTitleId,
+      // jobTitleName: arg.jobTitle,
+      // selectedCorporateNode: arg.corporateNodeId,
+      // selectedContractType: arg.contractTypeId,
+      // selectedEmploymentCase: arg.employmentCaseId,
+      // selectedHasMinistryApprove: arg.hasMinistryApprove,
+      // selectedGovernmentWorker: arg.governmentWorker,
+      // selectedWorkClassification: arg.workClassificationId,
+      // selectedAcademicYearId: arg.academicYearId,
+      // academicYear: arg.academicYear,
+      isEdit: true,
+      isOpen: false,
+    });
+    this.toggle();
+  };
+
+  render() {
+    const { absenceWarnings, years, t, trainees, deleted } = this.props;
+    const {
+      modal,
       deleteModal,
       duplicateError,
       showAlert,
       showAddButton,
       showSearchButton,
+      isEdit,
+      absenceWarning,
+      selectedTraineeId,
+      selectedYear,
+      selectedDecisionReason,
+      selectedCourseId,
     } = this.state;
 
     const { SearchBar } = Search;
@@ -502,6 +650,305 @@ class AbsenceWarningsList extends Component {
                                     {...paginationProps}
                                   />
                                 </Col>
+                                <Modal
+                                  isOpen={modal}
+                                  toggle={this.toggle}
+                                  size="xl"
+                                >
+                                  <ModalHeader toggle={this.toggle} tag="h4">
+                                    {!!isEdit
+                                      ? t("Edit Absence Warning")
+                                      : t("Add Absence Warning")}
+                                  </ModalHeader>
+                                  <ModalBody>
+                                    <Formik
+                                      enableReinitialize={true}
+                                      initialValues={{
+                                        ...(isEdit &&
+                                          absenceWarning && {
+                                            Id: absenceWarning.Id,
+                                          }),
+                                        traineeId:
+                                          (absenceWarning &&
+                                            absenceWarning.traineeId) ||
+                                          selectedTraineeId,
+                                        yearId:
+                                          (absenceWarning &&
+                                            absenceWarning.yearId) ||
+                                          selectedYear,
+                                        decisionReasonId:
+                                          (absenceWarning &&
+                                            absenceWarning.decisionReasonId) ||
+                                          selectedDecisionReason,
+                                        coursesId:
+                                          (absenceWarning &&
+                                            absenceWarning.coursesId) ||
+                                          selectedCourseId,
+                                        absenceRate:
+                                          (absenceWarning &&
+                                            absenceWarning.absenceRate) ||
+                                          "",
+                                        dateAdded: absenceWarning?.dateAdded
+                                          ? moment
+                                              .utc(absenceWarning.dateAdded)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+                                        note:
+                                          (absenceWarning &&
+                                            absenceWarning.note) ||
+                                          "",
+                                      }}
+                                      validationSchema={Yup.object().shape({
+                                        traineeId: Yup.string().required(
+                                          "Please select a trainee"
+                                        ),
+                                        dateAdded: Yup.string()
+                                          .nullable()
+                                          .test(
+                                            "is-valid-date",
+                                            "Date must be valid",
+                                            value =>
+                                              !value ||
+                                              moment(
+                                                value,
+                                                "YYYY-MM-DD",
+                                                true
+                                              ).isValid()
+                                          ),
+                                        absenceRate: Yup.number()
+                                          .required("Absence rate is required")
+                                          .min(
+                                            0,
+                                            "Absence rate cannot be less than 0"
+                                          )
+                                          .max(
+                                            100,
+                                            "Absence rate cannot be more than 100"
+                                          )
+                                          .typeError(
+                                            "Absence rate must be a number"
+                                          ),
+                                        coursesId: Yup.string().required(
+                                          "Please select or enter a course"
+                                        ),
+                                        jobTitleId: Yup.string().required(
+                                          t("Please Enter Your Job Title")
+                                        ),
+                                      })}
+                                    >
+                                      {({
+                                        errors,
+                                        status,
+                                        touched,
+                                        values,
+                                        handleChange,
+                                        handleBlur,
+                                        setFieldValue,
+                                      }) => (
+                                        <Form>
+                                          <Card id="employee-card">
+                                            <CardTitle id="course_header">
+                                              {t("Absence Warning")}
+                                            </CardTitle>
+                                            <CardBody className="cardBody">
+                                              <div className="mb-3">
+                                                <Row>
+                                                  <Col className="col-4">
+                                                    <Label for="yearId">
+                                                      {this.props.t("Year")}
+                                                    </Label>
+                                                  </Col>
+                                                  <Col className="col-8">
+                                                    <Field
+                                                      name="yearId"
+                                                      as="input"
+                                                      id="year-Id"
+                                                      type="text"
+                                                      placeholder="Search..."
+                                                      className={
+                                                        "form-control" +
+                                                        (errors.yearId &&
+                                                        touched.yearId
+                                                          ? " is-invalid"
+                                                          : "")
+                                                      }
+                                                      value={
+                                                        years.find(
+                                                          year =>
+                                                            year.key ===
+                                                            this.state
+                                                              .selectedYearId
+                                                        )?.value || ""
+                                                      }
+                                                      onChange={e => {
+                                                        const newValue =
+                                                          e.target.value;
+
+                                                        const selectedYear =
+                                                          years.find(
+                                                            year =>
+                                                              year.value ===
+                                                              newValue
+                                                          );
+
+                                                        if (selectedYear) {
+                                                          this.setState({
+                                                            selectedYearId:
+                                                              selectedYear.key,
+                                                            yearName:
+                                                              selectedYear.value,
+                                                          });
+                                                        } else {
+                                                          this.setState({
+                                                            selectedYearId:
+                                                              null,
+                                                            yearName: newValue,
+                                                          });
+                                                        }
+                                                      }}
+                                                      list="yearsId"
+                                                      autoComplete="off"
+                                                    />
+                                                    <datalist id="yearsId">
+                                                      {years.map(yearOpt => (
+                                                        <option
+                                                          key={yearOpt.key}
+                                                          value={yearOpt.value}
+                                                        />
+                                                      ))}
+                                                    </datalist>
+                                                  </Col>
+                                                </Row>
+                                              </div>
+                                              <div className="mb-3">
+                                                <Row>
+                                                  <Col className="col-4">
+                                                    <Label for="traineeId">
+                                                      {this.props.t(
+                                                        "Trainee Name"
+                                                      )}
+                                                    </Label>
+                                                  </Col>
+                                                  <Col className="col-8">
+                                                    <Field
+                                                      name="traineeId"
+                                                      as="input"
+                                                      id="trainee-Id"
+                                                      type="text"
+                                                      placeholder="Search..."
+                                                      className={
+                                                        "form-control" +
+                                                        (errors.traineeId &&
+                                                        touched.traineeId
+                                                          ? " is-invalid"
+                                                          : "")
+                                                      }
+                                                      value={
+                                                        trainees.find(
+                                                          trainee =>
+                                                            trainee.key ===
+                                                            this.state
+                                                              .selectedTraineeId
+                                                        )?.value || ""
+                                                      }
+                                                      onChange={e => {
+                                                        const newValue =
+                                                          e.target.value;
+
+                                                        const selectedTrainee =
+                                                          trainees.find(
+                                                            trainee =>
+                                                              trainee.value ===
+                                                              newValue
+                                                          );
+
+                                                        if (selectedTrainee) {
+                                                          this.setState({
+                                                            selectedTraineeId:
+                                                              selectedTrainee.key,
+                                                            traineeName:
+                                                              selectedTrainee.value,
+                                                          });
+                                                        } else {
+                                                          this.setState({
+                                                            selectedTraineeId:
+                                                              null,
+                                                            traineeName:
+                                                              newValue,
+                                                          });
+                                                        }
+                                                      }}
+                                                      list="traineesId"
+                                                      autoComplete="off"
+                                                    />
+                                                    <datalist id="traineesId">
+                                                      {trainees.map(
+                                                        traineeOpt => (
+                                                          <option
+                                                            key={traineeOpt.key}
+                                                            value={
+                                                              traineeOpt.value
+                                                            }
+                                                          />
+                                                        )
+                                                      )}
+                                                    </datalist>
+                                                  </Col>
+                                                </Row>
+                                              </div>
+                                              <div className="mb-3">
+                                                <Row>
+                                                  <Col className="col-4">
+                                                    <Label for="decisionReasonId">
+                                                      {this.props.t("Job Rank")}
+                                                    </Label>
+                                                  </Col>
+                                                  <Col className="col-8">
+                                                    <Select
+                                                      name="decisionReasonId"
+                                                      key={`select_decisionReason`}
+                                                      options={
+                                                        decisionReasonsOpt
+                                                      }
+                                                      className={`form-control`}
+                                                      onChange={newValue => {
+                                                        this.handleSelect(
+                                                          "decisionReasonId",
+                                                          newValue.value
+                                                        );
+                                                      }}
+                                                      defaultValue={decisionReasonsOpt.find(
+                                                        opt =>
+                                                          opt.value ===
+                                                          contract?.decisionReasonId
+                                                      )}
+                                                    />
+                                                  </Col>
+                                                </Row>
+                                              </div>
+                                            </CardBody>
+                                          </Card>
+                                          <Row>
+                                            <Col>
+                                              <div className="text-center">
+                                                <Link
+                                                  to="#"
+                                                  className="btn btn-primary me-2"
+                                                  onClick={() => {
+                                                    this.handleSubmit(values);
+                                                  }}
+                                                >
+                                                  {t("Save")}
+                                                </Link>
+                                              </div>
+                                            </Col>
+                                          </Row>
+                                        </Form>
+                                      )}
+                                    </Formik>
+                                  </ModalBody>
+                                </Modal>
                               </React.Fragment>
                             )}
                           </ToolkitProvider>
@@ -519,9 +966,11 @@ class AbsenceWarningsList extends Component {
   }
 }
 
-const mapStateToProps = ({ absenceWarnings, menu_items }) => ({
+const mapStateToProps = ({ absenceWarnings, trainees, years, menu_items }) => ({
   absenceWarnings: absenceWarnings.absenceWarnings,
   deleted: absenceWarnings.deleted,
+  years: years.years,
+  trainees: trainees.trainees,
   user_menu: menu_items.user_menu || [],
 });
 

@@ -1274,6 +1274,7 @@ export const GET_CERTIFICATE_GRADE_DELETED_VALUE = "/certificateGrade/deleted";
 
 //checkedGrades
 export const GET_CHECKED_GRADES = "/checkedGrades";
+export const IMPORT_CHECKED_GRADES = "/checkedGrades";
 export const UPDATE_CHECKED_GRADE = "/update/checkedGrade";
 
 //archived Grades

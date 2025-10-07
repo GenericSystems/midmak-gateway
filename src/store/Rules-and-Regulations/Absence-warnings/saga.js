@@ -22,6 +22,12 @@ import {
   deleteAbsenceWarningFail,
 } from "./actions";
 
+import { getYearsSuccess, getYearsFail } from "../../years/actions";
+import {
+  getTraineesOptSuccess,
+  getTraineesOptFail,
+} from "../../trainees/actions";
+
 // Helper API methods
 import {
   getAbsenceWarnings,
@@ -29,6 +35,8 @@ import {
   addNewAbsenceWarning,
   updateAbsenceWarning,
   deleteAbsenceWarning,
+  getYears,
+  getTraineesOpt,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchAbsenceWarnings() {
@@ -43,6 +51,33 @@ function* fetchAbsenceWarnings() {
     yield put(getAbsenceWarningsSuccess(response));
   } catch (error) {
     yield put(getAbsenceWarningsFail(error));
+  }
+
+  const get_years_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Years",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getYears, get_years_req);
+    yield put(getYearsSuccess(response));
+  } catch (error) {
+    yield put(getYearsFail(error));
+  }
+  const get_trainees_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_Trainee",
+    fields: "Id,fullName",
+  };
+  try {
+    const response = yield call(getTraineesOpt, get_trainees_req);
+    yield put(getTraineesOptSuccess(response));
+  } catch (error) {
+    yield put(getTraineesOptFail(error));
   }
 }
 

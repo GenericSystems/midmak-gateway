@@ -379,7 +379,7 @@ class CourseDistributionsList extends Component {
                                   distributingCoursesMethod =>
                                     distributingCoursesMethod.key ===
                                     selectedDistribution
-                                ) || ""
+                                ) || { value: "" }
                               ).value
                             }
                           />

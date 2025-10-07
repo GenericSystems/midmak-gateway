@@ -43,7 +43,6 @@ import {
 } from "../../helpers/fakebackend_helper";
 
 function* fetchEnteredGrades({ payload }) {
-  console.log("payloadpayloadpayloadpayload", payload);
   const request = {
     source: "db",
     procedure: "SisApp_getData",
@@ -86,7 +85,6 @@ function* fetchCourseContentsEnteredGrades({ payload }) {
   };
   try {
     const response = yield call(getCourseContentsEnteredGrades, request);
-    console.log("wwwwwwwwwwwww", response);
     yield put(getCourseContentsEnteredGradesSuccess(response));
   } catch (error) {
     yield put(getCourseContentsEnteredGradesFail(error));
@@ -118,7 +116,6 @@ function* fetchCoursesOpt() {
   };
   try {
     const response = yield call(getCoursesOpt, getCourseOptions);
-    console.log("reeeeeeeeeeees", response);
     yield put(getCoursesOptSuccess(response));
   } catch (error) {
     yield put(getCoursesOptFail(error));
