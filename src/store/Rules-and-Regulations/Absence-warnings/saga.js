@@ -39,6 +39,10 @@ import {
   getDecisionStatusSuccess,
   getDecisionStatusFail,
 } from "../../decisions/actions";
+import {
+  getEmployeesNamesSuccess,
+  getEmployeesNamesFail,
+} from "../../HR/employees/actions";
 
 // Helper API methods
 import {
@@ -53,6 +57,7 @@ import {
   getDecreeReason,
   getCoursesOffering,
   getDecisionStatus,
+  getEmployeesNames,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchAbsenceWarnings() {
@@ -148,6 +153,21 @@ function* fetchAbsenceWarnings() {
     yield put(getTurnReasonsSuccess(response));
   } catch (error) {
     yield put(getTurnReasonsFail(error));
+  }
+
+  const get_employeeName_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_EmployeeOption",
+    fields: "Id,fullName",
+  };
+  try {
+    const response = yield call(getEmployeesNames, get_employeeName_req);
+    console.log("employeeName", response);
+    yield put(getEmployeesNamesSuccess(response));
+  } catch (error) {
+    yield put(getEmployeesNamesFail(error));
   }
 }
 

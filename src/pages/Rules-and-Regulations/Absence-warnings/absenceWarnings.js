@@ -102,6 +102,7 @@ class AbsenceWarningsList extends Component {
     const {
       absenceWarnings,
       decreeReasons,
+      employeesNames,
       years,
       onGetAbsenceWarnings,
       user_menu,
@@ -125,6 +126,7 @@ class AbsenceWarningsList extends Component {
       deleted,
       decisionStatus,
       turnReasons,
+      employeesNames,
     });
   }
 
@@ -390,6 +392,7 @@ class AbsenceWarningsList extends Component {
   render() {
     const {
       absenceWarnings,
+      employeesNames,
       years,
       coursesOffering,
       decreeReasons,
@@ -1163,6 +1166,10 @@ class AbsenceWarningsList extends Component {
                                                                 name="absencePercent"
                                                                 id="absencePercent"
                                                                 className="form-control"
+                                                                value={
+                                                                  absencePercent ||
+                                                                  ""
+                                                                }
                                                               />
                                                               <div className="input-group-text">
                                                                 %
@@ -1979,7 +1986,7 @@ class AbsenceWarningsList extends Component {
                                                               </Col>
                                                             </Row>
                                                           </div>
-                                                          <div className="md-2">
+                                                          <div className="mb-2">
                                                             <Row>
                                                               <Col className="col-4">
                                                                 <Label for="note">
@@ -1998,6 +2005,90 @@ class AbsenceWarningsList extends Component {
                                                                     "form-control"
                                                                   }
                                                                 />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-2">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="fullName-Id">
+                                                                  {this.props.t(
+                                                                    "Employee Name"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="employeeId"
+                                                                  as="input"
+                                                                  id="fullName-Id"
+                                                                  type="text"
+                                                                  placeholder="Search..."
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                  value={
+                                                                    employeesNames.find(
+                                                                      empl =>
+                                                                        empl.key ===
+                                                                        this
+                                                                          .state
+                                                                          .selectedFullName
+                                                                    )?.value ||
+                                                                    ""
+                                                                  }
+                                                                  onChange={e => {
+                                                                    const newValue =
+                                                                      e.target
+                                                                        .value;
+
+                                                                    const selectedEmployee =
+                                                                      employeesNames.find(
+                                                                        empl =>
+                                                                          empl.value ===
+                                                                          newValue
+                                                                      );
+
+                                                                    if (
+                                                                      selectedEmployee
+                                                                    ) {
+                                                                      this.setState(
+                                                                        {
+                                                                          selectedFullName:
+                                                                            selectedEmployee.key,
+                                                                          employeeFullName:
+                                                                            selectedEmployee.value,
+                                                                        }
+                                                                      );
+                                                                    } else {
+                                                                      this.setState(
+                                                                        {
+                                                                          selectedFullName:
+                                                                            null,
+                                                                          employeeFullName:
+                                                                            newValue,
+                                                                        }
+                                                                      );
+                                                                    }
+                                                                  }}
+                                                                  list="fullNames"
+                                                                  autoComplete="off"
+                                                                />
+
+                                                                <datalist id="fullNames">
+                                                                  {employeesNames.map(
+                                                                    employeesName => (
+                                                                      <option
+                                                                        key={
+                                                                          employeesName.key
+                                                                        }
+                                                                        value={
+                                                                          employeesName.value
+                                                                        }
+                                                                      />
+                                                                    )
+                                                                  )}
+                                                                </datalist>
                                                               </Col>
                                                             </Row>
                                                           </div>
@@ -2080,7 +2171,7 @@ class AbsenceWarningsList extends Component {
                                                               </Col>
                                                             </Row>
                                                           </div>
-                                                          <div className="md-3">
+                                                          <div className="mb-2">
                                                             <Row>
                                                               <Col className="col-4">
                                                                 <Label for="turnNote">
@@ -2099,6 +2190,90 @@ class AbsenceWarningsList extends Component {
                                                                     "form-control"
                                                                   }
                                                                 />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-2">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="fullName-Id">
+                                                                  {this.props.t(
+                                                                    "Employee Name"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="employeeId"
+                                                                  as="input"
+                                                                  id="fullName-Id"
+                                                                  type="text"
+                                                                  placeholder="Search..."
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                  value={
+                                                                    employeesNames.find(
+                                                                      empl =>
+                                                                        empl.key ===
+                                                                        this
+                                                                          .state
+                                                                          .selectedFullName
+                                                                    )?.value ||
+                                                                    ""
+                                                                  }
+                                                                  onChange={e => {
+                                                                    const newValue =
+                                                                      e.target
+                                                                        .value;
+
+                                                                    const selectedEmployee =
+                                                                      employeesNames.find(
+                                                                        empl =>
+                                                                          empl.value ===
+                                                                          newValue
+                                                                      );
+
+                                                                    if (
+                                                                      selectedEmployee
+                                                                    ) {
+                                                                      this.setState(
+                                                                        {
+                                                                          selectedFullName:
+                                                                            selectedEmployee.key,
+                                                                          employeeFullName:
+                                                                            selectedEmployee.value,
+                                                                        }
+                                                                      );
+                                                                    } else {
+                                                                      this.setState(
+                                                                        {
+                                                                          selectedFullName:
+                                                                            null,
+                                                                          employeeFullName:
+                                                                            newValue,
+                                                                        }
+                                                                      );
+                                                                    }
+                                                                  }}
+                                                                  list="fullNames"
+                                                                  autoComplete="off"
+                                                                />
+
+                                                                <datalist id="fullNames">
+                                                                  {employeesNames.map(
+                                                                    employeesName => (
+                                                                      <option
+                                                                        key={
+                                                                          employeesName.key
+                                                                        }
+                                                                        value={
+                                                                          employeesName.value
+                                                                        }
+                                                                      />
+                                                                    )
+                                                                  )}
+                                                                </datalist>
                                                               </Col>
                                                             </Row>
                                                           </div>
@@ -2154,6 +2329,7 @@ const mapStateToProps = ({
   years,
   menu_items,
   decisions,
+  employees,
 }) => ({
   absenceWarnings: absenceWarnings.absenceWarnings,
   coursesOffering: classScheduling.coursesOffering,
@@ -2161,6 +2337,7 @@ const mapStateToProps = ({
   decreeReasons: absenceWarnings.decreeReasons,
   turnReasons: absenceWarnings.turnReasons,
   years: years.years,
+  employeesNames: employees.employeesNames,
   traineesOpt: trainees.traineesOpt,
   decisionStatus: decisions.decisionStatus,
   user_menu: menu_items.user_menu || [],
