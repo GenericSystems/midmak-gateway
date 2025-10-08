@@ -763,6 +763,17 @@
   "Practical Group": "الفئة العملية",
   "Clinical Group": "الفئة السرسرية",
   "Trainee Exams Schedule": "جدول امتحانات الطالب",
+  "Absence Warning": "إنذار الغياب",
+  "Decree Status": "حالة القرار",
+  "Decree Reason": "سبب القرار",
+  "Update Decree Details": "تعديل تفاصيل قرار التأديب",
+  "Add Decree": "إضافة القرار",
+  "Decree Code": "رمز القرار",
+  "Decree Num": "رقم القرار",
+  "Decree Date": "تاريخ القرار",
+  "Turn Reason": "سبب الإلغاء",
+  "Turn Date": "تاريخ الإلغاء",
+  "Absence Warnings": "إنذارات الغياب",
   "Time": "الوقت",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

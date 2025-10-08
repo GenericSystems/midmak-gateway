@@ -523,7 +523,7 @@ class AbsenceWarningsList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("AbsenceWarning")} />
+            <Breadcrumbs breadcrumbItem={this.props.t("Absence Warnings")} />
             <Row>
               <Col>
                 <Card>
@@ -662,7 +662,7 @@ class AbsenceWarningsList extends Component {
                                   <ModalHeader toggle={this.toggle} tag="h4">
                                     {!!isEdit
                                       ? t("Edit Absence Warning")
-                                      : t("Add Absence Warning")}
+                                      : t("Add Decree")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <Formik
@@ -1195,9 +1195,9 @@ class AbsenceWarningsList extends Component {
                                                           </Col>
                                                         </Row>
                                                       </div>
-                                                      <div className="md-3">
+                                                      <div className="md-2">
                                                         <Row>
-                                                          <Col className="col-4 text-center">
+                                                          <Col className="col-4">
                                                             <Label for="note">
                                                               {this.props.t(
                                                                 "Notes"
@@ -1943,9 +1943,9 @@ class AbsenceWarningsList extends Component {
                                                               </Col>
                                                             </Row>
                                                           </div>
-                                                          <div className="md-3">
+                                                          <div className="md-2">
                                                             <Row>
-                                                              <Col className="col-4 text-center">
+                                                              <Col className="col-4">
                                                                 <Label for="note">
                                                                   {this.props.t(
                                                                     "Notes"
@@ -2046,7 +2046,7 @@ class AbsenceWarningsList extends Component {
                                                           </div>
                                                           <div className="md-3">
                                                             <Row>
-                                                              <Col className="col-4 text-center">
+                                                              <Col className="col-4">
                                                                 <Label for="turnNote">
                                                                   {this.props.t(
                                                                     "Notes"
