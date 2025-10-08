@@ -8,6 +8,9 @@ import {
   GET_DECISION_REASONS,
   GET_DECISION_REASONS_FAIL,
   GET_DECISION_REASONS_SUCCESS,
+  GET_TURN_REASONS,
+  GET_TURN_REASONS_FAIL,
+  GET_TURN_REASONS_SUCCESS,
   ADD_NEW_ABSENCE_WARNING,
   ADD_ABSENCE_WARNING_SUCCESS,
   ADD_ABSENCE_WARNING_FAIL,
@@ -92,16 +95,30 @@ export const deleteAbsenceWarningFail = error => ({
   payload: error,
 });
 
-export const getDecisionReason = () => ({
+export const getDecreeReason = () => ({
   type: GET_DECISION_REASONS,
 });
 
-export const getDecisionReasonSuccess = decisionReason => ({
+export const getDecreeReasonSuccess = decreeReason => ({
   type: GET_DECISION_REASONS_SUCCESS,
-  payload: decisionReason,
+  payload: decreeReason,
 });
 
-export const getDecisionReasonFail = error => ({
+export const getDecreeReasonFail = error => ({
   type: GET_DECISION_REASONS_FAIL,
+  payload: error,
+});
+
+export const getTurnReasons = () => ({
+  type: GET_TURN_REASONS,
+});
+
+export const getTurnReasonsSuccess = trunReason => ({
+  type: GET_TURN_REASONS_SUCCESS,
+  payload: trunReason,
+});
+
+export const getTurnReasonsFail = error => ({
+  type: GET_TURN_REASONS_FAIL,
   payload: error,
 });

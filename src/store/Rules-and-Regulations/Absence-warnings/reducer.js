@@ -12,11 +12,14 @@ import {
   GET_ABSENCE_WARNING_DELETED_VALUE_FAIL,
   GET_DECISION_REASONS_FAIL,
   GET_DECISION_REASONS_SUCCESS,
+  GET_TURN_REASONS_FAIL,
+  GET_TURN_REASONS_SUCCESS,
 } from "./actionTypes";
 
 const INIT_STATE = {
   absenceWarnings: [],
-  decisionReasons: [],
+  decreeReasons: [],
+  turnReasons: [],
   deleted: {},
   error: {},
 };
@@ -94,10 +97,22 @@ const absenceWarnings = (state = INIT_STATE, action) => {
     case GET_DECISION_REASONS_SUCCESS:
       return {
         ...state,
-        decisionReasons: action.payload,
+        decreeReasons: action.payload,
       };
 
     case GET_DECISION_REASONS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_TURN_REASONS_SUCCESS:
+      return {
+        ...state,
+        turnReasons: action.payload,
+      };
+
+    case GET_TURN_REASONS_FAIL:
       return {
         ...state,
         error: action.payload,

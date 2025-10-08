@@ -383,6 +383,9 @@ export const GET_DECISION_MAKERS = "/decisionMakers";
 // DECISION STATUS
 export const GET_DECISION_STATUS = "/decisionStatus";
 
+// TURN REASONS
+export const GET_TURN_REASONS = "/turnReasons";
+
 // DECISIONS_RULES_REASON
 export const GET_DECISIONS_RULES_REASONS = "/decisionsRulesReasons";
 export const ADD_NEW_DECISIONS_RULES_REASON = "/add/decisionsRulesReason";

@@ -20,8 +20,10 @@ import {
   updateAbsenceWarningFail,
   deleteAbsenceWarningSuccess,
   deleteAbsenceWarningFail,
-  getDecisionReasonSuccess,
-  getDecisionReasonFail,
+  getDecreeReasonSuccess,
+  getDecreeReasonFail,
+  getTurnReasonsSuccess,
+  getTurnReasonsFail,
 } from "./actions";
 
 import { getYearsSuccess, getYearsFail } from "../../years/actions";
@@ -33,6 +35,10 @@ import {
   getCoursesOfferingSuccess,
   getCoursesOfferingFail,
 } from "../../classScheduling/actions";
+import {
+  getDecisionStatusSuccess,
+  getDecisionStatusFail,
+} from "../../decisions/actions";
 
 // Helper API methods
 import {
@@ -43,8 +49,10 @@ import {
   deleteAbsenceWarning,
   getYears,
   getTraineesOpt,
-  getDecisionReason,
+  getTurnReasons,
+  getDecreeReason,
   getCoursesOffering,
+  getDecisionStatus,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchAbsenceWarnings() {
@@ -87,7 +95,7 @@ function* fetchAbsenceWarnings() {
   } catch (error) {
     yield put(getTraineesOptFail(error));
   }
-  const get_decisionReasons_req = {
+  const get_decreeReasons_req = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
@@ -95,10 +103,10 @@ function* fetchAbsenceWarnings() {
     fields: "Id,fullName",
   };
   try {
-    const response = yield call(getDecisionReason, get_decisionReasons_req);
-    yield put(getDecisionReasonSuccess(response));
+    const response = yield call(getDecreeReason, get_decreeReasons_req);
+    yield put(getDecreeReasonSuccess(response));
   } catch (error) {
-    yield put(getDecisionReasonFail(error));
+    yield put(getDecreeReasonFail(error));
   }
 
   const get_courses_req = {
@@ -114,6 +122,32 @@ function* fetchAbsenceWarnings() {
     yield put(getCoursesOfferingSuccess(response));
   } catch (error) {
     yield put(getCoursesOfferingFail(error));
+  }
+
+  const get_decisionStatus_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_DecisionStatus",
+  };
+  try {
+    const response = yield call(getDecisionStatus, get_decisionStatus_req);
+    yield put(getDecisionStatusSuccess(response));
+  } catch (error) {
+    yield put(getDecisionStatusFail(error));
+  }
+
+  const get_turnReasons_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_DecisionStatus",
+  };
+  try {
+    const response = yield call(getTurnReasons, get_turnReasons_req);
+    yield put(getTurnReasonsSuccess(response));
+  } catch (error) {
+    yield put(getTurnReasonsFail(error));
   }
 }
 

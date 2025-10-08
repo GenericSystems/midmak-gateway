@@ -72,14 +72,14 @@ class AbsenceWarningsList extends Component {
       showEditButton: false,
       showSearchButton: false,
       duplicateError: null,
-      deleteModal: false,
       duplicateError: null,
       selectedRowId: null,
       modal: false,
+      editModal: false,
       isEdit: false,
       isAdd: false,
-      selectedDecisionReason: null,
-      decisionReasonName: "",
+      selectedDecreeReason: null,
+      decreeReasonName: "",
       selectedTraineeId: null,
       traineeName: "",
       selectedCourseId: null,
@@ -91,7 +91,7 @@ class AbsenceWarningsList extends Component {
       endDateError: false,
       traineeError: false,
       courseError: false,
-      decisionReasonError: false,
+      decreeReasonError: false,
       values: "",
     };
     this.state = {};
@@ -100,12 +100,14 @@ class AbsenceWarningsList extends Component {
   componentDidMount() {
     const {
       absenceWarnings,
-      decisionReasons,
+      decreeReasons,
       years,
       onGetAbsenceWarnings,
       user_menu,
       deleted,
       coursesOffering,
+      decisionStatus,
+      turnReasons,
     } = this.props;
 
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -117,9 +119,11 @@ class AbsenceWarningsList extends Component {
     this.setState({
       absenceWarnings,
       coursesOffering,
-      decisionReasons,
+      decreeReasons,
       years,
       deleted,
+      decisionStatus,
+      turnReasons,
     });
   }
 
@@ -190,9 +194,9 @@ class AbsenceWarningsList extends Component {
     }));
   };
 
-  toggle2 = () => {
+  toggleEdit = () => {
     this.setState(prevState => ({
-      modal2: !prevState.modal2,
+      editModal: !prevState.editModal,
     }));
   };
 
@@ -287,14 +291,14 @@ class AbsenceWarningsList extends Component {
     const {
       selectedCourseId,
       selectedTraineeId,
-      selectedDecisionReason,
+      selectedDecreeReason,
       isEdit,
     } = this.state;
     const { onAddNewAbsenceWarning, onUpdateAbsenceWarning } = this.props;
 
     values["traineeId"] = selectedTraineeId;
     values["coursesId"] = selectedCourseId;
-    values["decisionReasonId"] = selectedDecisionReason;
+    values["decreeReasonId"] = selectedDecreeReason;
 
     console.log("valuesssssssssssssssssssss", values);
 
@@ -305,7 +309,7 @@ class AbsenceWarningsList extends Component {
       values.applyingDate &&
       selectedTraineeId !== null &&
       selectedCourseId !== null &&
-      selectedDecisionReason !== null
+      selectedDecreeReason !== null
     ) {
       Object.keys(values).forEach(function (key) {
         if (
@@ -333,14 +337,14 @@ class AbsenceWarningsList extends Component {
       values.applyingDate === "" ||
       (values.traineeId === "" && selectedTraineeId === "")(
         values.coursesId === "" && selectedCourseId === ""
-      )(values.decisionReasonId === "" && selectedDecisionReason === "")
+      )(values.decreeReasonId === "" && selectedDecreeReason === "")
     ) {
       this.setState({ applyingDateError: true, saveError: true });
       this.setState({ startDateError: true, saveError: true });
       this.setState({ endDateError: true, saveError: true });
       this.setState({ traineeError: true, saveError: true });
       this.setState({ courseError: true, saveError: true });
-      this.setState({ decisionReasonError: true, saveError: true });
+      this.setState({ decreeReasonError: true, saveError: true });
 
       const emptyError = this.props.t("Fill the Required Fields to Save");
 
@@ -366,13 +370,13 @@ class AbsenceWarningsList extends Component {
       // academicYear: arg.academicYear,
       isEdit: true,
     });
-    this.toggle();
+    this.toggleEdit();
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
-    if (fieldName == "decisionReasonId") {
+    if (fieldName == "decreeReasonId") {
       this.setState({
-        selectedDecisionReason: selectedValue,
+        selectedDecreeReason: selectedValue,
         absenceWarning: values,
       });
     }
@@ -383,13 +387,16 @@ class AbsenceWarningsList extends Component {
       absenceWarnings,
       years,
       coursesOffering,
-      decisionReasons,
+      decreeReasons,
       t,
       traineesOpt,
+      decisionStatus,
       deleted,
+      turnReasons,
     } = this.props;
     const {
       modal,
+      editModal,
       deleteModal,
       duplicateError,
       showAlert,
@@ -398,14 +405,16 @@ class AbsenceWarningsList extends Component {
       isEdit,
       absenceWarning,
       selectedTraineeId,
-      selectedDecisionReason,
+      selectedDecreeReason,
       selectedCourseId,
       applyingDateError,
       startDateError,
       endDateError,
       traineeError,
       courseError,
-      decisionReasonError,
+      decreeReasonError,
+      selectedDecreeStatus,
+      selectedTurnReason,
     } = this.state;
 
     const { SearchBar } = Search;
@@ -659,18 +668,14 @@ class AbsenceWarningsList extends Component {
                                     <Formik
                                       enableReinitialize={true}
                                       initialValues={{
-                                        ...(isEdit &&
-                                          absenceWarning && {
-                                            Id: absenceWarning.Id,
-                                          }),
                                         traineeId:
                                           (absenceWarning &&
                                             absenceWarning.traineeId) ||
                                           selectedTraineeId,
-                                        decisionReasonId:
+                                        decreeReasonId:
                                           (absenceWarning &&
-                                            absenceWarning.decisionReasonId) ||
-                                          selectedDecisionReason,
+                                            absenceWarning.decreeReasonId) ||
+                                          selectedDecreeReason,
                                         coursesId:
                                           (absenceWarning &&
                                             absenceWarning.coursesId) ||
@@ -967,9 +972,9 @@ class AbsenceWarningsList extends Component {
                                                       <div className="mb-3">
                                                         <Row>
                                                           <Col className="col-4">
-                                                            <Label for="decisionReasonId">
+                                                            <Label for="decreeReasonId">
                                                               {this.props.t(
-                                                                "Decision Reason"
+                                                                "Decree Reason"
                                                               )}
                                                             </Label>
                                                             <span className="text-danger">
@@ -978,36 +983,36 @@ class AbsenceWarningsList extends Component {
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Select
-                                                              name="decisionReasonId"
-                                                              key={`select_decisionReason`}
+                                                              name="decreeReasonId"
+                                                              key={`select_decreeReason`}
                                                               options={
-                                                                decisionReasons
+                                                                decreeReasons
                                                               }
                                                               className={
                                                                 "form-control" +
-                                                                ((errors.decisionReasonId &&
-                                                                  touched.decisionReasonId) ||
-                                                                decisionReasonError
+                                                                ((errors.decreeReasonId &&
+                                                                  touched.decreeReasonId) ||
+                                                                decreeReasonError
                                                                   ? " is-invalid"
                                                                   : "")
                                                               }
                                                               onChange={newValue => {
                                                                 this.handleSelect(
-                                                                  "decisionReasonId",
+                                                                  "decreeReasonId",
                                                                   newValue.value,
                                                                   values
                                                                 );
                                                               }}
-                                                              defaultValue={decisionReasons.find(
+                                                              defaultValue={decreeReasons.find(
                                                                 opt =>
                                                                   opt.value ===
-                                                                  absenceWarning?.decisionReasonId
+                                                                  absenceWarning?.decreeReasonId
                                                               )}
                                                             />
-                                                            {decisionReasonError && (
+                                                            {decreeReasonError && (
                                                               <div className="invalid-feedback">
                                                                 {this.props.t(
-                                                                  "Decision Reason is required"
+                                                                  "Decree Reason is required"
                                                                 )}
                                                               </div>
                                                             )}
@@ -1107,6 +1112,30 @@ class AbsenceWarningsList extends Component {
                                                                 )}
                                                               </div>
                                                             )}
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                      <div className="mb-3">
+                                                        <Row>
+                                                          <Col className="col-4">
+                                                            <Label for="absencePercent">
+                                                              {this.props.t(
+                                                                "Absence Percent"
+                                                              )}
+                                                            </Label>
+                                                          </Col>
+                                                          <Col className="col-3">
+                                                            <InputGroup>
+                                                              <Field
+                                                                type="text"
+                                                                name="absencePercent"
+                                                                id="absencePercent"
+                                                                className="form-control"
+                                                              />
+                                                              <div className="input-group-text">
+                                                                %
+                                                              </div>
+                                                            </InputGroup>
                                                           </Col>
                                                         </Row>
                                                       </div>
@@ -1214,6 +1243,857 @@ class AbsenceWarningsList extends Component {
                                     </Formik>
                                   </ModalBody>
                                 </Modal>
+                                <Modal
+                                  isOpen={editModal}
+                                  toggle={this.toggleEdit}
+                                  fullscreen
+                                >
+                                  <ModalHeader
+                                    toggle={this.toggleEdit}
+                                    tag="h4"
+                                  >
+                                    {!!isEdit
+                                      ? t("Update Decree Details")
+                                      : t("Add Absence Warning")}
+                                  </ModalHeader>
+                                  <ModalBody>
+                                    <Formik
+                                      enableReinitialize={true}
+                                      initialValues={{
+                                        ...(isEdit &&
+                                          absenceWarning && {
+                                            Id: absenceWarning.Id,
+                                          }),
+                                        decreeCode:
+                                          (absenceWarning &&
+                                            absenceWarning.decreeCode) ||
+                                          "",
+                                        traineeId:
+                                          (absenceWarning &&
+                                            absenceWarning.traineeId) ||
+                                          selectedTraineeId,
+                                        decreeReasonId:
+                                          (absenceWarning &&
+                                            absenceWarning.decreeReasonId) ||
+                                          selectedDecreeReason,
+                                        coursesId:
+                                          (absenceWarning &&
+                                            absenceWarning.coursesId) ||
+                                          selectedCourseId,
+                                        applyingDate:
+                                          absenceWarning?.applyingDate
+                                            ? moment
+                                                .utc(
+                                                  absenceWarning.applyingDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+                                        startDate: absenceWarning?.startDate
+                                          ? moment
+                                              .utc(absenceWarning.startDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+                                        endDate: absenceWarning?.endDate
+                                          ? moment
+                                              .utc(absenceWarning.endDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+                                        decreeNum:
+                                          (absenceWarning &&
+                                            absenceWarning.decreeNum) ||
+                                          "",
+                                        decreeDate: absenceWarning?.decreeDate
+                                          ? moment
+                                              .utc(absenceWarning.decreeDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+                                        note:
+                                          (absenceWarning &&
+                                            absenceWarning.note) ||
+                                          "",
+                                        //file: null,
+                                        decreeStatusId:
+                                          (absenceWarning &&
+                                            absenceWarning.decreeStatusId) ||
+                                          selectedDecreeStatus,
+                                        turnReasonId:
+                                          (absenceWarning &&
+                                            absenceWarning.turnReason) ||
+                                          selectedTurnReason,
+                                        turnDate: absenceWarning?.turnDate
+                                          ? moment
+                                              .utc(absenceWarning.turnDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+                                        turnNote:
+                                          (absenceWarning &&
+                                            absenceWarning.turnNote) ||
+                                          "",
+                                      }}
+                                      validationSchema={Yup.object().shape({
+                                        traineeId: Yup.string().required(
+                                          "Please select a trainee"
+                                        ),
+                                        applyingDate: Yup.string()
+                                          .nullable()
+                                          .test(
+                                            "is-valid-date",
+                                            "Date must be valid",
+                                            value =>
+                                              !value ||
+                                              moment(
+                                                value,
+                                                "YYYY-MM-DD",
+                                                true
+                                              ).isValid()
+                                          ),
+                                        startDate: Yup.string()
+                                          .nullable()
+                                          .test(
+                                            "is-valid-date",
+                                            "Date must be valid",
+                                            value =>
+                                              !value ||
+                                              moment(
+                                                value,
+                                                "YYYY-MM-DD",
+                                                true
+                                              ).isValid()
+                                          ),
+                                        endDate: Yup.string()
+                                          .nullable()
+                                          .test(
+                                            "is-valid-date",
+                                            "Date must be valid",
+                                            value =>
+                                              !value ||
+                                              moment(
+                                                value,
+                                                "YYYY-MM-DD",
+                                                true
+                                              ).isValid()
+                                          ),
+                                        coursesId: Yup.string().required(
+                                          "Please select or enter a course"
+                                        ),
+                                      })}
+                                    >
+                                      {({
+                                        errors,
+                                        status,
+                                        touched,
+                                        values,
+                                        handleChange,
+                                        handleBlur,
+                                        setFieldValue,
+                                      }) => {
+                                        return (
+                                          <Form>
+                                            <Card id="employee-card">
+                                              <CardBody className="cardBody">
+                                                <Row>
+                                                  <Col lg="6">
+                                                    <Card>
+                                                      <CardBody>
+                                                        <div className="bordered">
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="decreeCode">
+                                                                  {this.props.t(
+                                                                    "Decree Code"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  type="text"
+                                                                  name="decreeCode"
+                                                                  id="decreeCode"
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="traineeId">
+                                                                  {this.props.t(
+                                                                    "Trainee Name"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="traineeId"
+                                                                  as="input"
+                                                                  id="trainee-Id"
+                                                                  type="text"
+                                                                  placeholder="Search..."
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                  value={
+                                                                    traineesOpt.find(
+                                                                      trainee =>
+                                                                        trainee.key ===
+                                                                        this
+                                                                          .state
+                                                                          .selectedTraineeId
+                                                                    )?.value ||
+                                                                    ""
+                                                                  }
+                                                                  onChange={e => {
+                                                                    const newValue =
+                                                                      e.target
+                                                                        .value;
+
+                                                                    const selectedTrainee =
+                                                                      traineesOpt.find(
+                                                                        trainee =>
+                                                                          trainee.value ===
+                                                                          newValue
+                                                                      );
+
+                                                                    if (
+                                                                      selectedTrainee
+                                                                    ) {
+                                                                      this.setState(
+                                                                        {
+                                                                          selectedTraineeId:
+                                                                            selectedTrainee.key,
+                                                                          traineeName:
+                                                                            selectedTrainee.value,
+                                                                        }
+                                                                      );
+                                                                    } else {
+                                                                      this.setState(
+                                                                        {
+                                                                          selectedTraineeId:
+                                                                            null,
+                                                                          traineeName:
+                                                                            newValue,
+                                                                        }
+                                                                      );
+                                                                    }
+                                                                  }}
+                                                                  list="traineesId"
+                                                                  autoComplete="off"
+                                                                />
+                                                                <datalist id="traineesId">
+                                                                  {traineesOpt.map(
+                                                                    traineeOpt => (
+                                                                      <option
+                                                                        key={
+                                                                          traineeOpt.key
+                                                                        }
+                                                                        value={
+                                                                          traineeOpt.value
+                                                                        }
+                                                                      />
+                                                                    )
+                                                                  )}
+                                                                </datalist>
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="startDate">
+                                                                  {this.props.t(
+                                                                    "Start Date"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="startDate"
+                                                                  className={`form-control`}
+                                                                  type="date"
+                                                                  value={
+                                                                    values.startDate
+                                                                      ? new Date(
+                                                                          values.startDate
+                                                                        )
+                                                                          .toISOString()
+                                                                          .split(
+                                                                            "T"
+                                                                          )[0]
+                                                                      : ""
+                                                                  }
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  onBlur={
+                                                                    handleBlur
+                                                                  }
+                                                                  id="startDate-date-input"
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="endDate">
+                                                                  {this.props.t(
+                                                                    "End Date"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="endDate"
+                                                                  className={`form-control`}
+                                                                  type="date"
+                                                                  value={
+                                                                    values.endDate
+                                                                      ? new Date(
+                                                                          values.endDate
+                                                                        )
+                                                                          .toISOString()
+                                                                          .split(
+                                                                            "T"
+                                                                          )[0]
+                                                                      : ""
+                                                                  }
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  onBlur={
+                                                                    handleBlur
+                                                                  }
+                                                                  id="endDate-date-input"
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="coursesId">
+                                                                  {this.props.t(
+                                                                    "Courses"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="coursesId"
+                                                                  as="input"
+                                                                  id="courses-Id"
+                                                                  type="text"
+                                                                  placeholder="Search..."
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                  value={
+                                                                    coursesOffering.find(
+                                                                      course =>
+                                                                        course.key ===
+                                                                        this
+                                                                          .state
+                                                                          .selectedCourseId
+                                                                    )?.value ||
+                                                                    ""
+                                                                  }
+                                                                  onChange={e => {
+                                                                    const newValue =
+                                                                      e.target
+                                                                        .value;
+
+                                                                    const selectedCouese =
+                                                                      coursesOffering.find(
+                                                                        course =>
+                                                                          course.value ===
+                                                                          newValue
+                                                                      );
+
+                                                                    if (
+                                                                      selectedCouese
+                                                                    ) {
+                                                                      this.setState(
+                                                                        {
+                                                                          selectedCourseId:
+                                                                            selectedCouese.key,
+                                                                          courseName:
+                                                                            selectedCouese.value,
+                                                                        }
+                                                                      );
+                                                                    } else {
+                                                                      this.setState(
+                                                                        {
+                                                                          selectedCourseId:
+                                                                            null,
+                                                                          courseName:
+                                                                            newValue,
+                                                                        }
+                                                                      );
+                                                                    }
+                                                                  }}
+                                                                  list="coursesId"
+                                                                  autoComplete="off"
+                                                                />
+                                                                <datalist id="coursesId">
+                                                                  {coursesOffering.map(
+                                                                    course => (
+                                                                      <option
+                                                                        key={
+                                                                          course.key
+                                                                        }
+                                                                        value={
+                                                                          course.value
+                                                                        }
+                                                                      />
+                                                                    )
+                                                                  )}
+                                                                </datalist>
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="absencePercent">
+                                                                  {this.props.t(
+                                                                    "Absence Percent"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-3">
+                                                                <InputGroup>
+                                                                  <Field
+                                                                    type="text"
+                                                                    name="absencePercent"
+                                                                    id="absencePercent"
+                                                                    className="form-control"
+                                                                  />
+                                                                  <div className="input-group-text">
+                                                                    %
+                                                                  </div>
+                                                                </InputGroup>
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                        </div>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </Col>
+                                                  <Col lg="6">
+                                                    <Card>
+                                                      <CardBody>
+                                                        <div className="bordered">
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="decreeNum">
+                                                                  {this.props.t(
+                                                                    "Decree Num"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  type="text"
+                                                                  name="decreeNum"
+                                                                  id="decreeNum"
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="decreeDate">
+                                                                  {this.props.t(
+                                                                    "Decree Date"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="decreeDate"
+                                                                  className={`form-control`}
+                                                                  type="date"
+                                                                  value={
+                                                                    values.decreeDate
+                                                                      ? new Date(
+                                                                          values.decreeDate
+                                                                        )
+                                                                          .toISOString()
+                                                                          .split(
+                                                                            "T"
+                                                                          )[0]
+                                                                      : ""
+                                                                  }
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  onBlur={
+                                                                    handleBlur
+                                                                  }
+                                                                  id="decreeDate-date-input"
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div
+                                                            className="upload-box"
+                                                            onClick={() =>
+                                                              document
+                                                                .getElementById(
+                                                                  "fileInput"
+                                                                )
+                                                                .click()
+                                                            }
+                                                          >
+                                                            <div className="upload-content text-center">
+                                                              <div className="upload-icon-wrapper">
+                                                                <i className="bx bx-upload upload-icon"></i>
+                                                              </div>
+                                                              <p className="upload-text">
+                                                                {this.props.t(
+                                                                  "Click or drag file to upload"
+                                                                )}
+                                                              </p>
+                                                            </div>
+
+                                                            <input
+                                                              id="fileInput"
+                                                              name="file"
+                                                              type="file"
+                                                              className="d-none"
+                                                              onChange={event => {
+                                                                this.props.setFieldValue(
+                                                                  "file",
+                                                                  event
+                                                                    .currentTarget
+                                                                    .files[0]
+                                                                );
+                                                              }}
+                                                            />
+                                                          </div>
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col lg="4">
+                                                                <Label
+                                                                  for="decreeStatus-Id"
+                                                                  className="form-label d-flex"
+                                                                >
+                                                                  {this.props.t(
+                                                                    "Decree Status"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col lg="8">
+                                                                <div className="d-flex flex-wrap gap-3">
+                                                                  <div
+                                                                    className="btn-group button-or"
+                                                                    role="group"
+                                                                  >
+                                                                    {decisionStatus.map(
+                                                                      (
+                                                                        status,
+                                                                        index
+                                                                      ) => (
+                                                                        <React.Fragment
+                                                                          key={
+                                                                            index
+                                                                          }
+                                                                        >
+                                                                          <input
+                                                                            type="radio"
+                                                                            className={`btn-check button-or ${
+                                                                              selectedDecreeStatus ===
+                                                                              status.Id
+                                                                                ? "active"
+                                                                                : ""
+                                                                            }`}
+                                                                            name="decreeStatusId"
+                                                                            id={`btnradio${index}`}
+                                                                            autoComplete="off"
+                                                                            defaultChecked={
+                                                                              selectedDecreeStatus ===
+                                                                              status.Id
+                                                                                ? "active"
+                                                                                : ""
+                                                                            }
+                                                                            onChange={() => {
+                                                                              setFieldValue(
+                                                                                "decreeStatusId",
+                                                                                status.Id
+                                                                              );
+
+                                                                              this.setState(
+                                                                                {
+                                                                                  selectedDecreeStatus:
+                                                                                    status.Id,
+                                                                                }
+                                                                              );
+                                                                            }}
+                                                                          />
+                                                                          <Label
+                                                                            className="btn btn-outline-primary smallButton w-sm"
+                                                                            for={`btnradio${index}`}
+                                                                          >
+                                                                            {
+                                                                              status.arTitle
+                                                                            }
+                                                                          </Label>
+                                                                        </React.Fragment>
+                                                                      )
+                                                                    )}
+                                                                  </div>
+                                                                </div>
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                        </div>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </Col>
+                                                </Row>
+                                                <Row>
+                                                  <Col lg="6">
+                                                    <Card>
+                                                      <CardBody>
+                                                        <div className="bordered">
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="decreeReasonId">
+                                                                  {this.props.t(
+                                                                    "Decree Reason"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Select
+                                                                  name="decreeReasonId"
+                                                                  key={`select_decreeReason`}
+                                                                  options={
+                                                                    decreeReasons
+                                                                  }
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                  onChange={newValue => {
+                                                                    this.handleSelect(
+                                                                      "decreeReasonId",
+                                                                      newValue.value,
+                                                                      values
+                                                                    );
+                                                                  }}
+                                                                  defaultValue={decreeReasons.find(
+                                                                    opt =>
+                                                                      opt.value ===
+                                                                      absenceWarning?.decreeReasonId
+                                                                  )}
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-2">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="applyingDate">
+                                                                  {this.props.t(
+                                                                    "Applying Date"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="applyingDate"
+                                                                  className={`form-control `}
+                                                                  type="date"
+                                                                  value={
+                                                                    values.applyingDate
+                                                                      ? new Date(
+                                                                          values.applyingDate
+                                                                        )
+                                                                          .toISOString()
+                                                                          .split(
+                                                                            "T"
+                                                                          )[0]
+                                                                      : ""
+                                                                  }
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  onBlur={
+                                                                    handleBlur
+                                                                  }
+                                                                  id="applyingDate-date-input"
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="md-3">
+                                                            <Row>
+                                                              <Col className="col-4 text-center">
+                                                                <Label for="note">
+                                                                  {this.props.t(
+                                                                    "Notes"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  type="textarea"
+                                                                  name="note"
+                                                                  as="textarea"
+                                                                  id="note"
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                        </div>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </Col>
+                                                  <Col lg="6">
+                                                    <Card>
+                                                      <CardBody>
+                                                        <div className="bordered">
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="turnReasonId">
+                                                                  {this.props.t(
+                                                                    "Turn Reason"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Select
+                                                                  name="turnReasonId"
+                                                                  key={`select_turnReason`}
+                                                                  options={
+                                                                    turnReasons
+                                                                  }
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                  onChange={newValue => {
+                                                                    this.handleSelect(
+                                                                      "turnReasonId",
+                                                                      newValue.value,
+                                                                      values
+                                                                    );
+                                                                  }}
+                                                                  defaultValue={turnReasons.find(
+                                                                    opt =>
+                                                                      opt.value ===
+                                                                      absenceWarning?.turnReasonId
+                                                                  )}
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-2">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="turnDate">
+                                                                  {this.props.t(
+                                                                    "Turn Date"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="turnDate"
+                                                                  className={`form-control `}
+                                                                  type="date"
+                                                                  value={
+                                                                    values.turnDate
+                                                                      ? new Date(
+                                                                          values.turnDate
+                                                                        )
+                                                                          .toISOString()
+                                                                          .split(
+                                                                            "T"
+                                                                          )[0]
+                                                                      : ""
+                                                                  }
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  onBlur={
+                                                                    handleBlur
+                                                                  }
+                                                                  id="turnDate-date-input"
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="md-3">
+                                                            <Row>
+                                                              <Col className="col-4 text-center">
+                                                                <Label for="turnNote">
+                                                                  {this.props.t(
+                                                                    "Notes"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  type="textarea"
+                                                                  name="turnNote"
+                                                                  as="textarea"
+                                                                  id="turnNote"
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                        </div>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </Col>
+                                                </Row>
+                                              </CardBody>
+                                            </Card>
+                                            <Row>
+                                              <Col>
+                                                <div className="text-center">
+                                                  <Link
+                                                    to="#"
+                                                    className="btn btn-primary me-2"
+                                                    onClick={() => {
+                                                      this.handleSubmit(values);
+                                                    }}
+                                                  >
+                                                    {t("Save")}
+                                                  </Link>
+                                                </div>
+                                              </Col>
+                                            </Row>
+                                          </Form>
+                                        );
+                                      }}
+                                    </Formik>
+                                  </ModalBody>
+                                </Modal>
                               </React.Fragment>
                             )}
                           </ToolkitProvider>
@@ -1237,13 +2117,16 @@ const mapStateToProps = ({
   trainees,
   years,
   menu_items,
+  decisions,
 }) => ({
   absenceWarnings: absenceWarnings.absenceWarnings,
   coursesOffering: classScheduling.coursesOffering,
   deleted: absenceWarnings.deleted,
-  decisionReasons: absenceWarnings.decisionReasons,
+  decreeReasons: absenceWarnings.decreeReasons,
+  turnReasons: absenceWarnings.turnReasons,
   years: years.years,
   traineesOpt: trainees.traineesOpt,
+  decisionStatus: decisions.decisionStatus,
   user_menu: menu_items.user_menu || [],
 });
 
