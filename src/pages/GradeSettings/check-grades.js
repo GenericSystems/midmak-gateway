@@ -167,49 +167,49 @@ class CheckGradesList extends Component {
     }
   };
 
-  // handleSelectCourse = (fieldName, selectedValue) => {
-  //   const {
-  //     onGetFilteredSections,
-  //     coursesOpt,
-  //     onGetCheckedGrades,
-  //     onGetCourseContentsGrades,
-  //     courseContentsEnteredGrades,
-  //   } = this.props;
-  //   const courseobj = coursesOpt.find(
-  //     courseOpt =>
-  //       `${courseOpt.value} ${courseOpt.courseName}` === selectedValue
-  //   );
-  //   this.setState({
-  //     selectedCourse: selectedValue,
-  //     selectedCourseId: courseobj ? courseobj.key : "",
-  //     selectedSection: 0,
-  //   });
-  //   if (courseobj) {
-  //     this.setState({
-  //       selectedCourseId: courseobj.key,
-  //       selectedCourseCode: courseobj.value,
-  //     });
-  //     const obj = {
-  //       courseId: courseobj.key,
-  //       CourseCode: courseobj.value,
-  //     };
-  //     const obj2 = {
-  //       courseId: courseobj.key,
-  //       CourseCode: courseobj.value,
-  //       active: 1,
-  //     };
-  //     const obj3 = {
-  //       courseId: courseobj.key,
-  //     };
-  //     obj2[
-  //       "filter"
-  //     ] = `courseId = ${obj2.courseId} and code = ''''${obj2.CourseCode}'''' and active = ${obj2.active}`;
+  handleSelectCourse = (fieldName, selectedValue) => {
+    const {
+      onGetFilteredSections,
+      coursesOpt,
+      onGetCheckedGrades,
+      onGetCourseContentsGrades,
+      courseContentsEnteredGrades,
+    } = this.props;
+    const courseobj = coursesOpt.find(
+      courseOpt =>
+        `${courseOpt.value} ${courseOpt.courseName}` === selectedValue
+    );
+    this.setState({
+      selectedCourse: selectedValue,
+      selectedCourseId: courseobj ? courseobj.key : "",
+      selectedSection: 0,
+    });
+    if (courseobj) {
+      this.setState({
+        selectedCourseId: courseobj.key,
+        selectedCourseCode: courseobj.value,
+      });
+      const obj = {
+        courseId: courseobj.key,
+        CourseCode: courseobj.value,
+      };
+      const obj2 = {
+        courseId: courseobj.key,
+        CourseCode: courseobj.value,
+        active: 1,
+      };
+      const obj3 = {
+        courseId: courseobj.key,
+      };
+      obj2[
+        "filter"
+      ] = `courseId = ${obj2.courseId} and code = ''''${obj2.CourseCode}'''' and active = ${obj2.active}`;
 
-  //     onGetFilteredSections(obj) &&
-  //       onGetCheckedGrades(obj2) &&
-  //       onGetCourseContentsGrades(obj3);
-  //   }
-  // };
+      onGetFilteredSections(obj) &&
+        onGetCheckedGrades(obj2) &&
+        onGetCourseContentsGrades(obj3);
+    }
+  };
 
   handleSelectSection = (fieldName, selectedValue) => {
     const { onGetCheckedGrades, filteredSections } = this.props;
@@ -293,7 +293,7 @@ class CheckGradesList extends Component {
                 // traineeId: row.traineeId,
                 [FieldToUpdate]: null,
               };
-              // updateData["examType"] = `${FieldToUpdate}`;
+              updateData["examType"] = `${FieldToUpdate}`;
               onUpdateCheckedGrade(updateData);
             } else {
               const updateData = {
@@ -301,7 +301,7 @@ class CheckGradesList extends Component {
                 // traineeId: row.traineeId,
                 [FieldToUpdate]: fieldValue,
               };
-              // updateData["examType"] = `${FieldToUpdate}`;
+              updateData["examType"] = `${FieldToUpdate}`;
 
               onUpdateCheckedGrade(updateData);
             }
@@ -323,80 +323,81 @@ class CheckGradesList extends Component {
     }));
   }
 
-  // handleImport = () => {
-  //   const { onImportCheckedGrades } = this.props;
-  //   const { selectedSection, selectedCourseId, selectedCourseCode } =
-  //     this.state;
+  handleImport = () => {
+    const { onImportCheckedGrades } = this.props;
+    const { selectedSection, selectedCourseId, selectedCourseCode } =
+      this.state;
 
-  //   if (!selectedCourseId) {
-  //     alert("Please select a course first");
-  //     return;
-  //   }
+    if (!selectedCourseId) {
+      alert("Please select a course first");
+      return;
+    }
 
-  //   const obj = {
-  //     courseId: selectedCourseId,
-  //     // CourseCode: selectedCourseCode,
-  //     // SectionNumber: selectedSection,
-  //     // active: 1,
-  //   };
+    const obj = {
+      courseId: selectedCourseId,
+      // CourseCode: selectedCourseCode,
+      // SectionNumber: selectedSection,
+      // active: 1,
+    };
 
-  //   // obj[
-  //   //   "filter"
-  //   // ] = `courseId = ${obj.courseId} and code = ''''${obj.CourseCode}'''' and active = ${obj.active}`;
+    // obj[
+    //   "filter"
+    // ] = `courseId = ${obj.courseId} and code = ''''${obj.CourseCode}'''' and active = ${obj.active}`;
 
-  //   onImportCheckedGrades(obj);
-  // };
-
-  handleSelectCourse = (fieldName, selectedValue) => {
-    const {
-      coursesOpt,
-      onGetFilteredSections,
-      onGetCheckedGrades,
-      onGetCourseContentsGrades,
-    } = this.props;
-
-    if (!selectedValue) return;
-
-    const courseobj = coursesOpt.find(
-      courseOpt =>
-        `${courseOpt.value} ${courseOpt.courseName}` === selectedValue
-    );
-
-    if (!courseobj) return;
-
-    const isFirst = this.state.isFirstSelect;
-
-    // تحديث الـ state
-    this.setState(
-      {
-        selectedCourse: selectedValue,
-        selectedCourseId: courseobj.key,
-        selectedCourseCode: courseobj.value,
-        selectedSection: 0,
-        isFirstSelect: false, // بعد أول اختيار، يتم تعطيل الحالة الأولى
-      },
-      () => {
-        // استدعاء GET فقط إذا ليس أول اختيار
-        if (!isFirst) {
-          const objFilteredSections = {
-            courseId: courseobj.key,
-            CourseCode: courseobj.value,
-          };
-          const objCheckedGrades = {
-            courseId: courseobj.key,
-            CourseCode: courseobj.value,
-            active: 1,
-            filter: `courseId = ${courseobj.key} and code = ''''${courseobj.value}'''' and active = 1`,
-          };
-          const objCourseContents = { courseId: courseobj.key };
-
-          onGetFilteredSections(objFilteredSections);
-          onGetCheckedGrades(objCheckedGrades);
-          onGetCourseContentsGrades(objCourseContents);
-        }
-      }
-    );
+    onImportCheckedGrades(obj);
   };
+
+  //if we want condition to first select
+  // handleSelectCourse = (fieldName, selectedValue) => {
+  //   const {
+  //     coursesOpt,
+  //     onGetFilteredSections,
+  //     onGetCheckedGrades,
+  //     onGetCourseContentsGrades,
+  //   } = this.props;
+
+  //   if (!selectedValue) return;
+
+  //   const courseobj = coursesOpt.find(
+  //     courseOpt =>
+  //       `${courseOpt.value} ${courseOpt.courseName}` === selectedValue
+  //   );
+
+  //   if (!courseobj) return;
+
+  //   const isFirst = this.state.isFirstSelect;
+
+  //   // تحديث الـ state
+  //   this.setState(
+  //     {
+  //       selectedCourse: selectedValue,
+  //       selectedCourseId: courseobj.key,
+  //       selectedCourseCode: courseobj.value,
+  //       selectedSection: 0,
+  //       isFirstSelect: false,
+  //     },
+  //     () => {
+
+  //       if (!isFirst) {
+  //         const objFilteredSections = {
+  //           courseId: courseobj.key,
+  //           CourseCode: courseobj.value,
+  //         };
+  //         const objCheckedGrades = {
+  //           courseId: courseobj.key,
+  //           CourseCode: courseobj.value,
+  //           active: 1,
+  //           filter: `courseId = ${courseobj.key} and code = ''''${courseobj.value}'''' and active = 1`,
+  //         };
+  //         const objCourseContents = { courseId: courseobj.key };
+
+  //         onGetFilteredSections(objFilteredSections);
+  //         onGetCheckedGrades(objCheckedGrades);
+  //         onGetCourseContentsGrades(objCourseContents);
+  //       }
+  //     }
+  //   );
+  // };
 
   handleImport = () => {
     const { onImportCheckedGrades } = this.props;

@@ -29,6 +29,10 @@ import {
   getTraineesOptSuccess,
   getTraineesOptFail,
 } from "../../trainees/actions";
+import {
+  getCoursesOfferingSuccess,
+  getCoursesOfferingFail,
+} from "../../classScheduling/actions";
 
 // Helper API methods
 import {
@@ -40,6 +44,7 @@ import {
   getYears,
   getTraineesOpt,
   getDecisionReason,
+  getCoursesOffering,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchAbsenceWarnings() {
@@ -94,6 +99,21 @@ function* fetchAbsenceWarnings() {
     yield put(getDecisionReasonSuccess(response));
   } catch (error) {
     yield put(getDecisionReasonFail(error));
+  }
+
+  const get_courses_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_CourseOffering",
+    filter: `isOffered = 1`,
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getCoursesOffering, get_courses_req);
+    yield put(getCoursesOfferingSuccess(response));
+  } catch (error) {
+    yield put(getCoursesOfferingFail(error));
   }
 }
 
