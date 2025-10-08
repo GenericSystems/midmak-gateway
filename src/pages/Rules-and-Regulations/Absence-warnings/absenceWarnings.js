@@ -57,6 +57,7 @@ import {
 } from "../../../utils/menuUtils";
 import absenceWarnings from "store/Rules-and-Regulations/Absence-warnings/reducer";
 import decisions from "pages/HR/decisions/decisions";
+import absencePercents from "pages/TraineeAttendence/AttendenceSettings/absencePercents";
 
 class AbsenceWarningsList extends Component {
   constructor(props) {
@@ -263,8 +264,8 @@ class AbsenceWarningsList extends Component {
       onUpdateAbsenceWarning(onUpdate);
     }
   };
-  handleAlertClose = () => {
-    this.setState({ duplicateError: null });
+  handleAlertClose = alertName => {
+    this.setState({ [alertName]: null });
   };
 
   handleSuccessClose = () => {
@@ -292,6 +293,8 @@ class AbsenceWarningsList extends Component {
       selectedCourseId,
       selectedTraineeId,
       selectedDecreeReason,
+      selectedTurnReason,
+      selectedDecisionStatus,
       isEdit,
     } = this.state;
     const { onAddNewAbsenceWarning, onUpdateAbsenceWarning } = this.props;
@@ -299,6 +302,8 @@ class AbsenceWarningsList extends Component {
     values["traineeId"] = selectedTraineeId;
     values["coursesId"] = selectedCourseId;
     values["decreeReasonId"] = selectedDecreeReason;
+    values["decreeStatusId"] = isEdit ? selectedDecisionStatus : 4;
+    values["turnReasonId"] = selectedTurnReason;
 
     console.log("valuesssssssssssssssssssss", values);
 
@@ -321,9 +326,9 @@ class AbsenceWarningsList extends Component {
       console.log("absenceWarningInfoabsenceWarningInfo", warningInfo);
       if (isEdit) {
         console.log("9999999", warningInfo);
-        // onUpdateContract(warningInfo);
+        // onUpdateAbsenceWarning(warningInfo);
       } else {
-        // onAddNewContract(warningInfo);
+        // onAddNewAbsenceWarning(warningInfo);
       }
       const saveMessage = "Saved successfully ";
       this.setState({
@@ -415,6 +420,8 @@ class AbsenceWarningsList extends Component {
       decreeReasonError,
       selectedDecreeStatus,
       selectedTurnReason,
+      emptyError,
+      successMessage,
     } = this.state;
 
     const { SearchBar } = Search;
@@ -540,7 +547,9 @@ class AbsenceWarningsList extends Component {
                             type="button"
                             className="btn-close"
                             aria-label="Close"
-                            onClick={this.handleAlertClose}
+                            onClick={() =>
+                              this.handleAlertClose("duplicateError")
+                            }
                           ></button>
                         </Alert>
                       )}
@@ -705,6 +714,10 @@ class AbsenceWarningsList extends Component {
                                           (absenceWarning &&
                                             absenceWarning.note) ||
                                           "",
+                                        absencePercent:
+                                          (absenceWarning &&
+                                            absenceWarning.absencePercent) ||
+                                          "",
                                       }}
                                       validationSchema={Yup.object().shape({
                                         traineeId: Yup.string().required(
@@ -770,6 +783,25 @@ class AbsenceWarningsList extends Component {
                                                 {t("Absence Warning")}
                                               </CardTitle>
                                               <CardBody className="cardBody">
+                                                {emptyError && (
+                                                  <Alert
+                                                    color="danger"
+                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                    role="alert"
+                                                  >
+                                                    {emptyError}
+                                                    <button
+                                                      type="button"
+                                                      className="btn-close"
+                                                      aria-label="Close"
+                                                      onClick={() =>
+                                                        this.handleAlertClose(
+                                                          "emptyError"
+                                                        )
+                                                      }
+                                                    ></button>
+                                                  </Alert>
+                                                )}
                                                 <Card>
                                                   <CardBody>
                                                     <div className="bordered">
@@ -1334,6 +1366,10 @@ class AbsenceWarningsList extends Component {
                                           (absenceWarning &&
                                             absenceWarning.turnNote) ||
                                           "",
+                                        absencePercent:
+                                          (absenceWarning &&
+                                            absenceWarning.absencePercent) ||
+                                          "",
                                       }}
                                       validationSchema={Yup.object().shape({
                                         traineeId: Yup.string().required(
@@ -1752,7 +1788,7 @@ class AbsenceWarningsList extends Component {
                                                             </Row>
                                                           </div>
                                                           <div
-                                                            className="upload-box"
+                                                            // className="upload-box1"
                                                             onClick={() =>
                                                               document
                                                                 .getElementById(
