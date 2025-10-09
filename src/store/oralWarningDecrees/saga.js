@@ -2,55 +2,55 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 // Redux Action Types
 import {
-  GET_ABSENCE_WARNINGS,
-  GET_ABSENCE_WARNING_DELETED_VALUE,
-  ADD_NEW_ABSENCE_WARNING,
-  DELETE_ABSENCE_WARNING,
-  UPDATE_ABSENCE_WARNING,
+  GET_ORAL_WARNING_DECREES,
+  GET_ORAL_WARNING_DECREE_DELETED_VALUE,
+  ADD_NEW_ORAL_WARNING_DECREE,
+  DELETE_ORAL_WARNING_DECREE,
+  UPDATE_ORAL_WARNING_DECREE,
 } from "./actionTypes";
 
 import {
-  getAbsenceWarningsSuccess,
-  getAbsenceWarningsFail,
-  getAbsenceWarningDeletedValueSuccess,
-  getAbsenceWarningDeletedValueFail,
-  addAbsenceWarningSuccess,
-  addAbsenceWarningFail,
-  updateAbsenceWarningSuccess,
-  updateAbsenceWarningFail,
-  deleteAbsenceWarningSuccess,
-  deleteAbsenceWarningFail,
+  getOralWarningDecreesSuccess,
+  getOralWarningDecreesFail,
+  getOralWarningDecreeDeletedValueSuccess,
+  getOralWarningDecreeDeletedValueFail,
+  addOralWarningDecreeSuccess,
+  addOralWarningDecreeFail,
+  updateOralWarningDecreeSuccess,
+  updateOralWarningDecreeFail,
+  deleteOralWarningDecreeSuccess,
+  deleteOralWarningDecreeFail,
+} from "./actions";
+
+import { getYearsSuccess, getYearsFail } from "../years/actions";
+import {
   getDecreeReasonSuccess,
   getDecreeReasonFail,
   getTurnReasonsSuccess,
   getTurnReasonsFail,
-} from "./actions";
+} from "../Absence-warnings/actions";
 
-import { getYearsSuccess, getYearsFail } from "../../years/actions";
-import {
-  getTraineesOptSuccess,
-  getTraineesOptFail,
-} from "../../trainees/actions";
+import { getTraineesOptSuccess, getTraineesOptFail } from "../trainees/actions";
 import {
   getCoursesOfferingSuccess,
   getCoursesOfferingFail,
-} from "../../classScheduling/actions";
+} from "../classScheduling/actions";
 import {
   getDecisionStatusSuccess,
   getDecisionStatusFail,
-} from "../../decisions/actions";
+} from "../decisions/actions";
 import {
   getEmployeesNamesSuccess,
   getEmployeesNamesFail,
-} from "../../HR/employees/actions";
+} from "../HR/employees/actions";
 
 // Helper API methods
 import {
-  getAbsenceWarnings,
-  getAbsenceWarningDeletedValue,
-  addNewAbsenceWarning,
-  updateAbsenceWarning,
-  deleteAbsenceWarning,
+  getOralWarningDecrees,
+  getOralWarningDecreeDeletedValue,
+  addNewOralWarningDecree,
+  updateOralWarningDecree,
+  deleteOralWarningDecree,
   getYears,
   getTraineesOpt,
   getTurnReasons,
@@ -58,9 +58,9 @@ import {
   getCoursesOffering,
   getDecisionStatus,
   getEmployeesNames,
-} from "../../../helpers/fakebackend_helper";
+} from "../../helpers/fakebackend_helper";
 
-function* fetchAbsenceWarnings() {
+function* fetchOralWarningDecrees() {
   const requestPayload = {
     source: "db",
     procedure: "SisApp_getData",
@@ -68,10 +68,10 @@ function* fetchAbsenceWarnings() {
     tablename: "_Common_AbsenceWarnings",
   };
   try {
-    const response = yield call(getAbsenceWarnings, requestPayload);
-    yield put(getAbsenceWarningsSuccess(response));
+    const response = yield call(getOralWarningDecrees, requestPayload);
+    yield put(getOralWarningDecreesSuccess(response));
   } catch (error) {
-    yield put(getAbsenceWarningsFail(error));
+    yield put(getOralWarningDecreesFail(error));
   }
 
   const get_years_req = {
@@ -171,64 +171,67 @@ function* fetchAbsenceWarnings() {
   }
 }
 
-function* getAbsenceWarningProfile() {
+function* getOralWarningDecreeProfile() {
   try {
-    const response = yield call(getAbsenceWarningDeletedValue);
-    yield put(getAbsenceWarningDeletedValueSuccess(response));
+    const response = yield call(getOralWarningDecreeDeletedValue);
+    yield put(getOralWarningDecreeDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getAbsenceWarningDeletedValueFail(error));
+    yield put(getOralWarningDecreeDeletedValueFail(error));
   }
 }
 
-function* onAddNewAbsenceWarning({ payload }) {
+function* onAddNewOralWarningDecree({ payload }) {
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_AbsenceWarnings";
+  payload["tablename"] = "Common_OralWarningDecrees";
 
   try {
-    const response = yield call(addNewAbsenceWarning, payload);
-    yield put(addAbsenceWarningSuccess(response[0]));
+    const response = yield call(addNewOralWarningDecree, payload);
+    yield put(addOralWarningDecreeSuccess(response[0]));
   } catch (error) {
-    yield put(addAbsenceWarningFail(error));
+    yield put(addOralWarningDecreeFail(error));
   }
 }
 
-function* onUpdateAbsenceWarning({ payload }) {
+function* onUpdateOralWarningDecree({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_AbsenceWarnings";
+  payload["tablename"] = "Common_OralWarningDecrees";
 
   try {
-    const response = yield call(updateAbsenceWarning, payload);
-    yield put(updateAbsenceWarningSuccess(response[0]));
+    const response = yield call(updateOralWarningDecree, payload);
+    yield put(updateOralWarningDecreeSuccess(response[0]));
   } catch (error) {
-    yield put(updateAbsenceWarningFail(error));
+    yield put(updateOralWarningDecreeFail(error));
   }
 }
 
-function* onDeleteAbsenceWarning({ payload }) {
+function* onDeleteOralWarningDecree({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_AbsenceWarnings";
+  payload["tablename"] = "Common_OralWarningDecrees";
 
   try {
-    const response = yield call(deleteAbsenceWarning, payload);
-    yield put(deleteAbsenceWarningSuccess(response[0]));
+    const response = yield call(deleteOralWarningDecree, payload);
+    yield put(deleteOralWarningDecreeSuccess(response[0]));
   } catch (error) {
-    yield put(deleteAbsenceWarningFail(error));
+    yield put(deleteOralWarningDecreeFail(error));
   }
 }
 
-function* AbsenceWarningsSaga() {
-  yield takeEvery(GET_ABSENCE_WARNINGS, fetchAbsenceWarnings);
-  yield takeEvery(GET_ABSENCE_WARNING_DELETED_VALUE, getAbsenceWarningProfile);
-  yield takeEvery(ADD_NEW_ABSENCE_WARNING, onAddNewAbsenceWarning);
-  yield takeEvery(UPDATE_ABSENCE_WARNING, onUpdateAbsenceWarning);
-  yield takeEvery(DELETE_ABSENCE_WARNING, onDeleteAbsenceWarning);
+function* OralWarningDecreesSaga() {
+  yield takeEvery(GET_ORAL_WARNING_DECREES, fetchOralWarningDecrees);
+  yield takeEvery(
+    GET_ORAL_WARNING_DECREE_DELETED_VALUE,
+    getOralWarningDecreeProfile
+  );
+  yield takeEvery(ADD_NEW_ORAL_WARNING_DECREE, onAddNewOralWarningDecree);
+  yield takeEvery(UPDATE_ORAL_WARNING_DECREE, onUpdateOralWarningDecree);
+  yield takeEvery(DELETE_ORAL_WARNING_DECREE, onDeleteOralWarningDecree);
 }
 
-export default AbsenceWarningsSaga;
+export default OralWarningDecreesSaga;

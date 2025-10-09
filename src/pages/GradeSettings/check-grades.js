@@ -551,7 +551,7 @@ class CheckGradesList extends Component {
                             <Row>
                               <Col lg="4">
                                 <Label className="form-label">
-                                  {t("Course name")}
+                                  {t("Course Name")}
                                 </Label>
                               </Col>
                               <Col lg="8">

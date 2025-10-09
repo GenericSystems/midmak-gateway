@@ -98,7 +98,6 @@ export * from "./academyBuildingStructure/actions";
 //contractsTypes
 export * from "./HR/contractsTypes/actions";
 
-//absence
 //absencesTypes
 export * from "./absenceType/actions";
 
@@ -112,7 +111,16 @@ export * from "./absencePercents/actions";
 export * from "./gradesVersions/actions";
 
 //AbsenceWarnings
-export * from "./Rules-and-Regulations/Absence-warnings/actions";
+export * from "./Absence-warnings/actions";
+
+//oralWarningDecrees
+export * from "./oralWarningDecrees/actions";
+
+//writtenWarningDecreesList
+export * from "./writtenWarningDecrees/actions";
+
+//DismissCoursesDecrees
+export * from "./dismissCoursesDecrees-absence/actions";
 
 //DocumentTypes
 export * from "./documents-types/actions";

@@ -37,12 +37,12 @@ import ToolkitProvider, {
 import Breadcrumbs from "components/Common/Breadcrumb";
 import DeleteModal from "components/Common/DeleteModal";
 import {
-  getAbsenceWarnings,
-  addNewAbsenceWarning,
-  updateAbsenceWarning,
-  deleteAbsenceWarning,
-  getAbsenceWarningDeletedValue,
-} from "store/Absence-warnings/actions";
+  getDismissDecreesAbsence,
+  addNewDismissDecreeAbsence,
+  updateDismissDecreeAbsence,
+  deleteDismissDecreeAbsence,
+  getDismissDecreeAbsenceDeletedValue,
+} from "store/dismissCoursesDecrees-absence/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -56,12 +56,12 @@ import {
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
 
-class AbsenceWarningsList extends Component {
+class DismissDecreesAbsenceList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      absenceWarnings: [],
-      absenceWarning: "",
+      dismissDecreesAbsence: [],
+      dismissDecreeAbsence: "",
       deleteModal: false,
       selectedRowId: null,
       showAlert: null,
@@ -97,11 +97,11 @@ class AbsenceWarningsList extends Component {
 
   componentDidMount() {
     const {
-      absenceWarnings,
+      dismissDecreesAbsence,
       decreeReasons,
       employeesNames,
       years,
-      onGetAbsenceWarnings,
+      onGetDismissDecreesAbsence,
       user_menu,
       deleted,
       coursesOffering,
@@ -114,9 +114,9 @@ class AbsenceWarningsList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
 
-    onGetAbsenceWarnings();
+    onGetDismissDecreesAbsence();
     this.setState({
-      absenceWarnings,
+      dismissDecreesAbsence,
       coursesOffering,
       decreeReasons,
       years,
@@ -201,17 +201,18 @@ class AbsenceWarningsList extends Component {
   };
 
   handleAddRow = () => {
-    const { onAddNewAbsenceWarning, absenceWarnings } = this.props;
+    const { onAddNewDismissDecreeAbsence, dismissDecreesAbsence } = this.props;
 
     const newRow = {
       TraineeNum: "-----",
     };
 
     // Check if the same value already exists in the table
-    const emptyRowsExist = absenceWarnings.some(
-      absenceWarnings => absenceWarnings.TraineeNum.trim() === "-----"
+    const emptyRowsExist = dismissDecreesAbsence.some(
+      dismissDecreesAbsence =>
+        dismissDecreesAbsence.TraineeNum.trim() === "-----"
       // ||
-      // absenceWarning.enTitle.trim() === ""
+      // dismissDecreeAbsence.enTitle.trim() === ""
     );
 
     if (emptyRowsExist) {
@@ -219,15 +220,15 @@ class AbsenceWarningsList extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewAbsenceWarning(newRow);
+      onAddNewDismissDecreeAbsence(newRow);
     }
   };
 
   handleDeleteRow = () => {
-    const { onDeleteAbsenceWarning } = this.props;
+    const { onDeleteDismissDecreeAbsence } = this.props;
     const { selectedRowId } = this.state;
     if (selectedRowId !== null) {
-      onDeleteAbsenceWarning(selectedRowId);
+      onDeleteDismissDecreeAbsence(selectedRowId);
       this.setState({
         deleteModal: false,
         selectedRowId: null,
@@ -244,23 +245,23 @@ class AbsenceWarningsList extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
-  handleAbsenceWarningDataChange = (rowId, fieldName, fieldValue) => {
-    const { absenceWarnings, onUpdateAbsenceWarning } = this.props;
-    const isDuplicate = absenceWarnings.some(absenceWarning => {
+  handleDismissDecreeAbsenceDataChange = (rowId, fieldName, fieldValue) => {
+    const { dismissDecreesAbsence, onUpdateDismissDecreeAbsence } = this.props;
+    const isDuplicate = dismissDecreesAbsence.some(dismissDecreeAbsence => {
       return (
-        absenceWarning.Id !== rowId &&
-        absenceWarning.arTitle.trim() === fieldValue.trim()
+        dismissDecreeAbsence.Id !== rowId &&
+        dismissDecreeAbsence.arTitle.trim() === fieldValue.trim()
       );
     });
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateAbsenceWarning(onUpdate);
+      onUpdateDismissDecreeAbsence(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateAbsenceWarning(onUpdate);
+      onUpdateDismissDecreeAbsence(onUpdate);
     }
   };
   handleAlertClose = alertName => {
@@ -269,17 +270,17 @@ class AbsenceWarningsList extends Component {
 
   handleSuccessClose = () => {
     this.setState({ showAlert: null });
-    this.props.onGetAbsenceWarningDeletedValue();
+    this.props.onGetDismissDecreeAbsenceDeletedValue();
   };
 
   handleErrorClose = () => {
     this.setState({ showAlert: null });
-    this.props.onGetAbsenceWarningDeletedValue();
+    this.props.onGetDismissDecreeAbsenceDeletedValue();
   };
 
   handleAddRow = () => {
     this.setState({
-      absenceWarning: "",
+      dismissDecreeAbsence: "",
       isEdit: false,
       isOpen: false,
       isAdd: true,
@@ -296,7 +297,8 @@ class AbsenceWarningsList extends Component {
       selectedDecisionStatus,
       isEdit,
     } = this.state;
-    const { onAddNewAbsenceWarning, onUpdateAbsenceWarning } = this.props;
+    const { onAddNewDismissDecreeAbsence, onUpdateDismissDecreeAbsence } =
+      this.props;
 
     values["traineeId"] = selectedTraineeId;
     values["coursesId"] = selectedCourseId;
@@ -322,12 +324,15 @@ class AbsenceWarningsList extends Component {
         )
           warningInfo[key] = values[key];
       });
-      console.log("absenceWarningInfoabsenceWarningInfo", warningInfo);
+      console.log(
+        "dismissDecreeAbsenceInfodismissDecreeAbsenceInfo",
+        warningInfo
+      );
       if (isEdit) {
         console.log("9999999", warningInfo);
-        // onUpdateAbsenceWarning(warningInfo);
+        // onUpdateDismissDecreeAbsence(warningInfo);
       } else {
-        // onAddNewAbsenceWarning(warningInfo);
+        // onAddNewDismissDecreeAbsence(warningInfo);
       }
       const saveMessage = "Saved successfully ";
       this.setState({
@@ -356,16 +361,16 @@ class AbsenceWarningsList extends Component {
     }
   };
 
-  handleAbsenceWarningEdit = arg => {
+  handleDismissDecreeAbsenceEdit = arg => {
     console.log("arg", arg);
 
     this.setState({
-      absenceWarning: arg,
+      dismissDecreeAbsence: arg,
       // selectedJobRank: arg.jobRankId,
       // selectedJobTitle: arg.jobTitleId,
       // jobTitleName: arg.jobTitle,
       // selectedCorporateNode: arg.corporateNodeId,
-      // selectedContractType: arg.absenceWarningTypeId,
+      // selectedContractType: arg.dismissDecreeAbsenceTypeId,
       // selectedEmploymentCase: arg.employmentCaseId,
       // selectedHasMinistryApprove: arg.hasMinistryApprove,
       // selectedGovernmentWorker: arg.governmentWorker,
@@ -381,14 +386,14 @@ class AbsenceWarningsList extends Component {
     if (fieldName == "decreeReasonId") {
       this.setState({
         selectedDecreeReason: selectedValue,
-        absenceWarning: values,
+        dismissDecreeAbsence: values,
       });
     }
   };
 
   render() {
     const {
-      absenceWarnings,
+      dismissDecreesAbsence,
       employeesNames,
       years,
       coursesOffering,
@@ -408,7 +413,7 @@ class AbsenceWarningsList extends Component {
       showAddButton,
       showSearchButton,
       isEdit,
-      absenceWarning,
+      dismissDecreeAbsence,
       selectedTraineeId,
       selectedDecreeReason,
       selectedCourseId,
@@ -500,11 +505,13 @@ class AbsenceWarningsList extends Component {
         text: "",
         isDummyField: true,
         editable: false,
-        formatter: (cellContent, absenceWarning) => (
+        formatter: (cellContent, dismissDecreeAbsence) => (
           <Tooltip title={this.props.t("Edit")} placement="top">
             <IconButton
               className="text-sm-end"
-              onClick={() => this.handleAbsenceWarningEdit(absenceWarning)}
+              onClick={() =>
+                this.handleDismissDecreeAbsenceEdit(dismissDecreeAbsence)
+              }
             >
               <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
             </IconButton>
@@ -515,7 +522,7 @@ class AbsenceWarningsList extends Component {
 
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: absenceWarnings.length,
+      totalSize: dismissDecreesAbsence.length,
       custom: true,
     };
 
@@ -530,7 +537,9 @@ class AbsenceWarningsList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Absence Warnings")} />
+            <Breadcrumbs
+              breadcrumbItem={this.props.t("Dismiss Courses Decrees Absence")}
+            />
             <Row>
               <Col>
                 <Card>
@@ -589,12 +598,12 @@ class AbsenceWarningsList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={absenceWarnings}
+                        data={dismissDecreesAbsence}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={absenceWarnings}
+                            data={dismissDecreesAbsence}
                             columns={columns}
                             search
                           >
@@ -634,7 +643,7 @@ class AbsenceWarningsList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={absenceWarnings}
+                                  data={dismissDecreesAbsence}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "dbclick",
@@ -645,7 +654,7 @@ class AbsenceWarningsList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handleAbsenceWarningDataChange(
+                                      this.handleDismissDecreeAbsenceDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
@@ -654,7 +663,7 @@ class AbsenceWarningsList extends Component {
                                   })}
                                   defaultSorted={defaultSorting}
                                   noDataIndication={t(
-                                    "No Absence Warnings found"
+                                    "No Dismiss Courses Decrees Absence found"
                                   )}
                                   filter={filterFactory()}
                                 />
@@ -670,7 +679,7 @@ class AbsenceWarningsList extends Component {
                                 >
                                   <ModalHeader toggle={this.toggle} tag="h4">
                                     {!!isEdit
-                                      ? t("Edit Absence Warning")
+                                      ? t("Edit Decree")
                                       : t("Add Decree")}
                                   </ModalHeader>
                                   <ModalBody>
@@ -678,45 +687,48 @@ class AbsenceWarningsList extends Component {
                                       enableReinitialize={true}
                                       initialValues={{
                                         traineeId:
-                                          (absenceWarning &&
-                                            absenceWarning.traineeId) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.traineeId) ||
                                           selectedTraineeId,
                                         decreeReasonId:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeReasonId) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.decreeReasonId) ||
                                           selectedDecreeReason,
                                         coursesId:
-                                          (absenceWarning &&
-                                            absenceWarning.coursesId) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.coursesId) ||
                                           selectedCourseId,
                                         applyingDate:
-                                          absenceWarning?.applyingDate
+                                          dismissDecreeAbsence?.applyingDate
                                             ? moment
                                                 .utc(
-                                                  absenceWarning.applyingDate
+                                                  dismissDecreeAbsence.applyingDate
                                                 )
                                                 .local()
                                                 .format("YYYY-MM-DD")
                                             : "",
-                                        startDate: absenceWarning?.startDate
+                                        startDate:
+                                          dismissDecreeAbsence?.startDate
+                                            ? moment
+                                                .utc(
+                                                  dismissDecreeAbsence.startDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+                                        endDate: dismissDecreeAbsence?.endDate
                                           ? moment
-                                              .utc(absenceWarning.startDate)
-                                              .local()
-                                              .format("YYYY-MM-DD")
-                                          : "",
-                                        endDate: absenceWarning?.endDate
-                                          ? moment
-                                              .utc(absenceWarning.endDate)
+                                              .utc(dismissDecreeAbsence.endDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
                                         note:
-                                          (absenceWarning &&
-                                            absenceWarning.note) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.note) ||
                                           "",
                                         absencePercent:
-                                          (absenceWarning &&
-                                            absenceWarning.absencePercent) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.absencePercent) ||
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
@@ -780,7 +792,7 @@ class AbsenceWarningsList extends Component {
                                           <Form>
                                             <Card id="employee-card">
                                               <CardTitle id="course_header">
-                                                {t("Absence Warning")}
+                                                {t("Decree")}
                                               </CardTitle>
                                               <CardBody className="cardBody">
                                                 {emptyError && (
@@ -1038,7 +1050,7 @@ class AbsenceWarningsList extends Component {
                                                               defaultValue={decreeReasons.find(
                                                                 opt =>
                                                                   opt.value ===
-                                                                  absenceWarning?.decreeReasonId
+                                                                  dismissDecreeAbsence?.decreeReasonId
                                                               )}
                                                             />
                                                             {decreeReasonError && (
@@ -1286,89 +1298,97 @@ class AbsenceWarningsList extends Component {
                                   >
                                     {!!isEdit
                                       ? t("Update Decree Details")
-                                      : t("Add Absence Warning")}
+                                      : t("Add Decree")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <Formik
                                       enableReinitialize={true}
                                       initialValues={{
                                         ...(isEdit &&
-                                          absenceWarning && {
-                                            Id: absenceWarning.Id,
+                                          dismissDecreeAbsence && {
+                                            Id: dismissDecreeAbsence.Id,
                                           }),
                                         decreeCode:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeCode) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.decreeCode) ||
                                           "",
                                         traineeId:
-                                          (absenceWarning &&
-                                            absenceWarning.traineeId) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.traineeId) ||
                                           selectedTraineeId,
                                         decreeReasonId:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeReasonId) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.decreeReasonId) ||
                                           selectedDecreeReason,
                                         coursesId:
-                                          (absenceWarning &&
-                                            absenceWarning.coursesId) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.coursesId) ||
                                           selectedCourseId,
                                         applyingDate:
-                                          absenceWarning?.applyingDate
+                                          dismissDecreeAbsence?.applyingDate
                                             ? moment
                                                 .utc(
-                                                  absenceWarning.applyingDate
+                                                  dismissDecreeAbsence.applyingDate
                                                 )
                                                 .local()
                                                 .format("YYYY-MM-DD")
                                             : "",
-                                        startDate: absenceWarning?.startDate
+                                        startDate:
+                                          dismissDecreeAbsence?.startDate
+                                            ? moment
+                                                .utc(
+                                                  dismissDecreeAbsence.startDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+                                        endDate: dismissDecreeAbsence?.endDate
                                           ? moment
-                                              .utc(absenceWarning.startDate)
-                                              .local()
-                                              .format("YYYY-MM-DD")
-                                          : "",
-                                        endDate: absenceWarning?.endDate
-                                          ? moment
-                                              .utc(absenceWarning.endDate)
+                                              .utc(dismissDecreeAbsence.endDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
                                         decreeNum:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeNum) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.decreeNum) ||
                                           "",
-                                        decreeDate: absenceWarning?.decreeDate
-                                          ? moment
-                                              .utc(absenceWarning.decreeDate)
-                                              .local()
-                                              .format("YYYY-MM-DD")
-                                          : "",
+                                        decreeDate:
+                                          dismissDecreeAbsence?.decreeDate
+                                            ? moment
+                                                .utc(
+                                                  dismissDecreeAbsence.decreeDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
                                         note:
-                                          (absenceWarning &&
-                                            absenceWarning.note) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.note) ||
                                           "",
                                         //file: null,
                                         decreeStatusId:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeStatusId) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.decreeStatusId) ||
                                           selectedDecreeStatus,
                                         turnReasonId:
-                                          (absenceWarning &&
-                                            absenceWarning.turnReason) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.turnReason) ||
                                           selectedTurnReason,
-                                        turnDate: absenceWarning?.turnDate
+                                        turnDate: dismissDecreeAbsence?.turnDate
                                           ? moment
-                                              .utc(absenceWarning.turnDate)
+                                              .utc(
+                                                dismissDecreeAbsence.turnDate
+                                              )
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
                                         turnNote:
-                                          (absenceWarning &&
-                                            absenceWarning.turnNote) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.turnNote) ||
                                           "",
                                         absencePercent:
-                                          (absenceWarning &&
-                                            absenceWarning.absencePercent) ||
+                                          (dismissDecreeAbsence &&
+                                            dismissDecreeAbsence.absencePercent) ||
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
@@ -1937,7 +1957,7 @@ class AbsenceWarningsList extends Component {
                                                                   defaultValue={decreeReasons.find(
                                                                     opt =>
                                                                       opt.value ===
-                                                                      absenceWarning?.decreeReasonId
+                                                                      dismissDecreeAbsence?.decreeReasonId
                                                                   )}
                                                                 />
                                                               </Col>
@@ -2122,7 +2142,7 @@ class AbsenceWarningsList extends Component {
                                                                   defaultValue={turnReasons.find(
                                                                     opt =>
                                                                       opt.value ===
-                                                                      absenceWarning?.turnReasonId
+                                                                      dismissDecreeAbsence?.turnReasonId
                                                                   )}
                                                                 />
                                                               </Col>
@@ -2317,6 +2337,7 @@ class AbsenceWarningsList extends Component {
 
 const mapStateToProps = ({
   classScheduling,
+  dismissDecreesAbsence,
   absenceWarnings,
   trainees,
   years,
@@ -2324,9 +2345,9 @@ const mapStateToProps = ({
   decisions,
   employees,
 }) => ({
-  absenceWarnings: absenceWarnings.absenceWarnings,
+  dismissDecreesAbsence: dismissDecreesAbsence.dismissDecreesAbsence,
   coursesOffering: classScheduling.coursesOffering,
-  deleted: absenceWarnings.deleted,
+  deleted: dismissDecreesAbsence.deleted,
   decreeReasons: absenceWarnings.decreeReasons,
   turnReasons: absenceWarnings.turnReasons,
   years: years.years,
@@ -2337,18 +2358,18 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetAbsenceWarnings: () => dispatch(getAbsenceWarnings()),
-  onAddNewAbsenceWarning: absenceWarning =>
-    dispatch(addNewAbsenceWarning(absenceWarning)),
-  onUpdateAbsenceWarning: absenceWarning =>
-    dispatch(updateAbsenceWarning(absenceWarning)),
-  onDeleteCAbsenceWarning: absenceWarning =>
-    dispatch(deleteAbsenceWarning(absenceWarning)),
-  onGetAbsenceWarningDeletedValue: () =>
-    dispatch(getAbsenceWarningDeletedValue()),
+  onGetDismissDecreesAbsence: () => dispatch(getDismissDecreesAbsence()),
+  onAddNewDismissDecreeAbsence: dismissDecreeAbsence =>
+    dispatch(addNewDismissDecreeAbsence(dismissDecreeAbsence)),
+  onUpdateDismissDecreeAbsence: dismissDecreeAbsence =>
+    dispatch(updateDismissDecreeAbsence(dismissDecreeAbsence)),
+  onDeleteCDismissDecreeAbsence: dismissDecreeAbsence =>
+    dispatch(deleteDismissDecreeAbsence(dismissDecreeAbsence)),
+  onGetDismissDecreeAbsenceDeletedValue: () =>
+    dispatch(getDismissDecreeAbsenceDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(AbsenceWarningsList));
+)(withTranslation()(DismissDecreesAbsenceList));

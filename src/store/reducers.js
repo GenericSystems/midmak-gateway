@@ -250,8 +250,10 @@ import contractsTypes from "./HR/contractsTypes/reducer";
 
 //absenceTypes
 import absencesTypes from "./absenceType/reducer";
+
 //absenceJustification
 import absencesJustifications from "./absenceJustification/reducer";
+
 //absencepercents
 import absencePercents from "./absencePercents/reducer";
 
@@ -261,8 +263,17 @@ import gradesVersions from "./gradesVersions/reducer";
 // documentTypes
 import documentsTypes from "./documents-types/reducer";
 
+//oralWarningDecrees
+import oralWarningDecrees from "./oralWarningDecrees/reducer";
+
+//WrittenWarningDecreesList
+import writtenWarningDecrees from "./writtenWarningDecrees/reducer";
+
+//DismissCoursesDecrees
+import dismissDecreesAbsence from "./dismissCoursesDecrees-absence/reducer";
+
 //AbsenceWarnings
-import absenceWarnings from "./Rules-and-Regulations/Absence-warnings/reducer";
+import absenceWarnings from "./Absence-warnings/reducer";
 
 // ExamRooms
 import examRooms from "./Exam/ExamRooms/reducer";
@@ -490,6 +501,9 @@ const rootReducer = combineReducers({
   highstudytypes,
   gradesVersions,
   absenceWarnings,
+  oralWarningDecrees,
+  writtenWarningDecrees,
+  dismissDecreesAbsence,
 });
 
 export default rootReducer;

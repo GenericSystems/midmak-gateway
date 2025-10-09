@@ -65,6 +65,7 @@ class EnterGradesList extends Component {
       errorMessage: null,
       sidebarOpen: true,
       selectedCourseId: null,
+      showEditButton: false,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
   }

@@ -228,6 +228,84 @@ class ArchiveGradesList extends Component {
     onGetArchivedGrades(obj);
   };
 
+  // handleGradeDataChange = (row, dataField, fieldValue) => {
+  //   const {
+  //     onUpdateArchivedGrade,
+  //     archived_grades,
+  //     courseContentsEnteredGrades,
+  //   } = this.props;
+
+  //   if (!dataField) {
+  //     console.error("dataField is undefined");
+  //     return;
+  //   }
+
+  //   if (typeof row[dataField] === "undefined") {
+  //     console.error(`${dataField} is undefined in the row data`);
+  //     return;
+  //   }
+
+  //   const rowId = row.Id;
+  //   const { updatedCells } = this.state;
+  //   const updatedCell = { rowId, dataField };
+  //   this.setState({ updatedCells: [...updatedCells, updatedCell] });
+
+  //   this.setState({
+  //     updatedColumn: dataField,
+  //   });
+
+  //   const termInput = dataField.match(/\d+/).input;
+
+  //   const gradeInput = termInput.match(/\((\d+)\)/);
+
+  //   if (termInput) {
+  //     const gradeValue = gradeInput[1];
+  //     if (!isNaN(gradeValue)) {
+  //       if (parseInt(fieldValue) > gradeValue) {
+  //         console.error("Entered value is greater than grade value");
+  //         const errorGreaterGrade = this.props.t(
+  //           `Enter Grade From 0 to ${gradeValue}`
+  //         );
+  //         this.setState({ errorMessage: errorGreaterGrade });
+  //       } else if (parseInt(fieldValue) < 0) {
+  //         console.error("Entered value is negative");
+  //         const errorNegativeGrade = this.props.t(
+  //           "You Entered Negative Grade "
+  //         );
+  //         this.setState({ errorMessage: errorNegativeGrade });
+  //       } else {
+  //         const matchingField = courseContentsEnteredGrades.find(
+  //           field => field.dataField === termInput
+  //         );
+
+  //         if (matchingField) {
+  //           const FieldToUpdate = `Ex${matchingField.orderContent}`;
+  //           if (fieldValue == "") {
+  //             const updateData = {
+  //               Id: row.Id,
+  //               TraineeNum: row.TraineeNum,
+  //               [FieldToUpdate]: null,
+  //             };
+  //             updateData["examType"] = `${FieldToUpdate}`;
+  //             onUpdateArchivedGrade(updateData);
+  //           } else {
+  //             const updateData = {
+  //               Id: row.Id,
+  //               TraineeNum: row.TraineeNum,
+  //               [FieldToUpdate]: fieldValue,
+  //             };
+  //             updateData["examType"] = `${FieldToUpdate}`;
+
+  //             onUpdateArchivedGrade(updateData);
+  //           }
+  //         } else {
+  //           console.error("Matching field not found");
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
+
   handleGradeDataChange = (row, dataField, fieldValue) => {
     const {
       onUpdateArchivedGrade,
@@ -250,56 +328,43 @@ class ArchiveGradesList extends Component {
     const updatedCell = { rowId, dataField };
     this.setState({ updatedCells: [...updatedCells, updatedCell] });
 
-    this.setState({
-      updatedColumn: dataField,
-    });
+    const checkboxFields = ["deprivedFromExam", "inProgress", "archived"];
+    if (checkboxFields.includes(dataField)) {
+      const updateData = {
+        Id: row.Id,
+        [dataField]: fieldValue,
+      };
+      onUpdateArchivedGrade(updateData);
+      return;
+    }
 
-    const termInput = dataField.match(/\d+/).input;
+    if (!dataField || typeof row[dataField] === "undefined") return;
 
-    const gradeInput = termInput.match(/\((\d+)\)/);
+    const termInput = dataField.match(/\d+/)?.input;
+    const gradeInput = termInput?.match(/\((\d+)\)/);
 
-    if (termInput) {
+    if (termInput && gradeInput) {
       const gradeValue = gradeInput[1];
       if (!isNaN(gradeValue)) {
         if (parseInt(fieldValue) > gradeValue) {
-          console.error("Entered value is greater than grade value");
-          const errorGreaterGrade = this.props.t(
-            `Enter Grade From 0 to ${gradeValue}`
-          );
-          this.setState({ errorMessage: errorGreaterGrade });
+          this.setState({
+            errorMessage: `Enter Grade From 0 to ${gradeValue}`,
+          });
         } else if (parseInt(fieldValue) < 0) {
-          console.error("Entered value is negative");
-          const errorNegativeGrade = this.props.t(
-            "You Entered Negative Grade "
-          );
-          this.setState({ errorMessage: errorNegativeGrade });
+          this.setState({ errorMessage: "You Entered Negative Grade" });
         } else {
-          const matchingField = courseContentsEnteredGrades.find(
+          const matchingField = this.props.courseContentsEnteredGrades.find(
             field => field.dataField === termInput
           );
-
           if (matchingField) {
             const FieldToUpdate = `Ex${matchingField.orderContent}`;
-            if (fieldValue == "") {
-              const updateData = {
-                Id: row.Id,
-                studentId: row.studentId,
-                [FieldToUpdate]: null,
-              };
-              updateData["examType"] = `${FieldToUpdate}`;
-              onUpdateArchivedGrade(updateData);
-            } else {
-              const updateData = {
-                Id: row.Id,
-                studentId: row.studentId,
-                [FieldToUpdate]: fieldValue,
-              };
-              updateData["examType"] = `${FieldToUpdate}`;
-
-              onUpdateArchivedGrade(updateData);
-            }
-          } else {
-            console.error("Matching field not found");
+            const updateData = {
+              Id: row.Id,
+              TraineeNum: row.TraineeNum,
+              [FieldToUpdate]: fieldValue || null,
+              examType: `${FieldToUpdate}`,
+            };
+            onUpdateArchivedGrade(updateData);
           }
         }
       }
@@ -367,8 +432,8 @@ class ArchiveGradesList extends Component {
           dataField: column.dataField,
           text: column.textField,
           editable: showEditButton
-            ? column.dataField !== "studentId" &&
-              column.dataField !== "studentName" &&
+            ? column.dataField !== "TraineeNum" &&
+              column.dataField !== "traineeName" &&
               column.dataField !== "totalGrade" &&
               column.dataField !== "letter_grade"
             : false,
@@ -386,6 +451,66 @@ class ArchiveGradesList extends Component {
             return isIdenticalZero && isUpdated ? "warning-cell" : "";
           },
         }));
+
+        columns.push(
+          {
+            key: "deprivedFromExam",
+            dataField: "deprivedFromExam",
+            text: "Deprived from Exam",
+            formatter: (cell, row, rowIndex) => (
+              <input
+                type="checkbox"
+                checked={!!cell}
+                disabled={!this.state.showEditButton}
+                onChange={() => {
+                  const newData = [...this.state.tableData];
+                  newData[rowIndex] = {
+                    ...newData[rowIndex],
+                    deprivedFromExam: !cell,
+                  };
+                  this.setState({ tableData: newData });
+                }}
+              />
+            ),
+          },
+          {
+            key: "inProgress",
+            dataField: "inProgress",
+            text: "In Progress",
+            formatter: (cell, row, rowIndex) => (
+              <input
+                type="checkbox"
+                checked={!!cell}
+                disabled={!this.state.showEditButton}
+                onChange={() => {
+                  const newData = [...this.state.tableData];
+                  newData[rowIndex] = {
+                    ...newData[rowIndex],
+                    inProgress: !cell,
+                  };
+                  this.setState({ tableData: newData });
+                }}
+              />
+            ),
+          },
+          {
+            key: "archived",
+            dataField: "archived",
+            text: "Archived",
+            formatter: (cell, row, rowIndex) => (
+              <input
+                type="checkbox"
+                checked={!!cell}
+                disabled={!this.state.showEditButton}
+                onChange={() => {
+                  const newData = [...this.state.tableData];
+                  newData[rowIndex] = { ...newData[rowIndex], archived: !cell };
+                  this.setState({ tableData: newData });
+                }}
+              />
+            ),
+          }
+        );
 
         return columns;
       } else {
@@ -408,10 +533,13 @@ class ArchiveGradesList extends Component {
 
           const mappedData = {
             Id: grade.Id || "",
-            studentId: grade.studentId || "",
-            studentName: grade.studentName || "",
+            TraineeNum: grade.TraineeNum || "",
+            traineeName: grade.traineeName || "",
             totalGrade: grade.totalGrade || "",
             letter_grade: grade.letter_grade || "",
+            deprivedFromExam: grade.deprivedFromExam || false,
+            inProgress: grade.inProgress || false,
+            archived: grade.archived || false,
           };
 
           courseIdColumns.forEach(column => {
@@ -433,10 +561,13 @@ class ArchiveGradesList extends Component {
       } else {
         mappedDataArray.push({
           Id: "",
-          studentId: "",
-          studentName: "",
+          TraineeNum: "",
+          traineeName: "",
           Total: "",
           Letter: "",
+          deprivedFromExam: false,
+          inProgress: false,
+          archived: false,
         });
       }
 

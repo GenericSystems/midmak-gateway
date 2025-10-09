@@ -37,12 +37,12 @@ import ToolkitProvider, {
 import Breadcrumbs from "components/Common/Breadcrumb";
 import DeleteModal from "components/Common/DeleteModal";
 import {
-  getAbsenceWarnings,
-  addNewAbsenceWarning,
-  updateAbsenceWarning,
-  deleteAbsenceWarning,
-  getAbsenceWarningDeletedValue,
-} from "store/Absence-warnings/actions";
+  getOralWarningDecrees,
+  addNewOralWarningDecree,
+  updateOralWarningDecree,
+  deleteOralWarningDecree,
+  getOralWarningDecreeDeletedValue,
+} from "store/oralWarningDecrees/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -56,12 +56,12 @@ import {
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
 
-class AbsenceWarningsList extends Component {
+class OralWarningDecreesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      absenceWarnings: [],
-      absenceWarning: "",
+      oralWarningDecrees: [],
+      oralWarningDecree: "",
       deleteModal: false,
       selectedRowId: null,
       showAlert: null,
@@ -97,11 +97,11 @@ class AbsenceWarningsList extends Component {
 
   componentDidMount() {
     const {
-      absenceWarnings,
+      oralWarningDecrees,
       decreeReasons,
       employeesNames,
       years,
-      onGetAbsenceWarnings,
+      onGetOralWarningDecrees,
       user_menu,
       deleted,
       coursesOffering,
@@ -114,9 +114,9 @@ class AbsenceWarningsList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
 
-    onGetAbsenceWarnings();
+    onGetOralWarningDecrees();
     this.setState({
-      absenceWarnings,
+      oralWarningDecrees,
       coursesOffering,
       decreeReasons,
       years,
@@ -201,17 +201,17 @@ class AbsenceWarningsList extends Component {
   };
 
   handleAddRow = () => {
-    const { onAddNewAbsenceWarning, absenceWarnings } = this.props;
+    const { onAddNewOralWarningDecree, oralWarningDecrees } = this.props;
 
     const newRow = {
       TraineeNum: "-----",
     };
 
     // Check if the same value already exists in the table
-    const emptyRowsExist = absenceWarnings.some(
-      absenceWarnings => absenceWarnings.TraineeNum.trim() === "-----"
+    const emptyRowsExist = oralWarningDecrees.some(
+      oralWarningDecrees => oralWarningDecrees.TraineeNum.trim() === "-----"
       // ||
-      // absenceWarning.enTitle.trim() === ""
+      // oralWarningDecree.enTitle.trim() === ""
     );
 
     if (emptyRowsExist) {
@@ -219,15 +219,15 @@ class AbsenceWarningsList extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewAbsenceWarning(newRow);
+      onAddNewOralWarningDecree(newRow);
     }
   };
 
   handleDeleteRow = () => {
-    const { onDeleteAbsenceWarning } = this.props;
+    const { onDeleteOralWarningDecree } = this.props;
     const { selectedRowId } = this.state;
     if (selectedRowId !== null) {
-      onDeleteAbsenceWarning(selectedRowId);
+      onDeleteOralWarningDecree(selectedRowId);
       this.setState({
         deleteModal: false,
         selectedRowId: null,
@@ -244,23 +244,23 @@ class AbsenceWarningsList extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
-  handleAbsenceWarningDataChange = (rowId, fieldName, fieldValue) => {
-    const { absenceWarnings, onUpdateAbsenceWarning } = this.props;
-    const isDuplicate = absenceWarnings.some(absenceWarning => {
+  handleOralWarningDecreeDataChange = (rowId, fieldName, fieldValue) => {
+    const { oralWarningDecrees, onUpdateOralWarningDecree } = this.props;
+    const isDuplicate = oralWarningDecrees.some(oralWarningDecree => {
       return (
-        absenceWarning.Id !== rowId &&
-        absenceWarning.arTitle.trim() === fieldValue.trim()
+        oralWarningDecree.Id !== rowId &&
+        oralWarningDecree.arTitle.trim() === fieldValue.trim()
       );
     });
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateAbsenceWarning(onUpdate);
+      onUpdateOralWarningDecree(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateAbsenceWarning(onUpdate);
+      onUpdateOralWarningDecree(onUpdate);
     }
   };
   handleAlertClose = alertName => {
@@ -269,17 +269,17 @@ class AbsenceWarningsList extends Component {
 
   handleSuccessClose = () => {
     this.setState({ showAlert: null });
-    this.props.onGetAbsenceWarningDeletedValue();
+    this.props.onGetOralWarningDecreeDeletedValue();
   };
 
   handleErrorClose = () => {
     this.setState({ showAlert: null });
-    this.props.onGetAbsenceWarningDeletedValue();
+    this.props.onGetOralWarningDecreeDeletedValue();
   };
 
   handleAddRow = () => {
     this.setState({
-      absenceWarning: "",
+      oralWarningDecree: "",
       isEdit: false,
       isOpen: false,
       isAdd: true,
@@ -296,7 +296,7 @@ class AbsenceWarningsList extends Component {
       selectedDecisionStatus,
       isEdit,
     } = this.state;
-    const { onAddNewAbsenceWarning, onUpdateAbsenceWarning } = this.props;
+    const { onAddNewOralWarningDecree, onUpdateOralWarningDecree } = this.props;
 
     values["traineeId"] = selectedTraineeId;
     values["coursesId"] = selectedCourseId;
@@ -322,12 +322,12 @@ class AbsenceWarningsList extends Component {
         )
           warningInfo[key] = values[key];
       });
-      console.log("absenceWarningInfoabsenceWarningInfo", warningInfo);
+      console.log("oralWarningDecreeInfooralWarningDecreeInfo", warningInfo);
       if (isEdit) {
         console.log("9999999", warningInfo);
-        // onUpdateAbsenceWarning(warningInfo);
+        // onUpdateOralWarningDecree(warningInfo);
       } else {
-        // onAddNewAbsenceWarning(warningInfo);
+        // onAddNewOralWarningDecree(warningInfo);
       }
       const saveMessage = "Saved successfully ";
       this.setState({
@@ -356,16 +356,16 @@ class AbsenceWarningsList extends Component {
     }
   };
 
-  handleAbsenceWarningEdit = arg => {
+  handleOralWarningDecreeEdit = arg => {
     console.log("arg", arg);
 
     this.setState({
-      absenceWarning: arg,
+      oralWarningDecree: arg,
       // selectedJobRank: arg.jobRankId,
       // selectedJobTitle: arg.jobTitleId,
       // jobTitleName: arg.jobTitle,
       // selectedCorporateNode: arg.corporateNodeId,
-      // selectedContractType: arg.absenceWarningTypeId,
+      // selectedContractType: arg.oralWarningDecreeTypeId,
       // selectedEmploymentCase: arg.employmentCaseId,
       // selectedHasMinistryApprove: arg.hasMinistryApprove,
       // selectedGovernmentWorker: arg.governmentWorker,
@@ -381,14 +381,14 @@ class AbsenceWarningsList extends Component {
     if (fieldName == "decreeReasonId") {
       this.setState({
         selectedDecreeReason: selectedValue,
-        absenceWarning: values,
+        oralWarningDecree: values,
       });
     }
   };
 
   render() {
     const {
-      absenceWarnings,
+      oralWarningDecrees,
       employeesNames,
       years,
       coursesOffering,
@@ -408,7 +408,7 @@ class AbsenceWarningsList extends Component {
       showAddButton,
       showSearchButton,
       isEdit,
-      absenceWarning,
+      oralWarningDecree,
       selectedTraineeId,
       selectedDecreeReason,
       selectedCourseId,
@@ -500,11 +500,13 @@ class AbsenceWarningsList extends Component {
         text: "",
         isDummyField: true,
         editable: false,
-        formatter: (cellContent, absenceWarning) => (
+        formatter: (cellContent, oralWarningDecree) => (
           <Tooltip title={this.props.t("Edit")} placement="top">
             <IconButton
               className="text-sm-end"
-              onClick={() => this.handleAbsenceWarningEdit(absenceWarning)}
+              onClick={() =>
+                this.handleOralWarningDecreeEdit(oralWarningDecree)
+              }
             >
               <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
             </IconButton>
@@ -515,7 +517,7 @@ class AbsenceWarningsList extends Component {
 
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: absenceWarnings.length,
+      totalSize: oralWarningDecrees.length,
       custom: true,
     };
 
@@ -530,7 +532,9 @@ class AbsenceWarningsList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Absence Warnings")} />
+            <Breadcrumbs
+              breadcrumbItem={this.props.t("Oral Warning Decrees")}
+            />
             <Row>
               <Col>
                 <Card>
@@ -589,12 +593,12 @@ class AbsenceWarningsList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={absenceWarnings}
+                        data={oralWarningDecrees}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={absenceWarnings}
+                            data={oralWarningDecrees}
                             columns={columns}
                             search
                           >
@@ -634,7 +638,7 @@ class AbsenceWarningsList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={absenceWarnings}
+                                  data={oralWarningDecrees}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "dbclick",
@@ -645,7 +649,7 @@ class AbsenceWarningsList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handleAbsenceWarningDataChange(
+                                      this.handleOralWarningDecreeDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
@@ -654,7 +658,7 @@ class AbsenceWarningsList extends Component {
                                   })}
                                   defaultSorted={defaultSorting}
                                   noDataIndication={t(
-                                    "No Absence Warnings found"
+                                    "No Oral Warning Decrees found"
                                   )}
                                   filter={filterFactory()}
                                 />
@@ -670,7 +674,7 @@ class AbsenceWarningsList extends Component {
                                 >
                                   <ModalHeader toggle={this.toggle} tag="h4">
                                     {!!isEdit
-                                      ? t("Edit Absence Warning")
+                                      ? t("Edit Oral Warning Decree")
                                       : t("Add Decree")}
                                   </ModalHeader>
                                   <ModalBody>
@@ -678,45 +682,45 @@ class AbsenceWarningsList extends Component {
                                       enableReinitialize={true}
                                       initialValues={{
                                         traineeId:
-                                          (absenceWarning &&
-                                            absenceWarning.traineeId) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.traineeId) ||
                                           selectedTraineeId,
                                         decreeReasonId:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeReasonId) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.decreeReasonId) ||
                                           selectedDecreeReason,
                                         coursesId:
-                                          (absenceWarning &&
-                                            absenceWarning.coursesId) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.coursesId) ||
                                           selectedCourseId,
                                         applyingDate:
-                                          absenceWarning?.applyingDate
+                                          oralWarningDecree?.applyingDate
                                             ? moment
                                                 .utc(
-                                                  absenceWarning.applyingDate
+                                                  oralWarningDecree.applyingDate
                                                 )
                                                 .local()
                                                 .format("YYYY-MM-DD")
                                             : "",
-                                        startDate: absenceWarning?.startDate
+                                        startDate: oralWarningDecree?.startDate
                                           ? moment
-                                              .utc(absenceWarning.startDate)
+                                              .utc(oralWarningDecree.startDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
-                                        endDate: absenceWarning?.endDate
+                                        endDate: oralWarningDecree?.endDate
                                           ? moment
-                                              .utc(absenceWarning.endDate)
+                                              .utc(oralWarningDecree.endDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
                                         note:
-                                          (absenceWarning &&
-                                            absenceWarning.note) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.note) ||
                                           "",
                                         absencePercent:
-                                          (absenceWarning &&
-                                            absenceWarning.absencePercent) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.absencePercent) ||
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
@@ -780,7 +784,7 @@ class AbsenceWarningsList extends Component {
                                           <Form>
                                             <Card id="employee-card">
                                               <CardTitle id="course_header">
-                                                {t("Absence Warning")}
+                                                {t("Oral Warning Decree")}
                                               </CardTitle>
                                               <CardBody className="cardBody">
                                                 {emptyError && (
@@ -1038,7 +1042,7 @@ class AbsenceWarningsList extends Component {
                                                               defaultValue={decreeReasons.find(
                                                                 opt =>
                                                                   opt.value ===
-                                                                  absenceWarning?.decreeReasonId
+                                                                  oralWarningDecree?.decreeReasonId
                                                               )}
                                                             />
                                                             {decreeReasonError && (
@@ -1163,6 +1167,10 @@ class AbsenceWarningsList extends Component {
                                                                 name="absencePercent"
                                                                 id="absencePercent"
                                                                 className="form-control"
+                                                                value={
+                                                                  absencePercent ||
+                                                                  ""
+                                                                }
                                                               />
                                                               <div className="input-group-text">
                                                                 %
@@ -1286,89 +1294,92 @@ class AbsenceWarningsList extends Component {
                                   >
                                     {!!isEdit
                                       ? t("Update Decree Details")
-                                      : t("Add Absence Warning")}
+                                      : t("Add Oral Warning Decree")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <Formik
                                       enableReinitialize={true}
                                       initialValues={{
                                         ...(isEdit &&
-                                          absenceWarning && {
-                                            Id: absenceWarning.Id,
+                                          oralWarningDecree && {
+                                            Id: oralWarningDecree.Id,
                                           }),
                                         decreeCode:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeCode) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.decreeCode) ||
                                           "",
                                         traineeId:
-                                          (absenceWarning &&
-                                            absenceWarning.traineeId) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.traineeId) ||
                                           selectedTraineeId,
                                         decreeReasonId:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeReasonId) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.decreeReasonId) ||
                                           selectedDecreeReason,
                                         coursesId:
-                                          (absenceWarning &&
-                                            absenceWarning.coursesId) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.coursesId) ||
                                           selectedCourseId,
                                         applyingDate:
-                                          absenceWarning?.applyingDate
+                                          oralWarningDecree?.applyingDate
                                             ? moment
                                                 .utc(
-                                                  absenceWarning.applyingDate
+                                                  oralWarningDecree.applyingDate
                                                 )
                                                 .local()
                                                 .format("YYYY-MM-DD")
                                             : "",
-                                        startDate: absenceWarning?.startDate
+                                        startDate: oralWarningDecree?.startDate
                                           ? moment
-                                              .utc(absenceWarning.startDate)
+                                              .utc(oralWarningDecree.startDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
-                                        endDate: absenceWarning?.endDate
+                                        endDate: oralWarningDecree?.endDate
                                           ? moment
-                                              .utc(absenceWarning.endDate)
+                                              .utc(oralWarningDecree.endDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
                                         decreeNum:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeNum) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.decreeNum) ||
                                           "",
-                                        decreeDate: absenceWarning?.decreeDate
-                                          ? moment
-                                              .utc(absenceWarning.decreeDate)
-                                              .local()
-                                              .format("YYYY-MM-DD")
-                                          : "",
+                                        decreeDate:
+                                          oralWarningDecree?.decreeDate
+                                            ? moment
+                                                .utc(
+                                                  oralWarningDecree.decreeDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
                                         note:
-                                          (absenceWarning &&
-                                            absenceWarning.note) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.note) ||
                                           "",
                                         //file: null,
                                         decreeStatusId:
-                                          (absenceWarning &&
-                                            absenceWarning.decreeStatusId) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.decreeStatusId) ||
                                           selectedDecreeStatus,
                                         turnReasonId:
-                                          (absenceWarning &&
-                                            absenceWarning.turnReason) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.turnReason) ||
                                           selectedTurnReason,
-                                        turnDate: absenceWarning?.turnDate
+                                        turnDate: oralWarningDecree?.turnDate
                                           ? moment
-                                              .utc(absenceWarning.turnDate)
+                                              .utc(oralWarningDecree.turnDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
                                         turnNote:
-                                          (absenceWarning &&
-                                            absenceWarning.turnNote) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.turnNote) ||
                                           "",
                                         absencePercent:
-                                          (absenceWarning &&
-                                            absenceWarning.absencePercent) ||
+                                          (oralWarningDecree &&
+                                            oralWarningDecree.absencePercent) ||
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
@@ -1937,7 +1948,7 @@ class AbsenceWarningsList extends Component {
                                                                   defaultValue={decreeReasons.find(
                                                                     opt =>
                                                                       opt.value ===
-                                                                      absenceWarning?.decreeReasonId
+                                                                      oralWarningDecree?.decreeReasonId
                                                                   )}
                                                                 />
                                                               </Col>
@@ -2122,7 +2133,7 @@ class AbsenceWarningsList extends Component {
                                                                   defaultValue={turnReasons.find(
                                                                     opt =>
                                                                       opt.value ===
-                                                                      absenceWarning?.turnReasonId
+                                                                      oralWarningDecree?.turnReasonId
                                                                   )}
                                                                 />
                                                               </Col>
@@ -2317,18 +2328,18 @@ class AbsenceWarningsList extends Component {
 
 const mapStateToProps = ({
   classScheduling,
-  absenceWarnings,
+  oralWarningDecrees,
   trainees,
   years,
   menu_items,
   decisions,
   employees,
 }) => ({
-  absenceWarnings: absenceWarnings.absenceWarnings,
+  oralWarningDecrees: oralWarningDecrees.oralWarningDecrees,
   coursesOffering: classScheduling.coursesOffering,
-  deleted: absenceWarnings.deleted,
-  decreeReasons: absenceWarnings.decreeReasons,
-  turnReasons: absenceWarnings.turnReasons,
+  deleted: oralWarningDecrees.deleted,
+  decreeReasons: oralWarningDecrees.decreeReasons,
+  turnReasons: oralWarningDecrees.turnReasons,
   years: years.years,
   employeesNames: employees.employeesNames,
   traineesOpt: trainees.traineesOpt,
@@ -2337,18 +2348,18 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetAbsenceWarnings: () => dispatch(getAbsenceWarnings()),
-  onAddNewAbsenceWarning: absenceWarning =>
-    dispatch(addNewAbsenceWarning(absenceWarning)),
-  onUpdateAbsenceWarning: absenceWarning =>
-    dispatch(updateAbsenceWarning(absenceWarning)),
-  onDeleteCAbsenceWarning: absenceWarning =>
-    dispatch(deleteAbsenceWarning(absenceWarning)),
-  onGetAbsenceWarningDeletedValue: () =>
-    dispatch(getAbsenceWarningDeletedValue()),
+  onGetOralWarningDecrees: () => dispatch(getOralWarningDecrees()),
+  onAddNewOralWarningDecree: oralWarningDecree =>
+    dispatch(addNewOralWarningDecree(oralWarningDecree)),
+  onUpdateOralWarningDecree: oralWarningDecree =>
+    dispatch(updateOralWarningDecree(oralWarningDecree)),
+  onDeleteCOralWarningDecree: oralWarningDecree =>
+    dispatch(deleteOralWarningDecree(oralWarningDecree)),
+  onGetOralWarningDecreeDeletedValue: () =>
+    dispatch(getOralWarningDecreeDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(AbsenceWarningsList));
+)(withTranslation()(OralWarningDecreesList));

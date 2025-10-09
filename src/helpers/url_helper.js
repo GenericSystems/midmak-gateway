@@ -1079,6 +1079,27 @@ export const ADD_NEW_ABSENCE_WARNING = "/add/absenceWarning";
 export const UPDATE_ABSENCE_WARNING = "/update/absenceWarning";
 export const DELETE_ABSENCE_WARNING = "/delete/absenceWarning";
 
+//OralWarningDecree
+export const GET_ORAL_WARNING_DECREES = "/oralWarningDecrees";
+export const GET_ORAL_WARNING_DECREE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_ORAL_WARNING_DECREE = "/add/oralWarningDecree";
+export const UPDATE_ORAL_WARNING_DECREE = "/update/oralWarningDecree";
+export const DELETE_ORAL_WARNING_DECREE = "/delete/oralWarningDecree";
+
+//WrittenWarningDecrees
+export const GET_WRITTEN_WARNING_DECREES = "/writtenWarningDecrees";
+export const GET_WRITTEN_WARNING_DECREE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_WRITTEN_WARNING_DECREE = "/add/writtenWarningDecree";
+export const UPDATE_WRITTEN_WARNING_DECREE = "/update/writtenWarningDecree";
+export const DELETE_WRITTEN_WARNING_DECREE = "/delete/writtenWarningDecree";
+
+//dismissDecreesAbsence
+export const GET_DISMISS_DECREES_ABSENCE = "/dismissDecreesAbsence";
+export const GET_DISMISS_DECREE_ABSENCE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DISMISS_DECREE_ABSENCE = "/add/dismissDecreeAbsence";
+export const UPDATE_DISMISS_DECREE_ABSENCE = "/update/dismissDecreeAbsence";
+export const DELETE_DISMISS_DECREE_ABSENCE = "/delete/dismissDecreeAbsence";
+
 //EMPLOYMENT_CASES
 export const GET_EMPLOYMENT_CASES = "/employmentCases";
 export const GET_EMPLOYMENT_CASE_DELETED_VALUE = "/deleted";

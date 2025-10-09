@@ -188,6 +188,15 @@ import NationalitiesList from "../pages/Addmission/AdmissionSettings/nationality
 //Absence warnings
 import AbsenceWarningsList from "../pages/Rules-and-Regulations/Absence-warnings/absenceWarnings";
 
+//Oral Warning Decrees
+import OralWarningDecreesList from "../pages/Rules-and-Regulations/OralWarningDecrees/oralWarningDecrees";
+
+//writtenWarningDecrees
+import WrittenWarningDecreesList from "../pages/Rules-and-Regulations/WrittenWarningDecrees/writtenWarningDecrees";
+
+//DismissDecreesAbsence
+import DismissDecreesAbsenceList from "../pages/Rules-and-Regulations/DismissCoursesDecrees-Absence/dismissCoursesDecreesAbsence";
+
 //documet types
 import DocumentsTypesList from "../pages/Addmission/AdmissionSettings/documents-types";
 
@@ -438,6 +447,18 @@ const authProtectedRoutes = [
 
   // AbsenceWarnings
   { path: "/absenceWarnings", component: AbsenceWarningsList },
+
+  // OralWarningDecrees
+  { path: "/oralWarningDecrees", component: OralWarningDecreesList },
+
+  // WrittenWarningDecrees
+  { path: "/writtenWarningDecrees", component: WrittenWarningDecreesList },
+
+  // DismissDecreesAbsence
+  {
+    path: "/dismissCoursesDecreesAbsence",
+    component: DismissDecreesAbsenceList,
+  },
 
   // rewardsTypes
 

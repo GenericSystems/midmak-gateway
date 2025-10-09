@@ -2161,6 +2161,54 @@ export const updateAbsenceWarning = data =>
 export const deleteAbsenceWarning = data =>
   post(url.DELETE_ABSENCE_WARNING, data);
 
+//OralWarningDecree
+export const getOralWarningDecrees = data =>
+  post(url.GET_ORAL_WARNING_DECREES, data);
+
+export const addNewOralWarningDecree = data =>
+  post(url.ADD_NEW_ORAL_WARNING_DECREE, data);
+
+export const getOralWarningDecreeDeletedValue = () =>
+  get(url.GET_ORAL_WARNING_DECREE_DELETED_VALUE);
+
+export const updateOralWarningDecree = data =>
+  post(url.UPDATE_ORAL_WARNING_DECREE, data);
+
+export const deleteOralWarningDecree = data =>
+  post(url.DELETE_ORAL_WARNING_DECREE, data);
+
+//writtenWarningDecrees
+export const getWrittenWarningDecrees = data =>
+  post(url.GET_WRITTEN_WARNING_DECREES, data);
+
+export const addNewWrittenWarningDecree = data =>
+  post(url.ADD_NEW_WRITTEN_WARNING_DECREE, data);
+
+export const getWrittenWarningDecreeDeletedValue = () =>
+  get(url.GET_WRITTEN_WARNING_DECREE_DELETED_VALUE);
+
+export const updateWrittenWarningDecree = data =>
+  post(url.UPDATE_WRITTEN_WARNING_DECREE, data);
+
+export const deleteWrittenWarningDecree = data =>
+  post(url.DELETE_WRITTEN_WARNING_DECREE, data);
+
+//DismissDecreeAbsence
+export const getDismissDecreesAbsence = data =>
+  post(url.GET_DISMISS_DECREES_ABSENCE, data);
+
+export const addNewDismissDecreeAbsence = data =>
+  post(url.ADD_NEW_DISMISS_DECREE_ABSENCE, data);
+
+export const getDismissDecreeAbsenceDeletedValue = () =>
+  get(url.GET_DISMISS_DECREE_ABSENCE_DELETED_VALUE);
+
+export const updateDismissDecreeAbsence = data =>
+  post(url.UPDATE_DISMISS_DECREE_ABSENCE, data);
+
+export const deleteDismissDecreeAbsence = data =>
+  post(url.DELETE_DISMISS_DECREE_ABSENCE, data);
+
 // DOCUMENT_TYPE
 export const getDocumentsTypes = data => post(url.GET_DOCUMENTS_TYPES, data);
 
