@@ -144,9 +144,10 @@ function* fetchWrittenWarningDecrees() {
 
   const get_turnReasons_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_DecisionStatus",
+    fields: "Id,arTitle",
   };
   try {
     const response = yield call(getTurnReasons, get_turnReasons_req);

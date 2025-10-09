@@ -1100,6 +1100,34 @@ export const ADD_NEW_DISMISS_DECREE_ABSENCE = "/add/dismissDecreeAbsence";
 export const UPDATE_DISMISS_DECREE_ABSENCE = "/update/dismissDecreeAbsence";
 export const DELETE_DISMISS_DECREE_ABSENCE = "/delete/dismissDecreeAbsence";
 
+//dismissDecreesExam
+export const GET_DISMISS_DECREES_EXAM = "/dismissDecreesExam";
+export const GET_DISMISS_DECREE_EXAM_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DISMISS_DECREE_EXAM = "/add/dismissDecreeExam";
+export const UPDATE_DISMISS_DECREE_EXAM = "/update/dismissDecreeExam";
+export const DELETE_DISMISS_DECREE_EXAM = "/delete/dismissDecreeExam";
+
+//dismissDecreesOther
+export const GET_DISMISS_DECREES_OTHER = "/dismissDecreesOther";
+export const GET_DISMISS_DECREE_OTHER_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DISMISS_DECREE_OTHER = "/add/dismissDecreeOther";
+export const UPDATE_DISMISS_DECREE_OTHER = "/update/dismissDecreeOther";
+export const DELETE_DISMISS_DECREE_OTHER = "/delete/dismissDecreeOther";
+
+//dismissDecreesOther
+export const GET_DISMISS_PERIOD_DECREES = "/dismissPeriodDecrees";
+export const GET_DISMISS_PERIOD_DECREE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DISMISS_PERIOD_DECREE = "/add/dismissPeriodDecree";
+export const UPDATE_DISMISS_PERIOD_DECREE = "/update/dismissPeriodDecree";
+export const DELETE_DISMISS_PERIOD_DECREE = "/delete/dismissPeriodDecree";
+
+//dismissAcademyDecrees
+export const GET_DISMISS_ACADEMY_DECREES = "/dismissAcademyDecrees";
+export const GET_DISMISS_ACADEMY_DECREE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DISMISS_ACADEMY_DECREE = "/add/dismissAcademyDecree";
+export const UPDATE_DISMISS_ACADEMY_DECREE = "/update/dismissAcademyDecree";
+export const DELETE_DISMISS_ACADEMY_DECREE = "/delete/dismissAcademyDecree";
+
 //EMPLOYMENT_CASES
 export const GET_EMPLOYMENT_CASES = "/employmentCases";
 export const GET_EMPLOYMENT_CASE_DELETED_VALUE = "/deleted";

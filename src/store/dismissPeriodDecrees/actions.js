@@ -1,90 +1,91 @@
 import {
-  GET_ORAL_WARNING_DECREE_DELETED_VALUE,
-  GET_ORAL_WARNING_DECREE_DELETED_VALUE_FAIL,
-  GET_ORAL_WARNING_DECREE_DELETED_VALUE_SUCCESS,
-  GET_ORAL_WARNING_DECREES,
-  GET_ORAL_WARNING_DECREES_FAIL,
-  GET_ORAL_WARNING_DECREES_SUCCESS,
-  ADD_NEW_ORAL_WARNING_DECREE,
-  ADD_ORAL_WARNING_DECREE_SUCCESS,
-  ADD_ORAL_WARNING_DECREE_FAIL,
-  UPDATE_ORAL_WARNING_DECREE,
-  UPDATE_ORAL_WARNING_DECREE_SUCCESS,
-  UPDATE_ORAL_WARNING_DECREE_FAIL,
-  DELETE_ORAL_WARNING_DECREE,
-  DELETE_ORAL_WARNING_DECREE_SUCCESS,
-  DELETE_ORAL_WARNING_DECREE_FAIL,
+  GET_DISMISS_PERIOD_DECREE_DELETED_VALUE,
+  GET_DISMISS_PERIOD_DECREE_DELETED_VALUE_FAIL,
+  GET_DISMISS_PERIOD_DECREE_DELETED_VALUE_SUCCESS,
+  GET_DISMISS_PERIOD_DECREES,
+  GET_DISMISS_PERIOD_DECREES_FAIL,
+  GET_DISMISS_PERIOD_DECREES_SUCCESS,
+  ADD_NEW_DISMISS_PERIOD_DECREE,
+  ADD_DISMISS_PERIOD_DECREE_SUCCESS,
+  ADD_DISMISS_PERIOD_DECREE_FAIL,
+  UPDATE_DISMISS_PERIOD_DECREE,
+  UPDATE_DISMISS_PERIOD_DECREE_SUCCESS,
+  UPDATE_DISMISS_PERIOD_DECREE_FAIL,
+  DELETE_DISMISS_PERIOD_DECREE,
+  DELETE_DISMISS_PERIOD_DECREE_SUCCESS,
+  DELETE_DISMISS_PERIOD_DECREE_FAIL,
 } from "./actionTypes";
 
-export const getOralWarningDecrees = () => ({
-  type: GET_ORAL_WARNING_DECREES,
+export const getDismissPeriodDecrees = () => ({
+  type: GET_DISMISS_PERIOD_DECREES,
 });
 
-export const getOralWarningDecreesSuccess = oralWarningDecrees => ({
-  type: GET_ORAL_WARNING_DECREES_SUCCESS,
-  payload: oralWarningDecrees,
+export const getDismissPeriodDecreesSuccess = dismissPeriodDecrees => ({
+  type: GET_DISMISS_PERIOD_DECREES_SUCCESS,
+  payload: dismissPeriodDecrees,
 });
 
-export const getOralWarningDecreesFail = error => ({
-  type: GET_ORAL_WARNING_DECREES_FAIL,
+export const getDismissPeriodDecreesFail = error => ({
+  type: GET_DISMISS_PERIOD_DECREES_FAIL,
   payload: error,
 });
 
-export const getOralWarningDecreeDeletedValue = () => ({
-  type: GET_ORAL_WARNING_DECREE_DELETED_VALUE,
+export const getDismissPeriodDecreeDeletedValue = () => ({
+  type: GET_DISMISS_PERIOD_DECREE_DELETED_VALUE,
 });
 
-export const getOralWarningDecreeDeletedValueSuccess = oralWarningDecree => ({
-  type: GET_ORAL_WARNING_DECREE_DELETED_VALUE_SUCCESS,
-  payload: oralWarningDecree,
-});
+export const getDismissPeriodDecreeDeletedValueSuccess =
+  dismissPeriodDecree => ({
+    type: GET_DISMISS_PERIOD_DECREE_DELETED_VALUE_SUCCESS,
+    payload: dismissPeriodDecree,
+  });
 
-export const getOralWarningDecreeDeletedValueFail = error => ({
-  type: GET_ORAL_WARNING_DECREE_DELETED_VALUE_FAIL,
+export const getDismissPeriodDecreeDeletedValueFail = error => ({
+  type: GET_DISMISS_PERIOD_DECREE_DELETED_VALUE_FAIL,
   payload: error,
 });
 
-export const addNewOralWarningDecree = oralWarningDecree => ({
-  type: ADD_NEW_ORAL_WARNING_DECREE,
-  payload: oralWarningDecree,
+export const addNewDismissPeriodDecree = dismissPeriodDecree => ({
+  type: ADD_NEW_DISMISS_PERIOD_DECREE,
+  payload: dismissPeriodDecree,
 });
 
-export const addOralWarningDecreeSuccess = oralWarningDecree => ({
-  type: ADD_ORAL_WARNING_DECREE_SUCCESS,
-  payload: oralWarningDecree,
+export const addDismissPeriodDecreeSuccess = dismissPeriodDecree => ({
+  type: ADD_DISMISS_PERIOD_DECREE_SUCCESS,
+  payload: dismissPeriodDecree,
 });
 
-export const addOralWarningDecreeFail = error => ({
-  type: ADD_ORAL_WARNING_DECREE_FAIL,
+export const addDismissPeriodDecreeFail = error => ({
+  type: ADD_DISMISS_PERIOD_DECREE_FAIL,
   payload: error,
 });
 
-export const updateOralWarningDecree = oralWarningDecree => ({
-  type: UPDATE_ORAL_WARNING_DECREE,
-  payload: oralWarningDecree,
+export const updateDismissPeriodDecree = dismissPeriodDecree => ({
+  type: UPDATE_DISMISS_PERIOD_DECREE,
+  payload: dismissPeriodDecree,
 });
 
-export const updateOralWarningDecreeSuccess = oralWarningDecree => ({
-  type: UPDATE_ORAL_WARNING_DECREE_SUCCESS,
-  payload: oralWarningDecree,
+export const updateDismissPeriodDecreeSuccess = dismissPeriodDecree => ({
+  type: UPDATE_DISMISS_PERIOD_DECREE_SUCCESS,
+  payload: dismissPeriodDecree,
 });
 
-export const updateOralWarningDecreeFail = error => ({
-  type: UPDATE_ORAL_WARNING_DECREE_FAIL,
+export const updateDismissPeriodDecreeFail = error => ({
+  type: UPDATE_DISMISS_PERIOD_DECREE_FAIL,
   payload: error,
 });
 
-export const deleteOralWarningDecree = oralWarningDecree => ({
-  type: DELETE_ORAL_WARNING_DECREE,
-  payload: oralWarningDecree,
+export const deleteDismissPeriodDecree = dismissPeriodDecree => ({
+  type: DELETE_DISMISS_PERIOD_DECREE,
+  payload: dismissPeriodDecree,
 });
 
-export const deleteOralWarningDecreeSuccess = oralWarningDecree => ({
-  type: DELETE_ORAL_WARNING_DECREE_SUCCESS,
-  payload: oralWarningDecree,
+export const deleteDismissPeriodDecreeSuccess = dismissPeriodDecree => ({
+  type: DELETE_DISMISS_PERIOD_DECREE_SUCCESS,
+  payload: dismissPeriodDecree,
 });
 
-export const deleteOralWarningDecreeFail = error => ({
-  type: DELETE_ORAL_WARNING_DECREE_FAIL,
+export const deleteDismissPeriodDecreeFail = error => ({
+  type: DELETE_DISMISS_PERIOD_DECREE_FAIL,
   payload: error,
 });

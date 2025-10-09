@@ -47,7 +47,7 @@ function* fetchArchivedGrades(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Archive_Common_StudentsCurriculalinesCheck",
+    tablename: "_Current_Common_TrianeeCurriculalinesCheck",
     filter: course.filter,
   };
 
@@ -62,7 +62,7 @@ function* fetchArchivedGrades(obj) {
     source: "db",
     procedure: "getCourseStatistics",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_StudentsCurriculalinesCheck",
+    tablename: "Common_CurriculalinesCheck",
     filter: `courseId = ${course.courseId}`,
   };
   try {
@@ -76,7 +76,7 @@ function* fetchArchivedGrades(obj) {
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_CourseOfferingOnly",
-    fields: "CourseId,courseCode,courseName",
+    fields: "courseId,Code,courseName",
   };
   try {
     const response = yield call(getCoursesOpt, get_preReqCourse_opt);
@@ -90,7 +90,7 @@ function* fetchArchivedGrades(obj) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_DistributingMethods",
-    filter: `courseId = ${course.courseId} `,
+    filter: `courseId = ${course.courseId} or courseId = 0 `,
   };
   try {
     const response = yield call(
@@ -101,14 +101,29 @@ function* fetchArchivedGrades(obj) {
   } catch (error) {
     yield put(getCourseContentsEnteredGradesFail(error));
   }
+
+  const request = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Section",
+    fields: "Id,SectionNumber,courseId",
+    filter: `CourseId = ${course.courseId} `,
+  };
+  try {
+    const response = yield call(getFilteredSections, request);
+    yield put(getFilteredSectionsSuccess(response));
+  } catch (error) {
+    yield put(getFilteredSectionsFail(error));
+  }
 }
 
 function* onUpdateArchivedGrade({ payload }) {
   payload["source"] = "db";
-  payload["procedure"] = "SC_SisApp_updateStudentGrade";
+  payload["procedure"] = "SC_SisApp_updateTraineeGrade";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_StudentsCurriculalinesCheck";
-  payload["queryname"] = "_Archive_Common_StudentsCurriculalinesCheck";
+  payload["tablename"] = "Common_CurriculalinesCheck";
+  payload["queryname"] = "_Current_Common_TrianeeCurriculalinesCheck";
 
   try {
     const response = yield call(updateArchivedGrade, payload);
@@ -118,28 +133,7 @@ function* onUpdateArchivedGrade({ payload }) {
   }
 }
 
-// function* fetchFilteredSections(obj) {
-//   let schedulingLec = obj.payload;
-//   const get_filtered_Sections = {
-//     source: "db",
-//     procedure: "Generic_getOptions",
-//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-//     tablename: "Common_Section",
-//     fields: "Id,SectionNumber,CourseCode",
-//     filter: `CourseId = ${schedulingLec.courseId} and CourseCode = ''''${schedulingLec.CourseCode}'''' `,
-//   };
-//   try {
-//     const response = yield call(getFilteredSections, get_filtered_Sections);
-//     yield put(getFilteredSectionsSuccess(response));
-//   } catch (error) {
-//     yield put(getFilteredSectionsFail(error));
-//   }
-// }
-
 function* archiveGradesSaga() {
-  // yield takeEvery(GET_FILTERED_SECTIONS, fetchFilteredSections);
-
-  // ARCHIVED GRADES
   yield takeEvery(GET_ARCHIVED_GRADES, fetchArchivedGrades);
   yield takeEvery(UPDATE_ARCHIVED_GRADE, onUpdateArchivedGrade);
 }

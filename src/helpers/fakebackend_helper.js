@@ -2209,6 +2209,70 @@ export const updateDismissDecreeAbsence = data =>
 export const deleteDismissDecreeAbsence = data =>
   post(url.DELETE_DISMISS_DECREE_ABSENCE, data);
 
+//DismissDecreeExam
+export const getDismissDecreesExam = data =>
+  post(url.GET_DISMISS_DECREES_EXAM, data);
+
+export const addNewDismissDecreeExam = data =>
+  post(url.ADD_NEW_DISMISS_DECREE_EXAM, data);
+
+export const getDismissDecreeExamDeletedValue = () =>
+  get(url.GET_DISMISS_DECREE_EXAM_DELETED_VALUE);
+
+export const updateDismissDecreeExam = data =>
+  post(url.UPDATE_DISMISS_DECREE_EXAM, data);
+
+export const deleteDismissDecreeExam = data =>
+  post(url.DELETE_DISMISS_DECREE_EXAM, data);
+
+//DismissDecreeOther
+export const getDismissDecreesOther = data =>
+  post(url.GET_DISMISS_DECREES_OTHER, data);
+
+export const addNewDismissDecreeOther = data =>
+  post(url.ADD_NEW_DISMISS_DECREE_OTHER, data);
+
+export const getDismissDecreeOtherDeletedValue = () =>
+  get(url.GET_DISMISS_DECREE_OTHER_DELETED_VALUE);
+
+export const updateDismissDecreeOther = data =>
+  post(url.UPDATE_DISMISS_DECREE_OTHER, data);
+
+export const deleteDismissDecreeOther = data =>
+  post(url.DELETE_DISMISS_DECREE_OTHER, data);
+
+//DISMISS_PERIOD_DECREE
+export const getDismissPeriodDecrees = data =>
+  post(url.GET_DISMISS_PERIOD_DECREES, data);
+
+export const addNewDismissPeriodDecree = data =>
+  post(url.ADD_NEW_DISMISS_PERIOD_DECREE, data);
+
+export const getDismissPeriodDecreeDeletedValue = () =>
+  get(url.GET_DISMISS_PERIOD_DECREE_DELETED_VALUE);
+
+export const updateDismissPeriodDecree = data =>
+  post(url.UPDATE_DISMISS_PERIOD_DECREE, data);
+
+export const deleteDismissPeriodDecree = data =>
+  post(url.DELETE_DISMISS_PERIOD_DECREE, data);
+
+//DISMISS_ACADEMY_DECREE
+export const getDismissAcademyDecrees = data =>
+  post(url.GET_DISMISS_ACADEMY_DECREES, data);
+
+export const addNewDismissAcademyDecree = data =>
+  post(url.ADD_NEW_DISMISS_ACADEMY_DECREE, data);
+
+export const getDismissAcademyDecreeDeletedValue = () =>
+  get(url.GET_DISMISS_ACADEMY_DECREE_DELETED_VALUE);
+
+export const updateDismissAcademyDecree = data =>
+  post(url.UPDATE_DISMISS_ACADEMY_DECREE, data);
+
+export const deleteDismissAcademyDecree = data =>
+  post(url.DELETE_DISMISS_ACADEMY_DECREE, data);
+
 // DOCUMENT_TYPE
 export const getDocumentsTypes = data => post(url.GET_DOCUMENTS_TYPES, data);
 

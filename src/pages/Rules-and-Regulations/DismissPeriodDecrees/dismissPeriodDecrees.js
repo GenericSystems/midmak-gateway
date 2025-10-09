@@ -37,12 +37,12 @@ import ToolkitProvider, {
 import Breadcrumbs from "components/Common/Breadcrumb";
 import DeleteModal from "components/Common/DeleteModal";
 import {
-  getOralWarningDecrees,
-  addNewOralWarningDecree,
-  updateOralWarningDecree,
-  deleteOralWarningDecree,
-  getOralWarningDecreeDeletedValue,
-} from "store/oralWarningDecrees/actions";
+  getDismissPeriodDecrees,
+  addNewDismissPeriodDecree,
+  updateDismissPeriodDecree,
+  deleteDismissPeriodDecree,
+  getDismissPeriodDecreeDeletedValue,
+} from "store/dismissPeriodDecrees/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -56,12 +56,12 @@ import {
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
 
-class OralWarningDecreesList extends Component {
+class DismissPeriodDecreesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      oralWarningDecrees: [],
-      oralWarningDecree: "",
+      dismissPeriodDecrees: [],
+      dismissPeriodDecree: "",
       deleteModal: false,
       selectedRowId: null,
       showAlert: null,
@@ -80,15 +80,12 @@ class OralWarningDecreesList extends Component {
       decreeReasonName: "",
       selectedTraineeId: null,
       traineeName: "",
-      selectedCourseId: null,
-      courseName: "",
       errorMessage: null,
       successMessage: null,
       applyingDateError: false,
       startDateError: false,
       endDateError: false,
       traineeError: false,
-      courseError: false,
       decreeReasonError: false,
       values: "",
     };
@@ -97,14 +94,13 @@ class OralWarningDecreesList extends Component {
 
   componentDidMount() {
     const {
-      oralWarningDecrees,
+      dismissPeriodDecrees,
       decreeReasons,
       employeesNames,
       years,
-      onGetOralWarningDecrees,
+      onGetDismissPeriodDecrees,
       user_menu,
       deleted,
-      coursesOffering,
       decisionStatus,
       turnReasons,
     } = this.props;
@@ -114,10 +110,9 @@ class OralWarningDecreesList extends Component {
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
 
-    onGetOralWarningDecrees();
+    onGetDismissPeriodDecrees();
     this.setState({
-      oralWarningDecrees,
-      coursesOffering,
+      dismissPeriodDecrees,
       decreeReasons,
       years,
       deleted,
@@ -201,17 +196,17 @@ class OralWarningDecreesList extends Component {
   };
 
   handleAddRow = () => {
-    const { onAddNewOralWarningDecree, oralWarningDecrees } = this.props;
+    const { onAddNewDismissPeriodDecree, dismissPeriodDecrees } = this.props;
 
     const newRow = {
       TraineeNum: "-----",
     };
 
     // Check if the same value already exists in the table
-    const emptyRowsExist = oralWarningDecrees.some(
-      oralWarningDecrees => oralWarningDecrees.TraineeNum.trim() === "-----"
+    const emptyRowsExist = dismissPeriodDecrees.some(
+      dismissPeriodDecrees => dismissPeriodDecrees.TraineeNum.trim() === "-----"
       // ||
-      // oralWarningDecree.enTitle.trim() === ""
+      // dismissPeriodDecree.enTitle.trim() === ""
     );
 
     if (emptyRowsExist) {
@@ -219,15 +214,15 @@ class OralWarningDecreesList extends Component {
       this.setState({ duplicateError: errorMessage });
     } else {
       this.setState({ duplicateError: null });
-      onAddNewOralWarningDecree(newRow);
+      onAddNewDismissPeriodDecree(newRow);
     }
   };
 
   handleDeleteRow = () => {
-    const { onDeleteOralWarningDecree } = this.props;
+    const { onDeleteDismissPeriodDecree } = this.props;
     const { selectedRowId } = this.state;
     if (selectedRowId !== null) {
-      onDeleteOralWarningDecree(selectedRowId);
+      onDeleteDismissPeriodDecree(selectedRowId);
       this.setState({
         deleteModal: false,
         selectedRowId: null,
@@ -244,23 +239,23 @@ class OralWarningDecreesList extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
-  handleOralWarningDecreeDataChange = (rowId, fieldName, fieldValue) => {
-    const { oralWarningDecrees, onUpdateOralWarningDecree } = this.props;
-    const isDuplicate = oralWarningDecrees.some(oralWarningDecree => {
+  handleDismissPeriodDecreeDataChange = (rowId, fieldName, fieldValue) => {
+    const { dismissPeriodDecrees, onUpdateDismissPeriodDecree } = this.props;
+    const isDuplicate = dismissPeriodDecrees.some(dismissPeriodDecree => {
       return (
-        oralWarningDecree.Id !== rowId &&
-        oralWarningDecree.arTitle.trim() === fieldValue.trim()
+        dismissPeriodDecree.Id !== rowId &&
+        dismissPeriodDecree.arTitle.trim() === fieldValue.trim()
       );
     });
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
       this.setState({ duplicateError: errorMessage });
       let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateOralWarningDecree(onUpdate);
+      onUpdateDismissPeriodDecree(onUpdate);
     } else {
       this.setState({ duplicateError: null });
       let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateOralWarningDecree(onUpdate);
+      onUpdateDismissPeriodDecree(onUpdate);
     }
   };
   handleAlertClose = alertName => {
@@ -269,17 +264,17 @@ class OralWarningDecreesList extends Component {
 
   handleSuccessClose = () => {
     this.setState({ showAlert: null });
-    this.props.onGetOralWarningDecreeDeletedValue();
+    this.props.onGetDismissPeriodDecreeDeletedValue();
   };
 
   handleErrorClose = () => {
     this.setState({ showAlert: null });
-    this.props.onGetOralWarningDecreeDeletedValue();
+    this.props.onGetDismissPeriodDecreeDeletedValue();
   };
 
   handleAddRow = () => {
     this.setState({
-      oralWarningDecree: "",
+      dismissPeriodDecree: "",
       isEdit: false,
       isOpen: false,
       isAdd: true,
@@ -289,17 +284,16 @@ class OralWarningDecreesList extends Component {
 
   handleSubmit = values => {
     const {
-      selectedCourseId,
       selectedTraineeId,
       selectedDecreeReason,
       selectedTurnReason,
       selectedDecisionStatus,
       isEdit,
     } = this.state;
-    const { onAddNewOralWarningDecree, onUpdateOralWarningDecree } = this.props;
+    const { onAddNewDismissPeriodDecree, onUpdateDismissPeriodDecree } =
+      this.props;
 
     values["traineeId"] = selectedTraineeId;
-    values["coursesId"] = selectedCourseId;
     values["decreeReasonId"] = selectedDecreeReason;
     values["decreeStatusId"] = isEdit ? selectedDecisionStatus : 4;
     values["turnReasonId"] = selectedTurnReason;
@@ -312,7 +306,6 @@ class OralWarningDecreesList extends Component {
       values.endDate &&
       values.applyingDate &&
       selectedTraineeId !== null &&
-      selectedCourseId !== null &&
       selectedDecreeReason !== null
     ) {
       Object.keys(values).forEach(function (key) {
@@ -322,12 +315,15 @@ class OralWarningDecreesList extends Component {
         )
           warningInfo[key] = values[key];
       });
-      console.log("oralWarningDecreeInfooralWarningDecreeInfo", warningInfo);
+      console.log(
+        "dismissPeriodDecreeInfodismissPeriodDecreeInfo",
+        warningInfo
+      );
       if (isEdit) {
         console.log("9999999", warningInfo);
-        // onUpdateOralWarningDecree(warningInfo);
+        // onUpdateDismissPeriodDecree(warningInfo);
       } else {
-        // onAddNewOralWarningDecree(warningInfo);
+        // onAddNewDismissPeriodDecree(warningInfo);
       }
       const saveMessage = "Saved successfully ";
       this.setState({
@@ -340,14 +336,13 @@ class OralWarningDecreesList extends Component {
       values.endDate === "" ||
       values.applyingDate === "" ||
       (values.traineeId === "" && selectedTraineeId === "")(
-        values.coursesId === "" && selectedCourseId === ""
-      )(values.decreeReasonId === "" && selectedDecreeReason === "")
+        values.decreeReasonId === "" && selectedDecreeReason === ""
+      )
     ) {
       this.setState({ applyingDateError: true, saveError: true });
       this.setState({ startDateError: true, saveError: true });
       this.setState({ endDateError: true, saveError: true });
       this.setState({ traineeError: true, saveError: true });
-      this.setState({ courseError: true, saveError: true });
       this.setState({ decreeReasonError: true, saveError: true });
 
       const emptyError = this.props.t("Fill the Required Fields to Save");
@@ -356,16 +351,16 @@ class OralWarningDecreesList extends Component {
     }
   };
 
-  handleOralWarningDecreeEdit = arg => {
+  handleDismissPeriodDecreeEdit = arg => {
     console.log("arg", arg);
 
     this.setState({
-      oralWarningDecree: arg,
+      dismissPeriodDecree: arg,
       // selectedJobRank: arg.jobRankId,
       // selectedJobTitle: arg.jobTitleId,
       // jobTitleName: arg.jobTitle,
       // selectedCorporateNode: arg.corporateNodeId,
-      // selectedContractType: arg.oralWarningDecreeTypeId,
+      // selectedContractType: arg.dismissPeriodDecreeTypeId,
       // selectedEmploymentCase: arg.employmentCaseId,
       // selectedHasMinistryApprove: arg.hasMinistryApprove,
       // selectedGovernmentWorker: arg.governmentWorker,
@@ -381,17 +376,16 @@ class OralWarningDecreesList extends Component {
     if (fieldName == "decreeReasonId") {
       this.setState({
         selectedDecreeReason: selectedValue,
-        oralWarningDecree: values,
+        dismissPeriodDecree: values,
       });
     }
   };
 
   render() {
     const {
-      oralWarningDecrees,
+      dismissPeriodDecrees,
       employeesNames,
       years,
-      coursesOffering,
       decreeReasons,
       t,
       traineesOpt,
@@ -408,15 +402,13 @@ class OralWarningDecreesList extends Component {
       showAddButton,
       showSearchButton,
       isEdit,
-      oralWarningDecree,
+      dismissPeriodDecree,
       selectedTraineeId,
       selectedDecreeReason,
-      selectedCourseId,
       applyingDateError,
       startDateError,
       endDateError,
       traineeError,
-      courseError,
       decreeReasonError,
       selectedDecreeStatus,
       selectedTurnReason,
@@ -480,14 +472,6 @@ class OralWarningDecreesList extends Component {
         }),
       },
       {
-        dataField: "courseName",
-        text: t("Course"),
-        sort: true,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-        }),
-      },
-      {
         dataField: "DecreeStatus",
         text: t("Decree Status"),
         sort: true,
@@ -500,12 +484,12 @@ class OralWarningDecreesList extends Component {
         text: "",
         isDummyField: true,
         editable: false,
-        formatter: (cellContent, oralWarningDecree) => (
+        formatter: (cellContent, dismissPeriodDecree) => (
           <Tooltip title={this.props.t("Edit")} placement="top">
             <IconButton
               className="text-sm-end"
               onClick={() =>
-                this.handleOralWarningDecreeEdit(oralWarningDecree)
+                this.handleDismissPeriodDecreeEdit(dismissPeriodDecree)
               }
             >
               <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
@@ -517,7 +501,7 @@ class OralWarningDecreesList extends Component {
 
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: oralWarningDecrees.length,
+      totalSize: dismissPeriodDecrees.length,
       custom: true,
     };
 
@@ -533,7 +517,7 @@ class OralWarningDecreesList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              breadcrumbItem={this.props.t("Oral Warning Decrees")}
+              breadcrumbItem={this.props.t("Dismiss Period Decrees")}
             />
             <Row>
               <Col>
@@ -593,12 +577,12 @@ class OralWarningDecreesList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={oralWarningDecrees}
+                        data={dismissPeriodDecrees}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={oralWarningDecrees}
+                            data={dismissPeriodDecrees}
                             columns={columns}
                             search
                           >
@@ -638,7 +622,7 @@ class OralWarningDecreesList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={oralWarningDecrees}
+                                  data={dismissPeriodDecrees}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "dbclick",
@@ -649,7 +633,7 @@ class OralWarningDecreesList extends Component {
                                       row,
                                       column
                                     ) => {
-                                      this.handleOralWarningDecreeDataChange(
+                                      this.handleDismissPeriodDecreeDataChange(
                                         row.Id,
                                         column.dataField,
                                         newValue
@@ -658,7 +642,7 @@ class OralWarningDecreesList extends Component {
                                   })}
                                   defaultSorted={defaultSorting}
                                   noDataIndication={t(
-                                    "No Oral Warning Decrees found"
+                                    "No Dismiss Period Decrees found"
                                   )}
                                   filter={filterFactory()}
                                 />
@@ -674,7 +658,7 @@ class OralWarningDecreesList extends Component {
                                 >
                                   <ModalHeader toggle={this.toggle} tag="h4">
                                     {!!isEdit
-                                      ? t("Edit Oral Warning Decree")
+                                      ? t("Edit Decree")
                                       : t("Add Decree")}
                                   </ModalHeader>
                                   <ModalBody>
@@ -682,45 +666,40 @@ class OralWarningDecreesList extends Component {
                                       enableReinitialize={true}
                                       initialValues={{
                                         traineeId:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.traineeId) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.traineeId) ||
                                           selectedTraineeId,
                                         decreeReasonId:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.decreeReasonId) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.decreeReasonId) ||
                                           selectedDecreeReason,
-                                        coursesId:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.coursesId) ||
-                                          selectedCourseId,
                                         applyingDate:
-                                          oralWarningDecree?.applyingDate
+                                          dismissPeriodDecree?.applyingDate
                                             ? moment
                                                 .utc(
-                                                  oralWarningDecree.applyingDate
+                                                  dismissPeriodDecree.applyingDate
                                                 )
                                                 .local()
                                                 .format("YYYY-MM-DD")
                                             : "",
-                                        startDate: oralWarningDecree?.startDate
+                                        startDate:
+                                          dismissPeriodDecree?.startDate
+                                            ? moment
+                                                .utc(
+                                                  dismissPeriodDecree.startDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+                                        endDate: dismissPeriodDecree?.endDate
                                           ? moment
-                                              .utc(oralWarningDecree.startDate)
-                                              .local()
-                                              .format("YYYY-MM-DD")
-                                          : "",
-                                        endDate: oralWarningDecree?.endDate
-                                          ? moment
-                                              .utc(oralWarningDecree.endDate)
+                                              .utc(dismissPeriodDecree.endDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
                                         note:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.note) ||
-                                          "",
-                                        absencePercent:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.absencePercent) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.note) ||
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
@@ -766,9 +745,6 @@ class OralWarningDecreesList extends Component {
                                                 true
                                               ).isValid()
                                           ),
-                                        coursesId: Yup.string().required(
-                                          "Please select or enter a course"
-                                        ),
                                       })}
                                     >
                                       {({
@@ -784,7 +760,7 @@ class OralWarningDecreesList extends Component {
                                           <Form>
                                             <Card id="employee-card">
                                               <CardTitle id="course_header">
-                                                {t("Oral Warning Decree")}
+                                                {t("Dismiss Period Decree")}
                                               </CardTitle>
                                               <CardBody className="cardBody">
                                                 {emptyError && (
@@ -1042,7 +1018,7 @@ class OralWarningDecreesList extends Component {
                                                               defaultValue={decreeReasons.find(
                                                                 opt =>
                                                                   opt.value ===
-                                                                  oralWarningDecree?.decreeReasonId
+                                                                  dismissPeriodDecree?.decreeReasonId
                                                               )}
                                                             />
                                                             {decreeReasonError && (
@@ -1052,130 +1028,6 @@ class OralWarningDecreesList extends Component {
                                                                 )}
                                                               </div>
                                                             )}
-                                                          </Col>
-                                                        </Row>
-                                                      </div>
-                                                      <div className="mb-3">
-                                                        <Row>
-                                                          <Col className="col-4">
-                                                            <Label for="coursesId">
-                                                              {this.props.t(
-                                                                "Courses"
-                                                              )}
-                                                            </Label>
-                                                            <span className="text-danger">
-                                                              *
-                                                            </span>
-                                                          </Col>
-                                                          <Col className="col-8">
-                                                            <Field
-                                                              name="coursesId"
-                                                              as="input"
-                                                              id="courses-Id"
-                                                              type="text"
-                                                              placeholder="Search..."
-                                                              className={
-                                                                "form-control" +
-                                                                ((errors.coursesId &&
-                                                                  touched.coursesId) ||
-                                                                courseError
-                                                                  ? " is-invalid"
-                                                                  : "")
-                                                              }
-                                                              value={
-                                                                coursesOffering.find(
-                                                                  course =>
-                                                                    course.key ===
-                                                                    this.state
-                                                                      .selectedCourseId
-                                                                )?.value || ""
-                                                              }
-                                                              onChange={e => {
-                                                                const newValue =
-                                                                  e.target
-                                                                    .value;
-
-                                                                const selectedCouese =
-                                                                  coursesOffering.find(
-                                                                    course =>
-                                                                      course.value ===
-                                                                      newValue
-                                                                  );
-
-                                                                if (
-                                                                  selectedCouese
-                                                                ) {
-                                                                  this.setState(
-                                                                    {
-                                                                      selectedCourseId:
-                                                                        selectedCouese.key,
-                                                                      courseName:
-                                                                        selectedCouese.value,
-                                                                    }
-                                                                  );
-                                                                } else {
-                                                                  this.setState(
-                                                                    {
-                                                                      selectedCourseId:
-                                                                        null,
-                                                                      courseName:
-                                                                        newValue,
-                                                                    }
-                                                                  );
-                                                                }
-                                                              }}
-                                                              list="coursesId"
-                                                              autoComplete="off"
-                                                            />
-                                                            <datalist id="coursesId">
-                                                              {coursesOffering.map(
-                                                                course => (
-                                                                  <option
-                                                                    key={
-                                                                      course.key
-                                                                    }
-                                                                    value={
-                                                                      course.value
-                                                                    }
-                                                                  />
-                                                                )
-                                                              )}
-                                                            </datalist>
-                                                            {courseError && (
-                                                              <div className="invalid-feedback">
-                                                                {this.props.t(
-                                                                  "Courses is required"
-                                                                )}
-                                                              </div>
-                                                            )}
-                                                          </Col>
-                                                        </Row>
-                                                      </div>
-                                                      <div className="mb-3">
-                                                        <Row>
-                                                          <Col className="col-4">
-                                                            <Label for="absencePercent">
-                                                              {this.props.t(
-                                                                "Absence Percent"
-                                                              )}
-                                                            </Label>
-                                                          </Col>
-                                                          <Col className="col-3">
-                                                            <InputGroup>
-                                                              <Field
-                                                                type="text"
-                                                                name="absencePercent"
-                                                                id="absencePercent"
-                                                                className="form-control"
-                                                                value={
-                                                                  absencePercent ||
-                                                                  ""
-                                                                }
-                                                              />
-                                                              <div className="input-group-text">
-                                                                %
-                                                              </div>
-                                                            </InputGroup>
                                                           </Col>
                                                         </Row>
                                                       </div>
@@ -1294,92 +1146,99 @@ class OralWarningDecreesList extends Component {
                                   >
                                     {!!isEdit
                                       ? t("Update Decree Details")
-                                      : t("Add Oral Warning Decree")}
+                                      : t("Add Dismiss Period Decree")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <Formik
                                       enableReinitialize={true}
                                       initialValues={{
                                         ...(isEdit &&
-                                          oralWarningDecree && {
-                                            Id: oralWarningDecree.Id,
+                                          dismissPeriodDecree && {
+                                            Id: dismissPeriodDecree.Id,
                                           }),
                                         decreeCode:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.decreeCode) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.decreeCode) ||
                                           "",
                                         traineeId:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.traineeId) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.traineeId) ||
                                           selectedTraineeId,
                                         decreeReasonId:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.decreeReasonId) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.decreeReasonId) ||
                                           selectedDecreeReason,
-                                        coursesId:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.coursesId) ||
-                                          selectedCourseId,
                                         applyingDate:
-                                          oralWarningDecree?.applyingDate
+                                          dismissPeriodDecree?.applyingDate
                                             ? moment
                                                 .utc(
-                                                  oralWarningDecree.applyingDate
+                                                  dismissPeriodDecree.applyingDate
                                                 )
                                                 .local()
                                                 .format("YYYY-MM-DD")
                                             : "",
-                                        startDate: oralWarningDecree?.startDate
+                                        startDate:
+                                          dismissPeriodDecree?.startDate
+                                            ? moment
+                                                .utc(
+                                                  dismissPeriodDecree.startDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+                                        endDate: dismissPeriodDecree?.endDate
                                           ? moment
-                                              .utc(oralWarningDecree.startDate)
-                                              .local()
-                                              .format("YYYY-MM-DD")
-                                          : "",
-                                        endDate: oralWarningDecree?.endDate
-                                          ? moment
-                                              .utc(oralWarningDecree.endDate)
+                                              .utc(dismissPeriodDecree.endDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
                                         decreeNum:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.decreeNum) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.decreeNum) ||
                                           "",
                                         decreeDate:
-                                          oralWarningDecree?.decreeDate
+                                          dismissPeriodDecree?.decreeDate
                                             ? moment
                                                 .utc(
-                                                  oralWarningDecree.decreeDate
+                                                  dismissPeriodDecree.decreeDate
                                                 )
                                                 .local()
                                                 .format("YYYY-MM-DD")
                                             : "",
+                                        fromDate: dismissPeriodDecree?.fromDate
+                                          ? moment
+                                              .utc(dismissPeriodDecree.fromDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
+                                        toDate: dismissPeriodDecree?.toDate
+                                          ? moment
+                                              .utc(dismissPeriodDecree.toDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
                                         note:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.note) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.note) ||
                                           "",
                                         //file: null,
                                         decreeStatusId:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.decreeStatusId) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.decreeStatusId) ||
                                           selectedDecreeStatus,
                                         turnReasonId:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.turnReason) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.turnReason) ||
                                           selectedTurnReason,
-                                        turnDate: oralWarningDecree?.turnDate
+                                        turnDate: dismissPeriodDecree?.turnDate
                                           ? moment
-                                              .utc(oralWarningDecree.turnDate)
+                                              .utc(dismissPeriodDecree.turnDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
                                         turnNote:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.turnNote) ||
-                                          "",
-                                        absencePercent:
-                                          (oralWarningDecree &&
-                                            oralWarningDecree.absencePercent) ||
+                                          (dismissPeriodDecree &&
+                                            dismissPeriodDecree.turnNote) ||
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
@@ -1425,9 +1284,6 @@ class OralWarningDecreesList extends Component {
                                                 true
                                               ).isValid()
                                           ),
-                                        coursesId: Yup.string().required(
-                                          "Please select or enter a course"
-                                        ),
                                       })}
                                     >
                                       {({
@@ -1625,114 +1481,6 @@ class OralWarningDecreesList extends Component {
                                                               </Col>
                                                             </Row>
                                                           </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="coursesId">
-                                                                  {this.props.t(
-                                                                    "Courses"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col className="col-8">
-                                                                <Field
-                                                                  name="coursesId"
-                                                                  as="input"
-                                                                  id="courses-Id"
-                                                                  type="text"
-                                                                  placeholder="Search..."
-                                                                  className={
-                                                                    "form-control"
-                                                                  }
-                                                                  value={
-                                                                    coursesOffering.find(
-                                                                      course =>
-                                                                        course.key ===
-                                                                        this
-                                                                          .state
-                                                                          .selectedCourseId
-                                                                    )?.value ||
-                                                                    ""
-                                                                  }
-                                                                  onChange={e => {
-                                                                    const newValue =
-                                                                      e.target
-                                                                        .value;
-
-                                                                    const selectedCouese =
-                                                                      coursesOffering.find(
-                                                                        course =>
-                                                                          course.value ===
-                                                                          newValue
-                                                                      );
-
-                                                                    if (
-                                                                      selectedCouese
-                                                                    ) {
-                                                                      this.setState(
-                                                                        {
-                                                                          selectedCourseId:
-                                                                            selectedCouese.key,
-                                                                          courseName:
-                                                                            selectedCouese.value,
-                                                                        }
-                                                                      );
-                                                                    } else {
-                                                                      this.setState(
-                                                                        {
-                                                                          selectedCourseId:
-                                                                            null,
-                                                                          courseName:
-                                                                            newValue,
-                                                                        }
-                                                                      );
-                                                                    }
-                                                                  }}
-                                                                  list="coursesId"
-                                                                  autoComplete="off"
-                                                                />
-                                                                <datalist id="coursesId">
-                                                                  {coursesOffering.map(
-                                                                    course => (
-                                                                      <option
-                                                                        key={
-                                                                          course.key
-                                                                        }
-                                                                        value={
-                                                                          course.value
-                                                                        }
-                                                                      />
-                                                                    )
-                                                                  )}
-                                                                </datalist>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="absencePercent">
-                                                                  {this.props.t(
-                                                                    "Absence Percent"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col className="col-3">
-                                                                <InputGroup>
-                                                                  <Field
-                                                                    type="text"
-                                                                    name="absencePercent"
-                                                                    id="absencePercent"
-                                                                    className="form-control"
-                                                                  />
-                                                                  <div className="input-group-text">
-                                                                    %
-                                                                  </div>
-                                                                </InputGroup>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
                                                         </div>
                                                       </CardBody>
                                                     </Card>
@@ -1794,6 +1542,78 @@ class OralWarningDecreesList extends Component {
                                                                     handleBlur
                                                                   }
                                                                   id="decreeDate-date-input"
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="fromDate">
+                                                                  {this.props.t(
+                                                                    "From Date"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="fromDate"
+                                                                  className={`form-control`}
+                                                                  type="date"
+                                                                  value={
+                                                                    values.fromDate
+                                                                      ? new Date(
+                                                                          values.fromDate
+                                                                        )
+                                                                          .toISOString()
+                                                                          .split(
+                                                                            "T"
+                                                                          )[0]
+                                                                      : ""
+                                                                  }
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  onBlur={
+                                                                    handleBlur
+                                                                  }
+                                                                  id="fromDate-date-input"
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="toDate">
+                                                                  {this.props.t(
+                                                                    "To Date"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  name="toDate"
+                                                                  className={`form-control`}
+                                                                  type="date"
+                                                                  value={
+                                                                    values.toDate
+                                                                      ? new Date(
+                                                                          values.toDate
+                                                                        )
+                                                                          .toISOString()
+                                                                          .split(
+                                                                            "T"
+                                                                          )[0]
+                                                                      : ""
+                                                                  }
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  onBlur={
+                                                                    handleBlur
+                                                                  }
+                                                                  id="toDate-date-input"
                                                                 />
                                                               </Col>
                                                             </Row>
@@ -1948,7 +1768,7 @@ class OralWarningDecreesList extends Component {
                                                                   defaultValue={decreeReasons.find(
                                                                     opt =>
                                                                       opt.value ===
-                                                                      oralWarningDecree?.decreeReasonId
+                                                                      dismissPeriodDecree?.decreeReasonId
                                                                   )}
                                                                 />
                                                               </Col>
@@ -2133,7 +1953,7 @@ class OralWarningDecreesList extends Component {
                                                                   defaultValue={turnReasons.find(
                                                                     opt =>
                                                                       opt.value ===
-                                                                      oralWarningDecree?.turnReasonId
+                                                                      dismissPeriodDecree?.turnReasonId
                                                                   )}
                                                                 />
                                                               </Col>
@@ -2328,18 +2148,18 @@ class OralWarningDecreesList extends Component {
 
 const mapStateToProps = ({
   classScheduling,
-  oralWarningDecrees,
+  absenceWarnings,
+  dismissPeriodDecrees,
   trainees,
   years,
   menu_items,
   decisions,
   employees,
 }) => ({
-  oralWarningDecrees: oralWarningDecrees.oralWarningDecrees,
-  coursesOffering: classScheduling.coursesOffering,
-  deleted: oralWarningDecrees.deleted,
-  decreeReasons: oralWarningDecrees.decreeReasons,
-  turnReasons: oralWarningDecrees.turnReasons,
+  dismissPeriodDecrees: dismissPeriodDecrees.dismissPeriodDecrees,
+  deleted: dismissPeriodDecrees.deleted,
+  decreeReasons: absenceWarnings.decreeReasons,
+  turnReasons: absenceWarnings.turnReasons,
   years: years.years,
   employeesNames: employees.employeesNames,
   traineesOpt: trainees.traineesOpt,
@@ -2348,18 +2168,18 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetOralWarningDecrees: () => dispatch(getOralWarningDecrees()),
-  onAddNewOralWarningDecree: oralWarningDecree =>
-    dispatch(addNewOralWarningDecree(oralWarningDecree)),
-  onUpdateOralWarningDecree: oralWarningDecree =>
-    dispatch(updateOralWarningDecree(oralWarningDecree)),
-  onDeleteCOralWarningDecree: oralWarningDecree =>
-    dispatch(deleteOralWarningDecree(oralWarningDecree)),
-  onGetOralWarningDecreeDeletedValue: () =>
-    dispatch(getOralWarningDecreeDeletedValue()),
+  onGetDismissPeriodDecrees: () => dispatch(getDismissPeriodDecrees()),
+  onAddNewDismissPeriodDecree: dismissPeriodDecree =>
+    dispatch(addNewDismissPeriodDecree(dismissPeriodDecree)),
+  onUpdateDismissPeriodDecree: dismissPeriodDecree =>
+    dispatch(updateDismissPeriodDecree(dismissPeriodDecree)),
+  onDeleteCDismissPeriodDecree: dismissPeriodDecree =>
+    dispatch(deleteDismissPeriodDecree(dismissPeriodDecree)),
+  onGetDismissPeriodDecreeDeletedValue: () =>
+    dispatch(getDismissPeriodDecreeDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTranslation()(OralWarningDecreesList));
+)(withTranslation()(DismissPeriodDecreesList));

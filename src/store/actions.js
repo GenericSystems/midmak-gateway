@@ -119,8 +119,20 @@ export * from "./oralWarningDecrees/actions";
 //writtenWarningDecreesList
 export * from "./writtenWarningDecrees/actions";
 
-//DismissCoursesDecrees
+//DismissCoursesDecreesabsence
 export * from "./dismissCoursesDecrees-absence/actions";
+
+//DismissCoursesDecreesExam
+export * from "./dismissCoursesDecrees-exam/actions";
+
+//DismissCoursesDecreesOther
+export * from "./dismissCoursesDecrees-other/actions";
+
+//DismissPeriodDecree
+export * from "./dismissPeriodDecrees/actions";
+
+//DismissAcademyDecree
+export * from "./dismissAcademyDecrees/actions";
 
 //DocumentTypes
 export * from "./documents-types/actions";

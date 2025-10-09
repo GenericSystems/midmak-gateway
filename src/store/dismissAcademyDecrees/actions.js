@@ -1,90 +1,91 @@
 import {
-  GET_ORAL_WARNING_DECREE_DELETED_VALUE,
-  GET_ORAL_WARNING_DECREE_DELETED_VALUE_FAIL,
-  GET_ORAL_WARNING_DECREE_DELETED_VALUE_SUCCESS,
-  GET_ORAL_WARNING_DECREES,
-  GET_ORAL_WARNING_DECREES_FAIL,
-  GET_ORAL_WARNING_DECREES_SUCCESS,
-  ADD_NEW_ORAL_WARNING_DECREE,
-  ADD_ORAL_WARNING_DECREE_SUCCESS,
-  ADD_ORAL_WARNING_DECREE_FAIL,
-  UPDATE_ORAL_WARNING_DECREE,
-  UPDATE_ORAL_WARNING_DECREE_SUCCESS,
-  UPDATE_ORAL_WARNING_DECREE_FAIL,
-  DELETE_ORAL_WARNING_DECREE,
-  DELETE_ORAL_WARNING_DECREE_SUCCESS,
-  DELETE_ORAL_WARNING_DECREE_FAIL,
+  GET_DISMISS_ACADEMY_DECREE_DELETED_VALUE,
+  GET_DISMISS_ACADEMY_DECREE_DELETED_VALUE_FAIL,
+  GET_DISMISS_ACADEMY_DECREE_DELETED_VALUE_SUCCESS,
+  GET_DISMISS_ACADEMY_DECREES,
+  GET_DISMISS_ACADEMY_DECREES_FAIL,
+  GET_DISMISS_ACADEMY_DECREES_SUCCESS,
+  ADD_NEW_DISMISS_ACADEMY_DECREE,
+  ADD_DISMISS_ACADEMY_DECREE_SUCCESS,
+  ADD_DISMISS_ACADEMY_DECREE_FAIL,
+  UPDATE_DISMISS_ACADEMY_DECREE,
+  UPDATE_DISMISS_ACADEMY_DECREE_SUCCESS,
+  UPDATE_DISMISS_ACADEMY_DECREE_FAIL,
+  DELETE_DISMISS_ACADEMY_DECREE,
+  DELETE_DISMISS_ACADEMY_DECREE_SUCCESS,
+  DELETE_DISMISS_ACADEMY_DECREE_FAIL,
 } from "./actionTypes";
 
-export const getOralWarningDecrees = () => ({
-  type: GET_ORAL_WARNING_DECREES,
+export const getDismissAcademyDecrees = () => ({
+  type: GET_DISMISS_ACADEMY_DECREES,
 });
 
-export const getOralWarningDecreesSuccess = oralWarningDecrees => ({
-  type: GET_ORAL_WARNING_DECREES_SUCCESS,
-  payload: oralWarningDecrees,
+export const getDismissAcademyDecreesSuccess = dismissAcademyDecrees => ({
+  type: GET_DISMISS_ACADEMY_DECREES_SUCCESS,
+  payload: dismissAcademyDecrees,
 });
 
-export const getOralWarningDecreesFail = error => ({
-  type: GET_ORAL_WARNING_DECREES_FAIL,
+export const getDismissAcademyDecreesFail = error => ({
+  type: GET_DISMISS_ACADEMY_DECREES_FAIL,
   payload: error,
 });
 
-export const getOralWarningDecreeDeletedValue = () => ({
-  type: GET_ORAL_WARNING_DECREE_DELETED_VALUE,
+export const getDismissAcademyDecreeDeletedValue = () => ({
+  type: GET_DISMISS_ACADEMY_DECREE_DELETED_VALUE,
 });
 
-export const getOralWarningDecreeDeletedValueSuccess = oralWarningDecree => ({
-  type: GET_ORAL_WARNING_DECREE_DELETED_VALUE_SUCCESS,
-  payload: oralWarningDecree,
-});
+export const getDismissAcademyDecreeDeletedValueSuccess =
+  dismissAcademyDecree => ({
+    type: GET_DISMISS_ACADEMY_DECREE_DELETED_VALUE_SUCCESS,
+    payload: dismissAcademyDecree,
+  });
 
-export const getOralWarningDecreeDeletedValueFail = error => ({
-  type: GET_ORAL_WARNING_DECREE_DELETED_VALUE_FAIL,
+export const getDismissAcademyDecreeDeletedValueFail = error => ({
+  type: GET_DISMISS_ACADEMY_DECREE_DELETED_VALUE_FAIL,
   payload: error,
 });
 
-export const addNewOralWarningDecree = oralWarningDecree => ({
-  type: ADD_NEW_ORAL_WARNING_DECREE,
-  payload: oralWarningDecree,
+export const addNewDismissAcademyDecree = dismissAcademyDecree => ({
+  type: ADD_NEW_DISMISS_ACADEMY_DECREE,
+  payload: dismissAcademyDecree,
 });
 
-export const addOralWarningDecreeSuccess = oralWarningDecree => ({
-  type: ADD_ORAL_WARNING_DECREE_SUCCESS,
-  payload: oralWarningDecree,
+export const addDismissAcademyDecreeSuccess = dismissAcademyDecree => ({
+  type: ADD_DISMISS_ACADEMY_DECREE_SUCCESS,
+  payload: dismissAcademyDecree,
 });
 
-export const addOralWarningDecreeFail = error => ({
-  type: ADD_ORAL_WARNING_DECREE_FAIL,
+export const addDismissAcademyDecreeFail = error => ({
+  type: ADD_DISMISS_ACADEMY_DECREE_FAIL,
   payload: error,
 });
 
-export const updateOralWarningDecree = oralWarningDecree => ({
-  type: UPDATE_ORAL_WARNING_DECREE,
-  payload: oralWarningDecree,
+export const updateDismissAcademyDecree = dismissAcademyDecree => ({
+  type: UPDATE_DISMISS_ACADEMY_DECREE,
+  payload: dismissAcademyDecree,
 });
 
-export const updateOralWarningDecreeSuccess = oralWarningDecree => ({
-  type: UPDATE_ORAL_WARNING_DECREE_SUCCESS,
-  payload: oralWarningDecree,
+export const updateDismissAcademyDecreeSuccess = dismissAcademyDecree => ({
+  type: UPDATE_DISMISS_ACADEMY_DECREE_SUCCESS,
+  payload: dismissAcademyDecree,
 });
 
-export const updateOralWarningDecreeFail = error => ({
-  type: UPDATE_ORAL_WARNING_DECREE_FAIL,
+export const updateDismissAcademyDecreeFail = error => ({
+  type: UPDATE_DISMISS_ACADEMY_DECREE_FAIL,
   payload: error,
 });
 
-export const deleteOralWarningDecree = oralWarningDecree => ({
-  type: DELETE_ORAL_WARNING_DECREE,
-  payload: oralWarningDecree,
+export const deleteDismissAcademyDecree = dismissAcademyDecree => ({
+  type: DELETE_DISMISS_ACADEMY_DECREE,
+  payload: dismissAcademyDecree,
 });
 
-export const deleteOralWarningDecreeSuccess = oralWarningDecree => ({
-  type: DELETE_ORAL_WARNING_DECREE_SUCCESS,
-  payload: oralWarningDecree,
+export const deleteDismissAcademyDecreeSuccess = dismissAcademyDecree => ({
+  type: DELETE_DISMISS_ACADEMY_DECREE_SUCCESS,
+  payload: dismissAcademyDecree,
 });
 
-export const deleteOralWarningDecreeFail = error => ({
-  type: DELETE_ORAL_WARNING_DECREE_FAIL,
+export const deleteDismissAcademyDecreeFail = error => ({
+  type: DELETE_DISMISS_ACADEMY_DECREE_FAIL,
   payload: error,
 });

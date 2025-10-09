@@ -96,6 +96,10 @@ import AbsenceWarningsSaga from "./Absence-warnings/saga";
 import OralWarningDecreesSaga from "./oralWarningDecrees/saga";
 import WrittenWarningDecreesSaga from "./writtenWarningDecrees/saga";
 import DismissDecreesAbsenceSaga from "./dismissCoursesDecrees-absence/saga";
+import DismissDecreesExamSaga from "./dismissCoursesDecrees-exam/saga";
+import DismissDecreesOtherSaga from "./dismissCoursesDecrees-other/saga";
+import DismissPeriodDecreesSaga from "./dismissPeriodDecrees/saga";
+import DismissAcademyDecreesSaga from "./dismissAcademyDecrees/saga";
 import gradesVersionsSaga from "./gradesVersions/saga";
 import hiddenGradesSaga from "./hide-grade/saga";
 
@@ -273,6 +277,10 @@ export default function* rootSaga() {
     fork(OralWarningDecreesSaga),
     fork(WrittenWarningDecreesSaga),
     fork(DismissDecreesAbsenceSaga),
+    fork(DismissDecreesExamSaga),
+    fork(DismissDecreesOtherSaga),
+    fork(DismissPeriodDecreesSaga),
+    fork(DismissAcademyDecreesSaga),
     fork(DocumentTypesSaga),
     fork(gradesVersionsSaga),
   ]);

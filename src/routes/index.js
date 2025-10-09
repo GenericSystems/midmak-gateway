@@ -197,6 +197,18 @@ import WrittenWarningDecreesList from "../pages/Rules-and-Regulations/WrittenWar
 //DismissDecreesAbsence
 import DismissDecreesAbsenceList from "../pages/Rules-and-Regulations/DismissCoursesDecrees-Absence/dismissCoursesDecreesAbsence";
 
+//DismissDecreesExam
+import DismissDecreesExamList from "../pages/Rules-and-Regulations/DismissCoursesDecrees-Exam/dismissCoursesDecreesExam";
+
+//DismissDecreesOther
+import DismissDecreesOtherList from "../pages/Rules-and-Regulations/DismissCoursesDecrees-Other/dismissCoursesDecreesOthers";
+
+//DismissPeriodDecree
+import DismissPeriodDecreesList from "../pages/Rules-and-Regulations/DismissPeriodDecrees/dismissPeriodDecrees";
+
+//DismissAcademyDecrees
+import DismissAcademyDecreesList from "../pages/Rules-and-Regulations/DismissAcademyDecrees/dismissAcademyDecrees";
+
 //documet types
 import DocumentsTypesList from "../pages/Addmission/AdmissionSettings/documents-types";
 
@@ -458,6 +470,30 @@ const authProtectedRoutes = [
   {
     path: "/dismissCoursesDecreesAbsence",
     component: DismissDecreesAbsenceList,
+  },
+
+  // DismissDecreesExam
+  {
+    path: "/dismissCoursesDecreesExam",
+    component: DismissDecreesExamList,
+  },
+
+  // DismissDecreesOther
+  {
+    path: "/dismissCoursesDecreesOthers",
+    component: DismissDecreesOtherList,
+  },
+
+  // DismissPeriodDecree
+  {
+    path: "/dismissPeriodDecrees",
+    component: DismissPeriodDecreesList,
+  },
+
+  // DismissAcademyDecree
+  {
+    path: "/dismissAcademyDecrees",
+    component: DismissAcademyDecreesList,
   },
 
   // rewardsTypes

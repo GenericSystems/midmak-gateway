@@ -775,5 +775,8 @@
   "Turn Date": "تاريخ الإلغاء",
   "Absence Warnings": "إنذارات الغياب",
   "Time": "الوقت",
+  "From Date": "من تاريخ",
+  "To Date": "الى تاريخ",
+  "Dismiss Period Decrees": "قرارات الفصل لفترة",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

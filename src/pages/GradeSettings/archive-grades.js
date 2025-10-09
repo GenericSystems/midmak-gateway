@@ -9,6 +9,7 @@ import {
   CardTitle,
   Input,
   Label,
+  Button,
 } from "reactstrap";
 import { Dropdown, DropdownToggle, DropdownMenu } from "reactstrap";
 import Select from "react-select";
@@ -24,8 +25,7 @@ import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 
-import Accordion from "react-bootstrap/Accordion";
-
+import Tooltip from "@mui/material/Tooltip";
 import {
   getArchivedGrades,
   updateArchivedGrade,
@@ -67,7 +67,7 @@ class ArchiveGradesList extends Component {
       showEditButton: false,
       selectedCourseId: null,
     };
-    this.handleGradeDataChange = this.handleGradeDataChange.bind(this);
+    // this.handleGradeDataChange = this.handleGradeDataChange.bind(this);
   }
   componentDidMount() {
     const {
@@ -306,70 +306,70 @@ class ArchiveGradesList extends Component {
   //   }
   // };
 
-  handleGradeDataChange = (row, dataField, fieldValue) => {
-    const {
-      onUpdateArchivedGrade,
-      archived_grades,
-      courseContentsEnteredGrades,
-    } = this.props;
+  // handleGradeDataChange = (row, dataField, fieldValue) => {
+  //   const {
+  //     onUpdateArchivedGrade,
+  //     archived_grades,
+  //     courseContentsEnteredGrades,
+  //   } = this.props;
 
-    if (!dataField) {
-      console.error("dataField is undefined");
-      return;
-    }
+  //   if (!dataField) {
+  //     console.error("dataField is undefined");
+  //     return;
+  //   }
 
-    if (typeof row[dataField] === "undefined") {
-      console.error(`${dataField} is undefined in the row data`);
-      return;
-    }
+  //   if (typeof row[dataField] === "undefined") {
+  //     console.error(`${dataField} is undefined in the row data`);
+  //     return;
+  //   }
 
-    const rowId = row.Id;
-    const { updatedCells } = this.state;
-    const updatedCell = { rowId, dataField };
-    this.setState({ updatedCells: [...updatedCells, updatedCell] });
+  //   const rowId = row.Id;
+  //   const { updatedCells } = this.state;
+  //   const updatedCell = { rowId, dataField };
+  //   this.setState({ updatedCells: [...updatedCells, updatedCell] });
 
-    const checkboxFields = ["deprivedFromExam", "inProgress", "archived"];
-    if (checkboxFields.includes(dataField)) {
-      const updateData = {
-        Id: row.Id,
-        [dataField]: fieldValue,
-      };
-      onUpdateArchivedGrade(updateData);
-      return;
-    }
+  //   const checkboxFields = ["deprivedFromExam", "inProgress", "archived"];
+  //   if (checkboxFields.includes(dataField)) {
+  //     const updateData = {
+  //       Id: row.Id,
+  //       [dataField]: fieldValue,
+  //     };
+  //     onUpdateArchivedGrade(updateData);
+  //     return;
+  //   }
 
-    if (!dataField || typeof row[dataField] === "undefined") return;
+  //   if (!dataField || typeof row[dataField] === "undefined") return;
 
-    const termInput = dataField.match(/\d+/)?.input;
-    const gradeInput = termInput?.match(/\((\d+)\)/);
+  //   const termInput = dataField.match(/\d+/)?.input;
+  //   const gradeInput = termInput?.match(/\((\d+)\)/);
 
-    if (termInput && gradeInput) {
-      const gradeValue = gradeInput[1];
-      if (!isNaN(gradeValue)) {
-        if (parseInt(fieldValue) > gradeValue) {
-          this.setState({
-            errorMessage: `Enter Grade From 0 to ${gradeValue}`,
-          });
-        } else if (parseInt(fieldValue) < 0) {
-          this.setState({ errorMessage: "You Entered Negative Grade" });
-        } else {
-          const matchingField = this.props.courseContentsEnteredGrades.find(
-            field => field.dataField === termInput
-          );
-          if (matchingField) {
-            const FieldToUpdate = `Ex${matchingField.orderContent}`;
-            const updateData = {
-              Id: row.Id,
-              TraineeNum: row.TraineeNum,
-              [FieldToUpdate]: fieldValue || null,
-              examType: `${FieldToUpdate}`,
-            };
-            onUpdateArchivedGrade(updateData);
-          }
-        }
-      }
-    }
-  };
+  //   if (termInput && gradeInput) {
+  //     const gradeValue = gradeInput[1];
+  //     if (!isNaN(gradeValue)) {
+  //       if (parseInt(fieldValue) > gradeValue) {
+  //         this.setState({
+  //           errorMessage: `Enter Grade From 0 to ${gradeValue}`,
+  //         });
+  //       } else if (parseInt(fieldValue) < 0) {
+  //         this.setState({ errorMessage: "You Entered Negative Grade" });
+  //       } else {
+  //         const matchingField = this.props.courseContentsEnteredGrades.find(
+  //           field => field.dataField === termInput
+  //         );
+  //         if (matchingField) {
+  //           const FieldToUpdate = `Ex${matchingField.orderContent}`;
+  //           const updateData = {
+  //             Id: row.Id,
+  //             TraineeNum: row.TraineeNum,
+  //             [FieldToUpdate]: fieldValue || null,
+  //             examType: `${FieldToUpdate}`,
+  //           };
+  //           onUpdateArchivedGrade(updateData);
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
 
   handleErrorClose = () => {
     this.setState({ errorMessage: null });
@@ -385,6 +385,28 @@ class ArchiveGradesList extends Component {
     const file = event.target.files[0];
     if (file) {
       console.log("Selected file:", file);
+    }
+  };
+
+  handleArchiveAll = () => {
+    const { updatedCells } = this.state;
+    const { onUpdateArchivedGrade } = this.props;
+
+    const updatedData = updatedCells.map(row => ({
+      ...row,
+      archived: true,
+    }));
+
+    this.setState({ updatedCells: updatedData });
+
+    if (onUpdateArchivedGrade) {
+      updatedData.forEach(row => {
+        const updateData = {
+          Id: row.Id,
+          archived: true,
+        };
+        onUpdateArchivedGrade(updateData);
+      });
     }
   };
 
@@ -431,12 +453,8 @@ class ArchiveGradesList extends Component {
           key: column.orderContent,
           dataField: column.dataField,
           text: column.textField,
-          editable: showEditButton
-            ? column.dataField !== "TraineeNum" &&
-              column.dataField !== "traineeName" &&
-              column.dataField !== "totalGrade" &&
-              column.dataField !== "letter_grade"
-            : false,
+
+          editable: false,
 
           classes: (cell, row, rowIndex, colIndex) => {
             const grade = archived_grades.find(grade => grade.Id === row.Id);
@@ -456,41 +474,17 @@ class ArchiveGradesList extends Component {
           {
             key: "deprivedFromExam",
             dataField: "deprivedFromExam",
-            text: "Deprived from Exam",
-            formatter: (cell, row, rowIndex) => (
-              <input
-                type="checkbox"
-                checked={!!cell}
-                disabled={!this.state.showEditButton}
-                onChange={() => {
-                  const newData = [...this.state.tableData];
-                  newData[rowIndex] = {
-                    ...newData[rowIndex],
-                    deprivedFromExam: !cell,
-                  };
-                  this.setState({ tableData: newData });
-                }}
-              />
+            text: "Deprived from Exam 25%",
+            formatter: cell => (
+              <input type="checkbox" checked={!!cell} disabled={true} />
             ),
           },
           {
             key: "inProgress",
             dataField: "inProgress",
             text: "In Progress",
-            formatter: (cell, row, rowIndex) => (
-              <input
-                type="checkbox"
-                checked={!!cell}
-                disabled={!this.state.showEditButton}
-                onChange={() => {
-                  const newData = [...this.state.tableData];
-                  newData[rowIndex] = {
-                    ...newData[rowIndex],
-                    inProgress: !cell,
-                  };
-                  this.setState({ tableData: newData });
-                }}
-              />
+            formatter: cell => (
+              <input type="checkbox" checked={!!cell} disabled={true} />
             ),
           },
           {
@@ -501,11 +495,14 @@ class ArchiveGradesList extends Component {
               <input
                 type="checkbox"
                 checked={!!cell}
-                disabled={!this.state.showEditButton}
+                disabled={!this.state.showEditButton ? true : false}
                 onChange={() => {
-                  const newData = [...this.state.tableData];
-                  newData[rowIndex] = { ...newData[rowIndex], archived: !cell };
-                  this.setState({ tableData: newData });
+                  const newData = [...this.state.updatedCells];
+                  newData[rowIndex] = {
+                    ...newData[rowIndex],
+                    archived: !cell,
+                  };
+                  this.setState({ updatedCells: newData });
                 }}
               />
             ),
@@ -514,9 +511,7 @@ class ArchiveGradesList extends Component {
 
         return columns;
       } else {
-        const columns = [{ key: 0, dataField: "Id", text: "Id" }];
-
-        return columns;
+        return [{ key: 0, dataField: "Id", text: "Id" }];
       }
     };
 
@@ -895,6 +890,25 @@ class ArchiveGradesList extends Component {
                                           </Dropdown>
                                         </div>
                                       </Col>
+                                      <Col sm="6"></Col>
+                                      <Col sm="1">
+                                        <Tooltip title="Archive All">
+                                          <i
+                                            className="mdi mdi-archive-arrow-down"
+                                            style={{
+                                              cursor: this.state.showEditButton
+                                                ? "pointer"
+                                                : "not-allowed",
+                                              fontSize: "20px",
+                                            }}
+                                            onClick={() => {
+                                              if (this.state.showEditButton) {
+                                                this.handleToggleArchiveAll();
+                                              }
+                                            }}
+                                          />
+                                        </Tooltip>
+                                      </Col>
                                     </Row>
                                     <Row>
                                       <div>
@@ -921,22 +935,22 @@ class ArchiveGradesList extends Component {
                                       {...paginationTableProps}
                                       data={selectedCourseData}
                                       columns={selectedCourseColumns}
-                                      cellEdit={cellEditFactory({
-                                        mode: "click",
-                                        blurToSave: true,
-                                        afterSaveCell: (
-                                          oldValue,
-                                          newValue,
-                                          row,
-                                          column
-                                        ) => {
-                                          this.handleGradeDataChange(
-                                            row,
-                                            column.dataField,
-                                            newValue
-                                          );
-                                        },
-                                      })}
+                                      // cellEdit={cellEditFactory({
+                                      //   mode: "click",
+                                      //   blurToSave: true,
+                                      //   afterSaveCell: (
+                                      //     oldValue,
+                                      //     newValue,
+                                      //     row,
+                                      //     column
+                                      //   ) => {
+                                      //     this.handleGradeDataChange(
+                                      //       row,
+                                      //       column.dataField,
+                                      //       newValue
+                                      //     );
+                                      //   },
+                                      // })}
                                       noDataIndication={t("No Grades found")}
                                       defaultSorted={defaultSorting}
                                     />

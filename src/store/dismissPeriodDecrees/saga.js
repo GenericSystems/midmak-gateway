@@ -2,24 +2,24 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 // Redux Action Types
 import {
-  GET_ORAL_WARNING_DECREES,
-  GET_ORAL_WARNING_DECREE_DELETED_VALUE,
-  ADD_NEW_ORAL_WARNING_DECREE,
-  DELETE_ORAL_WARNING_DECREE,
-  UPDATE_ORAL_WARNING_DECREE,
+  GET_DISMISS_PERIOD_DECREES,
+  GET_DISMISS_PERIOD_DECREE_DELETED_VALUE,
+  ADD_NEW_DISMISS_PERIOD_DECREE,
+  DELETE_DISMISS_PERIOD_DECREE,
+  UPDATE_DISMISS_PERIOD_DECREE,
 } from "./actionTypes";
 
 import {
-  getOralWarningDecreesSuccess,
-  getOralWarningDecreesFail,
-  getOralWarningDecreeDeletedValueSuccess,
-  getOralWarningDecreeDeletedValueFail,
-  addOralWarningDecreeSuccess,
-  addOralWarningDecreeFail,
-  updateOralWarningDecreeSuccess,
-  updateOralWarningDecreeFail,
-  deleteOralWarningDecreeSuccess,
-  deleteOralWarningDecreeFail,
+  getDismissPeriodDecreesSuccess,
+  getDismissPeriodDecreesFail,
+  getDismissPeriodDecreeDeletedValueSuccess,
+  getDismissPeriodDecreeDeletedValueFail,
+  addDismissPeriodDecreeSuccess,
+  addDismissPeriodDecreeFail,
+  updateDismissPeriodDecreeSuccess,
+  updateDismissPeriodDecreeFail,
+  deleteDismissPeriodDecreeSuccess,
+  deleteDismissPeriodDecreeFail,
 } from "./actions";
 
 import { getYearsSuccess, getYearsFail } from "../years/actions";
@@ -46,11 +46,11 @@ import {
 
 // Helper API methods
 import {
-  getOralWarningDecrees,
-  getOralWarningDecreeDeletedValue,
-  addNewOralWarningDecree,
-  updateOralWarningDecree,
-  deleteOralWarningDecree,
+  getDismissPeriodDecrees,
+  getDismissPeriodDecreeDeletedValue,
+  addNewDismissPeriodDecree,
+  updateDismissPeriodDecree,
+  deleteDismissPeriodDecree,
   getYears,
   getTraineesOpt,
   getTurnReasons,
@@ -60,18 +60,18 @@ import {
   getEmployeesNames,
 } from "../../helpers/fakebackend_helper";
 
-function* fetchOralWarningDecrees() {
+function* fetchDismissPeriodDecrees() {
   const requestPayload = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_OralWarningDecrees",
+    tablename: "_Common_AbsenceWarnings",
   };
   try {
-    const response = yield call(getOralWarningDecrees, requestPayload);
-    yield put(getOralWarningDecreesSuccess(response));
+    const response = yield call(getDismissPeriodDecrees, requestPayload);
+    yield put(getDismissPeriodDecreesSuccess(response));
   } catch (error) {
-    yield put(getOralWarningDecreesFail(error));
+    yield put(getDismissPeriodDecreesFail(error));
   }
 
   const get_years_req = {
@@ -144,9 +144,10 @@ function* fetchOralWarningDecrees() {
 
   const get_turnReasons_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_DecisionStatus",
+    fields: "Id,arTitle",
   };
   try {
     const response = yield call(getTurnReasons, get_turnReasons_req);
@@ -171,67 +172,67 @@ function* fetchOralWarningDecrees() {
   }
 }
 
-function* getOralWarningDecreeProfile() {
+function* getDismissPeriodDecreeProfile() {
   try {
-    const response = yield call(getOralWarningDecreeDeletedValue);
-    yield put(getOralWarningDecreeDeletedValueSuccess(response));
+    const response = yield call(getDismissPeriodDecreeDeletedValue);
+    yield put(getDismissPeriodDecreeDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getOralWarningDecreeDeletedValueFail(error));
+    yield put(getDismissPeriodDecreeDeletedValueFail(error));
   }
 }
 
-function* onAddNewOralWarningDecree({ payload }) {
+function* onAddNewDismissPeriodDecree({ payload }) {
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_OralWarningDecrees";
+  payload["tablename"] = "Common_DismissPeriodDecrees";
 
   try {
-    const response = yield call(addNewOralWarningDecree, payload);
-    yield put(addOralWarningDecreeSuccess(response[0]));
+    const response = yield call(addNewDismissPeriodDecree, payload);
+    yield put(addDismissPeriodDecreeSuccess(response[0]));
   } catch (error) {
-    yield put(addOralWarningDecreeFail(error));
+    yield put(addDismissPeriodDecreeFail(error));
   }
 }
 
-function* onUpdateOralWarningDecree({ payload }) {
+function* onUpdateDismissPeriodDecree({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_OralWarningDecrees";
+  payload["tablename"] = "Common_DismissPeriodDecrees";
 
   try {
-    const response = yield call(updateOralWarningDecree, payload);
-    yield put(updateOralWarningDecreeSuccess(response[0]));
+    const response = yield call(updateDismissPeriodDecree, payload);
+    yield put(updateDismissPeriodDecreeSuccess(response[0]));
   } catch (error) {
-    yield put(updateOralWarningDecreeFail(error));
+    yield put(updateDismissPeriodDecreeFail(error));
   }
 }
 
-function* onDeleteOralWarningDecree({ payload }) {
+function* onDeleteDismissPeriodDecree({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_OralWarningDecrees";
+  payload["tablename"] = "Common_DismissPeriodDecrees";
 
   try {
-    const response = yield call(deleteOralWarningDecree, payload);
-    yield put(deleteOralWarningDecreeSuccess(response[0]));
+    const response = yield call(deleteDismissPeriodDecree, payload);
+    yield put(deleteDismissPeriodDecreeSuccess(response[0]));
   } catch (error) {
-    yield put(deleteOralWarningDecreeFail(error));
+    yield put(deleteDismissPeriodDecreeFail(error));
   }
 }
 
-function* OralWarningDecreesSaga() {
-  yield takeEvery(GET_ORAL_WARNING_DECREES, fetchOralWarningDecrees);
+function* DismissPeriodDecreesSaga() {
+  yield takeEvery(GET_DISMISS_PERIOD_DECREES, fetchDismissPeriodDecrees);
   yield takeEvery(
-    GET_ORAL_WARNING_DECREE_DELETED_VALUE,
-    getOralWarningDecreeProfile
+    GET_DISMISS_PERIOD_DECREE_DELETED_VALUE,
+    getDismissPeriodDecreeProfile
   );
-  yield takeEvery(ADD_NEW_ORAL_WARNING_DECREE, onAddNewOralWarningDecree);
-  yield takeEvery(UPDATE_ORAL_WARNING_DECREE, onUpdateOralWarningDecree);
-  yield takeEvery(DELETE_ORAL_WARNING_DECREE, onDeleteOralWarningDecree);
+  yield takeEvery(ADD_NEW_DISMISS_PERIOD_DECREE, onAddNewDismissPeriodDecree);
+  yield takeEvery(UPDATE_DISMISS_PERIOD_DECREE, onUpdateDismissPeriodDecree);
+  yield takeEvery(DELETE_DISMISS_PERIOD_DECREE, onDeleteDismissPeriodDecree);
 }
 
-export default OralWarningDecreesSaga;
+export default DismissPeriodDecreesSaga;
