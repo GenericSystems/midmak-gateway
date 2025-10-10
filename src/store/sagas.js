@@ -121,6 +121,7 @@ import DefineExamDatesSaga from "./Exam/DefineExamDates/saga";
 import WarningsTypesSaga from "./HR/warningsTypes/saga";
 import RewardsTypesSaga from "./HR/rewardsTypes/saga";
 import DecisionsTypesSaga from "./HR/decisionsTypes/saga";
+import DecreesSaga from "./decrees/saga";
 
 import DocumentTypesSaga from "./documents-types/saga";
 
@@ -262,6 +263,7 @@ export default function* rootSaga() {
     fork(WarningsTypesSaga),
     fork(RewardsTypesSaga),
     fork(DecisionsTypesSaga),
+    fork(DecreesSaga),
     fork(tempTraineesSaga),
     fork(trainingFormatsSaga),
     fork(coursesCatalogsSaga),

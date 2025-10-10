@@ -375,7 +375,6 @@ export const ADD_NEW_DECISION = "/add/decision";
 export const UPDATE_DECISION = "/update/decision";
 export const DELETE_DECISION = "/delete/decision";
 export const GET_DECISION_DELETED_VALUE = "/deleted";
-export const GET_DECISION_CATEGORIES = "/decisionCategories";
 
 // DECISION MAKERS
 export const GET_DECISION_MAKERS = "/decisionMakers";
@@ -386,31 +385,38 @@ export const GET_DECISION_STATUS = "/decisionStatus";
 // TURN REASONS
 export const GET_TURN_REASONS = "/turnReasons";
 
-// DECISIONS_RULES_REASON
-export const GET_DECISIONS_RULES_REASONS = "/decisionsRulesReasons";
-export const ADD_NEW_DECISIONS_RULES_REASON = "/add/decisionsRulesReason";
-export const UPDATE_DECISIONS_RULES_REASON = "/update/decisionsRulesReason";
-export const DELETE_DECISIONS_RULES_REASON = "/delete/decisionsRulesReason";
-export const GET_DECISIONS_RULES_REASON_DELETED_VALUE = "/deletedDetail";
+//DECREES
+export const GET_DECREES = "/decrees";
+export const GET_DECREE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DECREE = "/add/decree";
+export const UPDATE_DECREE = "/update/decree";
+export const DELETE_DECREE = "/delete/decree";
+export const GET_DECREE_CATEGORIES = "/decreeCategories";
 
-// DECISIONS_RULES_ROLE
-export const GET_DECISIONS_RULES_ROLES = "/decisionsRulesRoles";
-export const ADD_NEW_DECISIONS_RULES_ROLE = "/add/decisionsRulesRole";
-export const UPDATE_DECISIONS_RULES_ROLE = "/update/decisionsRulesRole";
-export const DELETE_DECISIONS_RULES_ROLE = "/delete/decisionsRulesRole";
-export const GET_DECISIONS_RULES_ROLE_DELETED_VALUE = "/deletedDetail";
+// DECREES_RULES_ROLE
+export const GET_DECREES_RULES_ROLES = "/decreesRulesRoles";
+export const ADD_NEW_DECREES_RULES_ROLE = "/add/decreesRulesRole";
+export const UPDATE_DECREES_RULES_ROLE = "/update/decreesRulesRole";
+export const DELETE_DECREES_RULES_ROLE = "/delete/decreesRulesRole";
+export const GET_DECREES_RULES_ROLE_DELETED_VALUE = "/deletedDetail";
 
-// DECISIONS_RULES_CANCELED_REASON
-export const GET_DECISIONS_RULES_CANCELED_REASONS =
-  "/decisionRulesCanceledReasons";
-export const ADD_NEW_DECISIONS_RULES_CANCELED_REASON =
-  "/add/decisionRulesCanceledReason";
-export const UPDATE_DECISIONS_RULES_CANCELED_REASON =
-  "/update/decisionRulesCanceledReason";
-export const DELETE_DECISIONS_RULES_CANCELED_REASON =
-  "/delete/decisionRulesCanceledReason";
-export const GET_DECISIONS_RULES_CANCELED_REASON_DELETED_VALUE =
-  "/deletedDetail";
+// DECREES_RULES_ROLE
+export const GET_DECREES_RULES_REASONS = "/decreesRulesReasons";
+export const ADD_NEW_DECREES_RULES_REASON = "/add/decreesRulesReason";
+export const UPDATE_DECREES_RULES_REASON = "/update/decreesRulesReason";
+export const DELETE_DECREES_RULES_REASON = "/delete/decreesRulesReason";
+export const GET_DECREES_RULES_REASON_DELETED_VALUE = "/deletedDetail";
+
+// DECREES_RULES_CANCELED_REASON
+export const GET_DECREES_RULES_CANCELED_REASONS = "/decreeRulesCanceledReasons";
+export const ADD_NEW_DECREES_RULES_CANCELED_REASON =
+  "/add/decreeRulesCanceledReason";
+export const UPDATE_DECREES_RULES_CANCELED_REASON =
+  "/update/decreeRulesCanceledReason";
+export const DELETE_DECREES_RULES_CANCELED_REASON =
+  "/delete/decreeRulesCanceledReason";
+export const GET_DECREES_RULES_CANCELED_REASON_DELETED_VALUE = "/deletedDetail";
+
 // GRANT
 export const GET_GRANTS = "/grants";
 export const ADD_NEW_GRANT = "/add/grant";

@@ -337,24 +337,29 @@ class EnterGradesList extends Component {
     ];
     console.log("showEditButton", showEditButton);
     const generateColumns = () => {
-      if (courseContentsEnteredGrades.length != 0) {
+      if (courseContentsEnteredGrades.length !== 0) {
         const columns = courseContentsEnteredGrades.map(column => ({
           key: column.orderContent,
           dataField: column.dataField,
           text: column.textField,
-          editable: showEditButton
-            ? column.dataField !== "TraineeNum" &&
+
+          editable: (cell, row) => {
+            if (row.archived === 1) {
+              return false;
+            }
+
+            return (
+              column.dataField !== "TraineeNum" &&
               column.dataField !== "traineeName" &&
               column.dataField !== "totalGrade" &&
               column.dataField !== "letter_grade"
-            : false,
+            );
+          },
         }));
 
         return columns;
       } else {
-        const columns = [{ key: 0, dataField: "Id", text: "Id" }];
-
-        return columns;
+        return [{ key: 0, dataField: "Id", text: "Id" }];
       }
     };
 
@@ -375,6 +380,7 @@ class EnterGradesList extends Component {
             traineeName: grade.traineeName || "",
             totalGrade: grade.totalGrade || "",
             letter_grade: grade.letter_grade || "",
+            archived: grade.archived || 0,
           };
 
           courseIdColumns.forEach(column => {

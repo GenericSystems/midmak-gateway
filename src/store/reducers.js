@@ -206,18 +206,24 @@ import studentsInfo from "./reset-password/reducer";
 
 //genders
 import genders from "./genders/reducer";
+
 //studentsDecrees
 import studentsDecrees from "./student-decrees/reducer";
+
 //decisions
 import decisions from "./decisions/reducer";
+
 import academyInfo from "./academydef/reducer";
+
 //grants
 import grants from "./grants/reducer";
+
 //userMngs
 import userMngs from "./user-mngs/reducer";
 
 //roles
 import roles from "./roles/reducer";
+
 // import universityOrgStructures from "./universityOrgStructure/reducer";
 
 //sidbarcontent
@@ -304,6 +310,9 @@ import rewardsTypes from "./HR/rewardsTypes/reducer";
 
 // decisionsTypes
 import decisionsTypes from "./HR/decisionsTypes/reducer";
+
+// decree
+import decrees from "./decrees/reducer";
 
 // employmentCases
 import employmentCases from "./HR/employmentCases/reducer";
@@ -499,6 +508,7 @@ const rootReducer = combineReducers({
   warningsTypes,
   rewardsTypes,
   decisionsTypes,
+  decrees,
   tempTrainees,
   trainingFormats,
   coursesCatalogs,

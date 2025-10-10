@@ -1034,15 +1034,25 @@ class ArchiveGradesList extends Component {
                                       </Col>
                                       <Col sm="6"></Col>
                                       <Col sm="1">
-                                        <Tooltip title="Archive All">
-                                          <i
-                                            className="mdi mdi-archive-arrow-down"
-                                            style={{
-                                              cursor: "pointer",
-                                              fontSize: "20px",
-                                            }}
-                                            onClick={this.handleArchiveAll}
-                                          />
+                                        <Tooltip
+                                          title={t("Archive All")}
+                                          placement="top"
+                                        >
+                                          <div className="square-switch square-switch-view">
+                                            <input
+                                              type="checkbox"
+                                              id="square-switch1"
+                                              switch="none"
+                                              onClick={() =>
+                                                this.handleArchiveAll()
+                                              }
+                                            />
+                                            <label
+                                              htmlFor="square-switch1"
+                                              data-on-label="View"
+                                              data-off-label="Off"
+                                            />
+                                          </div>
                                         </Tooltip>
                                       </Col>
                                     </Row>

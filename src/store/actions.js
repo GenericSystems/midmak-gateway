@@ -155,6 +155,9 @@ export * from "./HR/rewardsTypes/actions";
 //decisionsTypes
 export * from "./HR/decisionsTypes/actions";
 
+//decrees
+export * from "./decrees/actions";
+
 //employmentCases
 export * from "./HR/employmentCases/actions";
 

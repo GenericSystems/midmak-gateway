@@ -240,6 +240,9 @@ import RewardsTypesList from "../pages/HR/rewardsTypes/rewardsTypes";
 //DecisionsTypes
 import DecisionsTypesList from "../pages/HR/decisionsTypes/decisionsTypes";
 
+//Decrees
+import DecreesList from "../pages/Rules-and-Regulations/decrees";
+
 //Decisions
 import DecisionsList from "../pages/HR/decisions/decisions";
 
@@ -502,6 +505,10 @@ const authProtectedRoutes = [
   // decisionsTypes
 
   { path: "/decisionsTypes", component: DecisionsTypesList },
+
+  // decrees
+
+  { path: "/decrees", component: DecreesList },
 
   // decisions
 

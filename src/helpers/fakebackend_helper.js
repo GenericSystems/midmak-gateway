@@ -887,9 +887,6 @@ export const deleteDecision = data => post(url.DELETE_DECISION, data);
 export const getDecisionDeletedValue = () =>
   get(url.GET_DECISION_DELETED_VALUE);
 
-export const getDecisionCategories = data =>
-  post(url.GET_DECISION_CATEGORIES, data);
-
 // get Decision Makers
 export const getDecisionMakers = data => post(url.GET_DECISION_MAKERS, data);
 
@@ -900,51 +897,55 @@ export const getDecisionStatus = data => post(url.GET_DECISION_STATUS, data);
 export const getTurnReasons = data => post(url.GET_TURN_REASONS, data);
 
 // get DecisionsRulesCanceledReasons
-export const getDecisionsRulesCanceledReasons = data =>
-  post(url.GET_DECISIONS_RULES_CANCELED_REASONS, data);
+export const getDecreesRulesCanceledReasons = data =>
+  post(url.GET_DECREES_RULES_CANCELED_REASONS, data);
 
-export const addNewDecisionsRulesCanceledReason = data =>
-  post(url.ADD_NEW_DECISIONS_RULES_CANCELED_REASON, data);
+export const addNewDecreesRulesCanceledReason = data =>
+  post(url.ADD_NEW_DECREES_RULES_CANCELED_REASON, data);
 
-export const updateDecisionsRulesCanceledReason = data =>
-  post(url.UPDATE_DECISIONS_RULES_CANCELED_REASON, data);
+export const updateDecreesRulesCanceledReason = data =>
+  post(url.UPDATE_DECREES_RULES_CANCELED_REASON, data);
 
-export const deleteDecisionsRulesCanceledReason = data =>
-  post(url.DELETE_DECISIONS_RULES_CANCELED_REASON, data);
+export const deleteDecreesRulesCanceledReason = data =>
+  post(url.DELETE_DECREES_RULES_CANCELED_REASON, data);
 
-export const getDecisionsRulesCanceledReasonDeletedValue = () =>
-  get(url.GET_DECISIONS_RULES_CANCELED_REASON_DELETED_VALUE);
-// get DecisionsRulesReasons
-export const getDecisionsRulesReasons = data =>
-  post(url.GET_DECISIONS_RULES_REASONS, data);
+export const getDecreesRulesCanceledReasonDeletedValue = () =>
+  get(url.GET_DECREES_RULES_CANCELED_REASON_DELETED_VALUE);
 
-export const addNewDecisionsRulesReason = data =>
-  post(url.ADD_NEW_DECISIONS_RULES_REASON, data);
+export const getDecreeCategories = data =>
+  post(url.GET_DECREE_CATEGORIES, data);
 
-export const updateDecisionsRulesReason = data =>
-  post(url.UPDATE_DECISIONS_RULES_REASON, data);
+// get DecreesRulesReasons
+export const getDecreesRulesReasons = data =>
+  post(url.GET_DECREES_RULES_REASONS, data);
 
-export const deleteDecisionsRulesReason = data =>
-  post(url.DELETE_DECISIONS_RULES_REASON, data);
+export const addNewDecreesRulesReason = data =>
+  post(url.ADD_NEW_DECREES_RULES_REASON, data);
 
-export const getDecisionsRulesReasonDeletedValue = () =>
-  get(url.GET_DECISIONS_RULES_REASON_DELETED_VALUE);
+export const updateDecreesRulesReason = data =>
+  post(url.UPDATE_DECREES_RULES_REASON, data);
 
-// get DecisionsRulesRoles
-export const getDecisionsRulesRoles = data =>
-  post(url.GET_DECISIONS_RULES_ROLES, data);
+export const deleteDecreesRulesReason = data =>
+  post(url.DELETE_DECREES_RULES_REASON, data);
 
-export const addNewDecisionsRulesRole = data =>
-  post(url.ADD_NEW_DECISIONS_RULES_ROLE, data);
+export const getDecreesRulesReasonDeletedValue = () =>
+  get(url.GET_DECREES_RULES_REASON_DELETED_VALUE);
 
-export const updateDecisionsRulesRole = data =>
-  post(url.UPDATE_DECISIONS_RULES_ROLE, data);
+// get DecreesRulesRoles
+export const getDecreesRulesRoles = data =>
+  post(url.GET_DECREES_RULES_ROLES, data);
 
-export const deleteDecisionsRulesRole = data =>
-  post(url.DELETE_DECISIONS_RULES_ROLE, data);
+export const addNewDecreesRulesRole = data =>
+  post(url.ADD_NEW_DECREES_RULES_ROLE, data);
 
-export const getDecisionsRulesRoleDeletedValue = () =>
-  get(url.GET_DECISIONS_RULES_ROLE_DELETED_VALUE);
+export const updateDecreesRulesRole = data =>
+  post(url.UPDATE_DECREES_RULES_ROLE, data);
+
+export const deleteDecreesRulesRole = data =>
+  post(url.DELETE_DECREES_RULES_ROLE, data);
+
+export const getDecreesRulesRoleDeletedValue = () =>
+  get(url.GET_DECREES_RULES_ROLE_DELETED_VALUE);
 
 // get Grants
 export const getGrants = data => post(url.GET_GRANTS, data);
@@ -2581,6 +2582,21 @@ export const updateDecisionType = data => post(url.UPDATE_DECISION_TYPE, data);
 
 //delete DecisionType
 export const deleteDecisionType = data => post(url.DELETE_DECISION_TYPE, data);
+
+//DECREE
+export const getDecrees = data => post(url.GET_DECREES, data);
+
+// add Decree
+export const addNewDecree = data => post(url.ADD_NEW_DECREE, data);
+
+//Decree
+export const getDecreeDeletedValue = () => get(url.GET_DECREE_DELETED_VALUE);
+
+//update Decree
+export const updateDecree = data => post(url.UPDATE_DECREE, data);
+
+//delete Decree
+export const deleteDecree = data => post(url.DELETE_DECREE, data);
 
 //TempTrainee
 export const getTempTrainees = data => post(url.GET_TEMP_TRAINEES, data);
