@@ -454,12 +454,12 @@ class CheckGradesList extends Component {
           key: column.orderContent,
           dataField: column.dataField,
           text: column.textField,
-          editable: showEditButton
-            ? column.dataField !== "TraineeNum" &&
-              column.dataField !== "traineeName" &&
-              column.dataField !== "totalGrade" &&
-              column.dataField !== "letter_grade"
-            : false,
+          editable: ![
+            "TraineeNum",
+            "traineeName",
+            "totalGrade",
+            "letter_grade",
+          ].includes(column.dataField),
         }));
 
         return columns;

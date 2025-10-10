@@ -778,5 +778,11 @@
   "From Date": "من تاريخ",
   "To Date": "الى تاريخ",
   "Dismiss Period Decrees": "قرارات الفصل لفترة",
+  "Dismiss Academy Decrees": "قرارات الفصل من الأكاديمية",
+  "Dismiss Period Decree": "قرار الفصل لفترة",
+  "Dismiss Academy Decree": "قرار الفصل من الأكاديمية",
+  "Dismiss Courses Decrees Absence": "قرارات الحرمان من دورة(غياب)",
+  "Dismiss Courses Decrees Exam": "قرارات الحرمان من دورة(امتحان)",
+  "Dismiss Courses Decrees Other": "قرارات الفصل من دورة(أسباب منوعة)",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

@@ -533,7 +533,7 @@ class DismissDecreesExamList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              breadcrumbItem={this.props.t("Dismiss Courses Decrees Absence")}
+              breadcrumbItem={this.props.t("Dismiss Courses Decrees Exam")}
             />
             <Row>
               <Col>
@@ -658,7 +658,7 @@ class DismissDecreesExamList extends Component {
                                   })}
                                   defaultSorted={defaultSorting}
                                   noDataIndication={t(
-                                    "No Dismiss Courses Decrees Absence found"
+                                    "No Dismiss Courses Decrees Exam found"
                                   )}
                                   filter={filterFactory()}
                                 />

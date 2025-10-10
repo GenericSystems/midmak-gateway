@@ -47,7 +47,7 @@ function* fetchArchivedGrades(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Current_Common_TrianeeCurriculalinesCheck",
+    tablename: "_Common_CurriculalinesWithCheck",
     filter: course.filter,
   };
 
@@ -120,10 +120,10 @@ function* fetchArchivedGrades(obj) {
 
 function* onUpdateArchivedGrade({ payload }) {
   payload["source"] = "db";
-  payload["procedure"] = "SC_SisApp_updateTraineeGrade";
+  payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_CurriculalinesCheck";
-  payload["queryname"] = "_Current_Common_TrianeeCurriculalinesCheck";
+  payload["tablename"] = "Common_Curriculalines";
+  payload["queryname"] = "_Common_CurriculalinesWithCheck";
 
   try {
     const response = yield call(updateArchivedGrade, payload);

@@ -24,7 +24,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import BootstrapTheme from "@fullcalendar/bootstrap";
 //css
-import "@fullcalendar/bootstrap/main.css";
+// import "@fullcalendar/bootstrap/dist/main.css";
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import {
@@ -211,9 +211,8 @@ class Calender extends Component {
   };
 
   render() {
-
     //meta title
-    document.title="Calendar | keyInHands - React Admin & Dashboard Template";
+    document.title = "Calendar | keyInHands - React Admin & Dashboard Template";
 
     const { events, categories } = this.props;
     const { onAddNewEvent, onUpdateEvent } = this.props;
