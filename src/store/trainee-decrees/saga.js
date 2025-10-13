@@ -32,6 +32,7 @@ import {
   getTraineeDecreesDismissFail,
   getTraineeDecreesDismissSuccess,
 } from "./actions";
+import { getTraineesOptFail, getTraineesOptSuccess } from "../trainees/actions";
 
 import {
   getTraineesDecrees,
@@ -46,6 +47,7 @@ import {
   getCoursesDecrees,
   getDecreeStatus,
   getTraineeDecreesDismiss,
+  getTraineesOpt,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchFilteredCoursesPlan(obj) {
@@ -83,14 +85,14 @@ function* fetchCoursesDecrees() {
 }
 
 function* fetchTraineesDecrees() {
-  const get_studentsDecrees_req = {
+  const get_TraineesDecrees_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_TraineesDecrees",
   };
   try {
-    const response = yield call(getTraineesDecrees, get_studentsDecrees_req);
+    const response = yield call(getTraineesDecrees, get_TraineesDecrees_req);
     response.map(resp => {
       resp["TraineesDecreesCourses"] = JSON.parse(
         resp["TraineesDecreesCourses"]
@@ -100,31 +102,27 @@ function* fetchTraineesDecrees() {
   } catch (error) {
     yield put(getTraineesDecreesFail(error));
   }
-}
 
-function* fetchAcademyTraineesDecrees() {
-  const get_studentsDecrees_req = {
+  const get_traineesDecrees_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_AcademyTrainee",
+    tablename: "_Common_Trainee",
+    fields: `Id,fullName`,
   };
   try {
-    const response = yield call(
-      getAcademyTraineesDecrees,
-      get_studentsDecrees_req
-    );
-
-    yield put(getAcademyTraineesDecreesSuccess(response));
+    const response = yield call(getTraineesOpt, get_traineesDecrees_req);
+    console.log("rrrrrrrrrrrrrrrrrrrre", response);
+    yield put(getTraineesOptSuccess(response));
   } catch (error) {
-    yield put(getAcademyTraineesDecreesFail(error));
+    yield put(getTraineesOptFail(error));
   }
 
   const get_decreeStatus_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_DecreeStatus",
+    tablename: "Settings_DecreeStatus",
   };
   try {
     const response = yield call(getDecreeStatus, get_decreeStatus_req);
@@ -133,6 +131,7 @@ function* fetchAcademyTraineesDecrees() {
     yield put(getDecreeStatusFail(error));
   }
 }
+
 function* fetchTraineeDecreesDismiss(obj) {
   const get_stdDecreeDismiss_req = {
     source: "db",
@@ -204,12 +203,11 @@ function* onGetTraineesDecreeDeletedValue() {
     yield put(getTraineesDecreeDeletedValueFail(error));
   }
 }
-function* studentsDecreesSaga() {
-  yield takeEvery(GET_FILTERED_COURSES_PLANS, fetchFilteredCoursesPlan);
+function* traineesDecreesSaga() {
+  // yield takeEvery(GET_FILTERED_COURSES_PLANS, fetchFilteredCoursesPlan);
   yield takeEvery(GET_TRAINEE_DECREES_DISMISS, fetchTraineeDecreesDismiss);
-  yield takeEvery(GET_COURSES_DECREES, fetchCoursesDecrees);
+  // yield takeEvery(GET_COURSES_DECREES, fetchCoursesDecrees);
   yield takeEvery(GET_TRAINEES_DECREES, fetchTraineesDecrees);
-  yield takeEvery(GET_ACADEMY_TRAINEES_DECREE, fetchAcademyTraineesDecrees);
   yield takeEvery(ADD_NEW_TRAINEES_DECREES, onAddNewTraineesDecree);
   yield takeEvery(UPDATE_TRAINEES_DECREES, onUpdateTraineesDecree);
   yield takeEvery(DELETE_TRAINEES_DECREES, onDeleteTraineesDecree);
@@ -218,4 +216,4 @@ function* studentsDecreesSaga() {
     onGetTraineesDecreeDeletedValue
   );
 }
-export default studentsDecreesSaga;
+export default traineesDecreesSaga;
