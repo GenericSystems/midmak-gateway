@@ -848,32 +848,33 @@ export const updateGender = data => post(url.UPDATE_GENDER, data);
 export const deleteGender = data => post(url.DELETE_GENDER, data);
 
 export const getGenderDeletedValue = () => get(url.GET_GENDER_DELETED_VALUE);
-// get StudentsDecrees
 
-export const getUniversityStudentsDecrees = data =>
-  post(url.GET_UNIVERSITY_STUDENTS_DECREES, data);
+// get TraineesDecrees
+
+export const getAcademyTraineesDecrees = data =>
+  post(url.GET_ACADEMY_TRAINEES_DECREES, data);
 // get coursesDecrees
 
 export const getCoursesDecrees = data => post(url.GET_COURSES_DECREES, data);
 
-export const getStudentsDecrees = data => post(url.GET_STUDENTS_DECREES, data);
+export const getTraineesDecrees = data => post(url.GET_TRAINEES_DECREES, data);
 
-export const addNewStudentsDecree = data =>
-  post(url.ADD_NEW_STUDENTS_DECREES, data);
+export const addNewTraineesDecree = data =>
+  post(url.ADD_NEW_TRAINEES_DECREES, data);
 
-export const updateStudentsDecree = data =>
-  post(url.UPDATE_STUDENTS_DECREES, data);
+export const updateTraineesDecree = data =>
+  post(url.UPDATE_TRAINEES_DECREES, data);
 
-export const deleteStudentsDecree = data =>
-  post(url.DELETE_STUDENTS_DECREES, data);
+export const deleteTraineesDecree = data =>
+  post(url.DELETE_TRAINEES_DECREES, data);
 
-export const getStudentsDecreeDeletedValue = () =>
-  get(url.GET_STUDENTS_DECREES_DELETED_VALUE);
+export const getTraineesDecreeDeletedValue = () =>
+  get(url.GET_TRAINEES_DECREES_DELETED_VALUE);
 
 export const getDecreeStatus = data => post(url.GET_DECREE_STATUS, data);
 
-export const getStudentDecreesDismiss = data =>
-  post(url.GET_STUDENT_DECREES_DISMISS, data);
+export const getTraineeDecreesDismiss = data =>
+  post(url.GET_TRAINEE_DECREES_DISMISS, data);
 
 // get Decisions
 export const getDecisions = data => post(url.GET_DECISIONS, data);

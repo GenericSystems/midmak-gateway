@@ -94,7 +94,7 @@ function* fetchDecrees() {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_DecreesRulesCategory",
+    tablename: "Settings_DecisionsRulesCategory",
     fields: "Id,arTitle",
   };
   try {
@@ -110,7 +110,7 @@ function* fetchDecrees() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_settings_DecreesRules",
+    tablename: "_Settings_DecisionsRules",
   };
   try {
     const response = yield call(getDecrees, get_decisions_req);
@@ -130,7 +130,7 @@ function* onAddNewDecree({ payload, decision }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRules";
+  payload["tablename"] = "Settings_DecisionsRules";
   try {
     const response = yield call(addNewDecree, payload);
     yield put(addDecreeSuccess(response[0]));
@@ -143,7 +143,7 @@ function* onUpdateDecree({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRules";
+  payload["tablename"] = "Settings_DecisionsRules";
   try {
     const respupdate = yield call(updateDecree, payload);
     yield put(updateDecreeSuccess(respupdate[0]));
@@ -155,7 +155,7 @@ function* onDeleteDecree({ payload, Decree }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRules";
+  payload["tablename"] = "Settings_DecisionsRules";
   try {
     const respdelete = yield call(deleteDecree, payload);
     yield put(deleteDecreeSuccess(respdelete[0]));
@@ -177,7 +177,7 @@ function* fetchDecreesRulesReasons(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_DecreesRulesReasons",
+    tablename: "Settings_DecisionsRulesReasons",
     filter: `decisionsRulesId = ${decisionId}`,
   };
   try {
@@ -193,7 +193,7 @@ function* onAddNewDecreesRulesReason({ payload, decision }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRulesReasons";
+  payload["tablename"] = "Settings_DecisionsRulesReasons";
   try {
     const response = yield call(addNewDecreesRulesReason, payload);
     yield put(addDecreesRulesReasonSuccess(response[0]));
@@ -206,7 +206,7 @@ function* onUpdateDecreesRulesReason({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRulesReasons";
+  payload["tablename"] = "Settings_DecisionsRulesReasons";
   try {
     const respupdate = yield call(updateDecreesRulesReason, payload);
     yield put(updateDecreesRulesReasonSuccess(respupdate[0]));
@@ -218,7 +218,7 @@ function* onDeleteDecreesRulesReason({ payload, DecreesRulesReason }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRulesReasons";
+  payload["tablename"] = "Settings_DecisionsRulesReasons";
   try {
     const respdelete = yield call(deleteDecreesRulesReason, payload);
     yield put(deleteDecreesRulesReasonSuccess(respdelete[0]));
@@ -241,7 +241,7 @@ function* fetchDecreesRulesCanceledReasons(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_DecreesRulesCanceledReasons",
+    tablename: "Settings_DecisionsRulesCanceledReasons",
     filter: `decisionsRulesId = ${decisionId}`,
   };
   try {
@@ -259,7 +259,7 @@ function* onAddNewDecreesRulesCanceledReason({ payload, decision }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRulesCanceledReasons";
+  payload["tablename"] = "Settings_DecisionsRulesCanceledReasons";
   try {
     const response = yield call(addNewDecreesRulesCanceledReason, payload);
     yield put(addDecreesRulesCanceledReasonSuccess(response[0]));
@@ -272,7 +272,7 @@ function* onUpdateDecreesRulesCanceledReason({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRulesCanceledReasons";
+  payload["tablename"] = "Settings_DecisionsRulesCanceledReasons";
   try {
     const respupdate = yield call(updateDecreesRulesCanceledReason, payload);
     yield put(updateDecreesRulesCanceledReasonSuccess(respupdate[0]));
@@ -287,7 +287,7 @@ function* onDeleteDecreesRulesCanceledReason({
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRulesCanceledReasons";
+  payload["tablename"] = "Settings_DecisionsRulesCanceledReasons";
   try {
     const respdelete = yield call(deleteDecreesRulesCanceledReason, payload);
     yield put(deleteDecreesRulesCanceledReasonSuccess(respdelete[0]));
@@ -349,7 +349,7 @@ function* onUpdateDecreesRulesRole({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRulesRoles";
+  payload["tablename"] = "Settings_DecisionsRulesRoles";
   try {
     const respupdate = yield call(updateDecreesRulesRole, payload);
     yield put(updateDecreesRulesRoleSuccess(respupdate[0]));
@@ -361,7 +361,7 @@ function* onDeleteDecreesRulesRole({ payload, DecreesRulesRole }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "settings_DecreesRulesRoles";
+  payload["tablename"] = "Settings_DecisionsRulesRoles";
   try {
     const respdelete = yield call(deleteDecreesRulesRole, payload);
     yield put(deleteDecreesRulesRoleSuccess(respdelete[0]));

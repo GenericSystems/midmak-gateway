@@ -79,7 +79,7 @@ class DecreesList extends Component {
       reasonArray: null,
       duplicateDecreeError: null,
       selectedMulti: [],
-      decisionObj: "",
+      decreeObj: "",
       showAddButton: false,
       showDeleteButton: false,
       showEditButton: false,
@@ -100,12 +100,12 @@ class DecreesList extends Component {
     if (tab === "3") {
       onGetDecreesRulesRoles({
         Id: reasonArray.Id,
-        tablename: "settings_DecreesRulesAcceptRoles",
+        tablename: "Settings_DecisionsRulesAcceptRoles",
       });
     } else if (tab === "4") {
       onGetDecreesRulesRoles({
         Id: reasonArray.Id,
-        tablename: "settings_DecreesRulesRefuseRoles",
+        tablename: "Settings_DecisionsRulesRefuseRoles",
       });
     }
   }
@@ -122,7 +122,7 @@ class DecreesList extends Component {
     const { onGetDecreesRulesReasons, onGetDecreesRulesCanceledReasons } =
       this.props;
     this.setState({
-      decisionObj: reason,
+      decreeObj: reason,
       activeTab: "1",
       reasonArray: reason,
       isModalOpen: !this.state.isModalOpen,
@@ -133,10 +133,10 @@ class DecreesList extends Component {
   };
   componentDidMount() {
     const {
-      decisions,
+      decrees,
       onGetDecrees,
       deleted,
-      decisionCategories,
+      decreeCategories,
       onGetRoles,
       user_menu,
     } = this.props;
@@ -144,12 +144,12 @@ class DecreesList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (decisions && !decisions.length) {
+    if (decrees && !decrees.length) {
       onGetDecrees();
       onGetRoles();
-      this.setState({ decisions });
+      this.setState({ decrees });
       this.setState({ deleted });
-      this.setState({ decisionCategories });
+      this.setState({ decreeCategories });
     }
   }
 
@@ -219,15 +219,15 @@ class DecreesList extends Component {
   };
 
   handleAddRow = () => {
-    const { onAddNewDecree, decisions } = this.props;
+    const { onAddNewDecree, decrees } = this.props;
 
     const newRow = {
       arTitle: "-----",
       enTitle: "",
     };
 
-    const emptyRowsExist = decisions.some(
-      decision => decision.arTitle.trim() === "-----"
+    const emptyRowsExist = decrees.some(
+      decree => decree.arTitle.trim() === "-----"
     );
 
     if (emptyRowsExist) {
@@ -242,8 +242,8 @@ class DecreesList extends Component {
     const {
       onAddNewDecreesRulesCanceledReason,
       onAddNewDecreesRulesReason,
-      decisionRulesCanceledReasons,
-      decisionRulesReasons,
+      decreeRulesCanceledReasons,
+      decreeRulesReasons,
     } = this.props;
     const { reasonArray } = this.state;
     const newRow = {
@@ -254,12 +254,10 @@ class DecreesList extends Component {
 
     const emptyRowsExist =
       num === 1
-        ? decisionRulesReasons.some(
-            decision => decision.arTitle.trim() === "-----"
-          )
+        ? decreeRulesReasons.some(decree => decree.arTitle.trim() === "-----")
         : num === 2
-        ? decisionRulesCanceledReasons.some(
-            decision => decision.arTitle.trim() === "-----"
+        ? decreeRulesCanceledReasons.some(
+            decree => decree.arTitle.trim() === "-----"
           )
         : false;
 
@@ -289,25 +287,25 @@ class DecreesList extends Component {
       });
     }
   };
-  onClickDeleteDecree = decision => {
+  onClickDeleteDecree = decree => {
     const { onDeleteDecreesRulesReason, onDeleteDecreesRulesCanceledReason } =
       this.props;
     const { activeTab } = this.state;
     if (activeTab === "1") {
-      onDeleteDecreesRulesReason({ Id: decision.Id });
+      onDeleteDecreesRulesReason({ Id: decree.Id });
     } else if (activeTab === "2") {
-      onDeleteDecreesRulesCanceledReason({ Id: decision.Id });
+      onDeleteDecreesRulesCanceledReason({ Id: decree.Id });
     }
   };
 
   handleDecreeDataChange = (rowId, fieldName, fieldValue) => {
-    const { onUpdateDecree, decisions } = this.props;
+    const { onUpdateDecree, decrees } = this.props;
 
-    const isDuplicate = decisions.some(
-      decision =>
-        decision.Id !== rowId &&
-        ((decision.arTitle && decision.arTitle.trim() === fieldValue.trim()) ||
-          (decision.enTitle && decision.enTitle.trim() === fieldValue.trim()))
+    const isDuplicate = decrees.some(
+      decree =>
+        decree.Id !== rowId &&
+        ((decree.arTitle && decree.arTitle.trim() === fieldValue.trim()) ||
+          (decree.enTitle && decree.enTitle.trim() === fieldValue.trim()))
     );
 
     if (isDuplicate) {
@@ -326,27 +324,25 @@ class DecreesList extends Component {
     const {
       onUpdateDecreesRulesCanceledReason,
       onUpdateDecreesRulesReason,
-      decisionRulesReasons,
-      decisionRulesCanceledReasons,
+      decreeRulesReasons,
+      decreeRulesCanceledReasons,
     } = this.props;
     const isDuplicate =
       num === 1
-        ? decisionRulesReasons.some(
-            decision =>
-              decision.Id !== rowId &&
-              ((decision.arTitle &&
-                decision.arTitle.trim() === fieldValue.trim()) ||
-                (decision.enTitle &&
-                  decision.enTitle.trim() === fieldValue.trim()))
+        ? decreeRulesReasons.some(
+            decree =>
+              decree.Id !== rowId &&
+              ((decree.arTitle &&
+                decree.arTitle.trim() === fieldValue.trim()) ||
+                (decree.enTitle && decree.enTitle.trim() === fieldValue.trim()))
           )
         : num === 2
-        ? decisionRulesCanceledReasons.some(
-            decision =>
-              decision.Id !== rowId &&
-              ((decision.arTitle &&
-                decision.arTitle.trim() === fieldValue.trim()) ||
-                (decision.enTitle &&
-                  decision.enTitle.trim() === fieldValue.trim()))
+        ? decreeRulesCanceledReasons.some(
+            decree =>
+              decree.Id !== rowId &&
+              ((decree.arTitle &&
+                decree.arTitle.trim() === fieldValue.trim()) ||
+                (decree.enTitle && decree.enTitle.trim() === fieldValue.trim()))
           )
         : false;
     if (isDuplicate) {
@@ -404,7 +400,7 @@ class DecreesList extends Component {
 
   handleMulti = selectedMulti => {
     const { onAddNewDecreesRulesRole } = this.props;
-    const { reasonArray, activeTab, decisionObj } = this.state;
+    const { reasonArray, activeTab, decreeObj } = this.state;
     const selectedMultiWithId = selectedMulti.map(item => ({
       ...item,
       value1: reasonArray.Id,
@@ -412,36 +408,36 @@ class DecreesList extends Component {
 
     let newRoleDecrees = {
       multiArray: selectedMultiWithId,
-      Id: decisionObj.Id,
+      Id: decreeObj.Id,
     };
 
     if (activeTab === "3") {
-      newRoleDecrees["tablename"] = "settings_DecreesRulesAcceptRoles";
+      newRoleDecrees["tablename"] = "Settings_DecisionsRulesAcceptRoles";
       onAddNewDecreesRulesRole(newRoleDecrees);
       newRoleDecrees = {};
     } else if (activeTab === "4") {
-      newRoleDecrees["tablename"] = "settings_DecreesRulesRefuseRoles";
+      newRoleDecrees["tablename"] = "Settings_DecisionsRulesRefuseRoles";
       onAddNewDecreesRulesRole(newRoleDecrees);
       newRoleDecrees = {};
     }
   };
   render() {
     const {
-      decisions,
+      decrees,
       t,
       deleted,
-      decisionCategories,
-      decisionRulesCanceledReasons,
-      decisionRulesReasons,
+      decreeCategories,
+      decreeRulesCanceledReasons,
+      decreeRulesReasons,
       roles,
-      decisionsRulesRoles,
+      decreesRulesRoles,
     } = this.props;
     const {
       duplicateError,
       duplicateDecreeError,
       deleteModal,
       showAlert,
-      decisionObj,
+      decreeObj,
       reasonArray,
       showAddButton,
       showDeleteButton,
@@ -470,7 +466,7 @@ class DecreesList extends Component {
       },
       {
         dataField: "enTitle",
-        text: "Decree",
+        text: t("Decree"),
         sort: true,
         editable: showEditButton,
       },
@@ -497,7 +493,7 @@ class DecreesList extends Component {
         formatter: (cell, row) => (
           <Select
             key={`decisionCategoryId`}
-            options={decisionCategories}
+            options={decreeCategories}
             onChange={newValue => {
               this.handleSelectChangeDetails(
                 row.Id,
@@ -505,7 +501,7 @@ class DecreesList extends Component {
                 newValue.value
               );
             }}
-            value={decisionCategories.find(
+            value={decreeCategories.find(
               opt => opt.value == row.decisionCategoryId
             )}
             isDisabled={!showEditButton}
@@ -518,14 +514,14 @@ class DecreesList extends Component {
         text: "",
         isDummyField: true,
         editable: false,
-        formatter: (cellContent, decision) => (
+        formatter: (cellContent, decree) => (
           <div className="d-flex align-items-center">
             <Tooltip title={this.props.t("Decree Settings")} placement="top">
               <Link className="d-flex align-items-center" to="#">
                 <i
                   className="dripicons-gear font-size-16 "
                   id="deletetooltip"
-                  onClick={() => this.onClickReason(decision)}
+                  onClick={() => this.onClickReason(decree)}
                 ></i>
               </Link>
             </Tooltip>
@@ -534,7 +530,7 @@ class DecreesList extends Component {
                 <i
                   className="mdi mdi-delete font-size-18"
                   id="deletetooltip"
-                  onClick={() => this.onClickDelete(decision)}
+                  onClick={() => this.onClickDelete(decree)}
                 ></i>
               </Link>
             )}
@@ -544,36 +540,36 @@ class DecreesList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: decisions.length,
+      totalSize: decrees.length,
       custom: true,
     };
-    const decisionsColumns = [
+    const decreesColumns = [
       { dataField: "Id", text: t("ID"), hidden: true },
       {
         dataField: "arTitle",
         text: t("Decree(ar)"),
         sort: true,
-        editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "enTitle",
-        text: "Decree",
+        text: t("Decree"),
         sort: true,
-        editable: showEditButton,
+        // editable: showEditButton,
       },
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
-        formatter: (cellContent, decision) => (
+        formatter: (cellContent, decree) => (
           <div>
             {showDeleteButton && (
               <Link className="text-danger" to="#">
                 <i
                   className="mdi mdi-delete font-size-18"
                   id="deletetooltip"
-                  onClick={() => this.onClickDeleteDecree(decision)}
+                  onClick={() => this.onClickDeleteDecree(decree)}
                 ></i>
               </Link>
             )}
@@ -637,7 +633,7 @@ class DecreesList extends Component {
                     this.toggleTab("3");
                   }}
                 >
-                  {this.props.t("Accepted Roles for Granting")}
+                  {this.props.t("Allowed Roles for Approval")}
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -651,7 +647,7 @@ class DecreesList extends Component {
                     this.toggleTab("4");
                   }}
                 >
-                  {this.props.t("Accepted Roles for Deletion")}
+                  {this.props.t("Allowed Roles for Turning")}
                 </NavLink>
               </NavItem>
             </Nav>
@@ -674,10 +670,10 @@ class DecreesList extends Component {
                 )}
                 <BootstrapTable
                   keyField="Id"
-                  data={decisionRulesReasons}
-                  columns={decisionsColumns}
+                  data={decreeRulesReasons}
+                  columns={decreesColumns}
                   cellEdit={cellEditFactory({
-                    mode: "click",
+                    mode: "dbclick",
                     blurToSave: true,
                     afterSaveCell: (oldValue, newValue, row, column) => {
                       this.handleDecreeRulesDataChange(
@@ -724,10 +720,10 @@ class DecreesList extends Component {
                 )}
                 <BootstrapTable
                   keyField="Id"
-                  data={decisionRulesCanceledReasons}
-                  columns={decisionsColumns}
+                  data={decreeRulesCanceledReasons}
+                  columns={decreesColumns}
                   cellEdit={cellEditFactory({
-                    mode: "click",
+                    mode: "dbclick",
                     blurToSave: true,
                     afterSaveCell: (oldValue, newValue, row, column) => {
                       this.handleDecreeRulesDataChange(
@@ -759,19 +755,19 @@ class DecreesList extends Component {
               <TabPane tabId="3">
                 <Select
                   options={rolesModified}
-                  defaultValue={decisionObj ? decisionObj.AcceptRoles : []}
+                  defaultValue={decreeObj ? decreeObj.AcceptRoles : []}
                   onChange={this.handleMulti}
                   isMulti
-                  isDisabled={!showEditButton}
+                  // isDisabled={!showEditButton}
                 />
               </TabPane>
               <TabPane tabId="4">
                 <Select
                   options={rolesModified}
-                  defaultValue={decisionObj ? decisionObj.RefuseRoles : []}
+                  defaultValue={decreeObj ? decreeObj.RefuseRoles : []}
                   onChange={this.handleMulti}
                   isMulti
-                  isDisabled={!showEditButton}
+                  // isDisabled={!showEditButton}
                 />
               </TabPane>
             </TabContent>
@@ -786,10 +782,7 @@ class DecreesList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs
-              title={t("Decrees")}
-              breadcrumbItem={t("Decrees List")}
-            />
+            <Breadcrumbs title={t("Decrees")} breadcrumbItem={t("Decrees")} />
             <Row>
               <Col>
                 <Card>
@@ -846,12 +839,12 @@ class DecreesList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={decisions}
+                        data={decrees}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={decisions}
+                            data={decrees}
                             columns={columns}
                             search
                           >
@@ -892,10 +885,10 @@ class DecreesList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={decisions}
+                                  data={decrees}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
-                                    mode: "click",
+                                    mode: "dbclick",
                                     blurToSave: true,
                                     afterSaveCell: (
                                       oldValue,
@@ -935,52 +928,48 @@ class DecreesList extends Component {
   }
 }
 
-const mapStateToProps = ({ decisions, roles, menu_items }) => ({
-  decisions: decisions.decisions,
-  deleted: decisions.deleted,
-  decisionCategories: decisions.decisionCategories,
-  decisionRulesReasons: decisions.decisionRulesReasons,
-  decisionRulesCanceledReasons: decisions.decisionRulesCanceledReasons,
+const mapStateToProps = ({ decrees, roles, menu_items }) => ({
+  decrees: decrees.decrees,
+  deleted: decrees.deleted,
+  decreeCategories: decrees.decreeCategories,
+  decreeRulesReasons: decrees.decreeRulesReasons,
+  decreeRulesCanceledReasons: decrees.decreeRulesCanceledReasons,
   roles: roles.roles,
-  decisionsRulesRoles: decisions.decisionsRulesRoles,
+  decreesRulesRoles: decrees.decreesRulesRoles,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
   onGetDecrees: () => dispatch(getDecrees()),
   onGetRoles: () => dispatch(getRoles()),
-  onAddNewDecree: decision => dispatch(addNewDecree(decision)),
-  onUpdateDecree: decision => dispatch(updateDecree(decision)),
-  onDeleteDecree: decision => dispatch(deleteDecree(decision)),
+  onAddNewDecree: decree => dispatch(addNewDecree(decree)),
+  onUpdateDecree: decree => dispatch(updateDecree(decree)),
+  onDeleteDecree: decree => dispatch(deleteDecree(decree)),
   onGetDecreeDeletedValue: () => dispatch(getDecreeDeletedValue()),
-  onGetDecreesRulesReasons: decisionId =>
-    dispatch(getDecreesRulesReasons(decisionId)),
-  onAddNewDecreesRulesReason: decision =>
-    dispatch(addNewDecreesRulesReason(decision)),
-  onUpdateDecreesRulesReason: decision =>
-    dispatch(updateDecreesRulesReason(decision)),
-  onDeleteDecreesRulesReason: decision =>
-    dispatch(deleteDecreesRulesReason(decision)),
+  onGetDecreesRulesReasons: decreeId =>
+    dispatch(getDecreesRulesReasons(decreeId)),
+  onAddNewDecreesRulesReason: decree =>
+    dispatch(addNewDecreesRulesReason(decree)),
+  onUpdateDecreesRulesReason: decree =>
+    dispatch(updateDecreesRulesReason(decree)),
+  onDeleteDecreesRulesReason: decree =>
+    dispatch(deleteDecreesRulesReason(decree)),
   onGetDecreesRulesReasonDeletedValue: () =>
     dispatch(getDecreesRulesReasonDeletedValue()),
-  onGetDecreesRulesCanceledReasons: decisionId =>
-    dispatch(getDecreesRulesCanceledReasons(decisionId)),
-  onAddNewDecreesRulesCanceledReason: decision =>
-    dispatch(addNewDecreesRulesCanceledReason(decision)),
-  onUpdateDecreesRulesCanceledReason: decision =>
-    dispatch(updateDecreesRulesCanceledReason(decision)),
-  onDeleteDecreesRulesCanceledReason: decision =>
-    dispatch(deleteDecreesRulesCanceledReason(decision)),
+  onGetDecreesRulesCanceledReasons: decreeId =>
+    dispatch(getDecreesRulesCanceledReasons(decreeId)),
+  onAddNewDecreesRulesCanceledReason: decree =>
+    dispatch(addNewDecreesRulesCanceledReason(decree)),
+  onUpdateDecreesRulesCanceledReason: decree =>
+    dispatch(updateDecreesRulesCanceledReason(decree)),
+  onDeleteDecreesRulesCanceledReason: decree =>
+    dispatch(deleteDecreesRulesCanceledReason(decree)),
   onGetDecreesRulesCanceledReasonDeletedValue: () =>
     dispatch(getDecreesRulesCanceledReasonDeletedValue()),
-  onGetDecreesRulesRoles: decisionId =>
-    dispatch(getDecreesRulesRoles(decisionId)),
-  onAddNewDecreesRulesRole: decision =>
-    dispatch(addNewDecreesRulesRole(decision)),
-  onUpdateDecreesRulesRole: decision =>
-    dispatch(updateDecreesRulesRole(decision)),
-  onDeleteDecreesRulesRole: decision =>
-    dispatch(deleteDecreesRulesRole(decision)),
+  onGetDecreesRulesRoles: decreeId => dispatch(getDecreesRulesRoles(decreeId)),
+  onAddNewDecreesRulesRole: decree => dispatch(addNewDecreesRulesRole(decree)),
+  onUpdateDecreesRulesRole: decree => dispatch(updateDecreesRulesRole(decree)),
+  onDeleteDecreesRulesRole: decree => dispatch(deleteDecreesRulesRole(decree)),
   onGetDecreesRulesRoleDeletedValue: () =>
     dispatch(getDecreesRulesRoleDeletedValue()),
 });

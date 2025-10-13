@@ -207,8 +207,8 @@ import studentsInfo from "./reset-password/reducer";
 //genders
 import genders from "./genders/reducer";
 
-//studentsDecrees
-import studentsDecrees from "./student-decrees/reducer";
+//traineesDecrees
+import traineesDecrees from "./trainee-decrees/reducer";
 
 //decisions
 import decisions from "./decisions/reducer";
@@ -396,7 +396,7 @@ import highstudytypes from "./high-study-types/reducer";
 const rootReducer = combineReducers({
   // public
   genders,
-  studentsDecrees,
+  traineesDecrees,
   decisions,
   grants,
   userMngs,

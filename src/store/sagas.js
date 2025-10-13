@@ -73,7 +73,7 @@ import prereqsSaga from "./prereq-conditions/saga";
 import studentsStatisticsSaga from "./students-statistics/saga";
 import passwordsSaga from "./reset-password/saga";
 import gendersSaga from "./genders/saga";
-import studentsDecreesSaga from "./student-decrees/saga";
+import traineesDecreesSaga from "./trainee-decrees/saga";
 import DecisionsSaga from "./decisions/saga";
 import grantsSaga from "./grants/saga";
 import rolesSaga from "./roles/saga";
@@ -228,7 +228,7 @@ export default function* rootSaga() {
     fork(passwordsSaga),
     fork(studentsStatisticsSaga),
     fork(gendersSaga),
-    fork(studentsDecreesSaga),
+    fork(traineesDecreesSaga),
     fork(DecisionsSaga),
     fork(rolesSaga),
     fork(userMngsSaga),

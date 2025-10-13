@@ -243,6 +243,9 @@ import DecisionsTypesList from "../pages/HR/decisionsTypes/decisionsTypes";
 //Decrees
 import DecreesList from "../pages/Rules-and-Regulations/decrees";
 
+//traineeDecrees
+import TraineesDecreesList from "../pages/Rules-and-Regulations/traineeDecrees";
+
 //Decisions
 import DecisionsList from "../pages/HR/decisions/decisions";
 
@@ -509,6 +512,10 @@ const authProtectedRoutes = [
   // decrees
 
   { path: "/decrees", component: DecreesList },
+
+  // traineeDecrees
+
+  { path: "/traineeDecrees", component: TraineesDecreesList },
 
   // decisions
 

@@ -268,8 +268,8 @@ export * from "./reset-password/actions";
 //genders
 export * from "./genders/actions";
 
-//student-decrees
-export * from "./student-decrees/actions";
+//trainee-decrees
+export * from "./trainee-decrees/actions";
 //decisions
 export * from "./decisions/actions";
 //grants

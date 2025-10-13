@@ -354,17 +354,17 @@ export const UPDATE_GENDER = "/update/gender";
 export const DELETE_GENDER = "/delete/gender";
 export const GET_GENDER_DELETED_VALUE = "/deleted";
 
-// STUDENTS_DECREES
-export const GET_STUDENTS_DECREES = "/studentsDecrees";
-export const ADD_NEW_STUDENTS_DECREES = "/add/studentsDecree";
-export const UPDATE_STUDENTS_DECREES = "/update/studentsDecree";
-export const DELETE_STUDENTS_DECREES = "/delete/studentsDecree";
-export const GET_STUDENTS_DECREES_DELETED_VALUE = "/deleted";
+// TRAINEES_DECREES
+export const GET_TRAINEES_DECREES = "/traineesDecrees";
+export const ADD_NEW_TRAINEES_DECREES = "/add/traineesDecree";
+export const UPDATE_TRAINEES_DECREES = "/update/traineesDecree";
+export const DELETE_TRAINEES_DECREES = "/delete/traineesDecree";
+export const GET_TRAINEES_DECREES_DELETED_VALUE = "/deleted";
 export const GET_DECREE_STATUS = "/decreeState";
-export const GET_STUDENT_DECREES_DISMISS = "/studentDecreesDismiss";
+export const GET_TRAINEE_DECREES_DISMISS = "/traineeDecreesDismiss";
 
-// UNIVERSITY_STUDENTS_DECREES
-export const GET_UNIVERSITY_STUDENTS_DECREES = "/UniversityStudentsDecrees";
+// ACADEMY_TRAINEES_DECREES
+export const GET_ACADEMY_TRAINEES_DECREES = "/AcademyTraineesDecrees";
 
 // COURSES_DECREES
 export const GET_COURSES_DECREES = "/CoursesDecrees";

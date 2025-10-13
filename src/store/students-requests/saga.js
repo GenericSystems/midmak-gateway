@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from "redux-saga/effects"
+import { call, put, takeEvery } from "redux-saga/effects";
 
 // Crypto Redux States
 import {
@@ -16,8 +16,8 @@ import {
   UPDATE_TRANSFER_COURSE,
   UPDATE_TRANSFER_COURSE_STATE,
   GET_LAST_REQUEST_NUM,
-  GET_REQUEST_DETAILS
-} from "./actionTypes"
+  GET_REQUEST_DETAILS,
+} from "./actionTypes";
 import {
   getStudentsRequestsSuccess,
   getStudentsRequestsFail,
@@ -48,27 +48,22 @@ import {
   getLastReqNumSuccess,
   getLastReqNumFail,
   getRequestDetailsSuccess,
-  getRequestDetailsFail
-} from "./actions"
+  getRequestDetailsFail,
+} from "./actions";
 
-import {
-  getRequestsSuccess,
-  getRequestsFail,
-} from "../requests/actions"
+import { getRequestsSuccess, getRequestsFail } from "../requests/actions";
 
 import {
   getDecreeStatusSuccess,
   getDecreeStatusFail,
-} from "../student-decrees/actions"
+} from "../trainee-decrees/actions";
 
+import { getCoursesOptSuccess, getCoursesOptFail } from "../courses/actions";
 
 import {
-  getCoursesOptSuccess,
-  getCoursesOptFail,
-} from "../courses/actions"
-
-import { getAcademicCertificatesSuccess, getAcademicCertificatesFail } from "../academicvertificates/actions";
-
+  getAcademicCertificatesSuccess,
+  getAcademicCertificatesFail,
+} from "../academicvertificates/actions";
 
 import {
   getStudentsRequests,
@@ -89,71 +84,71 @@ import {
   getCoursesOpt,
   getLastReqNum,
   getAcademicCertificates,
-  getRequestDetails
-} from "../../helpers/fakebackend_helper"
-
+  getRequestDetails,
+} from "../../helpers/fakebackend_helper";
 
 function* fetchRequestDetails() {
-    //get requests
-    const get_requests_opt = {
-      source: "db",
-      procedure: "Generic_Optiondatalist",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "financeSetting_requests",
-      fields: "Id,arTitle"
-    };
-    try {
-      const response = yield call(getRequests, get_requests_opt);
-      yield put(getRequestsSuccess(response));
-    } catch (error) {
-      yield put(getRequestsFail(error));
-    }
-  
-    // get status
-    const get_decreeStatus_req = {
-      source: "db",
-      procedure: "SisApp_getData",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "settings_DecreeStatus",
-    };
-    try {
-      const response = yield call(getDecreeStatus, get_decreeStatus_req);
-      yield put(getDecreeStatusSuccess(response));
-    } catch (error) {
-      yield put(getDecreeStatusFail(error));
-    }
-  
-      //get rquired course options
-      const get_preReqCourse_opt = {
-        source: "db",
-        procedure: "SisApp_getData",
-        apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-        tablename: "Common_Course",
-        fields: "code,arCourseName,Id,nbHours",
-      };
-      try {
-        const response = yield call(getCoursesOpt, get_preReqCourse_opt);
-        yield put(getCoursesOptSuccess(response));
-      } catch (error) {
-        yield put(getCoursesOptFail(error));
-      }
-    
+  //get requests
+  const get_requests_opt = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "financeSetting_requests",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getRequests, get_requests_opt);
+    yield put(getRequestsSuccess(response));
+  } catch (error) {
+    yield put(getRequestsFail(error));
+  }
 
-          //get academicCertif
-    const get_academicCertif_opt = {
-      source: "db",
-      procedure: "Generic_getOptions",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "settings_AcadmicCertificates",
-      fields: "Id,arTitle,facultyId",
-    };
-    try {
-      const response = yield call(getAcademicCertificates, get_academicCertif_opt);
-      yield put(getAcademicCertificatesSuccess(response));
-    } catch (error) {
-      yield put(getAcademicCertificatesFail(error));
-    }
-  
+  // get status
+  const get_decreeStatus_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "settings_DecreeStatus",
+  };
+  try {
+    const response = yield call(getDecreeStatus, get_decreeStatus_req);
+    yield put(getDecreeStatusSuccess(response));
+  } catch (error) {
+    yield put(getDecreeStatusFail(error));
+  }
+
+  //get rquired course options
+  const get_preReqCourse_opt = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Course",
+    fields: "code,arCourseName,Id,nbHours",
+  };
+  try {
+    const response = yield call(getCoursesOpt, get_preReqCourse_opt);
+    yield put(getCoursesOptSuccess(response));
+  } catch (error) {
+    yield put(getCoursesOptFail(error));
+  }
+
+  //get academicCertif
+  const get_academicCertif_opt = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "settings_AcadmicCertificates",
+    fields: "Id,arTitle,facultyId",
+  };
+  try {
+    const response = yield call(
+      getAcademicCertificates,
+      get_academicCertif_opt
+    );
+    yield put(getAcademicCertificatesSuccess(response));
+  } catch (error) {
+    yield put(getAcademicCertificatesFail(error));
+  }
 }
 
 function* fetchStudentsRequests(obj) {
@@ -169,15 +164,14 @@ function* fetchStudentsRequests(obj) {
   }
 
   const get_studentmanagement_req = {
-    source: 'db',
+    source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_StudentsRequests",
     filter: filter,
-
-     }  
+  };
   try {
-    const response = yield call(getStudentsRequests, get_studentmanagement_req)
+    const response = yield call(getStudentsRequests, get_studentmanagement_req);
     response.map(resp => {
       resp["studentRequests"] = JSON.parse(resp["studentRequests"]);
     });
@@ -188,48 +182,40 @@ function* fetchStudentsRequests(obj) {
       resp["transferCourses"] = JSON.parse(resp["transferCourses"]);
     });
 
-    yield put(getStudentsRequestsSuccess(response))
+    yield put(getStudentsRequestsSuccess(response));
   } catch (error) {
-    yield put(getStudentsRequestsFail(error))
+    yield put(getStudentsRequestsFail(error));
   }
-
-  
- 
 }
-
-
-
-
 
 function* onAddNewStudentRequest({ payload }) {
   delete payload["id"];
-  payload["source"] = 'db';
-  payload["procedure"] = 'SisApp_addData';
-  payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-  payload["tablename"] = 'Common_StudentsRequests';
-  payload["queryname"] = '_Common_StudentsRequests';
-  
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_addData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_StudentsRequests";
+  payload["queryname"] = "_Common_StudentsRequests";
+
   try {
-    const response = yield call(addNewStudentRequest, payload)
+    const response = yield call(addNewStudentRequest, payload);
     response.map(resp => {
       resp["studentRequests"] = JSON.parse(resp["studentRequests"]);
     });
-    yield put(addStudentRequestSuccess(response[0]))
+    yield put(addStudentRequestSuccess(response[0]));
   } catch (error) {
-
-    yield put(addStudentRequestFail(error))
+    yield put(addStudentRequestFail(error));
   }
 }
 
 function* onUpdateStudentRequest({ payload }) {
-  payload["source"] = 'db';
-  payload["procedure"] = 'SisApp_updateData';
-  payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-  payload["tablename"] = 'Common_StudentsRequests';
-  payload["queryname"] = '_Common_StudentsRequests';
-  
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_updateData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_StudentsRequests";
+  payload["queryname"] = "_Common_StudentsRequests";
+
   try {
-    const response = yield call(updateStudentRequest, payload)
+    const response = yield call(updateStudentRequest, payload);
     response.map(resp => {
       resp["studentRequests"] = JSON.parse(resp["studentRequests"]);
     });
@@ -239,23 +225,23 @@ function* onUpdateStudentRequest({ payload }) {
     response.map(resp => {
       resp["transferCourses"] = JSON.parse(resp["transferCourses"]);
     });
-    yield put(updateStudentRequestSuccess(response[0]))
+    yield put(updateStudentRequestSuccess(response[0]));
   } catch (error) {
-    yield put(updateStudentRequestFail(error))
+    yield put(updateStudentRequestFail(error));
   }
 }
 
-function* onDeleteStudentRequest({ payload, }) {
-  payload["source"] = 'db';
-  payload["procedure"] = 'SisApp_removeData';
-  payload["apikey"] = '30294470-b4dd-11ea-8c20-b036fd52a43e';
-  payload["tablename"] = 'Common_StudentsRequests';
-  
+function* onDeleteStudentRequest({ payload }) {
+  payload["source"] = "db";
+  payload["procedure"] = "SisApp_removeData";
+  payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload["tablename"] = "Common_StudentsRequests";
+
   try {
-    const response = yield call(deleteStudentRequest, payload)
-    yield put(deleteStudentRequestSuccess(response[0]))
+    const response = yield call(deleteStudentRequest, payload);
+    yield put(deleteStudentRequestSuccess(response[0]));
   } catch (error) {
-    yield put(deleteStudentRequestFail(error))
+    yield put(deleteStudentRequestFail(error));
   }
 }
 
@@ -265,8 +251,6 @@ function* onAddNewPrevUnivCourse({ payload, course }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_StdPrevUnivCourses";
-
-  
 
   try {
     const response = yield call(addNewPrevUnivCourse, payload);
@@ -281,8 +265,6 @@ function* onUpdatePrevUnivCourse({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_StdPrevUnivCourses";
-
-  
 
   try {
     const respupdate = yield call(updatePrevUnivCourse, payload);
@@ -305,7 +287,6 @@ function* onDeletePrevUnivCourse({ payload, course }) {
     yield put(deletePrevUnivCourseFail(error));
   }
 }
-
 
 function* onAddNewTransferCourse({ payload, reqCourse }) {
   delete payload["id"];
@@ -350,7 +331,6 @@ function* onUpdateTransferCourseState({ payload }) {
   }
 }
 
-
 function* onDeleteTransferCourse({ payload, reqCourse }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
@@ -370,34 +350,32 @@ function* fetchCoursesInfo(obj) {
 
   // transfer courses
   const get_TransferedCourses = {
-    source: 'db',
+    source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_StdTransferedCourses",
-     filter : `studentRequestId = ${payload.studentRequestId} `
-
-     }  
+    filter: `studentRequestId = ${payload.studentRequestId} `,
+  };
   try {
-    const response = yield call(getTransferCourses, get_TransferedCourses)
-    yield put(getTransferCoursesSuccess(response))
+    const response = yield call(getTransferCourses, get_TransferedCourses);
+    yield put(getTransferCoursesSuccess(response));
   } catch (error) {
-    yield put(getTransferCoursesFail(error))
+    yield put(getTransferCoursesFail(error));
   }
 
   // PREV courses
   const get_PrevUnivCourses = {
-    source: 'db',
+    source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_StdPrevUnivCourses",
-     filter : `studentRequestId = ${payload.studentRequestId} `
-
-     }  
+    filter: `studentRequestId = ${payload.studentRequestId} `,
+  };
   try {
-    const response = yield call(getPrevUnivCourses, get_PrevUnivCourses)
-    yield put(getPrevUnivCoursesSuccess(response))
+    const response = yield call(getPrevUnivCourses, get_PrevUnivCourses);
+    yield put(getPrevUnivCoursesSuccess(response));
   } catch (error) {
-    yield put(getPrevUnivCoursesFail(error))
+    yield put(getPrevUnivCoursesFail(error));
   }
 }
 
@@ -405,27 +383,25 @@ function* fetchLastRequestNum(obj) {
   let payload = obj.payload;
 
   const get_lastReqNum = {
-    source: 'db',
+    source: "db",
     procedure: "add_lastRequest",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     requestId: `${payload.requestId}`,
-
-
-     }  
+  };
   try {
-    const response = yield call(getLastReqNum, get_lastReqNum)
-    
-    yield put(getLastReqNumSuccess(response[0]))
-  } catch (error) {
-    yield put(getLastReqNumFail(error))
-  }}
+    const response = yield call(getLastReqNum, get_lastReqNum);
 
+    yield put(getLastReqNumSuccess(response[0]));
+  } catch (error) {
+    yield put(getLastReqNumFail(error));
+  }
+}
 
 function* StudentRequestSaga() {
-  yield takeEvery(GET_STUDENTS_REQUESTS, fetchStudentsRequests)
-  yield takeEvery(ADD_NEW_STUDENT_REQUEST, onAddNewStudentRequest)
-  yield takeEvery(UPDATE_STUDENT_REQUEST, onUpdateStudentRequest)
-  yield takeEvery(DELETE_STUDENT_REQUEST, onDeleteStudentRequest)
+  yield takeEvery(GET_STUDENTS_REQUESTS, fetchStudentsRequests);
+  yield takeEvery(ADD_NEW_STUDENT_REQUEST, onAddNewStudentRequest);
+  yield takeEvery(UPDATE_STUDENT_REQUEST, onUpdateStudentRequest);
+  yield takeEvery(DELETE_STUDENT_REQUEST, onDeleteStudentRequest);
   yield takeEvery(ADD_NEW_PREV_UNI_COURSE, onAddNewPrevUnivCourse);
   yield takeEvery(UPDATE_PREV_UNI_COURSE, onUpdatePrevUnivCourse);
   yield takeEvery(DELETE_PREV_UNI_COURSE, onDeletePrevUnivCourse);
@@ -436,7 +412,6 @@ function* StudentRequestSaga() {
   yield takeEvery(GET_TRANSFER_COURSES, fetchCoursesInfo);
   yield takeEvery(GET_LAST_REQUEST_NUM, fetchLastRequestNum);
   yield takeEvery(GET_REQUEST_DETAILS, fetchRequestDetails);
-
 }
 
-export default StudentRequestSaga
+export default StudentRequestSaga;

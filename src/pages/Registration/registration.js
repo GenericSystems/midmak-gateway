@@ -363,11 +363,13 @@ class RegistrationList extends Component {
   };
   handleAddToAddedCourses = (row, currentStatus, fieldName) => {
     const { onAddNewAvailableCourse } = this.props;
-    const { traineeEdit } = this.state;
+    const { traineeEdit, selectedYear } = this.state;
     console.log("traineeEdit", traineeEdit);
+    console.log("traineeEdit", selectedYear);
     const newRow = {
       courseId: row.courseId,
       traineeId: traineeEdit.Id,
+      yearId: selectedYear.value,
       Code: row.Code,
       active: 0,
       color: this.generateRandomColor(),
