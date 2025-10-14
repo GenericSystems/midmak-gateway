@@ -2284,6 +2284,26 @@ export const updateContract = data => post(url.UPDATE_CONTRACT, data);
 //delete Contract
 export const deleteContract = data => post(url.DELETE_CONTRACT, data);
 
+//MARK_OBJECTION
+export const getMarksObjections = data => post(url.GET_MARKS_OBJECTIONS, data);
+
+// add MarkObjections
+
+export const addNewMarkObjection = data =>
+  post(url.ADD_NEW_MARK_OBJECTION, data);
+
+//MARK_OBJECTION
+export const getMarkObjectionDeletedValue = () =>
+  get(url.GET_MARK_OBJECTION_DELETED_VALUE);
+
+//update MarkObjections
+export const updateMarkObjection = data =>
+  post(url.UPDATE_MARK_OBJECTION, data);
+
+//delete MarkObjections
+export const deleteMarkObjection = data =>
+  post(url.DELETE_MARK_OBJECTION, data);
+
 //JustifyTraineeAbsence
 
 export const getJustifyTraineesAbsence = data =>

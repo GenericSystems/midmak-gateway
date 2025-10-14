@@ -222,6 +222,9 @@ import DecreesList from "../pages/Rules-and-Regulations/decrees";
 //traineeDecrees
 import TraineesDecreesList from "../pages/Rules-and-Regulations/traineeDecrees";
 
+//marks objection
+import MarksObjectionList from "../pages/Exam/MarksObjections/marksObjections";
+
 //Decisions
 import DecisionsList from "../pages/HR/decisions/decisions";
 
@@ -452,7 +455,11 @@ const authProtectedRoutes = [
 
   // traineeDecrees
 
-  { path: "/traineeDecrees", component: TraineesDecreesList },
+  { path: "/traineesDecrees", component: TraineesDecreesList },
+
+  // marksObjections
+
+  { path: "/marksObjections", component: MarksObjectionList },
 
   // decisions
 

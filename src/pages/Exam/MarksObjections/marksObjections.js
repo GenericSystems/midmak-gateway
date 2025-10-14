@@ -36,20 +36,12 @@ import ToolkitProvider, {
 import Breadcrumbs from "components/Common/Breadcrumb";
 import DeleteModal from "components/Common/DeleteModal";
 import {
-  getContracts,
-  addNewContract,
-  updateContract,
-  deleteContract,
-  getContractDeletedValue,
-} from "store/HR/contracts/actions";
-import {
-  // getAdministrativeSupervisorsOpt,
-  getJobRanksOpt,
-  getCorporateNodesOpt,
-  getJobTitlesOpt,
-  getPhysicalWorkLocationsOpt,
-  getAcademicYearsOpt,
-} from "store/HR/employees/actions";
+  getMarksObjections,
+  addNewMarkObjection,
+  updateMarkObjection,
+  deleteMarkObjection,
+  getMarkObjectionDeletedValue,
+} from "store/marks-objections/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -63,13 +55,13 @@ import {
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
 import academicLoadSaga from "store/academicloads/saga";
-class ContractsList extends Component {
+class MarksObjectionsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       employees: [],
-      contracts: [],
-      contract: "",
+      marksObjections: [],
+      markObjection: "",
       employee: "",
       selectConId: null,
       showAlert: null,
@@ -83,84 +75,50 @@ class ContractsList extends Component {
       duplicateError: null,
       selectedRowId: null,
       modal: false,
-      modal2: false,
+      editModal: false,
       isEdit: false,
-      isOpen: false,
-      isAdd: false,
-      selectedWorkClassification: null,
-      selectedJobTitle: null,
-      jobTitleName: "",
-      selectedCostCenter: null,
-      selectedJobRank: null,
-      selectedHasMinistryApprove: null,
-      selectedGovernmentWorker: null,
-      selectedFullName: null,
-      selectedContractType: null,
-      employeeFullName: "",
-      signatureDateError: false,
-      hireDateError: false,
-      fullNameError: false,
-      contractTypeError: false,
-      academicYearsIdError: false,
-      jobTitleError: false,
       errorMessage: null,
       successMessage: null,
       values: "",
-      modalContractValue: [],
+      modalMarkObjectionValue: [],
+      requestNumError: false,
+      applyingDateError: false,
+      selectedTraineeId: null,
+      traineeName: "",
+      courseError: false,
+      selectedCourseId: null,
+      courseName: "",
+      testExamError: false,
+      selectedTestExam: null,
+      selectedRequestType: null,
     };
     this.toggle = this.toggle.bind(this);
-    this.toggle2 = this.toggle2.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentDidMount() {
     const {
-      contracts,
-      onGetContracts,
-      genders,
-      nationalitiesOpt,
-      contractsTypes,
-      employmentCases,
+      marksObjections,
+      onGetMarksObjections,
+      traineeOpt,
+      coursesOffering,
       deleted,
-      onGetJobTitlesOpt,
-      onGetJobRanksOpt,
-      onGetAcademicYearsOpt,
-      jobRanksOpt,
-      workClassifications,
-      academicYearsOpt,
-      employeesNames,
-      jobTitlesOpt,
       user_menu,
-      employees,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    // if (contract && !contracts.length) {
-    //   onGetContracts();
+    // if (markObjection && !marksObjections.length) {
+    //   onGetMarksObjections();
     // }
-    onGetContracts();
-    onGetJobTitlesOpt();
-    onGetJobRanksOpt();
-    onGetAcademicYearsOpt();
+    onGetMarksObjections();
     this.setState({
-      contracts,
+      marksObjections,
       deleted,
-      jobRanksOpt,
-      jobTitlesOpt,
-      workClassifications,
-      contractsTypes,
-      employmentCases,
-      academicYearsOpt,
-      employeesNames,
-      nationalitiesOpt,
-      genders,
+      coursesOffering,
+      traineeOpt,
     });
-    const fullNamesOpt = this.state;
-    this.setState({ fullNamesOpt: employees });
-
-    console.log("rsssssssssssssss", contracts);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -230,9 +188,9 @@ class ContractsList extends Component {
     }));
   };
 
-  toggle2 = () => {
+  toggleEdit = () => {
     this.setState(prevState => ({
-      modal2: !prevState.modal2,
+      editModal: !prevState.editModal,
     }));
   };
 
@@ -242,7 +200,9 @@ class ContractsList extends Component {
 
   handleAddRow = () => {
     this.setState({
-      contract: "",
+      markObjection: "",
+      selectedTraineeId: null,
+      traineeName: "",
       isEdit: false,
       isOpen: false,
       isAdd: true,
@@ -251,12 +211,12 @@ class ContractsList extends Component {
   };
 
   handleDeleteRow = () => {
-    const { onDeleteContract } = this.props;
+    const { onDeleteMarkObjection } = this.props;
     const { selectedRowId } = this.state;
 
     if (selectedRowId !== null) {
       let onDelete = { Id: selectedRowId.Id };
-      onDeleteContract(onDelete);
+      onDeleteMarkObjection(onDelete);
 
       this.setState({
         selectedRowId: null,
@@ -276,175 +236,79 @@ class ContractsList extends Component {
     }
   };
 
-  handleSubmit = values => {
+  handleSave = values => {
     const {
-      // selectedAdministrativeSupervisor,
-      selectedPhysicalWorkLocations,
-      selectedJobRank,
-      selectedJobTitle,
-      selectedCorporateNode,
-      selectedContractType,
-      selectedEmploymentCase,
-      selectedNcsDate,
-      selectedEndDate,
-      selectedHireDate,
-      selectedSignatureDate,
-      selectedWorkClassification,
-      selectedAcademicYearId,
-      contract,
       isEdit,
       isAdd,
-      selectEmpId,
-      selectedHasMinistryApprove,
-      selectedGovernmentWorker,
-      selectedFullName,
-      fullNamesOpt,
+      isOpen,
+      selectedTraineeId,
+      selectedCourseId,
+      selectedTestExam,
     } = this.state;
-    const { onAddNewContract, onUpdateContract } = this.props;
+    const { onAddNewEmployee, onUpdateEmployee } = this.props;
+    console.log("values", values);
 
-    //values["administrativeSupervisor"] = selectedAdministrativeSupervisor;
-    // values["physicalWorkLocation"] = selectedPhysicalWorkLocations;
-    // values["employeeId"] = selectEmpId;
-
-    values["jobRankId"] = selectedJobRank;
-    values["jobTitleId"] = selectedJobTitle;
-    // values["corporateNodeId"] = selectedCorporateNode;
-    values["contractTypeId"] = selectedContractType;
-    values["employeeId"] = selectedFullName;
-    values["employmentCaseId"] = selectedEmploymentCase;
-    values["hasMinistryApprove"] = selectedHasMinistryApprove;
-    values["governmentWorker"] = selectedGovernmentWorker;
-    values["workClassificationId"] = selectedWorkClassification;
-    values["academicYearId"] = selectedAcademicYearId;
-    console.log("valuesssssssssssssssssssss", values);
-
-    let contractInfo = {};
-    // if (values.employeeId) {
-    //   const nameObject = fullNamesOpt.find(
-    //     fullName => fullName.value === values.employeeId
-    //   );
-    //   console.log("nameObject", nameObject);
-    //   values["employeeId"] = nameObject.key;
-    // }
-    // console.log("valuesssssssssssssssssssss", values);
+    values["courseNameId"] = selectedCourseId;
+    values["traineeNameId"] = selectedTraineeId;
+    values["testExamId"] = selectedTestExam;
     if (
-      values.jobNumber &&
-      values.biometricCode &&
-      values.contractNumber &&
-      values.sequenceInWorkplace &&
-      values.quorum &&
-      values.ncsDate &&
-      values.endDate &&
-      values.hireDate &&
-      values.signatureDate &&
-      // selectedAdministrativeSupervisor !== null &&
-      // selectedPhysicalWorkLocations !== null &&
-      selectedJobRank !== null &&
-      selectedAcademicYearId !== null &&
-      selectedWorkClassification !== null &&
-      selectedJobTitle !== null &&
-      // selectedCorporateNode !== null &&
-      selectedContractType !== null &&
-      selectedEmploymentCase !== null &&
-      selectedFullName !== null
+      values.requestNum === "" ||
+      values.applyingDate === "" ||
+      values.traineeNameId === "" ||
+      values.courseNameId === "" ||
+      (values.testExamId === "" && selectedTestExam === null)
     ) {
-      console.log("selectedFullName", selectedFullName);
+      this.setState({ requestNumError: true, saveError: true });
+
+      this.setState({ applyingDateError: true, saveError: true });
+
+      this.setState({ traineeError: true, saveError: true });
+
+      this.setState({ courseError: true, saveError: true });
+
+      this.setState({ testExamError: true, saveError: true });
+      const emptyError = this.props.t("Fill the Required Fields to Save");
+
+      this.setState({ emptyError: emptyError });
+    } else {
+      this.setState({ requestNumError: false, saveError: false });
+      this.setState({ applyingDateError: false, saveError: false });
+      this.setState({ traineeError: false, saveError: false });
+      this.setState({ courseError: false, saveError: false });
+      this.setState({ testExamError: false, saveError: false });
+
+      let employeeinfo = {};
+
       Object.keys(values).forEach(function (key) {
         if (
           values[key] != undefined &&
           (values[key].length > 0 || values[key] != "")
         )
-          console.log("9999999", contractInfo);
-        contractInfo[key] = values[key];
+          employeeinfo[key] = values[key];
       });
-      if (isEdit) {
-        console.log("9999999", contractInfo);
-        onUpdateContract(contractInfo);
-      } else {
-        onAddNewContract(contractInfo);
-      }
+      employeeinfo["courseNameId"] = selectedCourseId;
+      employeeinfo["traineeNameId"] = selectedTraineeId;
+      employeeinfo["testExamId"] = selectedTestExam;
       this.setState({
         errorMessages: {},
       });
+
+      if (isEdit) {
+        console.log("rrrrrrrrrrrrrrr", employeeinfo);
+        // onUpdateEmployee(employeeinfo);
+      } else if (isAdd) {
+        console.log("employeeinfoemployeeinfo", employeeinfo);
+
+        // onAddNewEmployee(employeeinfo);
+      }
+
+      const saveEmployeeMessage = "Saved successfully ";
+      this.setState({
+        successMessage: saveEmployeeMessage,
+      });
+
       this.toggle();
-    } else {
-      let emptyError = "";
-      // if (selectedAdministrativeSupervisor === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      // if (selectedPhysicalWorkLocations === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      if (selectedJobTitle === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedNcsDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedContractType === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedAcademicYearId === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedHireDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedSignatureDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedFullName === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      // if (selectedCorporateNode === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      this.setState({ emptyError: emptyError });
     }
-  };
-
-  handleSelect = (fieldName, selectedValue) => {
-    // if (fieldName == "administrativeSupervisor") {
-    //   this.setState({
-    //     selectedAdministrativeSupervisor: selectedValue,
-    //   });
-    // }
-    /*  if (fieldName == "physicalWorkLocation") {
-      this.setState({
-        selectedPhysicalWorkLocations: selectedValue,
-      });
-    } */
-
-    if (fieldName == "jobRankId") {
-      this.setState({
-        selectedJobRank: selectedValue,
-      });
-    }
-    if (fieldName == "contractTypeId") {
-      this.setState({
-        selectedContractType: selectedValue,
-      });
-    }
-    if (fieldName == "employmentCaseId") {
-      this.setState({
-        selectedEmploymentCase: selectedValue,
-      });
-    }
-    if (fieldName == "workClassificationId") {
-      this.setState({
-        selectedWorkClassification: selectedValue,
-      });
-    }
-    // if (fieldName == "corporateNodeId") {
-    //   this.setState({
-    //     selectedCorporateNode: selectedValue,
-    //   });
-    // }
-    // if (fieldName == "academicYearId") {
-    //   this.setState({
-    //     selectedAcademicYearId: selectedValue,
-    //   });
-    // }
   };
 
   handleSelectDatalist = e => {
@@ -489,53 +353,25 @@ class ContractsList extends Component {
   };
 
   handleSuccessClose = () => {
-    const { onGetContractDeletedValue } = this.props;
+    const { onGetMarkObjectionDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetContractDeletedValue();
+    onGetMarkObjectionDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetContractDeletedValue } = this.props;
+    const { onGetMarkObjectionDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetContractDeletedValue();
+    onGetMarkObjectionDeletedValue();
   };
 
-  handleContractClick = arg => {
+  handleMarkObjectionClick = arg => {
     console.log("arg", arg);
 
     this.setState({
-      contract: arg,
-      selectedFullName: arg.employeeId,
-      employeeFullName: arg.employeeName,
-      selectedJobRank: arg.jobRankId,
-      selectedJobTitle: arg.jobTitleId,
-      jobTitleName: arg.jobTitle,
-      selectedCorporateNode: arg.corporateNodeId,
-      selectedContractType: arg.contractTypeId,
-      selectedEmploymentCase: arg.employmentCaseId,
-      selectedHasMinistryApprove: arg.hasMinistryApprove,
-      selectedGovernmentWorker: arg.governmentWorker,
-      selectedWorkClassification: arg.workClassificationId,
-      selectedAcademicYearId: arg.academicYearId,
-      academicYear: arg.academicYear,
+      markObjection: arg,
       isEdit: true,
-      isOpen: false,
     });
-    this.toggle();
-  };
-
-  handleEmployeeDataClick = contract => {
-    console.log("arg", contract);
-
-    this.setState({
-      isOpen: true,
-      selectConId: contract.Id,
-      modalContractValue: contract,
-    });
-    this.toggle2();
-  };
-  testselected = val => {
-    console.log(val, "vvvvvvvvvvvvvvvvvv");
+    this.toggleEdit();
   };
 
   handleValidDate = date => {
@@ -543,14 +379,30 @@ class ContractsList extends Component {
     return date1;
   };
 
+  handleSelect = (fieldName, selectedValue, values) => {
+    if (fieldName == "testExamId") {
+      this.setState({
+        selectedTestExam: selectedValue,
+        markObjection: values,
+      });
+    }
+    if (fieldName == "requestTypeId") {
+      this.setState({
+        selectedRequestType: selectedValue,
+        markObjection: values,
+      });
+    }
+  };
+
   render() {
-    const contract = this.state.contract;
+    const markObjection = this.state.markObjection;
     const employee = this.state.employee;
     const {
-      contracts,
+      coursesOffering,
+      traineesOpt,
+      marksObjections,
       t,
       deleted,
-      contractsTypes,
       employmentCases,
       genders,
       nationalitiesOpt,
@@ -566,16 +418,24 @@ class ContractsList extends Component {
       employees,
     } = this.props;
     const {
+      testExamError,
+      selectedCourseId,
+      courseName,
+      courseError,
+      traineeError,
+      selectedTraineeId,
+      applyingDateError,
+      requestNumError,
       duplicateError,
       deleteModal,
       modal,
-      modal2,
+      editModal,
       isEdit,
       isOpen,
       isAdd,
       emptyError,
       showAlert,
-      contractTypeError,
+      markObjectionTypeError,
       academicYearsIdError,
       jobTitleError,
       signatureDateError,
@@ -584,7 +444,7 @@ class ContractsList extends Component {
       selectedFullName,
       selectedJobTitle,
       selectedAcademicYearId,
-      selectedContractType,
+      selectedMarkObjectionType,
       selectedWorkClassification,
       selectedEmploymentCase,
       hireDateError,
@@ -595,7 +455,7 @@ class ContractsList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
-      modalContractValue,
+      modalMarkObjectionValue,
       fullNamesOpt,
     } = this.state;
     const { SearchBar } = Search;
@@ -613,57 +473,94 @@ class ContractsList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "jobNumber",
-        text: this.props.t("Job Number"),
+        dataField: "requestNum",
+        text: this.props.t("Request Num"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "ncsDate",
-        text: this.props.t("NCS Date"),
-        sort: true,
-        editable: false,
-        formatter: (cellContent, row) => this.handleValidDate(row.ncsDate),
-      },
-      {
-        dataField: "employeeName",
-        text: this.props.t("Full Name"),
+        dataField: "traineeNum",
+        text: this.props.t("Trainee Num"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "position",
-        text: this.props.t("Position"),
+        dataField: "traineeName",
+        text: this.props.t("Trainee Name"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "jobTitle",
-        text: this.props.t("Job Title"),
+        dataField: "applyingDate",
+        text: this.props.t("Applying Date"),
+        sort: true,
+        editable: false,
+        formatter: (cellContent, row) => this.handleValidDate(row.applyingDate),
+      },
+      {
+        dataField: "courseName",
+        text: this.props.t("Course Name"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "corporateNode",
-        text: this.props.t("Corporate Node"),
+        dataField: "courseCode",
+        text: this.props.t("Course Code"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "contractName",
-        text: this.props.t("Contract Type "),
+        dataField: "startDate",
+        text: this.props.t("Start Date"),
+        sort: true,
+        editable: false,
+        formatter: (cellContent, row) => this.handleValidDate(row.startDate),
+      },
+      {
+        dataField: "examName",
+        text: this.props.t("Exam Name"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "workClassification",
-        text: this.props.t("Work Classification"),
+        dataField: "requestType",
+        text: this.props.t("Request Type"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "status",
-        text: this.props.t("Status"),
+        dataField: "objectionStatus",
+        text: this.props.t("Objection Status"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "oldMark",
+        text: this.props.t("Old Mark"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "newMark",
+        text: this.props.t("New Mark"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "marksDifference",
+        text: this.props.t("Marks Difference"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "requestStatus",
+        text: this.props.t("Request Status"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "applliedThrough",
+        text: this.props.t("Appllied Through"),
         sort: true,
         editable: false,
       },
@@ -673,25 +570,17 @@ class ContractsList extends Component {
         isDummyField: true,
         editable: false,
         //  hidden: !showDeleteButton,
-        formatter: (cellContent, contract) => (
+        formatter: (cellContent, markObjection) => (
           <div className="d-flex gap-3">
-            <Tooltip
-              title={this.props.t("View Employee Information")}
-              placement="top"
-            >
-              <IconButton
-                onClick={() => this.handleEmployeeDataClick(contract)}
-              >
-                <i className="fas fa-male font-size-18" id="viewtooltip"></i>
-              </IconButton>
-            </Tooltip>
             <Tooltip title={this.props.t("Edit")} placement="top">
-              <IconButton onClick={() => this.handleContractClick(contract)}>
+              <IconButton
+                onClick={() => this.handleMarkObjectionClick(markObjection)}
+              >
                 <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
               </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("Delete")} placement="top">
-              <IconButton onClick={() => this.onClickDelete(contract)}>
+              <IconButton onClick={() => this.onClickDelete(markObjection)}>
                 <i
                   className="mdi mdi-delete font-size-18"
                   id="deletetooltip"
@@ -704,7 +593,7 @@ class ContractsList extends Component {
     ];
     const pageOptions = {
       sizePerPage: 10,
-      totalSize: contracts.length,
+      totalSize: marksObjections.length,
       custom: true,
     };
     return (
@@ -718,7 +607,7 @@ class ContractsList extends Component {
         />
         <div className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Contracts")} />
+            <Breadcrumbs breadcrumbItem={this.props.t("Marks Objections")} />
             <Row>
               <Col>
                 <Card>
@@ -777,12 +666,12 @@ class ContractsList extends Component {
                         pagination={paginationFactory(pageOptions)}
                         keyField="Id"
                         columns={columns}
-                        data={contracts}
+                        data={marksObjections}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
                             keyField="Id"
-                            data={contracts}
+                            data={marksObjections}
                             columns={columns}
                             search
                           >
@@ -822,7 +711,7 @@ class ContractsList extends Component {
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={contracts}
+                                  data={marksObjections}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
@@ -837,7 +726,7 @@ class ContractsList extends Component {
                                     },
                                   })}
                                   noDataIndication={this.props.t(
-                                    "No Contracts found"
+                                    "No Marks Objections found"
                                   )}
                                   defaultSorted={defaultSorting}
                                 />
@@ -849,107 +738,676 @@ class ContractsList extends Component {
                                 <Modal
                                   isOpen={modal}
                                   toggle={this.toggle}
-                                  className={"modal-fullscreen"}
+                                  size="lg"
                                 >
                                   <ModalHeader toggle={this.toggle} tag="h4">
                                     {!!isEdit
-                                      ? t("Edit Contract Data")
-                                      : t("Add Contract Data")}
+                                      ? t("Edit Marks Objections")
+                                      : t("Add Marks Objections")}
+                                  </ModalHeader>
+                                  <ModalBody>
+                                    <Formik
+                                      enableReinitialize={true}
+                                      initialValues={{
+                                        requestNum:
+                                          (markObjection &&
+                                            markObjection.requestNum) ||
+                                          "",
+                                        applyingDate:
+                                          (markObjection &&
+                                            markObjection.applyingDate) ||
+                                          "",
+                                        traineeNameId:
+                                          (markObjection &&
+                                            markObjection.traineeNameId) ||
+                                          "",
+                                        courseNameId:
+                                          (markObjection &&
+                                            markObjection.courseNameId) ||
+                                          "",
+                                        testExamId:
+                                          (markObjection &&
+                                            markObjection.testExamId) ||
+                                          "",
+                                        oldMark:
+                                          (markObjection &&
+                                            markObjection.oldMark) ||
+                                          "",
+                                        requestType:
+                                          (markObjection &&
+                                            markObjection.requestType) ||
+                                          "",
+                                        applyingNotes:
+                                          (markObjection &&
+                                            markObjection.absencePercent) ||
+                                          "",
+                                      }}
+                                      validationSchema={Yup.object().shape({
+                                        applyingDate: Yup.string()
+                                          .nullable()
+                                          .test(
+                                            "is-valid-date",
+                                            "Date must be valid",
+                                            value =>
+                                              !value ||
+                                              moment(
+                                                value,
+                                                "YYYY-MM-DD",
+                                                true
+                                              ).isValid()
+                                          ),
+                                        startDate: Yup.string()
+                                          .nullable()
+                                          .test(
+                                            "is-valid-date",
+                                            "Date must be valid",
+                                            value =>
+                                              !value ||
+                                              moment(
+                                                value,
+                                                "YYYY-MM-DD",
+                                                true
+                                              ).isValid()
+                                          ),
+                                        endDate: Yup.string()
+                                          .nullable()
+                                          .test(
+                                            "is-valid-date",
+                                            "Date must be valid",
+                                            value =>
+                                              !value ||
+                                              moment(
+                                                value,
+                                                "YYYY-MM-DD",
+                                                true
+                                              ).isValid()
+                                          ),
+                                      })}
+                                    >
+                                      {({
+                                        errors,
+                                        status,
+                                        touched,
+                                        values,
+                                        handleChange,
+                                        handleBlur,
+                                        setFieldValue,
+                                      }) => {
+                                        return (
+                                          <Form>
+                                            <Card id="employee-card">
+                                              <CardBody className="cardBody">
+                                                {emptyError && (
+                                                  <Alert
+                                                    color="danger"
+                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                    role="alert"
+                                                  >
+                                                    {emptyError}
+                                                    <button
+                                                      type="button"
+                                                      className="btn-close"
+                                                      aria-label="Close"
+                                                      onClick={() =>
+                                                        this.handleAlertClose(
+                                                          "emptyError"
+                                                        )
+                                                      }
+                                                    ></button>
+                                                  </Alert>
+                                                )}
+                                                <Card>
+                                                  <CardBody>
+                                                    <div className="bordered">
+                                                      <div className="mb-3">
+                                                        <Row>
+                                                          <Col className="col-4">
+                                                            <Label for="requestNum">
+                                                              {this.props.t(
+                                                                "Request Num"
+                                                              )}
+                                                            </Label>
+
+                                                            <span className="text-danger">
+                                                              *
+                                                            </span>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Field
+                                                              type="text"
+                                                              name="requestNum"
+                                                              id="requestNum"
+                                                              className={
+                                                                "form-control" +
+                                                                ((errors.requestNum &&
+                                                                  touched.requestNum) ||
+                                                                requestNumError
+                                                                  ? " is-invalid"
+                                                                  : "")
+                                                              }
+                                                            />
+                                                            {requestNumError && (
+                                                              <div className="invalid-feedback">
+                                                                {this.props.t(
+                                                                  "Request Num is required"
+                                                                )}
+                                                              </div>
+                                                            )}
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                      <div className="mb-3">
+                                                        <Row>
+                                                          <Col className="col-4">
+                                                            <Label for="applyingDate">
+                                                              {this.props.t(
+                                                                "Applying Date"
+                                                              )}
+                                                            </Label>
+                                                            <span className="text-danger">
+                                                              *
+                                                            </span>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Field
+                                                              className={`form-control ${
+                                                                applyingDateError
+                                                                  ? "is-invalid"
+                                                                  : ""
+                                                              }`}
+                                                              name="applyingDate"
+                                                              type="date"
+                                                              value={
+                                                                values.applyingDate
+                                                                  ? new Date(
+                                                                      values.applyingDate
+                                                                    )
+                                                                      .toISOString()
+                                                                      .split(
+                                                                        "T"
+                                                                      )[0]
+                                                                  : ""
+                                                              }
+                                                              onChange={
+                                                                handleChange
+                                                              }
+                                                              onBlur={
+                                                                handleBlur
+                                                              }
+                                                              id="applyingDate-date-input"
+                                                            />
+                                                            {applyingDateError && (
+                                                              <div className="invalid-feedback">
+                                                                {this.props.t(
+                                                                  "Applying Date is required"
+                                                                )}
+                                                              </div>
+                                                            )}
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                      <div className="mb-3">
+                                                        <Row>
+                                                          <Col className="col-4">
+                                                            <Label for="traineeNameId">
+                                                              {this.props.t(
+                                                                "Trainee Name"
+                                                              )}
+                                                            </Label>
+                                                            <span className="text-danger">
+                                                              *
+                                                            </span>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Field
+                                                              name="traineeNameId"
+                                                              as="input"
+                                                              id="traineeName-Id"
+                                                              type="text"
+                                                              placeholder="Search..."
+                                                              className={
+                                                                "form-control" +
+                                                                ((errors.traineeNameId &&
+                                                                  touched.traineeNameId) ||
+                                                                traineeError
+                                                                  ? " is-invalid"
+                                                                  : "")
+                                                              }
+                                                              value={
+                                                                traineesOpt.find(
+                                                                  trainee =>
+                                                                    trainee.key ===
+                                                                    this.state
+                                                                      .selectedTraineeId
+                                                                )?.value || ""
+                                                              }
+                                                              onChange={e => {
+                                                                const newValue =
+                                                                  e.target
+                                                                    .value;
+
+                                                                const selectedTrainee =
+                                                                  traineesOpt.find(
+                                                                    trainee =>
+                                                                      trainee.value ===
+                                                                      newValue
+                                                                  );
+
+                                                                if (
+                                                                  selectedTrainee
+                                                                ) {
+                                                                  this.setState(
+                                                                    {
+                                                                      selectedTraineeId:
+                                                                        selectedTrainee.key,
+                                                                      traineeName:
+                                                                        selectedTrainee.value,
+                                                                    }
+                                                                  );
+                                                                } else {
+                                                                  this.setState(
+                                                                    {
+                                                                      selectedTraineeId:
+                                                                        null,
+                                                                      traineeName:
+                                                                        newValue,
+                                                                    }
+                                                                  );
+                                                                }
+                                                              }}
+                                                              list="traineesId"
+                                                              autoComplete="off"
+                                                            />
+                                                            <datalist id="traineesId">
+                                                              {traineesOpt.map(
+                                                                traineeOpt => (
+                                                                  <option
+                                                                    key={
+                                                                      traineeOpt.key
+                                                                    }
+                                                                    value={
+                                                                      traineeOpt.value
+                                                                    }
+                                                                  />
+                                                                )
+                                                              )}
+                                                            </datalist>
+                                                            {traineeError && (
+                                                              <div className="invalid-feedback">
+                                                                {this.props.t(
+                                                                  "Trainee Name is required"
+                                                                )}
+                                                              </div>
+                                                            )}
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                      <div className="mb-3">
+                                                        <Row>
+                                                          <Col className="col-4">
+                                                            <Label for="courseNameId">
+                                                              {this.props.t(
+                                                                "Courses"
+                                                              )}
+                                                            </Label>
+                                                            <span className="text-danger">
+                                                              *
+                                                            </span>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Field
+                                                              name="courseNameId"
+                                                              as="input"
+                                                              id="courseName-Id"
+                                                              type="text"
+                                                              placeholder="Search..."
+                                                              className={
+                                                                "form-control" +
+                                                                ((errors.courseNameId &&
+                                                                  touched.courseNameId) ||
+                                                                courseError
+                                                                  ? " is-invalid"
+                                                                  : "")
+                                                              }
+                                                              value={
+                                                                coursesOffering.find(
+                                                                  course =>
+                                                                    course.key ===
+                                                                    this.state
+                                                                      .selectedCourseId
+                                                                )?.value || ""
+                                                              }
+                                                              onChange={e => {
+                                                                const newValue =
+                                                                  e.target
+                                                                    .value;
+
+                                                                const selectedCouese =
+                                                                  coursesOffering.find(
+                                                                    course =>
+                                                                      course.value ===
+                                                                      newValue
+                                                                  );
+
+                                                                if (
+                                                                  selectedCouese
+                                                                ) {
+                                                                  this.setState(
+                                                                    {
+                                                                      selectedCourseId:
+                                                                        selectedCouese.key,
+                                                                      courseName:
+                                                                        selectedCouese.value,
+                                                                    }
+                                                                  );
+                                                                } else {
+                                                                  this.setState(
+                                                                    {
+                                                                      selectedCourseId:
+                                                                        null,
+                                                                      courseName:
+                                                                        newValue,
+                                                                    }
+                                                                  );
+                                                                }
+                                                              }}
+                                                              list="courseName"
+                                                              autoComplete="off"
+                                                            />
+                                                            <datalist id="courseName">
+                                                              {coursesOffering.map(
+                                                                course => (
+                                                                  <option
+                                                                    key={
+                                                                      course.key
+                                                                    }
+                                                                    value={
+                                                                      course.value
+                                                                    }
+                                                                  />
+                                                                )
+                                                              )}
+                                                            </datalist>
+                                                            {courseError && (
+                                                              <div className="invalid-feedback">
+                                                                {this.props.t(
+                                                                  "Courses is required"
+                                                                )}
+                                                              </div>
+                                                            )}
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                      <div className="mb-3">
+                                                        <Row>
+                                                          <Col className="col-4">
+                                                            <Label for="testExamId">
+                                                              {this.props.t(
+                                                                "Test/Exam"
+                                                              )}
+                                                            </Label>
+                                                            <span className="text-danger">
+                                                              *
+                                                            </span>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Select
+                                                              name="testExamId"
+                                                              key={`select_testExam`}
+                                                              // options={
+                                                              //   testExamOpt
+                                                              // }
+                                                              className={
+                                                                "form-control" +
+                                                                ((errors.testExamId &&
+                                                                  touched.testExamId) ||
+                                                                testExamError
+                                                                  ? " is-invalid"
+                                                                  : "")
+                                                              }
+                                                              onChange={newValue => {
+                                                                this.handleSelect(
+                                                                  "testExamId",
+                                                                  newValue.value,
+                                                                  values
+                                                                );
+                                                              }}
+                                                              // defaultValue={decreeReasons.find(
+                                                              //   opt =>
+                                                              //     opt.value ===
+                                                              //     markObjection?.testExamId
+                                                              // )}
+                                                            />
+                                                            {testExamError && (
+                                                              <div className="invalid-feedback">
+                                                                {this.props.t(
+                                                                  "Test/Exam is required"
+                                                                )}
+                                                              </div>
+                                                            )}
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                      <div className="mb-3">
+                                                        <Row>
+                                                          <Col className="col-4">
+                                                            <Label for="oldMark">
+                                                              {this.props.t(
+                                                                "Old Mark"
+                                                              )}
+                                                            </Label>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Field
+                                                              type="text"
+                                                              name="oldMark"
+                                                              id="oldMark"
+                                                              className={
+                                                                "form-control"
+                                                              }
+                                                            />
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                      <div className="mb-3">
+                                                        <Row>
+                                                          <Col className="col-4">
+                                                            <Label for="requestTypeId">
+                                                              {this.props.t(
+                                                                "Request Type"
+                                                              )}
+                                                            </Label>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Select
+                                                              name="requestTypeId"
+                                                              key={`select_requestType`}
+                                                              // options={
+                                                              //  requestTypeOpt
+                                                              // }
+                                                              className={
+                                                                "form-control"
+                                                              }
+                                                              onChange={newValue => {
+                                                                this.handleSelect(
+                                                                  "requestTypeId",
+                                                                  newValue.value,
+                                                                  values
+                                                                );
+                                                              }}
+                                                              // defaultValue={requestTypeOpt.find(
+                                                              //   opt =>
+                                                              //     opt.value ===
+                                                              //     markObjection?.requestTypeId
+                                                              // )}
+                                                            />
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                      <div className="md-2">
+                                                        <Row>
+                                                          <Col className="col-4">
+                                                            <Label for="applyingNotes">
+                                                              {this.props.t(
+                                                                "Applying Notes"
+                                                              )}
+                                                            </Label>
+                                                          </Col>
+                                                          <Col className="col-8">
+                                                            <Field
+                                                              type="textarea"
+                                                              name="applyingNotes"
+                                                              as="textarea"
+                                                              id="applyingNotes"
+                                                              className={
+                                                                "form-control"
+                                                              }
+                                                            />
+                                                          </Col>
+                                                        </Row>
+                                                      </div>
+                                                    </div>
+                                                  </CardBody>
+                                                </Card>
+                                              </CardBody>
+                                            </Card>
+                                            <Row>
+                                              <Col>
+                                                <div className="text-center">
+                                                  <Link
+                                                    to="#"
+                                                    className="btn btn-primary me-2"
+                                                    onClick={() => {
+                                                      this.handleSave(values);
+                                                    }}
+                                                  >
+                                                    {t("Save")}
+                                                  </Link>
+                                                </div>
+                                              </Col>
+                                            </Row>
+                                          </Form>
+                                        );
+                                      }}
+                                    </Formik>
+                                  </ModalBody>
+                                </Modal>
+                                <Modal
+                                  isOpen={editModal}
+                                  toggle={this.toggleEdit}
+                                  className={"modal-fullscreen"}
+                                >
+                                  <ModalHeader
+                                    toggle={this.toggleEdit}
+                                    tag="h4"
+                                  >
+                                    {!!isEdit
+                                      ? t("Edit MarkObjection Data")
+                                      : t("Add Marks Objections")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <Formik
                                       enableReinitialize={true}
                                       initialValues={{
                                         ...(isEdit &&
-                                          contract && {
-                                            Id: contract.Id,
+                                          markObjection && {
+                                            Id: markObjection.Id,
                                           }),
                                         employeeId:
-                                          (contract && contract.employeeId) ||
+                                          (markObjection &&
+                                            markObjection.employeeId) ||
                                           selectedFullName,
                                         jobNumber:
-                                          (contract && contract.jobNumber) ||
+                                          (markObjection &&
+                                            markObjection.jobNumber) ||
                                           "",
                                         biometricCode:
-                                          (contract &&
-                                            contract.biometricCode) ||
+                                          (markObjection &&
+                                            markObjection.biometricCode) ||
                                           "",
-                                        contractTypeId:
-                                          (contract &&
-                                            contract.contractTypeId) ||
-                                          selectedContractType,
-                                        contractNumber:
-                                          (contract &&
-                                            contract.contractNumber) ||
+                                        markObjectionTypeId:
+                                          (markObjection &&
+                                            markObjection.markObjectionTypeId) ||
+                                          selectedMarkObjectionType,
+                                        markObjectionNumber:
+                                          (markObjection &&
+                                            markObjection.markObjectionNumber) ||
                                           "",
                                         jobTitleId:
-                                          (contract && contract.jobTitleId) ||
+                                          (markObjection &&
+                                            markObjection.jobTitleId) ||
                                           selectedJobTitle,
                                         // corporateNodeId:
-                                        //   (contract &&
-                                        //     contract.corporateNodeId) ||
+                                        //   (markObjection &&
+                                        //     markObjection.corporateNodeId) ||
                                         //   "",
                                         // physicalWorkLocation:
-                                        //   (contract &&
-                                        //     contract.physicalWorkLocation) ||
+                                        //   (markObjection &&
+                                        //     markObjection.physicalWorkLocation) ||
                                         //   "",
                                         quorum:
-                                          (contract && contract.quorum) || "",
-                                        sequenceInWorkplace:
-                                          (contract &&
-                                            contract.sequenceInWorkplace) ||
+                                          (markObjection &&
+                                            markObjection.quorum) ||
                                           "",
-                                        hireDate: contract?.hireDate
+                                        sequenceInWorkplace:
+                                          (markObjection &&
+                                            markObjection.sequenceInWorkplace) ||
+                                          "",
+                                        hireDate: markObjection?.hireDate
                                           ? moment
-                                              .utc(contract.hireDate)
+                                              .utc(markObjection.hireDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
-                                        signatureDate: contract?.signatureDate
+                                        signatureDate:
+                                          markObjection?.signatureDate
+                                            ? moment
+                                                .utc(
+                                                  markObjection.signatureDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+
+                                        endDate: markObjection?.endDate
                                           ? moment
-                                              .utc(contract.signatureDate)
+                                              .utc(markObjection.endDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
 
-                                        endDate: contract?.endDate
+                                        ncsDate: markObjection?.ncsDate
                                           ? moment
-                                              .utc(contract.endDate)
-                                              .local()
-                                              .format("YYYY-MM-DD")
-                                          : "",
-
-                                        ncsDate: contract?.ncsDate
-                                          ? moment
-                                              .utc(contract.ncsDate)
+                                              .utc(markObjection.ncsDate)
                                               .local()
                                               .format("YYYY-MM-DD")
                                           : "",
 
                                         // administrativeSupervisor:
-                                        //   (contract &&
-                                        //     contract.administrativeSupervisor) ||
+                                        //   (markObjection &&
+                                        //     markObjection.administrativeSupervisor) ||
                                         //   "",
-                                        jobRankId: contract?.jobRankId || "",
+                                        jobRankId:
+                                          markObjection?.jobRankId || "",
                                         workClassificationId:
-                                          (contract &&
-                                            contract.workClassificationId) ||
+                                          (markObjection &&
+                                            markObjection.workClassificationId) ||
                                           selectedWorkClassification,
                                         academicYearId:
-                                          (contract &&
-                                            contract.academicYearId) ||
+                                          (markObjection &&
+                                            markObjection.academicYearId) ||
                                           selectedAcademicYearId,
                                         governmentWorker:
-                                          (contract &&
-                                            contract.governmentWorker) ||
+                                          (markObjection &&
+                                            markObjection.governmentWorker) ||
                                           "",
                                         hasMinistryApprove:
-                                          (contract &&
-                                            contract.hasMinistryApprove) ||
+                                          (markObjection &&
+                                            markObjection.hasMinistryApprove) ||
                                           "",
                                         employmentCaseId:
-                                          (contract &&
-                                            contract.employmentCaseId) ||
+                                          (markObjection &&
+                                            markObjection.employmentCaseId) ||
                                           selectedEmploymentCase,
                                       }}
                                       validationSchema={Yup.object().shape({
@@ -1262,7 +1720,7 @@ class ContractsList extends Component {
                                                                         defaultValue={jobRanksOpt.find(
                                                                           opt =>
                                                                             opt.value ===
-                                                                            contract?.jobRankId
+                                                                            markObjection?.jobRankId
                                                                         )}
                                                                       />
                                                                     </Col>
@@ -1305,7 +1763,7 @@ class ContractsList extends Component {
                                                       <Card>
                                                         <CardTitle id="card_header">
                                                           {t(
-                                                            "Contracting Type"
+                                                            "MarkObjectioning Type"
                                                           )}
                                                         </CardTitle>
                                                         <CardBody>
@@ -1419,57 +1877,6 @@ class ContractsList extends Component {
                                                               <div className="mb-3">
                                                                 <Row>
                                                                   <Col className="col-4">
-                                                                    <Label for="contractTypeId">
-                                                                      {this.props.t(
-                                                                        "Contract Type "
-                                                                      )}
-                                                                    </Label>
-                                                                    <span className="text-danger">
-                                                                      *
-                                                                    </span>
-                                                                  </Col>
-                                                                  <Col className="col-8">
-                                                                    <Select
-                                                                      name="contractTypeId"
-                                                                      key={`select_contractType`}
-                                                                      options={
-                                                                        contractsTypes
-                                                                      }
-                                                                      className={`form-control ${
-                                                                        contractTypeError
-                                                                          ? "is-invalid"
-                                                                          : ""
-                                                                      }`}
-                                                                      onChange={newValue => {
-                                                                        this.handleSelect(
-                                                                          "contractTypeId",
-                                                                          newValue.value
-                                                                        );
-                                                                      }}
-                                                                      defaultValue={contractsTypes.find(
-                                                                        opt =>
-                                                                          opt.value ===
-                                                                          contract?.contractTypeId
-                                                                      )}
-                                                                    />
-                                                                    {contractTypeError && (
-                                                                      <div className="invalid-feedback">
-                                                                        {this.props.t(
-                                                                          "Contract Type is required"
-                                                                        )}
-                                                                      </div>
-                                                                    )}
-                                                                    <ErrorMessage
-                                                                      name="contractTypeId"
-                                                                      component="div"
-                                                                      className="invalid-feedback"
-                                                                    />
-                                                                  </Col>
-                                                                </Row>
-                                                              </div>
-                                                              <div className="mb-3">
-                                                                <Row>
-                                                                  <Col className="col-4">
                                                                     <Label for="workClassificationId">
                                                                       {this.props.t(
                                                                         "Work Classification"
@@ -1493,7 +1900,7 @@ class ContractsList extends Component {
                                                                       defaultValue={workClassifications.find(
                                                                         opt =>
                                                                           opt.value ===
-                                                                          contract?.workClassificationId
+                                                                          markObjection?.workClassificationId
                                                                       )}
                                                                     />
                                                                   </Col>
@@ -1736,7 +2143,7 @@ class ContractsList extends Component {
                                                                                                     defaultValue={physicalWorkLocationsOpt.find(
                                                                                                       opt =>
                                                                                                         opt.value ===
-                                                                                                        contract.physicalWorkLocation
+                                                                                                        markObjection.physicalWorkLocation
                                                                                                     )}
                                                                                                   />
                                                                                                 </Col>
@@ -1798,7 +2205,7 @@ class ContractsList extends Component {
                                                                       defaultValue={employmentCases.find(
                                                                         opt =>
                                                                           opt.value ===
-                                                                          contract?.employmentCaseId
+                                                                          markObjection?.employmentCaseId
                                                                       )}
                                                                     />
                                                                   </Col>
@@ -1807,17 +2214,17 @@ class ContractsList extends Component {
                                                               <div className="mb-3">
                                                                 <Row>
                                                                   <Col className="col-4">
-                                                                    <Label for="contractNumber">
+                                                                    <Label for="markObjectionNumber">
                                                                       {this.props.t(
-                                                                        "Contract Number"
+                                                                        "MarkObjection Number"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
                                                                     <Field
-                                                                      name="contractNumber"
+                                                                      name="markObjectionNumber"
                                                                       type="text"
-                                                                      id="contractNumber"
+                                                                      id="markObjectionNumber"
                                                                       className={
                                                                         "form-control"
                                                                       }
@@ -2113,7 +2520,7 @@ class ContractsList extends Component {
                                                   to="#"
                                                   className="btn btn-primary me-2"
                                                   onClick={() => {
-                                                    this.handleSubmit(values);
+                                                    this.handleSave(values);
                                                   }}
                                                 >
                                                   {t("Save")}
@@ -2124,388 +2531,6 @@ class ContractsList extends Component {
                                         </Form>
                                       )}
                                     </Formik>
-                                  </ModalBody>
-                                </Modal>
-                                <Modal
-                                  isOpen={modal2}
-                                  toggle={this.toggle2}
-                                  className={"modal-fullscreen"}
-                                >
-                                  <ModalHeader toggle={this.toggle2} tag="h4">
-                                    {!!isOpen ? t("View Employee Data") : ""}
-                                  </ModalHeader>
-                                  <ModalBody>
-                                    <Card id="employee-card">
-                                      <CardTitle id="course_header">
-                                        {t("Employee Data")}
-                                      </CardTitle>
-                                      <CardBody className="cardBody">
-                                        {emptyError && (
-                                          <Alert
-                                            color="danger"
-                                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                            role="alert"
-                                          >
-                                            {emptyError}
-                                            <button
-                                              type="button"
-                                              className="btn-close"
-                                              aria-label="Close"
-                                              onClick={() =>
-                                                this.handleAlertClose(
-                                                  "emptyError"
-                                                )
-                                              }
-                                            ></button>
-                                          </Alert>
-                                        )}
-                                        <Row>
-                                          <Col lg="5">
-                                            <div className="bordered">
-                                              <Col lg="12">
-                                                <Card>
-                                                  <CardTitle id="card_header">
-                                                    {t("Personl Information")}
-                                                  </CardTitle>
-                                                  <CardBody className="card_Body1">
-                                                    <Row>
-                                                      <Col lg="12">
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Name"
-                                                            )}
-                                                            {""}:
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              modalContractValue.employeeName
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Mother Name"
-                                                            )}
-                                                            {""}:
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              modalContractValue.motherName
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Birth Date"
-                                                            )}
-                                                            {""}:
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {modalContractValue?.birthDate &&
-                                                              new Date(
-                                                                modalContractValue.birthDate
-                                                              ).toLocaleDateString()}
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "ID Number"
-                                                            )}
-                                                            {""}:
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              modalContractValue.idNumber
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Gender"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              (
-                                                                genders.find(
-                                                                  opt =>
-                                                                    opt.value ===
-                                                                    modalContractValue.genderId
-                                                                ) || ""
-                                                              ).label
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Nationality"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              (
-                                                                nationalitiesOpt.find(
-                                                                  opt =>
-                                                                    opt.value ===
-                                                                    modalContractValue.nationalityId
-                                                                ) || ""
-                                                              ).label
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                      </Col>
-                                                    </Row>
-                                                  </CardBody>
-                                                </Card>
-                                              </Col>
-                                            </div>
-                                          </Col>
-                                          <Col lg="5">
-                                            <div className="bordered">
-                                              <Col lg="12">
-                                                <Card>
-                                                  <CardTitle id="card_header">
-                                                    {t("Job Information")}
-                                                  </CardTitle>
-                                                  <CardBody className="card_Body1">
-                                                    <Row>
-                                                      <Col lg="12">
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Job Number"
-                                                            )}
-                                                            {""}:
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              modalContractValue.jobNumber
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Contract Number"
-                                                            )}
-                                                            {""}:
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              modalContractValue.contractNumber
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Signature Date"
-                                                            )}
-                                                            {""}:
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {modalContractValue?.signatureDate &&
-                                                              new Date(
-                                                                modalContractValue.signatureDate
-                                                              ).toLocaleDateString()}
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "End Date"
-                                                            )}
-                                                            {""}:
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {modalContractValue?.endDate &&
-                                                              new Date(
-                                                                modalContractValue.endDate
-                                                              ).toLocaleDateString()}
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "ID Number"
-                                                            )}
-                                                            {""}:
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              modalContractValue.idNumber
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Job Title"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {/* {modalContractValue.jobTitleId
-                                                              ? jobTitlesOpt.find(
-                                                                  jobTitleOpt =>
-                                                                    jobTitleOpt.key ===
-                                                                      modalContractValue.jobTitleId ||
-                                                                    ""
-                                                                ).arTitle
-                                                              : ""} */}
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Position"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              modalContractValue.position
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Corporate Node"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {/* {modalContractValue.corporateNodeId
-                                                              ? corporateNodesOpt.find(
-                                                                  corporateNodeOpt =>
-                                                                    corporateNodeOpt.key ===
-                                                                      modalContractValue.corporateNodeId ||
-                                                                    ""
-                                                                ).arTitle
-                                                              : ""} */}
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Work Classification"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              (
-                                                                workClassifications.find(
-                                                                  opt =>
-                                                                    opt.value ===
-                                                                    modalContractValue.workClassificationId
-                                                                ) || ""
-                                                              ).label
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Label className="right-label">
-                                                            {this.props.t(
-                                                              "Status"
-                                                            )}{" "}
-                                                            :
-                                                          </Label>
-                                                          <Label className="left-label">
-                                                            {
-                                                              modalContractValue.status
-                                                            }
-                                                          </Label>
-                                                        </div>
-                                                      </Col>
-                                                    </Row>
-                                                  </CardBody>
-                                                </Card>
-                                              </Col>
-                                            </div>
-                                          </Col>
-                                          <Col lg="2">
-                                            <div className="bordered">
-                                              <Col lg="12">
-                                                <Card>
-                                                  <CardTitle id="card_header">
-                                                    {t("Personal Photo")}
-                                                  </CardTitle>
-                                                  <CardBody className="cardBody">
-                                                    <Row></Row>
-                                                  </CardBody>
-                                                </Card>
-                                              </Col>
-                                            </div>
-                                          </Col>
-                                        </Row>
-                                        <Row>
-                                          <Col lg="12">
-                                            <div className="bordered">
-                                              <Col lg="12">
-                                                <Card>
-                                                  <CardTitle id="card_header">
-                                                    {t("View Employee Contact")}
-                                                  </CardTitle>
-                                                  <CardBody className="cardBody">
-                                                    <Row>
-                                                      <div className="mb-2">
-                                                        <Label className="right-label">
-                                                          {this.props.t(
-                                                            "Phone Number"
-                                                          )}{" "}
-                                                          :
-                                                        </Label>
-                                                        <Label className="left-label">
-                                                          {
-                                                            modalContractValue.phoneNumber
-                                                          }
-                                                        </Label>
-                                                      </div>
-                                                      <div className="mb-2">
-                                                        <Label className="right-label">
-                                                          {this.props.t(
-                                                            "Mobile Phone Number"
-                                                          )}{" "}
-                                                          :
-                                                        </Label>
-                                                        <Label className="left-label">
-                                                          {
-                                                            modalContractValue.mobileNumber
-                                                          }
-                                                        </Label>
-                                                      </div>
-                                                      <div className="mb-2">
-                                                        <Label className="right-label">
-                                                          {this.props.t(
-                                                            "Email Address"
-                                                          )}{" "}
-                                                          :
-                                                        </Label>
-                                                        <Label className="left-label">
-                                                          {
-                                                            modalContractValue.email
-                                                          }
-                                                        </Label>
-                                                      </div>
-                                                    </Row>
-                                                  </CardBody>
-                                                </Card>
-                                              </Col>
-                                            </div>
-                                          </Col>
-                                        </Row>
-                                      </CardBody>
-                                    </Card>
                                   </ModalBody>
                                 </Modal>
                               </React.Fragment>
@@ -2526,44 +2551,46 @@ class ContractsList extends Component {
 }
 
 const mapStateToProps = ({
-  contracts,
+  marksObjections,
   menu_items,
   employees,
   employmentCases,
-  contractsTypes,
   workClassifications,
+  trainees,
+  classScheduling,
 }) => ({
-  // administrativeSupervisorsOpt: employees.administrativeSupervisorsOpt || [],
+  coursesOffering: classScheduling.coursesOffering,
   workClassifications: workClassifications.workClassifications || [],
   // physicalWorkLocationsOpt: employees.physicalWorkLocationsOpt || [],
   jobRanksOpt: employees.jobRanksOpt || [],
   jobTitlesOpt: employees.jobTitlesOpt || [],
   // corporateNodesOpt: employees.corporateNodesOpt || [],
+  traineesOpt: trainees.traineesOpt,
   genders: employees.genders,
   nationalitiesOpt: employees.nationalitiesOpt,
   academicYearsOpt: employees.academicYearsOpt,
-  contractsTypes: contractsTypes.contractsTypes,
   employmentCases: employmentCases.employmentCases,
-  contracts: contracts.contracts,
+  marksObjections: marksObjections.marksObjections,
   genders: employees.genders,
   employeesNames: employees.employeesNames,
   employees: employees.employees,
-  deleted: contracts.deleted,
+  deleted: marksObjections.deleted,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetContracts: () => dispatch(getContracts()),
-  onAddNewContract: contract => dispatch(addNewContract(contract)),
-  onUpdateContract: contract => dispatch(updateContract(contract)),
-  onDeleteContract: contract => dispatch(deleteContract(contract)),
-  onGetContractDeletedValue: () => dispatch(getContractDeletedValue()),
-  onGetJobRanksOpt: () => dispatch(getJobRanksOpt()),
-  onGetJobTitlesOpt: () => dispatch(getJobTitlesOpt()),
-  onGetAcademicYearsOpt: () => dispatch(getAcademicYearsOpt()),
+  onGetMarksObjections: () => dispatch(getMarksObjections()),
+  onAddNewMarkObjection: markObjection =>
+    dispatch(addNewMarkObjection(markObjection)),
+  onUpdateMarkObjection: markObjection =>
+    dispatch(updateMarkObjection(markObjection)),
+  onDeleteMarkObjection: markObjection =>
+    dispatch(deleteMarkObjection(markObjection)),
+  onGetMarkObjectionDeletedValue: () =>
+    dispatch(getMarkObjectionDeletedValue()),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(withTranslation()(ContractsList)));
+)(withRouter(withTranslation()(MarksObjectionsList)));

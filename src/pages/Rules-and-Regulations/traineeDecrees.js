@@ -52,7 +52,6 @@ import {
   getTraineeDecreesDismiss,
   getCoursesDecrees,
 } from "store/trainee-decrees/actions";
-// import { getAcademyTrainees } from "store/university-trainees/actions";
 import { getDecrees, getDecreesRulesReasons } from "store/decrees/actions";
 
 import { isEmpty, size, map } from "lodash";
@@ -85,6 +84,7 @@ class TraineesDecreesList extends Component {
       selectedBeginSemester: null,
       selectedEndSemester: null,
       selectedTraineeId: null,
+      defaultTraineeName: "",
       selectedEducation: "",
       showAlert: null,
       minMaxValueError: null,
@@ -99,6 +99,7 @@ class TraineesDecreesList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      isEdit: false,
     };
 
     this.handleTraineesDecreeClick = this.handleTraineesDecreeClick.bind(this);
@@ -123,7 +124,8 @@ class TraineesDecreesList extends Component {
       onGetDecrees,
       onGetCoursesDecrees,
       onGetDecreesRulesReason,
-      traineesOpt,
+      trainees,
+      onGetTrainees,
       user_menu,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
@@ -133,6 +135,7 @@ class TraineesDecreesList extends Component {
     if (!traineesDecrees || traineesDecrees.length === 0) {
       onGetTraineesDecrees();
       onGetDecrees();
+      onGetTrainees();
       onGetCoursesDecrees();
       onGetDecreesRulesReason();
     }
@@ -146,12 +149,12 @@ class TraineesDecreesList extends Component {
     this.setState({ years });
     this.setState({ filteredDepartments });
     this.setState({ departments });
-    this.setState({ traineesOpt });
+    this.setState({ trainees });
   }
   componentDidUpdate(prevProps) {
-    // if (this.props.trainees !== prevProps.trainees) {
-    //   this.forceUpdate();
-    // }
+    if (this.props.trainees !== prevProps.trainees) {
+      this.forceUpdate();
+    }
     if (
       this.props.user_menu !== prevProps.user_menu ||
       this.props.location.pathname !== prevProps.location.pathname
@@ -202,7 +205,7 @@ class TraineesDecreesList extends Component {
       const filteredCoursesModified =
         coursesDecrees &&
         coursesDecrees.map(item => ({
-          label: `${item.code} - ${item.courseName}`,
+          label: `${item.code} - ${item.CourseName}`,
           value: item.Id,
         }));
     }
@@ -268,9 +271,9 @@ class TraineesDecreesList extends Component {
 
   handleTraineesDecreeClick = arg => {
     const {
-      traineesOpt,
+      trainees,
       decrees,
-      // onGetFilteredCoursesPlan,
+      onGetFilteredCoursesPlan,
       coursesDecrees,
       decreeRulesReasons,
     } = this.props;
@@ -281,22 +284,20 @@ class TraineesDecreesList extends Component {
       label: item.arTitle,
     }));
 
-    traineesDecree["fullName"] = traineesOpt.find(
-      trainee => trainee.SID === arg["TraineeId"]
+    traineesDecree["fullName"] = trainees.find(
+      trainee => trainee.TraineeNum === arg["TraineeNum"]
     ).fullName;
     traineesDecree["decree"] = decrees.find(
-      decree => decree.Id === arg["decreeRuleId"]
+      decree => decree.Id === arg["decisionRuleId"]
     ).arTitle;
-    let decreeCat = decrees.find(
-      decree => decree.Id === arg["decreeRuleId"]
+    let decisionCat = decrees.find(
+      decree => decree.Id === arg["decisionRuleId"]
     ).decisionCategoryId;
-    if (decreeCat == 3 || decreeCat == 2) {
-      const plan = traineesOpt.find(
+    if (decisionCat == 3 || decisionCat == 2) {
+      const trainee = trainees.find(
         trainee => trainee.fullName === traineesDecree["fullName"]
       );
-      // if (plan) {
-      //   onGetFilteredCoursesPlan(plan.plan);
-      // }
+      onGetFilteredCoursesPlan(trainee);
     }
 
     const { onGetTraineeDecreesDismiss, onGetDecreesRulesReason } = this.props;
@@ -352,7 +353,7 @@ class TraineesDecreesList extends Component {
     const {
       onAddNewTraineesDecree,
       decrees,
-      traineesOpt,
+      trainees,
       onUpdateTraineesDecree,
     } = this.props;
     const { traineesDecree, isEdit } = this.state;
@@ -365,29 +366,29 @@ class TraineesDecreesList extends Component {
       )
         emptyDecree[key] = values[key];
     });
-    emptyDecree["decree"] = undefined;
-    emptyDecree["traineeName"] = undefined;
+    // emptyDecree["decision"] = undefined;
+    // emptyDecree["traineeName"] = undefined;
 
-    emptyDecree["decreeRuleId"] = decrees.find(
-      decree => decree.arTitle === values["decree"]
+    emptyDecree["decisionRuleId"] = decrees.find(
+      decree => decree.arTitle === values["decision"]
     ).Id;
-    emptyDecree["TraineeNum"] = traineesOpt.find(
-      trainee => trainee.fullName === values["fullName"]
-    ).TraineeNum;
+    // emptyDecree["traineeId"] = trainees.find(
+    //   trainee => trainee.fullName === values["fullName"]
+    // ).TraineeNum;
     emptyDecree["TraineesDecreesCourses"] = values["TraineesDecreesCourses"];
 
-    if (isEdit == false) {
-      emptyDecree["decreeStateId"] = 4;
-      onAddNewTraineesDecree(emptyDecree);
-      this.setState(prevState => ({
-        addModal: !prevState.addModal,
-      }));
-    } else if (isEdit == true) {
+    if (isEdit) {
       console.log("edit");
       emptyDecree["Id"] = traineesDecree["Id"];
       onUpdateTraineesDecree(emptyDecree);
       this.setState(prevState => ({
         modal: !prevState.modal,
+      }));
+    } else {
+      emptyDecree["decreeStateId"] = 4;
+      onAddNewTraineesDecree(emptyDecree);
+      this.setState(prevState => ({
+        addModal: !prevState.addModal,
       }));
     }
   };
@@ -400,7 +401,7 @@ class TraineesDecreesList extends Component {
     const { SearchBar } = Search;
 
     const {
-      traineesOpt,
+      trainees,
       traineesDecrees,
       faculties,
       years,
@@ -411,7 +412,7 @@ class TraineesDecreesList extends Component {
       decrees,
       onGetDecreesRulesReason,
       decreeRulesReasons,
-      // onGetFilteredCoursesPlan,
+      onGetFilteredCoursesPlan,
       filteredCourses,
       coursesDecrees,
       decreeStatus,
@@ -485,7 +486,7 @@ class TraineesDecreesList extends Component {
     const filteredCoursesModified =
       filteredCourses &&
       filteredCourses.map(item => ({
-        label: `${item.code} - ${item.courseName}`,
+        label: `${item.code} - ${item.CourseName}`,
         value: item.Id,
       }));
 
@@ -513,7 +514,7 @@ class TraineesDecreesList extends Component {
     }));
 
     const l = decreeRulesReasonsModified.find(
-      opt => opt.value === traineesDecree.decreeRuleReasonId || ""
+      opt => opt.value === traineesDecree.decisionRuleReasonId || ""
     );
 
     const traineesDecreeListColumns = [
@@ -563,7 +564,7 @@ class TraineesDecreesList extends Component {
       },
       {
         text: this.props.t("decree Rule"),
-        dataField: "decreeRuleId",
+        dataField: "decisionRuleId",
         sort: true,
         formatter: (cellContent, traineesDecrees) => (
           <>
@@ -581,7 +582,7 @@ class TraineesDecreesList extends Component {
       },
       {
         text: this.props.t("Decree Rule Reason"),
-        dataField: "decreeRuleReasonId",
+        dataField: "decisionRuleReasonId",
         sort: true,
         formatter: (cellContent, traineesDecrees) => (
           <>
@@ -679,15 +680,8 @@ class TraineesDecreesList extends Component {
         sort: true,
       },
       {
-        text: this.props.t("Adding Date"),
+        text: this.props.t("Applying Date"),
         dataField: "insertDate",
-        formatter: (cellContent, traineesDecrees) => (
-          <>
-            {traineesDecrees.insertDate
-              ? traineesDecrees.insertDate.slice(0, 10)
-              : ""}
-          </>
-        ),
         sort: true,
       },
 
@@ -903,10 +897,10 @@ class TraineesDecreesList extends Component {
                                                 traineeName:
                                                   traineesDecree.traineeName ||
                                                   "",
-                                                decreeRuleReasonId:
-                                                  traineesDecree.decreeRuleReasonId,
-                                                decreeId:
-                                                  "" || traineesDecree.decreeId,
+                                                decisionRuleReasonId:
+                                                  traineesDecree.decisionRuleReasonId,
+                                                decision:
+                                                  "" || traineesDecree.decision,
                                                 absenceRate:
                                                   traineesDecree.absenceRate ||
                                                   "",
@@ -918,23 +912,6 @@ class TraineesDecreesList extends Component {
                                                     : "",
                                                 note: "",
                                                 TraineesDecreesCourses: [],
-                                                startDate:
-                                                  traineesDecree?.startDate
-                                                    ? moment
-                                                        .utc(
-                                                          traineesDecree.startDate
-                                                        )
-                                                        .local()
-                                                        .format("YYYY-MM-DD")
-                                                    : "",
-                                                endDate: traineesDecree?.endDate
-                                                  ? moment
-                                                      .utc(
-                                                        traineesDecree.endDate
-                                                      )
-                                                      .local()
-                                                      .format("YYYY-MM-DD")
-                                                  : "",
                                                 fromDate:
                                                   traineesDecree?.fromDate
                                                     ? moment
@@ -999,9 +976,9 @@ class TraineesDecreesList extends Component {
                                                           .nullable()
                                                           .notRequired(),
                                                       }),
-                                                  decreeRuleReasonId:
+                                                  decisionRuleReasonId:
                                                     Yup.object().nullable(),
-                                                  decree: Yup.string()
+                                                  decision: Yup.string()
                                                     .required(
                                                       "Decree is required"
                                                     )
@@ -1024,7 +1001,7 @@ class TraineesDecreesList extends Component {
                                                       "is-valid-trainee",
                                                       "Invalid trainee",
                                                       value => {
-                                                        return traineesOpt.some(
+                                                        return trainees.some(
                                                           trainee =>
                                                             trainee.fullName ===
                                                             value
@@ -1057,14 +1034,11 @@ class TraineesDecreesList extends Component {
                                                     ),
                                                   insertDate:
                                                     Yup.date().required(
-                                                      "Adding Date is required"
+                                                      "Applying Date is required"
                                                     ),
                                                   note: Yup.string(),
                                                 }
                                               )}
-                                              onSubmit={values => {
-                                                this.handleSave(values);
-                                              }}
                                             >
                                               {({
                                                 errors,
@@ -1081,7 +1055,7 @@ class TraineesDecreesList extends Component {
                                                     <Row>
                                                       <Col lg="4">
                                                         <label
-                                                          htmlFor="decree"
+                                                          htmlFor="decision"
                                                           className="form-label d-flex"
                                                         >
                                                           {this.props.t(
@@ -1094,12 +1068,12 @@ class TraineesDecreesList extends Component {
                                                       </Col>
                                                       <Col lg="8">
                                                         <Field
-                                                          name="decreeId"
+                                                          name="decision"
                                                           type="text"
-                                                          list="decreeList"
+                                                          list="decisionList"
                                                           className={`form-control ${
-                                                            errors.decreeId &&
-                                                            touched.decreeId
+                                                            errors.decision &&
+                                                            touched.decision
                                                               ? "is-invalid"
                                                               : ""
                                                           }`}
@@ -1164,63 +1138,43 @@ class TraineesDecreesList extends Component {
                                                       <Col lg="8">
                                                         <Field
                                                           name="traineeName"
-                                                          as="input"
                                                           type="text"
                                                           list="traineeNameList"
-                                                          placeholder="Search..."
                                                           className={`form-control ${
                                                             errors.traineeName &&
                                                             touched.traineeName
                                                               ? "is-invalid"
                                                               : ""
                                                           }`}
-                                                          value={
-                                                            traineesOpt.find(
-                                                              t =>
-                                                                t.key ===
-                                                                this.state
-                                                                  .selectedTraineeId
-                                                            )?.value || ""
-                                                          }
                                                           onChange={e => {
-                                                            const newValue =
+                                                            const traineeName =
                                                               e.target.value;
 
-                                                            const selectedTrainee =
-                                                              traineesOpt.find(
-                                                                t =>
-                                                                  t.value ===
-                                                                  newValue
+                                                            const plan =
+                                                              trainees.find(
+                                                                trainee =>
+                                                                  trainee.fullName ===
+                                                                  traineeName
                                                               );
-
-                                                            if (
-                                                              selectedTrainee
-                                                            ) {
-                                                              this.setState({
-                                                                selectedTraineeId:
-                                                                  selectedTrainee.key,
-                                                                defaultTraineeName:
-                                                                  selectedTrainee.value,
-                                                              });
-                                                            } else {
-                                                              this.setState({
-                                                                selectedTraineeId:
-                                                                  null,
-                                                                defaultTraineeName:
-                                                                  newValue,
-                                                              });
+                                                            console.log(
+                                                              "77777777777777777777",
+                                                              trainees
+                                                            );
+                                                            if (plan) {
+                                                              onGetFilteredCoursesPlan(
+                                                                plan
+                                                              );
                                                             }
+                                                            handleChange(e);
                                                           }}
                                                         />
                                                         <datalist id="traineeNameList">
-                                                          {traineesOpt.map(
+                                                          {trainees.map(
                                                             trainee => (
                                                               <option
-                                                                key={
-                                                                  trainee.key
-                                                                }
+                                                                key={trainee.Id}
                                                                 value={
-                                                                  trainee.value
+                                                                  trainee.fullName
                                                                 }
                                                               />
                                                             )
@@ -1239,7 +1193,7 @@ class TraineesDecreesList extends Component {
                                                     <Row>
                                                       <Col lg="4">
                                                         <label
-                                                          htmlFor="decreeRuleReasonId"
+                                                          htmlFor="decisionRuleReasonId"
                                                           className="form-label d-flex"
                                                         >
                                                           {this.props.t(
@@ -1252,26 +1206,26 @@ class TraineesDecreesList extends Component {
                                                       </Col>
                                                       <Col lg="8">
                                                         <Field
-                                                          name="decreeRuleReasonId"
+                                                          name="decisionRuleReasonId"
                                                           options={
                                                             decreeRulesReasonsModified
                                                           }
                                                           component={Select}
                                                           onChange={option =>
                                                             setFieldValue(
-                                                              "decreeRuleReasonId",
+                                                              "decisionRuleReasonId",
                                                               option.value
                                                             )
                                                           }
                                                           className={`select-style-std ${
-                                                            errors.decreeRuleReasonId &&
-                                                            touched.decreeRuleReasonId
+                                                            errors.decisionRuleReasonId &&
+                                                            touched.decisionRuleReasonId
                                                               ? "is-invalid"
                                                               : ""
                                                           }`}
                                                         />
                                                         <ErrorMessage
-                                                          name="decreeRuleReasonId"
+                                                          name="decisionRuleReasonId"
                                                           component="div"
                                                           className="invalid-feedback"
                                                         />
@@ -1369,84 +1323,6 @@ class TraineesDecreesList extends Component {
                                                                 name="TraineesDecreesCourses"
                                                                 component="div"
                                                                 className="invalid-feedback"
-                                                              />
-                                                            </Col>
-                                                          </Row>
-                                                        </div>
-                                                        <div className="mb-3">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label for="startDate">
-                                                                {this.props.t(
-                                                                  "Start Date"
-                                                                )}
-                                                              </Label>
-                                                              <span className="text-danger">
-                                                                *
-                                                              </span>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Field
-                                                                name="startDate"
-                                                                className={`form-control`}
-                                                                type="date"
-                                                                value={
-                                                                  values.startDate
-                                                                    ? new Date(
-                                                                        values.startDate
-                                                                      )
-                                                                        .toISOString()
-                                                                        .split(
-                                                                          "T"
-                                                                        )[0]
-                                                                    : ""
-                                                                }
-                                                                onChange={
-                                                                  handleChange
-                                                                }
-                                                                onBlur={
-                                                                  handleBlur
-                                                                }
-                                                                id="startDate-date-input"
-                                                              />
-                                                            </Col>
-                                                          </Row>
-                                                        </div>
-                                                        <div className="mb-3">
-                                                          <Row>
-                                                            <Col className="col-4">
-                                                              <Label for="endDate">
-                                                                {this.props.t(
-                                                                  "End Date"
-                                                                )}
-                                                              </Label>
-                                                              <span className="text-danger">
-                                                                *
-                                                              </span>
-                                                            </Col>
-                                                            <Col className="col-8">
-                                                              <Field
-                                                                name="endDate"
-                                                                className={`form-control`}
-                                                                type="date"
-                                                                value={
-                                                                  values.endDate
-                                                                    ? new Date(
-                                                                        values.endDate
-                                                                      )
-                                                                        .toISOString()
-                                                                        .split(
-                                                                          "T"
-                                                                        )[0]
-                                                                    : ""
-                                                                }
-                                                                onChange={
-                                                                  handleChange
-                                                                }
-                                                                onBlur={
-                                                                  handleBlur
-                                                                }
-                                                                id="endDate-date-input"
                                                               />
                                                             </Col>
                                                           </Row>
@@ -1576,7 +1452,7 @@ class TraineesDecreesList extends Component {
                                                           className="form-label d-flex"
                                                         >
                                                           {this.props.t(
-                                                            "Adding Date"
+                                                            "Applying Date"
                                                           )}
                                                           <span className="text-danger">
                                                             *
@@ -1607,12 +1483,17 @@ class TraineesDecreesList extends Component {
                                                     </Row>
                                                   </div>
 
-                                                  <button
-                                                    type="submit"
-                                                    className="btn btn-primary"
-                                                  >
-                                                    {this.props.t("Save")}
-                                                  </button>
+                                                  <div className="text-center">
+                                                    <button
+                                                      type="button"
+                                                      className="btn btn-primary me-2"
+                                                      onClick={() => {
+                                                        this.handleSave(values);
+                                                      }}
+                                                    >
+                                                      {t("Save")}
+                                                    </button>
+                                                  </div>
                                                 </Form>
                                               )}
                                             </Formik>
@@ -1665,10 +1546,10 @@ class TraineesDecreesList extends Component {
                                                   traineeName:
                                                     traineesDecree.fullName ||
                                                     "",
-                                                  decreeRuleReasonId:
-                                                    traineesDecree.decreeRuleReasonId,
-                                                  decree:
-                                                    "" || traineesDecree.decree,
+                                                  decisionRuleReasonId:
+                                                    traineesDecree.decisionRuleReasonId,
+                                                  decision:
+                                                    traineesDecree.decision,
                                                   absenceRate:
                                                     traineesDecree.absenceRate ||
                                                     "",
@@ -1683,12 +1564,6 @@ class TraineesDecreesList extends Component {
                                                   note: traineesDecree.note,
                                                   TraineesDecreesCourses:
                                                     stdCoursesArray,
-                                                  fromYearSemesterId:
-                                                    null ||
-                                                    traineesDecree.fromYearSemesterId,
-                                                  toYearSemesterId:
-                                                    null ||
-                                                    traineesDecree.toYearSemesterId,
                                                   decreeNum:
                                                     traineesDecree.decreeNum,
                                                   decreeType:
@@ -1705,24 +1580,6 @@ class TraineesDecreesList extends Component {
                                                     traineesDecree.decreeStateId,
                                                   councilDecree:
                                                     traineesDecree.councilDecree,
-                                                  startDate:
-                                                    traineesDecree?.startDate
-                                                      ? moment
-                                                          .utc(
-                                                            traineesDecree.startDate
-                                                          )
-                                                          .local()
-                                                          .format("YYYY-MM-DD")
-                                                      : "",
-                                                  endDate:
-                                                    traineesDecree?.endDate
-                                                      ? moment
-                                                          .utc(
-                                                            traineesDecree.endDate
-                                                          )
-                                                          .local()
-                                                          .format("YYYY-MM-DD")
-                                                      : "",
                                                   fromDate:
                                                     traineesDecree?.fromDate
                                                       ? moment
@@ -1860,7 +1717,7 @@ class TraineesDecreesList extends Component {
                                                           .nullable()
                                                           .notRequired(),
                                                       }),
-                                                  decreeRuleReasonId:
+                                                  decisionRuleReasonId:
                                                     Yup.object().nullable(),
                                                   decree: Yup.string()
                                                     .required(
@@ -1885,7 +1742,7 @@ class TraineesDecreesList extends Component {
                                                       "is-valid-trainee",
                                                       "Invalid trainee",
                                                       value => {
-                                                        return traineesOpt.some(
+                                                        return trainees.some(
                                                           trainee =>
                                                             trainee.fullName ===
                                                             value
@@ -1918,14 +1775,11 @@ class TraineesDecreesList extends Component {
                                                     ),
                                                   insertDate:
                                                     Yup.date().required(
-                                                      "Adding Date is required"
+                                                      "Applying Date is required"
                                                     ),
                                                   note: Yup.string(),
                                                 }
                                               )}
-                                              onSubmit={values => {
-                                                this.handleSave(values);
-                                              }}
                                             >
                                               {({
                                                 errors,
@@ -1993,7 +1847,7 @@ class TraineesDecreesList extends Component {
                                                       <Row>
                                                         <Col lg="4">
                                                           <label
-                                                            htmlFor="decree"
+                                                            htmlFor="decision"
                                                             className="form-label d-flex"
                                                           >
                                                             {this.props.t(
@@ -2006,12 +1860,12 @@ class TraineesDecreesList extends Component {
                                                         </Col>
                                                         <Col lg="8">
                                                           <Field
-                                                            name="decree"
+                                                            name="decision"
                                                             type="text"
-                                                            list="decreeList"
+                                                            list="decisionList"
                                                             className={`form-control ${
-                                                              errors.decree &&
-                                                              touched.decree
+                                                              errors.decision &&
+                                                              touched.decision
                                                                 ? "is-invalid"
                                                                 : ""
                                                             }`}
@@ -2037,7 +1891,7 @@ class TraineesDecreesList extends Component {
                                                               );
                                                             }}
                                                           />
-                                                          <datalist id="decreeList">
+                                                          <datalist id="decisionList">
                                                             {decrees.map(
                                                               decree => (
                                                                 <option
@@ -2087,7 +1941,7 @@ class TraineesDecreesList extends Component {
                                                                 : ""
                                                             }`}
                                                             value={
-                                                              traineesOpt.find(
+                                                              trainees.find(
                                                                 t =>
                                                                   t.key ===
                                                                   this.state
@@ -2099,7 +1953,7 @@ class TraineesDecreesList extends Component {
                                                                 e.target.value;
 
                                                               const selectedTrainee =
-                                                                traineesOpt.find(
+                                                                trainees.find(
                                                                   t =>
                                                                     t.value ===
                                                                     newValue
@@ -2125,7 +1979,7 @@ class TraineesDecreesList extends Component {
                                                             }}
                                                           />
                                                           <datalist id="traineeNameList">
-                                                            {traineesOpt.map(
+                                                            {trainees.map(
                                                               trainee => (
                                                                 <option
                                                                   key={
@@ -2151,7 +2005,7 @@ class TraineesDecreesList extends Component {
                                                       <Row>
                                                         <Col lg="4">
                                                           <label
-                                                            htmlFor="decreeRuleReasonId"
+                                                            htmlFor="decisionRuleReasonId"
                                                             className="form-label d-flex"
                                                           >
                                                             {this.props.t(
@@ -2164,31 +2018,31 @@ class TraineesDecreesList extends Component {
                                                         </Col>
                                                         <Col lg="8">
                                                           <Field
-                                                            name="decreeRuleReasonId"
+                                                            name="decisionRuleReasonId"
                                                             component={Select}
                                                             options={
                                                               decreeRulesReasonsModified
                                                             }
                                                             onChange={option =>
                                                               setFieldValue(
-                                                                "decreeRuleReasonId",
+                                                                "decisionRuleReasonId",
                                                                 option.value
                                                               )
                                                             }
                                                             defaultValue={decreeRulesReasonsModified.find(
                                                               opt =>
                                                                 opt.value ===
-                                                                traineesDecree.decreeRuleReasonId
+                                                                traineesDecree.decisionRuleReasonId
                                                             )}
                                                             className={`select-style-std ${
-                                                              errors.decreeRuleReasonId &&
-                                                              touched.decreeRuleReasonId
+                                                              errors.decisionRuleReasonId &&
+                                                              touched.decisionRuleReasonId
                                                                 ? "is-invalid"
                                                                 : ""
                                                             }`}
                                                           />
                                                           <ErrorMessage
-                                                            name="decreeRuleReasonId"
+                                                            name="decisionRuleReasonId"
                                                             component="div"
                                                             className="invalid-feedback"
                                                           />
@@ -2288,84 +2142,6 @@ class TraineesDecreesList extends Component {
                                                                   name="TraineesDecreesCourses"
                                                                   component="div"
                                                                   className="invalid-feedback"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="startDate">
-                                                                  {this.props.t(
-                                                                    "Start Date"
-                                                                  )}
-                                                                </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
-                                                              </Col>
-                                                              <Col className="col-8">
-                                                                <Field
-                                                                  name="startDate"
-                                                                  className={`form-control`}
-                                                                  type="date"
-                                                                  value={
-                                                                    values.startDate
-                                                                      ? new Date(
-                                                                          values.startDate
-                                                                        )
-                                                                          .toISOString()
-                                                                          .split(
-                                                                            "T"
-                                                                          )[0]
-                                                                      : ""
-                                                                  }
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  onBlur={
-                                                                    handleBlur
-                                                                  }
-                                                                  id="startDate-date-input"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col className="col-4">
-                                                                <Label for="endDate">
-                                                                  {this.props.t(
-                                                                    "End Date"
-                                                                  )}
-                                                                </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
-                                                              </Col>
-                                                              <Col className="col-8">
-                                                                <Field
-                                                                  name="endDate"
-                                                                  className={`form-control`}
-                                                                  type="date"
-                                                                  value={
-                                                                    values.endDate
-                                                                      ? new Date(
-                                                                          values.endDate
-                                                                        )
-                                                                          .toISOString()
-                                                                          .split(
-                                                                            "T"
-                                                                          )[0]
-                                                                      : ""
-                                                                  }
-                                                                  onChange={
-                                                                    handleChange
-                                                                  }
-                                                                  onBlur={
-                                                                    handleBlur
-                                                                  }
-                                                                  id="endDate-date-input"
                                                                 />
                                                               </Col>
                                                             </Row>
@@ -2567,7 +2343,7 @@ class TraineesDecreesList extends Component {
                                                             className="form-label d-flex"
                                                           >
                                                             {this.props.t(
-                                                              "Adding Date"
+                                                              "Applying Date"
                                                             )}
                                                             <span className="text-danger">
                                                               *
@@ -2823,12 +2599,17 @@ class TraineesDecreesList extends Component {
                                                     </div>
                                                   </div>
 
-                                                  <button
-                                                    type="submit"
-                                                    className="btn btn-primary"
-                                                  >
-                                                    {this.props.t("Save")}
-                                                  </button>
+                                                  <div className="text-center">
+                                                    <button
+                                                      type="button"
+                                                      className="btn btn-primary me-2"
+                                                      onClick={() => {
+                                                        this.handleSave(values);
+                                                      }}
+                                                    >
+                                                      {t("Save")}
+                                                    </button>
+                                                  </div>
                                                 </Form>
                                               )}
                                             </Formik>
@@ -3099,20 +2880,22 @@ const mapStateToProps = ({
   departments: departments.departments,
   decrees: decrees.decrees,
   decreeRulesReasons: decrees.decreeRulesReasons,
-  traineesOpt: trainees.traineesOpt,
+  trainees: traineesDecrees.academyTraineesDecrees,
   coursesDecrees: traineesDecrees.coursesDecrees,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  // onGetFilteredCoursesPlan: planId => dispatch(getFilteredCoursesPlans(planId)),
+  onGetFilteredCoursesPlan: trainee =>
+    dispatch(getFilteredCoursesPlans(trainee)),
   onGetTraineeDecreesDismiss: traineeId =>
     dispatch(getTraineeDecreesDismiss(traineeId)),
   onGetCoursesDecrees: () => dispatch(getCoursesDecrees()),
   onGetTraineesDecrees: () => dispatch(getTraineesDecrees()),
+  onGetTrainees: () => dispatch(getAcademyTraineesDecrees()),
   onGetDecrees: () => dispatch(getDecrees()),
-  onGetDecreesRulesReason: decreeId =>
-    dispatch(getDecreesRulesReasons(decreeId)),
+  onGetDecreesRulesReason: decisionId =>
+    dispatch(getDecreesRulesReasons(decisionId)),
   onAddNewTraineesDecree: traineesDecree =>
     dispatch(addNewTraineesDecree(traineesDecree)),
   onUpdateTraineesDecree: traineesDecree =>

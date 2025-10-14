@@ -303,7 +303,11 @@ export * from "./students-requests/actions";
 
 export * from "./HR/contracts/actions";
 
-//Contract
+//markObjection
+
+export * from "./marks-objections/actions";
+
+//justifyTraineeAbsence
 
 export * from "./justifyTraineeAbsence/actions";
 

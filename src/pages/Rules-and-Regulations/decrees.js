@@ -549,13 +549,13 @@ class DecreesList extends Component {
         dataField: "arTitle",
         text: t("Decree(ar)"),
         sort: true,
-        // editable: showEditButton,
+        editable: showEditButton,
       },
       {
         dataField: "enTitle",
         text: t("Decree"),
         sort: true,
-        // editable: showEditButton,
+        editable: showEditButton,
       },
       {
         dataField: "delete",

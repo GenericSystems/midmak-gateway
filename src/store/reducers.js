@@ -320,6 +320,9 @@ import studentsRequests from "./students-requests/reducer";
 //contract
 import contracts from "./HR/contracts/reducer";
 
+//marksObjections
+import marksObjections from "./marks-objections/reducer";
+
 //justifyTraineesAbsence
 import justifyTraineesAbsence from "./justifyTraineeAbsence/reducer";
 
@@ -473,6 +476,7 @@ const rootReducer = combineReducers({
   workClassifications,
   employees,
   contracts,
+  marksObjections,
   justifyTraineesAbsence,
   examsAttendance,
   attendanceObservers,
