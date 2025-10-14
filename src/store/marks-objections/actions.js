@@ -15,6 +15,9 @@ import {
   DELETE_MARK_OBJECTION,
   DELETE_MARK_OBJECTION_SUCCESS,
   DELETE_MARK_OBJECTION_FAIL,
+  GET_REQUEST_STATUS,
+  GET_REQUEST_STATUS_FAIL,
+  GET_REQUEST_STATUS_SUCCESS,
 } from "./actionTypes";
 
 export const getMarksObjections = () => ({
@@ -89,5 +92,19 @@ export const deleteMarkObjectionSuccess = contract => ({
 
 export const deleteMarkObjectionFail = error => ({
   type: DELETE_MARK_OBJECTION_FAIL,
+  payload: error,
+});
+
+export const getRequestStatus = () => ({
+  type: GET_REQUEST_STATUS,
+});
+
+export const getRequestStatusSuccess = contracts => ({
+  type: GET_REQUEST_STATUS_SUCCESS,
+  payload: contracts,
+});
+
+export const getRequestStatusFail = error => ({
+  type: GET_REQUEST_STATUS_FAIL,
   payload: error,
 });

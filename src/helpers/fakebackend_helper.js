@@ -2304,6 +2304,9 @@ export const updateMarkObjection = data =>
 export const deleteMarkObjection = data =>
   post(url.DELETE_MARK_OBJECTION, data);
 
+//request status
+export const getRequestStatus = data => post(url.GET_REQUEST_STATUS, data);
+
 //JustifyTraineeAbsence
 
 export const getJustifyTraineesAbsence = data =>

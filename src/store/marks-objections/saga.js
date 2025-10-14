@@ -20,6 +20,8 @@ import {
   updateMarkObjectionFail,
   deleteMarkObjectionSuccess,
   deleteMarkObjectionFail,
+  getRequestStatusSuccess,
+  getRequestStatusFail,
 } from "./actions";
 
 import { getTraineesOptSuccess, getTraineesOptFail } from "../trainees/actions";
@@ -36,6 +38,7 @@ import {
   deleteMarkObjection,
   getTraineesOpt,
   getCoursesOffering,
+  getRequestStatus,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchMarksObjections() {
@@ -81,18 +84,18 @@ function* fetchMarksObjections() {
     yield put(getCoursesOfferingFail(error));
   }
 
-  //   const get_employee_req = {
-  //     source: "db",
-  //     procedure: "SisApp_getData",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "_Common_Employee",
-  //   };
-  //   try {
-  //     const response = yield call(getEmployees, get_employee_req);
-  //     yield put(getEmployeesSuccess(response));
-  //   } catch (error) {
-  //     yield put(getEmployeesFail(error));
-  //   }
+  const get_RequestStatus_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_DecreeStatus",
+  };
+  try {
+    const response = yield call(getRequestStatus, get_RequestStatus_req);
+    yield put(getRequestStatusSuccess(response));
+  } catch (error) {
+    yield put(getRequestStatusFail(error));
+  }
 
   //   const get_contractType_req = {
   //     source: "db",

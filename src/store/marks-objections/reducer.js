@@ -1,3 +1,4 @@
+import { getRequestStatus } from "./actions";
 import {
   GET_MARKS_OBJECTIONS_SUCCESS,
   GET_MARKS_OBJECTIONS_FAIL,
@@ -9,10 +10,13 @@ import {
   GET_MARK_OBJECTION_DELETED_VALUE_FAIL,
   DELETE_MARK_OBJECTION_SUCCESS,
   DELETE_MARK_OBJECTION_FAIL,
+  GET_REQUEST_STATUS_SUCCESS,
+  GET_REQUEST_STATUS_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   marksObjections: [],
+  requestStatus: [],
   deleted: {},
   error: {},
 };
@@ -83,6 +87,19 @@ const marksObjections = (state = INIT_STATE, action) => {
       };
 
     case DELETE_MARK_OBJECTION_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_REQUEST_STATUS_SUCCESS:
+      return {
+        ...state,
+        requestStatus: action.payload,
+        deleted: {},
+      };
+
+    case GET_REQUEST_STATUS_FAIL:
       return {
         ...state,
         error: action.payload,

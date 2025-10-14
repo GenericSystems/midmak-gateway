@@ -1133,6 +1133,7 @@ export const GET_MARK_OBJECTION_DELETED_VALUE = "/deleted";
 export const ADD_NEW_MARK_OBJECTION = "/add/markObjection";
 export const UPDATE_MARK_OBJECTION = "/update/markObjection";
 export const DELETE_MARK_OBJECTION = "/deleted/markObjection";
+export const GET_REQUEST_STATUS = "/requestStatus";
 
 //JustifyTraineeAbsence
 export const GET_JUSTIFY_TRAINEES_ABSENCE = "/justifyTraineesAbsence";
