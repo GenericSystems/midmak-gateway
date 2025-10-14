@@ -1077,63 +1077,6 @@ export const UPDATE_HIDDEN_GRADE = "/update/hiddenGrades";
 export const DELETE_HIDDEN_GRADE = "/delete/hiddenGrades";
 export const GET_HIDE_REASONS = "/hideReasons";
 
-//ABSCENCE_WARNINGS
-export const GET_ABSENCE_WARNINGS = "/absenceWarnings";
-export const GET_DECISION_REASONS = "/decisionReasons";
-export const GET_ABSENCE_WARNING_DELETED_VALUE = "/deleted";
-export const ADD_NEW_ABSENCE_WARNING = "/add/absenceWarning";
-export const UPDATE_ABSENCE_WARNING = "/update/absenceWarning";
-export const DELETE_ABSENCE_WARNING = "/delete/absenceWarning";
-
-//OralWarningDecree
-export const GET_ORAL_WARNING_DECREES = "/oralWarningDecrees";
-export const GET_ORAL_WARNING_DECREE_DELETED_VALUE = "/deleted";
-export const ADD_NEW_ORAL_WARNING_DECREE = "/add/oralWarningDecree";
-export const UPDATE_ORAL_WARNING_DECREE = "/update/oralWarningDecree";
-export const DELETE_ORAL_WARNING_DECREE = "/delete/oralWarningDecree";
-
-//WrittenWarningDecrees
-export const GET_WRITTEN_WARNING_DECREES = "/writtenWarningDecrees";
-export const GET_WRITTEN_WARNING_DECREE_DELETED_VALUE = "/deleted";
-export const ADD_NEW_WRITTEN_WARNING_DECREE = "/add/writtenWarningDecree";
-export const UPDATE_WRITTEN_WARNING_DECREE = "/update/writtenWarningDecree";
-export const DELETE_WRITTEN_WARNING_DECREE = "/delete/writtenWarningDecree";
-
-//dismissDecreesAbsence
-export const GET_DISMISS_DECREES_ABSENCE = "/dismissDecreesAbsence";
-export const GET_DISMISS_DECREE_ABSENCE_DELETED_VALUE = "/deleted";
-export const ADD_NEW_DISMISS_DECREE_ABSENCE = "/add/dismissDecreeAbsence";
-export const UPDATE_DISMISS_DECREE_ABSENCE = "/update/dismissDecreeAbsence";
-export const DELETE_DISMISS_DECREE_ABSENCE = "/delete/dismissDecreeAbsence";
-
-//dismissDecreesExam
-export const GET_DISMISS_DECREES_EXAM = "/dismissDecreesExam";
-export const GET_DISMISS_DECREE_EXAM_DELETED_VALUE = "/deleted";
-export const ADD_NEW_DISMISS_DECREE_EXAM = "/add/dismissDecreeExam";
-export const UPDATE_DISMISS_DECREE_EXAM = "/update/dismissDecreeExam";
-export const DELETE_DISMISS_DECREE_EXAM = "/delete/dismissDecreeExam";
-
-//dismissDecreesOther
-export const GET_DISMISS_DECREES_OTHER = "/dismissDecreesOther";
-export const GET_DISMISS_DECREE_OTHER_DELETED_VALUE = "/deleted";
-export const ADD_NEW_DISMISS_DECREE_OTHER = "/add/dismissDecreeOther";
-export const UPDATE_DISMISS_DECREE_OTHER = "/update/dismissDecreeOther";
-export const DELETE_DISMISS_DECREE_OTHER = "/delete/dismissDecreeOther";
-
-//dismissDecreesOther
-export const GET_DISMISS_PERIOD_DECREES = "/dismissPeriodDecrees";
-export const GET_DISMISS_PERIOD_DECREE_DELETED_VALUE = "/deleted";
-export const ADD_NEW_DISMISS_PERIOD_DECREE = "/add/dismissPeriodDecree";
-export const UPDATE_DISMISS_PERIOD_DECREE = "/update/dismissPeriodDecree";
-export const DELETE_DISMISS_PERIOD_DECREE = "/delete/dismissPeriodDecree";
-
-//dismissAcademyDecrees
-export const GET_DISMISS_ACADEMY_DECREES = "/dismissAcademyDecrees";
-export const GET_DISMISS_ACADEMY_DECREE_DELETED_VALUE = "/deleted";
-export const ADD_NEW_DISMISS_ACADEMY_DECREE = "/add/dismissAcademyDecree";
-export const UPDATE_DISMISS_ACADEMY_DECREE = "/update/dismissAcademyDecree";
-export const DELETE_DISMISS_ACADEMY_DECREE = "/delete/dismissAcademyDecree";
-
 //EMPLOYMENT_CASES
 export const GET_EMPLOYMENT_CASES = "/employmentCases";
 export const GET_EMPLOYMENT_CASE_DELETED_VALUE = "/deleted";

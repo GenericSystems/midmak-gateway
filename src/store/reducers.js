@@ -269,30 +269,6 @@ import gradesVersions from "./gradesVersions/reducer";
 // documentTypes
 import documentsTypes from "./documents-types/reducer";
 
-//oralWarningDecrees
-import oralWarningDecrees from "./oralWarningDecrees/reducer";
-
-//WrittenWarningDecreesList
-import writtenWarningDecrees from "./writtenWarningDecrees/reducer";
-
-//DismissCoursesDecreesabsence
-import dismissDecreesAbsence from "./dismissCoursesDecrees-absence/reducer";
-
-//DismissCoursesDecreesexam
-import dismissDecreesExam from "./dismissCoursesDecrees-exam/reducer";
-
-//DismissCoursesDecreesOther
-import dismissDecreesOther from "./dismissCoursesDecrees-other/reducer";
-
-//DismissPeriodDecree
-import dismissPeriodDecrees from "./dismissPeriodDecrees/reducer";
-
-//DismissAcademyDecree
-import dismissAcademyDecrees from "./dismissAcademyDecrees/reducer";
-
-//AbsenceWarnings
-import absenceWarnings from "./Absence-warnings/reducer";
-
 // ExamRooms
 import examRooms from "./Exam/ExamRooms/reducer";
 
@@ -522,14 +498,6 @@ const rootReducer = combineReducers({
   diplomalevels,
   highstudytypes,
   gradesVersions,
-  absenceWarnings,
-  oralWarningDecrees,
-  writtenWarningDecrees,
-  dismissDecreesAbsence,
-  dismissDecreesExam,
-  dismissDecreesOther,
-  dismissPeriodDecrees,
-  dismissAcademyDecrees,
 });
 
 export default rootReducer;

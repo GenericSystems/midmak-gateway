@@ -110,30 +110,6 @@ export * from "./absencePercents/actions";
 //gradesVersions
 export * from "./gradesVersions/actions";
 
-//AbsenceWarnings
-export * from "./Absence-warnings/actions";
-
-//oralWarningDecrees
-export * from "./oralWarningDecrees/actions";
-
-//writtenWarningDecreesList
-export * from "./writtenWarningDecrees/actions";
-
-//DismissCoursesDecreesabsence
-export * from "./dismissCoursesDecrees-absence/actions";
-
-//DismissCoursesDecreesExam
-export * from "./dismissCoursesDecrees-exam/actions";
-
-//DismissCoursesDecreesOther
-export * from "./dismissCoursesDecrees-other/actions";
-
-//DismissPeriodDecree
-export * from "./dismissPeriodDecrees/actions";
-
-//DismissAcademyDecree
-export * from "./dismissAcademyDecrees/actions";
-
 //DocumentTypes
 export * from "./documents-types/actions";
 

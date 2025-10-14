@@ -92,17 +92,8 @@ import contractsTypesSaga from "./HR/contractsTypes/saga";
 import AbsencesTypesSaga from "./absenceType/saga";
 import AbsencesJustificationsSaga from "./absenceJustification/saga";
 import absencePercentsSaga from "./absencePercents/saga";
-import AbsenceWarningsSaga from "./Absence-warnings/saga";
-import OralWarningDecreesSaga from "./oralWarningDecrees/saga";
-import WrittenWarningDecreesSaga from "./writtenWarningDecrees/saga";
-import DismissDecreesAbsenceSaga from "./dismissCoursesDecrees-absence/saga";
-import DismissDecreesExamSaga from "./dismissCoursesDecrees-exam/saga";
-import DismissDecreesOtherSaga from "./dismissCoursesDecrees-other/saga";
-import DismissPeriodDecreesSaga from "./dismissPeriodDecrees/saga";
-import DismissAcademyDecreesSaga from "./dismissAcademyDecrees/saga";
 import gradesVersionsSaga from "./gradesVersions/saga";
 import hiddenGradesSaga from "./hide-grade/saga";
-
 import ExamRoomsSaga from "./Exam/ExamRooms/saga";
 import ExamObserversSaga from "./examObservers/saga";
 import employmentCasesSaga from "./HR/employmentCases/saga";
@@ -275,14 +266,6 @@ export default function* rootSaga() {
     fork(archiveGradesSaga),
     fork(DiplomaLevelSaga),
     fork(HighStudyTypeSaga),
-    fork(AbsenceWarningsSaga),
-    fork(OralWarningDecreesSaga),
-    fork(WrittenWarningDecreesSaga),
-    fork(DismissDecreesAbsenceSaga),
-    fork(DismissDecreesExamSaga),
-    fork(DismissDecreesOtherSaga),
-    fork(DismissPeriodDecreesSaga),
-    fork(DismissAcademyDecreesSaga),
     fork(DocumentTypesSaga),
     fork(gradesVersionsSaga),
   ]);
