@@ -240,6 +240,12 @@ class AcademyBuildingStructuresList extends Component {
     }
   };
 
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   handleFloorDataChange = (fieldName, value) => {
     const { openForm } = this.state;
 
@@ -533,21 +539,38 @@ class AcademyBuildingStructuresList extends Component {
         this.setState({ floorNameError: true, saveError: true });
       } else {
         this.setState({ floorNameError: false, saveError: false });
+        const isDuplicateFloor = academyBuildingStructures.some(
+          building =>
+            building.Id &&
+            building.floors.some(
+              floor =>
+                floor.Id &&
+                floor.floorArName &&
+                floor.floorArName.trim() === newFloorArName.trim()
+            )
+        );
 
         const selectedBuilding = academyBuildingStructures.find(
           building => building.Id === flrBuildingId
         );
 
-        const successSavedMessage = this.props.t("Floor saved successfully");
-        this.setState({ successMessage: successSavedMessage });
-        const payload = {
-          arTitle: newFloorArName,
-          enTitle: newFloorEnName,
-          floorNum: newFloorNum,
-          buildingId: flrBuildingId,
-        };
-        (payload["tablename"] = "Common_Floor"),
-          onAddNewAcademyBuildingStructure(payload);
+        if (isDuplicateFloor) {
+          const duplicateErrorMessage = this.props.t(
+            "Floor Name already exists"
+          );
+          this.setState({ errorMessage: duplicateErrorMessage });
+        } else {
+          const successSavedMessage = this.props.t("Floor saved successfully");
+          this.setState({ successMessage: successSavedMessage });
+          const payload = {
+            arTitle: newFloorArName,
+            enTitle: newFloorEnName,
+            floorNum: newFloorNum,
+            buildingId: flrBuildingId,
+          };
+          (payload["tablename"] = "Common_Floor"),
+            onAddNewAcademyBuildingStructure(payload);
+        }
       }
     } else if (openForm == "editFloor") {
       const { onUpdateAcademyBuildingStructure } = this.props;
@@ -938,11 +961,12 @@ class AcademyBuildingStructuresList extends Component {
       hallOpt,
       languageState,
     } = this.state;
+    const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
     return (
-      <div className="page-content">
+      <div dir={direction} className="page-content">
         <DeleteModal
           show={deleteBuildingModal}
           onDeleteClick={this.handleDeleteBuilding}
@@ -1062,7 +1086,10 @@ class AcademyBuildingStructuresList extends Component {
                                   }
                                 >
                                   <span>
-                                    {t(academyBuildingStructure.buildingArName)}
+                                    {languageState === "ar"
+                                      ? academyBuildingStructure.buildingArName
+                                      : academyBuildingStructure.buildingEnName}
+                                    {/* {t(academyBuildingStructure.buildingArName)} */}
                                   </span>
                                   <div className="directorate-item-actions">
                                     {showAddButton && (
@@ -1124,7 +1151,11 @@ class AcademyBuildingStructuresList extends Component {
                                             this.showFloorInfo(floor)
                                           }
                                         >
-                                          <span>{floor.floorArName}</span>
+                                          <span>
+                                            {languageState === "ar"
+                                              ? floor.floorArName
+                                              : floor.floorEnName}
+                                          </span>
                                           <div className="directorate-item-actions">
                                             {showAddButton && (
                                               <IconButton
@@ -1187,7 +1218,12 @@ class AcademyBuildingStructuresList extends Component {
                                                   this.showHallInfo(hall);
                                                 }}
                                               >
-                                                <span>{hall.hallArName}</span>
+                                                <span>
+                                                  {" "}
+                                                  {languageState === "ar"
+                                                    ? hall.hallArName
+                                                    : hall.hallEnName}
+                                                </span>
                                                 <div className="directorate-item-actions">
                                                   {showEditButton && (
                                                     <IconButton
@@ -1327,7 +1363,7 @@ class AcademyBuildingStructuresList extends Component {
                           className={`form-control ${
                             buildingNameError ? "is-invalid" : ""
                           }`}
-                          placeholder={"Building Name(ar)"}
+                          placeholder={t("Building Name(ar)")}
                           value={newBuildingArName}
                           onChange={e => {
                             this.handleBuildingDataChange(
@@ -1381,7 +1417,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="buildingNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={"Building Number"}
+                          placeholder={t("Building Number")}
                           value={newBuildingNum}
                           onChange={e => {
                             this.handleBuildingDataChange(
@@ -1439,7 +1475,7 @@ class AcademyBuildingStructuresList extends Component {
                           className={`form-control ${
                             floorNameError ? "is-invalid" : ""
                           }`}
-                          placeholder={"Floor Name(ar)"}
+                          placeholder={t("Floor Name(ar)")}
                           value={newFloorArName}
                           onChange={e => {
                             this.handleFloorDataChange(
@@ -1489,7 +1525,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="floorNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={"Floor Number"}
+                          placeholder={t("Floor Number")}
                           value={newfloorNum}
                           onChange={e => {
                             this.handleFloorDataChange(
@@ -1598,7 +1634,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="buildingNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={"Building Number"}
+                          placeholder={t("Building Number")}
                           value={editBuildingNum}
                           onChange={e => {
                             this.handleBuildingDataChange(
@@ -1698,7 +1734,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="floorNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={"Floor Number"}
+                          placeholder={t("Floor Number")}
                           value={editFloorNum}
                           onChange={e => {
                             this.handleFloorDataChange(
@@ -1859,7 +1895,7 @@ class AcademyBuildingStructuresList extends Component {
                       </Col>
                       <Col lg="2">
                         <label htmlFor="maxNumOfPer" className="col-form-label">
-                          {t("Max Numer Of Persons")}:
+                          {t("Max Nubmer Of Persons")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1868,7 +1904,7 @@ class AcademyBuildingStructuresList extends Component {
                           id="maxNumOfPer"
                           name="maxNumOfPer"
                           className="form-control mb-2"
-                          placeholder={t("Max Numer Of Person")}
+                          placeholder={t("Max Nubmer Of Persons")}
                           value={NewMaxNumOfPer}
                           onChange={e =>
                             this.handleHallDataChange(
@@ -1893,7 +1929,7 @@ class AcademyBuildingStructuresList extends Component {
                           id="currentNumOfPer"
                           name="currentNumOfPer"
                           className="form-control mb-2"
-                          placeholder={t("current Number Of Person")}
+                          placeholder={t("current Number Of Persons")}
                           value={NewCurrentNumOfPer}
                           onChange={e =>
                             this.handleHallDataChange(
@@ -2052,7 +2088,7 @@ class AcademyBuildingStructuresList extends Component {
                       </Col>
                       <Col lg="2">
                         <label htmlFor="maxNumOfPer" className="col-form-label">
-                          {t("Max Numer Of Persons")}:
+                          {t("Max Nubmer Of Persons")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -2061,7 +2097,7 @@ class AcademyBuildingStructuresList extends Component {
                           id="maxNumOfPer"
                           name="maxNumOfPer"
                           className="form-control mb-2"
-                          placeholder={t("Max Numer Of Person")}
+                          placeholder={t("Max Nubmer Of Persons")}
                           value={editMaxNumOfPer}
                           onChange={e =>
                             this.handleHallDataChange(
@@ -2086,7 +2122,7 @@ class AcademyBuildingStructuresList extends Component {
                           id="currentNumOfPer"
                           name="currentNumOfPer"
                           className="form-control mb-2"
-                          placeholder={t("current Number Of Person")}
+                          placeholder={t("current Number Of Persons")}
                           value={editCurrentNumOfPer}
                           onChange={e =>
                             this.handleHallDataChange(
@@ -2197,7 +2233,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="buildingNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={"Building Number"}
+                          placeholder={t("Building Number")}
                           value={editBuildingNum}
                           onChange={e => {
                             this.handleBuildingDataChange(
@@ -2288,7 +2324,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="floorNum"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={"Floor Number"}
+                          placeholder={t("Floor Number")}
                           value={editFloorNum}
                           onChange={e => {
                             this.handleFloorDataChange(
@@ -2432,7 +2468,7 @@ class AcademyBuildingStructuresList extends Component {
                       </Col>
                       <Col lg="2">
                         <label htmlFor="maxNumOfPer" className="col-form-label">
-                          {t("Max Numer Of Persons")}:
+                          {t("Max Nubmer Of Persons")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -2441,7 +2477,7 @@ class AcademyBuildingStructuresList extends Component {
                           id="maxNumOfPer"
                           name="maxNumOfPer"
                           className="form-control mb-2"
-                          placeholder={t("Max Numer Of Person")}
+                          placeholder={t("Max Nubmer Of Persons")}
                           value={editMaxNumOfPer}
                           onChange={e =>
                             this.handleHallDataChange(
@@ -2466,7 +2502,7 @@ class AcademyBuildingStructuresList extends Component {
                           id="currentNumOfPer"
                           name="currentNumOfPer"
                           className="form-control mb-2"
-                          placeholder={t("current Number Of Person")}
+                          placeholder={t("current Number Of Persons")}
                           value={editCurrentNumOfPer}
                           onChange={e =>
                             this.handleHallDataChange(

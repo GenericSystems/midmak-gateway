@@ -737,14 +737,14 @@ class ArchiveGradesList extends Component {
                     <Col lg="3">
                       <Card>
                         <CardTitle id="course_header">
-                          {t("Search for the course student")}
+                          {t("Search for the course")}
                         </CardTitle>
                         <CardBody>
                           <div className="mb-3">
                             <Row>
                               <Col lg="4">
                                 <Label className="form-label">
-                                  {t("Course name")}
+                                  {t("Course Name")}
                                 </Label>
                               </Col>
                               <Col lg="8">

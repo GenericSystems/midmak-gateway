@@ -131,7 +131,7 @@ function* fetchRegReqDocSettings() {
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "AdmissionSettings_RegisterUnderCertificates",
     fields: "Id,arTitle",
-    filter: "checkLevel = 1",
+    // filter: "checkLevel = 1",
   };
 
   try {

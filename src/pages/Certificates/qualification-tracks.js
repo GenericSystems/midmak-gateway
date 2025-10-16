@@ -194,9 +194,7 @@ class QualificationsTracksList extends Component {
         qualificationTrack.Id !== rowId &&
         qualificationTrack.arTitle.trim() === fieldValue.trim()
       // qualificationTrack.facultyId.trim() === fieldValue.trim())
-    
     );
-
 
     if (isDuplicate) {
       const errorMessage = this.props.t("Value already exists");
@@ -251,33 +249,51 @@ class QualificationsTracksList extends Component {
         order: "desc",
       },
     ];
+
+    const pageOptions = {
+      sizePerPage: 10,
+      totalSize: qualificationTracks.length,
+      custom: true,
+      page: 1,
+    };
+
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex, extraData) => {
+          const currentPage = extraData?.currentPage || 1;
+          const sizePerPage = extraData?.sizePerPage || pageOptions.sizePerPage;
+          return rowIndex + 1 + (currentPage - 1) * sizePerPage;
+        },
+        editable: false,
+      },
       {
         dataField: "arTitle",
         text: this.props.t("Qualification Tracks(ar)"),
         sort: true,
-        // editable: showEditButton,
+        editable: showEditButton,
       },
 
       {
         dataField: "enTitle",
         text: this.props.t("Qualification Tracks(en)"),
         sort: true,
-        // editable: showEditButton,
+        editable: showEditButton,
       },
       {
         dataField: "code",
         text: this.props.t("Code"),
         sort: true,
-        // editable: showEditButton,
+        editable: showEditButton,
       },
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
-        // hidden: !showDeleteButton,
+        hidden: !showDeleteButton,
         formatter: (cellContent, qualificationTrack) => (
           <Tooltip title={this.props.t("Delete")} placement="top">
             <Link className="text-danger" to="#">
@@ -291,11 +307,6 @@ class QualificationsTracksList extends Component {
         ),
       },
     ];
-    const pageOptions = {
-      sizePerPage: 10,
-      totalSize: qualificationTracks.length,
-      custom: true,
-    };
 
     return (
       <React.Fragment>
@@ -309,7 +320,7 @@ class QualificationsTracksList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              breadcrumbItem={this.props.t("QualificationsTracks List")}
+              breadcrumbItem={this.props.t("Qualifications Tracks")}
             />
 
             <Row>
@@ -413,9 +424,19 @@ class QualificationsTracksList extends Component {
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
                                   data={qualificationTracks}
-                                  columns={columns}
+                                  columns={columns.map(col => ({
+                                    ...col,
+                                    formatter:
+                                      col.dataField === "serial"
+                                        ? (cell, row, rowIndex) =>
+                                            rowIndex +
+                                            1 +
+                                            (paginationProps.page - 1) *
+                                              paginationProps.sizePerPage
+                                        : col.formatter,
+                                  }))}
                                   cellEdit={cellEditFactory({
-                                    mode: "click",
+                                    mode: "dbclick",
                                     blurToSave: true,
                                     afterSaveCell: (
                                       oldValue,

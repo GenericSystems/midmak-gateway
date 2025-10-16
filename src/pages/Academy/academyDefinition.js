@@ -34,6 +34,7 @@ class AcademyInfo extends Component {
       AcademyNameEn: "",
       Email: "",
       Website: "",
+      languageState: "",
       // logo: null,
       AcademyCountryInfo: [
         {
@@ -54,13 +55,15 @@ class AcademyInfo extends Component {
   }
 
   componentDidMount() {
-    const { academyInfo, onGetAcademyInfo, countriesOpt } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+    const { academyInfo, i18n, onGetAcademyInfo, countriesOpt } = this.props;
 
     if (academyInfo && !academyInfo.length) {
       onGetAcademyInfo();
     }
 
-    this.setState({ academyInfo, countriesOpt });
+    this.setState({ academyInfo, countriesOpt, languageState: lang });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
 
   componentDidUpdate(prevProps) {
@@ -87,9 +90,25 @@ class AcademyInfo extends Component {
     }
   }
 
+  handleLanguageChange = lng => {
+    const { i18n, onGetAcademyInfo } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    // onGetAcademyInfo(lang);
+    this.setState({ languageState: lng });
+    // }
+  };
+
   isUrlValid = event => {
     const pattern = /^(https?:\/\/|www\.)[^\s/$.?#].[^\s]*$/i;
     return pattern.test(event);
+  };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
   };
 
   handleInputChange = event => {
@@ -299,14 +318,15 @@ class AcademyInfo extends Component {
       AcademyNameError,
       successMessage,
       setErrormessage,
+      languageState,
     } = this.state;
     const { countriesOpt } = this.props;
 
     const { t } = this.props;
-
+    const direction = languageState === "ar" ? "rtl" : "ltr";
     return (
       <React.Fragment>
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <Breadcrumbs
             title={this.props.t("Academy Definition")}
             breadcrumbItem={this.props.t("Academy Definition")}
@@ -657,7 +677,7 @@ class AcademyInfo extends Component {
                             className="me-2"
                             onClick={this.handleSubmit}
                           >
-                            Submit
+                            {t("Save")}
                           </Button>
                         </div>
                       </CardBody>

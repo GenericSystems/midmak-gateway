@@ -314,43 +314,6 @@ class MarksObjectionsList extends Component {
     }
   };
 
-  handleSelectDatalist = e => {
-    const selectedValue = e.target.value;
-    if (fieldName === "jobTitleId") {
-      const selected = this.props.jobTitlesOpt.find(
-        job => job.value === selectedValue
-      );
-
-      this.setState({
-        selectedJobTitle: selected ? selected.key : null,
-        jobTitleName: selectedValue,
-      });
-    }
-
-    if (fieldName === "employeeId") {
-      const selected = this.props.employeesNames.find(
-        employeeName => employeeName.value === selectedValue
-      );
-
-      this.setState({
-        selectedFullName: selected ? selected.key : null,
-        employeeFullName: selectedValue,
-      });
-    }
-
-    if (fieldName === "academicYearId") {
-      const selected = this.props.academicYearsOpt.find(
-        aYear => aYear.value === selectedValue
-      );
-      this.setState({
-        selectedAcademicYearId: selected ? selected.key : null,
-        academicYear: selectedValue,
-      });
-
-      return;
-    }
-  };
-
   handleAlertClose = alertName => {
     this.setState({ [alertName]: null });
   };
@@ -745,8 +708,8 @@ class MarksObjectionsList extends Component {
                                 >
                                   <ModalHeader toggle={this.toggle} tag="h4">
                                     {!!isEdit
-                                      ? t("Edit Marks Objections")
-                                      : t("Add Marks Objections")}
+                                      ? t("Edit Mark Objection")
+                                      : t("Add Mark Objection")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <Formik
@@ -941,7 +904,9 @@ class MarksObjectionsList extends Component {
                                                               as="input"
                                                               id="traineeName-Id"
                                                               type="text"
-                                                              placeholder="Search..."
+                                                              placeholder={t(
+                                                                "Search..."
+                                                              )}
                                                               className={
                                                                 "form-control" +
                                                                 ((errors.traineeNameId &&
@@ -1037,7 +1002,9 @@ class MarksObjectionsList extends Component {
                                                               as="input"
                                                               id="courseName-Id"
                                                               type="text"
-                                                              placeholder="Search..."
+                                                              placeholder={t(
+                                                                "Search..."
+                                                              )}
                                                               className={
                                                                 "form-control" +
                                                                 ((errors.courseNameId &&
@@ -1279,8 +1246,8 @@ class MarksObjectionsList extends Component {
                                     tag="h4"
                                   >
                                     {!!isEdit
-                                      ? t("Edit MarkObjection Data")
-                                      : t("Add Marks Objections")}
+                                      ? t("Edit Mark Objection")
+                                      : t("Add Mark Objection")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <Formik
@@ -1323,32 +1290,7 @@ class MarksObjectionsList extends Component {
                                             markObjection.absencePercent) ||
                                           "",
                                       }}
-                                      validationSchema={Yup.object().shape({
-                                        contratType: Yup.string()
-                                          .matches(/^[أ-ي]+$/)
-                                          .required(
-                                            "Please Enter Your Contrat Type"
-                                          ),
-                                        ncsDate: Yup.string().required(
-                                          t("Please Enter Your NCS Date")
-                                        ),
-                                        hireDate: Yup.string().required(
-                                          t("Please Enter Your Hire Date")
-                                        ),
-                                        academicYearId: Yup.string().required(
-                                          t("Please Enter Your Academic Year")
-                                        ),
-                                        jobTitleId: Yup.string().required(
-                                          t("Please Enter Your Job Title")
-                                        ),
-                                        // corporateNodeId: Yup.string().required(
-                                        //   t("Please Enter Your Corporate Node")
-                                        // ),
-
-                                        signatureDate: Yup.string().required(
-                                          t("Please Enter Your Signature Date")
-                                        ),
-                                      })}
+                                      validationSchema={Yup.object().shape({})}
                                     >
                                       {({
                                         errors,
@@ -1362,7 +1304,7 @@ class MarksObjectionsList extends Component {
                                         <Form>
                                           <Card id="employee-card">
                                             <CardTitle id="course_header">
-                                              {t("Job profile")}
+                                              {t("")}
                                             </CardTitle>
                                             <CardBody className="cardBody">
                                               {emptyError && (
@@ -1405,7 +1347,9 @@ class MarksObjectionsList extends Component {
                                                           as="input"
                                                           id="courseName-Id"
                                                           type="text"
-                                                          placeholder="Search..."
+                                                          placeholder={t(
+                                                            "Search..."
+                                                          )}
                                                           className={
                                                             "form-control" +
                                                             ((errors.courseNameId &&

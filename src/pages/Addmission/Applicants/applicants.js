@@ -1648,7 +1648,7 @@ class ApplicantsList extends Component {
       selectedTempTraineeId,
     } = this.state;
     const emptyRowsExist = profExperiencesArray.some(
-      profExperiences => profExperiences.workType.trim() === ""
+      profExperiences => profExperiences.jobTitle.trim() === ""
     );
     console.log("emptyRowsExist", emptyRowsExist);
     console.log("selectedTempTraineeId", selectedTempTraineeId);
@@ -1659,11 +1659,11 @@ class ApplicantsList extends Component {
       const newExperience = {
         Id: lastUsedExperienceId,
         tempTraineeId: isAdd ? lastAddedId : selectedTempTraineeId,
-        workType: "",
-        companyName: "",
+        jobTitle: "",
         workPlace: "",
+        workAddress: "",
         workField: "",
-        duaration: "",
+        workDuration: "",
       };
       // onAddNewProfessionalExperience(newExperience);
       this.setState({
@@ -1699,7 +1699,7 @@ class ApplicantsList extends Component {
     //   const isDuplicate = trnProfExperiences.some(trnProfExperience => {
     //     return (
     //       trnProfExperience.Id !== rowId &&
-    //       trnProfExperience.workType.trim() === fieldValue.trim()
+    //       trnProfExperience.jobTitle.trim() === fieldValue.trim()
     //     );
     //   });
 
@@ -1907,11 +1907,11 @@ class ApplicantsList extends Component {
   //     let traineeinfo = {};
   //     const extractedArray = profExperiencesArray.map(item => ({
   //       Id: item.Id,
-  //       workType: item.workType,
-  //       companyName: item.companyName,
+  //       jobTitle: item.jobTitle,
   //       workPlace: item.workPlace,
+  //       workAddress: item.workAddress,
   //       workField: item.workField,
-  //       duaration: item.duaration,
+  //       workDuration: item.workDuration,
   //     }));
   //     console.log("extractedArray", extractedArray);
   //     traineeinfo["ProfessionalExperiences"] = extractedArray;
@@ -1924,11 +1924,11 @@ class ApplicantsList extends Component {
   //     let traineeinfo = {};
   //     const extractedArray = profExperiencesArray.map(item => ({
   //       Id: item.Id,
-  //       workType: item.workType,
-  //       companyName: item.companyName,
+  //       jobTitle: item.jobTitle,
   //       workPlace: item.workPlace,
+  //       workAddress: item.workAddress,
   //       workField: item.workField,
-  //       duaration: item.duaration,
+  //       workDuration: item.workDuration,
   //     }));
   //     console.log("extractedArray", extractedArray);
   //     traineeinfo["ProfessionalExperiences"] = extractedArray;
@@ -1947,11 +1947,11 @@ class ApplicantsList extends Component {
     // let traineeinfo = {};
     // const extractedArray = profExperiencesArray.map(item => ({
     //   Id: item.Id,
-    //   workType: item.workType,
-    //   companyName: item.companyName,
+    //   jobTitle: item.jobTitle,
     //   workPlace: item.workPlace,
+    //   workAddress: item.workAddress,
     //   workField: item.workField,
-    //   duaration: item.duaration,
+    //   workDuration: item.workDuration,
     // }));
     // console.log("extractedArray", extractedArray);
     // traineeinfo["ProfessionalExperiences"] = extractedArray;
@@ -1960,11 +1960,11 @@ class ApplicantsList extends Component {
     // profExperiencesArray.forEach((item, i) => {
     //   experiencesObject[`${i}`] = {
     //     Id: item.Id,
-    //     workType: item.workType,
-    //     companyName: item.companyName,
+    //     jobTitle: item.jobTitle,
     //     workPlace: item.workPlace,
+    //     workAddress: item.workAddress,
     //     workField: item.workField,
-    //     duaration: item.duaration,
+    //     workDuration: item.workDuration,
     //   };
     // });
 
@@ -1972,11 +1972,11 @@ class ApplicantsList extends Component {
       tempTraineeId: values.Id,
       ProfessionalExperiences: profExperiencesArray.map(item => ({
         Id: item.Id,
-        workType: item.workType,
-        companyName: item.companyName,
+        jobTitle: item.jobTitle,
         workPlace: item.workPlace,
+        workAddress: item.workAddress,
         workField: item.workField,
-        duaration: item.duaration,
+        workDuration: item.workDuration,
       })),
       procedure: "SisApp_UpdateTempTraineeInfo",
       tablename: "Common_TempTraineesProfessionalExperiences",
@@ -2149,14 +2149,22 @@ class ApplicantsList extends Component {
 
     const { isEdit, deleteModal, generateModal } = this.state;
 
-    const defaultSorting = [
+    const defaultSorted = [
       {
-        dataField: "Id",
-        order: "desc",
+        id: 99,
+        dataField: "Id", // if dataField is not match to any column you defined, it will be ignored.
+        order: "desc", // desc or asc
       },
     ];
 
-    const traineeListColumns = [
+    const pageOptions = {
+      sizePerPage: 10,
+      TotalGradeSize: tempTrainees.length, // replace later with size(tempTrainees),
+      custom: true,
+      page: 1,
+    };
+
+    const columns = [
       {
         text: "Id",
         key: "Id",
@@ -2164,6 +2172,16 @@ class ApplicantsList extends Component {
         sort: true,
         hidden: true,
         formatter: (cellContent, tempTrainee) => <>{tempTrainee.Id}</>,
+      },
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex, extraData) => {
+          const currentPage = extraData?.currentPage || 1;
+          const sizePerPage = extraData?.sizePerPage || pageOptions.sizePerPage;
+          return rowIndex + 1 + (currentPage - 1) * sizePerPage;
+        },
+        editable: false,
       },
       {
         dataField: "img",
@@ -2223,7 +2241,7 @@ class ApplicantsList extends Component {
         }),
       },
       {
-        dataField: "statusId",
+        dataField: "traineeStatus",
         text: this.props.t("Trainee Status"),
         sort: true,
         filter: textFilter({
@@ -2309,87 +2327,9 @@ class ApplicantsList extends Component {
             .split("T")[0]
         : selectedDiplomaVerificationDate;
 
-    const pageOptions = {
-      sizePerPage: 10,
-      TotalGradeSize: tempTrainees.length, // replace later with size(tempTrainees),
-      custom: true,
-    };
-
-    const defaultSorted = [
-      {
-        id: 99,
-        dataField: "Id", // if dataField is not match to any column you defined, it will be ignored.
-        order: "desc", // desc or asc
-      },
-    ];
-
     const selectRow = {
       mode: "checkbox",
     };
-
-    const ParentsColumns = [
-      { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "arName", text: t("Name(ar)"), sort: true },
-      { dataField: "enName", text: t("Name(en)"), sort: true },
-      {
-        dataField: "relativeId",
-        text: t("Relatives"),
-        formatter: (cell, row) => (
-          <Select
-            key={`relative_Id`}
-            options={relatives}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "relativeId",
-                newValue.value
-              );
-            }}
-            value={relatives.find(opt => opt.value == row.relativeId)}
-          />
-        ),
-        editable: false,
-      },
-
-      {
-        dataField: "nationalityId",
-        text: t("Nationality"),
-        formatter: (cell, row) => (
-          <Select
-            key={`nationality_Id`}
-            options={nationalities}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "nationalityId",
-                newValue.value
-              );
-            }}
-            defaultValue={nationalities.find(
-              opt => opt.value == row.ationalityId
-            )}
-          />
-        ),
-        editable: false,
-      },
-      { dataField: "phone", text: t("Phone Number") },
-      { dataField: "cellular", text: t("Cellular Number") },
-      {
-        dataField: "delete",
-        text: "",
-        isDummyField: true,
-        editable: false,
-        formatter: (cellContent, relative) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.deleteRelative(relative)}
-            ></i>
-          </Link>
-        ),
-      },
-    ];
 
     const preReqColumns = [
       {
@@ -2590,11 +2530,11 @@ class ApplicantsList extends Component {
 
     const trnProfExperienceColumns = [
       { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "workType", text: t("Work Type"), sort: true },
-      { dataField: "companyName", text: t("Company Name"), sort: true },
+      { dataField: "jobTitle", text: t("Job Title"), sort: true },
       { dataField: "workPlace", text: t("Work Place"), sort: true },
+      { dataField: "workAddress", text: t("Work Address"), sort: true },
       { dataField: "workField", text: t("Work Field"), sort: true },
-      { dataField: "duaration", text: t("Duration"), sort: true },
+      { dataField: "workDuration", text: t("Work Duration"), sort: true },
       {
         dataField: "uploadFile",
         id: 8,
@@ -2662,14 +2602,14 @@ class ApplicantsList extends Component {
                       pagination={paginationFactory(pageOptions)}
                       key="unique-pagination-key"
                       keyField="Pagination-Provider"
-                      columns={traineeListColumns}
+                      columns={columns}
                       data={tempTrainees}
                     >
                       {({ paginationProps, paginationTableProps }) => (
                         <ToolkitProvider
                           key="unique-toolkit-key"
                           keyField="Toolkit-Provider"
-                          columns={traineeListColumns}
+                          columns={columns}
                           data={tempTrainees}
                           search
                         >
@@ -2755,6 +2695,17 @@ class ApplicantsList extends Component {
                                       classes={
                                         "table align-middle table-nowrap table-hover"
                                       }
+                                      columns={columns.map(col => ({
+                                        ...col,
+                                        formatter:
+                                          col.dataField === "serial"
+                                            ? (cell, row, rowIndex) =>
+                                                rowIndex +
+                                                1 +
+                                                (paginationProps.page - 1) *
+                                                  paginationProps.sizePerPage
+                                            : col.formatter,
+                                      }))}
                                       bordered={false}
                                       striped={false}
                                       responsive

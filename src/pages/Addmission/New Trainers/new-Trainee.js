@@ -402,7 +402,7 @@ class NewTrainee extends Component {
         this.setState({ identityNoError: true, saveError: true });
       }
       const errorSaveTempTraineeMessage = this.props.t(
-        "Fill the Required Fields to Save TempTrainee"
+        "Fill the Required Fields to Save Trainee"
       );
       this.setState({ errorMessage: errorSaveTempTraineeMessage }, () => {
         window.scrollTo(0, 0);
@@ -457,6 +457,7 @@ class NewTrainee extends Component {
         diplomalevels,
         currentSemester,
         governorates,
+        tempTrainees,
       } = this.props;
 
       if (values.diplomaId) {
@@ -574,6 +575,35 @@ class NewTrainee extends Component {
         traineeinfo["Average"] = averageValue;
       }
 
+      const isDuplicateNationalNo = tempTrainees.some(
+        trainee =>
+          trainee.nationalNo &&
+          trainee.nationalNo.trim() === values.nationalNo.trim()
+      );
+
+      if (isDuplicateNationalNo) {
+        const duplicateErrorMessage = this.props.t(
+          "New Trainee already exists"
+        );
+        this.setState({
+          errorMessage: duplicateErrorMessage,
+          nationalNoError: true,
+          saveError: true,
+        });
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      const successSavedMessage = this.props.t(
+        "New Trainee saved successfully"
+      );
+      this.setState({
+        successMessage: successSavedMessage,
+        isTempTraineeSaved: true,
+        nationalNoError: false,
+        saveError: false,
+      });
+
       const response = onAddNewTempTrainee(traineeinfo);
       if (response?.Id) {
         this.setState({ tempTraineeId: response.Id });
@@ -582,13 +612,6 @@ class NewTrainee extends Component {
         const parsedDoc = JSON.parse(response.RegReqDocTempTrainee);
         this.setState({ stdDocsArray: parsedDoc });
       }
-      const saveTempTraineeMessage = this.props.t(
-        "TempTrainee saved successfully"
-      );
-      this.setState({
-        successMessage: saveTempTraineeMessage,
-        isTempTraineeSaved: true,
-      });
     }
   };
 
@@ -776,7 +799,7 @@ class NewTrainee extends Component {
       selectedTempTraineeId,
     } = this.state;
     const emptyRowsExist = profExperiencesArray.some(
-      profExperiences => profExperiences.workType.trim() === ""
+      profExperiences => profExperiences.jobTitle.trim() === ""
     );
     console.log("emptyRowsExist", emptyRowsExist);
     if (emptyRowsExist) {
@@ -786,11 +809,11 @@ class NewTrainee extends Component {
       const newExperience = {
         Id: lastUsedExperienceId,
         tempTraineeId: lastAddedId,
-        workType: "",
-        companyName: "",
+        jobTitle: "",
         workPlace: "",
+        workAddress: "",
         workField: "",
-        duaration: "",
+        workDuration: "",
       };
       //onAddNewProfessionalExperience(newExperience);
       this.setState({
@@ -806,7 +829,7 @@ class NewTrainee extends Component {
   //   const isDuplicate = trnProfExperiences.some(trnProfExperience => {
   //     return (
   //       trnProfExperience.Id !== rowId &&
-  //       trnProfExperience.workType.trim() === fieldValue.trim()
+  //       trnProfExperience.jobTitle.trim() === fieldValue.trim()
   //     );
   //   });
 
@@ -1240,11 +1263,11 @@ class NewTrainee extends Component {
     let traineeinfo = {};
     const extractedArray = profExperiencesArray.map(item => ({
       Id: item.Id,
-      workType: item.workType,
-      companyName: item.companyName,
+      jobTitle: item.jobTitle,
       workPlace: item.workPlace,
+      workAddress: item.workAddress,
       workField: item.workField,
-      duaration: item.duaration,
+      workDuration: item.workDuration,
     }));
     console.log("extractedArray", extractedArray);
     (traineeinfo["procedure"] = "SisApp_UpdateTempTraineeInfo"),
@@ -1274,7 +1297,6 @@ class NewTrainee extends Component {
       duplicateError,
       duplicateErrorRelative,
       diplomaIdError,
-      studentListColumns,
       duplicateErrorProfExperiences,
       selectedRegistrationDate,
       selectedregistrationCertLevelId,
@@ -1626,76 +1648,13 @@ class NewTrainee extends Component {
       },
     ];
 
-    const ParentsColumns = [
-      { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "arName", text: t("Name(ar)"), sort: true },
-      { dataField: "enName", text: t("Name(en)"), sort: true },
-      {
-        dataField: "relativeId",
-        text: t("Relatives"),
-        formatter: (cell, row) => (
-          <Select
-            key={`relative_Id`}
-            options={relatives}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "relativeId",
-                newValue.value
-              );
-            }}
-            value={relatives.find(opt => opt.value == row.relativeId)}
-          />
-        ),
-        editable: false,
-      },
-
-      {
-        dataField: "nationalityId",
-        text: t("Nationality"),
-        formatter: (cell, row) => (
-          <Select
-            key={`nationality_Id`}
-            options={nationalities}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "nationalityId",
-                newValue.value
-              );
-            }}
-            defaultValue={nationalities.find(
-              opt => opt.value == row.nationalityId
-            )}
-          />
-        ),
-        editable: false,
-      },
-      { dataField: "phone", text: t("Phone Number") },
-      { dataField: "cellular", text: t("Cellular Number") },
-      {
-        dataField: "delete",
-        text: "",
-        isDummyField: true,
-        editable: false,
-        formatter: (cellContent, relative) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.deleteRelative(relative)}
-            ></i>
-          </Link>
-        ),
-      },
-    ];
     const trnProfExperienceColumns = [
       { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "workType", text: t("Work Type"), sort: true },
-      { dataField: "companyName", text: t("Company Name"), sort: true },
+      { dataField: "jobTitle", text: t("Job Title"), sort: true },
       { dataField: "workPlace", text: t("Work Place"), sort: true },
+      { dataField: "workAddress", text: t("Work Address"), sort: true },
       { dataField: "workField", text: t("Work Field"), sort: true },
-      { dataField: "duaration", text: t("Duration"), sort: true },
+      { dataField: "workDuration", text: t("Work Duration"), sort: true },
       {
         dataField: "uploadFile",
         id: 8,
@@ -1957,10 +1916,10 @@ class NewTrainee extends Component {
                                 RegUniDate:
                                   (trainee && trainee.RegUniDate) ||
                                   selectedRegUniDate,
-                                // workType: (trainee && trainee.workType) || "",
-                                // companyName:
-                                //   (trainee && trainee.companyName) || "",
-                                // workPlace: (trainee && trainee.workPlace) || "",
+                                // jobTitle: (trainee && trainee.jobTitle) || "",
+                                // workPlace:
+                                //   (trainee && trainee.workPlace) || "",
+                                // workAddress: (trainee && trainee.workAddress) || "",
                                 // workField: (trainee && trainee.workField) || "",
                                 // Duration: (trainee && trainee.Duration) || "",
                               }}

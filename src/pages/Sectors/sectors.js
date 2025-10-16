@@ -66,6 +66,8 @@ class SectorsList extends Component {
     this.state = {
       duplicateError: null,
       deleteModal: false,
+      currentPage: 1,
+      sizePerPage: 10,
     };
   }
 
@@ -223,6 +225,11 @@ class SectorsList extends Component {
     this.setState({ showAlert: null });
     onGetSectorDeletedValue();
   };
+
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
+
   render() {
     const { sectors, t, deleted } = this.props;
     const {
@@ -233,6 +240,8 @@ class SectorsList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      currentPage,
+      sizePerPage,
     } = this.state;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
@@ -243,33 +252,51 @@ class SectorsList extends Component {
         order: "desc",
       },
     ];
+
+    const pageOptions = {
+      sizePerPage: 10,
+      totalSize: sectors.length,
+      custom: true,
+      page: 1,
+    };
+
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex, extraData) => {
+          const currentPage = extraData?.currentPage || 1;
+          const sizePerPage = extraData?.sizePerPage || pageOptions.sizePerPage;
+          return rowIndex + 1 + (currentPage - 1) * sizePerPage;
+        },
+        editable: false,
+      },
       {
         dataField: "arTitle",
         text: this.props.t("Sector(ar)"),
         sort: true,
-        // editable: showEditButton,
+        editable: showEditButton,
       },
 
       {
         dataField: "enTitle",
         text: "Sector",
         sort: true,
-        // editable: showEditButton,
+        editable: showEditButton,
       },
       {
         dataField: "code",
         text: this.props.t("Code"),
         sort: true,
-        // editable: showEditButton,
+        editable: showEditButton,
       },
       {
         dataField: "delete",
         text: "",
         isDummyField: true,
         editable: false,
-        // hidden: !showDeleteButton,
+        hidden: !showDeleteButton,
         formatter: (cellContent, sector) => (
           <Tooltip title={this.props.t("Delete")} placement="top">
             <Link className="text-danger" to="#">
@@ -283,11 +310,6 @@ class SectorsList extends Component {
         ),
       },
     ];
-    const pageOptions = {
-      sizePerPage: 10,
-      totalSize: sectors.length,
-      custom: true,
-    };
 
     return (
       <React.Fragment>
@@ -372,30 +394,33 @@ class SectorsList extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                      <div className="position-relative">
-                                        <SearchBar
-                                          {...toolkitprops.searchProps}
-                                          placeholder={t("Search...")}
-                                        />
-                                      </div>
+                                      {showSearchButton && (
+                                        <div className="position-relative">
+                                          <SearchBar
+                                            {...toolkitprops.searchProps}
+                                            placeholder={t("Search...")}
+                                          />
+                                        </div>
+                                      )}
                                     </div>
                                   </Col>
-
-                                  <Col sm="8">
-                                    <div className="text-sm-end">
-                                      <Tooltip
-                                        title={this.props.t("Add")}
-                                        placement="top"
-                                      >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleAddRow}
+                                  {showAddButton && (
+                                    <Col sm="8">
+                                      <div className="text-sm-end">
+                                        <Tooltip
+                                          title={this.props.t("Add")}
+                                          placement="top"
                                         >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </div>
-                                  </Col>
+                                          <IconButton
+                                            color="primary"
+                                            onClick={this.handleAddRow}
+                                          >
+                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </div>
+                                    </Col>
+                                  )}
                                 </Row>
 
                                 <BootstrapTable
@@ -403,9 +428,19 @@ class SectorsList extends Component {
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
                                   data={sectors}
-                                  columns={columns}
+                                  columns={columns.map(col => ({
+                                    ...col,
+                                    formatter:
+                                      col.dataField === "serial"
+                                        ? (cell, row, rowIndex) =>
+                                            rowIndex +
+                                            1 +
+                                            (paginationProps.page - 1) *
+                                              paginationProps.sizePerPage
+                                        : col.formatter,
+                                  }))}
                                   cellEdit={cellEditFactory({
-                                    mode: "click",
+                                    mode: "dbclick",
                                     blurToSave: true,
                                     afterSaveCell: (
                                       oldValue,

@@ -284,7 +284,7 @@ class CourseCatalogeList extends Component {
     const { onDeleteCoursesCatalog } = this.props;
     const { selectedRowId } = this.state;
 
-    console.log("selectedRowId", selectedRowId.Id);
+    // console.log("selectedRowId", selectedRowId.Id);
 
     if (selectedRowId !== null) {
       let deleteObj = {
@@ -349,7 +349,8 @@ class CourseCatalogeList extends Component {
   };
 
   handleSubmit = values => {
-    const { onAddNewCoursesCatalog, onUpdateCoursesCatalog } = this.props;
+    const { onAddNewCoursesCatalog, onUpdateCoursesCatalog, coursesCatalogs } =
+      this.props;
 
     console.log("values", values);
 
@@ -466,6 +467,32 @@ class CourseCatalogeList extends Component {
       }
     });
 
+    const isDuplicate = coursesCatalogs.some(course => {
+      if (isEdit && Number(values.Id) === Number(course.Id)) return false;
+      const arMatch =
+        course.arTitle &&
+        values.arTitle &&
+        course.arTitle.trim() === values.arTitle.trim();
+
+      const enMatch =
+        course.enTitle &&
+        values.enTitle &&
+        course.enTitle.trim().toLowerCase() ===
+          values.enTitle.trim().toLowerCase();
+
+      return arMatch || enMatch;
+    });
+
+    if (isDuplicate) {
+      const duplicateErrorMessage = this.props.t("Course already exists");
+      this.setState({
+        errorMessage: duplicateErrorMessage,
+        saveError: true,
+      });
+      window.scrollTo(0, 0);
+      return;
+    }
+    console.log("1111111111111111", isDuplicate);
     if (isEdit) {
       console.log("Updating courseCatalogInfo:", courseCatalogInfo);
       onUpdateCoursesCatalog(courseCatalogInfo);
@@ -558,56 +585,54 @@ class CourseCatalogeList extends Component {
     onGetCoursesCatalogDeletedValue();
   };
 
-handleEditCourse = arg => {
-  const { preReqCourses, onGetCourseCatalogePrerequisites, trainingSectorOptions = [] } = this.props;
-  console.log("argsssss",arg)
+  handleEditCourse = arg => {
+    const {
+      preReqCourses,
+      onGetCourseCatalogePrerequisites,
+      trainingSectorOptions = [],
+    } = this.props;
+    console.log("argsssss", arg);
 
-  const filteredPreReqCourses = preReqCourses.filter(
-    course => course.key !== arg.Id
-  );
+    const filteredPreReqCourses = preReqCourses.filter(
+      course => course.key !== arg.Id
+    );
 
- const sectorsArray = Array.isArray(arg.courseSectors)
-  ? arg.courseSectors.map(s => {
-     
-      const match = trainingSectorOptions.find(
-        opt => opt.value === s.sectorId
-      );
-      return match || { value: s.sectorId, label: s.sectorName };
-    })
-  : [];
+    const sectorsArray = Array.isArray(arg.courseSectors)
+      ? arg.courseSectors.map(s => {
+          const match = trainingSectorOptions.find(
+            opt => opt.value === s.sectorId
+          );
+          return match || { value: s.sectorId, label: s.sectorName };
+        })
+      : [];
 
+    // Generate sector code for read-only field
+    const concatenatedCodes =
+      arg.sectorCode || sectorsArray.map(s => s.value).join(",");
+    console.log("sectorsArray", sectorsArray);
 
-  // Generate sector code for read-only field
-  const concatenatedCodes = arg.sectorCode || sectorsArray.map(s => s.value).join(",");
-  console.log("sectorsArray",sectorsArray)
+    this.setState({
+      courseCataloge: arg,
+      isEdit: true,
+      filtredPreReqCourses: filteredPreReqCourses,
+      selectedCoursId: arg.Id,
+      selectedTrainingFormat: arg.trainingFormatId,
 
+      courseSectors: sectorsArray,
 
-  this.setState({
-    courseCataloge: arg,
-    isEdit: true,
-    filtredPreReqCourses: filteredPreReqCourses,
-    selectedCoursId: arg.Id,
-    selectedTrainingFormat: arg.trainingFormatId,
+      sectorsCode: concatenatedCodes,
 
-    courseSectors: sectorsArray, 
-      
-    sectorsCode: concatenatedCodes, 
+      selectedQualificationTrack: arg.qualificationTrackId,
+      selectedIsNeedLabs: arg.isNeedLab,
+      selectedIsNeedSection: arg.isNeedSection,
+      selectedTrainingProgram: arg.programId,
+      selectedTrainingType: arg.courseTypeId,
+    });
+    console.log("sectorsArray", sectorsArray);
 
-    selectedQualificationTrack: arg.qualificationTrackId,
-    selectedIsNeedLabs: arg.isNeedLab,
-    selectedIsNeedSection: arg.isNeedSection,
-    selectedTrainingProgram: arg.programId,
-    selectedTrainingType: arg.courseTypeId,
-  });
-  console.log("sectorsArray",sectorsArray)
-  console.log("trainingSectorOptions",trainingSector)
-
-
-  onGetCourseCatalogePrerequisites(arg.Id);
-  this.toggle();
-};
-
-
+    onGetCourseCatalogePrerequisites(arg.Id);
+    this.toggle();
+  };
 
   deletePrerequisite = row => {
     this.props.onDeleteCourseCatalogePrerequisite({ Id: row.Id });
@@ -623,6 +648,10 @@ handleEditCourse = arg => {
 
   handleToggleChange = (field, value) => {
     this.setState({ [field]: value });
+  };
+
+  handleErrorCloseDublicate = () => {
+    this.setState({ errorMessage: null });
   };
 
   render() {
@@ -643,6 +672,7 @@ handleEditCourse = arg => {
       coursesCatalogsPrReq,
     } = this.props;
     const {
+      successMessage,
       duplicateError,
       deleteModal,
       modal,
@@ -911,6 +941,26 @@ handleEditCourse = arg => {
               <Col>
                 <Card>
                   <CardBody>
+                    <Row>
+                      <div>
+                        {successMessage && (
+                          <Alert
+                            color="success"
+                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                            role="alert"
+                          >
+                            {successMessage}
+                            <button
+                              type="button"
+                              className="btn-close"
+                              aria-label="Close"
+                              onClick={this.handleSuccessClose}
+                            ></button>
+                          </Alert>
+                        )}
+                      </div>
+                    </Row>
+
                     <div>
                       {duplicateError && (
                         <Alert
@@ -1048,6 +1098,27 @@ handleEditCourse = arg => {
                                         : t("Add Course Catalog Data")}
                                     </ModalHeader>
                                     <ModalBody>
+                                      <Row>
+                                        <div>
+                                          {errorMessage && (
+                                            <Alert
+                                              color="danger"
+                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                              role="alert"
+                                            >
+                                              {errorMessage}
+                                              <button
+                                                type="button"
+                                                className="btn-close"
+                                                aria-label="Close"
+                                                onClick={
+                                                  this.handleErrorCloseDublicate
+                                                }
+                                              ></button>
+                                            </Alert>
+                                          )}
+                                        </div>
+                                      </Row>
                                       <Formik
                                         enableReinitialize={true}
                                         initialValues={{

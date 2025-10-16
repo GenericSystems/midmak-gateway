@@ -373,6 +373,9 @@ function* onUpdateTempTrainee({ payload }) {
 
   try {
     const response = yield call(updateTempTrainee, payload);
+    response.map(resp => {
+      resp["RegReqDocTempTrainee"] = JSON.parse(resp["RegReqDocTempTrainee"]);
+    });
     yield put(updateTempTraineeSuccess(response[0]));
   } catch (error) {
     yield put(updateTempTraineeFail(error));

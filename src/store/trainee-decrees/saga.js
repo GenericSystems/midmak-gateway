@@ -94,11 +94,11 @@ function* fetchTraineesDecrees() {
   };
   try {
     const response = yield call(getTraineesDecrees, get_TraineesDecrees_req);
-    response.map(resp => {
-      resp["TraineesDecreesCourses"] = JSON.parse(
-        resp["TraineesDecreesCourses"]
-      );
-    });
+    // response.map(resp => {
+    //   resp["TraineesDecreesCourses"] = JSON.parse(
+    //     resp["TraineesDecreesCourses"]
+    //   );
+    // });
     yield put(getTraineesDecreesSuccess(response));
   } catch (error) {
     yield put(getTraineesDecreesFail(error));
@@ -168,6 +168,11 @@ function* onAddNewTraineesDecree({ payload, studentsDecree }) {
   payload["queryname"] = "_Common_TraineesDecrees";
   try {
     const response = yield call(addNewTraineesDecree, payload);
+    // response.map(resp => {
+    //   resp["TraineesDecreesCourses"] = JSON.parse(
+    //     resp["TraineesDecreesCourses"]
+    //   );
+    // });
     yield put(addTraineesDecreeSuccess(response[0]));
   } catch (error) {
     yield put(addTraineesDecreeFail(error));
@@ -182,6 +187,11 @@ function* onUpdateTraineesDecree({ payload }) {
   payload["queryname"] = "_Common_TraineesDecrees";
   try {
     const respupdate = yield call(updateTraineesDecree, payload);
+    response.map(resp => {
+      resp["TraineesDecreesCourses"] = JSON.parse(
+        resp["TraineesDecreesCourses"]
+      );
+    });
     yield put(updateTraineesDecreeSuccess(respupdate[0]));
   } catch (error) {
     yield put(updateTraineesDecreeFail(error));

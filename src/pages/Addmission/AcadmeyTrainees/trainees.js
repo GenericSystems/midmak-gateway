@@ -97,6 +97,7 @@ class TraineesList extends Component {
       isEdit: false,
       showFatherName: false,
       showTraineeStatus: false,
+      showTempStatus: false,
       showYear: false,
       showGrandFatherName: false,
       showMotherName: false,
@@ -617,6 +618,12 @@ class TraineesList extends Component {
       }));
     }
 
+    if (fieldName == "tempStatusId") {
+      this.setState(prevState => ({
+        showTempStatus: !prevState.showTempStatus,
+      }));
+    }
+
     if (fieldName == "RegistrationDate") {
       this.setState(prevState => ({
         showRegistrationDate: !prevState.showRegistrationDate,
@@ -629,7 +636,7 @@ class TraineesList extends Component {
       }));
     }
 
-    if (fieldName == "Faculty") {
+    if (fieldName == "facultyName") {
       this.setState(prevState => ({
         showFaculty: !prevState.showFaculty,
       }));
@@ -785,19 +792,19 @@ class TraineesList extends Component {
       }));
     }
 
-    if (fieldName == "workType") {
+    if (fieldName == "jobTitle") {
       this.setState(prevState => ({
         showJobTitle: !prevState.showJobTitle,
       }));
     }
 
-    if (fieldName == "companyName") {
+    if (fieldName == "workPlace") {
       this.setState(prevState => ({
         showWorkPlace: !prevState.showWorkPlace,
       }));
     }
 
-    if (fieldName == "workPlace") {
+    if (fieldName == "workAddress") {
       this.setState(prevState => ({
         showWorkAddress: !prevState.showWorkAddress,
       }));
@@ -809,7 +816,7 @@ class TraineesList extends Component {
       }));
     }
 
-    if (fieldName == "duaration") {
+    if (fieldName == "workDuration") {
       this.setState(prevState => ({
         showWorkDuration: !prevState.showWorkDuration,
       }));
@@ -1134,11 +1141,11 @@ class TraineesList extends Component {
     // let traineeinfo = {};
     // const extractedArray = profExperiencesArray.map(item => ({
     //   Id: item.Id,
-    //   workType: item.workType,
-    //   companyName: item.companyName,
+    //   jobTitle: item.jobTitle,
     //   workPlace: item.workPlace,
+    //   workAddress: item.workAddress,
     //   workField: item.workField,
-    //   duaration: item.duaration,
+    //   workDuration: item.workDuration,
     // }));
     // console.log("extractedArray", extractedArray);
     // traineeinfo["ProfessionalExperiences"] = extractedArray;
@@ -1147,11 +1154,11 @@ class TraineesList extends Component {
     // profExperiencesArray.forEach((item, i) => {
     //   experiencesObject[`${i}`] = {
     //     Id: item.Id,
-    //     workType: item.workType,
-    //     companyName: item.companyName,
+    //     jobTitle: item.jobTitle,
     //     workPlace: item.workPlace,
+    //     workAddress: item.workAddress,
     //     workField: item.workField,
-    //     duaration: item.duaration,
+    //     workDuration: item.workDuration,
     //   };
     // });
 
@@ -1162,11 +1169,11 @@ class TraineesList extends Component {
       queryname: "_Common_Trainee",
       ProfessionalExperiences: profExperiencesArray.map(item => ({
         Id: item.Id,
-        workType: item.workType,
-        companyName: item.companyName,
+        jobTitle: item.jobTitle,
         workPlace: item.workPlace,
+        workAddress: item.workAddress,
         workField: item.workField,
-        duaration: item.duaration,
+        workDuration: item.workDuration,
       })),
     };
     console.log("traineeinfo", traineeinfo);
@@ -1493,7 +1500,7 @@ class TraineesList extends Component {
       selectedTraineeId,
     } = this.state;
     const emptyRowsExist = profExperiencesArray.some(
-      profExperiences => profExperiences.workType.trim() === ""
+      profExperiences => profExperiences.jobTitle.trim() === ""
     );
     console.log("emptyRowsExist", emptyRowsExist);
     console.log("selectedTraineeId", selectedTraineeId);
@@ -1504,11 +1511,11 @@ class TraineesList extends Component {
       const newExperience = {
         Id: lastUsedExperienceId,
         traineeId: isAdd ? lastAddedId : selectedTraineeId,
-        workType: "",
-        companyName: "",
+        jobTitle: "",
         workPlace: "",
+        workAddress: "",
         workField: "",
-        duaration: "",
+        workDuration: "",
       };
       // onAddNewProfessionalExperience(newExperience);
       this.setState({
@@ -1544,7 +1551,7 @@ class TraineesList extends Component {
     //   const isDuplicate = trnProfExperiences.some(trnProfExperience => {
     //     return (
     //       trnProfExperience.Id !== rowId &&
-    //       trnProfExperience.workType.trim() === fieldValue.trim()
+    //       trnProfExperience.jobTitle.trim() === fieldValue.trim()
     //     );
     //   });
 
@@ -1745,6 +1752,7 @@ class TraineesList extends Component {
       deleteModal,
       isEdit,
       showTraineeStatus,
+      showTempStatus,
       showYear,
       showFatherName,
       showGrandFatherName,
@@ -1894,11 +1902,11 @@ class TraineesList extends Component {
 
     const trnProfExperienceColumns = [
       { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "workType", text: t("Work Type"), sort: true },
-      { dataField: "companyName", text: t("Company Name"), sort: true },
+      { dataField: "jobTitle", text: t("Job Title"), sort: true },
       { dataField: "workPlace", text: t("Work Place"), sort: true },
+      { dataField: "workAddress", text: t("Work Address"), sort: true },
       { dataField: "workField", text: t("Work Field"), sort: true },
-      { dataField: "duaration", text: t("Duration"), sort: true },
+      { dataField: "workDuration", text: t("Work Duration"), sort: true },
       {
         dataField: "uploadFile",
         id: 8,
@@ -2332,16 +2340,16 @@ class TraineesList extends Component {
           placeholder: this.props.t("Search..."),
         }),
       },
-      // {
-      //   dataField: "tempStatusId",
-      //   text: this.props.t("tempStatus"),
-      //   sort: true,
-      //   editable: false,
-      //   hidden: !showTraineeName,
-      //   // filter: textFilter({
-      //   //   placeholder: this.props.t("Search..."),
-      //   // }),
-      // },
+      {
+        dataField: "tempStatusId",
+        text: this.props.t("Temporary Trainee Status"),
+        sort: true,
+        editable: false,
+        hidden: !showTempStatus,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
+      },
 
       {
         dataField: "FirstName",
@@ -2570,6 +2578,26 @@ class TraineesList extends Component {
         }),
       },
       {
+        dataField: "facultyName",
+        text: this.props.t("Faculty"),
+        editable: false,
+        sort: true,
+        hidden: !showFaculty,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
+      },
+      {
+        dataField: "plan_study",
+        text: this.props.t("Specialty"),
+        editable: false,
+        sort: true,
+        hidden: !showSpecialty,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
+      },
+      {
         dataField: "uniName",
         text: this.props.t("UniversityName"),
         editable: false,
@@ -2732,7 +2760,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "Average",
-        text: this.props.t("Averager"),
+        text: this.props.t("Average"),
         editable: false,
         sort: true,
         hidden: !showAverage,
@@ -2815,7 +2843,7 @@ class TraineesList extends Component {
         }),
       },
       {
-        dataField: "workType",
+        dataField: "jobTitle",
         text: this.props.t("Job Title"),
         editable: false,
         sort: true,
@@ -2825,7 +2853,7 @@ class TraineesList extends Component {
         }),
       },
       {
-        dataField: "companyName",
+        dataField: "workPlace",
         text: this.props.t("Work Place"),
         editable: false,
         sort: true,
@@ -2835,8 +2863,8 @@ class TraineesList extends Component {
         }),
       },
       {
-        dataField: "workPlace",
-        text: this.props.t("Work address"),
+        dataField: "workAddress",
+        text: this.props.t("Work Address"),
         editable: false,
         sort: true,
         hidden: !showWorkAddress,
@@ -2855,8 +2883,8 @@ class TraineesList extends Component {
         }),
       },
       {
-        dataField: "duaration",
-        text: this.props.t("work Duration"),
+        dataField: "workDuration",
+        text: this.props.t("Work Duration"),
         editable: false,
         sort: true,
         hidden: !showWorkDuration,
@@ -3027,14 +3055,8 @@ class TraineesList extends Component {
             <Row>
               {sidebarOpen && (
                 <Row>
-                  <Col lg={2}>
-                    <div
-                      style={{
-                        marginLeft: "220px",
-                        padding: "20px",
-                        textAlign: "center",
-                      }}
-                    >
+                  <Col xs="12" sm="12" md="4" lg="2" className="mb-3">
+                    <div>
                       <Card className="accordion-card">
                         <CardHeader className="card-header1">
                           {t("Required data")}
@@ -3088,6 +3110,30 @@ class TraineesList extends Component {
                                         htmlFor="btncheck18"
                                       >
                                         {this.props.t("Trainee Status")}
+                                      </label>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="mb-1">
+                                  <Row>
+                                    <Col>
+                                      <input
+                                        type="checkbox"
+                                        className="btn-check"
+                                        id="btncheck67"
+                                        autoComplete="off"
+                                        defaultChecked={showTempStatus}
+                                        onClick={() =>
+                                          this.handleShowColumn("tempStatusId")
+                                        }
+                                      />
+                                      <label
+                                        className="btn btn-outline-primary big-width-check"
+                                        htmlFor="btncheck67"
+                                      >
+                                        {this.props.t(
+                                          "Temporary Trainee Status"
+                                        )}
                                       </label>
                                     </Col>
                                   </Row>
@@ -3631,7 +3677,7 @@ class TraineesList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showFaculty}
                                         onClick={() =>
-                                          this.handleShowColumn("FacultyId")
+                                          this.handleShowColumn("facultyName")
                                         }
                                       />
                                       <label
@@ -4268,7 +4314,7 @@ class TraineesList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showJobTitle}
                                         onClick={() =>
-                                          this.handleShowColumn("workType")
+                                          this.handleShowColumn("jobTitle")
                                         }
                                       />
                                       <label
@@ -4290,7 +4336,7 @@ class TraineesList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showWorkPlace}
                                         onClick={() =>
-                                          this.handleShowColumn("companyName")
+                                          this.handleShowColumn("workPlace")
                                         }
                                       />
                                       <label
@@ -4312,7 +4358,7 @@ class TraineesList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showWorkAddress}
                                         onClick={() =>
-                                          this.handleShowColumn("workPlace")
+                                          this.handleShowColumn("workAddress")
                                         }
                                       />
                                       <label
@@ -4356,14 +4402,14 @@ class TraineesList extends Component {
                                         autoComplete="off"
                                         defaultChecked={showWorkDuration}
                                         onClick={() =>
-                                          this.handleShowColumn("duaration")
+                                          this.handleShowColumn("workDuration")
                                         }
                                       />
                                       <label
                                         className="btn btn-outline-primary big-width-check"
                                         htmlFor="btncheck44"
                                       >
-                                        {this.props.t("work Duration")}
+                                        {this.props.t("Work Duration")}
                                       </label>
                                     </Col>
                                   </Row>
@@ -4614,7 +4660,12 @@ class TraineesList extends Component {
                     </div>
                   </Col>
 
-                  <Col lg={10}>
+                  <Col
+                    xs="12"
+                    sm="12"
+                    md={sidebarOpen ? "8" : "12"}
+                    lg={sidebarOpen ? "10" : "12"}
+                  >
                     <Card>
                       <CardBody>
                         <div>
@@ -5449,52 +5500,40 @@ class TraineesList extends Component {
                                                       (isEdit && {
                                                         Id: trainee.Id,
                                                         FirstName:
-                                                          (trainee &&
-                                                            trainee.FirstName) ||
+                                                          trainee?.FirstName ||
                                                           "",
                                                         LastName:
-                                                          (trainee &&
-                                                            trainee.LastName) ||
+                                                          trainee?.LastName ||
                                                           "",
                                                         FatherName:
-                                                          (trainee &&
-                                                            trainee.FatherName) ||
+                                                          trainee?.FatherName ||
                                                           "",
                                                         grandFatherName:
-                                                          (trainee &&
-                                                            trainee.grandFatherName) ||
+                                                          trainee?.grandFatherName ||
                                                           "",
                                                         MotherName:
-                                                          (trainee &&
-                                                            trainee.MotherName) ||
+                                                          trainee?.MotherName ||
                                                           "",
                                                         BirthLocation:
-                                                          (trainee &&
-                                                            trainee.BirthLocation) ||
+                                                          trainee?.BirthLocation ||
                                                           "",
                                                         FirstNameE:
-                                                          (trainee &&
-                                                            trainee.FirstNameE) ||
+                                                          trainee?.FirstNameE ||
                                                           "",
                                                         LastNameE:
-                                                          (trainee &&
-                                                            trainee.LastNameE) ||
+                                                          trainee?.LastNameE ||
                                                           "",
                                                         FatherNameE:
-                                                          (trainee &&
-                                                            trainee.FatherNameE) ||
+                                                          trainee?.FatherNameE ||
                                                           "",
                                                         grandFatherNameE:
-                                                          (trainee &&
-                                                            trainee.grandFatherNameE) ||
+                                                          trainee?.grandFatherNameE ||
                                                           "",
                                                         MotherNameE:
-                                                          (trainee &&
-                                                            trainee.MotherNameE) ||
+                                                          trainee?.MotherNameE ||
                                                           "",
                                                         BirthLocationE:
-                                                          (trainee &&
-                                                            trainee.BirthLocationE) ||
+                                                          trainee?.BirthLocationE ||
                                                           "",
                                                         birthdate:
                                                           trainee?.birthdate
@@ -5508,22 +5547,18 @@ class TraineesList extends Component {
                                                                 )
                                                             : "",
                                                         NationalityId:
-                                                          (trainee &&
-                                                            trainee.NationalityId) ||
+                                                          trainee?.NationalityId ||
                                                           selectedNationalityId,
                                                         GenderId:
-                                                          (trainee &&
-                                                            trainee.GenderId) ||
+                                                          trainee?.GenderId ||
                                                           selectedGender ||
                                                           "",
 
                                                         nationalNo:
-                                                          (trainee &&
-                                                            trainee.nationalNo) ||
+                                                          trainee?.nationalNo ||
                                                           "",
                                                         identityNo:
-                                                          (trainee &&
-                                                            trainee.identityNo) ||
+                                                          trainee?.identityNo ||
                                                           "",
                                                         identityIssueDate:
                                                           trainee?.identityIssueDate
@@ -5537,20 +5572,16 @@ class TraineesList extends Component {
                                                                 )
                                                             : "",
                                                         civicZone:
-                                                          (trainee &&
-                                                            trainee.civicZone) ||
+                                                          trainee?.civicZone ||
                                                           "",
                                                         registerZone:
-                                                          (trainee &&
-                                                            trainee.registerZone) ||
+                                                          trainee?.registerZone ||
                                                           "",
                                                         registerNo:
-                                                          (trainee &&
-                                                            trainee.registerNo) ||
+                                                          trainee?.registerNo ||
                                                           "",
                                                         PassNumber:
-                                                          (trainee &&
-                                                            trainee.PassNumber) ||
+                                                          trainee?.PassNumber ||
                                                           "",
                                                         passportIssueDate:
                                                           trainee?.passportIssueDate
@@ -5575,21 +5606,17 @@ class TraineesList extends Component {
                                                                 )
                                                             : "",
                                                         diplomaId:
-                                                          (trainee &&
-                                                            trainee.diplomaId) ||
+                                                          trainee?.diplomaId ||
                                                           selectedDiploma,
                                                         DiplomaCountryId:
-                                                          (trainee &&
-                                                            trainee.DiplomaCountryId) ||
+                                                          trainee?.DiplomaCountryId ||
                                                           selectedCountry,
 
                                                         DiplomaNumber:
-                                                          (trainee &&
-                                                            trainee.DiplomaNumber) ||
+                                                          trainee?.DiplomaNumber ||
                                                           "",
                                                         DiplomaGovernorateId:
-                                                          (trainee &&
-                                                            trainee.DiplomaGovernorateId) ||
+                                                          trainee?.DiplomaGovernorateId ||
                                                           selectedGovernorate,
 
                                                         /* DiplomaCityId:
@@ -5597,16 +5624,13 @@ class TraineesList extends Component {
                                                                             selectedCity, */
 
                                                         DiplomaYear:
-                                                          (trainee &&
-                                                            trainee.DiplomaYear) ||
+                                                          trainee?.DiplomaYear ||
                                                           "",
                                                         ExaminationSession:
-                                                          (trainee &&
-                                                            trainee.ExaminationSession) ||
+                                                          trainee?.ExaminationSession ||
                                                           "",
                                                         Average:
-                                                          (trainee &&
-                                                            trainee.Average) ||
+                                                          trainee?.Average ||
                                                           "",
                                                         diplomaDate:
                                                           trainee?.diplomaDate
@@ -5620,61 +5644,49 @@ class TraineesList extends Component {
                                                                 )
                                                             : "",
                                                         diplomaVerificationNum:
-                                                          (trainee &&
-                                                            trainee.diplomaVerificationNum) ||
+                                                          trainee?.diplomaVerificationNum ||
                                                           "",
                                                         diplomaVerificationDate:
-                                                          (trainee &&
-                                                            trainee.diplomaVerificationDate) ||
+                                                          trainee?.diplomaVerificationDate ||
                                                           selectedDiplomaVerificationDate,
                                                         socialStatusId:
                                                           trainee &&
                                                           trainee.socialStatusId,
                                                         registrationCertLevelId:
-                                                          (trainee &&
-                                                            trainee.registrationCertLevelId) ||
+                                                          trainee?.registrationCertLevelId ||
                                                           selectedRegistrationCertLevelId,
                                                         registrationDiplomaName:
-                                                          (trainee &&
-                                                            trainee.registrationDiplomaName) ||
+                                                          trainee?.registrationDiplomaName ||
                                                           "",
                                                         registrationDiplomaDepartment:
-                                                          (trainee &&
-                                                            trainee.registrationDiplomaDepartment) ||
+                                                          trainee?.registrationDiplomaDepartment ||
                                                           "",
                                                         diplomaName:
-                                                          (trainee &&
-                                                            trainee.diplomaName) ||
+                                                          trainee?.diplomaName ||
                                                           "",
 
                                                         registrationDiplomaAverage:
-                                                          (trainee &&
-                                                            trainee.registrationDiplomaAverage) ||
+                                                          trainee?.registrationDiplomaAverage ||
                                                           "",
                                                         uniAverage:
-                                                          (trainee &&
-                                                            trainee.uniAverage) ||
+                                                          trainee?.uniAverage ||
                                                           "",
                                                         registrationDiplomaDate:
-                                                          (trainee &&
-                                                            trainee.registrationDiplomaDate) ||
+                                                          trainee?.registrationDiplomaDate ||
                                                           selectedRegistrationDiplomaDate,
 
                                                         uniName:
-                                                          (trainee &&
-                                                            trainee.uniName) ||
+                                                          trainee?.uniName ||
                                                           "",
                                                         UnivCountryId:
-                                                          (trainee &&
-                                                            trainee.UnivCountryId) ||
+                                                          trainee?.UnivCountryId ||
                                                           selectedUnivCountry,
 
                                                         /* TransferUnivAverage:
                                                                             (trainee && trainee.TransferUnivAverage) ||
                                                                             "", */
                                                         studyPattern:
-                                                          (trainee &&
-                                                            trainee.studyPattern) ||
+                                                          trainee?.studyPattern ||
                                                           "",
                                                         /*  selectedSemester:
                                                                             (trainee && trainee.selectedSemester) ||
@@ -5693,61 +5705,46 @@ class TraineesList extends Component {
                                                                 )
                                                             : "",
                                                         FacultyId:
-                                                          (trainee &&
-                                                            trainee.FacultyId) ||
+                                                          trainee?.FacultyId ||
                                                           selectedFacultyId,
                                                         plan_study:
-                                                          (trainee &&
-                                                            trainee.plan_study) ||
+                                                          trainee?.plan_study ||
                                                           "",
                                                         CurrentAddress:
-                                                          (trainee &&
-                                                            trainee.CurrentAddress) ||
+                                                          trainee?.CurrentAddress ||
                                                           "",
                                                         CurrentAddrPhone:
-                                                          (trainee &&
-                                                            trainee.CurrentAddrPhone) ||
+                                                          trainee?.CurrentAddrPhone ||
                                                           "",
                                                         CurrentAddrCell:
-                                                          (trainee &&
-                                                            trainee.CurrentAddrCell) ||
+                                                          trainee?.CurrentAddrCell ||
                                                           "",
                                                         PermanentAddress:
-                                                          (trainee &&
-                                                            trainee.PermanentAddress) ||
+                                                          trainee?.PermanentAddress ||
                                                           "",
                                                         ParentAddrPhone:
-                                                          (trainee &&
-                                                            trainee.ParentAddrPhone) ||
+                                                          trainee?.ParentAddrPhone ||
                                                           "",
                                                         WhatsappMobileNum:
-                                                          (trainee &&
-                                                            trainee.WhatsappMobileNum) ||
+                                                          trainee?.WhatsappMobileNum ||
                                                           "",
                                                         Email:
-                                                          (trainee &&
-                                                            trainee.Email) ||
-                                                          "",
+                                                          trainee?.Email || "",
                                                         GeneralNote:
-                                                          (trainee &&
-                                                            trainee.GeneralNote) ||
+                                                          trainee?.GeneralNote ||
                                                           "",
                                                         academicYear:
-                                                          (trainee &&
-                                                            trainee.academicYear) ||
+                                                          trainee?.academicYear ||
                                                           "",
 
                                                         InstituteCountryId:
-                                                          (trainee &&
-                                                            trainee.InstituteCountryId) ||
+                                                          trainee?.InstituteCountryId ||
                                                           selectedInstituteCountry,
                                                         HighStudyTypeId:
-                                                          (trainee &&
-                                                            trainee.HighStudyTypeId) ||
+                                                          trainee?.HighStudyTypeId ||
                                                           selectedHightStudyTypeId,
                                                         EstimateId:
-                                                          (trainee &&
-                                                            trainee.EstimateId) ||
+                                                          trainee?.EstimateId ||
                                                           selectedEstimateId,
                                                         RegUniDate:
                                                           trainee?.RegUniDate
@@ -7201,7 +7198,7 @@ class TraineesList extends Component {
                                                                                   <Col className="col-4">
                                                                                     <Label for="regDiploma">
                                                                                       {this.props.t(
-                                                                                        "Registered under"
+                                                                                        "Registered Under"
                                                                                       )}
                                                                                     </Label>
                                                                                   </Col>
@@ -7361,7 +7358,9 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="UnivCountryId"
                                                                                           className={`form-control }`}
-                                                                                          placeholder="Type to search..."
+                                                                                          placeholder={t(
+                                                                                            "Type to search..."
+                                                                                          )}
                                                                                           list="univCountryDatalistOptions"
                                                                                           value={
                                                                                             values.UnivCountryId
@@ -7687,7 +7686,9 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="InstituteCountryId"
                                                                                           className={`form-control }`}
-                                                                                          placeholder="Type to search..."
+                                                                                          placeholder={t(
+                                                                                            "Type to search..."
+                                                                                          )}
                                                                                           list="InstituteCountryIdDatalistOptions"
                                                                                           value={
                                                                                             values.InstituteCountryId
@@ -7887,7 +7888,9 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="UnivCountryId"
                                                                                           className={`form-control }`}
-                                                                                          placeholder="Type to search..."
+                                                                                          placeholder={t(
+                                                                                            "Type to search..."
+                                                                                          )}
                                                                                           list="univCountryDatalistOptions"
                                                                                           value={
                                                                                             values.UnivCountryId
@@ -8111,7 +8114,9 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="diplomaId"
                                                                                           id="diploma-Id"
-                                                                                          placeholder="Type to search..."
+                                                                                          placeholder={t(
+                                                                                            "Type to search..."
+                                                                                          )}
                                                                                           list="certificateDatalistOptions"
                                                                                           onBlur={() =>
                                                                                             this.handleInputBlur(
@@ -8201,7 +8206,9 @@ class TraineesList extends Component {
                                                                                           className={
                                                                                             "form-control"
                                                                                           }
-                                                                                          placeholder="Type to search..."
+                                                                                          placeholder={t(
+                                                                                            "Type to search..."
+                                                                                          )}
                                                                                           list="CountrydatalistOptions"
                                                                                           value={
                                                                                             values.DiplomaCountryId
@@ -8256,7 +8263,9 @@ class TraineesList extends Component {
                                                                                           type="text"
                                                                                           name="DiplomaGovernorateId"
                                                                                           className={`form-control }`}
-                                                                                          placeholder="Type to search..."
+                                                                                          placeholder={t(
+                                                                                            "Type to search..."
+                                                                                          )}
                                                                                           list="GovernoratedatalistOptions"
                                                                                           value={
                                                                                             values.DiplomaGovernorateId
@@ -9388,7 +9397,9 @@ class TraineesList extends Component {
                                                                                 );
                                                                               }}
                                                                             >
-                                                                              save
+                                                                              {this.props.t(
+                                                                                "Save"
+                                                                              )}
                                                                             </Link>
                                                                           </li>
                                                                         )}
@@ -9406,7 +9417,9 @@ class TraineesList extends Component {
                                                                                 );
                                                                               }}
                                                                             >
-                                                                              save
+                                                                              {this.props.t(
+                                                                                "Save"
+                                                                              )}
                                                                             </Link>
                                                                           </li>
                                                                         )}
@@ -9425,7 +9438,9 @@ class TraineesList extends Component {
                                                                                 );
                                                                               }}
                                                                             >
-                                                                              save
+                                                                              {this.props.t(
+                                                                                "Save"
+                                                                              )}
                                                                             </Link>
                                                                           </li>
                                                                         )}
@@ -9443,7 +9458,9 @@ class TraineesList extends Component {
                                                                                 );
                                                                               }}
                                                                             >
-                                                                              save
+                                                                              {this.props.t(
+                                                                                "Save"
+                                                                              )}
                                                                             </Link>
                                                                           </li>
                                                                         )}
@@ -9461,7 +9478,9 @@ class TraineesList extends Component {
                                                                                 );
                                                                               }}
                                                                             >
-                                                                              save
+                                                                              {this.props.t(
+                                                                                "Save"
+                                                                              )}
                                                                             </Link>
                                                                           </li>
                                                                         )}
@@ -9479,7 +9498,9 @@ class TraineesList extends Component {
                                                                                 );
                                                                               }}
                                                                             >
-                                                                              save
+                                                                              {this.props.t(
+                                                                                "Save"
+                                                                              )}
                                                                             </Link>
                                                                           </li>
                                                                         )}

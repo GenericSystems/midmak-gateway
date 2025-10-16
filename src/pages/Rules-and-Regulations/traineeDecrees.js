@@ -367,14 +367,15 @@ class TraineesDecreesList extends Component {
         emptyDecree[key] = values[key];
     });
     // emptyDecree["decision"] = undefined;
-    // emptyDecree["traineeName"] = undefined;
-
+    // emptyDecree["traineeId"] = undefined;
+    delete emptyDecree.traineeName;
+    delete emptyDecree.decision;
     emptyDecree["decisionRuleId"] = decrees.find(
       decree => decree.arTitle === values["decision"]
     ).Id;
-    // emptyDecree["traineeId"] = trainees.find(
-    //   trainee => trainee.fullName === values["fullName"]
-    // ).TraineeNum;
+    emptyDecree["traineeId"] = trainees.find(
+      trainee => trainee.fullName === values["traineeName"]
+    ).Id;
     emptyDecree["TraineesDecreesCourses"] = values["TraineesDecreesCourses"];
 
     if (isEdit) {
@@ -546,13 +547,13 @@ class TraineesDecreesList extends Component {
       },
       {
         text: this.props.t("Trainee Name"),
-        dataField: "traineeName",
+        dataField: "traineeId",
         sort: true,
         formatter: (cellContent, traineesDecrees) => (
           <>
             <h5 className="font-size-14 mb-1">
               <Link to="#" className="text-dark">
-                {traineesDecrees.traineeName}
+                {traineesDecrees.traineeId}
               </Link>
             </h5>
           </>
@@ -894,8 +895,8 @@ class TraineesDecreesList extends Component {
                                           <Col>
                                             <Formik
                                               initialValues={{
-                                                traineeName:
-                                                  traineesDecree.traineeName ||
+                                                traineeId:
+                                                  traineesDecree.traineeId ||
                                                   "",
                                                 decisionRuleReasonId:
                                                   traineesDecree.decisionRuleReasonId,
@@ -993,7 +994,7 @@ class TraineesDecreesList extends Component {
                                                         );
                                                       }
                                                     ),
-                                                  traineeName: Yup.string()
+                                                  traineeId: Yup.string()
                                                     .required(
                                                       "Trainee is required"
                                                     )
@@ -1099,7 +1100,7 @@ class TraineesDecreesList extends Component {
                                                             );
                                                           }}
                                                         />
-                                                        <datalist id="decreeList">
+                                                        <datalist id="decisionList">
                                                           {decrees.map(
                                                             decree => (
                                                               <option
@@ -1124,7 +1125,7 @@ class TraineesDecreesList extends Component {
                                                     <Row>
                                                       <Col lg="4">
                                                         <Label
-                                                          htmlFor="traineeName"
+                                                          htmlFor="traineeId"
                                                           className="form-label d-flex"
                                                         >
                                                           {this.props.t(
@@ -1181,7 +1182,7 @@ class TraineesDecreesList extends Component {
                                                           )}
                                                         </datalist>
                                                         <ErrorMessage
-                                                          name="traineeName"
+                                                          name="traineeId"
                                                           component="div"
                                                           className="invalid-feedback"
                                                         />
@@ -1543,7 +1544,7 @@ class TraineesDecreesList extends Component {
                                                   yearSemesterId:
                                                     null ||
                                                     traineesDecree.yearSemesterId,
-                                                  traineeName:
+                                                  traineeId:
                                                     traineesDecree.fullName ||
                                                     "",
                                                   decisionRuleReasonId:
@@ -1734,7 +1735,7 @@ class TraineesDecreesList extends Component {
                                                         );
                                                       }
                                                     ),
-                                                  traineeName: Yup.string()
+                                                  traineeId: Yup.string()
                                                     .required(
                                                       "Trainee is required"
                                                     )
@@ -1918,7 +1919,7 @@ class TraineesDecreesList extends Component {
                                                       <Row>
                                                         <Col lg="4">
                                                           <label
-                                                            htmlFor="traineeName"
+                                                            htmlFor="traineeId"
                                                             className="form-label d-flex"
                                                           >
                                                             {this.props.t(
@@ -1931,12 +1932,12 @@ class TraineesDecreesList extends Component {
                                                         </Col>
                                                         <Col lg="8">
                                                           <Field
-                                                            name="traineeName"
+                                                            name="traineeId"
                                                             type="text"
                                                             list="traineeNameList"
                                                             className={`form-control ${
-                                                              errors.traineeName &&
-                                                              touched.traineeName
+                                                              errors.traineeId &&
+                                                              touched.traineeId
                                                                 ? "is-invalid"
                                                                 : ""
                                                             }`}
@@ -1993,7 +1994,7 @@ class TraineesDecreesList extends Component {
                                                             )}
                                                           </datalist>
                                                           <ErrorMessage
-                                                            name="traineeName"
+                                                            name="traineeId"
                                                             component="div"
                                                             className="invalid-feedback"
                                                           />
@@ -2618,7 +2619,7 @@ class TraineesDecreesList extends Component {
                                             <Row>
                                               <Card>
                                                 <CardTitle id="add_header">
-                                                  {traineesDecree.traineeName +
+                                                  {traineesDecree.traineeId +
                                                     "  " +
                                                     traineesDecree.TraineeId}
                                                 </CardTitle>

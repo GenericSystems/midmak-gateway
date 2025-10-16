@@ -1173,13 +1173,12 @@ class RegistrationList extends Component {
       },
     ];
     const columns3 = [
+      { dataField: "Id", text: t("ID"), hidden: true },
       {
         dataField: "serial",
         text: "#",
         formatter: (cell, row, rowIndex) => rowIndex + 1,
       },
-      { dataField: "Id", text: t("ID"), hidden: true },
-
       { dataField: "courseName", text: t("Course Name"), sort: true },
       { dataField: "courseCode", text: t("Course Code"), sort: true },
       { dataField: "creditsCount", text: t("Credits Count"), sort: true },

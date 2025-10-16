@@ -185,6 +185,12 @@ class AcademyTree extends Component {
     this.setState({ showEditButton });
   };
 
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   handleAddDirectorateForm = () => {
     this.setState({ openForm: "directorate" });
     this.setState({ newDirectorateArName: "" });
@@ -1076,6 +1082,7 @@ class AcademyTree extends Component {
     );
 
     const { t, academyOrgStructures, academyInfo, deleted } = this.props;
+    const direction = languageState === "ar" ? "rtl" : "ltr";
     console.log("1111111111111111", academyInfo);
     const alertMessage =
       deleted == 0
@@ -1086,7 +1093,7 @@ class AcademyTree extends Component {
     document.title = "Academy | keyInHands - React Admin & Dashboard Template";
 
     return (
-      <div className="page-content">
+      <div dir={direction} className="page-content">
         <DeleteModal
           show={deleteDirectorateModal}
           onDeleteClick={this.handleDeleteDirectorate}
@@ -1202,7 +1209,11 @@ class AcademyTree extends Component {
                                 }
                               >
                                 <span>
-                                  {t(academyOrgStructure.directorateArName)}
+                                  {languageState === "ar"
+                                    ? academyOrgStructure.directorateArName +
+                                      " "
+                                    : academyOrgStructure.directorateEnName +
+                                      " "}
                                 </span>
                                 <div className="directorate-item-actions">
                                   {showAddButton && (
@@ -1266,7 +1277,11 @@ class AcademyTree extends Component {
                                           }
                                         >
                                           <span>
-                                            {department.departmentArName}
+                                            {languageState === "ar"
+                                              ? department.departmentArName +
+                                                " "
+                                              : department.departmentEnName +
+                                                " "}
                                           </span>
                                           <div className="directorate-item-actions">
                                             {showAddButton && (
@@ -1331,8 +1346,16 @@ class AcademyTree extends Component {
                                                   )
                                                 }
                                               >
-                                                <span>
-                                                  {organism.organismArName}
+                                                <span
+                                                  style={{
+                                                    direction: direction,
+                                                  }}
+                                                >
+                                                  {languageState === "ar"
+                                                    ? organism.organismArName +
+                                                      " "
+                                                    : organism.organismEnName +
+                                                      " "}
                                                 </span>
                                                 <div className="directorate-item-actions">
                                                   {showEditButton && (
@@ -1503,7 +1526,7 @@ class AcademyTree extends Component {
                           name="enTitle"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Directorate Name")}
+                          placeholder={t("Directorate Name(en)")}
                           value={newDirectorateEnName}
                           onChange={e => {
                             this.handleDirectorateDataChange(
@@ -1652,7 +1675,7 @@ class AcademyTree extends Component {
                           className={`form-control ${
                             departmentNameError ? "is-invalid" : ""
                           }`}
-                          placeholder={"Department Name(ar)"}
+                          placeholder={t("Department Name(ar)")}
                           value={newDepartmentArName}
                           onChange={e => {
                             this.handleDepartmentDataChange(
@@ -1766,7 +1789,10 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Directorate")} - {editDirectorateArName}
+                          {t("Edit Directorate")} -{""}
+                          {languageState === "ar"
+                            ? editDirectorateArName
+                            : editDirectorateEnName || editDirectorateArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -1820,7 +1846,7 @@ class AcademyTree extends Component {
                           name="enTitle"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Directorate Name")}
+                          placeholder={t("Directorate Name(en)")}
                           value={editDirectorateEnName}
                           onChange={e => {
                             this.handleDirectorateDataChange(
@@ -1941,8 +1967,10 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Department")} - {""}
-                          {editDirectorateArName}
+                          {t("Edit Department")} - {""}{" "}
+                          {languageState === "ar"
+                            ? editDirectorateArName
+                            : editDirectorateEnName || editDirectorateArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2215,7 +2243,10 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Edit Organism")} - {editOrganismArName}
+                          {t("Edit Organism")} -{" "}
+                          {languageState === "ar"
+                            ? editOrganismArName
+                            : editOrganismEnName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2361,7 +2392,10 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Show Directorate")} - {editDirectorateArName}
+                          {t("Show Directorate")} -{""}{" "}
+                          {languageState === "ar"
+                            ? editDirectorateArName
+                            : editDirectorateEnName || editDirectorateArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2415,7 +2449,7 @@ class AcademyTree extends Component {
                           name="enTitle"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Directorate Name")}
+                          placeholder={t("Directorate Name(en)")}
                           value={editDirectorateEnName}
                           onChange={e => {
                             this.handleDirectorateDataChange(
@@ -2528,7 +2562,10 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Show Department")} - {editDepartmentArName}
+                          {t("Show Department")} -{" "}
+                          {languageState === "ar"
+                            ? editDepartmentArName
+                            : editDepartmentEnName || editDepartmentArName}
                         </h5>
                       </Typography>
                     </Row>
@@ -2646,7 +2683,10 @@ class AcademyTree extends Component {
                     <Row>
                       <Typography variant="div">
                         <h5 className="header pt-2 mb-2" id="title">
-                          {t("Show Organism")} - {editOrganismArName}
+                          {t("Show Organism")} -{" "}
+                          {languageState === "ar"
+                            ? editOrganismArName
+                            : editOrganismEnName}
                         </h5>
                       </Typography>
                     </Row>
