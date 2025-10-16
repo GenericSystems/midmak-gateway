@@ -102,10 +102,9 @@ class TraineesDecreesList extends Component {
       isEdit: false,
     };
 
-    this.handleTraineesDecreeClick = this.handleTraineesDecreeClick.bind(this);
+    this.handleEditTraineesDecree = this.handleEditTraineesDecree.bind(this);
     this.toggle = this.toggle.bind(this);
-    this.handleTraineesDecreeClicks =
-      this.handleTraineesDecreeClicks.bind(this);
+    this.handleAddTraineesDecree = this.handleAddTraineesDecree.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
     this.handleMulti = this.handleMulti.bind(this);
   }
@@ -198,21 +197,26 @@ class TraineesDecreesList extends Component {
   };
 
   toggle(decree) {
-    const { decisionCategoryId, traineesDecree } = this.state;
-    const { filteredCourses, coursesDecrees } = this.props;
-
-    if (decree == 3 || decree == 2) {
-      const filteredCoursesModified =
-        coursesDecrees &&
-        coursesDecrees.map(item => ({
-          label: `${item.code} - ${item.CourseName}`,
-          value: item.Id,
-        }));
-    }
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
   }
+  // toggle(decree) {
+  //   const { decisionCategoryId, traineesDecree } = this.state;
+  //   const { filteredCourses, coursesDecrees } = this.props;
+
+  //   if (decree == 3 || decree == 2) {
+  //     const filteredCoursesModified =
+  //       coursesDecrees &&
+  //       coursesDecrees.map(item => ({
+  //         label: `${item.code} - ${item.CourseName}`,
+  //         value: item.Id,
+  //       }));
+  //   }
+  //   this.setState(prevState => ({
+  //     modal: !prevState.modal,
+  //   }));
+  // }
 
   addToggle = () => {
     this.setState(prevState => ({
@@ -220,7 +224,7 @@ class TraineesDecreesList extends Component {
     }));
   };
 
-  handleTraineesDecreeClicks = () => {
+  handleAddTraineesDecree = () => {
     this.setState({
       traineesDecree: "",
       isEdit: false,
@@ -269,7 +273,7 @@ class TraineesDecreesList extends Component {
     this.setState({ deleteModal: false, showAlert: true });
   };
 
-  handleTraineesDecreeClick = arg => {
+  handleEditTraineesDecree = arg => {
     const {
       trainees,
       decrees,
@@ -284,42 +288,43 @@ class TraineesDecreesList extends Component {
       label: item.arTitle,
     }));
 
-    traineesDecree["fullName"] = trainees.find(
-      trainee => trainee.TraineeNum === arg["TraineeNum"]
-    ).fullName;
-    traineesDecree["decree"] = decrees.find(
-      decree => decree.Id === arg["decisionRuleId"]
-    ).arTitle;
-    let decisionCat = decrees.find(
-      decree => decree.Id === arg["decisionRuleId"]
-    ).decisionCategoryId;
-    if (decisionCat == 3 || decisionCat == 2) {
-      const trainee = trainees.find(
-        trainee => trainee.fullName === traineesDecree["fullName"]
-      );
-      onGetFilteredCoursesPlan(trainee);
-    }
+    // traineesDecree["fullName"] = trainees.find(
+    //   trainee => trainee.TraineeNum === arg["TraineeNum"]
+    // ).fullName;
+    // traineesDecree["decree"] = decrees.find(
+    //   decree => decree.Id === arg["decisionRuleId"]
+    // ).arTitle;
+    // let decisionCat = decrees.find(
+    //   decree => decree.Id === arg["decisionRuleId"]
+    // ).decisionCategoryId;
+    // if (decisionCat == 3 || decisionCat == 2) {
+    //   const trainee = trainees.find(
+    //     trainee => trainee.fullName === traineesDecree["fullName"]
+    //   );
+    //   onGetFilteredCoursesPlan(trainee);
+    // }
 
-    const { onGetTraineeDecreesDismiss, onGetDecreesRulesReason } = this.props;
-    onGetTraineeDecreesDismiss(traineesDecree);
-    onGetDecreesRulesReason(traineesDecree.decisionRuleId);
+    // const { onGetTraineeDecreesDismiss, onGetDecreesRulesReason } = this.props;
+    // onGetTraineeDecreesDismiss(traineesDecree);
+    // onGetDecreesRulesReason(traineesDecree.decisionRuleId);
 
-    traineesDecree["TraineesDecreesCourses"] = arg["TraineesDecreesCourses"];
+    // traineesDecree["TraineesDecreesCourses"] = arg["TraineesDecreesCourses"];
 
     this.setState({
       traineesDecree,
-      decisionCategoryId: decreeCat,
-      selectedFaculty: arg.facultyId,
-      selectedEducation: arg.educationType,
-      stdCoursesArray: traineesDecree["TraineesDecreesCourses"],
-      selectedReason: traineesDecree["decisioneRuleReasonId"],
-      selectedReasonName: traineesDecree["decreeReasonName"],
-      selectedDecreeStatus: traineesDecree["decreeStateId"],
-      selectedDecreeType: traineesDecree["decreeType"],
+      // decisionCategoryId: decisionCat,
+      // selectedFaculty: arg.facultyId,
+      // selectedEducation: arg.educationType,
+      // stdCoursesArray: traineesDecree["TraineesDecreesCourses"],
+      // selectedReason: traineesDecree["decisioneRuleReasonId"],
+      // selectedReasonName: traineesDecree["decreeReasonName"],
+      // selectedDecreeStatus: traineesDecree["decreeStateId"],
+      // selectedDecreeType: traineesDecree["decreeType"],
       isEdit: true,
     });
 
-    this.toggle(decreeCat);
+    // this.toggle(decisionCat);
+    this.toggle();
   };
   handleMulti = selectedMulti => {
     this.setState({ selectedMulti });
@@ -564,7 +569,7 @@ class TraineesDecreesList extends Component {
         }),
       },
       {
-        text: this.props.t("decree Rule"),
+        text: this.props.t("Decree Rule"),
         dataField: "decisionRuleId",
         sort: true,
         formatter: (cellContent, traineesDecrees) => (
@@ -641,7 +646,7 @@ class TraineesDecreesList extends Component {
         dataField: "menu",
         isDummyField: true,
         editable: false,
-        text: this.props.t("Action"),
+        text: this.props.t(""),
         formatter: (cellContent, traineesDecree) => (
           <div className="d-flex gap-3">
             {/* {showEditButton && ( */}
@@ -649,7 +654,7 @@ class TraineesDecreesList extends Component {
               <i
                 className="mdi mdi-pencil font-size-18"
                 id="edittooltip"
-                onClick={() => this.handleTraineesDecreeClick(traineesDecree)}
+                onClick={() => this.handleEditTraineesDecree(traineesDecree)}
               ></i>
             </Link>
             {/* )} */}
@@ -765,7 +770,7 @@ class TraineesDecreesList extends Component {
             {/* Render Breadcrumbs */}
             <Breadcrumbs
               title={t("Trainees Decrees")}
-              breadcrumbItem={t("Trainees Decrees List")}
+              breadcrumbItem={t("Trainees Decrees")}
             />
             <Row>
               <Col lg="12">
@@ -829,9 +834,7 @@ class TraineesDecreesList extends Component {
                                     >
                                       <IconButton
                                         color="primary"
-                                        onClick={
-                                          this.handleTraineesDecreeClicks
-                                        }
+                                        onClick={this.handleAddTraineesDecree}
                                       >
                                         <i className="mdi mdi-plus-circle blue-noti-icon" />
                                       </IconButton>
@@ -1129,7 +1132,7 @@ class TraineesDecreesList extends Component {
                                                           className="form-label d-flex"
                                                         >
                                                           {this.props.t(
-                                                            "Trainee Names"
+                                                            "Trainee Name"
                                                           )}{" "}
                                                           <span className="text-danger">
                                                             *
@@ -1513,8 +1516,8 @@ class TraineesDecreesList extends Component {
                                         tag="h4"
                                       >
                                         {!!isEdit
-                                          ? this.props.t("Edit TraineesDecree")
-                                          : this.props.t("Add TraineesDecree")}
+                                          ? this.props.t("Edit Trainee Decree")
+                                          : this.props.t("Add Trainee Decree")}
                                       </ModalHeader>
 
                                       <ModalBody>
@@ -1610,70 +1613,6 @@ class TraineesDecreesList extends Component {
                                               }
                                               validationSchema={Yup.object().shape(
                                                 {
-                                                  yearSemesterId: Yup.number()
-                                                    .required(
-                                                      "Current Semester is required"
-                                                    )
-                                                    .nullable(),
-
-                                                  fromYearSemesterId:
-                                                    Yup.number().when(
-                                                      "decree",
-                                                      {
-                                                        is: decree => {
-                                                          const decreeObject =
-                                                            decrees.find(
-                                                              d =>
-                                                                d.arTitle ===
-                                                                decree
-                                                            );
-                                                          return (
-                                                            decreeObject &&
-                                                            decreeObject.decisionCategoryId ===
-                                                              6
-                                                          );
-                                                        },
-                                                        then: /* Yup.object().nullable().required("Semester is required").shape({
-                                                        value: Yup.string().required("Semester value is required"),
-                                                        label: Yup.string().required("Semester label is required"),
-                                                      }), */ Yup.number()
-                                                          .required(
-                                                            "Semester is required"
-                                                          )
-                                                          .nullable(),
-                                                        otherwise:
-                                                          Yup.number().nullable(),
-                                                      }
-                                                    ),
-                                                  toYearSemesterId:
-                                                    Yup.number().when(
-                                                      "decree",
-                                                      {
-                                                        is: decree => {
-                                                          const decreeObject =
-                                                            decrees.find(
-                                                              d =>
-                                                                d.arTitle ===
-                                                                decree
-                                                            );
-                                                          return (
-                                                            decreeObject &&
-                                                            decreeObject.decisionCategoryId ===
-                                                              6
-                                                          );
-                                                        },
-                                                        then: /* Yup.object().nullable().required("Semester is required").shape({
-                                                        value: Yup.string().required("Semester value is required"),
-                                                        label: Yup.string().required("Semester label is required"),
-                                                      }), */ Yup.number()
-                                                          .required(
-                                                            "Semester is required"
-                                                          )
-                                                          .nullable(),
-                                                        otherwise:
-                                                          Yup.number().nullable(),
-                                                      }
-                                                    ),
                                                   TraineesDecreesCourses:
                                                     Yup.array()
                                                       .nullable()
@@ -1799,55 +1738,6 @@ class TraineesDecreesList extends Component {
                                                       <Row>
                                                         <Col lg="4">
                                                           <label
-                                                            htmlFor="yearSemesterId"
-                                                            className="form-label d-flex"
-                                                          >
-                                                            {this.props.t(
-                                                              "Current Semester"
-                                                            )}{" "}
-                                                            <span className="text-danger">
-                                                              *
-                                                            </span>
-                                                          </label>
-                                                        </Col>
-                                                        <Col lg="8">
-                                                          <Field
-                                                            name="yearSemesterId"
-                                                            options={
-                                                              yearsModified
-                                                            }
-                                                            component={Select}
-                                                            onChange={option =>
-                                                              setFieldValue(
-                                                                "yearSemesterId",
-                                                                option.value
-                                                              )
-                                                            }
-                                                            className={`select-style-std ${
-                                                              errors.yearSemesterId &&
-                                                              touched.yearSemesterId
-                                                                ? "is-invalid"
-                                                                : ""
-                                                            }`}
-                                                            defaultValue={yearsModified.find(
-                                                              opt =>
-                                                                opt.value ===
-                                                                traineesDecree.yearSemesterId
-                                                            )}
-                                                          />
-                                                          <ErrorMessage
-                                                            name="yearSemesterId"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </Col>
-                                                      </Row>
-                                                    </div>
-
-                                                    <div className="mb-3">
-                                                      <Row>
-                                                        <Col lg="4">
-                                                          <label
                                                             htmlFor="decision"
                                                             className="form-label d-flex"
                                                           >
@@ -1923,7 +1813,7 @@ class TraineesDecreesList extends Component {
                                                             className="form-label d-flex"
                                                           >
                                                             {this.props.t(
-                                                              "Trainee Names"
+                                                              "Trainee Name"
                                                             )}{" "}
                                                             <span className="text-danger">
                                                               *

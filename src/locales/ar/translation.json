@@ -833,5 +833,11 @@
   "Sections & Labs": "الشعب&الفئات",
   "Add Details": "إضافة تفاصيل",
   "Edit Details": "تعديل تفاصيل",
+  "Decrees Type": "أنواع القرارت",
+  "Trainees Decrees": "قرارات المتدربين",
+  "Decree Rule": "قاعدة القرار",
+  "Decree Rule Reason": "سبب قاعدة القرار",
+  "Add Trainees Decree": "إضافة قرار المتدرب",
+  "Date": "تاريخ",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }
