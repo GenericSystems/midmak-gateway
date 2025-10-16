@@ -1528,7 +1528,7 @@ class ClassSchedulingList extends Component {
         dataField: "menu",
         isDummyField: true,
         editable: false,
-        text: this.props.t("Action"),
+        text: this.props.t(""),
         formatter: (cellContent, sectionLabData) => (
           <div className="d-flex gap-3">
             <Tooltip title={t("Schedule Timing")} placement="top">
@@ -1599,7 +1599,7 @@ class ClassSchedulingList extends Component {
         dataField: "menu",
         isDummyField: true,
         editable: false,
-        text: this.props.t("Action"),
+        text: this.props.t(""),
         formatter: (cellContent, sectionLabDetails) => (
           <div className="d-flex gap-3">
             {/* <Tooltip title={t("View Hall Timing")} placement="top">
@@ -2787,8 +2787,8 @@ class ClassSchedulingList extends Component {
                                     {selectedRowSectionLab
                                       ? `${this.props.t(
                                           isEdit1
-                                            ? "Edit Details"
-                                            : "Add Details"
+                                            ? t("Edit Details")
+                                            : t("Add Details")
                                         )} - ${selectedRowSectionLab.type}${
                                           selectedRowSectionLab.SectionLabNumber
                                         } `
@@ -3123,7 +3123,9 @@ class ClassSchedulingList extends Component {
                                                           </span>
                                                           <Field
                                                             name="SectionNumber"
-                                                            placeholder="Section Number"
+                                                            placeholder={t(
+                                                              "Section Number"
+                                                            )}
                                                             type="number"
                                                             className={
                                                               "form-control" +
@@ -3153,7 +3155,9 @@ class ClassSchedulingList extends Component {
                                                           </span>
                                                           <Field
                                                             name="Capacity"
-                                                            placeholder="Section Capacity"
+                                                            placeholder={t(
+                                                              "Section Capacity"
+                                                            )}
                                                             type="number"
                                                             className={
                                                               "form-control" +
@@ -3549,7 +3553,9 @@ class ClassSchedulingList extends Component {
                                                           </span>
                                                           <Field
                                                             name="LabNumber"
-                                                            placeholder="Lab Number"
+                                                            placeholder={t(
+                                                              "Lab Number"
+                                                            )}
                                                             type="number"
                                                             className={
                                                               "form-control" +
@@ -3577,7 +3583,9 @@ class ClassSchedulingList extends Component {
                                                           </span>
                                                           <Field
                                                             name="Capacity"
-                                                            placeholder="Lab Capacity"
+                                                            placeholder={t(
+                                                              "Lab Capacity"
+                                                            )}
                                                             type="number"
                                                             className={
                                                               "form-control" +
