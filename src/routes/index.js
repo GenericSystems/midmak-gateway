@@ -317,6 +317,30 @@ import TimeLines from "pages/TimeLines/timeLine";
 //diploma-level
 import DiplomaLevelsList from "pages/diploma-level/diploma-level";
 
+//currencies
+import CurrenciesList from "../pages/Finances/Settings/currencies";
+
+//fines
+import FinesList from "../pages/Finances/Settings/fines";
+
+//fines
+import FinesDefinitionList from "../pages/Finances/Definition/fines-definition";
+
+//request fees
+import RequestsFeesList from "../pages/Finances/Definition/requests-fees";
+
+//fees
+import FeesDefinitionList from "../pages/Finances/Definition/fees-definition";
+
+//fines
+import PeriodsList from "../pages/Finances/Definition/periods";
+
+//services
+import ServicesList from "../pages/Finances/Settings/services";
+
+//requests
+import RequestsList from "../pages/Finances/Settings/requests";
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -563,6 +587,30 @@ const authProtectedRoutes = [
 
   //DiplomaLevelsList
   { path: "diploma-level", component: DiplomaLevelsList },
+
+  //Currencies
+  { path: "/currencies", component: CurrenciesList },
+
+  //Fines
+  { path: "/fines", component: FinesList },
+
+  //Fines Definition
+  { path: "/fines-definition", component: FinesDefinitionList },
+
+  //requests Fees
+  { path: "/requests-fees", component: RequestsFeesList },
+
+  //fees Definition
+  { path: "/fees-definition", component: FeesDefinitionList },
+
+  //Periods
+  { path: "/periods", component: PeriodsList },
+
+  //Services
+  { path: "/services", component: ServicesList },
+
+  //Requests
+  { path: "/requests", component: RequestsList },
 
   //Blog
   { path: "/blog-list", component: BlogList },
