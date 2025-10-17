@@ -45,7 +45,7 @@ import {
   getCities,
   getCountries,
   getGenders,
-  getTraineeRegCertificate,
+  getTempTraineeRegCertificate,
   getEstimates,
   getGovernorates,
   getFaculties,
@@ -329,6 +329,23 @@ function* fetchTrainees(selectedpayload) {
     yield put(getTraineesOptSuccess(response));
   } catch (error) {
     yield put(getTraineesOptFail(error));
+  }
+
+  const get_Reg_Certificate = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "AdmissionSettings_RegisterUnderCertificates",
+  };
+
+  try {
+    const response = yield call(
+      getTempTraineeRegCertificate,
+      get_Reg_Certificate
+    );
+    yield put(getRegisterCertificatesSuccess(response));
+  } catch (error) {
+    yield put(getRegisterCertificatesFail(error));
   }
 
   //get trainees_req
