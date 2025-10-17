@@ -10,13 +10,13 @@ import {
   GET_ALL_COURSES_REGISTRATION,
   GET_AVAILABLE_COURSES,
   ADD_NEW_AVAILABLE_COURSE,
-  GET_NON_ACTIVE_STD_CURRS,
-  UPDATE_NON_ACTIVE_STD_CURR,
-  DELETE_NON_ACTIVE_STD_CURR,
-  GET_TEMP_STD_SCHEDULES,
+  GET_NON_ACTIVE_CURRS,
+  UPDATE_NON_ACTIVE_CURR,
+  DELETE_NON_ACTIVE_CURR,
+  GET_TRAINEE_SCHEDULES,
   GET_ACHIEVED_COURSES,
-  DELETE_ALL_NON_ACTIVE_STD_CURR,
-  SAVE_ALL_NON_ACTIVE_STD_CURR,
+  DELETE_ALL_NON_ACTIVE_CURR,
+  SAVE_ALL_NON_ACTIVE_CURR,
 } from "./actionTypes";
 
 import {
@@ -34,20 +34,22 @@ import {
   getAllRegistrationFail,
   getAvailableCourseSuccess,
   getAvailableCourseFail,
-  getNonActiveStdCurrSuccess,
-  getNonActiveStdCurrFail,
-  updateNonActiveStdCurrSuccess,
-  updateNonActiveStdCurrFail,
-  deleteNonActiveStdCurrSuccess,
-  deleteNonActiveStdCurrFail,
-  getTempStdSchedulesSuccess,
-  getTempStdSchedulesFail,
-  deleteAllNonActiveStdCurrSuccess,
-  deleteAllNonActiveStdCurrFail,
+  addAvailableCourseFail,
+  addAvailableCourseSuccess,
+  getNonActiveCurrSuccess,
+  getNonActiveCurrFail,
+  updateNonActiveCurrSuccess,
+  updateNonActiveCurrFail,
+  deleteNonActiveCurrSuccess,
+  deleteNonActiveCurrFail,
+  getTraineeSchedulesSuccess,
+  getTraineeSchedulesFail,
+  deleteAllNonActiveCurrSuccess,
+  deleteAllNonActiveCurrFail,
   getAchievedCoursesFail,
   getAchievedCoursesSuccess,
-  saveAllNonActiveStdCurrSuccess,
-  saveAllNonActiveStdCurrFail,
+  saveAllNonActiveCurrSuccess,
+  saveAllNonActiveCurrFail,
 } from "./actions";
 import {
   getLecturePeriodsSuccess,
@@ -65,60 +67,66 @@ import {
   getLecturePeriods,
   getAvailableCourses,
   addNewAvailableCourse,
-  getNonActiveStdCurrs,
-  updateNonActiveStdCurr,
-  deleteNonActiveStdCurr,
-  getTempStdSchedules,
-  deleteAllNonActiveStdCurr,
+  getNonActiveCurrs,
+  updateNonActiveCurr,
+  deleteNonActiveCurr,
+  getTraineeSchedules,
+  deleteAllNonActiveCurr,
   getAchievedCourses,
   getStudentRegisterInfo,
-  saveAllNonActiveStdCurr,
+  saveAllNonActiveCurr,
 } from "../../helpers/fakebackend_helper";
 let theObj;
+
+//first table
 function* fetchAvailableCourses(obj) {
   theObj = obj;
-  let userType = obj.payload.userType;
-  let studentId = obj.payload.studentId;
+  // let userType = obj.payload.userType;
+  let traineeId = obj.payload.traineeId;
   const get_availablecourse_req = {
     source: "db",
-    procedure: "RegistrationCourses_getStudentOfferedCourses",
+    procedure: "RegistrationCourses_getTraineeOfferedCourses",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    StudentId: studentId,
+    traineeId: traineeId,
   };
   try {
     const response = yield call(getAvailableCourses, get_availablecourse_req);
+    console.log("rrrrrrrrrrrrrrrrrrrre", response);
     yield put(getAvailableCourseSuccess(response));
   } catch (error) {
     yield put(getAvailableCourseFail(error));
   }
 }
 
-function* fetchTempStdSchedules(obj) {
-  let studentId = obj.payload.studentId;
+function* fetchTraineeSchedules(obj) {
+  let traineeId = obj.payload.traineeId;
+  console.log("''''''''''''''''ob", obj.payload.traineeId);
+
   const get_temp_schedule = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_TempStudentSchedule",
-    // filter: `studentId =${studentId} and type = ''''${type}'''' and sectionLabId=${sectionLabId} `,
-    filter: `studentId =${studentId}`,
+    tablename: "_TraineesSchedule",
+    // filter: `traineeId =${traineeId} and type = ''''${type}'''' and sectionLabId=${sectionLabId} `,
+    filter: `traineeId =${traineeId}`,
   };
   try {
-    const response = yield call(getTempStdSchedules, get_temp_schedule);
-
-    yield put(getTempStdSchedulesSuccess(response));
+    const response = yield call(getTraineeSchedules, get_temp_schedule);
+    console.log("responseschedule", response);
+    yield put(getTraineeSchedulesSuccess(response));
   } catch (error) {
-    yield put(getTempStdSchedulesFail(error));
+    yield put(getTraineeSchedulesFail(error));
   }
 }
+//ruba cacelled that
 // function* fetchAchievedCourses(obj) {
-//   let studentId = obj.payload.studentId;
+//   let traineeId = obj.payload.traineeId;
 
 //   const get_achieved_courses = {
 //     source: "db",
 //     procedure: `Student_getPlanAchievements`,
 //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-//     StudentId: studentId,
+//     traineeId: traineeId,
 //   };
 //   try {
 //     const response = yield call(getAchievedCourses, get_achieved_courses);
@@ -134,7 +142,7 @@ function* fetchRegistrations() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_Employee",
+    tablename: "_Common_Trainee",
   };
   try {
     const response = yield call(getRegistrations, get_Registration_req);
@@ -172,22 +180,22 @@ function* fetchRegistrations() {
     yield put(getWeekDaysFail(error));
   }
 }
-
-function* fetchStudentRegisterInfo(obj) {
-  let studentId = obj.payload;
-  const get_student_info = {
-    source: "db",
-    procedure: "Student_getRegisterInfo",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    StudentId: studentId,
-  };
-  try {
-    const response = yield call(getStudentRegisterInfo, get_student_info);
-    yield put(getStudentRegisterInfoSuccess(response));
-  } catch (error) {
-    yield put(getStudentRegisterInfoFail(error));
-  }
-}
+//ruba cancelled that
+// function* fetchStudentRegisterInfo(obj) {
+//   let traineeId = obj.payload;
+//   const get_student_info = {
+//     source: "db",
+//     procedure: "Student_getRegisterInfo",
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     traineeId: traineeId,
+//   };
+//   try {
+//     const response = yield call(getStudentRegisterInfo, get_student_info);
+//     yield put(getStudentRegisterInfoSuccess(response));
+//   } catch (error) {
+//     yield put(getStudentRegisterInfoFail(error));
+//   }
+// }
 
 function* onAddNewRegistration({ payload, registration }) {
   delete payload["id"];
@@ -206,19 +214,24 @@ function* onAddNewRegistration({ payload, registration }) {
 
 function* onAddNewAvailableCourse({ payload }) {
   delete payload["id"];
-  console.log("StudentId", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_StudentsCurriculalines";
-  payload["queryname"] = "_Current_Common_StudentsCurriculalines";
+  payload["tablename"] = "Common_Curriculalines";
+  payload["queryname"] = "_Current_Common_TrianeeCurriculalines";
 
   try {
     const response = yield call(addNewAvailableCourse, payload);
+    console.log("responseresponseresponseresponse", response);
     yield put(addAvailableCourseSuccess(response[0]));
+    console.log("theoiooooooooooo", theObj);
     yield fetchAvailableCourses(theObj);
-    yield call(fetchNonActiveStdCurr, {
-      payload: { active: 0, studentId: payload.StudentId },
+    console.log("theoioooooo555555555555ooooo", {
+      active: 0,
+      traineeId: payload.traineeId,
+    });
+    yield call(fetchNonActiveCurr, {
+      payload: { active: 0, traineeId: payload.traineeId },
     });
   } catch (error) {
     yield put(addAvailableCourseFail(error));
@@ -238,32 +251,31 @@ function* onUpdateRegistration({ payload }) {
     yield put(updateRegistrationFail(error));
   }
 }
-function* onUpdateNonActiveStdCurr({ payload }) {
-  payload.nonActiveStdCurr["source"] = "db";
-  payload.nonActiveStdCurr["procedure"] = "SisApp_checkRegistrationConflic";
-  payload.nonActiveStdCurr["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload.nonActiveStdCurr["tablename"] = "Common_StudentsCurriculalines";
-  payload.nonActiveStdCurr["queryname"] =
-    "_Current_Common_StudentsCurriculalines";
+function* onUpdateNonActiveCurr({ payload }) {
+  console.log("im hereeeeeeeeeeeeeee");
+  console.log("payload update before", payload.nonActiveCurr);
+  payload.nonActiveCurr["source"] = "db";
+  payload.nonActiveCurr["procedure"] = "SisApp_checkRegistrationConflic";
+  payload.nonActiveCurr["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+  payload.nonActiveCurr["tablename"] = "Common_Curriculalines";
+  payload.nonActiveCurr["queryname"] = "_Current_Common_TrianeeCurriculalines";
   console.log("payload update", payload);
   try {
-    const respupdate = yield call(
-      updateNonActiveStdCurr,
-      payload.nonActiveStdCurr
-    );
-    yield put(updateNonActiveStdCurrSuccess(respupdate[0]));
+    const respupdate = yield call(updateNonActiveCurr, payload.nonActiveCurr);
+    console.log("777777777777777", respupdate);
+    yield put(updateNonActiveCurrSuccess(respupdate[0]));
   } catch (error) {
-    yield put(updateNonActiveStdCurrFail(error));
+    yield put(updateNonActiveCurrFail(error));
   }
   if (payload.active == 0) {
-    yield call(fetchTempStdSchedules, {
-      payload: { studentId: payload.nonActiveStdCurr.studentId },
+    yield call(fetchTraineeSchedules, {
+      payload: { traineeId: payload.nonActiveCurr.traineeId },
     });
   }
-  yield call(fetchNonActiveStdCurr, {
+  yield call(fetchNonActiveCurr, {
     payload: {
       active: payload.active,
-      studentId: payload.nonActiveStdCurr.studentId,
+      traineeId: payload.nonActiveCurr.traineeId,
     },
   });
 }
@@ -281,118 +293,121 @@ function* onDeleteRegistration({ payload, registration }) {
     yield put(deleteRegistrationFail(error));
   }
 }
-function* onDeleteNonActiveStdCurr({ payload, registrations }) {
+function* onDeleteNonActiveCurr({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_StudentsCurriculalines";
+  payload["tablename"] = "Common_Curriculalines";
 
   try {
-    const respdelete = yield call(deleteNonActiveStdCurr, payload);
+    const respdelete = yield call(deleteNonActiveCurr, payload);
 
-    yield put(deleteNonActiveStdCurrSuccess(respdelete[0]));
+    yield put(deleteNonActiveCurrSuccess(respdelete[0]));
     yield fetchAvailableCourses(theObj);
   } catch (error) {
-    yield put(deleteNonActiveStdCurrFail(error));
+    yield put(deleteNonActiveCurrFail(error));
   }
 }
-function* fetchNonActiveStdCurr(obj) {
-  let studentId = obj.payload.studentId;
+
+//second table
+function* fetchNonActiveCurr(obj) {
+  console.log("objobjobjobjobj", obj);
+  let traineeId = obj.payload.traineeId;
   let active = obj.payload.active;
   const get_availablecourse_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Current_Common_StudentsCurriculalines",
-    filter: `active = ${active}  and studentId =${studentId} `,
+    tablename: "_Current_Common_TrianeeCurriculalines",
+    filter: `active = ${active}  and traineeId = ${traineeId} `,
   };
   try {
-    const response = yield call(getNonActiveStdCurrs, get_availablecourse_req);
+    const response = yield call(getNonActiveCurrs, get_availablecourse_req);
     response.map(resp => {
       resp["sections"] = JSON.parse(resp["sections"]);
     });
     response.map(resp => {
       resp["labs"] = JSON.parse(resp["labs"]);
     });
-    yield put(getNonActiveStdCurrSuccess(response));
+    console.log("rreeeeeeennnnon", response);
+    yield put(getNonActiveCurrSuccess(response));
   } catch (error) {
-    yield put(getNonActiveStdCurrFail(error));
+    yield put(getNonActiveCurrFail(error));
   }
 }
-function* onDeleteAllNonActiveStdCurr({ payload }) {
+function* onDeleteAllNonActiveCurr({ payload }) {
+  console.log("objobjobjobjobjpayloadpayload", payload);
   payload["source"] = "db";
-  payload["procedure"] = "SisApp_DeleteAllStudentRegistration";
+  payload["procedure"] = "SisApp_DeleteAllTraineesRegistration";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_StudentsCurriculalines";
-  payload["queryname"] = "_Current_Common_StudentsCurriculalines";
+  payload["tablename"] = "Common_Curriculalines";
+  payload["queryname"] = "_Current_Common_TrianeeCurriculalines";
   payload["flag"] = payload.flag;
-  payload[
-    "filter"
-  ] = `StudentId=${payload.studentId} and active=0 and YearSemesterId=${payload.semesterYearId}`;
+  payload["filter"] = `traineeId=${payload.traineeId} and active=0`;
   try {
-    const respupdate = yield call(deleteAllNonActiveStdCurr, payload);
+    const respupdate = yield call(deleteAllNonActiveCurr, payload);
     respupdate.map(resp => {
       resp["sections"] = JSON.parse(resp["sections"]);
     });
     respupdate.map(resp => {
       resp["labs"] = JSON.parse(resp["labs"]);
     });
-    yield put(deleteAllNonActiveStdCurrSuccess(respupdate));
+    yield put(deleteAllNonActiveCurrSuccess(respupdate));
   } catch (error) {
-    yield put(deleteAllNonActiveStdCurrFail(error));
+    yield put(deleteAllNonActiveCurrFail(error));
   }
   if (payload.flag === "reset") {
-    yield call(fetchTempStdSchedules, {
-      payload: { studentId: payload.studentId },
+    yield call(fetchTraineeSchedules, {
+      payload: { traineeId: payload.traineeId },
     });
-    yield call(fetchNonActiveStdCurr, {
-      payload: { active: 0, studentId: payload.studentId },
+    yield call(fetchNonActiveCurr, {
+      payload: { active: 0, traineeId: payload.traineeId },
     });
   } else {
     yield fetchAvailableCourses(theObj);
   }
 }
-function* onSaveAllNonActiveStdCurr({ payload }) {
+function* onSaveAllNonActiveCurr({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "Registration_SubmitRegistration";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_StudentsCurriculalines";
-  payload["queryname"] = "_Current_Common_StudentsCurriculalines";
+  payload["tablename"] = "Common_Curriculalines";
+  payload["queryname"] = "_Current_Common_TrianeeCurriculalines";
   try {
-    const respupdate = yield call(saveAllNonActiveStdCurr, payload);
+    const respupdate = yield call(saveAllNonActiveCurr, payload);
     respupdate.map(resp => {
       resp["sections"] = JSON.parse(resp["sections"]);
     });
     respupdate.map(resp => {
       resp["labs"] = JSON.parse(resp["labs"]);
     });
-    yield put(saveAllNonActiveStdCurrSuccess(respupdate));
+    yield put(saveAllNonActiveCurrSuccess(respupdate));
   } catch (error) {
-    yield put(saveAllNonActiveStdCurrFail(error));
+    yield put(saveAllNonActiveCurrFail(error));
   }
   yield fetchAvailableCourses(theObj);
-  yield call(fetchTempStdSchedules, {
-    payload: { studentId: payload.studentId },
+  yield call(fetchTraineeSchedules, {
+    payload: { traineeId: payload.traineeId },
   });
-  yield call(fetchNonActiveStdCurr, {
-    payload: { active: 1, studentId: payload.studentId },
+  yield call(fetchNonActiveCurr, {
+    payload: { active: 1, traineeId: payload.traineeId },
   });
 }
 function* RegistrationSaga() {
-  yield takeEvery(GET_NON_ACTIVE_STD_CURRS, fetchNonActiveStdCurr);
-  yield takeEvery(UPDATE_NON_ACTIVE_STD_CURR, onUpdateNonActiveStdCurr);
-  yield takeEvery(DELETE_NON_ACTIVE_STD_CURR, onDeleteNonActiveStdCurr);
+  yield takeEvery(GET_NON_ACTIVE_CURRS, fetchNonActiveCurr);
+  yield takeEvery(UPDATE_NON_ACTIVE_CURR, onUpdateNonActiveCurr);
+  yield takeEvery(DELETE_NON_ACTIVE_CURR, onDeleteNonActiveCurr);
   yield takeEvery(GET_REGISTRATIONS, fetchRegistrations);
-  yield takeEvery(GET_STUDENT_REGISTER_INFO, fetchStudentRegisterInfo);
+  // yield takeEvery(GET_STUDENT_REGISTER_INFO, fetchStudentRegisterInfo);
   yield takeEvery(ADD_NEW_REGISTRATION, onAddNewRegistration);
   yield takeEvery(UPDATE_REGISTRATION, onUpdateRegistration);
   yield takeEvery(DELETE_REGISTRATION, onDeleteRegistration);
   yield takeEvery(ADD_NEW_AVAILABLE_COURSE, onAddNewAvailableCourse);
   yield takeEvery(GET_AVAILABLE_COURSES, fetchAvailableCourses);
-  yield takeEvery(GET_TEMP_STD_SCHEDULES, fetchTempStdSchedules);
+  yield takeEvery(GET_TRAINEE_SCHEDULES, fetchTraineeSchedules);
   // yield takeEvery(GET_ACHIEVED_COURSES, fetchAchievedCourses);
-  yield takeEvery(DELETE_ALL_NON_ACTIVE_STD_CURR, onDeleteAllNonActiveStdCurr);
-  yield takeEvery(SAVE_ALL_NON_ACTIVE_STD_CURR, onSaveAllNonActiveStdCurr);
+  yield takeEvery(DELETE_ALL_NON_ACTIVE_CURR, onDeleteAllNonActiveCurr);
+  yield takeEvery(SAVE_ALL_NON_ACTIVE_CURR, onSaveAllNonActiveCurr);
 }
 
 export default RegistrationSaga;

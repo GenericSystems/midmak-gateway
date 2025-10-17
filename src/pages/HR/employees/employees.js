@@ -12,6 +12,7 @@ import {
   Card,
   CardBody,
   CardTitle,
+  CardHeader,
   Col,
   Container,
   Row,
@@ -50,9 +51,6 @@ import {
   getJobTitlesOpt,
   getPhysicalWorkLocationsOpt,
   getAcademicYearsOpt,
-  getCountriesOpt,
-  getCitiesOpt,
-  getStatesOpt,
 } from "store/HR/employees/actions";
 import {
   getContracts,
@@ -60,6 +58,7 @@ import {
   updateContract,
   // getEmployeeDeletedValue,
 } from "store/HR/contracts/actions";
+
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -72,6 +71,7 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+import countriesSaga from "store/country/saga";
 class EmployeesList extends Component {
   constructor(props) {
     super(props);
@@ -96,6 +96,7 @@ class EmployeesList extends Component {
       selectedRowId: null,
       modal: false,
       modal2: false,
+      modal3: false,
       firstNameError: false,
       grandFatherNameError: false,
       fatherNameError: false,
@@ -106,7 +107,8 @@ class EmployeesList extends Component {
       isEdit: false,
       isAdd: false,
       isOpen: false,
-      selectedGender: "",
+      isView: false,
+      selectedGender: null,
       selectedBirthDate: "",
       selectedPassportExpirationDate: "",
       selectedPassportGrantDate: "",
@@ -114,19 +116,22 @@ class EmployeesList extends Component {
       selectedResidenceGrantedDate: "",
       selectedCardExpirationDate: "",
       selectedCardGrantDate: "",
-      // selectedCorporateNode: "",
-      // selectedAdministrativeSupervisors: "",
-      // selectedPhysicalWorkLocations: "",
-      selectedWorkClassification: "",
-      selectedJobTitle: "",
-      selectedCostCenter: "",
-      selectedJobRank: "",
-      selectedCountryId: "",
-      selectedCityId: "",
-      selectedStateId: "",
-      selectedHasMinistryApprove: "",
-      selectedGovernmentWorker: "",
+      // selectedCorporateNode: null,
+      // selectedAdministrativeSupervisors: null,
+      // selectedPhysicalWorkLocations: null,
+      selectedWorkClassification: null,
+      selectedJobTitle: null,
+      selectedCostCenter: null,
+      selectedJobRank: null,
+      selectedCountryId: null,
+      selectedCityId: null,
+      selectedStateId: null,
+      selectedHasMinistryApprove: null,
+      selectedGovernmentWorker: null,
       selectedNationality: 0,
+      countryName: "",
+      cityName: "",
+      stateName: "",
       birthdateError: false,
       nationalityError: false,
       signatureDateError: false,
@@ -138,6 +143,9 @@ class EmployeesList extends Component {
       errorMessage: null,
       successMessage: null,
       values: "",
+      languageState: "",
+      showDecision: false,
+      showEmployeeData: false,
     };
     this.toggle = this.toggle.bind(this);
     this.toggle2 = this.toggle2.bind(this);
@@ -146,6 +154,7 @@ class EmployeesList extends Component {
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
       employees,
       contracts,
@@ -163,21 +172,17 @@ class EmployeesList extends Component {
       onGetAdministrativeSupervisorsOpt,
       onGetPhysicalWorkLocationsOpt,
       onGetJobRanksOpt,
-      onGetNationalitiesOpt,
       onGetJobTitlesOpt,
       // onGetCorporateNodesOpt,
       jobRanksOpt,
       corporateNodesOpt,
       jobTitlesOpt,
-      onGetGendersch,
       onGetAcademicYearsOpt,
-      onGetCitiesOpt,
-      onGetCountriesOpt,
-      onGetStatesOpt,
-      citiesOpt,
-      countriesOpt,
-      statesOpt,
+      cities,
+      countries,
+      governorates,
       academicYearsOpt,
+      i18n,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -186,13 +191,8 @@ class EmployeesList extends Component {
     // if (employee && !employees.length) {
     //   onGetEmployees();
     // }
-    onGetEmployees();
-    onGetNationalitiesOpt();
-    onGetGendersch();
+    onGetEmployees(lang);
     onGetContracts();
-    onGetCitiesOpt();
-    onGetCountriesOpt();
-    onGetStatesOpt();
     // onGetAdministrativeSupervisorsOpt();
     // onGetPhysicalWorkLocationsOpt();
     onGetJobRanksOpt();
@@ -215,11 +215,23 @@ class EmployeesList extends Component {
       contractsTypes,
       employmentCases,
       academicYearsOpt,
-      citiesOpt,
-      countriesOpt,
-      statesOpt,
+      cities,
+      countries,
+      governorates,
+      languageState: lang,
     });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { onGetEmployees } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    if (lang != lng) {
+      this.setState({ languageState: lng });
+      onGetEmployees(lng);
+    }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -288,6 +300,12 @@ class EmployeesList extends Component {
       modal2: !prevState.modal2,
     }));
   };
+
+  toggle3 = () => {
+    this.setState(prevState => ({
+      modal3: !prevState.modal3,
+    }));
+  };
   toggleDeleteModal = () => {
     this.setState(prevState => ({
       deleteModal: !prevState.deleteModal,
@@ -310,8 +328,11 @@ class EmployeesList extends Component {
       selectedGender: arg.genderId,
       selectedNationality: arg.nationalityId,
       selectedStateId: arg.stateId,
+      stateName: arg.stateName,
       selectedCountryId: arg.countryId,
+      countryName: arg.countryName,
       selectedCityId: arg.cityId,
+      cityName: arg.cityName,
       isEdit: true,
     });
     this.toggle();
@@ -364,7 +385,13 @@ class EmployeesList extends Component {
       selectedGender,
       selectedNationality,
     } = this.state;
-    const { onAddNewEmployee, onUpdateEmployee } = this.props;
+    const {
+      onAddNewEmployee,
+      cities,
+      countries,
+      governorates,
+      onUpdateEmployee,
+    } = this.props;
     console.log("values", values);
 
     values["genderId"] = selectedGender;
@@ -409,7 +436,7 @@ class EmployeesList extends Component {
       this.setState({ fatherNameError: false, saveError: false });
       this.setState({ motherNameError: false, saveError: false });
       this.setState({ birthLocError: false, saveError: false });
-      this.setState({ birthdateError: false, saveError: false });
+      this.setState({ birthDateError: false, saveError: false });
       this.setState({ nationalityError: false, saveError: false });
       this.setState({ grandFatherNameError: false, saveError: false });
 
@@ -422,12 +449,9 @@ class EmployeesList extends Component {
         )
           employeeinfo[key] = values[key];
       });
-      if (isEdit) {
-        console.log("rrrrrrrrrrrrrrr", employeeinfo);
-        onUpdateEmployee(employeeinfo);
-      } else if (isAdd) {
-        onAddNewEmployee(employeeinfo);
-      }
+      employeeinfo.countryId = this.state.selectedCountryId;
+      employeeinfo.cityId = this.state.selectedCityId;
+      employeeinfo.stateId = this.state.selectedStateId;
       this.setState({
         errorMessages: {},
       });
@@ -468,12 +492,21 @@ class EmployeesList extends Component {
       if (selectedResidenceGrantedDate) {
         employeeinfo["residenceGrantedDate"] = selectedResidenceGrantedDate;
       }
+
+      if (isEdit) {
+        console.log("rrrrrrrrrrrrrrr", employeeinfo);
+        onUpdateEmployee(employeeinfo);
+      } else if (isAdd) {
+        onAddNewEmployee(employeeinfo);
+      }
+
       const saveEmployeeMessage = "Saved successfully ";
       this.setState({
         successMessage: saveEmployeeMessage,
       });
+
+      this.toggle();
     }
-    this.toggle();
   };
 
   handleSubmit = values => {
@@ -550,40 +583,15 @@ class EmployeesList extends Component {
       this.toggle2();
     } else {
       let emptyError = "";
-      // if (selectedAdministrativeSupervisor === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      // if (selectedPhysicalWorkLocations === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      if (selectedJobTitle === undefined) {
-        emptyError = "Fill the empty select";
+      if (
+        selectedJobTitle === undefined ||
+        selectedNcsDate === undefined ||
+        selectedContractType === undefined ||
+        selectedHireDate === undefined ||
+        selectedSignatureDate === undefined
+      ) {
+        this.setState({ emptyError: "Please fill in the required fields" });
       }
-      if (selectedNcsDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedContractType === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedEmploymentCase === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedAcademicYearId === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedHireDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedSignatureDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      // if (selectedCorporateNode === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      if (selectedWorkClassification === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      this.setState({ emptyError: emptyError });
     }
   };
 
@@ -624,7 +632,8 @@ class EmployeesList extends Component {
   // };
 
   handleSelectChange = (fieldName, selectedValue, values) => {
-    const { nationalitiesOpt } = this.props;
+    console.log("selectedValue", selectedValue);
+    const { nationalitiesOpt, countries, cities, governorates } = this.props;
 
     if (fieldName == "nationalityId") {
       const name = nationalitiesOpt.find(
@@ -638,35 +647,33 @@ class EmployeesList extends Component {
       });
     }
     if (fieldName === "countryId") {
-      const selected = this.state.countriesOpt.find(
-        country => country.arTitle === selectedValue
+      const selected = countries.find(
+        country => country.value === selectedValue
       );
-
+      console.log("selectedcountryId", selected);
       this.setState({
-        selectedCountryId: selected ? selected.Id : null,
+        selectedCountryId: selected ? selected.key : null,
         employee: values,
       });
       return;
     }
     if (fieldName === "cityId") {
-      const selected = this.state.citiesOpt.find(
-        city => city.arTitle === selectedValue
-      );
-
+      const selected = cities.find(city => city.value === selectedValue);
+      console.log("CCCCCCCCCC", selected);
       this.setState({
-        selectedCityId: selected ? selected.Id : null,
+        selectedCityId: selected ? selected.key : null,
         employee: values,
       });
       return;
     }
 
     if (fieldName === "stateId") {
-      const selected = this.state.statesOpt.find(
-        state => state.arTitle === selectedValue
+      const selected = governorates.find(
+        state => state.value === selectedValue
       );
 
       this.setState({
-        selectedStateId: selected ? selected.Id : null,
+        selectedStateId: selected ? selected.key : null,
         employee: values,
       });
       return;
@@ -677,7 +684,7 @@ class EmployeesList extends Component {
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
-    let updatedField = {};
+    const { jobTitlesOpt, academicYearsOpt } = this.props;
     // if (fieldName == "administrativeSupervisor") {
     //   this.setState({
     //     selectedAdministrativeSupervisor: selectedValue,
@@ -713,9 +720,7 @@ class EmployeesList extends Component {
       });
     }
     if (fieldName === "jobTitleId") {
-      const selected = this.state.jobTitlesOpt.find(
-        job => job.arTitle === selectedValue
-      );
+      const selected = jobTitlesOpt.find(job => job.arTitle === selectedValue);
 
       this.setState({
         selectedJobTitle: selected ? selected.Id : null,
@@ -724,7 +729,7 @@ class EmployeesList extends Component {
       return;
     }
     if (fieldName === "academicYearId") {
-      const selected = this.state.academicYearsOpt.find(
+      const selected = academicYearsOpt.find(
         academicYear =>
           academicYear.arTitle.trim().toLowerCase() ===
           selectedValue.trim().toLowerCase()
@@ -749,8 +754,8 @@ class EmployeesList extends Component {
     // }
   };
 
-  handleAlertClose = () => {
-    this.setState({ duplicateError: null });
+  handleAlertClose = alertName => {
+    this.setState({ [alertName]: null });
   };
 
   handlePhotoChange = event => {
@@ -781,15 +786,43 @@ class EmployeesList extends Component {
   };
 
   handleValidDate = date => {
-    if (
-      !date ||
-      date === "1970-01-01" ||
-      date === "0000-00-00" ||
-      moment(date).year() === 1970
-    ) {
-      return "";
-    }
-    return moment(date).format("DD-MM-YYYY");
+    const date1 = moment(new Date(date)).format("DD /MM/ Y");
+    return date1;
+  };
+
+  handleViewEmployee = arg => {
+    console.log("arg", arg);
+    this.setState({
+      employee: arg,
+      selectedCountryId: arg.countryId || null,
+      // diplomaTypeName: arg.diplomaTypeName || null,
+      // averageValue: arg.Average || null,
+      // selectedCountry: arg.DiplomaCountryId || null,
+      // facultyName: arg.facultyName || "",
+      // selectedFacultyId: arg.FacultyId || null,
+      // studyPlanName: arg.plan_study || "",
+      // selectedGovernorate: arg.DiplomaGovernorateId || null,
+      // selectedExaminationSession: arg.ExaminationSession || "",
+      // selectedRegistrationCertLevelId: arg.registrationCertLevelId || "",
+      // socialStatusName: arg.socialStatusName || null,
+      // selectedRegistrationDiplomaDate: arg.registrationDiplomaDate || "",
+      isView: true,
+    });
+    this.toggle3();
+  };
+
+  handleDecision = () => {
+    this.setState({
+      showDecision: true,
+      showEmployeeData: false,
+    });
+  };
+
+  handleEmployeeInformation = () => {
+    this.setState({
+      showEmployeeData: true,
+      showDecision: false,
+    });
   };
 
   render() {
@@ -812,17 +845,20 @@ class EmployeesList extends Component {
       corporateNodesOpt,
       costCentersOpt,
       academicYearsOpt,
-      citiesOpt,
-      countriesOpt,
-      statesOpt,
+      cities,
+      countries,
+      governorates,
     } = this.props;
     const {
+      languageState,
       duplicateError,
       deleteModal,
       modal,
       modal2,
+      modal3,
       isEdit,
       isAdd,
+      isView,
       isOpen,
       showAlert,
       emptyError,
@@ -861,6 +897,8 @@ class EmployeesList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      showDecision,
+      showEmployeeData,
     } = this.state;
     console.log("employeeeeeeeeeeeeeeeee", employees);
     const { SearchBar } = Search;
@@ -950,30 +988,30 @@ class EmployeesList extends Component {
         formatter: (cellContent, employee, contract) => (
           <div className="d-flex gap-3">
             <Tooltip title={this.props.t("Add Contract")} placement="top">
-              <Link className="text-secondary" to="#">
-                <i
-                  className="mdi mdi-plus-circle blue-noti-icon"
-                  onClick={() => this.handleOnClick(employee)}
-                ></i>
-              </Link>
+              <IconButton onClick={() => this.handleOnClick(employee)}>
+                <i className="mdi mdi-plus-circle blue-noti-icon"></i>
+              </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("Edit")} placement="top">
-              <Link className="text-sm-end" to="#">
+              <IconButton onClick={() => this.handleEmployeeClick(employee)}>
+                <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={this.props.t("View Employee")} placement="top">
+              <IconButton onClick={() => this.handleViewEmployee(employee)}>
                 <i
-                  className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
-                  onClick={() => this.handleEmployeeClick(employee)}
+                  className="bx bxs-user font-size-18 text-secondary"
+                  id="viewtooltip"
                 ></i>
-              </Link>
+              </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("Delete")} placement="top">
-              <Link className="text-danger" to="#">
+              <IconButton onClick={() => this.onClickDelete(employee)}>
                 <i
                   className="mdi mdi-delete font-size-18"
                   id="deletetooltip"
-                  onClick={() => this.onClickDelete(employee)}
                 ></i>
-              </Link>
+              </IconButton>
             </Tooltip>
           </div>
         ),
@@ -993,6 +1031,7 @@ class EmployeesList extends Component {
             this.setState({
               deleteModal: false,
               deleteModal2: false,
+              deleteModal3: false,
               selectedRowId: null,
             })
           }
@@ -1016,7 +1055,9 @@ class EmployeesList extends Component {
                             type="button"
                             className="btn-close"
                             aria-label="Close"
-                            onClick={this.handleAlertClose}
+                            onClick={() =>
+                              this.handleAlertClose("duplicateError")
+                            }
                           ></button>
                         </Alert>
                       )}
@@ -1186,9 +1227,12 @@ class EmployeesList extends Component {
                                         motherNameE:
                                           (employee && employee.motherNameE) ||
                                           "",
-                                        birthDate:
-                                          (employee && employee.birthDate) ||
-                                          selectedBirthDate,
+                                        birthDate: employee?.birthDate
+                                          ? moment
+                                              .utc(employee.birthDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
                                         nationalityId:
                                           (employee &&
                                             employee.nationalityId) ||
@@ -1204,13 +1248,24 @@ class EmployeesList extends Component {
                                             employee.perosonalCardNum) ||
                                           "",
                                         perosonalCardGrantDate:
-                                          (employee &&
-                                            employee.perosonalCardGrantDate) ||
-                                          selectedCardGrantDate,
+                                          employee?.perosonalCardGrantDate
+                                            ? moment
+                                                .utc(
+                                                  employee.perosonalCardGrantDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
                                         perosonalCardExpirationDate:
-                                          (employee &&
-                                            employee.perosonalCardExpirationDate) ||
-                                          selectedCardExpirationDate,
+                                          employee?.perosonalCardExpirationDate
+                                            ? moment
+                                                .utc(
+                                                  employee.perosonalCardExpirationDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+
                                         amanaNum:
                                           (employee && employee.amanaNum) || "",
                                         registrationPlace:
@@ -1225,24 +1280,43 @@ class EmployeesList extends Component {
                                           (employee && employee.passNumber) ||
                                           "",
                                         passportGrantDate:
-                                          (employee &&
-                                            employee.passportGrantDate) ||
-                                          selectedPassportGrantDate,
+                                          employee?.passportGrantDate
+                                            ? moment
+                                                .utc(employee.passportGrantDate)
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+
                                         passportExpirationDate:
-                                          (employee &&
-                                            employee.passportExpirationDate) ||
-                                          selectedPassportExpirationDate,
+                                          employee?.passportExpirationDate
+                                            ? moment
+                                                .utc(
+                                                  employee.passportExpirationDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+
                                         residenceNum:
                                           (employee && employee.residenceNum) ||
                                           "",
                                         residenceGrantedDate:
-                                          (employee &&
-                                            employee.residenceGrantedDate) ||
-                                          selectedResidenceGrantedDate,
+                                          employee?.residenceGrantedDate
+                                            ? moment
+                                                .utc(
+                                                  employee.residenceGrantedDate
+                                                )
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
                                         resExpirationDate:
-                                          (employee &&
-                                            employee.resExpirationDate) ||
-                                          selectedResExpirationDate,
+                                          employee?.resExpirationDate
+                                            ? moment
+                                                .utc(employee.resExpirationDate)
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
+
                                         stateId:
                                           (employee && employee.stateId) ||
                                           selectedStateId,
@@ -1252,14 +1326,14 @@ class EmployeesList extends Component {
                                         cityId:
                                           (employee && employee.cityId) ||
                                           selectedCityId,
-                                        permanentAddress:
-                                          (employee &&
-                                            employee.permanentAddress) ||
-                                          "",
-                                        temporaryAddress:
-                                          (employee &&
-                                            employee.temporaryAddress) ||
-                                          "",
+                                        // permanentAddress:
+                                        //   (employee &&
+                                        //     employee.permanentAddress) ||
+                                        //   "",
+                                        // temporaryAddress:
+                                        //   (employee &&
+                                        //     employee.temporaryAddress) ||
+                                        //   "",
                                         phoneNumber:
                                           (employee && employee.phoneNumber) ||
                                           "",
@@ -1370,8 +1444,10 @@ class EmployeesList extends Component {
                                                     type="button"
                                                     className="btn-close"
                                                     aria-label="Close"
-                                                    onClick={
-                                                      this.handleAlertClose
+                                                    onClick={() =>
+                                                      this.handleAlertClose(
+                                                        "emptyError"
+                                                      )
                                                     }
                                                   ></button>
                                                 </Alert>
@@ -2458,30 +2534,70 @@ class EmployeesList extends Component {
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
+                                                                    <Field
                                                                       name="countryId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="countriesId"
-                                                                      id="countryId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
+                                                                      as="input"
+                                                                      id="country-Id"
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.countryId &&
+                                                                        touched.countryId
+                                                                          ? " is-invalid"
+                                                                          : "")
+                                                                      }
                                                                       value={
-                                                                        values.countryId
-                                                                      }
-                                                                      onChange={e =>
-                                                                        this.handleSelectChange(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values
+                                                                        countries.find(
+                                                                          country =>
+                                                                            country.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedCountryId
                                                                         )
+                                                                          ?.value ||
+                                                                        ""
                                                                       }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedCountry =
+                                                                          countries.find(
+                                                                            country =>
+                                                                              country.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedCountry
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCountryId:
+                                                                                selectedCountry.key,
+                                                                              countryName:
+                                                                                selectedCountry.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCountryId:
+                                                                                null,
+                                                                              countryName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="countriesId"
+                                                                      autoComplete="off"
                                                                     />
                                                                     <datalist id="countriesId">
-                                                                      {countriesOpt.map(
+                                                                      {countries.map(
                                                                         countryOpt => (
                                                                           <option
                                                                             key={
@@ -2509,37 +2625,77 @@ class EmployeesList extends Component {
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
+                                                                    <Field
                                                                       name="stateId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="statesId"
-                                                                      id="stateId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
+                                                                      as="input"
+                                                                      id="state-Id"
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.stateId &&
+                                                                        touched.stateId
+                                                                          ? " is-invalid"
+                                                                          : "")
+                                                                      }
                                                                       value={
-                                                                        values.stateId
-                                                                      }
-                                                                      onChange={e =>
-                                                                        this.handleSelectChange(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values
+                                                                        governorates.find(
+                                                                          governorate =>
+                                                                            governorate.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedStateId
                                                                         )
+                                                                          ?.value ||
+                                                                        ""
                                                                       }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedGovernorate =
+                                                                          governorates.find(
+                                                                            governorate =>
+                                                                              governorate.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedGovernorate
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedStateId:
+                                                                                selectedGovernorate.key,
+                                                                              stateName:
+                                                                                selectedGovernorate.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedStateId:
+                                                                                null,
+                                                                              stateName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="statesId"
+                                                                      autoComplete="off"
                                                                     />
                                                                     <datalist id="statesId">
-                                                                      {statesOpt.map(
+                                                                      {governorates.map(
                                                                         stateOpt => (
                                                                           <option
                                                                             key={
-                                                                              stateOpt.Id
+                                                                              stateOpt.key
                                                                             }
                                                                             value={
-                                                                              stateOpt.arTitle
+                                                                              stateOpt.value
                                                                             }
                                                                           />
                                                                         )
@@ -2560,35 +2716,78 @@ class EmployeesList extends Component {
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
+                                                                    <Field
                                                                       name="cityId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="citiesId"
-                                                                      id="cityId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      onChange={e =>
-                                                                        this.handleSelectChange(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values,
-                                                                          values
-                                                                        )
+                                                                      as="input"
+                                                                      id="cityId-Id"
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.cityId &&
+                                                                        touched.cityId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        cities.find(
+                                                                          city =>
+                                                                            city.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedCityId
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedCity =
+                                                                          cities.find(
+                                                                            city =>
+                                                                              city.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedCity
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCityId:
+                                                                                selectedCity.key,
+                                                                              cityName:
+                                                                                selectedCity.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCityId:
+                                                                                null,
+                                                                              cityName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="citiesId"
+                                                                      autoComplete="off"
                                                                     />
+
                                                                     <datalist id="citiesId">
-                                                                      {citiesOpt.map(
+                                                                      {cities.map(
                                                                         cityOpt => (
                                                                           <option
                                                                             key={
-                                                                              cityOpt.Id
+                                                                              cityOpt.key
                                                                             }
                                                                             value={
-                                                                              cityOpt.arTitle
+                                                                              cityOpt.value
                                                                             }
                                                                           />
                                                                         )
@@ -2601,7 +2800,7 @@ class EmployeesList extends Component {
                                                           </Row>
                                                           <Row>
                                                             <Col lg="6">
-                                                              <div className="mb-2">
+                                                              {/* <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
                                                                     <Label for="permanentAddress">
@@ -2621,7 +2820,7 @@ class EmployeesList extends Component {
                                                                     />
                                                                   </Col>
                                                                 </Row>
-                                                              </div>
+                                                              </div> */}
                                                               <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
@@ -2679,7 +2878,7 @@ class EmployeesList extends Component {
                                                               <Col lg="12">
                                                                 <Row>
                                                                   <Col lg="12">
-                                                                    <div className="mb-2">
+                                                                    {/* <div className="mb-2">
                                                                       <Row>
                                                                         <Col className="col-6">
                                                                           <Label for="temporaryAddress">
@@ -2699,7 +2898,7 @@ class EmployeesList extends Component {
                                                                           />
                                                                         </Col>
                                                                       </Row>
-                                                                    </div>
+                                                                    </div> */}
                                                                     <div className="mb-2">
                                                                       <Row>
                                                                         <Col className="col-6">
@@ -2871,29 +3070,35 @@ class EmployeesList extends Component {
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
-                                        contratType: Yup.string()
-                                          .matches(/^[أ-ي]+$/)
+                                        contratType: Yup.string().required(
+                                          "Please Enter Your Contract Type"
+                                        ),
+                                        ncsDate: Yup.date()
+                                          .typeError(
+                                            "Please Enter a valid NCS Date"
+                                          )
                                           .required(
-                                            "Please Enter Your Contrat Type"
+                                            "Please Enter Your NCS Date"
                                           ),
-                                        ncsDate: Yup.string().required(
-                                          t("Please Enter Your NCS Date")
-                                        ),
-                                        hireDate: Yup.string().required(
-                                          t("Please Enter Your Hire Date")
-                                        ),
-                                        academicYearId: Yup.string().required(
-                                          t("Please Enter Your Academic Year")
-                                        ),
-                                        jobTitleId: Yup.string().required(
-                                          t("Please Enter Your Job Title")
-                                        ),
-                                        // corporateNodeId: Yup.string().required(
-                                        //   t("Please Enter Your Corporate Node")
-                                        // ),
 
-                                        signatureDate: Yup.string().required(
-                                          t("Please Enter Your Signature Date")
+                                        hireDate: Yup.date()
+                                          .typeError(
+                                            "Please Enter a valid Hire Date"
+                                          )
+                                          .required(
+                                            "Please Enter Your Hire Date"
+                                          ),
+
+                                        signatureDate: Yup.date()
+                                          .typeError(
+                                            "Please Enter a valid Signature Date"
+                                          )
+                                          .required(
+                                            "Please Enter Your Signature Date"
+                                          ),
+
+                                        jobTitleId: Yup.string().required(
+                                          "Please Select Your Job Title"
                                         ),
                                       })}
                                     >
@@ -2923,8 +3128,10 @@ class EmployeesList extends Component {
                                                     type="button"
                                                     className="btn-close"
                                                     aria-label="Close"
-                                                    onClick={
-                                                      this.handleAlertClose
+                                                    onClick={() =>
+                                                      this.handleAlertClose(
+                                                        "emptyError"
+                                                      )
                                                     }
                                                   ></button>
                                                 </Alert>
@@ -2978,7 +3185,8 @@ class EmployeesList extends Component {
                                                                       <Field
                                                                         name="ncsDate"
                                                                         className={`form-control ${
-                                                                          ncsDateError
+                                                                          touched.ncsDate &&
+                                                                          errors.ncsDate
                                                                             ? "is-invalid"
                                                                             : ""
                                                                         }`}
@@ -3002,13 +3210,11 @@ class EmployeesList extends Component {
                                                                         }
                                                                         id="ncsDate-date-input"
                                                                       />
-                                                                      {ncsDateError && (
-                                                                        <div className="invalid-feedback">
-                                                                          {this.props.t(
-                                                                            "NCS Date is required"
-                                                                          )}
-                                                                        </div>
-                                                                      )}
+                                                                      <ErrorMessage
+                                                                        name="ncsDate"
+                                                                        component="div"
+                                                                        className="invalid-feedback"
+                                                                      />
                                                                     </Col>
                                                                   </Row>
                                                                 </div>
@@ -3141,34 +3347,78 @@ class EmployeesList extends Component {
                                                                     </span>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="jobTitles"
+                                                                    <Field
                                                                       name="jobTitleId"
+                                                                      as="input"
                                                                       id="jobTitleId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      onChange={e =>
-                                                                        this.handleSelect(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values
-                                                                        )
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.jobTitleId &&
+                                                                        touched.jobTitleId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        jobTitlesOpt.find(
+                                                                          job =>
+                                                                            job.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedJobTitle
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedJob =
+                                                                          jobTitlesOpt.find(
+                                                                            job =>
+                                                                              job.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedJob
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedJobTitle:
+                                                                                selectedJob.key,
+                                                                              jobTitleName:
+                                                                                selectedJob.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedJobTitle:
+                                                                                null,
+                                                                              jobTitleName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="jobTitles"
+                                                                      autoComplete="off"
                                                                     />
+
                                                                     <datalist id="jobTitles">
                                                                       {jobTitlesOpt.map(
-                                                                        jobTitleOpt => (
+                                                                        jobTitle => (
                                                                           <option
                                                                             key={
-                                                                              jobTitleOpt.Id
+                                                                              jobTitle.key
                                                                             }
                                                                             value={
-                                                                              jobTitleOpt.arTitle
+                                                                              jobTitle.value
                                                                             }
                                                                           />
                                                                         )
@@ -3334,34 +3584,78 @@ class EmployeesList extends Component {
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-8">
-                                                                    <input
+                                                                    <Field
                                                                       name="academicYearId"
-                                                                      className={`form-control ${this.state.inputClass}`}
-                                                                      list="academicYearsId"
+                                                                      as="input"
                                                                       id="academicYearId"
-                                                                      placeholder="Type to search..."
-                                                                      autoComplete="off"
-                                                                      onChange={e =>
-                                                                        this.handleSelect(
-                                                                          e
-                                                                            .target
-                                                                            .name,
-                                                                          e
-                                                                            .target
-                                                                            .value,
-                                                                          values
-                                                                        )
+                                                                      type="text"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.academicYearId &&
+                                                                        touched.academicYearId
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                      value={
+                                                                        academicYearsOpt.find(
+                                                                          academic =>
+                                                                            academic.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedAcademicYearId
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedAcademic =
+                                                                          academicYearsOpt.find(
+                                                                            academic =>
+                                                                              academic.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedAcademic
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedAcademicYearId:
+                                                                                selectedAcademic.key,
+                                                                              academicYear:
+                                                                                selectedAcademic.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedAcademicYearId:
+                                                                                null,
+                                                                              academicYear:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="academicYearsId"
+                                                                      autoComplete="off"
                                                                     />
+
                                                                     <datalist id="academicYearsId">
                                                                       {academicYearsOpt.map(
-                                                                        academicYearOpt => (
+                                                                        academicYear => (
                                                                           <option
                                                                             key={
-                                                                              academicYearOpt.Id
+                                                                              academicYear.key
                                                                             }
                                                                             value={
-                                                                              academicYearOpt.arTitle
+                                                                              academicYear.value
                                                                             }
                                                                           />
                                                                         )
@@ -3858,6 +4152,844 @@ class EmployeesList extends Component {
                                     </Formik>
                                   </ModalBody>
                                 </Modal>
+                                <Col xl="12">
+                                  <div className="table-responsive">
+                                    <Modal
+                                      isOpen={modal3}
+                                      className={this.props.className}
+                                      fullscreen
+                                    >
+                                      <ModalHeader
+                                        toggle={this.toggle3}
+                                        tag="h4"
+                                      >
+                                        {/* {!!isView &&
+                                          (languageState === "ar"
+                                            ? `${employee.firstName} ${employee.fatherName} ${employee.lastName}`
+                                            : `${employee.firstNameE} ${employee.fatherNameE} ${employee.lastNameE}`)} */}
+                                      </ModalHeader>
+                                      <Row>
+                                        <div>
+                                          {errorMessage && (
+                                            <Alert
+                                              color="danger"
+                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                              role="alert"
+                                            >
+                                              {errorMessage}
+                                              <button
+                                                type="button"
+                                                className="btn-close"
+                                                aria-label="Close"
+                                                onClick={this.handleErrorClose}
+                                              ></button>
+                                            </Alert>
+                                          )}
+                                        </div>
+                                      </Row>
+                                      <ModalBody>
+                                        <div className="modal">
+                                          <div className="sidebar">
+                                            <h2 className="employee-info">
+                                              {languageState === "ar"
+                                                ? `${
+                                                    this.state.employee
+                                                      ?.firstName || ""
+                                                  } ${
+                                                    this.state.employee
+                                                      ?.fatherName || ""
+                                                  } ${
+                                                    this.state.employee
+                                                      ?.lastName || ""
+                                                  }`
+                                                : `${
+                                                    this.state.employee
+                                                      ?.firstNameE || ""
+                                                  } ${
+                                                    this.state.employee
+                                                      ?.fatherNameE || ""
+                                                  } ${
+                                                    this.state.employee
+                                                      ?.lastNameE || ""
+                                                  }`}
+                                            </h2>
+                                            <ul>
+                                              <li>
+                                                <a
+                                                  href="#"
+                                                  onClick={
+                                                    this
+                                                      .handleEmployeeInformation
+                                                  }
+                                                  style={{
+                                                    color: showEmployeeData
+                                                      ? "orange"
+                                                      : "black",
+                                                  }}
+                                                >
+                                                  {this.props.t(
+                                                    "Employee Data File"
+                                                  )}
+                                                </a>
+                                              </li>{" "}
+                                              <li>
+                                                <a
+                                                  href="#"
+                                                  onClick={this.handleDecision}
+                                                  style={{
+                                                    color: showDecision
+                                                      ? "orange"
+                                                      : "black",
+                                                  }}
+                                                >
+                                                  {this.props.t(
+                                                    "Decision File"
+                                                  )}
+                                                </a>
+                                              </li>
+                                            </ul>
+                                          </div>
+
+                                          <div className="modal-content">
+                                            {showEmployeeData && (
+                                              <div>
+                                                <Card className="bordered">
+                                                  <CardHeader className="card-header">
+                                                    <h4>
+                                                      <i className="fas fa-user-circle" />{" "}
+                                                      {languageState === "ar"
+                                                        ? employee.firstName +
+                                                          " " +
+                                                          employee.fatherName +
+                                                          " " +
+                                                          employee.lastName
+                                                        : employee.firstNameE +
+                                                          " " +
+                                                          employee.fatherNameE +
+                                                          " " +
+                                                          employee.lastNameE}
+                                                    </h4>
+                                                  </CardHeader>
+                                                  <CardBody className="cardBody">
+                                                    {emptyError && (
+                                                      <Alert
+                                                        color="danger"
+                                                        className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                        role="alert"
+                                                      >
+                                                        {emptyError}
+                                                        <button
+                                                          type="button"
+                                                          className="btn-close"
+                                                          aria-label="Close"
+                                                          onClick={() =>
+                                                            this.handleAlertClose(
+                                                              "emptyError"
+                                                            )
+                                                          }
+                                                        ></button>
+                                                      </Alert>
+                                                    )}
+                                                    <Row>
+                                                      <Col lg="5">
+                                                        <div className="bordered">
+                                                          <Col lg="12">
+                                                            <Card>
+                                                              <CardTitle id="card_header">
+                                                                {t(
+                                                                  "Arabic Information"
+                                                                )}
+                                                              </CardTitle>
+                                                              <CardBody className="cardBody">
+                                                                <Row>
+                                                                  <Col lg="12">
+                                                                    <div className="mb-2">
+                                                                      <Label for="arfirstName">
+                                                                        {this.props.t(
+                                                                          "First Name(ar)"
+                                                                        )}{" "}
+                                                                        :
+                                                                      </Label>
+
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.firstName
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="arlastName">
+                                                                        {this.props.t(
+                                                                          "Last Name(ar)"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.lastName
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="arfatherName">
+                                                                        {this.props.t(
+                                                                          "Father Name(ar)"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.fatherName
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="argrandFatherName">
+                                                                        {this.props.t(
+                                                                          "Grandfather Name ar"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.grandFatherName
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="armotherName">
+                                                                        {this.props.t(
+                                                                          "Mother Name(ar)"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.motherName
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                  </Col>
+                                                                </Row>
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Col>
+                                                        </div>
+                                                      </Col>
+                                                      <Col lg="5">
+                                                        <div className="bordered">
+                                                          <Col lg="12">
+                                                            <Card>
+                                                              <CardTitle id="card_header">
+                                                                {t(
+                                                                  "English Information"
+                                                                )}
+                                                              </CardTitle>
+                                                              <CardBody className="cardBody">
+                                                                <Row>
+                                                                  <Col lg="12">
+                                                                    <div className="mb-2">
+                                                                      <Label for="enfirstName">
+                                                                        {this.props.t(
+                                                                          "First Name"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.firstNameE
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="enlastName">
+                                                                        {this.props.t(
+                                                                          "Last Name"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.lastNameE
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="enfatherName">
+                                                                        {this.props.t(
+                                                                          "Father Name"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.fatherNameE
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="enGrandFatherName">
+                                                                        {this.props.t(
+                                                                          "Grandfather Name"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.grandFatherNameE
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="enMotherName">
+                                                                        {this.props.t(
+                                                                          "Mother Name"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.motherNameE
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                  </Col>
+                                                                </Row>
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Col>
+                                                        </div>
+                                                      </Col>
+                                                      <Col lg="2">
+                                                        <div className="bordered">
+                                                          <Col lg="12">
+                                                            <div className="mb-1">
+                                                              <Card
+                                                                style={{
+                                                                  width:
+                                                                    "12rem",
+                                                                }}
+                                                              >
+                                                                <CardTitle id="card_header">
+                                                                  {t(
+                                                                    "Personal Photo"
+                                                                  )}
+                                                                </CardTitle>
+                                                                <img
+                                                                  src={
+                                                                    this.state
+                                                                      .photoURL
+                                                                  }
+                                                                />
+                                                                <CardBody className="cardBody">
+                                                                  <Row></Row>
+                                                                </CardBody>
+                                                              </Card>
+                                                            </div>
+                                                          </Col>
+                                                        </div>
+                                                      </Col>
+                                                    </Row>
+                                                    <Row>
+                                                      <Col lg="4">
+                                                        <div className="bordered">
+                                                          <Col lg="12">
+                                                            <Card>
+                                                              <CardTitle id="card_header">
+                                                                {t(
+                                                                  "Basic Information"
+                                                                )}
+                                                              </CardTitle>
+                                                              <CardBody className="card_Body">
+                                                                <Row>
+                                                                  <Col lg="12">
+                                                                    <div className="mb-2">
+                                                                      <Label for="arbirthLoc">
+                                                                        {this.props.t(
+                                                                          "Birth Location(ar)"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.birthLocation
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="birthDate">
+                                                                        {this.props.t(
+                                                                          "Date of Birth"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {employee?.birthDate &&
+                                                                          new Date(
+                                                                            employee.birthDate
+                                                                          ).toLocaleDateString()}
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="age">
+                                                                        {this.props.t(
+                                                                          "Age"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.age
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label className="form-label">
+                                                                        {this.props.t(
+                                                                          "Gender"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          (
+                                                                            genders.find(
+                                                                              opt =>
+                                                                                opt.value ===
+                                                                                employee.genderId
+                                                                            ) ||
+                                                                            ""
+                                                                          )
+                                                                            .label
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="nationalityId">
+                                                                        {this.props.t(
+                                                                          "Nationality"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          (
+                                                                            nationalitiesOpt.find(
+                                                                              opt =>
+                                                                                opt.value ===
+                                                                                employee.nationalityId
+                                                                            ) ||
+                                                                            ""
+                                                                          )
+                                                                            .label
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                  </Col>
+                                                                </Row>
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Col>
+                                                        </div>
+                                                      </Col>
+                                                      <Col lg="4">
+                                                        <div className="bordered">
+                                                          <Col lg="12">
+                                                            <Card>
+                                                              <CardTitle id="card_header">
+                                                                {t(
+                                                                  "National Card Information"
+                                                                )}
+                                                              </CardTitle>
+                                                              <CardBody className="card_Body">
+                                                                <Row>
+                                                                  <Col lg="12">
+                                                                    <div className="mb-2">
+                                                                      <Label for="idNum">
+                                                                        {this.props.t(
+                                                                          "ID Number"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.idNumber
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="cardNum">
+                                                                        {this.props.t(
+                                                                          "Card Number"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.perosonalCardNum
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="perosonalCardGrantDate">
+                                                                        {this.props.t(
+                                                                          "Grant Date"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {employee?.perosonalCardGrantDate &&
+                                                                          new Date(
+                                                                            employee.perosonalCardGrantDate
+                                                                          ).toLocaleDateString()}
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="perosonalCardExpirationDate">
+                                                                        {this.props.t(
+                                                                          "End Date"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {employee?.perosonalCardExpirationDate &&
+                                                                          new Date(
+                                                                            employee.perosonalCardExpirationDate
+                                                                          ).toLocaleDateString()}
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="cardCaza">
+                                                                        {this.props.t(
+                                                                          "Amana Num"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.amanaNum
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="cardCazaReg">
+                                                                        {this.props.t(
+                                                                          "Place of Registration"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.registrationPlace
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="cardRegNum">
+                                                                        {this.props.t(
+                                                                          "Number of Registration"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.registrationNum
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                  </Col>
+                                                                </Row>
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Col>
+                                                        </div>
+                                                      </Col>
+                                                      <Col lg="4">
+                                                        <div className="bordered">
+                                                          <Col lg="12">
+                                                            <Card>
+                                                              <CardTitle id="card_header">
+                                                                {t(
+                                                                  "Passport and residence information"
+                                                                )}
+                                                              </CardTitle>
+                                                              <CardBody className="card_Body">
+                                                                <Row>
+                                                                  <Col lg="12">
+                                                                    <div className="mb-2">
+                                                                      <Label for="passNum">
+                                                                        {this.props.t(
+                                                                          "Passport Number"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.passNumber
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="passGrantdate">
+                                                                        {this.props.t(
+                                                                          "Grant Date"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {employee?.passportGrantDate &&
+                                                                          new Date(
+                                                                            employee.passportGrantDate
+                                                                          ).toLocaleDateString()}
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="passExpDate">
+                                                                        {this.props.t(
+                                                                          "Expiration Date"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {employee?.passportExpirationDate &&
+                                                                          new Date(
+                                                                            employee.passportExpirationDate
+                                                                          ).toLocaleDateString()}
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="residence">
+                                                                        {this.props.t(
+                                                                          "Residence Number"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.residenceNum
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="resGrantDate">
+                                                                        {this.props.t(
+                                                                          "Residence Granted Date"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {employee?.residenceGrantedDate &&
+                                                                          new Date(
+                                                                            employee.residenceGrantedDate
+                                                                          ).toLocaleDateString()}
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="resExpirationDate">
+                                                                        {this.props.t(
+                                                                          "Residence Expiration Date"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {employee?.resExpirationDate &&
+                                                                          new Date(
+                                                                            employee.resExpirationDate
+                                                                          ).toLocaleDateString()}
+                                                                      </Label>
+                                                                    </div>
+                                                                  </Col>
+                                                                </Row>
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Col>
+                                                        </div>
+                                                      </Col>
+                                                    </Row>
+                                                    <Row>
+                                                      <Col lg="12">
+                                                        <div className="bordered">
+                                                          <Col lg="12">
+                                                            <Card>
+                                                              <CardTitle id="card_header">
+                                                                {t(
+                                                                  "Contact Information"
+                                                                )}
+                                                              </CardTitle>
+                                                              <CardBody className="card_Body">
+                                                                <div className="mb-3">
+                                                                  <Label for="countryId">
+                                                                    {this.props.t(
+                                                                      "Country"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      (
+                                                                        countries.find(
+                                                                          countryOpt =>
+                                                                            countryOpt.value ===
+                                                                            employee?.countryId
+                                                                        ) || {}
+                                                                      ).label
+                                                                    }
+                                                                  </Label>
+                                                                </div>
+                                                                <div className="mb-3">
+                                                                  <Label for="stateId">
+                                                                    {this.props.t(
+                                                                      "State"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      (
+                                                                        governorates.find(
+                                                                          state =>
+                                                                            state.value ===
+                                                                            employee.stateId
+                                                                        ) || {}
+                                                                      ).value
+                                                                    }
+                                                                  </Label>
+                                                                </div>
+                                                                <div className="mb-3">
+                                                                  <Label for="cityId">
+                                                                    {this.props.t(
+                                                                      "City"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      (
+                                                                        cities.find(
+                                                                          city =>
+                                                                            city.value ===
+                                                                            employee.cityId
+                                                                        ) || {}
+                                                                      ).value
+                                                                    }
+                                                                  </Label>
+                                                                </div>
+                                                                <Row>
+                                                                  <Col lg="6">
+                                                                    <div className="mb-2">
+                                                                      <Label for="permanentAddress">
+                                                                        {this.props.t(
+                                                                          "Permanent Address (Full Details)"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.permanentAddress
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                      <Label for="phoneNumber">
+                                                                        {this.props.t(
+                                                                          "Phone Number"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.phoneNumber
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                    <div className="mb-3">
+                                                                      <Label for="email">
+                                                                        {this.props.t(
+                                                                          "Email Address"
+                                                                        )}
+                                                                        {""}:
+                                                                      </Label>
+                                                                      <Label className="left-label">
+                                                                        {
+                                                                          employee.email
+                                                                        }
+                                                                      </Label>
+                                                                    </div>
+                                                                  </Col>
+                                                                  <Col lg="6">
+                                                                    <Col lg="12">
+                                                                      <Row>
+                                                                        <Col lg="12">
+                                                                          <div className="mb-2">
+                                                                            <Label for="temporaryAddress">
+                                                                              {this.props.t(
+                                                                                "Temporary Address (if applicable)"
+                                                                              )}
+                                                                              {
+                                                                                ""
+                                                                              }
+                                                                              :
+                                                                            </Label>
+                                                                            <Label className="left-label">
+                                                                              {
+                                                                                employee.temporaryAddress
+                                                                              }
+                                                                            </Label>
+                                                                          </div>
+                                                                          <div className="mb-2">
+                                                                            <Label for="mobileNumber">
+                                                                              {this.props.t(
+                                                                                "Mobile Phone Number"
+                                                                              )}
+                                                                              {
+                                                                                ""
+                                                                              }
+                                                                              :
+                                                                            </Label>
+                                                                            <Label className="left-label">
+                                                                              {
+                                                                                employee.mobileNumber
+                                                                              }
+                                                                            </Label>
+                                                                          </div>
+                                                                          <div className="mb-2">
+                                                                            <Label for="whatsAppNumber">
+                                                                              {this.props.t(
+                                                                                "WhatsApp Number"
+                                                                              )}
+                                                                              {
+                                                                                ""
+                                                                              }
+                                                                              :
+                                                                            </Label>
+                                                                            <Label className="left-label">
+                                                                              {
+                                                                                employee.whatsAppNumber
+                                                                              }
+                                                                            </Label>
+                                                                          </div>
+                                                                        </Col>
+                                                                      </Row>
+                                                                    </Col>
+                                                                  </Col>
+                                                                </Row>
+                                                              </CardBody>
+                                                            </Card>
+                                                          </Col>
+                                                        </div>
+                                                      </Col>
+                                                    </Row>
+                                                  </CardBody>
+                                                </Card>
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </ModalBody>
+                                    </Modal>
+                                  </div>
+                                </Col>
                               </React.Fragment>
                             )}
                           </ToolkitProvider>
@@ -3882,6 +5014,9 @@ const mapStateToProps = ({
   contractsTypes,
   employmentCases,
   workClassifications,
+  countries,
+  governorates,
+  cities,
 }) => ({
   employees: employees.employees,
   deleted: employees.deleted,
@@ -3894,28 +5029,23 @@ const mapStateToProps = ({
   // corporateNodesOpt: employees.corporateNodesOpt || [],
   genders: employees.genders,
   academicYearsOpt: employees.academicYearsOpt,
-  countriesOpt: employees.countriesOpt,
-  statesOpt: employees.statesOpt,
-  citiesOpt: employees.citiesOpt,
+  countries: countries.countries,
+  governorates: governorates.governorates,
+  cities: cities.cities,
   contractsTypes: contractsTypes.contractsTypes,
   employmentCases: employmentCases.employmentCases,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetEmployees: () => dispatch(getEmployees()),
-  onGetNationalitiesOpt: () => dispatch(getNationalitiesOpt()),
+  onGetEmployees: lng => dispatch(getEmployees(lng)),
   // onGetAdministrativeSupervisorsOpt: () =>
   //   dispatch(getAdministrativeSupervisorsOpt()),
   // onGetPhysicalWorkLocationsOpt: () => dispatch(getPhysicalWorkLocationsOpt()),
   onGetJobRanksOpt: () => dispatch(getJobRanksOpt()),
   onGetJobTitlesOpt: () => dispatch(getJobTitlesOpt()),
   // onGetCorporateNodesOpt: () => dispatch(getCorporateNodesOpt()),
-  onGetGendersch: () => dispatch(getGendersch()),
   onGetAcademicYearsOpt: () => dispatch(getAcademicYearsOpt()),
-  onGetCountriesOpt: () => dispatch(getCountriesOpt()),
-  onGetCitiesOpt: () => dispatch(getCitiesOpt()),
-  onGetStatesOpt: () => dispatch(getStatesOpt()),
   onGetContracts: () => dispatch(getContracts()),
   onAddNewEmployee: employee => dispatch(addNewEmployee(employee)),
   onAddNewContract: contract => dispatch(addNewContract(contract)),

@@ -64,6 +64,7 @@ class ExamRoomsList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      languageState: "",
     };
     this.toggleVertical = this.toggleVertical.bind(this);
   }
@@ -81,13 +82,16 @@ class ExamRoomsList extends Component {
     }
   }
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
       studentManagements,
       examRooms,
       defineExamDates,
       onGetDefineExamDates,
+
       levels,
       user_menu,
+      i18n,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -100,7 +104,18 @@ class ExamRoomsList extends Component {
     this.setState({ examRooms });
     this.setState({ defineExamDates });
     console.log("defineExamDates", defineExamDates);
+    this.setState({ languageState: lang });
+
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    if (lang != lng) {
+      this.setState({ languageState: lng });
+    }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -220,8 +235,32 @@ class ExamRoomsList extends Component {
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
   };
+
+  handleExamRoomDataChange = (rowId, fieldName, fieldValue) => {
+    const { examRooms, onUpdateExamRoom } = this.props;
+
+    const isDuplicate = examRooms.some(examRoom => {
+      return (
+        examRoom.Id !== rowId &&
+        examRoom.examCapacity.trim() === fieldValue.trim()
+      );
+    });
+
+    if (isDuplicate) {
+      const errorMessage = this.props.t("Value already exists");
+      this.setState({ duplicateError: errorMessage });
+      let onUpdate = { Id: rowId, [fieldName]: "-----" };
+      onUpdateExamRoom(onUpdate);
+    } else {
+      this.setState({ duplicateError: null });
+      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
+      onUpdateExamRoom(onUpdate);
+    }
+  };
+
   render() {
     const {
+      languageState,
       selectedLevel,
       duplicateError,
       showAddButton,
@@ -243,12 +282,12 @@ class ExamRoomsList extends Component {
       {
         dataField: "defineExamDateId",
         text: this.props.t("defineExamDateId"),
-        hidden: false,
+        hidden: true,
       },
 
       {
-        dataField: "arTitle",
-        text: this.props.t("hall Name"),
+        dataField: "hallArName",
+        text: this.props.t("Room Name"),
         // formatter: (cell, row) => (
         //   <Select
         //     key={`level_select`}
@@ -270,9 +309,9 @@ class ExamRoomsList extends Component {
       },
 
       {
-        key: "defineExamDateNum",
+        key: "hallNum",
         dataField: "defineExamDateNum",
-        text: this.props.t("DefineExamDate Number"),
+        text: this.props.t("Room No."),
         editable: false,
         // formatter: (cellContent, row, column) => (
         //   <Input
@@ -367,7 +406,10 @@ class ExamRoomsList extends Component {
                         >
                           <p className="font-weight-bold m-1 pt-2 ">
                             <span style={{ fontWeight: "bold" }}>
-                              (
+                              {languageState === "ar"
+                                ? defineExamDate.arTitle
+                                : defineExamDate.enTitle}{" "}
+                              - (
                               {moment(defineExamDate.startDate).format(
                                 "DD/MM/YYYY"
                               )}{" "}
@@ -431,12 +473,27 @@ class ExamRoomsList extends Component {
                               )}
                               <BootstrapTable
                                 keyField="Id"
+                                // data={defineExamDates.filter(
+                                //   d => d.Id === defineExamDate.Id
+                                // )}
                                 data={examRooms}
                                 columns={columns}
                                 filter={filterFactory()}
                                 cellEdit={cellEditFactory({
-                                  mode: "click",
+                                  mode: "dbclick",
                                   blurToSave: true,
+                                  afterSaveCell: (
+                                    oldValue,
+                                    newValue,
+                                    row,
+                                    column
+                                  ) => {
+                                    this.handleExamRoomDataChange(
+                                      row.Id,
+                                      column.dataField,
+                                      newValue
+                                    );
+                                  },
                                 })}
                                 noDataIndication={this.props.t(
                                   "No trainee found"

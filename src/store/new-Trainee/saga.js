@@ -135,6 +135,7 @@ function* fetchTempTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getFaculties, get_faculty_opt);
+    console.log("1", response);
     yield put(getFacultiesSuccess(response));
   } catch (error) {
     yield put(getFacultiesFail(error));
@@ -150,6 +151,8 @@ function* fetchTempTrainees(selectedpayload) {
 
   try {
     const response = yield call(getDiplomaLevels, getDiploma_opt);
+    console.log("2", response);
+
     yield put(getDiplomaLevelsSuccess(response));
   } catch (error) {
     yield put(getDiplomaLevelsFail(error));
@@ -165,7 +168,7 @@ function* fetchTempTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getYears, get_years_req);
-    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", response);
+    console.log("3", response);
     yield put(getYearsSuccess(response));
   } catch (error) {
     yield put(getYearsFail(error));
@@ -181,7 +184,7 @@ function* fetchTempTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getNationalities, get_nationality_opt);
-    console.log("responsenationality", response);
+    console.log("4", response);
     yield put(getNationalitiesSuccess(response));
   } catch (error) {
     yield put(getNationalitiesFail(error));
@@ -197,7 +200,8 @@ function* fetchTempTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getCountries, get_country_opt);
-    console.log("response country", response);
+    console.log("5", response);
+
     yield put(getCountriesSuccess(response));
   } catch (error) {
     yield put(getCountriesFail(error));
@@ -213,6 +217,8 @@ function* fetchTempTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getCities, get_city_opt);
+    console.log("7", response);
+
     yield put(getCitiesSuccess(response));
   } catch (error) {
     yield put(getCitiesFail(error));
@@ -274,6 +280,7 @@ function* fetchTempTrainees(selectedpayload) {
   };
   try {
     const response = yield call(getGovernorates, get_governorate_opt);
+    console.log("8", response);
 
     console.log("responseresponseresponse", response);
     yield put(getGovernoratesSuccess(response));
@@ -348,7 +355,9 @@ function* onAddNewTempTrainee({ payload }) {
 
   try {
     const response = yield call(addNewTempTrainee, payload);
-    console.log("adddresssss123", response);
+    response.map(resp => {
+      resp["RegReqDocTempTrainee"] = JSON.parse(resp["RegReqDocTempTrainee"]);
+    });
     yield put(addTempTraineeSuccess(response[0]));
   } catch (error) {
     yield put(addTempTraineeFail(error));
@@ -364,6 +373,9 @@ function* onUpdateTempTrainee({ payload }) {
 
   try {
     const response = yield call(updateTempTrainee, payload);
+    response.map(resp => {
+      resp["RegReqDocTempTrainee"] = JSON.parse(resp["RegReqDocTempTrainee"]);
+    });
     yield put(updateTempTraineeSuccess(response[0]));
   } catch (error) {
     yield put(updateTempTraineeFail(error));
@@ -444,6 +456,12 @@ function* onAddNewProfessionalExperience({ payload }) {
 
   try {
     const response = yield call(addNewProfessionalExperience, payload);
+
+    response.map(resp => {
+      resp["ProfessionalExperiences"] = JSON.parse(
+        resp["ProfessionalExperiences"]
+      );
+    });
     console.log("response", response);
     yield put(addProfessionalExperienceSuccess(response[0]));
   } catch (error) {
@@ -481,12 +499,15 @@ function* onDeleteProfessionalExperience({ payload }) {
 
 function* onAddRequiredDocs({ payload }) {
   payload["source"] = "db";
-  payload["procedure"] = "Admission_AddDocsTempTrainee";
+  // payload["procedure"] = "Admission_AddDocsTempTrainee";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_RegReqDocTempTrainee";
+  // payload["tablename"] = "Common_RegReqDocTempTrainee";
 
   try {
     const response = yield call(addRequiredDocs, payload);
+    response.map(resp => {
+      resp["RegReqDocTempTrainee"] = JSON.parse(resp["RegReqDocTempTrainee"]);
+    });
     console.log("response", response);
     yield put(addRequiredDocsSuccess(response[0]));
   } catch (error) {

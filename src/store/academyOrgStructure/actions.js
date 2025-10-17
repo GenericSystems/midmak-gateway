@@ -19,6 +19,7 @@ import {
 /* GET */
 export const getAcademyOrgStructure = () => ({
   type: GET_ACADEMY_ORG_STRUCTURES,
+  // payload: academyOrgStructures,
 });
 
 export const getAcademyOrgStructureSuccess = academyOrgStructures => ({

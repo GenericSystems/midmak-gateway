@@ -200,8 +200,26 @@ class DocumentsTypesList extends Component {
         order: "desc",
       },
     ];
+
+    const pageOptions = {
+      sizePerPage: 10,
+      totalSize: documents?.length || 0, // avoids crash if undefined
+      custom: true,
+      page: 1,
+    };
+
     const columns = [
       { dataField: "Id", text: "ID", hidden: true },
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex, extraData) => {
+          const currentPage = extraData?.currentPage || 1;
+          const sizePerPage = extraData?.sizePerPage || pageOptions.sizePerPage;
+          return rowIndex + 1 + (currentPage - 1) * sizePerPage;
+        },
+        editable: false,
+      },
       {
         dataField: "arTitle",
         text: this.props.t("Name(ar)"),
@@ -209,12 +227,6 @@ class DocumentsTypesList extends Component {
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
-        // headerFormatter: (column, colIndex, components) => (
-        //   <div style={{ display: "flex", flexDirection: "column" }}>
-        //     <span>{column.text}</span>
-        //     {components.filterElement}
-        //   </div>
-        // ),
       },
       {
         dataField: "enTitle",
@@ -222,19 +234,9 @@ class DocumentsTypesList extends Component {
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
-        }), // // headerFormatter: (column, colIndex, components) => (
-        // //   <div style={{ display: "flex", flexDirection: "column" }}>
-        // //     <span>{column.text}</span>
-        // //     {components.filterElement}
-        // //   </div>
-        // ),
+        }),
       },
     ];
-    const pageOptions = {
-      sizePerPage: 10,
-      totalSize: documents?.length || 0, // avoids crash if undefined
-      custom: true,
-    };
 
     return (
       <React.Fragment>
@@ -281,39 +283,51 @@ class DocumentsTypesList extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {/*   {showSearchButton && ( */}
-                                      <div className="position-relative">
-                                        <SearchBar
-                                          {...toolkitprops.searchProps}
-                                          placeholder={t("Search...")}
-                                        />
-                                      </div>
+                                      {showSearchButton && (
+                                        <div className="position-relative">
+                                          <SearchBar
+                                            {...toolkitprops.searchProps}
+                                            placeholder={t("Search...")}
+                                          />
+                                        </div>
+                                      )}
                                     </div>
                                   </Col>
-                                  {/*    {showAddButton && ( */}
-                                  <Col sm="8">
-                                    <div className="text-sm-end">
-                                      <Tooltip
-                                        title={this.props.t("Add")}
-                                        placement="top"
-                                      >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleAddRow}
+                                  {showAddButton && (
+                                    <Col sm="8">
+                                      <div className="text-sm-end">
+                                        <Tooltip
+                                          title={this.props.t("Add")}
+                                          placement="top"
                                         >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </div>
-                                  </Col>
+                                          <IconButton
+                                            color="primary"
+                                            onClick={this.handleAddRow}
+                                          >
+                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </div>
+                                    </Col>
+                                  )}
                                 </Row>
 
                                 <BootstrapTable
                                   keyField="Id"
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
-                                  data={documents || []}
-                                  columns={columns}
+                                  data={documents}
+                                  columns={columns.map(col => ({
+                                    ...col,
+                                    formatter:
+                                      col.dataField === "serial"
+                                        ? (cell, row, rowIndex) =>
+                                            rowIndex +
+                                            1 +
+                                            (paginationProps.page - 1) *
+                                              paginationProps.sizePerPage
+                                        : col.formatter,
+                                  }))}
                                   cellEdit={cellEditFactory({
                                     mode: "dbclick",
                                     blurToSave: true,

@@ -1,7 +1,11 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
 // Crypto Redux States
-import { GET_CHECKED_GRADES, UPDATE_CHECKED_GRADE } from "./actionTypes";
+import {
+  GET_CHECKED_GRADES,
+  UPDATE_CHECKED_GRADE,
+  IMPORT_CHECKED_GRADES,
+} from "./actionTypes";
 
 import { GET_COURSE_CONTENTS_ENTERED_GRADES } from "../enterGrades/actionTypes";
 
@@ -28,6 +32,8 @@ import {
   getCheckedGradesFail,
   updateCheckedGradeSuccess,
   updateCheckedGradeFail,
+  importCheckedGradesSuccess,
+  importCheckedGradesFail,
 } from "./actions";
 
 // Include Both Helper File with needed methods
@@ -38,15 +44,36 @@ import {
   getCoursesOpt,
   getCourseContentsEnteredGrades,
   getFilteredSections,
+  importCheckedGrades,
 } from "../../helpers/fakebackend_helper";
+
+function* fetchImportCheckedGrades(obj) {
+  let course = obj.payload;
+  console.log("coursecourse", course);
+  const import_grades_req = {
+    source: "db",
+    procedure: "SC_SisApp_importCurriculalines",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    courseId: course.courseId,
+    // tablename: "_Current_Common_TrianeeCurriculalinesCheck",
+    // filter: course.filter,
+  };
+  try {
+    const response = yield call(importCheckedGrades, import_grades_req);
+    yield put(importCheckedGradesSuccess(response));
+  } catch (error) {
+    yield put(importCheckedGradesFail(error));
+  }
+}
 
 function* fetchCheckedGrades(obj) {
   let course = obj.payload;
+  console.log("coursecourse", course);
   const get_grades_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Current_Common_StudentsCurriculalinesCheck",
+    tablename: "_Current_Common_TrianeeCurriculalinesCheck",
     filter: course.filter,
   };
   try {
@@ -60,8 +87,9 @@ function* fetchCheckedGrades(obj) {
     source: "db",
     procedure: "getCourseStatistics",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_StudentsCurriculalinesCheck",
+    tablename: "Common_CurriculalinesCheck",
     filter: `courseId = ${course.courseId}`,
+    // flag: payload.flag,
   };
   try {
     const response = yield call(getCourseStatistics, get_info);
@@ -69,16 +97,13 @@ function* fetchCheckedGrades(obj) {
   } catch (error) {
     yield put(getCourseStatisticsFail(error));
   }
-}
 
-function* fetchCoursesOpt() {
-  //get rquired course options
   const get_preReqCourse_opt = {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_courseOffering",
-    fields: "CourseId,courseCode,courseName",
+    tablename: "_Common_CourseOfferingOnly",
+    fields: "courseId,Code,courseName",
   };
   try {
     const response = yield call(getCoursesOpt, get_preReqCourse_opt);
@@ -86,17 +111,13 @@ function* fetchCoursesOpt() {
   } catch (error) {
     yield put(getCoursesOptFail(error));
   }
-}
-
-function* fetchCourseContentsGrades(obj) {
-  let course = obj.payload;
 
   const get_courseContents = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_DistributingMethods",
-    filter: `courseId = ${course.courseId} `,
+    filter: `courseId = ${course.courseId} or courseId = 0 `,
   };
   try {
     const response = yield call(
@@ -107,14 +128,28 @@ function* fetchCourseContentsGrades(obj) {
   } catch (error) {
     yield put(getCourseContentsEnteredGradesFail(error));
   }
+  const request = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Section",
+    fields: "Id,SectionNumber,courseId",
+    filter: `CourseId = ${course.courseId} `,
+  };
+  try {
+    const response = yield call(getFilteredSections, request);
+    yield put(getFilteredSectionsSuccess(response));
+  } catch (error) {
+    yield put(getFilteredSectionsFail(error));
+  }
 }
 
 function* onUpdateCheckedGrade({ payload }) {
   payload["source"] = "db";
-  payload["procedure"] = "SC_SisApp_updateStudentGrade";
+  payload["procedure"] = "SC_SisApp_updateTraineeGrade";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_StudentsCurriculalinesCheck";
-  payload["queryname"] = "_Current_Common_StudentsCurriculalinesCheck";
+  payload["tablename"] = "Common_CurriculalinesCheck";
+  payload["queryname"] = "_Current_Common_TrianeeCurriculalinesCheck";
 
   try {
     const respupdate = yield call(updateCheckedGrade, payload);
@@ -124,33 +159,11 @@ function* onUpdateCheckedGrade({ payload }) {
   }
 }
 
-function* fetchFilteredSections(obj) {
-  let schedulingLec = obj.payload;
-  const get_filtered_Sections = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Section",
-    fields: "Id,SectionNumber,CourseCode",
-    filter: `CourseId = ${schedulingLec.courseId} and CourseCode = ''''${schedulingLec.CourseCode}'''' `,
-  };
-  try {
-    const response = yield call(getFilteredSections, get_filtered_Sections);
-    yield put(getFilteredSectionsSuccess(response));
-  } catch (error) {
-    yield put(getFilteredSectionsFail(error));
-  }
-}
-
 function* checkedGradesSaga() {
+  yield takeEvery(IMPORT_CHECKED_GRADES, fetchImportCheckedGrades);
   yield takeEvery(GET_CHECKED_GRADES, fetchCheckedGrades);
-  yield takeEvery(GET_COURSES_OPT, fetchCoursesOpt);
-  yield takeEvery(
-    GET_COURSE_CONTENTS_ENTERED_GRADES,
-    fetchCourseContentsGrades
-  );
   yield takeEvery(UPDATE_CHECKED_GRADE, onUpdateCheckedGrade);
-  yield takeEvery(GET_FILTERED_SECTIONS, fetchFilteredSections);
+  // yield takeEvery(GET_FILTERED_SECTIONS, fetchFilteredSections);
 }
 
 export default checkedGradesSaga;

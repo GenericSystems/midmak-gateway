@@ -23,6 +23,11 @@ import {
   getAcademyOrgStructureDeletedValueFail,
 } from "./actions";
 
+import {
+  getAcademyInfoSuccess,
+  getAcademyInfoFail,
+} from "../academydef/actions";
+
 // API Helpers
 import {
   getAcademyOrgStructure,
@@ -30,12 +35,17 @@ import {
   updateAcademyOrgStructure,
   deleteAcademyOrgStructure,
   getAcademyOrgStructureDeletedValue,
+  getAcademyInfo,
 } from "../../helpers/fakebackend_helper";
 
 // Constants
 
 /* FETCH */
 function* fetchAcademyOrgStructure() {
+  // let lang = selectedpayload.payload;
+  // console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", lang);
+
+  // const titleField = lang === "en" ? "enTitle" : "arTitle";
   const request = {
     source: "db",
     procedure: "SisApp_getData",
@@ -45,12 +55,26 @@ function* fetchAcademyOrgStructure() {
 
   try {
     const response = yield call(getAcademyOrgStructure, request);
-    /* response.map(resp => {
+    response.map(resp => {
       resp["departments"] = JSON.parse(resp["departments"]);
-    }); */
+    });
     yield put(getAcademyOrgStructureSuccess(response));
   } catch (error) {
     yield put(getAcademyOrgStructureFail(error));
+  }
+  const get_academyInfo_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_AcademyInfo",
+    // fields: `Id,${titleField}`,
+  };
+
+  try {
+    const response = yield call(getAcademyInfo, get_academyInfo_req);
+    yield put(getAcademyInfoSuccess(response[0]));
+  } catch (error) {
+    yield put(getAcademyInfoFail(error));
   }
 }
 

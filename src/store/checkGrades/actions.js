@@ -5,7 +5,25 @@ import {
   UPDATE_CHECKED_GRADE,
   UPDATE_CHECKED_GRADE_SUCCESS,
   UPDATE_CHECKED_GRADE_FAIL,
+  IMPORT_CHECKED_GRADES,
+  IMPORT_CHECKED_GRADES_SUCCESS,
+  IMPORT_CHECKED_GRADES_FAIL,
 } from "./actionTypes";
+
+export const importCheckedGrades = chGrades => ({
+  type: IMPORT_CHECKED_GRADES,
+  payload: chGrades,
+});
+
+export const importCheckedGradesSuccess = chGrades => ({
+  type: IMPORT_CHECKED_GRADES_SUCCESS,
+  payload: chGrades,
+});
+
+export const importCheckedGradesFail = error => ({
+  type: IMPORT_CHECKED_GRADES_FAIL,
+  payload: error,
+});
 
 export const getCheckedGrades = grades => ({
   type: GET_CHECKED_GRADES,

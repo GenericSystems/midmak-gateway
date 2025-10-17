@@ -49,6 +49,7 @@ import {
   getAllCoursesOffering,
   addNewCourseOffering,
   updateCourseOffering,
+  deleteCourseOffering,
   getSectionLabs,
   addNewSectionLab,
   addNewSectionLabDetail,
@@ -77,12 +78,13 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+const NoMultiValue = props => null;
 import { sectionLabs } from "common/data/sectionLabs";
 class ClassSchedulingList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      coursesOffering: [],
+      coursesOffering: {},
       sectionLabs: [],
       sectionLabData: [],
       sectionLabDetails: [],
@@ -111,6 +113,7 @@ class ClassSchedulingList extends Component {
       selectedRow: null,
       deleteModal: false,
       deleteModal1: false,
+      deleteModal2: false,
       duplicateError: null,
       startDateError: null,
       endDateError: null,
@@ -148,6 +151,9 @@ class ClassSchedulingList extends Component {
       showAddWarning: false,
       isScheduleEditable: false,
       selectedScheduleRow: null,
+      selectedCourseRow: null,
+      showAll: false,
+      selectedInstructor: [],
     };
     this.toggle1 = this.toggle1.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -164,12 +170,13 @@ class ClassSchedulingList extends Component {
     if (this.state.activeTab1 !== tab) {
       this.setState({
         activeTab1: tab,
+        showAll: false,
       });
     }
-    if (ifUpdateCourse != 0) {
-      onGetCoursesOffering();
-      this.setState({ ifUpdateCourse: 0 });
-    }
+    // if (ifUpdateCourse != 0) {
+    onGetCoursesOffering();
+    // this.setState({ ifUpdateCourse: 0 });
+    // }
 
     document.getElementById("square-switch1").checked = false;
   }
@@ -200,7 +207,8 @@ class ClassSchedulingList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    onGetCoursesOffering(lang);
+    // onGetCoursesOffering(lang);
+    onGetCoursesOffering();
     onGetMethodsOfOfferingCourses();
     this.setState({
       coursesOffering,
@@ -244,16 +252,16 @@ class ClassSchedulingList extends Component {
 
     console.log(this.state.currentYearObj, "gggg");
   }
+  //mays
+  // handleLanguageChange = lng => {
+  //   const { onGetCoursesOffering } = this.props;
+  //   const lang = localStorage.getItem("I18N_LANGUAGE");
 
-  handleLanguageChange = lng => {
-    const { onGetCoursesOffering } = this.props;
-    const lang = localStorage.getItem("I18N_LANGUAGE");
-
-    if (lang != lng) {
-      onGetCoursesOffering(lng);
-      this.setState({ languageState: lng });
-    }
-  };
+  //   if (lang != lng) {
+  //     onGetCoursesOffering(lng);
+  //     this.setState({ languageState: lng });
+  //   }
+  // };
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       this.props.user_menu !== prevProps.user_menu ||
@@ -276,15 +284,15 @@ class ClassSchedulingList extends Component {
         this.props.location.pathname
       );
     }
-    if (
-      prevProps.coursesOffering !== this.props.coursesOffering &&
-      Array.isArray(this.props.coursesOffering) &&
-      this.props.coursesOffering.length > 0
-    ) {
-      this.setState({
-        selectedCourseId: this.props.coursesOffering[0].courseId,
-      });
-    }
+    // if (
+    //   prevProps.coursesOffering !== this.props.coursesOffering &&
+    //   Array.isArray(this.props.coursesOffering) &&
+    //   this.props.coursesOffering.length > 0
+    // ) {
+    //   this.setState({
+    //     selectedCourseId: this.props.coursesOffering[0].courseId,
+    //   });
+    // }
   }
 
   updateShowAddButton = (menu, pathname) => {
@@ -330,10 +338,17 @@ class ClassSchedulingList extends Component {
     }));
   };
 
+  toggleDeleteModal2 = () => {
+    this.setState(prevState => ({
+      deleteModal2: !prevState.deleteModal2,
+    }));
+  };
+
   toggle = () => {
     this.setState(prevState => ({
       isModalOpen: !prevState.isModalOpen,
     }));
+    this.props.onGetCoursesOffering(0);
   };
 
   toggle3 = () => {
@@ -355,7 +370,7 @@ class ClassSchedulingList extends Component {
   handleCourseOfferingClick = row => {
     console.log("branch", row);
     this.setState({
-      courseOffering: "",
+      courseOffering: row,
       selectedCourseId: row.courseId,
       isOpen: true,
     });
@@ -368,36 +383,13 @@ class ClassSchedulingList extends Component {
     this.setState({ showAll: isChecked }, () => {
       if (isChecked) {
         onGetAllCoursesOffering();
+        // this.setState({ ifUpdateCourse: 1 });
       } else {
         console.log("noooooooooooo", isChecked);
         onGetCoursesOffering();
+        // this.setState({ ifUpdateCourse: 0 });
       }
     });
-  };
-
-  handleCheckboxAddOfferedCourseOrDelete = (row, currentStatus, fieldName) => {
-    const { onAddNewCourseOffering } = this.props;
-    const { selectedYear } = this.state;
-    const newStatus = currentStatus ? 1 : 0;
-    let ob = {};
-    ob["Id"] = row.Id;
-    ob[fieldName] = newStatus;
-    if (fieldName === "isOffered" && newStatus === 0) {
-      const { onDeleteCourseOffering } = this.props;
-      let onDelete = { Id: row.Id };
-      onDeleteCourseOffering(onDelete);
-    } else if (fieldName === "isOffered" && newStatus === 1) {
-      const newRow = {
-        Id: row.Id,
-        courseId: row.courseId,
-        courseCode: row.courseCode,
-        isOffered: 1,
-        yearId: selectedYear["value"],
-        queryname: "co_courseOffering",
-      };
-
-      onAddNewCourseOffering(newRow);
-    }
   };
 
   handleSelectChange = (fieldName, selectedValue) => {
@@ -439,8 +431,12 @@ class ClassSchedulingList extends Component {
     // onGetHallTimings(0);
     this.setState({ selectedRow: null, selectedType: "" });
   }
+
   toggleNestedModal = () => {
-    const { isEdit, selectedOption } = this.state;
+    const { isEdit, selectedOption, selectedSchedule } = this.state;
+    const { onGetScheduleTimings, onGetScheduleTimingDescs, onGetHallTimings } =
+      this.props;
+    console.log("isEdit", isEdit);
     if (selectedOption === "Section") {
       if (isEdit) {
         this.setState({
@@ -463,6 +459,7 @@ class ClassSchedulingList extends Component {
           selectedOption: "",
         });
       }
+      this.setState({ selectedRow: null, selectedType: "" });
     }
 
     this.setState(prevState => ({
@@ -472,6 +469,7 @@ class ClassSchedulingList extends Component {
       selectedRowSectionLab: null,
     });
   };
+
   toggleHallModal = () => {
     this.setState(prevState => ({
       isHallModalOpen: !prevState.isHallModalOpen,
@@ -531,6 +529,10 @@ class ClassSchedulingList extends Component {
     this.setState({ deleteModal1: true });
   };
 
+  onClickDelete2 = rowId => {
+    this.setState({ selectedCourseRow: rowId, deleteModal2: true });
+  };
+
   handleDeleteSectionLab = () => {
     const { onDeleteSectionLab, selectedOption } = this.props;
     const { sectionLabData } = this.state;
@@ -548,6 +550,20 @@ class ClassSchedulingList extends Component {
         LabNumber: "",
       },
       isEdit: false,
+    });
+  };
+
+  handleDeleteCourseOffering = () => {
+    const { onDeleteCourseOffering } = this.props;
+    const { selectedCourseRow } = this.state;
+    // if (selectedCourseRow && selectedCourseRow.Id !== undefined) {
+    let onDelete = { Id: selectedCourseRow.Id };
+    onDeleteCourseOffering(onDelete);
+    // }
+    this.setState({
+      selectedCourseRow: null,
+      deleteModal2: false,
+      showAlert: true,
     });
   };
 
@@ -592,14 +608,15 @@ class ClassSchedulingList extends Component {
 
   handleEditScheduleTiming = SLD => {
     console.log("ssssssssld", SLD);
+    const instructorsArray = SLD.instructors ? JSON.parse(SLD.instructors) : [];
     this.setState({
       // defaultHallName: SLD.hallName,
-      isEdit1: true,
       sectionLabDetails: SLD,
-      Id: SLD.Id,
-      instructorsArray: SLD.instructorsId,
+      instructorsArray,
+      instructorsId: instructorsArray.map(i => i.value),
       selectedHallKey: SLD.hallId,
       defaultHallName: SLD.hallName,
+      isEdit1: true,
     });
 
     this.toggle3();
@@ -669,6 +686,7 @@ class ClassSchedulingList extends Component {
       selectedRow: sectionLabData.Id,
       selectedType: sectionLabData.type,
     });
+    this.props.onGetScheduleTimings(0);
   };
 
   handleMouseDown = (cellIndex, lectureId, weekdayId) => {
@@ -682,7 +700,6 @@ class ClassSchedulingList extends Component {
       // onGetScheduleTimingDescs,
     } = this.props;
     const { selectedScheduleRow, selectedRowSectionLab } = this.state;
-    console.log("selectedScheduleRow", selectedScheduleRow);
     // onGetScheduleMsgValue();
     this.setState({
       isDragging: true,
@@ -746,6 +763,8 @@ class ClassSchedulingList extends Component {
     if (scheduledTiming) {
       onDeleteScheduleTiming(scheduledTiming);
       onGetScheduleTimings(selectedScheduleRow);
+      onGetSectionLabDetails(this.state.selectedRowSectionLab);
+
       // onGetScheduleTimingDescs(selectedScheduleRow);
     } else {
       const ob = {};
@@ -767,7 +786,7 @@ class ClassSchedulingList extends Component {
 
   handleSelectYear = (name, value) => {
     document.getElementById("square-switch1").checked = false;
-    const { onGetCoursesOffering } = this.props;
+    // const { onGetCoursesOffering } = this.props;
     this.setState({
       selectedYear: value,
       currentYearObj: {
@@ -775,7 +794,7 @@ class ClassSchedulingList extends Component {
         currentYearName: value.label,
       },
     });
-    onGetCoursesOffering();
+    // onGetCoursesOffering();
   };
 
   onChangeHall(oldValue, newValue) {
@@ -819,6 +838,7 @@ class ClassSchedulingList extends Component {
       selectedEndDate,
       selectedStartDate,
       courseOffering,
+      showAll,
     } = this.state;
     const { onAddNewCourseOffering } = this.props;
 
@@ -838,11 +858,17 @@ class ClassSchedulingList extends Component {
       });
 
       onAddNewCourseOffering(courseOfferingInfo);
-
       this.setState({
         errorMessages: {},
       });
       this.toggle();
+      // if (showAll) {
+      //   this.props.onGetAllCoursesOffering();
+      //   this.setState({ ifUpdateCourse: 1 });
+      // } else {
+      //   this.props.onGetCoursesOffering();
+      //   this.setState({ ifUpdateCourse: 0 });
+      // }
     } else {
       if (selectedMethodOffering === undefined) {
         this.setState({ methodOfferingError: true, saveError: true });
@@ -993,6 +1019,7 @@ class ClassSchedulingList extends Component {
       selectedInstructor,
       oldHallId,
       newHallId,
+      selectedScheduleRow,
     } = this.state;
 
     const { onAddNewSectionLabDetail, onUpdateSectionLabDetail } = this.props;
@@ -1035,7 +1062,8 @@ class ClassSchedulingList extends Component {
     //   instructorsArray?.map(item => ({
     //     value: item.value,
     //   })) || [];
-
+    console.log("selectedSchedule in save", selectedScheduleRow);
+    console.log("selectedRowSectionLab in save", selectedRowSectionLab);
     values["type"] = selectedRowSectionLab.type;
     values["sectionLabId"] = selectedRowSectionLab.Id;
     values["hallId"] = this.state.selectedHallKey;
@@ -1108,6 +1136,7 @@ class ClassSchedulingList extends Component {
     // scheduleTimingInfo["type"] = selectedRowSectionLab.type;
     // scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
     if (isEdit1) {
+      scheduleTimingInfo["Id"] = selectedScheduleRow.Id;
       onUpdateSectionLabDetail(scheduleTimingInfo);
       this.toggle3();
     } else {
@@ -1134,8 +1163,12 @@ class ClassSchedulingList extends Component {
     // });
 
     if (fieldName === "instructorsId") {
+      const selectedIds = selectedMulti
+        ? selectedMulti.map(option => option.value)
+        : [];
       this.setState({
         instructorsArray: selectedMulti || [],
+        instructorsId: selectedIds,
       });
     }
   };
@@ -1144,6 +1177,8 @@ class ClassSchedulingList extends Component {
       sectionLabDetails: "",
       selectedHallKey: null,
       defaultHallName: "",
+      instructorsArray: [],
+      instructorsId: [],
       isEdit1: false,
     });
     this.toggle3();
@@ -1181,7 +1216,6 @@ class ClassSchedulingList extends Component {
       sectionLabDetails,
       halls,
       years,
-      instructorsArray,
       weekDays,
       lecturePeriods,
       scheduleTimings,
@@ -1196,6 +1230,7 @@ class ClassSchedulingList extends Component {
       duplicateError,
       deleteModal,
       deleteModal1,
+      deleteModal2,
       modal,
       isOpen,
       emptyError,
@@ -1230,14 +1265,17 @@ class ClassSchedulingList extends Component {
       languageState,
       showAddWarning,
       isScheduleEditable,
+      instructorsArray,
     } = this.state;
-    console.log(
-      "sectionlab scheduletiming",
-      sectionLabDetails,
-      scheduleTimings,
-      scheduleTimingDescs
-    );
-    console.log(isScheduleEditable, "we needddddddd");
+    console.log("sectionLabDatasectionLabData", sectionLabData);
+
+    const defaultStartDate = sectionLabData?.startDate
+      ? moment.utc(sectionLabData.startDate).local().format("YYYY-MM-DD")
+      : "";
+
+    const defaultEndDate = sectionLabData?.endDate
+      ? moment.utc(sectionLabData.endDate).local().format("YYYY-MM-DD")
+      : "";
     const selectRow = {
       mode: "checkbox",
       clickToSelect: false,
@@ -1325,15 +1363,26 @@ class ClassSchedulingList extends Component {
         isDummyField: true,
         editable: false,
         formatter: (cellContent, row) => {
-          if (row.isOffered === 1) return null;
           return (
             <div className="d-flex gap-3">
-              <Tooltip placement="top" title={this.props.t("Add Method")}>
-                <Link className="text-sm-end" to="#">
+              {row.isOffered !== 1 && (
+                <Tooltip placement="top" title={this.props.t("Add Method")}>
+                  <Link className="text-sm-end" to="#">
+                    <i
+                      color="primary"
+                      onClick={() => this.handleCourseOfferingClick(row)}
+                      className="mdi mdi-plus-circle blue-noti-icon"
+                    ></i>
+                  </Link>
+                </Tooltip>
+              )}
+
+              <Tooltip title={this.props.t("Delete")} placement="top">
+                <Link className="text-danger" to="#">
                   <i
-                    color="primary"
-                    onClick={() => this.handleCourseOfferingClick(row)}
-                    className="mdi mdi-plus-circle blue-noti-icon"
+                    className="mdi mdi-delete font-size-18"
+                    id="deletetooltip"
+                    onClick={() => this.onClickDelete2(row)}
                   ></i>
                 </Link>
               </Tooltip>
@@ -1456,7 +1505,7 @@ class ClassSchedulingList extends Component {
       },
       {
         dataField: "NumOfRegStud",
-        text: t("Number Of Registered Students"),
+        text: t("Number Of Registered Trainees"),
         editable: false,
         sort: true,
       },
@@ -1479,7 +1528,7 @@ class ClassSchedulingList extends Component {
         dataField: "menu",
         isDummyField: true,
         editable: false,
-        text: this.props.t("Action"),
+        text: this.props.t(""),
         formatter: (cellContent, sectionLabData) => (
           <div className="d-flex gap-3">
             <Tooltip title={t("Schedule Timing")} placement="top">
@@ -1550,7 +1599,7 @@ class ClassSchedulingList extends Component {
         dataField: "menu",
         isDummyField: true,
         editable: false,
-        text: this.props.t("Action"),
+        text: this.props.t(""),
         formatter: (cellContent, sectionLabDetails) => (
           <div className="d-flex gap-3">
             {/* <Tooltip title={t("View Hall Timing")} placement="top">
@@ -1756,6 +1805,19 @@ class ClassSchedulingList extends Component {
                                           <PaginationListStandalone
                                             {...paginationProps}
                                           />
+                                          <DeleteModal
+                                            show={deleteModal2}
+                                            onDeleteClick={
+                                              this.handleDeleteCourseOffering
+                                            }
+                                            onCloseClick={() =>
+                                              this.setState({
+                                                deleteModal2: false,
+                                                selectedCourseRow: null,
+                                              })
+                                            }
+                                          />
+
                                           <Modal
                                             isOpen={isModalOpen}
                                             toggle={this.toggle}
@@ -1821,7 +1883,14 @@ class ClassSchedulingList extends Component {
                                                   <Form>
                                                     <Card id="employee-card">
                                                       <CardTitle id="course_header">
-                                                        {t("Course Offering")}
+                                                        {`${t(
+                                                          "Course Offering"
+                                                        )} - ${
+                                                          this.props.i18n
+                                                            .language === "ar"
+                                                            ? courseOffering.arTitle
+                                                            : courseOffering.enTitle
+                                                        }`}
                                                       </CardTitle>
                                                       <CardBody className="cardBody">
                                                         {emptyError && (
@@ -2718,8 +2787,8 @@ class ClassSchedulingList extends Component {
                                     {selectedRowSectionLab
                                       ? `${this.props.t(
                                           isEdit1
-                                            ? "Edit Details"
-                                            : "Add Details"
+                                            ? t("Edit Details")
+                                            : t("Add Details")
                                         )} - ${selectedRowSectionLab.type}${
                                           selectedRowSectionLab.SectionLabNumber
                                         } `
@@ -2728,6 +2797,9 @@ class ClassSchedulingList extends Component {
                                   <ModalBody>
                                     <Formik
                                       initialValues={{
+                                        ...(isEdit1 && {
+                                          Id: sectionLabDetails.Id,
+                                        }),
                                         instructorsId:
                                           (sectionLabDetails &&
                                             sectionLabDetails.instructorName) ||
@@ -2739,19 +2811,12 @@ class ClassSchedulingList extends Component {
                                       }}
                                       enableReinitialize={true}
                                       validationSchema={Yup.object().shape({
-                                        methodOfferingId: Yup.string().required(
-                                          "Please Enter Your Methods Offering"
+                                        instructorsId: Yup.string().required(
+                                          "Please Enter Instructor"
                                         ),
-                                        startDate: Yup.date().required(
-                                          "Please Enter Your Start Date"
-                                        ),
-                                        endDate: Yup.date()
-                                          .required(
-                                            "Please Enter Your End Date"
-                                          )
-                                          .min(
-                                            Yup.ref("startDate"),
-                                            "End date must be after start date"
+                                        hallId:
+                                          Yup.string().required(
+                                            "Please Enter Hall"
                                           ),
                                       })}
                                     >
@@ -2966,13 +3031,20 @@ class ClassSchedulingList extends Component {
                                                   sectionLabData.Capacity) ||
                                                 "",
                                               startDate:
-                                                (sectionLabData &&
-                                                  sectionLabData.startDate) ||
-                                                "",
-                                              endDate:
-                                                (sectionLabData &&
-                                                  sectionLabData.endDate) ||
-                                                "",
+                                                sectionLabData?.startDate
+                                                  ? moment
+                                                      .utc(
+                                                        sectionLabData.startDate
+                                                      )
+                                                      .local()
+                                                      .format("YYYY-MM-DD")
+                                                  : "",
+                                              endDate: sectionLabData?.endDate
+                                                ? moment
+                                                    .utc(sectionLabData.endDate)
+                                                    .local()
+                                                    .format("YYYY-MM-DD")
+                                                : "",
                                             }}
                                             validationSchema={Yup.object().shape(
                                               {
@@ -3051,7 +3123,9 @@ class ClassSchedulingList extends Component {
                                                           </span>
                                                           <Field
                                                             name="SectionNumber"
-                                                            placeholder="Section Number"
+                                                            placeholder={t(
+                                                              "Section Number"
+                                                            )}
                                                             type="number"
                                                             className={
                                                               "form-control" +
@@ -3081,7 +3155,9 @@ class ClassSchedulingList extends Component {
                                                           </span>
                                                           <Field
                                                             name="Capacity"
-                                                            placeholder="Section Capacity"
+                                                            placeholder={t(
+                                                              "Section Capacity"
+                                                            )}
                                                             type="number"
                                                             className={
                                                               "form-control" +
@@ -3137,6 +3213,13 @@ class ClassSchedulingList extends Component {
                                                                           )[0]
                                                                       : ""
                                                                   }
+                                                                  min={
+                                                                    defaultStartDate
+                                                                  }
+                                                                  max={
+                                                                    values.endDate ||
+                                                                    defaultEndDate
+                                                                  }
                                                                   onChange={
                                                                     handleChange
                                                                   }
@@ -3191,6 +3274,13 @@ class ClassSchedulingList extends Component {
                                                                           )[0]
                                                                       : ""
                                                                   }
+                                                                  min={
+                                                                    values.startDate ||
+                                                                    defaultStartDate
+                                                                  }
+                                                                  max={
+                                                                    defaultEndDate
+                                                                  }
                                                                   onChange={
                                                                     handleChange
                                                                   }
@@ -3212,17 +3302,17 @@ class ClassSchedulingList extends Component {
                                                     </Row>
                                                     <Row></Row>
                                                   </div>
-                                                  <div className="bordered">
+                                                  {/* <div className="bordered">
                                                     <h5
                                                       className="header pt-2"
                                                       id="title"
                                                     >
                                                       {this.props.t(
-                                                        "Specific Students"
+                                                        "Specific Trainees"
                                                       )}
                                                     </h5>
-                                                    <Row>
-                                                      {/* <Col md="12">
+                                                    <Row> */}
+                                                  {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3290,10 +3380,10 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup>
                                                   </Col> */}
-                                                    </Row>
+                                                  {/* </Row>
 
-                                                    <Row>
-                                                      {/* <Col md="12">
+                                                    <Row> */}
+                                                  {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3335,8 +3425,8 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup>
                                                   </Col> */}
-                                                    </Row>
-                                                  </div>
+                                                  {/* </Row>
+                                                  </div> */}
                                                   <Row className="justify-content-center">
                                                     <Col
                                                       lg="3"
@@ -3375,13 +3465,20 @@ class ClassSchedulingList extends Component {
                                                   sectionLabData.Capacity) ||
                                                 "",
                                               startDate:
-                                                (sectionLabData &&
-                                                  sectionLabData.startDate) ||
-                                                "",
-                                              endDate:
-                                                (sectionLabData &&
-                                                  sectionLabData.endDate) ||
-                                                "",
+                                                sectionLabData?.startDate
+                                                  ? moment
+                                                      .utc(
+                                                        sectionLabData.startDate
+                                                      )
+                                                      .local()
+                                                      .format("YYYY-MM-DD")
+                                                  : "",
+                                              endDate: sectionLabData?.endDate
+                                                ? moment
+                                                    .utc(sectionLabData.endDate)
+                                                    .local()
+                                                    .format("YYYY-MM-DD")
+                                                : "",
                                             }}
                                             validationSchema={Yup.object().shape(
                                               {
@@ -3456,7 +3553,9 @@ class ClassSchedulingList extends Component {
                                                           </span>
                                                           <Field
                                                             name="LabNumber"
-                                                            placeholder="Lab Number"
+                                                            placeholder={t(
+                                                              "Lab Number"
+                                                            )}
                                                             type="number"
                                                             className={
                                                               "form-control" +
@@ -3484,7 +3583,9 @@ class ClassSchedulingList extends Component {
                                                           </span>
                                                           <Field
                                                             name="Capacity"
-                                                            placeholder="Lab Capacity"
+                                                            placeholder={t(
+                                                              "Lab Capacity"
+                                                            )}
                                                             type="number"
                                                             className={
                                                               "form-control" +
@@ -3541,6 +3642,13 @@ class ClassSchedulingList extends Component {
                                                                           )[0]
                                                                       : ""
                                                                   }
+                                                                  min={
+                                                                    defaultStartDate
+                                                                  }
+                                                                  max={
+                                                                    values.endDate ||
+                                                                    defaultEndDate
+                                                                  }
                                                                   onChange={
                                                                     handleChange
                                                                   }
@@ -3595,6 +3703,13 @@ class ClassSchedulingList extends Component {
                                                                           )[0]
                                                                       : ""
                                                                   }
+                                                                  min={
+                                                                    values.startDate ||
+                                                                    defaultStartDate
+                                                                  }
+                                                                  max={
+                                                                    defaultEndDate
+                                                                  }
                                                                   onChange={
                                                                     handleChange
                                                                   }
@@ -3615,17 +3730,17 @@ class ClassSchedulingList extends Component {
                                                       </Col>
                                                     </Row>
                                                   </div>
-                                                  <div className="bordered">
+                                                  {/* <div className="bordered">
                                                     <h5
                                                       className="header pt-2"
                                                       id="title"
                                                     >
                                                       {this.props.t(
-                                                        "Specific Students"
+                                                        "Specific Trainees"
                                                       )}
                                                     </h5>
-                                                    <Row>
-                                                      {/* <Col md="12">
+                                                    <Row> */}
+                                                  {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3677,10 +3792,10 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup>
                                                   </Col> */}
-                                                    </Row>
+                                                  {/* </Row>
 
-                                                    <Row>
-                                                      {/* <Col md="12">
+                                                    <Row> */}
+                                                  {/* <Col md="12">
                                                     <FormGroup className="mb-3 mt-3">
                                                       <Row>
                                                         <Col md="2">
@@ -3724,8 +3839,8 @@ class ClassSchedulingList extends Component {
                                                       </Row>
                                                     </FormGroup> 
                                                   </Col>*/}
-                                                    </Row>
-                                                  </div>
+                                                  {/* </Row>
+                                                  </div> */}
                                                   <Row className="justify-content-center">
                                                     <Col
                                                       lg="3"
@@ -3871,13 +3986,16 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onGetCoursesOffering: lng => dispatch(getCoursesOffering(lng)),
+  // onGetCoursesOffering: lng => dispatch(getCoursesOffering(lng)),
+  onGetCoursesOffering: () => dispatch(getCoursesOffering()),
   onGetMethodsOfOfferingCourses: () => dispatch(getMethodsOfOfferingCourses()),
   onGetAllCoursesOffering: () => dispatch(getAllCoursesOffering()),
   onAddNewCourseOffering: CourseOffering =>
     dispatch(addNewCourseOffering(CourseOffering)),
   onUpdateCourseOffering: CourseOffering =>
     dispatch(updateCourseOffering(CourseOffering)),
+  onDeleteCourseOffering: CourseOffering =>
+    dispatch(deleteCourseOffering(CourseOffering)),
 
   onGetSectionLabs: Course => dispatch(getSectionLabs(Course)),
   onAddNewSectionLab: sectionLab => dispatch(addNewSectionLab(sectionLab)),

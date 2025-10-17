@@ -36,7 +36,7 @@ function* fetchGradeTypes() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_GradeType",
+    tablename: "Settings_CourseContents",
   };
 
   try {
@@ -53,7 +53,7 @@ function* onAddNewGradeType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_GradeType";
+  payload["tablename"] = "Settings_CourseContents";
 
   try {
     const response = yield call(addNewGradeType, payload);
@@ -68,7 +68,7 @@ function* onUpdateGradeType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_GradeType";
+  payload["tablename"] = "Settings_CourseContents";
 
   try {
     const response = yield call(updateGradeType, payload);
@@ -83,7 +83,7 @@ function* onDeleteGradeType({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_GradeType";
+  payload["tablename"] = "Settings_CourseContents";
 
   try {
     const response = yield call(deleteGradeType, payload);

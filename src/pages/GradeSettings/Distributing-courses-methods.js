@@ -52,7 +52,6 @@ import {
   addNewDistributingCoursesMethodContent,
   updateDistributingCoursesMethodContent,
   deleteDistributingCoursesMethodContent,
-  copyDistributingMethods,
 } from "store/distributing-courses-methods/actions";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -464,11 +463,6 @@ class DistributingCoursesMethods extends Component {
     });
   };
 
-  copyDistMethods = () => {
-    const { onCopyDistributingMethods } = this.props;
-    onCopyDistributingMethods();
-  };
-
   handleAddToTable = inputValue => {
     const { onAddNewDistributingCourse, distributingCourses } = this.props;
     const { selectedCoursId, distributingCoursesMethod } = this.state;
@@ -700,19 +694,19 @@ class DistributingCoursesMethods extends Component {
         text: "",
         formatter: (cellContent, distributingCoursesMethod) => (
           <div className="d-flex gap-3">
-            {showEditButton && (
-              <Link className="text-secondary" to="#">
-                <i
-                  className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
-                  onClick={() =>
-                    this.handleDistributingCoursesMethodEditForm(
-                      distributingCoursesMethod
-                    )
-                  }
-                ></i>
-              </Link>
-            )}
+            {/* {showEditButton && ( */}
+            <Link className="text-secondary" to="#">
+              <i
+                className="mdi mdi-pencil font-size-18"
+                id="edittooltip"
+                onClick={() =>
+                  this.handleDistributingCoursesMethodEditForm(
+                    distributingCoursesMethod
+                  )
+                }
+              ></i>
+            </Link>
+            {/* )} */}
             {showDeleteButton && (
               <Link className="text-danger" to="#">
                 <i
@@ -884,7 +878,7 @@ class DistributingCoursesMethods extends Component {
                                 <Col sm="4"></Col>
                                 <Col sm="8">
                                   <div className="text-sm-end d-none">
-                                    <Tooltip
+                                    {/* <Tooltip
                                       title={this.props.t("Copy")}
                                       placement="top"
                                     >
@@ -894,24 +888,24 @@ class DistributingCoursesMethods extends Component {
                                       >
                                         <i className="mdi mdi-content-copy blue-noti-icon" />
                                       </IconButton>
-                                    </Tooltip>
-                                    {showAddButton && (
-                                      <Tooltip
-                                        title={this.props.t(
-                                          "Create Distributing Method"
-                                        )}
-                                        placement="top"
+                                    </Tooltip>*/}
+                                    {/* {showAddButton && ( */}
+                                    <Tooltip
+                                      title={this.props.t(
+                                        "Create Distributing Method"
+                                      )}
+                                      placement="top"
+                                    >
+                                      <IconButton
+                                        color="primary"
+                                        onClick={
+                                          this.handleAddDistributingMethodForm
+                                        }
                                       >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={
-                                            this.handleAddDistributingMethodForm
-                                          }
-                                        >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    )}
+                                        <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                      </IconButton>
+                                    </Tooltip>
+                                    {/* )} */}
                                   </div>
                                 </Col>
                               </Row>
@@ -1397,8 +1391,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(
       deleteDistributingCoursesMethodContent(distributingCoursesMethodContent)
     ),
-
-  onCopyDistributingMethods: () => dispatch(copyDistributingMethods()),
 });
 
 export default connect(

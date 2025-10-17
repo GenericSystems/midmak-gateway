@@ -163,12 +163,51 @@ function* fetchMethodsOffering() {
   }
 }
 
-function* fetchCoursesOffering(selectedpayload) {
-  let lang = selectedpayload.payload;
+//mays language
+// function* fetchCoursesOffering(selectedpayload) {
+//   let lang = selectedpayload.payload;
 
-  console.log("979898989898989898", lang);
+//   console.log("979898989898989898", lang);
 
-  const titleField = lang === "en" ? "enTitle" : "arTitle";
+//   const titleField = lang === "en" ? "enTitle" : "arTitle";
+//   const payload = {};
+
+//   payload["source"] = "db";
+//   payload["procedure"] = "SisApp_getData";
+//   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+//   payload["tablename"] = "_Common_CourseOffering";
+//   payload["filter"] = `isOffered = 1`;
+
+//   try {
+//     const response = yield call(getCoursesOffering, payload);
+//     console.log("QQQQQQQQQQQQQQQ", response);
+//     yield put(getCoursesOfferingSuccess(response));
+//   } catch (error) {
+//     yield put(getCoursesOfferingFail(error));
+//   }
+
+//   const get_years_req = {
+//     source: "db",
+//     procedure: "Generic_getOptions",
+//     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+//     tablename: "Settings_Years",
+//     fields: "Id,arTitle",
+//   };
+//   try {
+//     const response = yield call(getYears, get_years_req);
+//     console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", response);
+//     yield put(getYearsSuccess(response));
+//   } catch (error) {
+//     yield put(getYearsFail(error));
+//   }
+// }
+
+function* fetchCoursesOffering() {
+  // let lang = selectedpayload.payload;
+
+  // console.log("979898989898989898", lang);
+
+  // const titleField = lang === "en" ? "enTitle" : "arTitle";
   const payload = {};
 
   payload["source"] = "db";
@@ -179,7 +218,7 @@ function* fetchCoursesOffering(selectedpayload) {
 
   try {
     const response = yield call(getCoursesOffering, payload);
-    console.log("QQQQQQQQQQQQQQQ", response);
+    // console.log("QQQQQQQQQQQQQQQ", response);
     yield put(getCoursesOfferingSuccess(response));
   } catch (error) {
     yield put(getCoursesOfferingFail(error));
@@ -235,57 +274,80 @@ function* onAddNewCourseOffering({ payload, courseOffering }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_CourseOffering";
+  payload["queryname"] = "_Common_CourseOffering";
 
   try {
     const response = yield call(addNewCourseOffering, payload);
+    console.log("responseAdd", response);
     yield put(addCourseOfferingSuccess(response[0]));
+    // yield fetchAllCoursesOffering({
+    //   type: GET_ALL_COURSES_OFFERING,
+    //   // payload: {
+    //   //   courseId: obj["courseId"],
+    //   // },
+    // });
   } catch (error) {
     yield put(addCourseOfferingFail(error));
   }
 }
 
-function* onUpdateCourseOffering({ payload }) {
+// function* onUpdateCourseOffering({ payload }) {
+//   payload["source"] = "db";
+//   payload["procedure"] = "SisApp_updateData";
+//   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+//   payload["tablename"] = "Common_CourseOffering";
+//   try {
+//     const response = yield call(updateCourseOffering, payload);
+//     yield put(updateCourseOfferingSuccess(response[0]));
+//     if (payload.showAll == true) {
+//       yield fetchAllCoursesOffering({
+//         type: GET_ALL_COURSES_OFFERING,
+//       });
+//     } else {
+//       yield fetchCoursesOffering({
+//         type: GET_COURSES_OFFERING,
+//       });
+//     }
+//   } catch (error) {
+//     yield put(updateCourseOfferingFail(error));
+//   }
+// }
+
+// function* onDeleteCourseOffering({ payload, courseOffering }) {
+//   payload["source"] = "db";
+//   payload["procedure"] = "SisApp_removeData";
+//   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
+//   payload["tablename"] = "Common_CourseOffering";
+
+//   try {
+//     const respdelete = yield call(deleteCourseOffering, payload);
+//     yield put(deleteCourseOfferingSuccess(respdelete[0]));
+//     // if (payload.showAll == true) {
+//     //   yield fetchAllCoursesOffering({
+//     //     type: GET_ALL_COURSES_OFFERING,
+//     //     payload: payload.semester,
+//     //   });
+//     // } else {
+//     //   yield fetchCoursesOffering({
+//     //     type: GET_COURSES_OFFERING,
+//     //     payload: payload.semester,
+//     //   });
+//     // }
+//   } catch (error) {
+//     yield put(deleteCourseOfferingFail(error));
+//   }
+// }
+
+function* onDeleteCourseOffering({ payload }) {
+  console.log("payloadpayloadpayload", payload);
   payload["source"] = "db";
-  payload["procedure"] = "SisApp_updateData";
+  payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_CourseOffering";
-  try {
-    const response = yield call(updateCourseOffering, payload);
-    yield put(updateCourseOfferingSuccess(response[0]));
-    if (payload.showAll == true) {
-      yield fetchAllCoursesOffering({
-        type: GET_ALL_COURSES_OFFERING,
-      });
-    } else {
-      yield fetchCoursesOffering({
-        type: GET_COURSES_OFFERING,
-      });
-    }
-  } catch (error) {
-    yield put(updateCourseOfferingFail(error));
-  }
-}
-
-function* onDeleteCourseOffering({ payload, courseOffering }) {
-  payload.delId["source"] = "db";
-  payload.delId["procedure"] = "SisApp_removeData";
-  payload.delId["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload.delId["tablename"] = "Common_CourseOffering";
 
   try {
-    const respdelete = yield call(deleteCourseOffering, payload.delId);
+    const respdelete = yield call(deleteCourseOffering, payload);
     yield put(deleteCourseOfferingSuccess(respdelete[0]));
-    if (payload.showAll == true) {
-      yield fetchAllCoursesOffering({
-        type: GET_ALL_COURSES_OFFERING,
-        payload: payload.semester,
-      });
-    } else {
-      yield fetchCoursesOffering({
-        type: GET_COURSES_OFFERING,
-        payload: payload.semester,
-      });
-    }
   } catch (error) {
     yield put(deleteCourseOfferingFail(error));
   }
@@ -540,6 +602,7 @@ function* fetchSectionLabDetails(obj) {
   };
   try {
     const response = yield call(getSectionLabDetails, get_SectionLabDetail);
+    console.log("detailssssss", response);
 
     yield put(getSectionLabDetailsSuccess(response));
   } catch (error) {
@@ -568,10 +631,12 @@ function* onUpdateSectionLabDetail({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["queryname"] = "Common_TeachingSchedule";
+  payload["tablename"] = "Common_TeachingSchedule";
+  payload["queryname"] = "_scheduleTimingsDescription";
 
   try {
     const respupdate = yield call(updateSectionLabDetail, payload);
+    console.log("respoonseupadte", respupdate);
     yield put(updateSectionLabDetailSuccess(respupdate[0]));
   } catch (error) {
     yield put(updateSectionLabDetailFail(error));
@@ -650,7 +715,7 @@ function* classSchedulingSaga() {
   yield takeEvery(GET_COURSE_OFFERING_PROFILE, fetchCourseOfferingProfile);
   yield takeEvery(GET_METHODS_OF_OFFERING_COURSES, fetchMethodsOffering);
   yield takeEvery(ADD_NEW_COURSE_OFFERING, onAddNewCourseOffering);
-  yield takeEvery(UPDATE_COURSE_OFFERING, onUpdateCourseOffering);
+  // yield takeEvery(UPDATE_COURSE_OFFERING, onUpdateCourseOffering);
   yield takeEvery(DELETE_COURSE_OFFERING, onDeleteCourseOffering);
   yield takeEvery(GET_SECTION_LABS, fetchSectionLabs);
   yield takeEvery(GET_SECTION_LAB_PROFILE, fetchSectionLabProfile);

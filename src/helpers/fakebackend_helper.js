@@ -270,7 +270,7 @@ export const getTraineeDeletedValue = () => get(url.GET_TRAINEE_DELETED_VALUE);
 // get Trainee
 export const getTraineeById = data => post(url.GET_TRAINEE_BY_ID, data);
 
-// get sTrainee_regReqDocs
+// get Trainee_regReqDocs
 export const getTraineeRegReqDocs = data =>
   post(url.GET_TRAINEE_REGREQDOCS, data);
 
@@ -280,6 +280,25 @@ export const updateTraineeRegReqDoc = data =>
 
 // get Trainee Opt
 export const getTraineesOpt = data => post(url.GET_TRAINEES_OPT, data);
+
+// get RegTraineesAttendance
+export const getRegisterTraineesAttendance = data =>
+  post(url.GET_REGISTER_TRAINEES_ATTENDANCE, data);
+
+// add RegisterTraineeAttendance
+export const addNewRegisterTraineeAttendance = data =>
+  post(url.ADD_NEW_REGISTER_TRAINEE_ATTENDANCE, data);
+
+//update RegisterTraineeAttendance
+export const updateRegisterTraineeAttendance = data =>
+  post(url.UPDATE_REGISTER_TRAINEE_ATTENDANCE, data);
+
+//delete RegisterTraineeAttendance
+export const deleteRegisterTraineeAttendance = data =>
+  post(url.DELETE_REGISTER_TRAINEE_ATTENDANCE, data);
+
+export const getRegisterTraineeAttendanceDeletedValue = () =>
+  get(url.GET_REGISTER_TRAINEE_ATTENDANCE_DELETED_VALUE);
 
 // add brother
 export const addBrother = data => post(url.ADD_BROTHER, data);
@@ -350,22 +369,21 @@ export const updateCurrSemMan = data => post(url.UPDATE_CURR_SEM_MAN, data);
 //delete CurrSemMan
 export const deleteCurrSemMan = data => post(url.DELETE_CURR_SEM_MAN, data);
 
-// get NonActiveStdCurrs
-export const getNonActiveStdCurrs = data =>
-  post(url.GET_NON_ACTIVE_STD_CURRS, data);
-//update NonActiveStdCurr
-export const updateNonActiveStdCurr = data =>
-  post(url.UPDATE_NON_ACTIVE_STD_CURR, data);
+// get NonActiveCurrs
+export const getNonActiveCurrs = data => post(url.GET_NON_ACTIVE_CURRS, data);
+//update NonActiveCurr
+export const updateNonActiveCurr = data =>
+  post(url.UPDATE_NON_ACTIVE_CURR, data);
 
-export const deleteAllNonActiveStdCurr = data =>
-  post(url.DELETE_ALL_NON_ACTIVE_STD_CURR, data);
+export const deleteAllNonActiveCurr = data =>
+  post(url.DELETE_ALL_NON_ACTIVE_CURR, data);
 
-export const saveAllNonActiveStdCurr = data =>
-  post(url.SAVE_ALL_NON_ACTIVE_STD_CURR, data);
+export const saveAllNonActiveCurr = data =>
+  post(url.SAVE_ALL_NON_ACTIVE_CURR, data);
 
-//delete NonActiveStdCurr
-export const deleteNonActiveStdCurr = data =>
-  post(url.DELETE_NON_ACTIVE_STD_CURR, data);
+//delete NonActiveCurr
+export const deleteNonActiveCurr = data =>
+  post(url.DELETE_NON_ACTIVE_CURR, data);
 
 // get Registration
 export const getRegistrations = data => post(url.GET_REGISTRATIONS, data);
@@ -385,9 +403,9 @@ export const getAvailableCourses = data =>
 export const addNewAvailableCourse = data =>
   post(url.ADD_NEW_AVAILABLE_COURSE, data);
 
-// get TempStdSchedules
-export const getTempStdSchedules = data =>
-  post(url.GET_TEMP_STD_SCHEDULES, data);
+// get TraineeSchedules
+export const getTraineeSchedules = data =>
+  post(url.GET_TRAINEE_SCHEDULES, data);
 
 // get AchievedCourses
 export const getAchievedCourses = data => post(url.GET_ACHIEVED_COURSES, data);
@@ -467,6 +485,20 @@ export const updateExamRoom = data => post(url.UPDATE_EXAM_ROOM, data);
 //delete ExamRoom
 export const deleteExamRoom = data => post(url.DELETE_EXAM_ROOM, data);
 
+// get ExamObservers
+export const getExamObservers = data => post(url.GET_EXAM_OBSERVERS, data);
+
+//get ExamObservers profile
+export const getExamObserverProfile = () => get(url.GET_EXAM_OBSERVER_PROFILE);
+
+// add ExamObserver
+export const addNewExamObserver = data => post(url.ADD_NEW_EXAM_OBSERVER, data);
+
+//update ExamRoom
+export const updateExamObserver = data => post(url.UPDATE_EXAM_OBSERVER, data);
+
+//delete ExamRoom
+export const deleteExamObserver = data => post(url.DELETE_EXAM_OBSERVER, data);
 // get Sectors
 export const getSectors = data => post(url.GET_SECTORS, data);
 
@@ -816,32 +848,33 @@ export const updateGender = data => post(url.UPDATE_GENDER, data);
 export const deleteGender = data => post(url.DELETE_GENDER, data);
 
 export const getGenderDeletedValue = () => get(url.GET_GENDER_DELETED_VALUE);
-// get StudentsDecrees
 
-export const getUniversityStudentsDecrees = data =>
-  post(url.GET_UNIVERSITY_STUDENTS_DECREES, data);
+// get TraineesDecrees
+
+export const getAcademyTraineesDecrees = data =>
+  post(url.GET_ACADEMY_TRAINEES_DECREES, data);
 // get coursesDecrees
 
 export const getCoursesDecrees = data => post(url.GET_COURSES_DECREES, data);
 
-export const getStudentsDecrees = data => post(url.GET_STUDENTS_DECREES, data);
+export const getTraineesDecrees = data => post(url.GET_TRAINEES_DECREES, data);
 
-export const addNewStudentsDecree = data =>
-  post(url.ADD_NEW_STUDENTS_DECREES, data);
+export const addNewTraineeDecree = data =>
+  post(url.ADD_NEW_TRAINEE_DECREE, data);
 
-export const updateStudentsDecree = data =>
-  post(url.UPDATE_STUDENTS_DECREES, data);
+export const updateTraineeDecree = data =>
+  post(url.UPDATE_TRAINEE_DECREE, data);
 
-export const deleteStudentsDecree = data =>
-  post(url.DELETE_STUDENTS_DECREES, data);
+export const deleteTraineeDecree = data =>
+  post(url.DELETE_TRAINEE_DECREE, data);
 
-export const getStudentsDecreeDeletedValue = () =>
-  get(url.GET_STUDENTS_DECREES_DELETED_VALUE);
+export const getTraineeDecreeDeletedValue = () =>
+  get(url.GET_TRAINEE_DECREE_DELETED_VALUE);
 
 export const getDecreeStatus = data => post(url.GET_DECREE_STATUS, data);
 
-export const getStudentDecreesDismiss = data =>
-  post(url.GET_STUDENT_DECREES_DISMISS, data);
+export const getTraineeDecreesDismiss = data =>
+  post(url.GET_TRAINEE_DECREES_DISMISS, data);
 
 // get Decisions
 export const getDecisions = data => post(url.GET_DECISIONS, data);
@@ -855,61 +888,65 @@ export const deleteDecision = data => post(url.DELETE_DECISION, data);
 export const getDecisionDeletedValue = () =>
   get(url.GET_DECISION_DELETED_VALUE);
 
-export const getDecisionCategories = data =>
-  post(url.GET_DECISION_CATEGORIES, data);
-
 // get Decision Makers
 export const getDecisionMakers = data => post(url.GET_DECISION_MAKERS, data);
 
 // get Decision Status
 export const getDecisionStatus = data => post(url.GET_DECISION_STATUS, data);
 
+// getTurnReason
+export const getTurnReasons = data => post(url.GET_TURN_REASONS, data);
+
 // get DecisionsRulesCanceledReasons
-export const getDecisionsRulesCanceledReasons = data =>
-  post(url.GET_DECISIONS_RULES_CANCELED_REASONS, data);
+export const getDecreesRulesCanceledReasons = data =>
+  post(url.GET_DECREES_RULES_CANCELED_REASONS, data);
 
-export const addNewDecisionsRulesCanceledReason = data =>
-  post(url.ADD_NEW_DECISIONS_RULES_CANCELED_REASON, data);
+export const addNewDecreesRulesCanceledReason = data =>
+  post(url.ADD_NEW_DECREES_RULES_CANCELED_REASON, data);
 
-export const updateDecisionsRulesCanceledReason = data =>
-  post(url.UPDATE_DECISIONS_RULES_CANCELED_REASON, data);
+export const updateDecreesRulesCanceledReason = data =>
+  post(url.UPDATE_DECREES_RULES_CANCELED_REASON, data);
 
-export const deleteDecisionsRulesCanceledReason = data =>
-  post(url.DELETE_DECISIONS_RULES_CANCELED_REASON, data);
+export const deleteDecreesRulesCanceledReason = data =>
+  post(url.DELETE_DECREES_RULES_CANCELED_REASON, data);
 
-export const getDecisionsRulesCanceledReasonDeletedValue = () =>
-  get(url.GET_DECISIONS_RULES_CANCELED_REASON_DELETED_VALUE);
-// get DecisionsRulesReasons
-export const getDecisionsRulesReasons = data =>
-  post(url.GET_DECISIONS_RULES_REASONS, data);
+export const getDecreesRulesCanceledReasonDeletedValue = () =>
+  get(url.GET_DECREES_RULES_CANCELED_REASON_DELETED_VALUE);
 
-export const addNewDecisionsRulesReason = data =>
-  post(url.ADD_NEW_DECISIONS_RULES_REASON, data);
+export const getDecreeCategories = data =>
+  post(url.GET_DECREE_CATEGORIES, data);
 
-export const updateDecisionsRulesReason = data =>
-  post(url.UPDATE_DECISIONS_RULES_REASON, data);
+// get DecreesRulesReasons
+export const getDecreesRulesReasons = data =>
+  post(url.GET_DECREES_RULES_REASONS, data);
 
-export const deleteDecisionsRulesReason = data =>
-  post(url.DELETE_DECISIONS_RULES_REASON, data);
+export const addNewDecreesRulesReason = data =>
+  post(url.ADD_NEW_DECREES_RULES_REASON, data);
 
-export const getDecisionsRulesReasonDeletedValue = () =>
-  get(url.GET_DECISIONS_RULES_REASON_DELETED_VALUE);
+export const updateDecreesRulesReason = data =>
+  post(url.UPDATE_DECREES_RULES_REASON, data);
 
-// get DecisionsRulesRoles
-export const getDecisionsRulesRoles = data =>
-  post(url.GET_DECISIONS_RULES_ROLES, data);
+export const deleteDecreesRulesReason = data =>
+  post(url.DELETE_DECREES_RULES_REASON, data);
 
-export const addNewDecisionsRulesRole = data =>
-  post(url.ADD_NEW_DECISIONS_RULES_ROLE, data);
+export const getDecreesRulesReasonDeletedValue = () =>
+  get(url.GET_DECREES_RULES_REASON_DELETED_VALUE);
 
-export const updateDecisionsRulesRole = data =>
-  post(url.UPDATE_DECISIONS_RULES_ROLE, data);
+// get DecreesRulesRoles
+export const getDecreesRulesRoles = data =>
+  post(url.GET_DECREES_RULES_ROLES, data);
 
-export const deleteDecisionsRulesRole = data =>
-  post(url.DELETE_DECISIONS_RULES_ROLE, data);
+export const addNewDecreesRulesRole = data =>
+  post(url.ADD_NEW_DECREES_RULES_ROLE, data);
 
-export const getDecisionsRulesRoleDeletedValue = () =>
-  get(url.GET_DECISIONS_RULES_ROLE_DELETED_VALUE);
+export const updateDecreesRulesRole = data =>
+  post(url.UPDATE_DECREES_RULES_ROLE, data);
+
+export const deleteDecreesRulesRole = data =>
+  post(url.DELETE_DECREES_RULES_ROLE, data);
+
+export const getDecreesRulesRoleDeletedValue = () =>
+  get(url.GET_DECREES_RULES_ROLE_DELETED_VALUE);
 
 // get Grants
 export const getGrants = data => post(url.GET_GRANTS, data);
@@ -1850,9 +1887,9 @@ export const updateDistributingCoursesMethodsContent = data =>
 export const deleteDistributingCoursesMethodsContent = data =>
   post(url.DELETE_DISTRIBUTING_COURSES_METHOD_CONTENT, data);
 
-//copy Distributing Methods
-export const copyDistributingMethods = data =>
-  post(url.COPY_DISTRIBUTING_METHODS, data);
+//copy CourseDistributions
+export const copyCourseDistributions = data =>
+  post(url.COPY_DISTRIBUTING_COURSES, data);
 
 //  Distributing courses
 
@@ -2004,6 +2041,41 @@ export const updateContractType = data => post(url.UPDATE_CONTRACT_TYPE, data);
 //delete contractType
 export const deleteContractType = data => post(url.DELETE_CONTRACT_TYPE, data);
 
+//ABSENCE_TYPE
+export const getAbsencesTypes = data => post(url.GET_ABSENCES_TYPES, data);
+
+// add
+export const addNewAbsenceType = data => post(url.ADD_NEW_ABSENCE_TYPE, data);
+
+//ABSENCE_TYPE
+export const getAbsenceTypeDeletedValue = () =>
+  get(url.GET_ABSENCE_TYPE_DELETED_VALUE);
+
+//update
+export const updateAbsenceType = data => post(url.UPDATE_ABSENCE_TYPE, data);
+
+//delete
+export const deleteAbsenceType = data => post(url.DELETE_ABSENCE_TYPE, data);
+
+//ABSENCE_JUSTIFICATION
+export const getAbsencesJustifications = data =>
+  post(url.GET_ABSENCES_JUSTIFICATIONS, data);
+
+// add
+export const addNewAbsenceJustification = data =>
+  post(url.ADD_NEW_ABSENCE_JUSTIFICATION, data);
+
+export const getAbsenceJustificationDeletedValue = () =>
+  get(url.GET_ABSENCE_JUSTIFICATION_DELETED_VALUE);
+
+//update
+export const updateAbsenceJustification = data =>
+  post(url.UPDATE_ABSENCE_JUSTIFICATION, data);
+
+//delete
+export const deleteAbsenceJustification = data =>
+  post(url.DELETE_ABSENCE_JUSTIFICATION, data);
+
 //QUALIFICATION_TRACK
 export const getQualificationsTracks = data =>
   post(url.GET_QUALIFICATIONS_TRACKS, data);
@@ -2019,6 +2091,23 @@ export const updateQualificationTrack = data =>
 //DELETE
 export const deleteQualificationTrack = data =>
   post(url.DELETE_QUALIFICATION_TRACK, data);
+
+//ABSENCE_PERCENT
+export const getAbsencePercents = data => post(url.GET_ABSENCES_PERCENTS, data);
+
+// add
+export const addNewAbsencePercent = data =>
+  post(url.ADD_NEW_ABSENCE_PERCENT, data);
+export const getAbsencePercentDeletedValue = () =>
+  get(url.GET_ABSENCE_PERCENT_DELETED_VALUE);
+
+//update
+export const updateAbsencePercent = data =>
+  post(url.UPDATE_ABSENCE_PERCENT, data);
+
+//delete
+export const deleteAbsencePercent = data =>
+  post(url.DELETE_ABSENCE_PERCENT, data);
 
 //GRADE_VERSION
 export const getGradesVersions = data => post(url.GET_GRADES_VERSIONS, data);
@@ -2057,21 +2146,6 @@ export const getRanks = data => post(url.GET_RANKS, data);
 //statuses
 export const getFinishStatus = data => post(url.GET_FINISH_STATUS, data);
 
-//ABSENCE WARNINGS
-export const getAbsenceWarnings = data => post(url.GET_ABSENCE_WARNINGS, data);
-
-export const addNewAbsenceWarning = data =>
-  post(url.ADD_NEW_ABSENCE_WARNING, data);
-
-export const getAbsenceWarningDeletedValue = () =>
-  get(url.GET_ABSENCE_WARNING_DELETED_VALUE);
-
-export const updateAbsenceWarning = data =>
-  post(url.UPDATE_ABSENCE_WARNING, data);
-
-export const deleteAbsenceWarning = data =>
-  post(url.DELETE_ABSENCE_WARNING, data);
-
 // DOCUMENT_TYPE
 export const getDocumentsTypes = data => post(url.GET_DOCUMENTS_TYPES, data);
 
@@ -2084,6 +2158,24 @@ export const getDocumentTypeDeletedValue = () =>
 
 // update documentType
 export const updateDocumentType = data => post(url.UPDATE_DOCUMENT_TYPE, data);
+
+//hiddenGrade
+
+export const getHiddenGrades = data => post(url.GET_HIDDEN_GRADES, data);
+
+// add
+export const addNewHiddenGrade = data => post(url.ADD_NEW_HIDDEN_GRADE, data);
+
+// HIDDEN_GRADE
+export const getHiddenGradeDeletedValue = () =>
+  get(url.GET_HIDDEN_GRADE_DELETED_VALUE);
+
+// update
+export const updateHiddenGrade = data => post(url.UPDATE_HIDDEN_GRADE, data);
+//getHideReasons
+export const getHideReasons = data => post(url.GET_HIDE_REASONS, data);
+//delete
+export const deleteHiddenGrade = data => post(url.DELETE_HIDDEN_GRADE, data);
 
 //EMPLOYMENT_CASE
 export const getEmploymentCases = data => post(url.GET_EMPLOYMENT_CASES, data);
@@ -2191,6 +2283,113 @@ export const updateContract = data => post(url.UPDATE_CONTRACT, data);
 
 //delete Contract
 export const deleteContract = data => post(url.DELETE_CONTRACT, data);
+
+//MARK_OBJECTION
+export const getMarksObjections = data => post(url.GET_MARKS_OBJECTIONS, data);
+
+// add MarkObjections
+
+export const addNewMarkObjection = data =>
+  post(url.ADD_NEW_MARK_OBJECTION, data);
+
+//MARK_OBJECTION
+export const getMarkObjectionDeletedValue = () =>
+  get(url.GET_MARK_OBJECTION_DELETED_VALUE);
+
+//update MarkObjections
+export const updateMarkObjection = data =>
+  post(url.UPDATE_MARK_OBJECTION, data);
+
+//delete MarkObjections
+export const deleteMarkObjection = data =>
+  post(url.DELETE_MARK_OBJECTION, data);
+
+//request status
+export const getRequestStatus = data => post(url.GET_REQUEST_STATUS, data);
+
+//JustifyTraineeAbsence
+
+export const getJustifyTraineesAbsence = data =>
+  post(url.GET_JUSTIFY_TRAINEES_ABSENCE, data);
+
+// add JustifyTraineeAbsence
+
+export const addNewJustifyTraineeAbsence = data =>
+  post(url.ADD_NEW_JUSTIFY_TRAINEE_ABSENCE, data);
+
+//JUSTIFY_TRAINEE_ABSENCE
+export const getJustifyTraineeAbsenceDeletedValue = () =>
+  get(url.GET_JUSTIFY_TRAINEE_ABSENCE_DELETED_VALUE);
+
+//update JustifyTraineeAbsence
+export const updateJustifyTraineeAbsence = data =>
+  post(url.UPDATE_JUSTIFY_TRAINEE_ABSENCE, data);
+
+//delete JustifyTraineeAbsence
+export const deleteJustifyTraineeAbsence = data =>
+  post(url.DELETE_JUSTIFY_TRAINEE_ABSENCE, data);
+
+//attend status
+export const getAttendStatus = data => post(url.GET_ATTEND_STATUS, data);
+
+//ExamAttendance
+export const getExamsAttendance = data => post(url.GET_EXAMS_ATTENDANCE, data);
+
+// add ExamAttendance
+
+export const addNewExamAttendance = data =>
+  post(url.ADD_NEW_EXAM_ATTENDANCE, data);
+
+//ExamAttendance
+export const getExamAttendanceDeletedValue = () =>
+  get(url.GET_EXAM_ATTENDANCE_DELETED_VALUE);
+
+//update ExamAttendance
+export const updateExamAttendance = data =>
+  post(url.UPDATE_EXAM_ATTENDANCE, data);
+
+//delete ExamAttendance
+export const deleteExamAttendance = data =>
+  post(url.DELETE_EXAM_ATTENDANCE, data);
+
+//ExamAttendanceObserver
+export const getExamAttendanceObservers = data =>
+  post(url.GET_EXAM_ATTENDANCE_OBSERVERS, data);
+
+// add ExamAttendanceObserver
+
+export const addNewExamAttendanceObserver = data =>
+  post(url.ADD_NEW_EXAM_ATTENDANCE_OBSERVER, data);
+
+//ExamAttendanceObserver
+export const getExamAttendanceObserverDeletedValue = () =>
+  get(url.GET_EXAM_ATTENDANCE_OBSERVER_DELETED_VALUE);
+
+//update ExamAttendanceObserver
+export const updateExamAttendanceObserver = data =>
+  post(url.UPDATE_EXAM_ATTENDANCE_OBSERVER, data);
+
+//delete ExamAttendanceObserver
+export const deleteExamAttendanceObserver = data =>
+  post(url.DELETE_EXAM_ATTENDANCE_OBSERVER, data);
+
+//HallSchedule
+export const getHallSchedules = data => post(url.GET_HALL_SCHEDULES, data);
+
+// add HallSchedule
+
+export const addNewHallSchedule = data => post(url.ADD_NEW_HALL_SCHEDULE, data);
+
+//HallSchedule
+export const getHallScheduleDeletedValue = () =>
+  get(url.GET_HALL_SCHEDULE_DELETED_VALUE);
+
+//update HallSchedule
+export const updateHallSchedule = data => post(url.UPDATE_HALL_SCHEDULE, data);
+
+//delete HallSchedule
+export const deleteHallSchedule = data => post(url.DELETE_HALL_SCHEDULE, data);
+
 //DefineExamDate
 export const getDefineExamDates = data => post(url.GET_DEFINE_EXAM_DATES, data);
 
@@ -2278,6 +2477,21 @@ export const updateDecisionType = data => post(url.UPDATE_DECISION_TYPE, data);
 
 //delete DecisionType
 export const deleteDecisionType = data => post(url.DELETE_DECISION_TYPE, data);
+
+//DECREE
+export const getDecrees = data => post(url.GET_DECREES, data);
+
+// add Decree
+export const addNewDecree = data => post(url.ADD_NEW_DECREE, data);
+
+//Decree
+export const getDecreeDeletedValue = () => get(url.GET_DECREE_DELETED_VALUE);
+
+//update Decree
+export const updateDecree = data => post(url.UPDATE_DECREE, data);
+
+//delete Decree
+export const deleteDecree = data => post(url.DELETE_DECREE, data);
 
 //TempTrainee
 export const getTempTrainees = data => post(url.GET_TEMP_TRAINEES, data);
@@ -2405,6 +2619,8 @@ export const getCertificateGradeDeletedValue = () =>
 //CheckedGrade
 export const updateCheckedGrade = data => post(url.UPDATE_CHECKED_GRADE, data);
 export const getCheckedGrades = data => post(url.GET_CHECKED_GRADES, data);
+export const importCheckedGrades = data =>
+  post(url.IMPORT_CHECKED_GRADES, data);
 
 //archived_grades
 

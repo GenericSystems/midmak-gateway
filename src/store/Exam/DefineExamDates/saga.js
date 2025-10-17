@@ -41,6 +41,11 @@ import {
 } from "./actions";
 
 import {
+  getCoursesOfferingSuccess,
+  getCoursesOfferingFail,
+} from "../../classScheduling/actions";
+
+import {
   getGradeTypesSuccess,
   getGradeTypesFail,
 } from "../../grade-types/actions";
@@ -59,6 +64,7 @@ import {
   addNewDefinePeriod,
   updateDefinePeriod,
   deleteDefinePeriod,
+  getCoursesOffering,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchDefineExamDates(selectedpayload) {
@@ -97,7 +103,7 @@ function* fetchDefineExamDates(selectedpayload) {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_GradeType",
+    tablename: "Settings_CourseContents",
     fields: "Id,arTitle",
   };
 
@@ -107,6 +113,22 @@ function* fetchDefineExamDates(selectedpayload) {
     yield put(getGradeTypesSuccess(response));
   } catch (error) {
     yield put(getGradeTypesFail(error));
+  }
+
+  const get_Course_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_CourseOffering",
+    filter: `isOffered = 1`,
+    fields: "Id,arTitle,Code",
+  };
+  try {
+    const response = yield call(getCoursesOffering, get_Course_req);
+    console.log("11111111111", response);
+    yield put(getCoursesOfferingSuccess(response));
+  } catch (error) {
+    yield put(getCoursesOfferingFail(error));
   }
 }
 
@@ -148,9 +170,9 @@ function* onAddNewDefineExamDate({ payload }) {
   try {
     const response = yield call(addNewDefineExamDate, payload);
     console.log("اااااااااااااااااااااااااااااااا", response);
-    response.map(resp => {
-      resp["allDays"] = JSON.parse(resp["allDays"]);
-    });
+    // response.map(resp => {
+    //   resp["allDays"] = JSON.parse(resp["allDays"]);
+    // });
     yield put(addDefineExamDateSuccess(response[0]));
   } catch (error) {
     yield put(addDefineExamDateFail(error));

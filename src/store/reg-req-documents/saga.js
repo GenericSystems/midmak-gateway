@@ -131,7 +131,7 @@ function* fetchRegReqDocSettings() {
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "AdmissionSettings_RegisterUnderCertificates",
     fields: "Id,arTitle",
-    filter: "checkLevel = 1",
+    // filter: "checkLevel = 1",
   };
 
   try {
@@ -179,7 +179,7 @@ function* onAddNewRegReqDocument({ payload, regReqDocument }) {
   payload["tablename"] = "Settings_RequiredRegistrationDocuments";
   try {
     const response = yield call(addNewRegReqDocument, payload);
-    console.log("payload", payload);
+    console.log("response", response);
     yield put(addRegReqDocumentSuccess(response[0]));
   } catch (error) {
     yield put(addRegReqDocumentFail(error));

@@ -258,6 +258,25 @@ class NewTrainee extends Component {
     }
   };
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (
+      prevProps.tempTrainees !== this.props.tempTrainees &&
+      this.props.tempTrainees.length > 0
+    ) {
+      const lastItem =
+        this.props.tempTrainees[this.props.tempTrainees.length - 1];
+      if (lastItem.RegReqDocTempTrainee) {
+        try {
+          // const stdDocsArray = JSON.parse(lastItem.RegReqDocTempTrainee);
+          const stdDocsArray = lastItem.RegReqDocTempTrainee;
+          this.setState({ stdDocsArray });
+        } catch (e) {
+          console.error("Error parsing RegReqDocTempTrainee JSON", e);
+        }
+      }
+    }
+  }
+
   collapse = () => {
     this.setState(prevState => ({
       isOpen: !prevState.isOpen,
@@ -383,7 +402,7 @@ class NewTrainee extends Component {
         this.setState({ identityNoError: true, saveError: true });
       }
       const errorSaveTempTraineeMessage = this.props.t(
-        "Fill the Required Fields to Save TempTrainee"
+        "Fill the Required Fields to Save Trainee"
       );
       this.setState({ errorMessage: errorSaveTempTraineeMessage }, () => {
         window.scrollTo(0, 0);
@@ -438,6 +457,7 @@ class NewTrainee extends Component {
         diplomalevels,
         currentSemester,
         governorates,
+        tempTrainees,
       } = this.props;
 
       if (values.diplomaId) {
@@ -555,17 +575,43 @@ class NewTrainee extends Component {
         traineeinfo["Average"] = averageValue;
       }
 
+      const isDuplicateNationalNo = tempTrainees.some(
+        trainee =>
+          trainee.nationalNo &&
+          trainee.nationalNo.trim() === values.nationalNo.trim()
+      );
+
+      if (isDuplicateNationalNo) {
+        const duplicateErrorMessage = this.props.t(
+          "New Trainee already exists"
+        );
+        this.setState({
+          errorMessage: duplicateErrorMessage,
+          nationalNoError: true,
+          saveError: true,
+        });
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      const successSavedMessage = this.props.t(
+        "New Trainee saved successfully"
+      );
+      this.setState({
+        successMessage: successSavedMessage,
+        isTempTraineeSaved: true,
+        nationalNoError: false,
+        saveError: false,
+      });
+
       const response = onAddNewTempTrainee(traineeinfo);
       if (response?.Id) {
         this.setState({ tempTraineeId: response.Id });
       }
-      const saveTempTraineeMessage = this.props.t(
-        "TempTrainee saved successfully"
-      );
-      this.setState({
-        successMessage: saveTempTraineeMessage,
-        isTempTraineeSaved: true,
-      });
+      if (response?.RegReqDocTempTrainee) {
+        const parsedDoc = JSON.parse(response.RegReqDocTempTrainee);
+        this.setState({ stdDocsArray: parsedDoc });
+      }
     }
   };
 
@@ -623,12 +669,12 @@ class NewTrainee extends Component {
       });
     }
 
-    if (tab == 5) {
-      const { tempTraineesDocuments, onGetTempTraineesDocuments } = this.props;
-      this.setState({
-        stdDocsArray: tempTraineesDocuments,
-      });
-    }
+    // if (tab == 5) {
+    //   const { tempTraineesDocuments, onGetTempTraineesDocuments } = this.props;
+    //   this.setState({
+    //     stdDocsArray: tempTraineesDocuments,
+    //   });
+    // }
   }
 
   toggleTabVertical(tab) {
@@ -658,7 +704,7 @@ class NewTrainee extends Component {
     const { onGetTempTraineesDocuments } = this.props;
     let obj = { certificateLevelId: option };
     console.log("objobjobj", obj);
-    onGetTempTraineesDocuments(obj);
+    // onGetTempTraineesDocuments(obj);
     if (fieldName == "registrationCertLevelId") {
       this.setState({ selectedregistrationCertLevelId: option });
       this.setState({ trainee: values });
@@ -754,7 +800,7 @@ class NewTrainee extends Component {
       selectedTempTraineeId,
     } = this.state;
     const emptyRowsExist = profExperiencesArray.some(
-      profExperiences => profExperiences.workType.trim() === ""
+      profExperiences => profExperiences.jobTitle.trim() === ""
     );
     console.log("emptyRowsExist", emptyRowsExist);
     if (emptyRowsExist) {
@@ -764,11 +810,11 @@ class NewTrainee extends Component {
       const newExperience = {
         Id: lastUsedExperienceId,
         tempTraineeId: lastAddedId,
-        workType: "",
-        companyName: "",
+        jobTitle: "",
         workPlace: "",
+        workAddress: "",
         workField: "",
-        duaration: "",
+        workDuration: "",
       };
       //onAddNewProfessionalExperience(newExperience);
       this.setState({
@@ -784,7 +830,7 @@ class NewTrainee extends Component {
   //   const isDuplicate = trnProfExperiences.some(trnProfExperience => {
   //     return (
   //       trnProfExperience.Id !== rowId &&
-  //       trnProfExperience.workType.trim() === fieldValue.trim()
+  //       trnProfExperience.jobTitle.trim() === fieldValue.trim()
   //     );
   //   });
 
@@ -1192,17 +1238,19 @@ class NewTrainee extends Component {
     const { stdDocsArray } = this.state;
     console.log("values in save", values);
     values["tempTraineeId"] = lastAddedId;
-    values["isAdd"] = 1;
     console.log(lastAddedId);
     let traineeinfo = {};
     const extractedArray = stdDocsArray.map(item => ({
-      regReqDocId: item.Id,
+      Id: item.Id,
+      regReqDocId: item.regReqDocId,
       availableNumber: item.availableNumber,
     }));
     console.log("extractedArray", extractedArray);
-    traineeinfo["stdDocs"] = extractedArray;
+    (traineeinfo["procedure"] = "Admission_UpdateDocsTrainee"),
+      (traineeinfo["tablename"] = "Common_RegReqDocTempTrainee"),
+      (traineeinfo["queryname"] = "_Common_TempTrainee"),
+      (traineeinfo["stdDocs"] = extractedArray);
     traineeinfo["tempTraineeId"] = lastAddedId;
-    traineeinfo["isAdd"] = 1;
     console.log("traineeinfo", traineeinfo);
     onAddRequiredDocs(traineeinfo);
   };
@@ -1216,16 +1264,15 @@ class NewTrainee extends Component {
     let traineeinfo = {};
     const extractedArray = profExperiencesArray.map(item => ({
       Id: item.Id,
-      workType: item.workType,
-      companyName: item.companyName,
+      jobTitle: item.jobTitle,
       workPlace: item.workPlace,
+      workAddress: item.workAddress,
       workField: item.workField,
-      duaration: item.duaration,
+      workDuration: item.workDuration,
     }));
     console.log("extractedArray", extractedArray);
-    (traineeinfo[" procedure"] = "SisApp_UpdateTempTraineeInfo"),
-      (traineeinfo[" tablename"] =
-        "Common_TempTraineesProfessionalExperiences"),
+    (traineeinfo["procedure"] = "SisApp_UpdateTempTraineeInfo"),
+      (traineeinfo["tablename"] = "Common_TempTraineesProfessionalExperiences"),
       (traineeinfo["queryname"] = "Common_TempTraineesProfessionalExperiences"),
       (traineeinfo["ProfessionalExperiences"] = extractedArray);
     traineeinfo["tempTraineeId"] = lastAddedId;
@@ -1251,7 +1298,6 @@ class NewTrainee extends Component {
       duplicateError,
       duplicateErrorRelative,
       diplomaIdError,
-      studentListColumns,
       duplicateErrorProfExperiences,
       selectedRegistrationDate,
       selectedregistrationCertLevelId,
@@ -1370,6 +1416,7 @@ class NewTrainee extends Component {
     const { isEdit, deleteModal, generateModal } = this.state;
 
     const trainee = this.state.trainee;
+    console.log("std", stdDocsArray);
     const alertMessage =
       deleted == 0
         ? this.props.t("Can't Delete")
@@ -1602,76 +1649,13 @@ class NewTrainee extends Component {
       },
     ];
 
-    const ParentsColumns = [
-      { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "arName", text: t("Name(ar)"), sort: true },
-      { dataField: "enName", text: t("Name(en)"), sort: true },
-      {
-        dataField: "relativeId",
-        text: t("Relatives"),
-        formatter: (cell, row) => (
-          <Select
-            key={`relative_Id`}
-            options={relatives}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "relativeId",
-                newValue.value
-              );
-            }}
-            value={relatives.find(opt => opt.value == row.relativeId)}
-          />
-        ),
-        editable: false,
-      },
-
-      {
-        dataField: "nationalityId",
-        text: t("Nationality"),
-        formatter: (cell, row) => (
-          <Select
-            key={`nationality_Id`}
-            options={nationalities}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "nationalityId",
-                newValue.value
-              );
-            }}
-            defaultValue={nationalities.find(
-              opt => opt.value == row.nationalityId
-            )}
-          />
-        ),
-        editable: false,
-      },
-      { dataField: "phone", text: t("Phone Number") },
-      { dataField: "cellular", text: t("Cellular Number") },
-      {
-        dataField: "delete",
-        text: "",
-        isDummyField: true,
-        editable: false,
-        formatter: (cellContent, relative) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.deleteRelative(relative)}
-            ></i>
-          </Link>
-        ),
-      },
-    ];
     const trnProfExperienceColumns = [
       { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "workType", text: t("Work Type"), sort: true },
-      { dataField: "companyName", text: t("Company Name"), sort: true },
+      { dataField: "jobTitle", text: t("Job Title"), sort: true },
       { dataField: "workPlace", text: t("Work Place"), sort: true },
+      { dataField: "workAddress", text: t("Work Address"), sort: true },
       { dataField: "workField", text: t("Work Field"), sort: true },
-      { dataField: "duaration", text: t("Duration"), sort: true },
+      { dataField: "workDuration", text: t("Work Duration"), sort: true },
       {
         dataField: "uploadFile",
         id: 8,
@@ -1933,10 +1917,10 @@ class NewTrainee extends Component {
                                 RegUniDate:
                                   (trainee && trainee.RegUniDate) ||
                                   selectedRegUniDate,
-                                // workType: (trainee && trainee.workType) || "",
-                                // companyName:
-                                //   (trainee && trainee.companyName) || "",
-                                // workPlace: (trainee && trainee.workPlace) || "",
+                                // jobTitle: (trainee && trainee.jobTitle) || "",
+                                // workPlace:
+                                //   (trainee && trainee.workPlace) || "",
+                                // workAddress: (trainee && trainee.workAddress) || "",
                                 // workField: (trainee && trainee.workField) || "",
                                 // Duration: (trainee && trainee.Duration) || "",
                               }}
@@ -3385,10 +3369,12 @@ class NewTrainee extends Component {
                                                                   type="text"
                                                                   name="UnivCountryId"
                                                                   className={`form-control }`}
+                                                                  placeholder="Type to search..."
                                                                   list="univCountryDatalistOptions"
                                                                   value={
                                                                     values.UnivCountryId
                                                                   }
+                                                                  autoComplete="off"
                                                                   onChange={event => {
                                                                     setFieldValue(
                                                                       "UnivCountryId",
@@ -3703,10 +3689,12 @@ class NewTrainee extends Component {
                                                                   type="text"
                                                                   name="InstituteCountryId"
                                                                   className={`form-control }`}
+                                                                  placeholder="Type to search..."
                                                                   list="InstituteCountryIdDatalistOptions"
                                                                   value={
                                                                     values.InstituteCountryId
                                                                   }
+                                                                  autoComplete="off"
                                                                   onChange={event => {
                                                                     const selectedInstituteCountry =
                                                                       event
@@ -3901,10 +3889,12 @@ class NewTrainee extends Component {
                                                                   type="text"
                                                                   name="UnivCountryId"
                                                                   className={`form-control }`}
+                                                                  placeholder="Type to search..."
                                                                   list="univCountryDatalistOptions"
                                                                   value={
                                                                     values.UnivCountryId
                                                                   }
+                                                                  autoComplete="off"
                                                                   onChange={event => {
                                                                     setFieldValue(
                                                                       "UnivCountryId",
@@ -4129,6 +4119,7 @@ class NewTrainee extends Component {
                                                                       "diplomaId"
                                                                     )
                                                                   }
+                                                                  autoComplete="off"
                                                                   onFocus={() =>
                                                                     this.handleInputFocus(
                                                                       "diplomaId"
@@ -4201,9 +4192,11 @@ class NewTrainee extends Component {
                                                                     "form-control"
                                                                   }
                                                                   list="CountrydatalistOptions"
+                                                                  placeholder="Type to search..."
                                                                   value={
                                                                     values.DiplomaCountryId
                                                                   }
+                                                                  autoComplete="off"
                                                                   // onChange={event => {
                                                                   //   const selectedCountry =
                                                                   //     event
@@ -4259,12 +4252,14 @@ class NewTrainee extends Component {
                                                               <Col className="col-8">
                                                                 <Field
                                                                   type="text"
+                                                                  placeholder="Type to search..."
                                                                   name="DiplomaGovernorateId"
                                                                   className={`form-control }`}
                                                                   list="GovernoratedatalistOptions"
                                                                   value={
                                                                     values.DiplomaGovernorateId
                                                                   }
+                                                                  autoComplete="off"
                                                                   onChange={event => {
                                                                     setFieldValue(
                                                                       "DiplomaGovernorateId",
@@ -5151,18 +5146,20 @@ class NewTrainee extends Component {
                                                                   )}
                                                                   placement="top"
                                                                 >
-                                                                  <IconButton
-                                                                    color="primary"
-                                                                    onClick={
-                                                                      this
-                                                                        .handelAddExperience
-                                                                    }
-                                                                    disabled={
-                                                                      !lastAddedId
-                                                                    }
-                                                                  >
-                                                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                                                  </IconButton>
+                                                                  <span>
+                                                                    <IconButton
+                                                                      color="primary"
+                                                                      onClick={
+                                                                        this
+                                                                          .handelAddExperience
+                                                                      }
+                                                                      disabled={
+                                                                        !lastAddedId
+                                                                      }
+                                                                    >
+                                                                      <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                                    </IconButton>
+                                                                  </span>
                                                                 </Tooltip>
                                                               </div>
                                                             </Col>

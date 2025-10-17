@@ -10,6 +10,7 @@ import {
   Input,
   Label,
 } from "reactstrap";
+import Tooltip from "@mui/material/Tooltip";
 import { Dropdown, DropdownToggle, DropdownMenu } from "reactstrap";
 import Select from "react-select";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -29,6 +30,7 @@ import Accordion from "react-bootstrap/Accordion";
 import {
   getCheckedGrades,
   updateCheckedGrade,
+  importCheckedGrades,
 } from "store/checkGrades/actions";
 import { getFilteredSections } from "store/classScheduling/actions";
 import { getCoursesOpt } from "store/courses/actions";
@@ -48,10 +50,14 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
+import checkedGradesSaga from "store/checkGrades/saga";
+import checked_grades from "store/checkGrades/reducer";
 class CheckGradesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      checked_grades: {},
+      checked_grade: "",
       selectedRowId: null,
       selectedView: "",
       selectedSection: "",
@@ -66,6 +72,7 @@ class CheckGradesList extends Component {
       showSearchButton: false,
       showEditButton: false,
       selectedCourseId: null,
+      isFirstSelect: true,
     };
     this.handleGradeDataChange = this.handleGradeDataChange.bind(this);
   }
@@ -229,8 +236,11 @@ class CheckGradesList extends Component {
   };
 
   handleGradeDataChange = (row, dataField, fieldValue) => {
-    const { onUpdateCheckedGrade, checked_grades, courseContentsEnteredGrades } =
-      this.props;
+    const {
+      onUpdateCheckedGrade,
+      checked_grades,
+      courseContentsEnteredGrades,
+    } = this.props;
 
     if (!dataField) {
       console.error("dataField is undefined");
@@ -280,7 +290,7 @@ class CheckGradesList extends Component {
             if (fieldValue == "") {
               const updateData = {
                 Id: row.Id,
-                studentId: row.studentId,
+                // traineeId: row.traineeId,
                 [FieldToUpdate]: null,
               };
               updateData["examType"] = `${FieldToUpdate}`;
@@ -288,7 +298,7 @@ class CheckGradesList extends Component {
             } else {
               const updateData = {
                 Id: row.Id,
-                studentId: row.studentId,
+                // traineeId: row.traineeId,
                 [FieldToUpdate]: fieldValue,
               };
               updateData["examType"] = `${FieldToUpdate}`;
@@ -312,6 +322,94 @@ class CheckGradesList extends Component {
       sidebarOpen: !prevState.sidebarOpen,
     }));
   }
+
+  handleImport = () => {
+    const { onImportCheckedGrades } = this.props;
+    const { selectedSection, selectedCourseId, selectedCourseCode } =
+      this.state;
+
+    if (!selectedCourseId) {
+      alert("Please select a course first");
+      return;
+    }
+
+    const obj = {
+      courseId: selectedCourseId,
+      // CourseCode: selectedCourseCode,
+      // SectionNumber: selectedSection,
+      // active: 1,
+    };
+
+    // obj[
+    //   "filter"
+    // ] = `courseId = ${obj.courseId} and code = ''''${obj.CourseCode}'''' and active = ${obj.active}`;
+
+    onImportCheckedGrades(obj);
+  };
+
+  //if we want condition to first select
+  // handleSelectCourse = (fieldName, selectedValue) => {
+  //   const {
+  //     coursesOpt,
+  //     onGetFilteredSections,
+  //     onGetCheckedGrades,
+  //     onGetCourseContentsGrades,
+  //   } = this.props;
+
+  //   if (!selectedValue) return;
+
+  //   const courseobj = coursesOpt.find(
+  //     courseOpt =>
+  //       `${courseOpt.value} ${courseOpt.courseName}` === selectedValue
+  //   );
+
+  //   if (!courseobj) return;
+
+  //   const isFirst = this.state.isFirstSelect;
+
+  //   // تحديث الـ state
+  //   this.setState(
+  //     {
+  //       selectedCourse: selectedValue,
+  //       selectedCourseId: courseobj.key,
+  //       selectedCourseCode: courseobj.value,
+  //       selectedSection: 0,
+  //       isFirstSelect: false,
+  //     },
+  //     () => {
+
+  //       if (!isFirst) {
+  //         const objFilteredSections = {
+  //           courseId: courseobj.key,
+  //           CourseCode: courseobj.value,
+  //         };
+  //         const objCheckedGrades = {
+  //           courseId: courseobj.key,
+  //           CourseCode: courseobj.value,
+  //           active: 1,
+  //           filter: `courseId = ${courseobj.key} and code = ''''${courseobj.value}'''' and active = 1`,
+  //         };
+  //         const objCourseContents = { courseId: courseobj.key };
+
+  //         onGetFilteredSections(objFilteredSections);
+  //         onGetCheckedGrades(objCheckedGrades);
+  //         onGetCourseContentsGrades(objCourseContents);
+  //       }
+  //     }
+  //   );
+  // };
+
+  handleImport = () => {
+    const { onImportCheckedGrades } = this.props;
+    const { selectedCourseId } = this.state;
+
+    if (!selectedCourseId) {
+      alert("Please select a course first");
+      return;
+    }
+
+    onImportCheckedGrades({ courseId: selectedCourseId });
+  };
 
   render() {
     const {
@@ -350,31 +448,18 @@ class CheckGradesList extends Component {
       return isUpdated ? "warning-cell" : "";
     };
 
-    const generateColumns = updatedCells => {
-      if (courseContentsEnteredGrades.length !== 0) {
+    const generateColumns = () => {
+      if (courseContentsEnteredGrades.length != 0) {
         const columns = courseContentsEnteredGrades.map(column => ({
           key: column.orderContent,
           dataField: column.dataField,
           text: column.textField,
-          editable: showEditButton
-            ? column.dataField !== "studentId" &&
-              column.dataField !== "studentName" &&
-              column.dataField !== "totalGrade" &&
-              column.dataField !== "letter_grade"
-            : false,
-
-          classes: (cell, row, rowIndex, colIndex) => {
-            const grade = checked_grades.find(grade => grade.Id === row.Id);
-            const isIdenticalZero = grade && grade.identical === 0;
-
-            const isUpdated = updatedCells.some(
-              updatedCell =>
-                updatedCell.rowId === row.Id &&
-                updatedCell.dataField === column.dataField
-            );
-
-            return isIdenticalZero && isUpdated ? "warning-cell" : "";
-          },
+          editable: ![
+            "TraineeNum",
+            "traineeName",
+            "totalGrade",
+            "letter_grade",
+          ].includes(column.dataField),
         }));
 
         return columns;
@@ -385,7 +470,7 @@ class CheckGradesList extends Component {
       }
     };
 
-    const selectedCourseColumns = generateColumns(updatedCells);
+    const selectedCourseColumns = generateColumns();
 
     const generateData = () => {
       let mappedDataArray = [];
@@ -398,8 +483,8 @@ class CheckGradesList extends Component {
 
           const mappedData = {
             Id: grade.Id || "",
-            studentId: grade.studentId || "",
-            studentName: grade.studentName || "",
+            TraineeNum: grade.TraineeNum || "",
+            traineeName: grade.traineeName || "",
             totalGrade: grade.totalGrade || "",
             letter_grade: grade.letter_grade || "",
           };
@@ -423,8 +508,8 @@ class CheckGradesList extends Component {
       } else {
         mappedDataArray.push({
           Id: "",
-          studentId: "",
-          studentName: "",
+          TraineeNum: "",
+          traineeName: "",
           Total: "",
           Letter: "",
         });
@@ -449,7 +534,7 @@ class CheckGradesList extends Component {
           <div className="container-fluid">
             <Breadcrumbs
               title={t("Grades")}
-              breadcrumbItem={t("Enter Grades")}
+              breadcrumbItem={t("Check Grades")}
             />
 
             <Card>
@@ -459,14 +544,14 @@ class CheckGradesList extends Component {
                     <Col lg="3">
                       <Card>
                         <CardTitle id="course_header">
-                          {t("Search for the course student")}
+                          {t("Search for the course")}
                         </CardTitle>
                         <CardBody>
                           <div className="mb-3">
                             <Row>
                               <Col lg="4">
                                 <Label className="form-label">
-                                  {t("Course name")}
+                                  {t("Course Name")}
                                 </Label>
                               </Col>
                               <Col lg="8">
@@ -551,7 +636,7 @@ class CheckGradesList extends Component {
                                       className="btn btn-outline-primary smallButton  w-sm "
                                       htmlFor="btnradio6"
                                     >
-                                      {this.props.t("Not Entered")}
+                                      {this.props.t("Not Checked")}
                                     </label>
                                   </div>
                                 </div>
@@ -588,6 +673,19 @@ class CheckGradesList extends Component {
                                 />
                               </Col>
                             </Row>
+                          </div>
+                          <div className="text-sm-end">
+                            <Tooltip
+                              title={this.props.t("Import")}
+                              placement="top"
+                            >
+                              <IconButton
+                                color="primary"
+                                onClick={this.handleImport}
+                              >
+                                <i className="bx bx-upload blue-noti-icon fs-1 mx-2" />
+                              </IconButton>
+                            </Tooltip>
                           </div>
                         </CardBody>
                       </Card>
@@ -667,7 +765,7 @@ class CheckGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Number of Students"
+                                                      "Number of Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon ">
@@ -679,7 +777,7 @@ class CheckGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Successful Students"
+                                                      "Successful Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon">
@@ -691,7 +789,7 @@ class CheckGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Failed Students"
+                                                      "Failed Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon">
@@ -703,7 +801,7 @@ class CheckGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Applicant Students"
+                                                      "Applicant Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon">
@@ -756,7 +854,7 @@ class CheckGradesList extends Component {
                                       data={selectedCourseData}
                                       columns={selectedCourseColumns}
                                       cellEdit={cellEditFactory({
-                                        mode: "click",
+                                        mode: "dbclick",
                                         blurToSave: true,
                                         afterSaveCell: (
                                           oldValue,
@@ -816,6 +914,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   onGetCheckedGrades: course => dispatch(getCheckedGrades(course)),
+  onImportCheckedGrades: course => dispatch(importCheckedGrades(course)),
   onGetCourseContentsGrades: courseContents =>
     dispatch(getCourseContentsEnteredGrades(courseContents)),
   onUpdateCheckedGrade: grade => dispatch(updateCheckedGrade(grade)),

@@ -829,7 +829,28 @@
 }
 
 .card-header {
-  background-color: #b4d2ec;
+  background-color: #a3d2e7;
+  align-items: center;
+  height: 40px;
+  padding-top: 10px !important;
+  padding-right: 15px;
+  margin-top: -10px;
+  margin-left: -10px;
+  margin-right: -10px;
+  color: white;
+  h4 {
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    i {
+      color: white;
+      border-radius: 13px;
+    }
+  }
+}
+
+.card-header1 {
+  background-color: #c5ab5a;
   align-items: center;
   height: 40px;
   padding-top: 10px !important;
@@ -873,8 +894,9 @@
 .react-bootstrap-table {
   .table {
     .warning-cell {
-      //  background-color: #ff2e2e;
-      border: 3px solid #ff2e2e;
+      background-color: #ff2e2e;
+      color: white;
+      // border: 3px solid #ff2e2e;
     }
   }
 }
@@ -1130,4 +1152,20 @@
   background-color: transparent;
   font-size: medium;
   font-weight: bold;
+}
+
+.card-sidebar {
+  position: "relative";
+  margin-right: "30px";
+}
+
+.header-table {
+  background-color: #114290;
+  color: white;
+  border: 1px solid white;
+  padding: 8px;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 0;
+  border-radius: 0;
 }

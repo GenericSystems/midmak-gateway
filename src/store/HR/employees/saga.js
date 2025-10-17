@@ -47,12 +47,6 @@ import {
   getPhysicalWorkLocationsOptFail,
   getAcademicYearsOptSuccess,
   getAcademicYearsOptFail,
-  getCountriesOptSuccess,
-  getCountriesOptFail,
-  getCitiesOptSuccess,
-  getCitiesOptFail,
-  getStatesOptSuccess,
-  getStatesOptFail,
 } from "./actions";
 
 import {
@@ -69,6 +63,14 @@ import {
   getContractsTypesFail,
   getContractsTypesSuccess,
 } from "../contractsTypes/actions";
+import { getCitiesSuccess, getCitiesFail } from "../../cities/actions";
+
+import { getCountriesSuccess, getCountriesFail } from "../../country/actions";
+
+import {
+  getGovernoratesSuccess,
+  getGovernoratesFail,
+} from "../../governorate/actions";
 
 //Include Both Helper File with needed methods
 import {
@@ -88,82 +90,15 @@ import {
   getWorkClassifications,
   getAcademicYearsOpt,
   getEmploymentCases,
-  getCountriesOpt,
-  getCitiesOpt,
-  getStatesOpt,
+  getCities,
+  getCountries,
+  getGovernorates,
 } from "../../../helpers/fakebackend_helper";
-
-function* fetchNationalities() {
-  const get_nationality_req = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Nationality",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getNationalitiesOpt, get_nationality_req);
-    yield put(getNationalitiesOptSuccess(response));
-  } catch (error) {
-    yield put(getNationalitiesOptFail(error));
-  }
-}
-
-function* fetchCountries() {
-  const get_Countries_req = {
-    source: "db",
-    procedure: "Generic_Optiondatalist",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Country",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getCountriesOpt, get_Countries_req);
-    console.log("mmmmmmmmmmmmmmmmmm", response);
-    yield put(getCountriesOptSuccess(response));
-  } catch (error) {
-    yield put(getCountriesOptFail(error));
-  }
-}
-
-function* fetchCities() {
-  const get_Cities_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Country",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getCitiesOpt, get_Cities_req);
-    console.log("20200000000000000000000000000", response);
-    yield put(getCitiesOptSuccess(response));
-  } catch (error) {
-    yield put(getCitiesOptFail(error));
-  }
-}
-
-function* fetchStates() {
-  const get_States_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Country",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getStatesOpt, get_States_req);
-    console.log("101000000000000000000000000000000000", response);
-    yield put(getStatesOptSuccess(response));
-  } catch (error) {
-    yield put(getStatesOptFail(error));
-  }
-}
 
 function* fetchCorporateNodes() {
   const get_CorporateNodes_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_Gender",
     fields: "Id,arTitle",
@@ -198,7 +133,7 @@ function* fetchCorporateNodes() {
 function* fetchAcademicYears() {
   const get_AcademicYears_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_Years",
     fields: "Id,arTitle",
@@ -249,7 +184,7 @@ function* fetchJobRanks() {
 function* fetchJobTitles() {
   const get_JobTitles_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_JobTitles",
     fields: "Id,arTitle",
@@ -262,23 +197,9 @@ function* fetchJobTitles() {
   }
 }
 
-function* fetchGenders() {
-  const get_gender_req = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Gender",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getGendersch, get_gender_req);
-    yield put(getGenderschSuccess(response));
-  } catch (error) {
-    yield put(getGenderschFail(error));
-  }
-}
-
-function* fetchEmployees() {
+function* fetchEmployees(selectedpayload) {
+  let lang = selectedpayload.payload;
+  const titleField = lang === "en" ? "enTitle" : "arTitle";
   const get_employee_req = {
     source: "db",
     procedure: "SisApp_getData",
@@ -337,6 +258,79 @@ function* fetchEmployees() {
     yield put(getEmploymentCasesSuccess(response));
   } catch (error) {
     yield put(getEmploymentCasesFail(error));
+  }
+
+  const get_States_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Governorate",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getGovernorates, get_States_req);
+    console.log("101000000000000000000000000000000000", response);
+    yield put(getGovernoratesSuccess(response));
+  } catch (error) {
+    yield put(getGovernoratesFail(error));
+  }
+
+  const get_gender_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Gender",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getGendersch, get_gender_req);
+    yield put(getGenderschSuccess(response));
+  } catch (error) {
+    yield put(getGenderschFail(error));
+  }
+
+  const get_Countries_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Country",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getCountries, get_Countries_req);
+    console.log("mmmmmmmmmmmmmmmmmm", response);
+    yield put(getCountriesSuccess(response));
+  } catch (error) {
+    yield put(getCountriesFail(error));
+  }
+
+  const get_Cities_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_City",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getCities, get_Cities_req);
+    console.log("20200000000000000000000000000", response);
+    yield put(getCitiesSuccess(response));
+  } catch (error) {
+    yield put(getCitiesFail(error));
+  }
+
+  const get_nationality_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Nationality",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getNationalitiesOpt, get_nationality_req);
+    yield put(getNationalitiesOptSuccess(response));
+  } catch (error) {
+    yield put(getNationalitiesOptFail(error));
   }
 }
 
@@ -405,16 +399,11 @@ function* onGetEmployeeDeletedValue() {
 }
 
 function* employeesSaga() {
-  yield takeEvery(GET_GENDERSCH, fetchGenders);
-  yield takeEvery(GET_NATIONALITIES_OPT, fetchNationalities);
   // yield takeEvery(
   //   GET_ADMINISTRATIVE_SUPERVISORS_OPT,
   //   fetchAdministrativeSupervisors
   // );
   yield takeEvery(GET_ACADEMIC_YEARS_OPT, fetchAcademicYears);
-  yield takeEvery(GET_STATES_OPT, fetchStates);
-  yield takeEvery(GET_CITIES_OPT, fetchCities);
-  yield takeEvery(GET_COUNTRIES_OPT, fetchCountries);
   yield takeEvery(GET_PHYSIACL_WORK_LOCATIONS_OPT, fetchPhysicalWorkLocations);
   yield takeEvery(GET_CORPORATE_NODES_OPT, fetchCorporateNodes);
   yield takeEvery(GET_JOB_RANKS_OPT, fetchJobRanks);

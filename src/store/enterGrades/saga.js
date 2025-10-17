@@ -47,7 +47,7 @@ function* fetchEnteredGrades({ payload }) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Current_Common_StudentsCurriculalines",
+    tablename: "_Current_Common_TrianeeCurriculalines",
     filter: payload.filter,
   };
   try {
@@ -63,7 +63,7 @@ function* fetchCourseStatistics({ payload }) {
     source: "db",
     procedure: "getCourseStatistics",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_StudentsCurriculalines",
+    tablename: "Common_Curriculalines",
     filter: `courseId = ${payload.courseId}`,
     flag: payload.flag,
   };
@@ -81,7 +81,7 @@ function* fetchCourseContentsEnteredGrades({ payload }) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_DistributingMethods",
-    filter: `courseId = ${payload.courseId} `,
+    filter: `courseId = ${payload.courseId}  or courseId = 0`,
   };
   try {
     const response = yield call(getCourseContentsEnteredGrades, request);
@@ -93,10 +93,10 @@ function* fetchCourseContentsEnteredGrades({ payload }) {
 
 function* onUpdateEnteredGrade({ payload }) {
   payload["source"] = "db";
-  payload["procedure"] = "SC_SisApp_updateStudentGrade";
+  payload["procedure"] = "SC_SisApp_updateTraineeGrade";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_StudentsCurriculalines";
-  payload["queryname"] = "_Current_Common_StudentsCurriculalines";
+  payload["tablename"] = "Common_Curriculalines";
+  payload["queryname"] = "_Current_Common_TrianeeCurriculalines";
 
   try {
     const response = yield call(updateEnteredGrade, payload);
@@ -112,7 +112,7 @@ function* fetchCoursesOpt() {
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_CourseOfferingOnly",
-    fields: "CourseId,courseCode,courseName",
+    fields: "courseId,Code,courseName",
   };
   try {
     const response = yield call(getCoursesOpt, getCourseOptions);
@@ -128,8 +128,8 @@ function* fetchFilteredSections({ payload }) {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Common_Section",
-    fields: "Id,SectionNumber,CourseCode",
-    filter: `CourseId = ${payload.courseId} and CourseCode = ''''${payload.CourseCode}'''' `,
+    fields: "Id,SectionNumber,courseId",
+    filter: `CourseId = ${payload.courseId} `,
   };
   try {
     const response = yield call(getFilteredSections, request);

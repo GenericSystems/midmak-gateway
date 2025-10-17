@@ -21,6 +21,9 @@ import chat from "./chat/reducer";
 //crypto
 import crypto from "./crypto/reducer";
 
+//hiddenMarks
+import hiddenGrades from "./hide-grade/reducer";
+
 //invoices
 import invoices from "./invoices/reducer";
 
@@ -29,6 +32,9 @@ import invoices from "./invoices/reducer";
 
 //trainees
 import trainees from "./trainees/reducer";
+
+//regTraineesAttendance
+import regTraineesAttendance from "./registerTraineesAttendance/reducer";
 
 //admissionConditions
 import admissionConditions from "./admissionConditions/reducer";
@@ -78,8 +84,7 @@ import userTypes from "./user-types/reducer";
 import certificates from "./certificates/reducer";
 
 //qualificationTypes
-import qualificationTracks from "./qualification-tracks/reducer"
-
+import qualificationTracks from "./qualification-tracks/reducer";
 
 //certificateTypes
 import certificateTypes from "./certificateTypes/reducer";
@@ -201,18 +206,24 @@ import studentsInfo from "./reset-password/reducer";
 
 //genders
 import genders from "./genders/reducer";
-//studentsDecrees
-import studentsDecrees from "./student-decrees/reducer";
+
+//traineesDecrees
+import traineesDecrees from "./trainee-decrees/reducer";
+
 //decisions
 import decisions from "./decisions/reducer";
+
 import academyInfo from "./academydef/reducer";
+
 //grants
 import grants from "./grants/reducer";
+
 //userMngs
 import userMngs from "./user-mngs/reducer";
 
 //roles
 import roles from "./roles/reducer";
+
 // import universityOrgStructures from "./universityOrgStructure/reducer";
 
 //sidbarcontent
@@ -243,17 +254,26 @@ import academyBuildingStructures from "./academyBuildingStructure/reducer";
 // contractsTypes
 import contractsTypes from "./HR/contractsTypes/reducer";
 
+//absenceTypes
+import absencesTypes from "./absenceType/reducer";
+
+//absenceJustification
+import absencesJustifications from "./absenceJustification/reducer";
+
+//absencepercents
+import absencePercents from "./absencePercents/reducer";
+
 // gradesVersions
 import gradesVersions from "./gradesVersions/reducer";
 
 // documentTypes
 import documentsTypes from "./documents-types/reducer";
 
-//AbsenceWarnings
-import absenceWarnings from "./Rules-and-Regulations/Absence-warnings/reducer";
-
 // ExamRooms
 import examRooms from "./Exam/ExamRooms/reducer";
+
+// ExamObservers
+import examObservers from "./examObservers/reducer";
 
 // defineExamDates
 import defineExamDates from "./Exam/DefineExamDates/reducer";
@@ -266,6 +286,9 @@ import rewardsTypes from "./HR/rewardsTypes/reducer";
 
 // decisionsTypes
 import decisionsTypes from "./HR/decisionsTypes/reducer";
+
+// decree
+import decrees from "./decrees/reducer";
 
 // employmentCases
 import employmentCases from "./HR/employmentCases/reducer";
@@ -296,6 +319,21 @@ import studentsRequests from "./students-requests/reducer";
 
 //contract
 import contracts from "./HR/contracts/reducer";
+
+//marksObjections
+import marksObjections from "./marks-objections/reducer";
+
+//justifyTraineesAbsence
+import justifyTraineesAbsence from "./justifyTraineeAbsence/reducer";
+
+//ExamsAttendance
+import examsAttendance from "./examAttendance/reducer";
+
+//ExamsAttendanceObserver
+import attendanceObservers from "./examAttendanceObservers/reducer";
+
+//HallSchedule
+import hallSchedules from "./hallSchedules/reducer";
 
 //tempTrainees
 import tempTrainees from "./new-Trainee/reducer";
@@ -337,7 +375,7 @@ import highstudytypes from "./high-study-types/reducer";
 const rootReducer = combineReducers({
   // public
   genders,
-  studentsDecrees,
+  traineesDecrees,
   decisions,
   grants,
   userMngs,
@@ -358,6 +396,10 @@ const rootReducer = combineReducers({
   projects,
   tasks,
   contacts,
+  hiddenGrades,
+  absencesTypes,
+  absencesJustifications,
+  absencePercents,
 
   certificateTypes,
   studentManagements,
@@ -404,6 +446,7 @@ const rootReducer = combineReducers({
   grantSponsors,
   years,
   trainees,
+  regTraineesAttendance,
   semesters,
   weekDays,
   timeLines,
@@ -413,7 +456,7 @@ const rootReducer = combineReducers({
   studentsInfo,
   academyInfo,
   qualificationTracks,
- 
+
   menu_items,
   trainingMembers,
   warningRules,
@@ -433,12 +476,19 @@ const rootReducer = combineReducers({
   workClassifications,
   employees,
   contracts,
+  marksObjections,
+  justifyTraineesAbsence,
+  examsAttendance,
+  attendanceObservers,
+  hallSchedules,
   examRooms,
+  examObservers,
   defineExamDates,
   academyBuildingStructures,
   warningsTypes,
   rewardsTypes,
   decisionsTypes,
+  decrees,
   tempTrainees,
   trainingFormats,
   coursesCatalogs,
@@ -452,7 +502,6 @@ const rootReducer = combineReducers({
   diplomalevels,
   highstudytypes,
   gradesVersions,
-  absenceWarnings,
 });
 
 export default rootReducer;

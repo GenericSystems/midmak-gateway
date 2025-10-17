@@ -15,15 +15,12 @@ import {
   UPDATE_DISTRIBUTING_COURSES_METHOD_CONTENT_FAIL,
   DELETE_DISTRIBUTING_COURSES_METHOD_CONTENT_SUCCESS,
   DELETE_DISTRIBUTING_COURSES_METHOD_CONTENT_FAIL,
-
   GET_DISTRIBUTING_COURSES_SUCCESS,
   GET_DISTRIBUTING_COURSES_FAIL,
   ADD_DISTRIBUTING_COURSE_SUCCESS,
   ADD_DISTRIBUTING_COURSE_FAIL,
   DELETE_DISTRIBUTING_COURSE_SUCCESS,
   DELETE_DISTRIBUTING_COURSE_FAIL,
-  COPY_DISTRIBUTING_METHODS_SUCCESS,
-  COPY_DISTRIBUTING_METHODS_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -60,18 +57,7 @@ const distributingCoursesMethods = (state = INIT_STATE, action) => {
         ...state,
         error: action.payload,
       };
-      case COPY_DISTRIBUTING_METHODS_SUCCESS:
-        return {
-          ...state,
-          distributingCoursesMethods: action.payload,
-        };
-  
-    case COPY_DISTRIBUTING_METHODS_FAIL:
-      return {
-        ...state,
-        error: action.payload,
-      };
-  
+
     case UPDATE_DISTRIBUTING_COURSES_METHOD_SUCCESS:
       return {
         ...state,
@@ -179,37 +165,32 @@ const distributingCoursesMethods = (state = INIT_STATE, action) => {
         error: action.payload,
       };
 
-      case ADD_DISTRIBUTING_COURSE_SUCCESS:
-        return {
-          ...state,
-          distributingCourses: [
-            ...state.distributingCourses,
-            action.payload,
-          ],
-        };
-  
-      case ADD_DISTRIBUTING_COURSE_FAIL:
-        return {
-          ...state,
-          error: action.payload,
-        };
+    case ADD_DISTRIBUTING_COURSE_SUCCESS:
+      return {
+        ...state,
+        distributingCourses: [...state.distributingCourses, action.payload],
+      };
 
-        
-        case DELETE_DISTRIBUTING_COURSE_SUCCESS:
-          return {
-            ...state,
-            distributingCourses: state.distributingCourses.filter(
-              distributingCourse =>
-                distributingCourse.Id.toString() !==
-                action.payload.Id.toString()
-            ),
-          };
-    
-        case DELETE_DISTRIBUTING_COURSE_FAIL:
-          return {
-            ...state,
-            error: action.payload,
-          };
+    case ADD_DISTRIBUTING_COURSE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case DELETE_DISTRIBUTING_COURSE_SUCCESS:
+      return {
+        ...state,
+        distributingCourses: state.distributingCourses.filter(
+          distributingCourse =>
+            distributingCourse.Id.toString() !== action.payload.Id.toString()
+        ),
+      };
+
+    case DELETE_DISTRIBUTING_COURSE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
 
     default:
       return state;

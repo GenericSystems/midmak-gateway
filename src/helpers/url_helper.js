@@ -99,6 +99,14 @@ export const GET_TRAINEE_REGREQDOCS = "/trainee_regReqDocs";
 export const UPDATE_TRAINEE_REGREQDOC = "/update/trainee_regReqDoc";
 export const GET_TRAINEE_STATUS = "/traineeStatus";
 export const GET_TRAINEES_OPT = "/traineesOpt";
+
+//regTraineesAttendance
+export const GET_REGISTER_TRAINEES_ATTENDANCE = "/regTrainees";
+export const GET_REGISTER_TRAINEE_ATTENDANCE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_REGISTER_TRAINEE_ATTENDANCE = "/add/regTrainee";
+export const UPDATE_REGISTER_TRAINEE_ATTENDANCE = "/update/regTrainee";
+export const DELETE_REGISTER_TRAINEE_ATTENDANCE = "/delete/regTrainee";
+
 export const ADD_BROTHER = "/add/Brother";
 export const DELETE_BROTHER = "/delete/Brother";
 export const UPDATE_BROTHER = "/update/Brother";
@@ -155,13 +163,13 @@ export const GET_LEVELING_DECISION_DELETED_VALUE = "/deleted";
 //COPY FACUTLY
 export const COPY_FACULTY = "/Copy/copyFaculty";
 
-//NON_ACTIVE_STD_CURRS
-export const GET_NON_ACTIVE_STD_CURRS = "/nonActiveStdCurrs";
-export const UPDATE_NON_ACTIVE_STD_CURR = "/update/nonActiveStdCurr";
-export const DELETE_NON_ACTIVE_STD_CURR = "/delete/nonActiveStdCurr";
+//NON_ACTIVE_CURRS
+export const GET_NON_ACTIVE_CURRS = "/nonActiveCurrs";
+export const UPDATE_NON_ACTIVE_CURR = "/update/nonActiveCurr";
+export const DELETE_NON_ACTIVE_CURR = "/delete/nonActiveCurr";
 
-export const DELETE_ALL_NON_ACTIVE_STD_CURR = "/deleteAll/nonActiveStdCurr";
-export const SAVE_ALL_NON_ACTIVE_STD_CURR = "/saveAll/nonActiveStdCurr";
+export const DELETE_ALL_NON_ACTIVE_CURR = "/deleteAll/nonActiveCurr";
+export const SAVE_ALL_NON_ACTIVE_CURR = "/saveAll/nonActiveCurr";
 //REGISTRATIONS
 export const GET_REGISTRATIONS = "/registration";
 export const GET_STUDENT_REGISTER_INFO = "/StudentRegisterInfo";
@@ -170,7 +178,7 @@ export const UPDATE_REGISTRATION = "/update/registration";
 export const DELETE_REGISTRATION = "/delete/registration";
 
 //TEMP_STD_SCHEDULES
-export const GET_TEMP_STD_SCHEDULES = "/tempStdSchedules";
+export const GET_TRAINEE_SCHEDULES = "/traineeSchedules";
 
 //ACHIEVED_COURSES
 export const GET_ACHIEVED_COURSES = "/achievedCourses";
@@ -206,6 +214,13 @@ export const GET_EXAM_ROOM_PROFILE = "/examRoom";
 export const ADD_NEW_EXAM_ROOM = "/add/examRoom";
 export const UPDATE_EXAM_ROOM = "/update/examRoom";
 export const DELETE_EXAM_ROOM = "/delete/examRoom";
+
+//EXAM_OBSERVERS
+export const GET_EXAM_OBSERVERS = "/examObservers";
+export const GET_EXAM_OBSERVER_PROFILE = "/examObserver";
+export const ADD_NEW_EXAM_OBSERVER = "/add/examObserver";
+export const UPDATE_EXAM_OBSERVER = "/update/examObserver";
+export const DELETE_EXAM_OBSERVER = "/delete/examObserver";
 
 //SECTORS
 export const GET_SECTORS = "/sectors";
@@ -339,17 +354,17 @@ export const UPDATE_GENDER = "/update/gender";
 export const DELETE_GENDER = "/delete/gender";
 export const GET_GENDER_DELETED_VALUE = "/deleted";
 
-// STUDENTS_DECREES
-export const GET_STUDENTS_DECREES = "/studentsDecrees";
-export const ADD_NEW_STUDENTS_DECREES = "/add/studentsDecree";
-export const UPDATE_STUDENTS_DECREES = "/update/studentsDecree";
-export const DELETE_STUDENTS_DECREES = "/delete/studentsDecree";
-export const GET_STUDENTS_DECREES_DELETED_VALUE = "/deleted";
+// TRAINEES_DECREES
+export const GET_TRAINEES_DECREES = "/traineesDecrees";
+export const ADD_NEW_TRAINEE_DECREE = "/add/traineeDecree";
+export const UPDATE_TRAINEE_DECREE = "/update/traineeDecree";
+export const DELETE_TRAINEE_DECREE = "/delete/traineeDecree";
+export const GET_TRAINEE_DECREE_DELETED_VALUE = "/deleted";
 export const GET_DECREE_STATUS = "/decreeState";
-export const GET_STUDENT_DECREES_DISMISS = "/studentDecreesDismiss";
+export const GET_TRAINEE_DECREES_DISMISS = "/traineeDecreesDismiss";
 
-// UNIVERSITY_STUDENTS_DECREES
-export const GET_UNIVERSITY_STUDENTS_DECREES = "/UniversityStudentsDecrees";
+// ACADEMY_TRAINEES_DECREES
+export const GET_ACADEMY_TRAINEES_DECREES = "/AcademyTraineesDecrees";
 
 // COURSES_DECREES
 export const GET_COURSES_DECREES = "/CoursesDecrees";
@@ -360,7 +375,6 @@ export const ADD_NEW_DECISION = "/add/decision";
 export const UPDATE_DECISION = "/update/decision";
 export const DELETE_DECISION = "/delete/decision";
 export const GET_DECISION_DELETED_VALUE = "/deleted";
-export const GET_DECISION_CATEGORIES = "/decisionCategories";
 
 // DECISION MAKERS
 export const GET_DECISION_MAKERS = "/decisionMakers";
@@ -368,31 +382,41 @@ export const GET_DECISION_MAKERS = "/decisionMakers";
 // DECISION STATUS
 export const GET_DECISION_STATUS = "/decisionStatus";
 
-// DECISIONS_RULES_REASON
-export const GET_DECISIONS_RULES_REASONS = "/decisionsRulesReasons";
-export const ADD_NEW_DECISIONS_RULES_REASON = "/add/decisionsRulesReason";
-export const UPDATE_DECISIONS_RULES_REASON = "/update/decisionsRulesReason";
-export const DELETE_DECISIONS_RULES_REASON = "/delete/decisionsRulesReason";
-export const GET_DECISIONS_RULES_REASON_DELETED_VALUE = "/deletedDetail";
+// TURN REASONS
+export const GET_TURN_REASONS = "/turnReasons";
 
-// DECISIONS_RULES_ROLE
-export const GET_DECISIONS_RULES_ROLES = "/decisionsRulesRoles";
-export const ADD_NEW_DECISIONS_RULES_ROLE = "/add/decisionsRulesRole";
-export const UPDATE_DECISIONS_RULES_ROLE = "/update/decisionsRulesRole";
-export const DELETE_DECISIONS_RULES_ROLE = "/delete/decisionsRulesRole";
-export const GET_DECISIONS_RULES_ROLE_DELETED_VALUE = "/deletedDetail";
+//DECREES
+export const GET_DECREES = "/decrees";
+export const GET_DECREE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_DECREE = "/add/decree";
+export const UPDATE_DECREE = "/update/decree";
+export const DELETE_DECREE = "/delete/decree";
+export const GET_DECREE_CATEGORIES = "/decreeCategories";
 
-// DECISIONS_RULES_CANCELED_REASON
-export const GET_DECISIONS_RULES_CANCELED_REASONS =
-  "/decisionRulesCanceledReasons";
-export const ADD_NEW_DECISIONS_RULES_CANCELED_REASON =
-  "/add/decisionRulesCanceledReason";
-export const UPDATE_DECISIONS_RULES_CANCELED_REASON =
-  "/update/decisionRulesCanceledReason";
-export const DELETE_DECISIONS_RULES_CANCELED_REASON =
-  "/delete/decisionRulesCanceledReason";
-export const GET_DECISIONS_RULES_CANCELED_REASON_DELETED_VALUE =
-  "/deletedDetail";
+// DECREES_RULES_ROLE
+export const GET_DECREES_RULES_ROLES = "/decreesRulesRoles";
+export const ADD_NEW_DECREES_RULES_ROLE = "/add/decreesRulesRole";
+export const UPDATE_DECREES_RULES_ROLE = "/update/decreesRulesRole";
+export const DELETE_DECREES_RULES_ROLE = "/delete/decreesRulesRole";
+export const GET_DECREES_RULES_ROLE_DELETED_VALUE = "/deletedDetail";
+
+// DECREES_RULES_ROLE
+export const GET_DECREES_RULES_REASONS = "/decreesRulesReasons";
+export const ADD_NEW_DECREES_RULES_REASON = "/add/decreesRulesReason";
+export const UPDATE_DECREES_RULES_REASON = "/update/decreesRulesReason";
+export const DELETE_DECREES_RULES_REASON = "/delete/decreesRulesReason";
+export const GET_DECREES_RULES_REASON_DELETED_VALUE = "/deletedDetail";
+
+// DECREES_RULES_CANCELED_REASON
+export const GET_DECREES_RULES_CANCELED_REASONS = "/decreeRulesCanceledReasons";
+export const ADD_NEW_DECREES_RULES_CANCELED_REASON =
+  "/add/decreeRulesCanceledReason";
+export const UPDATE_DECREES_RULES_CANCELED_REASON =
+  "/update/decreeRulesCanceledReason";
+export const DELETE_DECREES_RULES_CANCELED_REASON =
+  "/delete/decreeRulesCanceledReason";
+export const GET_DECREES_RULES_CANCELED_REASON_DELETED_VALUE = "/deletedDetail";
+
 // GRANT
 export const GET_GRANTS = "/grants";
 export const ADD_NEW_GRANT = "/add/grant";
@@ -919,9 +943,9 @@ export const ADD_NEW_DISTRIBUTING_COURSE = "/add/distributingcourse";
 
 export const DELETE_DISTRIBUTING_COURSE = "/delete/distributingcourse";
 
-// Copy Distributing Methods
+// Copy course Distributions
 
-export const COPY_DISTRIBUTING_METHODS = "/copy/distributingMethods";
+export const COPY_DISTRIBUTING_COURSES = "/copy/courseDistributions";
 
 // Letter Grades
 
@@ -992,6 +1016,26 @@ export const ADD_NEW_CONTRACT_TYPE = "/add/contractType";
 export const UPDATE_CONTRACT_TYPE = "/update/contractType";
 export const DELETE_CONTRACT_TYPE = "/delete/contractType";
 
+//absence_types
+export const GET_ABSENCES_TYPES = "/absencesTypes";
+export const GET_ABSENCE_TYPE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_ABSENCE_TYPE = "/add/absenceType";
+export const UPDATE_ABSENCE_TYPE = "/update/absenceType";
+export const DELETE_ABSENCE_TYPE = "/delete/absenceType";
+//absence_justification
+export const GET_ABSENCES_JUSTIFICATIONS = "/absencesJustifications";
+export const GET_ABSENCE_JUSTIFICATION_DELETED_VALUE = "/deleted";
+export const ADD_NEW_ABSENCE_JUSTIFICATION = "/add/absenceJustification";
+export const UPDATE_ABSENCE_JUSTIFICATION = "/update/absenceJustification";
+export const DELETE_ABSENCE_JUSTIFICATION = "/delete/absenceJustification";
+
+//ABSENCE_PERCENT
+export const GET_ABSENCES_PERCENTS = "/absencesPercents";
+export const GET_ABSENCE_PERCENT_DELETED_VALUE = "/deleted";
+export const ADD_NEW_ABSENCE_PERCENT = "/add/absencePercent";
+export const UPDATE_ABSENCE_PERCENT = "/update/absencePercent";
+export const DELETE_ABSENCE_PERCENT = "/delete/absencePercent";
+
 //qualificaqtion_track
 export const GET_QUALIFICATIONS_TRACKS = "/qualificationTracks";
 export const GET_QUALIFICATION_TRACK_DELETED_VALUE = "/deleted";
@@ -1025,12 +1069,13 @@ export const ADD_NEW_DOCUMENT_TYPE = "/add/documentType";
 export const UPDATE_DOCUMENT_TYPE = "/update/documentType";
 export const DELETE_DOCUMENT_TYPE = "/delete/documentType";
 
-//ABSCENCE_WARNINGS
-export const GET_ABSENCE_WARNINGS = "/absenceWarnings";
-export const GET_ABSENCE_WARNING_DELETED_VALUE = "/deleted";
-export const ADD_NEW_ABSENCE_WARNING = "/add/absenceWarning";
-export const UPDATE_ABSENCE_WARNING = "/update/absenceWarning";
-export const DELETE_ABSENCE_WARNING = "/delete/absenceWarning";
+//HIDE_GRADES
+export const GET_HIDDEN_GRADES = "/hiddenGrades";
+export const GET_HIDDEN_GRADE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_HIDDEN_GRADE = "/add/hiddenGrades";
+export const UPDATE_HIDDEN_GRADE = "/update/hiddenGrades";
+export const DELETE_HIDDEN_GRADE = "/delete/hiddenGrades";
+export const GET_HIDE_REASONS = "/hideReasons";
 
 //EMPLOYMENT_CASES
 export const GET_EMPLOYMENT_CASES = "/employmentCases";
@@ -1081,6 +1126,46 @@ export const GET_CONTRACT_DELETED_VALUE = "/deleted";
 export const ADD_NEW_CONTRACT = "/add/contract";
 export const UPDATE_CONTRACT = "/update/contract";
 export const DELETE_CONTRACT = "/deleted/contract";
+
+//MARKS_OBJECTIONS
+export const GET_MARKS_OBJECTIONS = "/marksObjections";
+export const GET_MARK_OBJECTION_DELETED_VALUE = "/deleted";
+export const ADD_NEW_MARK_OBJECTION = "/add/markObjection";
+export const UPDATE_MARK_OBJECTION = "/update/markObjection";
+export const DELETE_MARK_OBJECTION = "/deleted/markObjection";
+export const GET_REQUEST_STATUS = "/requestStatus";
+
+//JustifyTraineeAbsence
+export const GET_JUSTIFY_TRAINEES_ABSENCE = "/justifyTraineesAbsence";
+export const GET_JUSTIFY_TRAINEE_ABSENCE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_JUSTIFY_TRAINEE_ABSENCE = "/add/justifyTraineeAbsence";
+export const UPDATE_JUSTIFY_TRAINEE_ABSENCE = "/update/justifyTraineeAbsence";
+export const DELETE_JUSTIFY_TRAINEE_ABSENCE = "/deleted/justifyTraineeAbsence";
+
+//attend status
+export const GET_ATTEND_STATUS = "/attendStatus";
+
+//ExamAttendance
+export const GET_EXAMS_ATTENDANCE = "/examAttendance";
+export const GET_EXAM_ATTENDANCE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_EXAM_ATTENDANCE = "/add/ExamAttendance";
+export const UPDATE_EXAM_ATTENDANCE = "/update/ExamAttendance";
+export const DELETE_EXAM_ATTENDANCE = "/deleted/ExamAttendance";
+
+//examAttendanceObservers
+export const GET_EXAM_ATTENDANCE_OBSERVERS = "/examAttendanceObservers";
+export const GET_EXAM_ATTENDANCE_OBSERVER_DELETED_VALUE = "/deleted";
+export const ADD_NEW_EXAM_ATTENDANCE_OBSERVER = "/add/examAttendanceObserver";
+export const UPDATE_EXAM_ATTENDANCE_OBSERVER = "/update/examAttendanceObserver";
+export const DELETE_EXAM_ATTENDANCE_OBSERVER =
+  "/deleted/examAttendanceObserver";
+
+//HallSchedule
+export const GET_HALL_SCHEDULES = "/HallSchedules";
+export const GET_HALL_SCHEDULE_DELETED_VALUE = "/deleted";
+export const ADD_NEW_HALL_SCHEDULE = "/add/HallSchedule";
+export const UPDATE_HALL_SCHEDULE = "/update/HallSchedule";
+export const DELETE_HALL_SCHEDULE = "/deleted/HallSchedule";
 
 export const GET_ADMINISTRATIVE_SUPERVISORS_OPT = "/administrativeSupervisors";
 export const GET_PHYSIACL_WORK_LOCATIONS_OPT = "/physicalWorkLocationsOpt";
@@ -1199,6 +1284,7 @@ export const GET_CERTIFICATE_GRADE_DELETED_VALUE = "/certificateGrade/deleted";
 
 //checkedGrades
 export const GET_CHECKED_GRADES = "/checkedGrades";
+export const IMPORT_CHECKED_GRADES = "/checkedGrades";
 export const UPDATE_CHECKED_GRADE = "/update/checkedGrade";
 
 //archived Grades

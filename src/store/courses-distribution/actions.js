@@ -14,6 +14,9 @@ import {
   DELETE_COURSE_DISTRIBUTION,
   DELETE_COURSE_DISTRIBUTION_SUCCESS,
   DELETE_COURSE_DISTRIBUTION_FAIL,
+  COPY_COURSE_DISTRIBUTIONS,
+  COPY_COURSE_DISTRIBUTIONS_SUCCESS,
+  COPY_COURSE_DISTRIBUTIONS_FAIL,
 } from "./actionTypes";
 
 // Get All Course Distributions
@@ -36,10 +39,11 @@ export const getCourseDistributionDeletedValue = () => ({
   type: GET_COURSE_DISTRIBUTION_DELETED_VALUE,
 });
 
-export const getCourseDistributionDeletedValueSuccess = courseDistributionProfile => ({
-  type: GET_COURSE_DISTRIBUTION_DELETED_VALUE_SUCCESS,
-  payload: courseDistributionProfile,
-});
+export const getCourseDistributionDeletedValueSuccess =
+  courseDistributionProfile => ({
+    type: GET_COURSE_DISTRIBUTION_DELETED_VALUE_SUCCESS,
+    payload: courseDistributionProfile,
+  });
 
 export const getCourseDistributionDeletedValueFail = error => ({
   type: GET_COURSE_DISTRIBUTION_DELETED_VALUE_FAIL,
@@ -91,5 +95,19 @@ export const deleteCourseDistributionSuccess = courseDistribution => ({
 
 export const deleteCourseDistributionFail = error => ({
   type: DELETE_COURSE_DISTRIBUTION_FAIL,
+  payload: error,
+});
+
+export const copyCourseDistributions = () => ({
+  type: COPY_COURSE_DISTRIBUTIONS,
+});
+
+export const copyCourseDistributionsSuccess = distributingCoursesMethod => ({
+  type: COPY_COURSE_DISTRIBUTIONS_SUCCESS,
+  payload: distributingCoursesMethod,
+});
+
+export const copyCourseDistributionsFail = error => ({
+  type: COPY_COURSE_DISTRIBUTIONS_FAIL,
   payload: error,
 });

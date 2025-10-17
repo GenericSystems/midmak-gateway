@@ -37,7 +37,8 @@ import ToolkitProvider, {
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 import Accordion from "react-bootstrap/Accordion";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -46,6 +47,7 @@ import paginationFactory, {
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
 // import OtherChart from "pages/generate-SIDs/OtherChart";
+import { getYears } from "store/years/actions";
 
 // import { getCurrentSemester } from "store/semesters/actions";
 // import { getStudentsRequests } from "store/students-requests/actions";
@@ -61,28 +63,27 @@ class CoursesPassPercentsList extends Component {
     super(props);
     this.state = {
       selectedView: "",
+      years: [],
       errorMessage: null,
       sidebarOpen: true,
       deleteModal: false,
       selectedRowId: null,
       isEdit: false,
-      showStudentName: true,
-      showYearSemester: true,
-      showStartDate: true,
-      showActivationSemester: true,
-      showStudentID: true,
-      showStateId: true,
-      showRequestOrganizer: true,
-      showRequestOrgNotes: true,
-      requestDate: true,
-      startDate: true,
-      showRequestNum: true,
-      showRequestId: true,
-      showDecreeOrganizer: false,
-      showDecreeDate: false,
-      showDecreeOrgNotes: false,
-      showFoldingDate: false,
-      showFoldingOrganizer: false,
+      showStartDate: false,
+      showTotalRegistered: false,
+      showTotalRegisteredExW: false,
+      showPassedCount: false,
+      showFailsCount: false,
+      showArchivedTraineeMarks: false,
+      withdrawnCount: false,
+      startDate: false,
+      showCourseName: false,
+      showCourseCode: false,
+      showPassPercentExW: false,
+      showUnarchivedTrainees: false,
+      showFailPercentExW: false,
+      showWithdrawPercent: false,
+      showArchivingPercent: false,
       showFoldingOrgNotes: false,
       modal: false,
       selectedMulti: null,
@@ -103,9 +104,13 @@ class CoursesPassPercentsList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      selectedYear: null,
+      trainees: [
+        { Id: 1, Name: "أحمد", Grade: 90 },
+        { Id: 2, Name: "مريم", Grade: 85 },
+        { Id: 3, Name: "خالد", Grade: 78 },
+      ],
     };
-    this.toggleSidebar = this.toggleSidebar.bind(this);
-    this.handleColorChange = this.handleColorChange.bind(this);
   }
   componentDidMount() {
     const {
@@ -119,20 +124,42 @@ class CoursesPassPercentsList extends Component {
       faculties,
       onGetStudentsRequests,
       deleted,
+      years,
       user_menu,
+      onGetYears,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (studentsRequests && !studentsRequests.length) {
       // onGetStudentsRequests({ yearSemesterId: 78 });
-
+      onGetYears();
       this.setState({ studentsRequests, stdWarningTestOpt });
       this.setState({ studentStates });
       this.setState({ currencies });
-      this.setState({ faculties });
+      this.setState({ faculties, years });
       this.setState({ yearSemesters });
       this.setState({ currentSemester, semesters });
       this.setState({ deleted });
+    }
+    let curentueardata = localStorage.getItem("authUser");
+    if (curentueardata) {
+      try {
+        const parsed = JSON.parse(curentueardata);
+        const firstYear = parsed[0];
+        const selectedYear = {
+          value: firstYear.currentYearId,
+          label: firstYear.currentYearName,
+        };
+        this.setState({
+          selectedYear,
+          currentYearObj: {
+            currentYearId: firstYear.currentYearId,
+            currentYearName: firstYear.currentYearName,
+          },
+        });
+      } catch (error) {
+        console.error("Error parsing authUser:", error);
+      }
     }
   }
   componentDidUpdate(prevProps) {
@@ -300,57 +327,51 @@ class CoursesPassPercentsList extends Component {
   };
 
   handleShowColumn = fieldName => {
-    if (fieldName == "studentId") {
+    if (fieldName == "credits") {
       this.setState(prevState => ({
-        showStudentID: !prevState.showStudentID,
+        showCredits: !prevState.showCredits,
       }));
     }
 
-    if (fieldName == "studentName") {
+    if (fieldName == "totalRegistered") {
       this.setState(prevState => ({
-        showStudentName: !prevState.showStudentName,
+        showTotalRegistered: !prevState.showTotalRegistered,
       }));
     }
 
-    if (fieldName == "yearSemester") {
+    if (fieldName == "totalRegisteredExW") {
       this.setState(prevState => ({
-        showYearSemester: !prevState.showYearSemester,
+        showTotalRegisteredExW: !prevState.showTotalRegisteredExW,
       }));
     }
 
-    if (fieldName == "activationSemester") {
+    if (fieldName == "passedCount") {
       this.setState(prevState => ({
-        showActivationSemester: !prevState.showActivationSemester,
+        showPassedCount: !prevState.showPassedCount,
       }));
     }
 
-    if (fieldName == "stateId") {
+    if (fieldName == "failsCount") {
       this.setState(prevState => ({
-        showStateId: !prevState.showStateId,
+        showFailsCount: !prevState.showFailsCount,
       }));
     }
 
-    if (fieldName == "requestOrganizer") {
+    if (fieldName == "archivedTraineeMarks") {
       this.setState(prevState => ({
-        showRequestOrganizer: !prevState.showRequestOrganizer,
+        showArchivedTraineeMarks: !prevState.showArchivedTraineeMarks,
       }));
     }
 
-    if (fieldName == "requestOrgNotes") {
-      this.setState(prevState => ({
-        showRequestOrgNotes: !prevState.showRequestOrgNotes,
-      }));
-    }
-
-    if (fieldName == "requestOrgNotes") {
+    if (fieldName == "archivedTraineeMarks") {
       this.setState(prevState => ({
         showToRegSemester: !prevState.showToRegSemester,
       }));
     }
 
-    if (fieldName == "requestDate") {
+    if (fieldName == "withdrawnCount") {
       this.setState(prevState => ({
-        requestDate: !prevState.requestDate,
+        withdrawnCount: !prevState.withdrawnCount,
       }));
     }
     if (fieldName == "startDate") {
@@ -359,45 +380,45 @@ class CoursesPassPercentsList extends Component {
       }));
     }
 
-    if (fieldName == "requestNum") {
+    if (fieldName == "courseName") {
       this.setState(prevState => ({
-        showRequestNum: !prevState.showRequestNum,
+        showCourseName: !prevState.showCourseName,
       }));
     }
 
-    if (fieldName == "requestId") {
+    if (fieldName == "courseCode") {
       this.setState(prevState => ({
-        showRequestId: !prevState.showRequestId,
+        showCourseCode: !prevState.showCourseCode,
       }));
     }
 
-    if (fieldName == "decreeOrganizer") {
+    if (fieldName == "passPercentExW") {
       this.setState(prevState => ({
-        showDecreeOrganizer: !prevState.showDecreeOrganizer,
+        showPassPercentExW: !prevState.showPassPercentExW,
       }));
     }
 
-    if (fieldName == "decreeDate") {
+    if (fieldName == "un-archivedTrainees") {
       this.setState(prevState => ({
-        showDecreeDate: !prevState.showDecreeDate,
+        showUnarchivedTrainees: !prevState.showUnarchivedTrainees,
       }));
     }
 
-    if (fieldName == "decreeOrgNotes") {
+    if (fieldName == "failPercentExW") {
       this.setState(prevState => ({
-        showDecreeOrgNotes: !prevState.showDecreeOrgNotes,
+        showFailPercentExW: !prevState.showFailPercentExW,
       }));
     }
 
-    if (fieldName == "foldingDate") {
+    if (fieldName == "withdrawPercent") {
       this.setState(prevState => ({
-        showFoldingDate: !prevState.showFoldingDate,
+        showWithdrawPercent: !prevState.showWithdrawPercent,
       }));
     }
 
-    if (fieldName == "foldingOrganizer") {
+    if (fieldName == "archivingPercent") {
       this.setState(prevState => ({
-        showFoldingOrganizer: !prevState.showFoldingOrganizer,
+        showArchivingPercent: !prevState.showArchivingPercent,
       }));
     }
 
@@ -464,337 +485,50 @@ class CoursesPassPercentsList extends Component {
       this.setState({ applyForSemesterArray: selectedMulti });
     }
 
-    if (fieldName === "decreeDate") {
+    if (fieldName === "un-archivedTrainees") {
       this.setState({ prevStatusSemesArray: selectedMulti });
     }
 
-    if (fieldName === "decreeOrganizer") {
+    if (fieldName === "passPercentExW") {
       this.setState({ prevAcademicWarningArray: selectedMulti });
     }
 
-    if (fieldName === "decreeOrgNotes") {
+    if (fieldName === "failPercentExW") {
       this.setState({ applyStatusArray: selectedMulti });
     }
-  };
-
-  handleInputBlur = fieldName => {
-    const {
-      selectedFromAdmSemes,
-      selectedToAdmSemes,
-      selectedFromRegSemes,
-      selectedToRegSemes,
-      selectedOldWarningStatus,
-      selectedColor,
-    } = this.state;
-
-    if (fieldName == "stateId") {
-      this.setState({ selectedFromAdmSemes });
-    }
-
-    if (fieldName == "academicStatus") {
-      this.setState({ selectedToAdmSemes });
-    }
-
-    if (fieldName == "requestOrgNotes ") {
-      this.setState({ selectedFromRegSemes });
-    }
-
-    if (fieldName == "toRegSemesId ") {
-      this.setState({ selectedToRegSemes });
-    }
-
-    if (fieldName == "oldWarningStatusId") {
-      this.setState({ selectedOldWarningStatus });
-    }
-
-    if (fieldName == "warningColor") {
-      this.setState({ selectedColor });
-    }
-  };
-
-  handleInputFocus = fieldName => {
-    const {
-      selectedFromAdmSemes,
-      selectedToAdmSemes,
-      selectedFromRegSemes,
-      selectedToRegSemes,
-      selectedOldWarningStatus,
-    } = this.state;
-
-    if (fieldName == "stateId") {
-      this.setState({ selectedFromAdmSemes });
-    }
-
-    if (fieldName == "academicStatus") {
-      this.setState({ selectedToAdmSemes });
-    }
-
-    if (fieldName == "requestOrgNotes ") {
-      this.setState({ selectedFromRegSemes });
-    }
-
-    if (fieldName == "toRegSemesId ") {
-      this.setState({ selectedToRegSemes });
-    }
-
-    if (fieldName == "oldWarningStatusId") {
-      this.setState({ selectedOldWarningStatus });
-    }
-  };
-
-  handleDataListChange = (event, fieldName) => {
-    const selectedValue = event.target.value;
-
-    if (fieldName == "stateId") {
-      this.setState({ selectedFromAdmSemes: selectedValue });
-    }
-
-    if (fieldName == "academicStatus") {
-      this.setState({ selectedToAdmSemes: selectedValue });
-    }
-
-    if (fieldName == "requestOrgNotes ") {
-      this.setState({ selectedFromRegSemes: selectedValue });
-    }
-
-    if (fieldName == "toRegSemesId ") {
-      this.setState({ selectedToRegSemes: selectedValue });
-    }
-
-    if (fieldName == "oldWarningStatusId") {
-      this.setState({ selectedOldWarningStatus: selectedValue });
-    }
-  };
-
-  handleColorChange(event) {
-    const selectedValue = event.target.value;
-    this.setState({ selectedColor: selectedValue });
-  }
-
-  handleSave = values => {
-    const { onAddNewStdWarningTest, yearSemesters } = this.props;
-    const {
-      selectedColor,
-      selectedFromAdmSemes,
-      selectedToAdmSemes,
-      selectedFromRegSemes,
-      selectedToRegSemes,
-      selectedRuleType,
-      selectedActiveAdditionalPeriod,
-      selectedCalculatedTransferCred,
-      applyStatusArray,
-      applyForSemesterArray,
-      prevStatusSemesArray,
-      prevAcademicWarningArray,
-    } = this.state;
-
-    const fromAdmSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedFromAdmSemes
-    );
-
-    const toAdmSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedToAdmSemes
-    );
-
-    const fromRegSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedFromRegSemes
-    );
-
-    const toRegSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedToRegSemes
-    );
-
-    const obj = {
-      SID: values["SID"],
-      enWarningStatus: values["enWarningStatus"],
-      studentName: values["studentName"],
-      enTransStatement: values["enTransStatement"],
-      priority: values["priority"],
-      warningColor: selectedColor,
-      ruleType: selectedRuleType,
-      stateId: fromAdmSemesterObj.key,
-      academicStatus: toAdmSemesterObj.key,
-      requestOrgNotes: fromRegSemesterObj.key,
-      toRegSemesId: toRegSemesterObj.key,
-      stdFromGPA: values["stdFromGPA"],
-      stdTillGPA: values["stdTillGPA"],
-      stdFromCredits: values["stdFromCredits"],
-      stdTillCredits: values["stdTillCredits"],
-      calculatedTransferCred: selectedCalculatedTransferCred,
-      activeAdditionalPeriod: selectedActiveAdditionalPeriod,
-      stdSemestersNb: values["stdSemestersNb"],
-      prevFromGPA: values["prevFromGPA"],
-      prevTillGPA: values["prevTillGPA"],
-      prevFromCredits: values["prevFromCredits"],
-      prevTillCredits: values["prevTillCredits"],
-      decreeOrgNotes: applyStatusArray,
-      applyForSemester: applyForSemesterArray,
-      decreeDate: prevStatusSemesArray,
-      decreeOrganizer: prevAcademicWarningArray,
-    };
-
-    onAddNewStdWarningTest(obj);
-  };
-
-  handleEditStdWarningTest = arg => {
-    const studentsRequests = arg;
-
-    this.setState({
-      warningId: studentsRequests.Id,
-      arWarning: studentsRequests.SID,
-      enWarning: studentsRequests.enWarningStatus,
-      arTransStatementWarning: studentsRequests.studentName,
-      enTransStatementWarning: studentsRequests.enTransStatement,
-      priorityWarning: studentsRequests.priority,
-      selectedColor: studentsRequests.warningColor,
-      selectedRuleType: studentsRequests.ruleType,
-      selectedFromAdmSemesId: studentsRequests.stateId,
-      selectedToAdmSemesId: studentsRequests.academicStatus,
-      selectedFromRegSemesId: studentsRequests.requestOrgNotes,
-      selectedToRegSemesId: studentsRequests.toRegSemesId,
-      stdFromGPAWarning: studentsRequests.stdFromGPA,
-      stdTillGPAWarning: studentsRequests.stdTillGPA,
-      stdFromCreditsWarning: studentsRequests.stdFromCredits,
-      stdTillCreditsWarning: studentsRequests.stdTillCredits,
-      selectedCalculatedTransferCred:
-        studentsRequests.calculatedTransferCred == 1 ? "yes" : "no",
-      selectedActiveAdditionalPeriod:
-        studentsRequests.activeAdditionalPeriod == 1 ? "yes" : "no",
-      stdSemestersNumber: studentsRequests.stdSemestersNb,
-      prevFromGPAWarning: studentsRequests.prevFromGPA,
-      prevTillGPAWarning: studentsRequests.prevTillGPA,
-      prevFromCreditsWarning: studentsRequests.prevFromCredits,
-      prevTillCreditsWarning: studentsRequests.prevTillCredits,
-      applyForSemesterArray: studentsRequests.applyForSemester,
-      applyStatusArray: studentsRequests.decreeOrgNotes,
-      prevAcademicWarningArray: studentsRequests.decreeOrganizer,
-      prevStatusSemesArray: studentsRequests.decreeDate,
-      isEdit: true,
-    });
-
-    this.toggle();
-    const { fiscalYears, yearSemesters, onGetFeesConditions, currencies } =
-      this.props;
-    let obj = { Id: studentsRequests.Id };
-
-    if (studentsRequests.stateId) {
-      const fromAdmSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === studentsRequests.stateId
-      );
-      this.setState({
-        selectedFromAdmSemes: fromAdmSemes.value,
-      });
-    }
-
-    if (studentsRequests.academicStatus) {
-      const toAdmSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === studentsRequests.academicStatus
-      );
-      this.setState({
-        selectedToAdmSemes: toAdmSemes.value,
-      });
-    }
-
-    if (studentsRequests.requestOrgNotes) {
-      const fromRegSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === studentsRequests.requestOrgNotes
-      );
-      this.setState({
-        selectedFromRegSemes: fromRegSemes.value,
-      });
-    }
-
-    if (studentsRequests.toRegSemesId) {
-      const toRegSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === studentsRequests.toRegSemesId
-      );
-      this.setState({
-        selectedToRegSemes: toRegSemes.value,
-      });
-    }
-  };
-
-  handleUpdate = values => {
-    const { onUpdateStdWarningTest, yearSemesters } = this.props;
-    const {
-      warningId,
-      selectedColor,
-      selectedFromAdmSemes,
-      selectedToAdmSemes,
-      selectedFromRegSemes,
-      selectedToRegSemes,
-      selectedRuleType,
-      selectedActiveAdditionalPeriod,
-      selectedCalculatedTransferCred,
-      applyStatusArray,
-      applyForSemesterArray,
-      prevStatusSemesArray,
-      prevAcademicWarningArray,
-    } = this.state;
-
-    const fromAdmSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedFromAdmSemes
-    );
-
-    const toAdmSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedToAdmSemes
-    );
-
-    const fromRegSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedFromRegSemes
-    );
-
-    const toRegSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedToRegSemes
-    );
-
-    const obj = {
-      Id: warningId,
-      SID: values["SID"],
-      enWarningStatus: values["enWarningStatus"],
-      studentName: values["studentName"],
-      enTransStatement: values["enTransStatement"],
-      priority: values["priority"],
-      warningColor: selectedColor,
-      ruleType: values["ruleType"],
-      stateId: fromAdmSemesterObj.key,
-      academicStatus: toAdmSemesterObj.key,
-      requestOrgNotes: fromRegSemesterObj.key,
-      toRegSemesId: toRegSemesterObj.key,
-      stdFromGPA: values["stdFromGPA"],
-      stdTillGPA: values["stdTillGPA"],
-      stdFromCredits: values["stdFromCredits"],
-      stdTillCredits: values["stdTillCredits"],
-      calculatedTransferCred:
-        values["calculatedTransferCred"] == "yes"
-          ? 1
-          : values["calculatedTransferCred"] == "no"
-          ? 0
-          : values["calculatedTransferCred"],
-      activeAdditionalPeriod:
-        values["activeAdditionalPeriod"] == "yes"
-          ? 1
-          : values["activeAdditionalPeriod"] == "no"
-          ? 0
-          : values["activeAdditionalPeriod"],
-      stdSemestersNb: values["stdSemestersNb"],
-      prevFromGPA: values["prevFromGPA"],
-      prevTillGPA: values["prevTillGPA"],
-      prevFromCredits: values["prevFromCredits"],
-      prevTillCredits: values["prevTillCredits"],
-      decreeOrgNotes: applyStatusArray,
-      applyForSemester: applyForSemesterArray,
-      decreeDate: prevStatusSemesArray,
-      decreeOrganizer: prevAcademicWarningArray,
-    };
-
-    onUpdateStdWarningTest(obj);
-    this.toggle();
   };
 
   handlePriorityChange = event => {
     const priorityValue = event.target.value;
     this.setState({ priorityWarning: priorityValue });
+  };
+
+  handleSelectYear = (name, value) => {
+    document.getElementById("square-switch1").checked = false;
+    this.setState({
+      selectedYear: value,
+      currentYearObj: {
+        currentYearId: value.value,
+        currentYearName: value.label,
+      },
+    });
+  };
+
+  exportToExcel = () => {
+    const { trainees } = this.state;
+
+    const worksheet = XLSX.utils.json_to_sheet(trainees);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Trainees");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(data, "trainees.xlsx");
   };
 
   render() {
@@ -806,30 +540,33 @@ class CoursesPassPercentsList extends Component {
       semesters,
       studentStates,
       deleted,
+      years,
       t,
     } = this.props;
     const {
+      selectedYear,
       errorMessage,
       sidebarOpen,
       deleteModal,
       isEdit,
       showStudentID,
       showStudentName,
-      showYearSemester,
-      showActivationSemester,
-      showStateId,
-      showRequestOrganizer,
-      showRequestOrgNotes,
-      requestDate,
+      showCredits,
+      showTotalRegistered,
+      showTotalRegisteredExW,
+      showPassedCount,
+      showFailsCount,
+      showArchivedTraineeMarks,
+      withdrawnCount,
       startDate,
       showToRegSemester,
-      showRequestNum,
-      showRequestId,
-      showDecreeOrganizer,
-      showDecreeDate,
-      showDecreeOrgNotes,
-      showFoldingDate,
-      showFoldingOrganizer,
+      showCourseName,
+      showCourseCode,
+      showPassPercentExW,
+      showUnarchivedTrainees,
+      showFailPercentExW,
+      showWithdrawPercent,
+      showArchivingPercent,
       showFoldingOrgNotes,
       modal,
       warningId,
@@ -883,32 +620,32 @@ class CoursesPassPercentsList extends Component {
     const studentsRequestsColumns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "requestNum",
+        dataField: "courseName",
         text: this.props.t("Course Name"),
         sort: true,
         editable: false,
-        hidden: !showRequestNum,
+        hidden: !showCourseName,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
       {
-        dataField: "requestId",
+        dataField: "courseCode",
         text: this.props.t("Course Code"),
         sort: true,
         editable: false,
-        hidden: !showRequestId,
+        hidden: !showCourseCode,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
 
       {
-        dataField: "yearSemester",
+        dataField: "credits",
         text: this.props.t("Credits"),
         sort: true,
         editable: false,
-        hidden: !showYearSemester,
+        hidden: !showCredits,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
@@ -925,141 +662,118 @@ class CoursesPassPercentsList extends Component {
       },
 
       {
-        dataField: "activationSemester",
+        dataField: "totalRegistered",
+        text: this.props.t("Total Registered"),
+        sort: true,
+        editable: false,
+        hidden: !showTotalRegistered,
+        filter: textFilter({
+          placeholder: this.props.t("Search..."),
+        }),
+      },
+
+      {
+        dataField: "totalRegisteredExW",
         text: this.props.t("Total Registered(Exclude W)"),
         sort: true,
         editable: false,
-        hidden: !showActivationSemester,
+        hidden: !showTotalRegisteredExW,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
       {
-        dataField: "stateId",
+        dataField: "passedCount",
         text: this.props.t("Passed Count"),
         sort: true,
         editable: false,
-        hidden: !showStateId,
+        hidden: !showPassedCount,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
 
       {
-        dataField: "requestDate",
+        dataField: "withdrawnCount",
         text: this.props.t("Withdrawn Count"),
         sort: true,
         editable: false,
-        hidden: !requestDate,
+        hidden: !withdrawnCount,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
 
       {
-        dataField: "requestOrganizer",
+        dataField: "failsCount",
 
         text: this.props.t("Fails Count"),
         sort: true,
         editable: false,
-        hidden: !showRequestOrganizer,
+        hidden: !showFailsCount,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
       {
-        dataField: "requestOrgNotes",
+        dataField: "archivedTraineeMarks",
 
         text: this.props.t("Archived Trainee Marks"),
         sort: true,
         editable: false,
-        hidden: !showRequestOrgNotes,
+        hidden: !showArchivedTraineeMarks,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
       {
-        dataField: "decreeDate",
-        text: this.props.t("Un-archived Students"),
+        dataField: "un-archivedTrainees",
+        text: this.props.t("Un-archived Trainees"),
         sort: true,
         editable: false,
-        hidden: !showDecreeDate,
+        hidden: !showUnarchivedTrainees,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
       {
-        dataField: "decreeOrganizer",
+        dataField: "passPercentExW",
         text: this.props.t("Pass Percent(Exclude W)"),
         sort: true,
-        formatter: (cell, row) =>
-          cell && Array.isArray(cell)
-            ? cell.map(option => option.label).join(" , ")
-            : "",
         editable: false,
-        hidden: !showDecreeOrganizer,
+        hidden: !showPassPercentExW,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
 
       {
-        dataField: "decreeOrgNotes",
+        dataField: "failPercentExW",
         text: this.props.t("Fail Percent(Exclude W)"),
         editable: false,
-        hidden: !showDecreeOrgNotes,
+        hidden: !showFailPercentExW,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
       {
-        dataField: "foldingDate",
+        dataField: "withdrawPercent",
         text: this.props.t("Withdraw Percent"),
         editable: false,
-        hidden: !showFoldingDate,
+        hidden: !showWithdrawPercent,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
       {
-        dataField: "foldingOrganizer",
+        dataField: "archivingPercent",
         text: this.props.t("Archiving Percent"),
         editable: false,
-        hidden: !showFoldingOrganizer,
+        hidden: !showArchivingPercent,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
       },
-      // {
-      //   dataField: "foldingOrgNotes",
-      //   text: this.props.t("Folding Notes"),
-      //   editable: false,
-      //   hidden: !showFoldingOrgNotes,
-      //   filter: textFilter({
-      //     placeholder: this.props.t("Search..."),
-      //   }),
-      // },
-      // {
-      //   dataField: "studentId",
-      //   text: this.props.t("Student ID"),
-      //   sort: true,
-      //   editable: false,
-      //   hidden: !showStudentID,
-      //   filter: textFilter({
-      //     placeholder: this.props.t("Search..."),
-      //   }),
-      // },
-      // {
-      //   dataField: "studentName",
-      //   text: this.props.t("Student Name"),
-      //   sort: true,
-      //   editable: false,
-      //   hidden: !showStudentName,
-      //   filter: textFilter({
-      //     placeholder: this.props.t("Search..."),
-      //   }),
-      // },
-
       {
         dataField: "action",
         text: "",
@@ -1109,8 +823,8 @@ class CoursesPassPercentsList extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={t("Academic Warning Rules")}
-              breadcrumbItem={t("Academic Warning Rules List")}
+              title={t("Courses Pass Percents")}
+              breadcrumbItem={t("Courses Pass Percents List")}
             />
 
             <Card>
@@ -1136,16 +850,16 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck15"
+                                  id="btncheck1"
                                   autoComplete="off"
-                                  defaultChecked={showRequestNum}
+                                  defaultChecked={showCourseName}
                                   onClick={() =>
-                                    this.handleShowColumn("requestNum")
+                                    this.handleShowColumn("courseName")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck15"
+                                  htmlFor="btncheck1"
                                 >
                                   {this.props.t("Course Name")}
                                 </label>
@@ -1158,16 +872,16 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck4"
+                                  id="btncheck2"
                                   autoComplete="off"
-                                  defaultChecked={showRequestId}
+                                  defaultChecked={showCourseCode}
                                   onClick={() =>
-                                    this.handleShowColumn("requestId")
+                                    this.handleShowColumn("courseCode")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck4"
+                                  htmlFor="btncheck2"
                                 >
                                   {this.props.t("Course Code")}
                                 </label>
@@ -1180,16 +894,16 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck16"
+                                  id="btncheck3"
                                   autoComplete="off"
-                                  defaultChecked={showYearSemester}
+                                  defaultChecked={showCredits}
                                   onClick={() =>
-                                    this.handleShowColumn("yearSemester")
+                                    this.handleShowColumn("credits")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check big-width-check"
-                                  htmlFor="btncheck16"
+                                  htmlFor="btncheck3"
                                 >
                                   {this.props.t("Credits")}
                                 </label>
@@ -1202,7 +916,7 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck17"
+                                  id="btncheck4"
                                   autoComplete="off"
                                   defaultChecked={startDate}
                                   onClick={() =>
@@ -1211,7 +925,7 @@ class CoursesPassPercentsList extends Component {
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check big-width-check"
-                                  htmlFor="btncheck17"
+                                  htmlFor="btncheck4"
                                 >
                                   {this.props.t("Start Date")}
                                 </label>
@@ -1224,18 +938,18 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck3"
+                                  id="btncheck5"
                                   autoComplete="off"
-                                  defaultChecked={showActivationSemester}
+                                  defaultChecked={showTotalRegistered}
                                   onClick={() =>
-                                    this.handleShowColumn("activationSemester")
+                                    this.handleShowColumn("totalRegistered")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check big-width-check"
-                                  htmlFor="btncheck3"
+                                  htmlFor="btncheck5"
                                 >
-                                  {this.props.t("Total Registered(Exclude W)")}
+                                  {this.props.t("Total Registered")}
                                 </label>
                               </Col>
                             </Row>
@@ -1248,14 +962,36 @@ class CoursesPassPercentsList extends Component {
                                   className="btn-check"
                                   id="btncheck6"
                                   autoComplete="off"
-                                  defaultChecked={showStateId}
+                                  defaultChecked={showTotalRegisteredExW}
                                   onClick={() =>
-                                    this.handleShowColumn("stateId")
+                                    this.handleShowColumn("totalRegisteredExW")
+                                  }
+                                />
+                                <label
+                                  className="btn btn-outline-primary big-width-check big-width-check"
+                                  htmlFor="btncheck6"
+                                >
+                                  {this.props.t("Total Registered(Exclude W)")}
+                                </label>
+                              </Col>
+                            </Row>
+                          </div>
+                          <div className="mb-1">
+                            <Row>
+                              <Col>
+                                <input
+                                  type="checkbox"
+                                  className="btn-check"
+                                  id="btncheck7"
+                                  autoComplete="off"
+                                  defaultChecked={showPassedCount}
+                                  onClick={() =>
+                                    this.handleShowColumn("passedCount")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck6"
+                                  htmlFor="btncheck7"
                                 >
                                   {this.props.t("Passed Count")}
                                 </label>
@@ -1268,16 +1004,16 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck5"
+                                  id="btncheck16"
                                   autoComplete="off"
-                                  defaultChecked={requestDate}
+                                  defaultChecked={withdrawnCount}
                                   onClick={() =>
-                                    this.handleShowColumn("requestDate")
+                                    this.handleShowColumn("withdrawnCount")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck5"
+                                  htmlFor="btncheck16"
                                 >
                                   {this.props.t("Withdrawn Count")}
                                 </label>
@@ -1291,16 +1027,16 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck7"
+                                  id="btncheck8"
                                   autoComplete="off"
-                                  defaultChecked={showRequestOrganizer}
+                                  defaultChecked={showFailsCount}
                                   onClick={() =>
-                                    this.handleShowColumn("requestOrganizer")
+                                    this.handleShowColumn("failsCount")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck7"
+                                  htmlFor="btncheck8"
                                 >
                                   {this.props.t("Fails Count")}
                                 </label>
@@ -1313,16 +1049,18 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck8"
+                                  id="btncheck9"
                                   autoComplete="off"
-                                  defaultChecked={showRequestOrgNotes}
+                                  defaultChecked={showArchivedTraineeMarks}
                                   onClick={() =>
-                                    this.handleShowColumn("requestOrgNotes")
+                                    this.handleShowColumn(
+                                      "archivedTraineeMarks"
+                                    )
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck8"
+                                  htmlFor="btncheck9"
                                 >
                                   {this.props.t("Archived Trainee Marks")}
                                 </label>
@@ -1336,41 +1074,18 @@ class CoursesPassPercentsList extends Component {
                                 <input
                                   type="checkbox"
                                   className="btn-check"
-                                  id="btncheck9"
-                                  autoComplete="off"
-                                  defaultChecked={showDecreeDate}
-                                  onClick={() =>
-                                    this.handleShowColumn("decreeDate")
-                                  }
-                                />
-                                <label
-                                  className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck9"
-                                >
-                                  {this.props.t("Un-archived Students")}
-                                </label>
-                              </Col>
-                            </Row>
-                          </div>
-
-                          <div className="mb-1">
-                            <Row>
-                              <Col>
-                                <input
-                                  type="checkbox"
-                                  className="btn-check"
                                   id="btncheck10"
                                   autoComplete="off"
-                                  defaultChecked={showDecreeOrganizer}
+                                  defaultChecked={showUnarchivedTrainees}
                                   onClick={() =>
-                                    this.handleShowColumn("decreeOrganizer")
+                                    this.handleShowColumn("un-archivedTrainees")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck10"
                                 >
-                                  {this.props.t("Pass Percent(Exclude W)")}
+                                  {this.props.t("Un-archived Trainees")}
                                 </label>
                               </Col>
                             </Row>
@@ -1384,16 +1099,16 @@ class CoursesPassPercentsList extends Component {
                                   className="btn-check"
                                   id="btncheck11"
                                   autoComplete="off"
-                                  defaultChecked={showDecreeOrgNotes}
+                                  defaultChecked={showPassPercentExW}
                                   onClick={() =>
-                                    this.handleShowColumn("decreeOrgNotes")
+                                    this.handleShowColumn("passPercentExW")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck11"
                                 >
-                                  {this.props.t("Fail Percent(Exclude W)")}
+                                  {this.props.t("Pass Percent(Exclude W)")}
                                 </label>
                               </Col>
                             </Row>
@@ -1407,14 +1122,37 @@ class CoursesPassPercentsList extends Component {
                                   className="btn-check"
                                   id="btncheck12"
                                   autoComplete="off"
-                                  defaultChecked={showFoldingDate}
+                                  defaultChecked={showFailPercentExW}
                                   onClick={() =>
-                                    this.handleShowColumn("foldingDate")
+                                    this.handleShowColumn("failPercentExW")
                                   }
                                 />
                                 <label
                                   className="btn btn-outline-primary big-width-check"
                                   htmlFor="btncheck12"
+                                >
+                                  {this.props.t("Fail Percent(Exclude W)")}
+                                </label>
+                              </Col>
+                            </Row>
+                          </div>
+
+                          <div className="mb-1">
+                            <Row>
+                              <Col>
+                                <input
+                                  type="checkbox"
+                                  className="btn-check"
+                                  id="btncheck13"
+                                  autoComplete="off"
+                                  defaultChecked={showWithdrawPercent}
+                                  onClick={() =>
+                                    this.handleShowColumn("withdrawPercent")
+                                  }
+                                />
+                                <label
+                                  className="btn btn-outline-primary big-width-check"
+                                  htmlFor="btncheck13"
                                 >
                                   {this.props.t("Withdraw Percent")}
                                 </label>
@@ -1430,9 +1168,9 @@ class CoursesPassPercentsList extends Component {
                                   className="btn-check"
                                   id="btncheck14"
                                   autoComplete="off"
-                                  defaultChecked={showFoldingOrganizer}
+                                  defaultChecked={showArchivingPercent}
                                   onClick={() =>
-                                    this.handleShowColumn("foldingOrganizer")
+                                    this.handleShowColumn("archivingPercent")
                                   }
                                 />
                                 <label
@@ -1440,73 +1178,6 @@ class CoursesPassPercentsList extends Component {
                                   htmlFor="btncheck14"
                                 >
                                   {this.props.t("Archiving Percent")}
-                                </label>
-                              </Col>
-                            </Row>
-                          </div>
-
-                          <div className="mb-1">
-                            <Row>
-                              <Col>
-                                <input
-                                  type="checkbox"
-                                  className="btn-check"
-                                  id="btncheck13"
-                                  autoComplete="off"
-                                  defaultChecked={showFoldingOrgNotes}
-                                  onClick={() =>
-                                    this.handleShowColumn("foldingOrgNotes")
-                                  }
-                                />
-                                <label
-                                  className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck13"
-                                >
-                                  {this.props.t("Folding Notes")}
-                                </label>
-                              </Col>
-                            </Row>
-                          </div>
-                          <div className="mb-1">
-                            <Row>
-                              <Col>
-                                <input
-                                  type="checkbox"
-                                  className="btn-check"
-                                  id="btncheck1"
-                                  autoComplete="off"
-                                  defaultChecked={showStudentID}
-                                  onClick={() =>
-                                    this.handleShowColumn("studentId")
-                                  }
-                                />
-                                <label
-                                  className="btn btn-outline-primary big-width-check"
-                                  htmlFor="btncheck1"
-                                >
-                                  {this.props.t("Student ID")}
-                                </label>
-                              </Col>
-                            </Row>
-                          </div>
-                          <div className="mb-1">
-                            <Row>
-                              <Col>
-                                <input
-                                  type="checkbox"
-                                  className="btn-check"
-                                  id="btncheck2"
-                                  autoComplete="off"
-                                  defaultChecked={showStudentName}
-                                  onClick={() =>
-                                    this.handleShowColumn("studentName")
-                                  }
-                                />
-                                <label
-                                  className="btn btn-outline-primary big-width-check big-width-check"
-                                  htmlFor="btncheck2"
-                                >
-                                  {this.props.t("Student Name")}
                                 </label>
                               </Col>
                             </Row>
@@ -1559,1069 +1230,52 @@ class CoursesPassPercentsList extends Component {
                                           ? this.props.t("Edit Warning")
                                           : this.props.t("Add Warning")}
                                       </ModalHeader>
-                                      <ModalBody className="py-3 px-5">
-                                        <Formik
-                                          initialValues={
-                                            (isEdit && {
-                                              Id: warningId,
-                                              SID: arWarning,
-                                              enWarningStatus: enWarning,
-                                              studentName:
-                                                arTransStatementWarning,
-                                              enTransStatement:
-                                                enTransStatementWarning,
-                                              priority: priorityWarning,
-                                              warningColor: selectedColor,
-                                              ruleType: selectedRuleType,
-                                              stateId: selectedFromAdmSemes,
-                                              academicStatus:
-                                                selectedToAdmSemes,
-                                              requestOrgNotes:
-                                                selectedFromRegSemes,
-                                              toRegSemesId: selectedToRegSemes,
-                                              stdFromGPA: stdFromGPAWarning,
-                                              stdTillGPA: stdTillGPAWarning,
-                                              stdFromCredits:
-                                                stdFromCreditsWarning,
-                                              stdTillCredits:
-                                                stdTillCreditsWarning,
-                                              calculatedTransferCred:
-                                                selectedCalculatedTransferCred,
-                                              activeAdditionalPeriod:
-                                                selectedActiveAdditionalPeriod,
-                                              stdSemestersNb:
-                                                stdSemestersNumber,
-                                              prevFromGPA: prevFromGPAWarning,
-                                              prevTillGPA: prevTillGPAWarning,
-                                              prevFromCredits:
-                                                prevFromCreditsWarning,
-                                              prevTillCredits:
-                                                prevTillCreditsWarning,
-                                            }) ||
-                                            (!isEdit && {
-                                              SID: "",
-                                              enWarningStatus: "",
-                                              studentName: "",
-                                              enTransStatement: "",
-                                              priority: "",
-                                              warningColor: "",
-                                              ruleType: "",
-                                              stateId: "",
-                                              academicStatus: "",
-                                              requestOrgNotes: "",
-                                              toRegSemesId: "",
-                                              stdFromGPA: "",
-                                              stdTillGPA: "",
-                                              calculatedTransferCred: "",
-                                              activeAdditionalPeriod: "",
-                                              stdSemestersNb: "",
-                                              prevFromGPA: "",
-                                              prevTillGPA: "",
-                                            })
-                                          }
-                                          enableReinitialize={true}
-                                          validationSchema={
-                                            (!isEdit &&
-                                              Yup.object().shape({
-                                                SID: Yup.string()
-                                                  .required(
-                                                    "Warning Status(ar) is required"
-                                                  )
-                                                  .notOneOf(
-                                                    studentsRequests.map(
-                                                      user => user.warningStatus
-                                                    ),
-                                                    "warningStatus already taken"
-                                                  ),
-                                                enWarningStatus:
-                                                  Yup.string().required(
-                                                    "Warning Status is required"
-                                                  ),
-                                              })) ||
-                                            (isEdit &&
-                                              Yup.object().shape({
-                                                SID: Yup.string().required(
-                                                  "Warning Status(ar) is required"
-                                                ),
-                                                enWarningStatus:
-                                                  Yup.string().required(
-                                                    "Warning Status is required"
-                                                  ),
-                                              }))
-                                          }
-                                          onSubmit={(
-                                            values,
-                                            { setSubmitting }
-                                          ) => {
-                                            if (isEdit) {
-                                              const updateFees = {
-                                                Id: warningId,
-                                                SID: values.SID,
-                                                enWarningStatus:
-                                                  values.enWarningStatus,
-                                                studentName: values.studentName,
-                                                enTransStatement:
-                                                  values.enTransStatement,
-                                                priority: values.priority,
-                                                warningColor: selectedColor,
-                                                ruleType: values.ruleType,
-                                                stateId: selectedFromAdmSemes,
-                                                academicStatus:
-                                                  selectedToAdmSemes,
-                                                requestOrgNotes:
-                                                  selectedFromRegSemes,
-                                                toRegSemesId:
-                                                  selectedToRegSemes,
-                                                stdFromGPA: values.stdFromGPA,
-                                                stdTillGPA: values.stdTillGPA,
-                                                stdFromCredits:
-                                                  values.stdFromCredits,
-                                                stdTillCredits:
-                                                  values.stdTillCredits,
-                                                calculatedTransferCred:
-                                                  values.calculatedTransferCred,
-                                                activeAdditionalPeriod:
-                                                  values.activeAdditionalPeriod,
-                                                stdSemestersNb:
-                                                  values.stdSemestersNb,
-                                                prevFromGPA: values.prevFromGPA,
-                                                prevTillGPA: values.prevTillGPA,
-                                                prevFromCredits:
-                                                  values.prevFromCredits,
-                                                prevTillCredits:
-                                                  values.prevTillCredits,
-                                              };
-                                              this.handleUpdate(updateFees);
-                                            } else {
-                                              this.handleSave(values);
-                                            }
-                                            setSubmitting(false);
-                                          }}
-                                        >
-                                          {({
-                                            errors,
-                                            status,
-                                            touched,
-                                            values,
-                                            handleSubmit,
-                                            setFieldValue,
-                                          }) => (
-                                            <Form onSubmit={handleSubmit}>
-                                              <Row>
-                                                <Col className="col-6">
-                                                  <Card>
-                                                    <CardTitle id="add_header">
-                                                      {this.props.t(
-                                                        "Basic Information"
-                                                      )}
-                                                    </CardTitle>
-                                                    <CardBody>
-                                                      <Row>
-                                                        <Col lg="6">
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Warning Status(ar)"
-                                                                  )}
-                                                                </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Field
-                                                                  name="SID"
-                                                                  type="text"
-                                                                  className={
-                                                                    "form-control" +
-                                                                    (errors.SID &&
-                                                                    touched.SID
-                                                                      ? " is-invalid"
-                                                                      : "")
-                                                                  }
-                                                                />
-                                                                <ErrorMessage
-                                                                  name="SID"
-                                                                  component="div"
-                                                                  className="invalid-feedback"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Transcript Statement(ar)"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Field
-                                                                  name="studentName"
-                                                                  type="text"
-                                                                  className={
-                                                                    "form-control"
-                                                                  }
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-4">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Priority"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <InputGroup>
-                                                                  <Field
-                                                                    type="number"
-                                                                    name="priority"
-                                                                    id="applying-order"
-                                                                    className={`form-control`}
-                                                                    defaultValue={
-                                                                      priorityWarning
-                                                                    }
-                                                                  />
-                                                                  <div className="input-group-ques">
-                                                                    ?
-                                                                  </div>
-                                                                </InputGroup>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Rule Type"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <div className="d-flex flex-wrap gap-3">
-                                                                  <div
-                                                                    className="btn-group button-or"
-                                                                    role="group"
-                                                                  >
-                                                                    <input
-                                                                      type="radio"
-                                                                      className={`btn-check button-or ${
-                                                                        selectedRuleType ===
-                                                                        "addWarning"
-                                                                          ? "active"
-                                                                          : ""
-                                                                      }`}
-                                                                      name="ruleType"
-                                                                      id="btnradio4"
-                                                                      autoComplete="off"
-                                                                      defaultChecked={
-                                                                        selectedRuleType ==
-                                                                        "addWarning"
-                                                                          ? "active"
-                                                                          : ""
-                                                                      }
-                                                                      onChange={() =>
-                                                                        setFieldValue(
-                                                                          "ruleType",
-                                                                          "addWarning"
-                                                                        )
-                                                                      }
-                                                                    />
-                                                                    <label
-                                                                      className="btn btn-outline-primary smallButton  w-sm "
-                                                                      htmlFor="btnradio4"
-                                                                    >
-                                                                      {this.props.t(
-                                                                        "Add Warning"
-                                                                      )}
-                                                                    </label>
-
-                                                                    <input
-                                                                      type="radio"
-                                                                      className={`btn-check button-or ${
-                                                                        selectedRuleType ===
-                                                                        "removeWarning"
-                                                                          ? "active"
-                                                                          : ""
-                                                                      }`}
-                                                                      name="ruleType"
-                                                                      id="btnradio6"
-                                                                      autoComplete="off"
-                                                                      defaultChecked={
-                                                                        selectedRuleType ==
-                                                                        "removeWarning"
-                                                                          ? "active"
-                                                                          : ""
-                                                                      }
-                                                                      onChange={() =>
-                                                                        setFieldValue(
-                                                                          "ruleType",
-                                                                          "removeWarning"
-                                                                        )
-                                                                      }
-                                                                    />
-                                                                    <label
-                                                                      className="btn btn-outline-primary smallButton  w-sm "
-                                                                      htmlFor="btnradio6"
-                                                                    >
-                                                                      {this.props.t(
-                                                                        "Remove Warning"
-                                                                      )}
-                                                                    </label>
-                                                                  </div>
-                                                                </div>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Warning Color"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <div className="row justify-content-center">
-                                                                  <input
-                                                                    name="warningColor"
-                                                                    className="form-control form-control-color mw-100"
-                                                                    value={
-                                                                      selectedColor
-                                                                    }
-                                                                    onChange={
-                                                                      this
-                                                                        .handleColorChange
-                                                                    }
-                                                                    onBlur={() =>
-                                                                      this.handleInputBlur(
-                                                                        "warningColor"
-                                                                      )
-                                                                    }
-                                                                    type="color"
-                                                                    id="example-color-input"
-                                                                  />
-                                                                </div>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                        </Col>
-                                                        <Col lg="6">
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Warning Status(en)"
-                                                                  )}
-                                                                </Label>
-                                                                <span className="text-danger">
-                                                                  *
-                                                                </span>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Field
-                                                                  name="enWarningStatus"
-                                                                  type="text"
-                                                                  className={
-                                                                    "form-control" +
-                                                                    (errors.enWarningStatus &&
-                                                                    touched.enWarningStatus
-                                                                      ? " is-invalid"
-                                                                      : "")
-                                                                  }
-                                                                />
-                                                                <ErrorMessage
-                                                                  name="enWarningStatus"
-                                                                  component="div"
-                                                                  className="invalid
-                                                                       -feedback"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Transcript Statement(en)"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Field
-                                                                  name="enTransStatement"
-                                                                  type="text"
-                                                                  className={
-                                                                    "form-control"
-                                                                  }
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Apply for Semesters"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Select
-                                                                  value={
-                                                                    applyForSemesterArray
-                                                                  }
-                                                                  name="applyForSemester"
-                                                                  isMulti={true}
-                                                                  onChange={selectedOption =>
-                                                                    this.handleMulti(
-                                                                      "applyForSemester",
-                                                                      selectedOption
-                                                                    )
-                                                                  }
-                                                                  options={
-                                                                    semesters
-                                                                  }
-                                                                  classNamePrefix="select2-selection"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Semester"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Select
-                                                                  value={
-                                                                    applyStatusArray
-                                                                  }
-                                                                  name="decreeOrgNotes"
-                                                                  isMulti={true}
-                                                                  onChange={selectedOption =>
-                                                                    this.handleMulti(
-                                                                      "decreeOrgNotes",
-                                                                      selectedOption
-                                                                    )
-                                                                  }
-                                                                  options={
-                                                                    studentStates
-                                                                  }
-                                                                  classNamePrefix="select2-selection"
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                        </Col>
-                                                      </Row>
-                                                    </CardBody>
-                                                  </Card>
-                                                </Col>
-
-                                                <Col className="col-6">
-                                                  <Card>
-                                                    <CardTitle id="add_header">
-                                                      {this.props.t(
-                                                        "Students Included"
-                                                      )}
-                                                    </CardTitle>
-                                                    <CardBody>
-                                                      <Row>
-                                                        <Col lg="6">
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <label className="form-label">
-                                                                  {this.props.t(
-                                                                    "From Adm. Semester"
-                                                                  )}
-                                                                </label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Input
-                                                                  type="text"
-                                                                  name="stateId"
-                                                                  id="year-semester"
-                                                                  list="fromAdmSemesterdatalistOptions"
-                                                                  placeholder="Type to search..."
-                                                                  className={
-                                                                    "form-control"
-                                                                  }
-                                                                  onBlur={() =>
-                                                                    this.handleInputBlur(
-                                                                      "stateId"
-                                                                    )
-                                                                  }
-                                                                  onFocus={() =>
-                                                                    this.handleInputFocus(
-                                                                      "stateId"
-                                                                    )
-                                                                  }
-                                                                  onChange={event =>
-                                                                    this.handleDataListChange(
-                                                                      event,
-                                                                      "stateId"
-                                                                    )
-                                                                  }
-                                                                  value={
-                                                                    selectedFromAdmSemes
-                                                                      ? (
-                                                                          yearSemesters.find(
-                                                                            yearSemester =>
-                                                                              yearSemester.value ===
-                                                                              selectedFromAdmSemes
-                                                                          ) ||
-                                                                          ""
-                                                                        ).value
-                                                                      : ""
-                                                                  }
-                                                                />
-                                                                <datalist id="fromAdmSemesterdatalistOptions">
-                                                                  {yearSemesters.map(
-                                                                    yearSemester => (
-                                                                      <option
-                                                                        key={
-                                                                          yearSemester.key
-                                                                        }
-                                                                        value={
-                                                                          yearSemester.value
-                                                                        }
-                                                                      />
-                                                                    )
-                                                                  )}
-                                                                </datalist>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <label className="form-label">
-                                                                  {this.props.t(
-                                                                    "From Reg. Semester"
-                                                                  )}
-                                                                </label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Input
-                                                                  type="text"
-                                                                  name="requestOrgNotes "
-                                                                  id="year-semester"
-                                                                  list="fromRegSemesterdatalistOptions"
-                                                                  placeholder="Type to search..."
-                                                                  className={
-                                                                    "form-control"
-                                                                  }
-                                                                  onBlur={() =>
-                                                                    this.handleInputBlur(
-                                                                      "requestOrgNotes "
-                                                                    )
-                                                                  }
-                                                                  onFocus={() =>
-                                                                    this.handleInputFocus(
-                                                                      "requestOrgNotes "
-                                                                    )
-                                                                  }
-                                                                  onChange={event =>
-                                                                    this.handleDataListChange(
-                                                                      event,
-                                                                      "requestOrgNotes "
-                                                                    )
-                                                                  }
-                                                                  value={
-                                                                    selectedFromRegSemes
-                                                                      ? (
-                                                                          yearSemesters.find(
-                                                                            yearSemester =>
-                                                                              yearSemester.value ===
-                                                                              selectedFromRegSemes
-                                                                          ) ||
-                                                                          ""
-                                                                        ).value
-                                                                      : ""
-                                                                  }
-                                                                />
-                                                                <datalist id="fromRegSemesterdatalistOptions">
-                                                                  {yearSemesters.map(
-                                                                    yearSemester => (
-                                                                      <option
-                                                                        key={
-                                                                          yearSemester.key
-                                                                        }
-                                                                        value={
-                                                                          yearSemester.value
-                                                                        }
-                                                                      />
-                                                                    )
-                                                                  )}
-                                                                </datalist>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "End AGPA"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="4">
-                                                                <InputGroup>
-                                                                  <Field
-                                                                    type="number"
-                                                                    name="stdFromGPA"
-                                                                    id="avg"
-                                                                    className={`form-control`}
-                                                                  />
-                                                                  <div className="input-group-ques">
-                                                                    Pts
-                                                                  </div>
-                                                                </InputGroup>
-                                                              </Col>
-                                                              <Col lg="4">
-                                                                <InputGroup>
-                                                                  <Field
-                                                                    type="number"
-                                                                    name="stdTillGPA"
-                                                                    id="avg"
-                                                                    className={`form-control`}
-                                                                  />
-                                                                  <div className="input-group-ques">
-                                                                    Pts
-                                                                  </div>
-                                                                </InputGroup>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="5">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Calculating the Transfer Credits"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="7">
-                                                                <div className="d-flex flex-wrap gap-3">
-                                                                  <div
-                                                                    className="btn-group button-or"
-                                                                    role="group"
-                                                                  >
-                                                                    <input
-                                                                      type="radio"
-                                                                      className="btn-check button-or"
-                                                                      name="calculatedTransferCred"
-                                                                      id="btnradio10"
-                                                                      autoComplete="off"
-                                                                      defaultChecked={
-                                                                        selectedCalculatedTransferCred ==
-                                                                        "yes"
-                                                                          ? "active"
-                                                                          : ""
-                                                                      }
-                                                                      onChange={() =>
-                                                                        setFieldValue(
-                                                                          "calculatedTransferCred",
-                                                                          "yes"
-                                                                        )
-                                                                      }
-                                                                    />
-                                                                    <label
-                                                                      className="btn btn-outline-primary smallButton  w-sm "
-                                                                      htmlFor="btnradio10"
-                                                                    >
-                                                                      {this.props.t(
-                                                                        "Yes"
-                                                                      )}
-                                                                    </label>
-
-                                                                    <input
-                                                                      type="radio"
-                                                                      className="btn-check button-or"
-                                                                      name="calculatedTransferCred"
-                                                                      id="btnradio11"
-                                                                      autoComplete="off"
-                                                                      onChange={() =>
-                                                                        setFieldValue(
-                                                                          "calculatedTransferCred",
-                                                                          "no"
-                                                                        )
-                                                                      }
-                                                                      defaultChecked={
-                                                                        selectedCalculatedTransferCred ==
-                                                                        "no"
-                                                                          ? "active"
-                                                                          : ""
-                                                                      }
-                                                                    />
-                                                                    <label
-                                                                      className="btn btn-outline-primary smallButton  w-sm "
-                                                                      htmlFor="btnradio11"
-                                                                    >
-                                                                      {this.props.t(
-                                                                        "No"
-                                                                      )}
-                                                                    </label>
-                                                                  </div>
-                                                                </div>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div>
-                                                            <Row>
-                                                              <Col lg="5">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Student Semesters"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="4">
-                                                                <Field
-                                                                  type="number"
-                                                                  name="stdSemestersNb"
-                                                                  className={`form-control`}
-                                                                />
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                        </Col>
-                                                        <Col lg="6">
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <label className="form-label">
-                                                                  {this.props.t(
-                                                                    "To Adm. Semester"
-                                                                  )}
-                                                                </label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Input
-                                                                  type="text"
-                                                                  name="academicStatus"
-                                                                  id="year-semester"
-                                                                  list="toAdmSemesterdatalistOptions"
-                                                                  placeholder="Type to search..."
-                                                                  className={
-                                                                    "form-control"
-                                                                  }
-                                                                  onBlur={() =>
-                                                                    this.handleInputBlur(
-                                                                      "academicStatus"
-                                                                    )
-                                                                  }
-                                                                  onFocus={() =>
-                                                                    this.handleInputFocus(
-                                                                      "academicStatus"
-                                                                    )
-                                                                  }
-                                                                  onChange={event =>
-                                                                    this.handleDataListChange(
-                                                                      event,
-                                                                      "academicStatus"
-                                                                    )
-                                                                  }
-                                                                  value={
-                                                                    selectedToAdmSemes
-                                                                      ? (
-                                                                          yearSemesters.find(
-                                                                            yearSemester =>
-                                                                              yearSemester.value ===
-                                                                              selectedToAdmSemes
-                                                                          ) ||
-                                                                          ""
-                                                                        ).value
-                                                                      : ""
-                                                                  }
-                                                                />
-                                                                <datalist id="toAdmSemesterdatalistOptions">
-                                                                  {yearSemesters.map(
-                                                                    yearSemester => (
-                                                                      <option
-                                                                        key={
-                                                                          yearSemester.key
-                                                                        }
-                                                                        value={
-                                                                          yearSemester.value
-                                                                        }
-                                                                      />
-                                                                    )
-                                                                  )}
-                                                                </datalist>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <label className="form-label">
-                                                                  {this.props.t(
-                                                                    "To Reg. Semester"
-                                                                  )}
-                                                                </label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <Input
-                                                                  type="text"
-                                                                  name="toRegSemesId "
-                                                                  id="year-semester"
-                                                                  list="toRegSemesterdatalistOptions"
-                                                                  placeholder="Type to search..."
-                                                                  className={
-                                                                    "form-control"
-                                                                  }
-                                                                  onBlur={() =>
-                                                                    this.handleInputBlur(
-                                                                      "toRegSemesId "
-                                                                    )
-                                                                  }
-                                                                  onFocus={() =>
-                                                                    this.handleInputFocus(
-                                                                      "toRegSemesId "
-                                                                    )
-                                                                  }
-                                                                  onChange={event =>
-                                                                    this.handleDataListChange(
-                                                                      event,
-                                                                      "toRegSemesId "
-                                                                    )
-                                                                  }
-                                                                  value={
-                                                                    selectedToRegSemes
-                                                                      ? (
-                                                                          yearSemesters.find(
-                                                                            yearSemester =>
-                                                                              yearSemester.value ===
-                                                                              selectedToRegSemes
-                                                                          ) ||
-                                                                          ""
-                                                                        ).value
-                                                                      : ""
-                                                                  }
-                                                                />
-                                                                <datalist id="toRegSemesterdatalistOptions">
-                                                                  {yearSemesters.map(
-                                                                    yearSemester => (
-                                                                      <option
-                                                                        key={
-                                                                          yearSemester.key
-                                                                        }
-                                                                        value={
-                                                                          yearSemester.value
-                                                                        }
-                                                                      />
-                                                                    )
-                                                                  )}
-                                                                </datalist>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="4">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Passed Credits"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="4">
-                                                                <InputGroup>
-                                                                  <Field
-                                                                    type="number"
-                                                                    name="stdFromCredits"
-                                                                    id="avg"
-                                                                    className={`form-control`}
-                                                                  />
-                                                                  <div className="input-group-ques">
-                                                                    CHs
-                                                                  </div>
-                                                                </InputGroup>
-                                                              </Col>
-                                                              <Col lg="4">
-                                                                <InputGroup>
-                                                                  <Field
-                                                                    type="number"
-                                                                    name="stdTillCredits"
-                                                                    id="avg"
-                                                                    className={`form-control`}
-                                                                  />
-                                                                  <div className="input-group-ques">
-                                                                    CHs
-                                                                  </div>
-                                                                </InputGroup>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-
-                                                          <div className="mb-3">
-                                                            <Row>
-                                                              <Col lg="5">
-                                                                <Label className="form-label">
-                                                                  {this.props.t(
-                                                                    "Active with Additional Period"
-                                                                  )}
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="7">
-                                                                <div className="d-flex flex-wrap gap-3">
-                                                                  <div
-                                                                    className="btn-group button-or"
-                                                                    role="group"
-                                                                  >
-                                                                    <input
-                                                                      type="radio"
-                                                                      className="btn-check button-or"
-                                                                      name="activeAdditionalPeriod"
-                                                                      id="btnradio12"
-                                                                      autoComplete="off"
-                                                                      onChange={() =>
-                                                                        setFieldValue(
-                                                                          "activeAdditionalPeriod",
-                                                                          "yes"
-                                                                        )
-                                                                      }
-                                                                      defaultChecked={
-                                                                        selectedActiveAdditionalPeriod ==
-                                                                        "yes"
-                                                                          ? "active"
-                                                                          : ""
-                                                                      }
-                                                                    />
-                                                                    <label
-                                                                      className="btn btn-outline-primary smallButton  w-sm "
-                                                                      htmlFor="btnradio12"
-                                                                    >
-                                                                      {this.props.t(
-                                                                        "Yes"
-                                                                      )}
-                                                                    </label>
-
-                                                                    <input
-                                                                      type="radio"
-                                                                      className="btn-check button-or"
-                                                                      name="activeAdditionalPeriod"
-                                                                      id="btnradio13"
-                                                                      autoComplete="off"
-                                                                      onChange={() =>
-                                                                        setFieldValue(
-                                                                          "activeAdditionalPeriod",
-                                                                          "no"
-                                                                        )
-                                                                      }
-                                                                      defaultChecked={
-                                                                        selectedActiveAdditionalPeriod ==
-                                                                        "no"
-                                                                          ? "active"
-                                                                          : ""
-                                                                      }
-                                                                    />
-                                                                    <label
-                                                                      className="btn btn-outline-primary smallButton  w-sm "
-                                                                      htmlFor="btnradio13"
-                                                                    >
-                                                                      {this.props.t(
-                                                                        "No"
-                                                                      )}
-                                                                    </label>
-                                                                  </div>
-                                                                </div>
-                                                              </Col>
-                                                            </Row>
-                                                          </div>
-                                                        </Col>
-                                                      </Row>
-                                                    </CardBody>
-                                                  </Card>
-                                                </Col>
-                                              </Row>
-                                              <Row>
-                                                <Col>
-                                                  <div className="text-center">
-                                                    <Button
-                                                      type="submit"
-                                                      style={{
-                                                        backgroundColor:
-                                                          "#0086BF",
-                                                        border: "#0086BF",
-                                                      }}
-                                                    >
-                                                      {t("Save")}
-                                                    </Button>
-                                                  </div>
-                                                </Col>
-                                              </Row>
-
-                                              <Row></Row>
-                                            </Form>
-                                          )}
-                                        </Formik>
-                                      </ModalBody>
+                                      <ModalBody className="py-3 px-5"></ModalBody>
                                     </Modal>
 
                                     <Row>
-                                      <Col sm="3">
+                                      <Col sm="5">
                                         <div className="search-box ms-2 mb-2 d-inline-block">
-                                          {showSearchButton && (
-                                            <div className="position-relative">
-                                              <SearchBar
-                                                {...toolkitprops.searchProps}
-                                              />
-                                            </div>
-                                          )}
+                                          {/* {showSearchButton && ( */}
+                                          <div className="position-relative">
+                                            <SearchBar
+                                              {...toolkitprops.searchProps}
+                                            />
+                                          </div>
+                                          {/* )} */}
                                         </div>
                                       </Col>
-                                      <Col>
-                                        {showAddButton && (
-                                          <div className="text-sm-end">
-                                            <Tooltip
-                                              title={this.props.t("Add")}
-                                              placement="top"
+                                      <Col lg="3">
+                                        <Select
+                                          className="select-style-year"
+                                          name="yearId"
+                                          key={`yearId`}
+                                          options={years}
+                                          onChange={newValue => {
+                                            this.handleSelectYear(
+                                              "yearId",
+                                              newValue
+                                            );
+                                          }}
+                                          value={selectedYear}
+                                        />
+                                      </Col>
+                                      <Col lg="3">
+                                        <div className="text-sm-end">
+                                          <Tooltip
+                                            title={this.props.t(
+                                              "Export to Excel"
+                                            )}
+                                            placement="top"
+                                          >
+                                            <IconButton
+                                              color="success"
+                                              onClick={this.exportToExcel}
                                             >
-                                              <IconButton
-                                                color="primary"
-                                                onClick={this.handleAddWarning}
-                                              >
-                                                <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                              </IconButton>
-                                            </Tooltip>
-                                          </div>
-                                        )}
+                                              <i className="mdi mdi-file-excel blue-noti-icon" />
+                                            </IconButton>
+                                          </Tooltip>
+                                        </div>
                                       </Col>
                                     </Row>
                                     <Row>
@@ -2736,12 +1390,13 @@ const mapStateToProps = ({
   generalManagements,
   semesters,
   menu_items,
+  years,
 }) => ({
   studentsRequests: studentsRequests.studentsRequests,
   deleted: studentsRequests.deleted,
   faculties: mobAppFacultyAccs.faculties,
   currencies: currencies.currencies,
-  yearSemesters: generalManagements.yearSemesters,
+  years: years.years,
   semesters: semesters.semesters,
   currentSemester: semesters.currentSemester,
   user_menu: menu_items.user_menu || [],
@@ -2751,6 +1406,7 @@ const mapDispatchToProps = dispatch => ({
   // onGetStudentsRequests: regReqDocs =>
   //   dispatch(getStudentsRequests(regReqDocs)),
   // onGetCurrentSemester: () => dispatch(getCurrentSemester()),
+  onGetYears: () => dispatch(getYears()),
 });
 
 export default connect(

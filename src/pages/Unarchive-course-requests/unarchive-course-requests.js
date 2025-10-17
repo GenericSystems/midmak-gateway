@@ -442,7 +442,7 @@ class UnarchiveCourseReq extends Component {
         editable: false,
       },
       {
-        dataField: "applyingUser",
+        dataField: "applyingUserS",
         text: this.props.t("Applying User"),
         sort: true,
         editable: false,
@@ -454,13 +454,13 @@ class UnarchiveCourseReq extends Component {
         editable: false,
       },
       {
-        dataField: "startDate",
+        dataField: "startDateS",
         text: this.props.t("Start Date"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "endDate",
+        dataField: "endDateS",
         text: this.props.t("End Date"),
         sort: true,
         editable: false,

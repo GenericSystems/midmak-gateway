@@ -184,8 +184,25 @@ class CourseTypesList extends Component {
 
     const { SearchBar } = Search;
 
+    const pageOptions = {
+      sizePerPage: 10,
+      totalSize: courseTypes.length,
+      custom: true,
+      page: 1,
+    };
+
     const columns = [
       { dataField: "Id", text: t("ID"), hidden: true },
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex, extraData) => {
+          const currentPage = extraData?.currentPage || 1;
+          const sizePerPage = extraData?.sizePerPage || pageOptions.sizePerPage;
+          return rowIndex + 1 + (currentPage - 1) * sizePerPage;
+        },
+        editable: false,
+      },
       {
         dataField: "arTitle",
         text: t("Course Type (ar)"),
@@ -213,12 +230,6 @@ class CourseTypesList extends Component {
         ),
       },
     ];
-
-    const pageOptions = {
-      sizePerPage: 10,
-      totalSize: courseTypes.length,
-      custom: true,
-    };
 
     return (
       <React.Fragment>
@@ -292,10 +303,20 @@ class CourseTypesList extends Component {
                                 keyField="Id"
                                 {...toolkitprops.baseProps}
                                 {...paginationTableProps}
-                                columns={columns}
+                                columns={columns.map(col => ({
+                                  ...col,
+                                  formatter:
+                                    col.dataField === "serial"
+                                      ? (cell, row, rowIndex) =>
+                                          rowIndex +
+                                          1 +
+                                          (paginationProps.page - 1) *
+                                            paginationProps.sizePerPage
+                                      : col.formatter,
+                                }))}
                                 data={courseTypes}
                                 cellEdit={cellEditFactory({
-                                  mode: "click",
+                                  mode: "dbclick",
                                   blurToSave: true,
                                   afterSaveCell: (
                                     oldValue,

@@ -8,10 +8,12 @@ import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import * as Yup from "yup";
 import Select from "react-select";
 import * as moment from "moment";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
   Card,
   CardBody,
   CardTitle,
+  CardHeader,
   Col,
   Container,
   Row,
@@ -62,13 +64,14 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-import periods from "store/periods/reducer";
-import defineExamDates from "store/Exam/DefineExamDates/reducer";
+import { getCoursesOffering } from "store/classScheduling/actions";
 class DefineExamDatesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       defineExamDates: [],
+      coursesOffering: [],
+      courses: this.props.coursesOffering,
       selecteDefineExamDateId: 0,
       gradeTypes: [],
       allDaysArray: [],
@@ -79,6 +82,7 @@ class DefineExamDatesList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      activeTable: "first",
     };
     this.state = {
       languageState: "",
@@ -88,12 +92,17 @@ class DefineExamDatesList extends Component {
       duplicateErrorDePer: null,
       selectedRowId: null,
       modal: false,
+      deleteModal1: false,
       modal2: false,
+      modal3: false,
       isEdit: false,
       isOpen: false,
+      isOpen1: false,
+      isOpen2: false,
       isAdd: false,
       selectedExamType: "",
       selectedDay: null,
+      selectedCourseName: null,
       selectedStudentsOrder: "",
       startDateError: false,
       endDateError: false,
@@ -114,6 +123,7 @@ class DefineExamDatesList extends Component {
       i18n,
       isLoading,
       defineExamDates,
+      coursesOffering,
       onGetDefineExamDates,
       onGetStudentsOrder,
       gradeTypes,
@@ -121,6 +131,7 @@ class DefineExamDatesList extends Component {
       studentsOrder,
       definePeriods,
       user_menu,
+      onGetCourseOffering,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -128,6 +139,9 @@ class DefineExamDatesList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetDefineExamDates(lang);
     onGetStudentsOrder();
+
+    onGetCourseOffering(lang);
+
     this.setState({
       defineExamDates,
       definePeriods,
@@ -136,6 +150,7 @@ class DefineExamDatesList extends Component {
       studentsOrder,
       languageState: lang,
       isLoading,
+      coursesOffering,
     });
     i18n.on("languageChanged", this.handleLanguageChange);
   }
@@ -231,6 +246,25 @@ class DefineExamDatesList extends Component {
       modal: !prevState.modal,
     }));
   };
+
+  toggle1 = () => {
+    this.setState(prevState => ({
+      modal1: !prevState.modal1,
+    }));
+  };
+
+  toggle2 = () => {
+    this.setState(prevState => ({
+      modal2: !prevState.modal2,
+    }));
+  };
+
+  toggle3 = () => {
+    this.setState(prevState => ({
+      modal3: !prevState.modal3,
+    }));
+  };
+
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
@@ -361,8 +395,8 @@ class DefineExamDatesList extends Component {
       } else if (isAdd) {
         const response = onAddNewDefineExamDate(defineExamDateInfo);
         if (response?.allDays) {
-          const parsedDays = JSON.parse(response.allDays);
-          this.setState({ allDaysArray: parsedDays });
+          // const parsedDays = JSON.parse(response.allDays);
+          this.setState({ allDaysArray: response.allDays });
         }
         if (response?.Id) {
           this.setState({ examId: response.Id });
@@ -415,11 +449,11 @@ class DefineExamDatesList extends Component {
   handleExamDateEdit = arg => {
     console.log("arg", arg);
     const { definePeriods, onGetDefinePeriods } = this.props;
-    console.log("1", arg.examPeriods);
+    console.log("1", arg.definePeriods);
     const filteredDefinePeriods = definePeriods.filter(
       defineExamDate => defineExamDate.key != arg.Id
     );
-    const periodsForGrid = (arg.examPeriods || []).map(period => ({
+    const periodsForGrid = (arg.definePeriods || []).map(period => ({
       id: period.Id,
       flag: period.flag,
       startTime: period.startTime,
@@ -437,13 +471,13 @@ class DefineExamDatesList extends Component {
       // startTime: periods.startTime,
       // endTime: periods.endTime,
       // flag: periods.flag,
-      // examPeriodsGridData: periodsForGrid,
+      // definePeriodsGridData: periodsForGrid,
       isEdit: true,
     }),
       // console.log("definePeriods in state:", this.state.definePeriods);
       onGetDefinePeriods(arg.Id);
     // this.setState({
-    //   examPeriodsGridData: periodsForGrid,
+    //   definePeriodsGridData: periodsForGrid,
     // });
     this.toggle();
   };
@@ -486,6 +520,98 @@ class DefineExamDatesList extends Component {
     }
   };
 
+  handleExamDateDetailEdit = arg => {
+    console.log("arg", arg);
+    this.setState({ isOpen: true });
+    this.toggle1();
+  };
+
+  handleExamSchedule = arg => {
+    console.log("arg", arg);
+    this.setState({
+      exam: arg,
+      isOpen1: true,
+      allDaysArray: arg.all_days,
+      examPeriods: arg.examPeriods,
+    });
+    this.toggle2();
+  };
+
+  exportToExcel = () => {
+    const { trainees } = this.state;
+
+    const worksheet = XLSX.utils.json_to_sheet(trainees);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Trainees");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(data, "trainees.xlsx");
+  };
+
+  onDragEnd = result => {
+    const { source, destination, draggableId } = result;
+    if (!destination) return;
+
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    )
+      return;
+
+    const newCourses = Array.from(this.props.coursesOffering);
+    const newPeriods = this.state.examPeriods.map(p => ({
+      ...p,
+      courses: [...p.courses],
+    }));
+
+    let movedCourse;
+
+    if (source.droppableId === "courses") {
+      movedCourse = newCourses.splice(source.index, 1)[0];
+    } else {
+      const sourcePeriod = newPeriods.find(p => p.Id === source.droppableId);
+      movedCourse = sourcePeriod.courses.splice(source.index, 1)[0];
+    }
+
+    if (destination.droppableId === "courses") {
+      newCourses.splice(destination.index, 0, movedCourse);
+    } else {
+      const destPeriod = newPeriods.find(p => p.Id === destination.droppableId);
+      destPeriod.courses.splice(destination.index, 0, movedCourse);
+    }
+
+    this.setState({
+      coursesOffering: newCourses,
+      examPeriods: newPeriods,
+    });
+  };
+
+  onDragStart = start => {
+    this.setState({ currentlyDragging: start.draggableId });
+  };
+
+  formatTime = time => {
+    if (!time) return "";
+    const date = new Date(`1970-01-01T${time}`);
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  handleConflicts = arg => {
+    console.log("arg", arg);
+    this.setState({ isOpen2: true });
+    this.toggle3();
+  };
+
   render() {
     const defineExamDate = this.state.defineExamDate;
 
@@ -497,8 +623,12 @@ class DefineExamDatesList extends Component {
       t,
       deleted,
       isLoading,
+      coursesOffering,
     } = this.props;
     const {
+      activeTable,
+      examPeriods,
+      modal1,
       languageState,
       duplicateError,
       duplicateErrorDePer,
@@ -507,9 +637,11 @@ class DefineExamDatesList extends Component {
       deleteModal1,
       modal,
       modal2,
+      modal3,
       isEdit,
+      isOpen1,
+      isOpen2,
       isOpen,
-      isAdd,
       emptyError,
       showAlert,
       showAddButton,
@@ -517,12 +649,13 @@ class DefineExamDatesList extends Component {
       showEditButton,
       showSearchButton,
       selectedDay,
+      selectedCourseName,
       selectedExamType,
       selectedStudentsOrder,
       isShowPreReq,
     } = this.state;
     console.log("allDaysArray", allDaysArray);
-    console.log("definePeriods", definePeriods);
+    console.log("definePeriods", examPeriods);
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -580,7 +713,16 @@ class DefineExamDatesList extends Component {
         editable: false,
         //  hidden: !showDeleteButton,
         formatter: (cellContent, defineExamDate) => (
-          <div className="d-flex gap-4">
+          <div className="d-flex justify-content-evenly">
+            <Tooltip title={this.props.t("Edit")} placement="top">
+              <Link className="text-sm-end" to="#">
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  onClick={() => this.handleExamDateEdit(defineExamDate)}
+                ></i>
+              </Link>
+            </Tooltip>
             <Tooltip title={this.props.t("Exam Date Settings")} placement="top">
               <Link
                 className="d-flex align-items-center justify-content-center"
@@ -593,12 +735,21 @@ class DefineExamDatesList extends Component {
                 ></i>
               </Link>
             </Tooltip>
-            <Tooltip title={this.props.t("Edit")} placement="top">
+            <Tooltip title={this.props.t("Exam Schedule")} placement="top">
               <Link className="text-sm-end" to="#">
                 <i
-                  className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
-                  onClick={() => this.handleExamDateEdit(defineExamDate)}
+                  className="fas fa-calendar-alt"
+                  id="examtooltip"
+                  onClick={() => this.handleExamSchedule(defineExamDate)}
+                ></i>
+              </Link>
+            </Tooltip>
+            <Tooltip title={this.props.t("Exam Conflicts")} placement="top">
+              <Link className="text-sm-end" to="#">
+                <i
+                  className="fas fa-exclamation-triangle"
+                  id="conflicttooltip"
+                  onClick={() => this.handleConflicts(defineExamDate)}
                 ></i>
               </Link>
             </Tooltip>
@@ -683,6 +834,144 @@ class DefineExamDatesList extends Component {
         ),
       },
     ];
+
+    const timeDateColumns = [
+      { dataField: "Id", text: t("ID"), hidden: true },
+      {
+        dataField: "flag",
+        text: t("Exam Date"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "startTime",
+        text: t("Start Time"),
+        sort: true,
+        // editable: true,
+        formatter: (cellContent, row, column) => (
+          <Input
+            className="form-control"
+            type="time"
+            value={row.startTime}
+            onChange={newValue => {
+              this.handleExamPeriodDataChange(
+                row.Id,
+                "startTime",
+                newValue.target.value
+              );
+            }}
+            // disabled={!showEditButton}
+          />
+        ),
+      },
+      {
+        dataField: "endTime",
+        text: t("End Time"),
+        sort: true,
+        // editable: true,
+        formatter: (cellContent, row, column) => (
+          <Input
+            className="form-control"
+            type="time"
+            value={row.endTime}
+            onChange={newValue => {
+              this.handleExamPeriodDataChange(
+                row.Id,
+                "endTime",
+                newValue.target.value
+              );
+            }}
+            // disabled={!showEditButton}
+          />
+        ),
+      },
+    ];
+
+    const conflictsByDateColumns = [
+      { dataField: "Id", text: t("ID"), hidden: true },
+      {
+        dataField: "traineeNum",
+        text: t("Trainee Num"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "traineeName",
+        text: t("Trainee Name"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "examDate",
+        text: t("Exam Date"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "examCounts",
+        text: t("Exam Counts"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "exams",
+        text: t("Exams"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "schedules",
+        text: t("Schedules"),
+        sort: true,
+        // editable: true,
+      },
+    ];
+    const conflictsByPeriodColumns = [
+      { dataField: "Id", text: t("ID"), hidden: true },
+      {
+        dataField: "traineeNum",
+        text: t("Trainee Num"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "traineeName",
+        text: t("Trainee Name"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "examDate",
+        text: t("Exam Date"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "startTime",
+        text: t("Start Time"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "examCounts",
+        text: t("Exam Counts"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "exams",
+        text: t("Exams"),
+        sort: true,
+        // editable: true,
+      },
+      {
+        dataField: "schedules",
+        text: t("Schedules"),
+        sort: true,
+        // editable: true,
+      },
+    ];
+
     const pageOptions = {
       sizePerPage: 10,
       totalSize: defineExamDates.length,
@@ -1450,6 +1739,592 @@ class DefineExamDatesList extends Component {
                                       </Formik>
                                     </ModalBody>
                                   </Modal>
+                                  <Modal
+                                    isOpen={modal1}
+                                    toggle={this.toggle1}
+                                    // className={"modal-fullscreen"}
+                                    size="lg"
+                                  >
+                                    <ModalHeader toggle={this.toggle1} tag="h4">
+                                      {!!isOpen ? t("Edit Exam Date") : ""}
+                                    </ModalHeader>
+                                    <ModalBody>
+                                      <BootstrapTable
+                                        keyField="Id"
+                                        data={defineExamDates}
+                                        columns={timeDateColumns}
+                                        cellEdit={cellEditFactory({
+                                          mode: "dbclick",
+                                          blurToSave: true,
+                                          afterSaveCell: (
+                                            oldValue,
+                                            newValue,
+                                            row,
+                                            column
+                                          ) => {
+                                            this.handleExperienceDataChange(
+                                              row.Id,
+                                              column.dataField,
+                                              newValue
+                                            );
+                                          },
+                                        })}
+                                      />
+                                    </ModalBody>
+                                  </Modal>
+                                  <Modal
+                                    isOpen={modal3}
+                                    toggle={this.toggle3}
+                                    // className={"modal-fullscreen"}
+                                    size="lg"
+                                  >
+                                    <ModalHeader toggle={this.toggle3} tag="h4">
+                                      {!!isOpen2 ? t("Exam Conflicts") : ""}
+                                    </ModalHeader>
+                                    <ModalBody>
+                                      <Card id="employee-card">
+                                        <CardTitle id="course_header">
+                                          {t("Conflicts")}
+                                        </CardTitle>
+                                        <CardBody className="cardBody">
+                                          <div className="mb-3 d-flex gap-3">
+                                            <button
+                                              className={`btn ${
+                                                activeTable === "first"
+                                                  ? "btn-primary"
+                                                  : "btn-outline-primary"
+                                              }`}
+                                              onClick={() =>
+                                                this.setState({
+                                                  activeTable: "first",
+                                                })
+                                              }
+                                            >
+                                              {t("Conflicts By Date")}
+                                            </button>
+
+                                            <button
+                                              className={`btn ${
+                                                activeTable === "second"
+                                                  ? "btn-primary"
+                                                  : "btn-outline-primary"
+                                              }`}
+                                              onClick={() =>
+                                                this.setState({
+                                                  activeTable: "second",
+                                                })
+                                              }
+                                            >
+                                              {t("Conflicts By Period")}
+                                            </button>
+                                          </div>
+                                          {activeTable === "first" && (
+                                            <BootstrapTable
+                                              keyField="Id"
+                                              {...toolkitprops.baseProps}
+                                              {...paginationTableProps}
+                                              data={defineExamDates}
+                                              columns={conflictsByDateColumns}
+                                              cellEdit={cellEditFactory({
+                                                mode: "dbclick",
+                                                blurToSave: true,
+                                                afterSaveCell: (
+                                                  oldValue,
+                                                  newValue,
+                                                  row,
+                                                  column
+                                                ) => {
+                                                  this.handleExamPeriodDataChange(
+                                                    row.Id,
+                                                    column.dataField,
+                                                    newValue
+                                                  );
+                                                },
+                                              })}
+                                              defaultSorted={defaultSorting}
+                                            />
+                                          )}
+                                          {activeTable === "second" && (
+                                            <BootstrapTable
+                                              keyField="Id"
+                                              {...toolkitprops.baseProps}
+                                              {...paginationTableProps}
+                                              data={defineExamDates}
+                                              columns={conflictsByPeriodColumns}
+                                              cellEdit={cellEditFactory({
+                                                mode: "dbclick",
+                                                blurToSave: true,
+                                                afterSaveCell: (
+                                                  oldValue,
+                                                  newValue,
+                                                  row,
+                                                  column
+                                                ) => {
+                                                  this.handleExamPeriodDataChange(
+                                                    row.Id,
+                                                    column.dataField,
+                                                    newValue
+                                                  );
+                                                },
+                                              })}
+                                              defaultSorted={defaultSorting}
+                                            />
+                                          )}
+                                        </CardBody>
+                                      </Card>
+                                    </ModalBody>
+                                  </Modal>
+                                  <Modal
+                                    isOpen={modal2}
+                                    toggle={this.toggle2}
+                                    className={"modal-fullscreen"}
+                                  >
+                                    <ModalHeader toggle={this.toggle2} tag="h4">
+                                      {!!isOpen1 ? t("Edit Exam Date") : ""}
+                                    </ModalHeader>
+                                    <ModalBody>
+                                      <Formik
+                                        enableReinitialize={true}
+                                        initialValues={{
+                                          courseId:
+                                            (defineExamDate &&
+                                              defineExamDate.courseId) ||
+                                            "",
+                                          dayId:
+                                            (defineExamDate &&
+                                              defineExamDate.dayId) ||
+                                            "",
+                                        }}
+                                        validationSchema={Yup.object().shape({
+                                          arTitle: Yup.string()
+                                            .matches(
+                                              /^[أ-ي]+$/,
+                                              "Only Arabic letters are allowed"
+                                            )
+                                            .required(
+                                              "Please Enter Your Exam Name In Arabic"
+                                            ),
+                                          enTitle: Yup.string()
+                                            .matches(
+                                              /^[A-Za-z]+$/,
+                                              "Only English letters are allowed"
+                                            )
+                                            .required(
+                                              "Please Enter Exam Name In English"
+                                            ),
+                                          startDate: Yup.date().required(
+                                            "Please Enter Your Start Date"
+                                          ),
+                                          endDate: Yup.date()
+                                            .required(
+                                              "Please Enter Your End Date"
+                                            )
+                                            .min(
+                                              Yup.ref("startDate"),
+                                              "End date must be after start date"
+                                            ),
+                                        })}
+                                      >
+                                        {({
+                                          errors,
+                                          status,
+                                          touched,
+                                          values,
+                                          handleChange,
+                                          handleBlur,
+                                          setFieldValue,
+                                        }) => (
+                                          <Form>
+                                            <Card id="employee-card">
+                                              <CardTitle id="course_header">
+                                                {t("Exam Days")}
+                                              </CardTitle>
+                                              <CardBody className="cardBody">
+                                                <Row>
+                                                  {/* <Col lg="4">
+                                              <Label
+                                                for="studentOrder-Id"
+                                                className="form-label d-flex"
+                                              >
+                                                {this.props.t("Students Order")}
+                                                <span className="text-danger">
+                                                  *
+                                                </span>
+                                              </Label>
+                                            </Col> */}
+                                                  <Col lg="12">
+                                                    <div className="d-flex flex-wrap gap-3">
+                                                      <div
+                                                        className="btn-group button-or"
+                                                        role="group"
+                                                      >
+                                                        {allDaysArray &&
+                                                          allDaysArray.map(
+                                                            (status, index) => (
+                                                              <React.Fragment
+                                                                key={index}
+                                                              >
+                                                                <input
+                                                                  type="radio"
+                                                                  className={`btn-check ${
+                                                                    selectedDay ===
+                                                                    status.value
+                                                                      ? "active"
+                                                                      : ""
+                                                                  }`}
+                                                                  name="dayId"
+                                                                  id={`dayradio${index}`}
+                                                                  autoComplete="off"
+                                                                  checked={
+                                                                    selectedDay ===
+                                                                    status.value
+                                                                  }
+                                                                  onChange={() => {
+                                                                    setFieldValue(
+                                                                      "dayId",
+                                                                      status.value
+                                                                    );
+
+                                                                    this.setState(
+                                                                      {
+                                                                        selectedDay:
+                                                                          status.value,
+                                                                      }
+                                                                    );
+                                                                  }}
+                                                                />
+                                                                <label
+                                                                  className="btn btn-outline-primary smallButton w-sm"
+                                                                  htmlFor={`dayradio${index}`}
+                                                                >
+                                                                  {status.label}
+                                                                </label>
+                                                              </React.Fragment>
+                                                            )
+                                                          )}
+                                                      </div>
+                                                    </div>
+                                                  </Col>
+                                                </Row>
+                                              </CardBody>
+                                            </Card>
+                                            <DragDropContext
+                                              onDragStart={this.onDragStart}
+                                              onDragEnd={this.onDragEnd}
+                                            >
+                                              {/* Courses List from Props */}
+                                              <Droppable droppableId="courses">
+                                                {provided => (
+                                                  <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.droppableProps}
+                                                  >
+                                                    <Card>
+                                                      <CardTitle>
+                                                        {t("Courses")}
+                                                      </CardTitle>
+                                                      <CardBody>
+                                                        {Array.isArray(
+                                                          coursesOffering
+                                                        ) &&
+                                                          coursesOffering.map(
+                                                            (course, index) => (
+                                                              <Draggable
+                                                                key={
+                                                                  course.value
+                                                                }
+                                                                draggableId={String(
+                                                                  course.value
+                                                                )}
+                                                                index={index}
+                                                              >
+                                                                {(
+                                                                  provided,
+                                                                  snapshot
+                                                                ) => (
+                                                                  <div
+                                                                    ref={
+                                                                      provided.innerRef
+                                                                    }
+                                                                    {...provided.draggableProps}
+                                                                    {...provided.dragHandleProps}
+                                                                    className={`btn btn-outline-primary m-1 ${
+                                                                      snapshot.isDragging
+                                                                        ? "dragging"
+                                                                        : ""
+                                                                    }`}
+                                                                  >
+                                                                    {
+                                                                      course.label
+                                                                    }
+                                                                  </div>
+                                                                )}
+                                                              </Draggable>
+                                                            )
+                                                          )}
+                                                        {provided.placeholder}
+                                                      </CardBody>
+                                                    </Card>
+                                                  </div>
+                                                )}
+                                              </Droppable>
+                                              {/* <Droppable droppableId="period">
+                                                {provided => (
+                                                  <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.droppableProps}
+                                                    style={{
+                                                      maxHeight: "300px",
+                                                      overflowY: "auto",
+                                                      padding: "10px",
+                                                      border: "1px solid #ddd",
+                                                      borderRadius: "5px",
+                                                    }}
+                                                  >
+                                                    <h5>Periods</h5>
+                                                    {examPeriods &&
+                                                      examPeriods.map(
+                                                        (course, index) => (
+                                                          <Draggable
+                                                            key={course.value}
+                                                            draggableId={String(
+                                                              course.value
+                                                            )}
+                                                            index={index}
+                                                          >
+                                                            {(
+                                                              provided,
+                                                              snapshot
+                                                            ) => (
+                                                              <div
+                                                                ref={
+                                                                  provided.innerRef
+                                                                }
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                className={`btn btn-success m-1 ${
+                                                                  snapshot.isDragging
+                                                                    ? "dragging"
+                                                                    : ""
+                                                                }`}
+                                                              >
+                                                                {course.label}
+                                                              </div>
+                                                            )}
+                                                          </Draggable>
+                                                        )
+                                                      )}
+                                                    {provided.placeholder}
+                                                  </div>
+                                                )}
+                                              </Droppable> */}
+                                              <Card className="mt-3">
+                                                <CardTitle id="course_header">
+                                                  {t("Periods")}
+                                                </CardTitle>
+
+                                                <CardBody className="cardBody">
+                                                  <Row>
+                                                    {Array.isArray(
+                                                      examPeriods
+                                                    ) &&
+                                                      examPeriods.map(
+                                                        period => {
+                                                          const formattedTimeALL =
+                                                            this.formatTime(
+                                                              period.startTime
+                                                            ) +
+                                                            " - " +
+                                                            this.formatTime(
+                                                              period.endTime
+                                                            );
+                                                          // const attendance = `${
+                                                          //   period.attended
+                                                          // }/${period.capacity.toLocaleString()}`;
+
+                                                          return (
+                                                            <Col
+                                                              key={period.Id}
+                                                              md={4}
+                                                            >
+                                                              <Card>
+                                                                <CardTitle className="card-header text-center">
+                                                                  (
+                                                                  {/* {attendance}{" "} */}
+                                                                  {
+                                                                    formattedTimeALL
+                                                                  }
+                                                                  )
+                                                                </CardTitle>
+                                                                <CardBody className="cardBody">
+                                                                  <Droppable
+                                                                    droppableId={String(
+                                                                      period.Id
+                                                                    )}
+                                                                  >
+                                                                    {provided => (
+                                                                      <div
+                                                                        ref={
+                                                                          provided.innerRef
+                                                                        }
+                                                                        {...provided.droppableProps}
+                                                                        style={{
+                                                                          maxHeight:
+                                                                            "200px",
+                                                                          overflowY:
+                                                                            "auto",
+                                                                          padding:
+                                                                            "10px",
+                                                                          border:
+                                                                            "1px solid #ddd",
+                                                                          borderRadius:
+                                                                            "5px",
+                                                                        }}
+                                                                      >
+                                                                        {Array.isArray(
+                                                                          period.courses
+                                                                        ) &&
+                                                                        period
+                                                                          .courses
+                                                                          .length >
+                                                                          0 ? (
+                                                                          period.courses.map(
+                                                                            (
+                                                                              course,
+                                                                              index
+                                                                            ) => (
+                                                                              <Draggable
+                                                                                draggableId={`${period.Id}-${course.value}`}
+                                                                                key={`${period.Id}-${course.value}`}
+                                                                                index={
+                                                                                  index
+                                                                                }
+                                                                              >
+                                                                                {(
+                                                                                  provided,
+                                                                                  snapshot
+                                                                                ) => (
+                                                                                  <div
+                                                                                    ref={
+                                                                                      provided.innerRef
+                                                                                    }
+                                                                                    {...provided.draggableProps}
+                                                                                    {...provided.dragHandleProps}
+                                                                                    className={`btn btn-success m-1 ${
+                                                                                      snapshot.isDragging
+                                                                                        ? "dragging"
+                                                                                        : ""
+                                                                                    }`}
+                                                                                  >
+                                                                                    {
+                                                                                      course.label
+                                                                                    }
+                                                                                  </div>
+                                                                                )}
+                                                                              </Draggable>
+                                                                            )
+                                                                          )
+                                                                        ) : (
+                                                                          <div className="text-muted">
+                                                                            No
+                                                                            Courses
+                                                                            Found
+                                                                          </div>
+                                                                        )}
+
+                                                                        {
+                                                                          provided.placeholder
+                                                                        }
+                                                                      </div>
+                                                                    )}
+                                                                  </Droppable>
+                                                                </CardBody>
+                                                              </Card>
+                                                            </Col>
+                                                          );
+                                                        }
+                                                      )}
+                                                  </Row>
+                                                </CardBody>
+                                              </Card>
+                                            </DragDropContext>
+                                            {/* <Card>
+                                              <CardTitle>
+                                                {t("Courses")}
+                                              </CardTitle>
+                                              <CardBody>
+                                                <Row> */}
+                                            {/* <Col lg="4">
+                                              <Label
+                                                for="studentOrder-Id"
+                                                className="form-label d-flex"
+                                              >
+                                                {this.props.t("Students Order")}
+                                                <span className="text-danger">
+                                                  *
+                                                </span>
+                                              </Label>
+                                            </Col> */}
+                                            {/* <Col lg="12"> */}
+                                            {/* <div className="d-flex flex-wrap gap-2">
+                                                      {coursesOffering.map(
+                                                        (status, index) => (
+                                                          <React.Fragment
+                                                            key={index}
+                                                          >
+                                                            <input
+                                                              type="radio"
+                                                              className={`btn-check ${
+                                                                selectedCourseName ===
+                                                                status.value
+                                                                  ? "active"
+                                                                  : ""
+                                                              }`}
+                                                              name="courseId"
+                                                              id={`courseradio${index}`}
+                                                              autoComplete="off"
+                                                              checked={
+                                                                selectedCourseName ===
+                                                                status.value
+                                                              }
+                                                              onChange={() => {
+                                                                setFieldValue(
+                                                                  "courseId",
+                                                                  status.value
+                                                                );
+
+                                                                this.setState({
+                                                                  selectedCourseName:
+                                                                    status.value,
+                                                                });
+                                                              }}
+                                                            />
+                                                            <label
+                                                              className="btn btn-outline-primary smallButton w-sm"
+                                                              htmlFor={`courseradio${index}`}
+                                                            >
+                                                              {status.label}
+                                                            </label>
+                                                          </React.Fragment>
+                                                        )
+                                                      )}
+                                                    </div> */}
+
+                                            {/* </Col>
+                                                </Row>
+                                              </CardBody>
+                                            </Card> */}
+                                            {/* <Card>
+                                              <CardTitle>
+                                                {t("Periods")}
+                                              </CardTitle>
+                                              <CardBody></CardBody>
+                                            </Card> */}
+                                          </Form>
+                                        )}
+                                      </Formik>
+                                    </ModalBody>
+                                  </Modal>
                                 </React.Fragment>
                               )}
                             </ToolkitProvider>
@@ -1468,8 +2343,14 @@ class DefineExamDatesList extends Component {
   }
 }
 
-const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
+const mapStateToProps = ({
+  menu_items,
+  gradeTypes,
+  classScheduling,
+  defineExamDates,
+}) => ({
   defineExamDates: defineExamDates.defineExamDates,
+  coursesOffering: classScheduling.coursesOffering,
   studentsOrder: defineExamDates.studentsOrder,
   definePeriods: defineExamDates.definePeriods,
   lastAddedId: defineExamDates.lastAddedId,
@@ -1482,6 +2363,7 @@ const mapStateToProps = ({ menu_items, gradeTypes, defineExamDates }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onGetDefineExamDates: () => dispatch(getDefineExamDates()),
+  onGetCourseOffering: lng => dispatch(getCoursesOffering(lng)),
   onGetStudentsOrder: () => dispatch(getStudentsOrder()),
   onAddNewDefineExamDate: defineExamDate =>
     dispatch(addNewDefineExamDate(defineExamDate)),
@@ -1493,7 +2375,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getDefineExamDateDeletedValue()),
   onGetDefinePeriods: defineExamDateId =>
     dispatch(getDefinePeriods(defineExamDateId)),
-  
+
   onAddNewDefinePeriod: definePeriod =>
     dispatch(addNewDefinePeriod(definePeriod)),
   onUpdateDefinePeriod: definePeriod =>

@@ -34,7 +34,7 @@ import cellEditFactory from "react-bootstrap-table2-editor";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
+import Breadcrumbs from "components/Common/Breadcrumb";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import ToolkitProvider, {
@@ -60,7 +60,7 @@ import {
   checkIsDeleteForPage,
   checkIsEditForPage,
   checkIsSearchForPage,
-} from "../../../utils/menuUtils";
+} from "utils/menuUtils";
 class TraineesList extends Component {
   constructor(props) {
     super(props);

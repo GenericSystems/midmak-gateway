@@ -138,10 +138,10 @@ import RolesList from "../pages/PriveledgeManagement/UserManagement/roles";
 //Sector
 import SectorsList from "../pages/Sectors/sectors";
 //QUALIFICATION TRACKS
-import QualificationsTracksList from "../pages/Certificates/qualification-tracks"
+import QualificationsTracksList from "../pages/Certificates/qualification-tracks";
 
 //universityDef
-import AcademyInfo from "../pages/Academy/academy-def"
+import AcademyInfo from "../pages/Academy/academyDefinition";
 
 //Warning
 import warningsList from "../pages/TrainingMembers/training-members";
@@ -162,7 +162,7 @@ import RegistrationList from "../pages/Registration/registration";
 import DefineExamDatesList from "../pages/Exam/DefineExamDates/defineExamDates";
 
 //academyBuildingStructure
-import AcademyBuildingStructuresList from "../pages/academyBuildingStructure/academyBuildingStructure";
+import AcademyBuildingStructuresList from "../pages/AcademyBuildingStructure/academyBuildingStructure";
 
 //classScheduling
 import classSchedulingList from "../pages/Addmission/classScheduling/classScheduling";
@@ -170,17 +170,26 @@ import classSchedulingList from "../pages/Addmission/classScheduling/classSchedu
 //ContractsTypes
 import ContractsTypesList from "../pages/HR/contractsTypes/contractsTypes";
 
+//TraineesReport
+import TraineesReportList from "../pages/ExamReports/TraineesGradeDetailsReport/traineesGradeDetailsReport";
+//AbsenceTypes
+import AbsencesTypesList from "../pages/TraineeAttendence/AttendenceSettings/absenceTypes";
+//AbsenceJustifications
+import AbsencesJustificationsList from "../pages/TraineeAttendence/AttendenceSettings/absenceJustification";
+//AbsencePercent
+import AbsencePercentsList from "pages/TraineeAttendence/AttendenceSettings/absencePercents";
+
 //GradesVersions
 import GradesVersionsList from "../pages/GradeSettings/gradesVersions";
 
 //Nationalities
 import NationalitiesList from "../pages/Addmission/AdmissionSettings/nationality-list";
 
-//Absence warnings
-import AbsenceWarningsList from "../pages/Rules-and-Regulations/Absence-warnings/absenceWarnings";
-
 //documet types
 import DocumentsTypesList from "../pages/Addmission/AdmissionSettings/documents-types";
+
+//hidden-grades
+import HiddenGradesList from "../pages/Exam/Grades/hide-grades";
 
 // RegReqDocuments
 
@@ -189,8 +198,14 @@ import RegReqDocumentsTable from "../pages/Addmission/AdmissionSettings/regReqDo
 //ExamRooms
 import ExamRoomsList from "../pages/Exam/ExamRooms/examRooms";
 
+//ExamObservers
+import ExamObserversList from "../pages/Exam/ExamObservers/examObservers";
+
 //trainees
-import TraineesList from "../pages/Addmission/AcadmeyStudents/trainees";
+import TraineesList from "../pages/Addmission/AcadmeyTrainees/trainees";
+
+//RegisterTraineesAttendance
+import RegisterTraineesAttendance from "../pages/TraineeAttendence/RegisterTraineesAttendance/registerTraineesAttendance";
 
 //WarningsTypes
 import WarningsTypesList from "../pages/HR/warningsTypes/warningsTypes";
@@ -201,11 +216,32 @@ import RewardsTypesList from "../pages/HR/rewardsTypes/rewardsTypes";
 //DecisionsTypes
 import DecisionsTypesList from "../pages/HR/decisionsTypes/decisionsTypes";
 
+//Decrees
+import DecreesList from "../pages/Rules-and-Regulations/decrees";
+
+//traineeDecrees
+import TraineesDecreesList from "../pages/Rules-and-Regulations/traineeDecrees";
+
+//marks objection
+import MarksObjectionList from "../pages/Exam/MarksObjections/marksObjections";
+
 //Decisions
 import DecisionsList from "../pages/HR/decisions/decisions";
 
 //Contracts
 import ContractsList from "../pages/HR/contracts/contracts";
+
+//justify TraineeAbsence
+import JustifyTraineeAbsenceList from "../pages/TraineeAttendence/JustifyTraineeAbsence/justifyTraineeAbsence";
+
+//ExamsAttendance
+import ExamsAttendance from "../pages/Exam/ExamAttendance/examAttendance";
+
+//ExamsAttendanceObserver
+import ExamAttendanceObservers from "../pages/Exam/ExamAttendanceObservers/examAttendanceObservers";
+
+//hallShedule
+import HallSchedules from "../pages/Exam/HallSchedules/hallSchedules";
 
 //Applicants
 import ApplicantsList from "../pages/Addmission/Applicants/applicants";
@@ -326,10 +362,10 @@ const authProtectedRoutes = [
   //sectors
   { path: "/sectors", component: SectorsList },
   //university-def
-  { path: "/academy-def", component: AcademyInfo },
+  { path: "/acadmyDefinition", component: AcademyInfo },
 
   //qualification_track
-  {path:"/qualification-tracks",component:QualificationsTracksList},
+  { path: "/qualification-tracks", component: QualificationsTracksList },
 
   //UserTypes
   { path: "/user-types", component: UserTypesList },
@@ -340,6 +376,17 @@ const authProtectedRoutes = [
   // contractsTypes
 
   { path: "/contractsTypes", component: ContractsTypesList },
+
+  //absenceTypes
+  { path: "/absenceTypes", component: AbsencesTypesList },
+  //absenceJustification
+  { path: "/absenceJustification", component: AbsencesJustificationsList },
+  //absencePercents
+  { path: "/defineAllowedAbsencePercents", component: AbsencePercentsList },
+
+  // TraineesReport
+
+  { path: "/traineesGradeDetailsReport", component: TraineesReportList },
 
   // gradesVersions
 
@@ -356,9 +403,32 @@ const authProtectedRoutes = [
 
   { path: "/examRooms", component: ExamRoomsList },
 
+  // examObservers
+
+  { path: "/examObservers", component: ExamObserversList },
+
   // contracts
 
   { path: "/contracts", component: ContractsList },
+
+  // contracts
+
+  { path: "/justifyTraineeAbsence", component: JustifyTraineeAbsenceList },
+
+  // ExamsAttendance
+
+  { path: "/examAttendance", component: ExamsAttendance },
+
+  // ExamsAttendanceObserver
+
+  { path: "/examAttendanceObservers", component: ExamAttendanceObservers },
+
+  // HallSchedules
+
+  { path: "/hallSchedules", component: HallSchedules },
+
+  //hidden grades
+  { path: "/hide-grades", component: HiddenGradesList },
 
   // Applicants
 
@@ -372,15 +442,24 @@ const authProtectedRoutes = [
 
   { path: "/nationality-list", component: NationalitiesList },
 
-  // AbsenceWarnings
-  { path: "/absenceWarnings", component: AbsenceWarningsList },
-
   // rewardsTypes
 
   { path: "/rewardsTypes", component: RewardsTypesList },
   // decisionsTypes
 
   { path: "/decisionsTypes", component: DecisionsTypesList },
+
+  // decrees
+
+  { path: "/decrees", component: DecreesList },
+
+  // traineeDecrees
+
+  { path: "/traineesDecrees", component: TraineesDecreesList },
+
+  // marksObjections
+
+  { path: "/marksObjections", component: MarksObjectionList },
 
   // decisions
 
@@ -435,6 +514,12 @@ const authProtectedRoutes = [
 
   // trainees
   { path: "/trainees", component: TraineesList },
+
+  // trainees
+  {
+    path: "/registerTraineesAttendance",
+    component: RegisterTraineesAttendance,
+  },
 
   //trainingFormat
   { path: "/trainingFormat", component: TrainingFormatsList },

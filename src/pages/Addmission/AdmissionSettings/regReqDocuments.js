@@ -90,30 +90,29 @@ class RegReqDocumentsTable extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-       onfetchSetting();     
-     let curentueardata = localStorage.getItem("authUser");
+    onfetchSetting();
+    let curentueardata = localStorage.getItem("authUser");
     if (curentueardata) {
       try {
         const parsed = JSON.parse(curentueardata);
         const firstYear = parsed[0];
-         let ob = { yearId: parsed[0].currentYearId, certificateLevelId: 1 };
-         onGetRegReqDocuments(ob);
+        let ob = { yearId: parsed[0].currentYearId, certificateLevelId: 1 };
+        onGetRegReqDocuments(ob);
       } catch (error) {
         console.error("Error parsing authUser:", error);
       }
     }
-       if (regReqDocuments && !regReqDocuments.length) {
- 
+    if (regReqDocuments && !regReqDocuments.length) {
       this.setState({ regReqDocuments, deleted });
       this.setState({
         documents,
         currentSemester,
         years,
         regcertificates,
-      }); 
+      });
     }
-     this.setState({ isCurrentYear: true });  
- }
+    this.setState({ isCurrentYear: true });
+  }
   componentDidUpdate(prevProps, prevState) {
     const { years, currentSemester, onGetRegReqDocuments } = this.props;
 
@@ -326,15 +325,11 @@ class RegReqDocumentsTable extends Component {
   };
 
   handleSuccessClose = () => {
-    const { onGetRegReqDocumentDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetRegReqDocumentDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetRegReqDocumentDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetRegReqDocumentDeletedValue();
   };
 
   handleSelectYear = (fieldName, selectedValue) => {
@@ -617,8 +612,7 @@ class RegReqDocumentsTable extends Component {
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
-              title={this.props.t("Documents")}
-              breadcrumbItem={this.props.t("Registration Required Documents")}
+              breadcrumbItem={this.props.t("Registration Required Documents ")}
             />
 
             <div>
@@ -679,7 +673,6 @@ class RegReqDocumentsTable extends Component {
                           {t("Certificate Levels")}
                         </CardTitle>
                         <CardBody>
-                          {console.log("regcertificates", regcertificates)}
                           {regcertificates.map((certificate, index) => (
                             <div className="mb-1" key={certificate.value}>
                               <Row>
@@ -798,19 +791,19 @@ class RegReqDocumentsTable extends Component {
                                           <i className="mdi mdi-content-copy blue-noti-icon" />
                                         </IconButton>
                                       </Tooltip>
-                                      {/* {showAddButton && ( */}
-                                      <Tooltip
-                                        title={this.props.t("Add")}
-                                        placement="top"
-                                      >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleAddRow}
+                                      {showAddButton && (
+                                        <Tooltip
+                                          title={this.props.t("Add")}
+                                          placement="top"
                                         >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                      {/* )} */}
+                                          <IconButton
+                                            color="primary"
+                                            onClick={this.handleAddRow}
+                                          >
+                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      )}
                                     </div>
                                   </Col>
                                 </Row>
@@ -822,7 +815,7 @@ class RegReqDocumentsTable extends Component {
                                   data={regReqDocuments}
                                   columns={columns}
                                   cellEdit={cellEditFactory({
-                                    mode: "click",
+                                    mode: "dbclick",
                                     blurToSave: true,
                                     afterSaveCell: (
                                       oldValue,
@@ -874,7 +867,7 @@ const mapStateToProps = ({
   semesters,
   menu_items,
   years,
-  trainees,
+  tempTrainees,
 }) => ({
   regReqDocuments: regReqDocuments.regReqDocuments,
   deleted: regReqDocuments.deleted,
@@ -882,7 +875,7 @@ const mapStateToProps = ({
   currentSemester: semesters.currentSemester,
   years: years.years,
   user_menu: menu_items.user_menu || [],
-  regcertificates: trainees.regcertificates,
+  regcertificates: tempTrainees.regcertificates,
 });
 
 const mapDispatchToProps = dispatch => ({

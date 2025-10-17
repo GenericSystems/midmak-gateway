@@ -59,7 +59,6 @@ const INIT_STATE = {
   weekDays: [],
   lecturePeriods: [],
   classProfile: {},
-  offeringLectures: [],
   coursesOffering: [],
   offeringCourses: [],
   departments: [],
@@ -116,6 +115,12 @@ const classScheduling = (state = INIT_STATE, action) => {
         ...state,
         coursesOffering: [...state.coursesOffering, action.payload],
       };
+    // return {
+    //   ...state,
+    //   coursesOffering: state.coursesOffering.map(row =>
+    //     row.Code === action.payload.Code ? { ...row, ...action.payload } : row
+    //   ),
+    // };
 
     case ADD_COURSE_OFFERING_FAIL:
       return {
@@ -152,6 +157,7 @@ const classScheduling = (state = INIT_STATE, action) => {
           courseOffering =>
             courseOffering.Id.toString() !== action.payload.Id.toString()
         ),
+        deleted: action.payload.deleted,
       };
 
     case DELETE_COURSE_OFFERING_FAIL:
@@ -213,7 +219,6 @@ const classScheduling = (state = INIT_STATE, action) => {
       };
 
     case UPDATE_SECTION_LAB_DETAIL_SUCCESS:
-      console.log("Reducer handled upppp:", action.payload);
       return {
         ...state,
         sectionLabDetails: state.sectionLabDetails.map(sectionLabDetail =>

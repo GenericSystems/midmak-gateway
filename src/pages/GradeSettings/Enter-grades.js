@@ -25,7 +25,6 @@ import { connect } from "react-redux";
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
-import TempStudentsChart from "../../components/Common/TempStudentsChart";
 import Accordion from "react-bootstrap/Accordion";
 
 import {
@@ -41,7 +40,7 @@ import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
 } from "react-bootstrap-table2-paginator";
-
+import TraineesChart from "../../components/Common/TraineesChart";
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
 import OtherChart from "../../components/Common/OtherChart";
@@ -66,6 +65,7 @@ class EnterGradesList extends Component {
       errorMessage: null,
       sidebarOpen: true,
       selectedCourseId: null,
+      showEditButton: false,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
   }
@@ -81,7 +81,7 @@ class EnterGradesList extends Component {
     } = this.props;
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    /*  if (enteredGrades && !enteredGrades.length) {
+    if (enteredGrades && !enteredGrades.length) {
       const obj = {
         courseId: 0,
       };
@@ -90,7 +90,7 @@ class EnterGradesList extends Component {
       this.setState({ courseContentsEnteredGrades });
       this.setState({ coursesOpt });
       this.setState({ filteredSections });
-    } */
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -227,6 +227,7 @@ class EnterGradesList extends Component {
   };
 
   handleGradeDataChange = (row, fieldName, fieldValue) => {
+    console.log("rrrrrrrrrr", row);
     const { onUpdateGrade, enteredGrades, courseContentsEnteredGrades } =
       this.props;
 
@@ -253,20 +254,20 @@ class EnterGradesList extends Component {
           const matchingField = courseContentsEnteredGrades.find(
             field => field.dataField === termInput
           );
-
+          console.log("matchingFieldmatchingField", matchingField);
           if (matchingField) {
             const FieldToUpdate = `Ex${matchingField.orderContent}`;
             if (fieldValue == "") {
               const updateData = {
                 Id: row.Id,
-                studentId: row.studentId,
+                // TraineeNum: row.TraineeNum,
                 [FieldToUpdate]: null,
               };
               onUpdateGrade(updateData);
             } else {
               const updateData = {
                 Id: row.Id,
-                studentId: row.studentId,
+                // TraineeNum: row.TraineeNum,
                 [FieldToUpdate]: fieldValue,
               };
               onUpdateGrade(updateData);
@@ -334,26 +335,31 @@ class EnterGradesList extends Component {
         order: "desc",
       },
     ];
-
+    console.log("showEditButton", showEditButton);
     const generateColumns = () => {
-      if (courseContentsEnteredGrades.length != 0) {
+      if (courseContentsEnteredGrades.length !== 0) {
         const columns = courseContentsEnteredGrades.map(column => ({
           key: column.orderContent,
           dataField: column.dataField,
           text: column.textField,
-          editable: showEditButton
-            ? column.dataField !== "studentId" &&
-              column.dataField !== "studentName" &&
+
+          editable: (cell, row) => {
+            if (row.archived === 1) {
+              return false;
+            }
+
+            return (
+              column.dataField !== "TraineeNum" &&
+              column.dataField !== "traineeName" &&
               column.dataField !== "totalGrade" &&
               column.dataField !== "letter_grade"
-            : false,
+            );
+          },
         }));
 
         return columns;
       } else {
-        const columns = [{ key: 0, dataField: "Id", text: "Id" }];
-
-        return columns;
+        return [{ key: 0, dataField: "Id", text: "Id" }];
       }
     };
 
@@ -370,10 +376,11 @@ class EnterGradesList extends Component {
 
           const mappedData = {
             Id: grade.Id || "",
-            studentId: grade.studentId || "",
-            studentName: grade.studentName || "",
+            TraineeNum: grade.TraineeNum || "",
+            traineeName: grade.traineeName || "",
             totalGrade: grade.totalGrade || "",
             letter_grade: grade.letter_grade || "",
+            archived: grade.archived || 0,
           };
 
           courseIdColumns.forEach(column => {
@@ -395,8 +402,8 @@ class EnterGradesList extends Component {
       } else {
         mappedDataArray.push({
           Id: "",
-          studentId: "",
-          studentName: "",
+          TraineeNum: "",
+          traineeName: "",
           Total: "",
           Letter: "",
         });
@@ -437,14 +444,14 @@ class EnterGradesList extends Component {
                     <Col lg={sidebarOpen ? "3" : "1"}>
                       <Card>
                         <CardTitle id="course_header">
-                          {t("Search for the course student")}
+                          {t("Search for the course")}
                         </CardTitle>
                         <CardBody>
                           <div className="mb-3">
                             <Row>
                               <Col lg="4">
                                 <Label className="form-label">
-                                  {t("Course name")}
+                                  {t("Course Name")}
                                 </Label>
                               </Col>
                               <Col lg="8">
@@ -659,7 +666,7 @@ class EnterGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Number of Students"
+                                                      "Number of Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon ">
@@ -671,7 +678,7 @@ class EnterGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Successful Students"
+                                                      "Successful Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon">
@@ -683,7 +690,7 @@ class EnterGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Failed Students"
+                                                      "Failed Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon">
@@ -695,7 +702,7 @@ class EnterGradesList extends Component {
                                                 <Col>
                                                   <p className="text-muted fw-medium">
                                                     {this.props.t(
-                                                      "Applicant Students"
+                                                      "Applicant Trainees"
                                                     )}
                                                   </p>
                                                   <h5 className="mb-3 blue-noti-icon">
@@ -748,7 +755,7 @@ class EnterGradesList extends Component {
                                                 <Col className="col-5">
                                                   {courseStatistics[1] &&
                                                     combinedArray && (
-                                                      <TempStudentsChart
+                                                      <TraineesChart
                                                         series={combinedArray.map(
                                                           item => item
                                                         )}
@@ -807,7 +814,7 @@ class EnterGradesList extends Component {
                                       data={selectedCourseData}
                                       columns={selectedCourseColumns}
                                       cellEdit={cellEditFactory({
-                                        mode: "click",
+                                        mode: "dbclick",
                                         blurToSave: true,
                                         afterSaveCell: (
                                           oldValue,

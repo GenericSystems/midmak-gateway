@@ -74,10 +74,10 @@ class CertificateTypesList extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-   // if (certificateTypes && !certificateTypes.length) {
- //     onGetCertificateTypes();
-  //  }
-  onGetCertificateTypes();
+    // if (certificateTypes && !certificateTypes.length) {
+    //     onGetCertificateTypes();
+    //  }
+    onGetCertificateTypes();
     this.setState({ certificateTypes, deleted });
   }
 
@@ -259,25 +259,43 @@ class CertificateTypesList extends Component {
         order: "desc",
       },
     ];
+
+    const pageOptions = {
+      sizePerPage: 10,
+      totalSize: certificateTypes.length,
+      custom: true,
+      page: 1,
+    };
+
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex, extraData) => {
+          const currentPage = extraData?.currentPage || 1;
+          const sizePerPage = extraData?.sizePerPage || pageOptions.sizePerPage;
+          return rowIndex + 1 + (currentPage - 1) * sizePerPage;
+        },
+        editable: false,
+      },
       {
         dataField: "arTitle",
         text: this.props.t("Certificate Type(ar)"),
         sort: true,
-        //  editable: showEditButton,
+        editable: showEditButton,
       },
       {
         dataField: "enTitle",
         text: "Certificate Type",
         sort: true,
-        //  editable: showEditButton,
+        editable: showEditButton,
       },
       {
         dataField: "code",
         text: "Code",
         sort: true,
-        //  editable: showEditButton,
+        editable: showEditButton,
       },
 
       {
@@ -285,7 +303,7 @@ class CertificateTypesList extends Component {
         text: "",
         isDummyField: true,
         editable: false,
-        //  hidden: !showDeleteButton,
+        hidden: !showDeleteButton,
         formatter: (cellContent, certificateType) => (
           <Tooltip title={this.props.t("Delete")} placement="top">
             <Link className="text-danger" to="#">
@@ -299,11 +317,6 @@ class CertificateTypesList extends Component {
         ),
       },
     ];
-    const pageOptions = {
-      sizePerPage: 10,
-      totalSize: certificateTypes.length,
-      custom: true,
-    };
 
     return (
       <React.Fragment>
@@ -389,32 +402,33 @@ class CertificateTypesList extends Component {
                                 <Row>
                                   <Col sm="4">
                                     <div className="search-box ms-2 mb-2 d-inline-block">
-                                      {/*   {showSearchButton && ( */}
-                                      <div className="position-relative">
-                                        <SearchBar
-                                          {...toolkitprops.searchProps}
-                                          placeholder={t("Search...")}
-
-                                        />
-                                      </div>
+                                      {showSearchButton && (
+                                        <div className="position-relative">
+                                          <SearchBar
+                                            {...toolkitprops.searchProps}
+                                            placeholder={t("Search...")}
+                                          />
+                                        </div>
+                                      )}
                                     </div>
                                   </Col>
-                                  {/*    {showAddButton && ( */}
-                                  <Col sm="8">
-                                    <div className="text-sm-end">
-                                      <Tooltip
-                                        title={this.props.t("Add")}
-                                        placement="top"
-                                      >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleAddRow}
+                                  {showAddButton && (
+                                    <Col sm="8">
+                                      <div className="text-sm-end">
+                                        <Tooltip
+                                          title={this.props.t("Add")}
+                                          placement="top"
                                         >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </div>
-                                  </Col>
+                                          <IconButton
+                                            color="primary"
+                                            onClick={this.handleAddRow}
+                                          >
+                                            <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </div>
+                                    </Col>
+                                  )}
                                 </Row>
 
                                 <BootstrapTable
@@ -422,9 +436,19 @@ class CertificateTypesList extends Component {
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
                                   data={certificateTypes}
-                                  columns={columns}
+                                  columns={columns.map(col => ({
+                                    ...col,
+                                    formatter:
+                                      col.dataField === "serial"
+                                        ? (cell, row, rowIndex) =>
+                                            rowIndex +
+                                            1 +
+                                            (paginationProps.page - 1) *
+                                              paginationProps.sizePerPage
+                                        : col.formatter,
+                                  }))}
                                   cellEdit={cellEditFactory({
-                                    mode: "click",
+                                    mode: "dbclick",
                                     blurToSave: true,
                                     afterSaveCell: (
                                       oldValue,

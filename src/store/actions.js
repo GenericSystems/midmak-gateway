@@ -27,8 +27,14 @@ export * from "./invoices/actions";
 // students history
 export * from "./students-history/actions";
 
+//hiddenGrade
+export * from "./hide-grade/actions";
+
 //trainees
 export * from "./trainees/actions";
+
+//regTrainees
+export * from "./registerTraineesAttendance/actions";
 
 // admissionConditions
 export * from "./admissionConditions/actions";
@@ -92,11 +98,17 @@ export * from "./academyBuildingStructure/actions";
 //contractsTypes
 export * from "./HR/contractsTypes/actions";
 
+//absencesTypes
+export * from "./absenceType/actions";
+
+//absenceJustification
+export * from "./absenceJustification/actions";
+
+//absencePercent
+export * from "./absencePercents/actions";
+
 //gradesVersions
 export * from "./gradesVersions/actions";
-
-//AbsenceWarnings
-export * from "./Rules-and-Regulations/Absence-warnings/actions";
 
 //DocumentTypes
 export * from "./documents-types/actions";
@@ -107,6 +119,9 @@ export * from "./nationality/actions";
 //ExamRooms
 export * from "./Exam/ExamRooms/actions";
 
+///examObservers
+export * from "./examObservers/actions";
+
 //warningsTypes
 export * from "./HR/warningsTypes/actions";
 
@@ -115,6 +130,9 @@ export * from "./HR/rewardsTypes/actions";
 
 //decisionsTypes
 export * from "./HR/decisionsTypes/actions";
+
+//decrees
+export * from "./decrees/actions";
 
 //employmentCases
 export * from "./HR/employmentCases/actions";
@@ -226,8 +244,8 @@ export * from "./reset-password/actions";
 //genders
 export * from "./genders/actions";
 
-//student-decrees
-export * from "./student-decrees/actions";
+//trainee-decrees
+export * from "./trainee-decrees/actions";
 //decisions
 export * from "./decisions/actions";
 //grants
@@ -285,7 +303,27 @@ export * from "./students-requests/actions";
 
 export * from "./HR/contracts/actions";
 
-//Trainees
+//markObjection
+
+export * from "./marks-objections/actions";
+
+//justifyTraineeAbsence
+
+export * from "./justifyTraineeAbsence/actions";
+
+//ExamAttendance
+
+export * from "./examAttendance/actions";
+
+//examAttendanceObservers
+
+export * from "./examAttendanceObservers/actions";
+
+//HallSchedule
+
+export * from "./hallSchedules/actions";
+
+//tempTrainees
 export * from "./new-Trainee/actions";
 
 //TrainingFormats
@@ -322,6 +360,6 @@ export * from "./diploma-level/actions";
 //HighStudyType
 
 export * from "./high-study-types/actions";
- 
+
 //qualification-track
-export * from "./qualification-tracks/actions"
+export * from "./qualification-tracks/actions";

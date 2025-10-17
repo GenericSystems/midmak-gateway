@@ -24,6 +24,7 @@ import {
 
 export const getAcademyBuildingStructures = () => ({
   type: GET_ACADEMY_BUILDING_STRUCTURES,
+  // payload: academyBuildingStructures,
 });
 
 export const getAcademyBuildingStructuresSuccess =

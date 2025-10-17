@@ -9,6 +9,8 @@ import {
   DELETE_COURSE_DISTRIBUTION_FAIL,
   GET_COURSE_DISTRIBUTION_DELETED_VALUE_SUCCESS,
   GET_COURSE_DISTRIBUTION_DELETED_VALUE_FAIL,
+  COPY_COURSE_DISTRIBUTIONS_SUCCESS,
+  COPY_COURSE_DISTRIBUTIONS_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
@@ -75,12 +77,25 @@ const courseDistributions = (state = INIT_STATE, action) => {
       return {
         ...state,
         courseDistributions: state.courseDistributions.filter(
-          courseDistribution => courseDistribution.Id.toString() !== action.payload.Id.toString()
+          courseDistribution =>
+            courseDistribution.Id.toString() !== action.payload.Id.toString()
         ),
         deleted: action.payload.deleted,
       };
 
     case DELETE_COURSE_DISTRIBUTION_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case COPY_COURSE_DISTRIBUTIONS_SUCCESS:
+      return {
+        ...state,
+        courseDistributions: action.payload,
+      };
+
+    case COPY_COURSE_DISTRIBUTIONS_FAIL:
       return {
         ...state,
         error: action.payload,
