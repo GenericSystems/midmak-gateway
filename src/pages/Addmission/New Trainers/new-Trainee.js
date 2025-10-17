@@ -587,7 +587,8 @@ class NewTrainee extends Component {
     const { onUploadFile } = this.props;
     const file = event.target.files[0];
     const reader = new FileReader();
-    onUploadFile(file);
+    const fileData= {file: file, id:0, table: "Trainee", field: "photo", index:0};
+    onUploadFile(fileData);
     reader.onloadend = () => {
       this.setState({
         photoURL: reader.result,
