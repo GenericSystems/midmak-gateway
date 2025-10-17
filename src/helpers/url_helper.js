@@ -943,9 +943,9 @@ export const ADD_NEW_DISTRIBUTING_COURSE = "/add/distributingcourse";
 
 export const DELETE_DISTRIBUTING_COURSE = "/delete/distributingcourse";
 
-// Copy Distributing Methods
+// Copy course Distributions
 
-export const COPY_DISTRIBUTING_METHODS = "/copy/distributingMethods";
+export const COPY_DISTRIBUTING_COURSES = "/copy/courseDistributions";
 
 // Letter Grades
 

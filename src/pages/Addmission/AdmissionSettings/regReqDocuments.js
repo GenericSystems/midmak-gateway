@@ -325,15 +325,11 @@ class RegReqDocumentsTable extends Component {
   };
 
   handleSuccessClose = () => {
-    const { onGetRegReqDocumentDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetRegReqDocumentDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetRegReqDocumentDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetRegReqDocumentDeletedValue();
   };
 
   handleSelectYear = (fieldName, selectedValue) => {

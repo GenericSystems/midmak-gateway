@@ -52,7 +52,6 @@ import {
   addNewDistributingCoursesMethodContent,
   updateDistributingCoursesMethodContent,
   deleteDistributingCoursesMethodContent,
-  copyDistributingMethods,
 } from "store/distributing-courses-methods/actions";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -462,11 +461,6 @@ class DistributingCoursesMethods extends Component {
       selectedCourse: "",
       inputFocused: false,
     });
-  };
-
-  copyDistMethods = () => {
-    const { onCopyDistributingMethods } = this.props;
-    onCopyDistributingMethods();
   };
 
   handleAddToTable = inputValue => {
@@ -884,7 +878,7 @@ class DistributingCoursesMethods extends Component {
                                 <Col sm="4"></Col>
                                 <Col sm="8">
                                   <div className="text-sm-end d-none">
-                                    <Tooltip
+                                    {/* <Tooltip
                                       title={this.props.t("Copy")}
                                       placement="top"
                                     >
@@ -894,7 +888,7 @@ class DistributingCoursesMethods extends Component {
                                       >
                                         <i className="mdi mdi-content-copy blue-noti-icon" />
                                       </IconButton>
-                                    </Tooltip>
+                                    </Tooltip>*/}
                                     {/* {showAddButton && ( */}
                                     <Tooltip
                                       title={this.props.t(
@@ -1397,8 +1391,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(
       deleteDistributingCoursesMethodContent(distributingCoursesMethodContent)
     ),
-
-  onCopyDistributingMethods: () => dispatch(copyDistributingMethods()),
 });
 
 export default connect(

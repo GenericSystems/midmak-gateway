@@ -83,8 +83,6 @@ class TraineesDecreesList extends Component {
       selectedDepartment: null,
       selectedBeginSemester: null,
       selectedEndSemester: null,
-      selectedTraineeId: null,
-      defaultTraineeName: "",
       selectedEducation: "",
       showAlert: null,
       minMaxValueError: null,
@@ -197,26 +195,21 @@ class TraineesDecreesList extends Component {
   };
 
   toggle(decree) {
+    const { decisionCategoryId, traineesDecree } = this.state;
+    const { filteredCourses, coursesDecrees } = this.props;
+
+    if (decree == 3 || decree == 2) {
+      const filteredCoursesModified =
+        coursesDecrees &&
+        coursesDecrees.map(item => ({
+          label: `${item.code} - ${item.CourseName}`,
+          value: item.courseId,
+        }));
+    }
     this.setState(prevState => ({
       modal: !prevState.modal,
     }));
   }
-  // toggle(decree) {
-  //   const { decisionCategoryId, traineesDecree } = this.state;
-  //   const { filteredCourses, coursesDecrees } = this.props;
-
-  //   if (decree == 3 || decree == 2) {
-  //     const filteredCoursesModified =
-  //       coursesDecrees &&
-  //       coursesDecrees.map(item => ({
-  //         label: `${item.code} - ${item.CourseName}`,
-  //         value: item.Id,
-  //       }));
-  //   }
-  //   this.setState(prevState => ({
-  //     modal: !prevState.modal,
-  //   }));
-  // }
 
   addToggle = () => {
     this.setState(prevState => ({
@@ -274,6 +267,7 @@ class TraineesDecreesList extends Component {
   };
 
   handleEditTraineesDecree = arg => {
+    console.log("argargarg", arg);
     const {
       trainees,
       decrees,
@@ -287,45 +281,44 @@ class TraineesDecreesList extends Component {
       value: item.Id,
       label: item.arTitle,
     }));
+    const foundTrainee = trainees.find(
+      trainee => String(trainee.Id) === String(arg["traineeId"])
+    );
+    traineesDecree["traineeName"] = foundTrainee?.fullName || "";
 
-    // traineesDecree["fullName"] = trainees.find(
-    //   trainee => trainee.TraineeNum === arg["TraineeNum"]
-    // ).fullName;
-    // traineesDecree["decree"] = decrees.find(
-    //   decree => decree.Id === arg["decisionRuleId"]
-    // ).arTitle;
-    // let decisionCat = decrees.find(
-    //   decree => decree.Id === arg["decisionRuleId"]
-    // ).decisionCategoryId;
-    // if (decisionCat == 3 || decisionCat == 2) {
-    //   const trainee = trainees.find(
-    //     trainee => trainee.fullName === traineesDecree["fullName"]
-    //   );
-    //   onGetFilteredCoursesPlan(trainee);
-    // }
+    traineesDecree["decision"] = decrees.find(
+      decree => decree.Id === arg["decisionRuleId"]
+    ).arTitle;
+    let decisionCat = decrees.find(
+      decree => decree.Id === arg["decisionRuleId"]
+    ).decisionCategoryId;
+    if (decisionCat == 3 || decisionCat == 2) {
+      const trainee = trainees.find(
+        trainee => trainee.fullName === traineesDecree["traineeName"]
+      );
+      console.log("traineetraineetrainee", trainee);
+      onGetFilteredCoursesPlan(trainee);
+    }
 
-    // const { onGetTraineeDecreesDismiss, onGetDecreesRulesReason } = this.props;
-    // onGetTraineeDecreesDismiss(traineesDecree);
-    // onGetDecreesRulesReason(traineesDecree.decisionRuleId);
+    const { onGetTraineeDecreesDismiss, onGetDecreesRulesReason } = this.props;
+    onGetTraineeDecreesDismiss(traineesDecree);
+    onGetDecreesRulesReason(traineesDecree.decisionRuleId);
 
-    // traineesDecree["TraineesDecreesCourses"] = arg["TraineesDecreesCourses"];
-
+    traineesDecree["TraineesDecreesCourses"] = arg["TraineesDecreesCourses"];
     this.setState({
       traineesDecree,
-      // decisionCategoryId: decisionCat,
-      // selectedFaculty: arg.facultyId,
-      // selectedEducation: arg.educationType,
-      // stdCoursesArray: traineesDecree["TraineesDecreesCourses"],
-      // selectedReason: traineesDecree["decisioneRuleReasonId"],
-      // selectedReasonName: traineesDecree["decreeReasonName"],
-      // selectedDecreeStatus: traineesDecree["decreeStateId"],
-      // selectedDecreeType: traineesDecree["decreeType"],
+      decisionCategoryId: decisionCat,
+      stdCoursesArray: traineesDecree["TraineesDecreesCourses"],
+      selectedReason: traineesDecree["decisionRuleReasonId"],
+      selectedReasonName: traineesDecree["decreeReasonName"],
+      selectedDecreeStatus: traineesDecree["decreeStateId"],
+      selectedDecreeType: traineesDecree["decreeType"],
       isEdit: true,
     });
 
-    // this.toggle(decisionCat);
-    this.toggle();
+    this.toggle(decisionCat);
   };
+
   handleMulti = selectedMulti => {
     this.setState({ selectedMulti });
   };
@@ -488,12 +481,12 @@ class TraineesDecreesList extends Component {
         option => option.value > selectedFromSemester.value
       );
     };
-
+    console.log("filteredCoursesfilteredCourses", filteredCourses);
     const filteredCoursesModified =
       filteredCourses &&
       filteredCourses.map(item => ({
         label: `${item.code} - ${item.CourseName}`,
-        value: item.Id,
+        value: item.courseId,
       }));
 
     const filteredCoursesDecrees =
@@ -536,15 +529,6 @@ class TraineesDecreesList extends Component {
         text: this.props.t("Trainee Num"),
         dataField: "TraineeNum",
         sort: true,
-        formatter: (cellContent, traineesDecrees) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {traineesDecrees.TraineeNum}
-              </Link>
-            </h5>
-          </>
-        ),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           hidden: !showSearchButton,
@@ -552,17 +536,8 @@ class TraineesDecreesList extends Component {
       },
       {
         text: this.props.t("Trainee Name"),
-        dataField: "traineeId",
+        dataField: "traineeName",
         sort: true,
-        formatter: (cellContent, traineesDecrees) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {traineesDecrees.traineeId}
-              </Link>
-            </h5>
-          </>
-        ),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           hidden: !showSearchButton,
@@ -572,15 +547,6 @@ class TraineesDecreesList extends Component {
         text: this.props.t("Decree Rule"),
         dataField: "decisionRuleId",
         sort: true,
-        formatter: (cellContent, traineesDecrees) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {traineesDecrees.decreeName}
-              </Link>
-            </h5>
-          </>
-        ),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           hidden: !showSearchButton,
@@ -590,15 +556,6 @@ class TraineesDecreesList extends Component {
         text: this.props.t("Decree Rule Reason"),
         dataField: "decisionRuleReasonId",
         sort: true,
-        formatter: (cellContent, traineesDecrees) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {traineesDecrees.decreeReasonName}
-              </Link>
-            </h5>
-          </>
-        ),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           hidden: !showSearchButton,
@@ -628,15 +585,6 @@ class TraineesDecreesList extends Component {
         text: this.props.t("Decree Status"),
         dataField: "decreeStateId",
         sort: true,
-        formatter: (cellContent, traineesDecrees) => (
-          <>
-            <h5 className="font-size-14 mb-1">
-              <Link to="#" className="text-dark">
-                {traineesDecrees.decreeStateName}
-              </Link>
-            </h5>
-          </>
-        ),
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           hidden: !showSearchButton,
@@ -689,6 +637,13 @@ class TraineesDecreesList extends Component {
         text: this.props.t("Applying Date"),
         dataField: "insertDate",
         sort: true,
+        formatter: (cellContent, traineesDecrees) => (
+          <>
+            {traineesDecrees.insertDate
+              ? traineesDecrees.insertDate.slice(0, 10)
+              : ""}
+          </>
+        ),
       },
 
       {
@@ -898,8 +853,8 @@ class TraineesDecreesList extends Component {
                                           <Col>
                                             <Formik
                                               initialValues={{
-                                                traineeId:
-                                                  traineesDecree.traineeId ||
+                                                traineeName:
+                                                  traineesDecree.traineeName ||
                                                   "",
                                                 decisionRuleReasonId:
                                                   traineesDecree.decisionRuleReasonId,
@@ -1092,7 +1047,10 @@ class TraineesDecreesList extends Component {
                                                                   decree.arTitle ===
                                                                   arTitle
                                                               );
-
+                                                            console.log(
+                                                              "decreedecreedecreedecreedecree",
+                                                              decree
+                                                            );
                                                             if (decree) {
                                                               onGetDecreesRulesReason(
                                                                 decree.Id
@@ -1128,7 +1086,7 @@ class TraineesDecreesList extends Component {
                                                     <Row>
                                                       <Col lg="4">
                                                         <Label
-                                                          htmlFor="traineeId"
+                                                          htmlFor="traineeName"
                                                           className="form-label d-flex"
                                                         >
                                                           {this.props.t(
@@ -1544,11 +1502,8 @@ class TraineesDecreesList extends Component {
                                               initialValues={
                                                 isEdit && {
                                                   Id: traineesDecree.Id,
-                                                  yearSemesterId:
-                                                    null ||
-                                                    traineesDecree.yearSemesterId,
-                                                  traineeId:
-                                                    traineesDecree.fullName ||
+                                                  traineeName:
+                                                    traineesDecree.traineeName ||
                                                     "",
                                                   decisionRuleReasonId:
                                                     traineesDecree.decisionRuleReasonId,
@@ -1809,7 +1764,7 @@ class TraineesDecreesList extends Component {
                                                       <Row>
                                                         <Col lg="4">
                                                           <label
-                                                            htmlFor="traineeId"
+                                                            htmlFor="traineeName"
                                                             className="form-label d-flex"
                                                           >
                                                             {this.props.t(
@@ -1822,51 +1777,35 @@ class TraineesDecreesList extends Component {
                                                         </Col>
                                                         <Col lg="8">
                                                           <Field
-                                                            name="traineeId"
+                                                            name="traineeName"
                                                             type="text"
                                                             list="traineeNameList"
                                                             className={`form-control ${
-                                                              errors.traineeId &&
-                                                              touched.traineeId
+                                                              errors.traineeName &&
+                                                              touched.traineeName
                                                                 ? "is-invalid"
                                                                 : ""
                                                             }`}
-                                                            value={
-                                                              trainees.find(
-                                                                t =>
-                                                                  t.key ===
-                                                                  this.state
-                                                                    .selectedTraineeId
-                                                              )?.value || ""
-                                                            }
                                                             onChange={e => {
-                                                              const newValue =
+                                                              const traineeName =
                                                                 e.target.value;
 
-                                                              const selectedTrainee =
+                                                              const plan =
                                                                 trainees.find(
-                                                                  t =>
-                                                                    t.value ===
-                                                                    newValue
+                                                                  trainee =>
+                                                                    trainee.fullName ===
+                                                                    traineeName
                                                                 );
-
-                                                              if (
-                                                                selectedTrainee
-                                                              ) {
-                                                                this.setState({
-                                                                  selectedTraineeId:
-                                                                    selectedTrainee.key,
-                                                                  defaultTraineeName:
-                                                                    selectedTrainee.value,
-                                                                });
-                                                              } else {
-                                                                this.setState({
-                                                                  selectedTraineeId:
-                                                                    null,
-                                                                  defaultTraineeName:
-                                                                    newValue,
-                                                                });
+                                                              console.log(
+                                                                "77777777777777777777",
+                                                                trainees
+                                                              );
+                                                              if (plan) {
+                                                                onGetFilteredCoursesPlan(
+                                                                  plan
+                                                                );
                                                               }
+                                                              handleChange(e);
                                                             }}
                                                           />
                                                           <datalist id="traineeNameList">
@@ -1874,17 +1813,17 @@ class TraineesDecreesList extends Component {
                                                               trainee => (
                                                                 <option
                                                                   key={
-                                                                    trainee.key
+                                                                    trainee.Id
                                                                   }
                                                                   value={
-                                                                    trainee.value
+                                                                    trainee.fullName
                                                                   }
                                                                 />
                                                               )
                                                             )}
                                                           </datalist>
                                                           <ErrorMessage
-                                                            name="traineeId"
+                                                            name="traineeName"
                                                             component="div"
                                                             className="invalid-feedback"
                                                           />
@@ -2509,9 +2448,9 @@ class TraineesDecreesList extends Component {
                                             <Row>
                                               <Card>
                                                 <CardTitle id="add_header">
-                                                  {traineesDecree.traineeId +
+                                                  {traineesDecree.traineeName +
                                                     "  " +
-                                                    traineesDecree.TraineeId}
+                                                    traineesDecree.TraineeNum}
                                                 </CardTitle>
                                                 <CardBody>
                                                   <Row>

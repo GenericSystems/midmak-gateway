@@ -6,6 +6,7 @@ import {
   ADD_NEW_COURSE_DISTRIBUTION,
   UPDATE_COURSE_DISTRIBUTION,
   DELETE_COURSE_DISTRIBUTION,
+  COPY_COURSE_DISTRIBUTIONS,
 } from "./actionTypes";
 
 import {
@@ -19,6 +20,8 @@ import {
   updateCourseDistributionFail,
   deleteCourseDistributionSuccess,
   deleteCourseDistributionFail,
+  copyCourseDistributionsSuccess,
+  copyCourseDistributionsFail,
 } from "./actions";
 
 import {
@@ -28,6 +31,7 @@ import {
   updateCourseDistribution,
   deleteCourseDistribution,
   getDistributingCoursesMethods,
+  copyCourseDistributions,
 } from "../../helpers/fakebackend_helper";
 
 import {
@@ -54,7 +58,7 @@ function* fetchCourseDistributions() {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_DistributingMethods",
+    tablename: "Common_CourseDistributions",
     fields: "Id,arTitle",
   };
   try {
@@ -121,6 +125,21 @@ function* onGetCourseDistributionDeletedValue() {
   }
 }
 
+function* onCopyCourseDistributions() {
+  const copydistmeth = {
+    source: "db",
+    procedure: "copyCourseDistributions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+  };
+
+  try {
+    const response = yield call(copyCourseDistributions, copydistmeth);
+    yield put(getCourseDistributionsSuccess(response));
+  } catch (error) {
+    yield put(getCourseDistributionsFail(error));
+  }
+}
+
 function* courseDistributionsSaga() {
   yield takeEvery(GET_COURSE_DISTRIBUTIONS, fetchCourseDistributions);
   yield takeEvery(ADD_NEW_COURSE_DISTRIBUTION, onAddNewCourseDistribution);
@@ -130,6 +149,7 @@ function* courseDistributionsSaga() {
     GET_COURSE_DISTRIBUTION_DELETED_VALUE,
     onGetCourseDistributionDeletedValue
   );
+  yield takeEvery(COPY_COURSE_DISTRIBUTIONS, onCopyCourseDistributions);
 }
 
 export default courseDistributionsSaga;

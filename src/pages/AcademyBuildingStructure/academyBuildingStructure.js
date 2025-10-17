@@ -1140,125 +1140,130 @@ class AcademyBuildingStructuresList extends Component {
                             >
                               {academyBuildingStructure.floors &&
                               academyBuildingStructure.floors[0].Id != null
-                                ? academyBuildingStructure.floors.map(floor => (
-                                    <TreeItem
-                                      key={floor.Id}
-                                      nodeId={`floor-${floor.Id}`}
-                                      label={
-                                        <div
-                                          className="department-item"
-                                          onClick={() =>
-                                            this.showFloorInfo(floor)
-                                          }
-                                        >
-                                          <span>
-                                            {languageState === "ar"
-                                              ? floor.floorArName
-                                              : floor.floorEnName}
-                                          </span>
-                                          <div className="directorate-item-actions">
-                                            {showAddButton && (
-                                              <IconButton
-                                                className="add-directorate-button"
-                                                onClick={e => {
-                                                  e.stopPropagation();
-                                                  this.handelAddHallForm(
-                                                    floor.Id
-                                                  );
-                                                }}
-                                              >
-                                                <AddIcon className="zeButton" />
-                                              </IconButton>
-                                            )}
-                                            {showEditButton && (
-                                              <IconButton
-                                                className="delete-department-button"
-                                                onClick={e => {
-                                                  e.stopPropagation();
-                                                  this.handleEditFloor(
-                                                    floor,
-                                                    academyBuildingStructure.Id
-                                                  );
-                                                }}
-                                              >
-                                                <EditIcon className="zeButton" />
-                                              </IconButton>
-                                            )}
-                                            {showDeleteButton && (
-                                              <div className="department-item-actions">
+                                ? [...academyBuildingStructure.floors]
+                                    .sort(
+                                      (a, b) =>
+                                        Number(a.floorNum) - Number(b.floorNum)
+                                    )
+                                    .map(floor => (
+                                      <TreeItem
+                                        key={floor.Id}
+                                        nodeId={`floor-${floor.Id}`}
+                                        label={
+                                          <div
+                                            className="department-item"
+                                            onClick={() =>
+                                              this.showFloorInfo(floor)
+                                            }
+                                          >
+                                            <span>
+                                              {languageState === "ar"
+                                                ? floor.floorArName
+                                                : floor.floorEnName}
+                                            </span>
+                                            <div className="directorate-item-actions">
+                                              {showAddButton && (
+                                                <IconButton
+                                                  className="add-directorate-button"
+                                                  onClick={e => {
+                                                    e.stopPropagation();
+                                                    this.handelAddHallForm(
+                                                      floor.Id
+                                                    );
+                                                  }}
+                                                >
+                                                  <AddIcon className="zeButton" />
+                                                </IconButton>
+                                              )}
+                                              {showEditButton && (
                                                 <IconButton
                                                   className="delete-department-button"
                                                   onClick={e => {
                                                     e.stopPropagation();
-                                                    this.onClickDeleteFloor(
-                                                      floor.Id,
-                                                      floor
+                                                    this.handleEditFloor(
+                                                      floor,
+                                                      academyBuildingStructure.Id
                                                     );
                                                   }}
                                                 >
-                                                  <DeleteIcon className="zeButton" />
+                                                  <EditIcon className="zeButton" />
                                                 </IconButton>
-                                              </div>
-                                            )}
-                                          </div>
-                                        </div>
-                                      }
-                                    >
-                                      {floor.halls &&
-                                        floor.halls.length > 0 &&
-                                        floor.halls.map(hall => (
-                                          <TreeItem
-                                            key={hall.Id}
-                                            nodeId={`hall-${hall.Id}`}
-                                            label={
-                                              <div
-                                                className="organism-item"
-                                                onClick={e => {
-                                                  e.stopPropagation();
-                                                  this.showHallInfo(hall);
-                                                }}
-                                              >
-                                                <span>
-                                                  {" "}
-                                                  {languageState === "ar"
-                                                    ? hall.hallArName
-                                                    : hall.hallEnName}
-                                                </span>
-                                                <div className="directorate-item-actions">
-                                                  {showEditButton && (
-                                                    <IconButton
-                                                      className="edit-organism-button"
-                                                      onClick={e => {
-                                                        e.stopPropagation();
-                                                        this.handelEditHall(
-                                                          hall,
-                                                          floor.Id
-                                                        );
-                                                      }}
-                                                    >
-                                                      <EditIcon className="zeButton" />
-                                                    </IconButton>
-                                                  )}
-                                                  {showDeleteButton && (
-                                                    <IconButton
-                                                      className="delete-organism-button"
-                                                      onClick={e => {
-                                                        e.stopPropagation();
-                                                        this.onClickDeleteHall(
-                                                          hall.Id
-                                                        );
-                                                      }}
-                                                    >
-                                                      <DeleteIcon className="zeButton" />
-                                                    </IconButton>
-                                                  )}
+                                              )}
+                                              {showDeleteButton && (
+                                                <div className="department-item-actions">
+                                                  <IconButton
+                                                    className="delete-department-button"
+                                                    onClick={e => {
+                                                      e.stopPropagation();
+                                                      this.onClickDeleteFloor(
+                                                        floor.Id,
+                                                        floor
+                                                      );
+                                                    }}
+                                                  >
+                                                    <DeleteIcon className="zeButton" />
+                                                  </IconButton>
                                                 </div>
-                                              </div>
-                                            }
-                                          />
-                                        ))}
-                                    </TreeItem>
-                                  ))
+                                              )}
+                                            </div>
+                                          </div>
+                                        }
+                                      >
+                                        {floor.halls &&
+                                          floor.halls.length > 0 &&
+                                          floor.halls.map(hall => (
+                                            <TreeItem
+                                              key={hall.Id}
+                                              nodeId={`hall-${hall.Id}`}
+                                              label={
+                                                <div
+                                                  className="organism-item"
+                                                  onClick={e => {
+                                                    e.stopPropagation();
+                                                    this.showHallInfo(hall);
+                                                  }}
+                                                >
+                                                  <span>
+                                                    {" "}
+                                                    {languageState === "ar"
+                                                      ? hall.hallArName
+                                                      : hall.hallEnName}
+                                                  </span>
+                                                  <div className="directorate-item-actions">
+                                                    {showEditButton && (
+                                                      <IconButton
+                                                        className="edit-organism-button"
+                                                        onClick={e => {
+                                                          e.stopPropagation();
+                                                          this.handelEditHall(
+                                                            hall,
+                                                            floor.Id
+                                                          );
+                                                        }}
+                                                      >
+                                                        <EditIcon className="zeButton" />
+                                                      </IconButton>
+                                                    )}
+                                                    {showDeleteButton && (
+                                                      <IconButton
+                                                        className="delete-organism-button"
+                                                        onClick={e => {
+                                                          e.stopPropagation();
+                                                          this.onClickDeleteHall(
+                                                            hall.Id
+                                                          );
+                                                        }}
+                                                      >
+                                                        <DeleteIcon className="zeButton" />
+                                                      </IconButton>
+                                                    )}
+                                                  </div>
+                                                </div>
+                                              }
+                                            />
+                                          ))}
+                                      </TreeItem>
+                                    ))
                                 : null}
                             </TreeItem>
                           )

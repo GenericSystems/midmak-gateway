@@ -32,16 +32,12 @@ import {
   DELETE_DISTRIBUTING_COURSE,
   DELETE_DISTRIBUTING_COURSE_SUCCESS,
   DELETE_DISTRIBUTING_COURSE_FAIL,
-  COPY_DISTRIBUTING_METHODS,
-COPY_DISTRIBUTING_METHODS_SUCCESS,
-COPY_DISTRIBUTING_METHODS_FAIL,
 } from "./actionTypes";
 
 // getDistributingCoursesMethods
 
 export const getDistributingCoursesMethods = () => ({
   type: GET_DISTRIBUTING_COURSES_METHODS,
-
 });
 
 export const getDistributingCoursesMethodsSuccess =
@@ -230,19 +226,5 @@ export const deleteDistributingCourseSuccess = distributingCourse => ({
 
 export const deleteDistributingCourseFail = error => ({
   type: DELETE_DISTRIBUTING_COURSE_FAIL,
-  payload: error,
-});
-export const copyDistributingMethods = () => ({
-  type: COPY_DISTRIBUTING_METHODS,
-});
-
-export const copyDistributingMethodsSuccess =
-  distributingCoursesMethod => ({
-    type: COPY_DISTRIBUTING_METHODS_SUCCESS,
-    payload: distributingCoursesMethod,
-  });
-
-export const copyDistributingMethodsFail = error => ({
-  type: COPY_DISTRIBUTING_METHODS_FAIL,
   payload: error,
 });

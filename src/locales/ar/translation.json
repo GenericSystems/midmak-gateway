@@ -839,5 +839,10 @@
   "Decree Rule Reason": "سبب قاعدة القرار",
   "Add Trainees Decree": "إضافة قرار المتدرب",
   "Date": "تاريخ",
+  "Sector Code": "رمز القطاع",
+  "Qualification Track": "المساق التأهيلي",
+  "Qualification Track Code": "رمز المساق التأهيلي",
+  "Is Need Lab": "يحتاج إلى فئة؟",
+  "Is Need Section": "يحتاج إلى شعبة؟",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

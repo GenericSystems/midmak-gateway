@@ -1887,9 +1887,9 @@ export const updateDistributingCoursesMethodsContent = data =>
 export const deleteDistributingCoursesMethodsContent = data =>
   post(url.DELETE_DISTRIBUTING_COURSES_METHOD_CONTENT, data);
 
-//copy Distributing Methods
-export const copyDistributingMethods = data =>
-  post(url.COPY_DISTRIBUTING_METHODS, data);
+//copy CourseDistributions
+export const copyCourseDistributions = data =>
+  post(url.COPY_DISTRIBUTING_COURSES, data);
 
 //  Distributing courses
 

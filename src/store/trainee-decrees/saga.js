@@ -90,15 +90,15 @@ function* fetchTraineesDecrees() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_Trainee",
+    tablename: "_Common_TraineesDecrees",
   };
   try {
     const response = yield call(getTraineesDecrees, get_TraineesDecrees_req);
-    // response.map(resp => {
-    //   resp["TraineesDecreesCourses"] = JSON.parse(
-    //     resp["TraineesDecreesCourses"]
-    //   );
-    // });
+    response.map(resp => {
+      resp["TraineesDecreesCourses"] = JSON.parse(
+        resp["TraineesDecreesCourses"]
+      );
+    });
     yield put(getTraineesDecreesSuccess(response));
   } catch (error) {
     yield put(getTraineesDecreesFail(error));
@@ -137,12 +137,13 @@ function* fetchAcademyTraineesDecrees() {
   }
 }
 function* fetchTraineeDecreesDismiss(obj) {
+  console.log("objobj", obj);
   const get_stdDecreeDismiss_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_TraineesDecrees",
-    filter: `TraineeId = ${obj.payload.TraineeId}`,
+    filter: `traineeId = ${obj.payload.traineeId}`,
   };
   try {
     const response = yield call(
@@ -168,11 +169,6 @@ function* onAddNewTraineesDecree({ payload, studentsDecree }) {
   payload["queryname"] = "_Common_TraineesDecrees";
   try {
     const response = yield call(addNewTraineesDecree, payload);
-    // response.map(resp => {
-    //   resp["TraineesDecreesCourses"] = JSON.parse(
-    //     resp["TraineesDecreesCourses"]
-    //   );
-    // });
     yield put(addTraineesDecreeSuccess(response[0]));
   } catch (error) {
     yield put(addTraineesDecreeFail(error));

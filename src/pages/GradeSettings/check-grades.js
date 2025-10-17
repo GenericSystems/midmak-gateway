@@ -544,7 +544,7 @@ class CheckGradesList extends Component {
                     <Col lg="3">
                       <Card>
                         <CardTitle id="course_header">
-                          {t("Search for the course trainee")}
+                          {t("Search for the course")}
                         </CardTitle>
                         <CardBody>
                           <div className="mb-3">

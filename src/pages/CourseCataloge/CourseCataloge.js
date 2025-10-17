@@ -1448,7 +1448,7 @@ class CourseCatalogeList extends Component {
                                                                       <Col className="col-4">
                                                                         <Label for="qualificationCode">
                                                                           {this.props.t(
-                                                                            "Qualification Code"
+                                                                            "Qualification Track Code"
                                                                           )}
                                                                         </Label>
                                                                         <span className="text-danger">
@@ -1644,7 +1644,7 @@ class CourseCatalogeList extends Component {
                                                                       <Col className="col-4">
                                                                         <Label for="isNeedSection">
                                                                           {this.props.t(
-                                                                            "Needet Sections"
+                                                                            "Is Need Section"
                                                                           )}
                                                                         </Label>
                                                                         <span className="text-danger">
@@ -1714,7 +1714,7 @@ class CourseCatalogeList extends Component {
                                                                       <Col className="col-4">
                                                                         <Label for="isNeedLab">
                                                                           {this.props.t(
-                                                                            "Need Labs"
+                                                                            "Is Need Lab"
                                                                           )}
                                                                         </Label>
                                                                         <span className="text-danger">

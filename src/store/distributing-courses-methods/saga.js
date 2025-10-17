@@ -13,9 +13,6 @@ import {
   GET_DISTRIBUTING_COURSES,
   ADD_NEW_DISTRIBUTING_COURSE,
   DELETE_DISTRIBUTING_COURSE,
-  COPY_DISTRIBUTING_METHODS,
-  COPY_DISTRIBUTING_METHODS_SUCCESS,
-  COPY_DISTRIBUTING_METHODS_FAIL,
 } from "./actionTypes";
 
 import {
@@ -41,8 +38,6 @@ import {
   addDistributingCourseFail,
   deleteDistributingCourseSuccess,
   deleteDistributingCourseFail,
-  copyDistributingMethodsSuccess,
-  copyDistributingMethodsFail,
 } from "./actions";
 
 // Include Both Helper File with needed methods
@@ -61,7 +56,6 @@ import {
   addDistributingCourse,
   deleteDistributingCourse,
   getCurrentSemester,
-  copyDistributingMethods,
   getGradeTypes,
 } from "../../helpers/fakebackend_helper";
 
@@ -329,26 +323,12 @@ function* onDeleteDistributingCourse({ payload, distributingCourse }) {
   }
 }
 
-function* onCopyDistributingMethods() {
-  const copydistmeth = {
-    source: "db",
-    procedure: "copyDistributingMethods",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  };
-
-  try {
-    const response = yield call(copyDistributingMethods, copydistmeth);
-    yield put(getDistributingCoursesMethodsSuccess(response));
-  } catch (error) {
-    yield put(getDistributingCoursesMethodsFail(error));
-  }
-}
 function* DistributingCoursesMethodsSaga() {
   yield takeEvery(
     GET_DISTRIBUTING_COURSES_METHODS,
     fetchDistributingCoursesMethods
   );
-  yield takeEvery(COPY_DISTRIBUTING_METHODS, onCopyDistributingMethods);
+
   yield takeEvery(
     ADD_NEW_DISTRIBUTING_COURSES_METHOD,
     onAddNewDistributingCoursesMethod

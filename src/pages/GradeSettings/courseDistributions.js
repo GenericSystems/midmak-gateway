@@ -43,6 +43,7 @@ import {
   addNewCourseDistribution,
   updateCourseDistribution,
   deleteCourseDistribution,
+  copyCourseDistributions,
 } from "store/courses-distribution/actions";
 
 import {
@@ -187,7 +188,9 @@ class CourseDistributionsList extends Component {
   };
 
   copyDistCours = () => {
-    this.setState({ openCopyModal: false });
+    // this.setState({ openCopyModal: false });
+    const { onCopyCourseDistributions } = this.props;
+    onCopyCourseDistributions();
   };
 
   render() {
@@ -536,6 +539,7 @@ const mapDispatchToProps = dispatch => ({
   onDeleteCourseDistribution: data => dispatch(deleteCourseDistribution(data)),
   onGetCourseDistributionDeletedValue: () =>
     dispatch(getCourseDistributionDeletedValue()),
+  onCopyCourseDistributions: () => dispatch(copyCourseDistributions()),
 });
 
 export default connect(
