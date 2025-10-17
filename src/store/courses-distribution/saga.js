@@ -58,7 +58,7 @@ function* fetchCourseDistributions() {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_CourseDistributions",
+    tablename: "Common_DistributingMethods",
     fields: "Id,arTitle",
   };
   try {
