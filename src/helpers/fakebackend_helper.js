@@ -859,17 +859,17 @@ export const getCoursesDecrees = data => post(url.GET_COURSES_DECREES, data);
 
 export const getTraineesDecrees = data => post(url.GET_TRAINEES_DECREES, data);
 
-export const addNewTraineesDecree = data =>
-  post(url.ADD_NEW_TRAINEES_DECREES, data);
+export const addNewTraineeDecree = data =>
+  post(url.ADD_NEW_TRAINEE_DECREE, data);
 
-export const updateTraineesDecree = data =>
-  post(url.UPDATE_TRAINEES_DECREES, data);
+export const updateTraineeDecree = data =>
+  post(url.UPDATE_TRAINEE_DECREE, data);
 
-export const deleteTraineesDecree = data =>
-  post(url.DELETE_TRAINEES_DECREES, data);
+export const deleteTraineeDecree = data =>
+  post(url.DELETE_TRAINEE_DECREE, data);
 
-export const getTraineesDecreeDeletedValue = () =>
-  get(url.GET_TRAINEES_DECREES_DELETED_VALUE);
+export const getTraineeDecreeDeletedValue = () =>
+  get(url.GET_TRAINEE_DECREE_DELETED_VALUE);
 
 export const getDecreeStatus = data => post(url.GET_DECREE_STATUS, data);
 

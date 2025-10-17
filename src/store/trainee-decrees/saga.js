@@ -1,10 +1,10 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import {
   GET_TRAINEES_DECREES,
-  ADD_NEW_TRAINEES_DECREES,
-  DELETE_TRAINEES_DECREES,
-  UPDATE_TRAINEES_DECREES,
-  GET_TRAINEES_DECREES_DELETED_VALUE,
+  ADD_NEW_TRAINEE_DECREE,
+  DELETE_TRAINEE_DECREE,
+  UPDATE_TRAINEE_DECREE,
+  GET_TRAINEE_DECREE_DELETED_VALUE,
   GET_FILTERED_COURSES_PLANS,
   GET_ACADEMY_TRAINEES_DECREE,
   GET_COURSES_DECREES,
@@ -13,14 +13,14 @@ import {
 import {
   getTraineesDecreesSuccess,
   getTraineesDecreesFail,
-  addTraineesDecreeFail,
-  addTraineesDecreeSuccess,
-  updateTraineesDecreeSuccess,
-  updateTraineesDecreeFail,
-  deleteTraineesDecreeSuccess,
-  deleteTraineesDecreeFail,
-  getTraineesDecreeDeletedValueSuccess,
-  getTraineesDecreeDeletedValueFail,
+  addTraineeDecreeFail,
+  addTraineeDecreeSuccess,
+  updateTraineeDecreeSuccess,
+  updateTraineeDecreeFail,
+  deleteTraineeDecreeSuccess,
+  deleteTraineeDecreeFail,
+  getTraineeDecreeDeletedValueSuccess,
+  getTraineeDecreeDeletedValueFail,
   getFilteredCoursesPlansFail,
   getFilteredCoursesPlansSuccess,
   getAcademyTraineesDecreesFail,
@@ -36,10 +36,10 @@ import { getTraineesOptFail, getTraineesOptSuccess } from "../trainees/actions";
 
 import {
   getTraineesDecrees,
-  addNewTraineesDecree,
-  updateTraineesDecree,
-  deleteTraineesDecree,
-  getTraineesDecreeDeletedValue,
+  addNewTraineeDecree,
+  updateTraineeDecree,
+  deleteTraineeDecree,
+  getTraineeDecreeDeletedValue,
   getFilteredCourses,
   getAcademyTrainees,
   getFilteredCoursesPlans,
@@ -168,10 +168,10 @@ function* onAddNewTraineesDecree({ payload, studentsDecree }) {
   payload["tablename"] = "Common_TraineesDecrees";
   payload["queryname"] = "_Common_TraineesDecrees";
   try {
-    const response = yield call(addNewTraineesDecree, payload);
-    yield put(addTraineesDecreeSuccess(response[0]));
+    const response = yield call(addNewTraineeDecree, payload);
+    yield put(addTraineeDecreeSuccess(response[0]));
   } catch (error) {
-    yield put(addTraineesDecreeFail(error));
+    yield put(addTraineeDecreeFail(error));
   }
 }
 
@@ -182,15 +182,15 @@ function* onUpdateTraineesDecree({ payload }) {
   payload["tablename"] = "Common_TraineesDecrees";
   payload["queryname"] = "_Common_TraineesDecrees";
   try {
-    const respupdate = yield call(updateTraineesDecree, payload);
-    response.map(resp => {
-      resp["TraineesDecreesCourses"] = JSON.parse(
-        resp["TraineesDecreesCourses"]
-      );
-    });
-    yield put(updateTraineesDecreeSuccess(respupdate[0]));
+    const respupdate = yield call(updateTraineeDecree, payload);
+    // respupdate.map(resp => {
+    //   resp["TraineesDecreesCourses"] = JSON.parse(
+    //     resp["TraineesDecreesCourses"]
+    //   );
+    // });
+    yield put(updateTraineeDecreeSuccess(respupdate[0]));
   } catch (error) {
-    yield put(updateTraineesDecreeFail(error));
+    yield put(updateTraineeDecreeFail(error));
   }
 }
 function* onDeleteTraineesDecree({ payload, TraineesDecree }) {
@@ -199,18 +199,18 @@ function* onDeleteTraineesDecree({ payload, TraineesDecree }) {
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_TraineesDecrees";
   try {
-    const respdelete = yield call(deleteTraineesDecree, payload);
-    yield put(deleteTraineesDecreeSuccess(respdelete[0]));
+    const respdelete = yield call(deleteTraineeDecree, payload);
+    yield put(deleteTraineeDecreeSuccess(respdelete[0]));
   } catch (error) {
-    yield put(deleteTraineesDecreeFail(error));
+    yield put(deleteTraineeDecreeFail(error));
   }
 }
 function* onGetTraineesDecreeDeletedValue() {
   try {
-    const response = yield call(getTraineesDecreeDeletedValue);
-    yield put(getTraineesDecreeDeletedValueSuccess(response));
+    const response = yield call(getTraineeDecreeDeletedValue);
+    yield put(getTraineeDecreeDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getTraineesDecreeDeletedValueFail(error));
+    yield put(getTraineeDecreeDeletedValueFail(error));
   }
 }
 function* traineesDecreesSaga() {
@@ -218,11 +218,11 @@ function* traineesDecreesSaga() {
   yield takeEvery(GET_TRAINEE_DECREES_DISMISS, fetchTraineeDecreesDismiss);
   // yield takeEvery(GET_COURSES_DECREES, fetchCoursesDecrees);
   yield takeEvery(GET_TRAINEES_DECREES, fetchTraineesDecrees);
-  yield takeEvery(ADD_NEW_TRAINEES_DECREES, onAddNewTraineesDecree);
-  yield takeEvery(UPDATE_TRAINEES_DECREES, onUpdateTraineesDecree);
-  yield takeEvery(DELETE_TRAINEES_DECREES, onDeleteTraineesDecree);
+  yield takeEvery(ADD_NEW_TRAINEE_DECREE, onAddNewTraineesDecree);
+  yield takeEvery(UPDATE_TRAINEE_DECREE, onUpdateTraineesDecree);
+  yield takeEvery(DELETE_TRAINEE_DECREE, onDeleteTraineesDecree);
   yield takeEvery(
-    GET_TRAINEES_DECREES_DELETED_VALUE,
+    GET_TRAINEE_DECREE_DELETED_VALUE,
     onGetTraineesDecreeDeletedValue
   );
   yield takeEvery(GET_ACADEMY_TRAINEES_DECREE, fetchAcademyTraineesDecrees);

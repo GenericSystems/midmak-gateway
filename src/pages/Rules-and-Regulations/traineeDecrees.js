@@ -43,10 +43,10 @@ import DeleteModal from "components/Common/DeleteModal";
 
 import {
   getTraineesDecrees,
-  addNewTraineesDecree,
-  updateTraineesDecree,
-  deleteTraineesDecree,
-  getTraineesDecreeDeletedValue,
+  addNewTraineeDecree,
+  updateTraineeDecree,
+  deleteTraineeDecree,
+  getTraineeDecreeDeletedValue,
   getFilteredCoursesPlans,
   getAcademyTraineesDecrees,
   getTraineeDecreesDismiss,
@@ -256,12 +256,12 @@ class TraineesDecreesList extends Component {
   };
 
   handleDeleteTraineesDecree = () => {
-    const { onDeleteTraineesDecree } = this.props;
+    const { onDeleteTraineeDecree } = this.props;
     const { traineesDecree } = this.state;
 
     if (traineesDecree.Id !== undefined) {
       let onDelete = { Id: traineesDecree.Id };
-      onDeleteTraineesDecree(onDelete);
+      onDeleteTraineeDecree(onDelete);
     }
     this.setState({ deleteModal: false, showAlert: true });
   };
@@ -323,15 +323,15 @@ class TraineesDecreesList extends Component {
     this.setState({ selectedMulti });
   };
   handleSuccessClose = () => {
-    const { onGetTraineesDecreeDeletedValue } = this.props;
+    const { onGetTraineeDecreeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetTraineesDecreeDeletedValue();
+    onGetTraineeDecreeDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetTraineesDecreeDeletedValue } = this.props;
+    const { onGetTraineeDecreeDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetTraineesDecreeDeletedValue();
+    onGetTraineeDecreeDeletedValue();
   };
 
   handleAlertClose = () => {
@@ -348,12 +348,8 @@ class TraineesDecreesList extends Component {
 
   handleSave = values => {
     console.log("valuesvalues", values);
-    const {
-      onAddNewTraineesDecree,
-      decrees,
-      trainees,
-      onUpdateTraineesDecree,
-    } = this.props;
+    const { onAddNewTraineeDecree, decrees, trainees, onUpdateTraineeDecree } =
+      this.props;
     const { traineesDecree, isEdit } = this.state;
     const emptyDecree = {};
     console.log("valuesvalues", values);
@@ -379,13 +375,13 @@ class TraineesDecreesList extends Component {
     if (isEdit) {
       console.log("edit");
       emptyDecree["Id"] = traineesDecree["Id"];
-      onUpdateTraineesDecree(emptyDecree);
+      onUpdateTraineeDecree(emptyDecree);
       this.setState(prevState => ({
         modal: !prevState.modal,
       }));
     } else {
       emptyDecree["decreeStateId"] = 4;
-      onAddNewTraineesDecree(emptyDecree);
+      onAddNewTraineeDecree(emptyDecree);
       this.setState(prevState => ({
         addModal: !prevState.addModal,
       }));
@@ -438,7 +434,7 @@ class TraineesDecreesList extends Component {
       showSearchButton,
       selectedTraineeId,
     } = this.state;
-    const { onAddNewTraineesDecree, onUpdateTraineesDecree } = this.props;
+    const { onAddNewTraineeDecree, onUpdateTraineeDecree } = this.props;
     const traineesDecree = this.state.traineesDecree;
 
     console.log("decreeStatus", decrees);
@@ -2726,14 +2722,14 @@ const mapDispatchToProps = dispatch => ({
   onGetDecrees: () => dispatch(getDecrees()),
   onGetDecreesRulesReason: decisionId =>
     dispatch(getDecreesRulesReasons(decisionId)),
-  onAddNewTraineesDecree: traineesDecree =>
-    dispatch(addNewTraineesDecree(traineesDecree)),
-  onUpdateTraineesDecree: traineesDecree =>
-    dispatch(updateTraineesDecree(traineesDecree)),
-  onDeleteTraineesDecree: traineesDecree =>
-    dispatch(deleteTraineesDecree(traineesDecree)),
-  onGetTraineesDecreeDeletedValue: () =>
-    dispatch(getTraineesDecreeDeletedValue()),
+  onAddNewTraineeDecree: traineesDecree =>
+    dispatch(addNewTraineeDecree(traineesDecree)),
+  onUpdateTraineeDecree: traineesDecree =>
+    dispatch(updateTraineeDecree(traineesDecree)),
+  onDeleteTraineeDecree: traineesDecree =>
+    dispatch(deleteTraineeDecree(traineesDecree)),
+  onGetTraineeDecreeDeletedValue: () =>
+    dispatch(getTraineeDecreeDeletedValue()),
 });
 
 export default connect(

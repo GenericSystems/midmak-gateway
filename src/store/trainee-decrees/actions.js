@@ -2,18 +2,18 @@ import {
   GET_TRAINEES_DECREES,
   GET_TRAINEES_DECREES_SUCCESS,
   GET_TRAINEES_DECREES_FAIL,
-  ADD_NEW_TRAINEES_DECREES,
-  ADD_TRAINEES_DECREES_SUCCESS,
-  ADD_TRAINEES_DECREES_FAIL,
-  UPDATE_TRAINEES_DECREES,
-  UPDATE_TRAINEES_DECREES_SUCCESS,
-  UPDATE_TRAINEES_DECREES_FAIL,
-  DELETE_TRAINEES_DECREES,
-  DELETE_TRAINEES_DECREES_SUCCESS,
-  DELETE_TRAINEES_DECREES_FAIL,
-  GET_TRAINEES_DECREES_DELETED_VALUE,
-  GET_TRAINEES_DECREES_DELETED_VALUE_FAIL,
-  GET_TRAINEES_DECREES_DELETED_VALUE_SUCCESS,
+  ADD_NEW_TRAINEE_DECREE,
+  ADD_TRAINEE_DECREE_SUCCESS,
+  ADD_TRAINEE_DECREE_FAIL,
+  UPDATE_TRAINEE_DECREE,
+  UPDATE_TRAINEE_DECREE_SUCCESS,
+  UPDATE_TRAINEE_DECREE_FAIL,
+  DELETE_TRAINEE_DECREE,
+  DELETE_TRAINEE_DECREE_SUCCESS,
+  DELETE_TRAINEE_DECREE_FAIL,
+  GET_TRAINEE_DECREE_DELETED_VALUE,
+  GET_TRAINEE_DECREE_DELETED_VALUE_FAIL,
+  GET_TRAINEE_DECREE_DELETED_VALUE_SUCCESS,
   GET_FILTERED_COURSES_PLANS,
   GET_FILTERED_COURSES_PLANS_SUCCESS,
   GET_FILTERED_COURSES_PLANS_FAIL,
@@ -45,60 +45,60 @@ export const getTraineesDecreesFail = error => ({
   payload: error,
 });
 
-export const addNewTraineesDecree = traineesDecree => ({
-  type: ADD_NEW_TRAINEES_DECREES,
+export const addNewTraineeDecree = traineesDecree => ({
+  type: ADD_NEW_TRAINEE_DECREE,
   payload: traineesDecree,
 });
 
-export const addTraineesDecreeSuccess = traineesDecree => ({
-  type: ADD_TRAINEES_DECREES_SUCCESS,
+export const addTraineeDecreeSuccess = traineesDecree => ({
+  type: ADD_TRAINEE_DECREE_SUCCESS,
   payload: traineesDecree,
 });
 
-export const addTraineesDecreeFail = error => ({
-  type: ADD_TRAINEES_DECREES_FAIL,
+export const addTraineeDecreeFail = error => ({
+  type: ADD_TRAINEE_DECREE_FAIL,
   payload: error,
 });
-export const updateTraineesDecree = traineesDecree => {
+export const updateTraineeDecree = traineesDecree => {
   return {
-    type: UPDATE_TRAINEES_DECREES,
+    type: UPDATE_TRAINEE_DECREE,
     payload: traineesDecree,
   };
 };
 
-export const updateTraineesDecreeSuccess = traineesDecree => ({
-  type: UPDATE_TRAINEES_DECREES_SUCCESS,
+export const updateTraineeDecreeSuccess = traineesDecree => ({
+  type: UPDATE_TRAINEE_DECREE_SUCCESS,
   payload: traineesDecree,
 });
 
-export const updateTraineesDecreeFail = error => ({
-  type: UPDATE_TRAINEES_DECREES_FAIL,
+export const updateTraineeDecreeFail = error => ({
+  type: UPDATE_TRAINEE_DECREE_FAIL,
   payload: error,
 });
-export const deleteTraineesDecree = traineesDecree => ({
-  type: DELETE_TRAINEES_DECREES,
+export const deleteTraineeDecree = traineesDecree => ({
+  type: DELETE_TRAINEE_DECREE,
   payload: traineesDecree,
 });
-export const deleteTraineesDecreeSuccess = traineesDecree => ({
-  type: DELETE_TRAINEES_DECREES_SUCCESS,
+export const deleteTraineeDecreeSuccess = traineesDecree => ({
+  type: DELETE_TRAINEE_DECREE_SUCCESS,
   payload: traineesDecree,
 });
-export const deleteTraineesDecreeFail = error => ({
-  type: DELETE_TRAINEES_DECREES_FAIL,
+export const deleteTraineeDecreeFail = error => ({
+  type: DELETE_TRAINEE_DECREE_FAIL,
   payload: error,
 });
 
-export const getTraineesDecreeDeletedValue = () => ({
-  type: GET_TRAINEES_DECREES_DELETED_VALUE,
+export const getTraineeDecreeDeletedValue = () => ({
+  type: GET_TRAINEE_DECREE_DELETED_VALUE,
 });
 
-export const getTraineesDecreeDeletedValueSuccess = deleted => ({
-  type: GET_TRAINEES_DECREES_DELETED_VALUE_SUCCESS,
+export const getTraineeDecreeDeletedValueSuccess = deleted => ({
+  type: GET_TRAINEE_DECREE_DELETED_VALUE_SUCCESS,
   payload: deleted,
 });
 
-export const getTraineesDecreeDeletedValueFail = error => ({
-  type: GET_TRAINEES_DECREES_DELETED_VALUE_FAIL,
+export const getTraineeDecreeDeletedValueFail = error => ({
+  type: GET_TRAINEE_DECREE_DELETED_VALUE_FAIL,
   payload: error,
 });
 

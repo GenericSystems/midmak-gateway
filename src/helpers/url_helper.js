@@ -356,10 +356,10 @@ export const GET_GENDER_DELETED_VALUE = "/deleted";
 
 // TRAINEES_DECREES
 export const GET_TRAINEES_DECREES = "/traineesDecrees";
-export const ADD_NEW_TRAINEES_DECREES = "/add/traineesDecree";
-export const UPDATE_TRAINEES_DECREES = "/update/traineesDecree";
-export const DELETE_TRAINEES_DECREES = "/delete/traineesDecree";
-export const GET_TRAINEES_DECREES_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TRAINEE_DECREE = "/add/traineeDecree";
+export const UPDATE_TRAINEE_DECREE = "/update/traineeDecree";
+export const DELETE_TRAINEE_DECREE = "/delete/traineeDecree";
+export const GET_TRAINEE_DECREE_DELETED_VALUE = "/deleted";
 export const GET_DECREE_STATUS = "/decreeState";
 export const GET_TRAINEE_DECREES_DISMISS = "/traineeDecreesDismiss";
 
