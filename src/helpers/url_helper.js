@@ -1135,6 +1135,13 @@ export const UPDATE_MARK_OBJECTION = "/update/markObjection";
 export const DELETE_MARK_OBJECTION = "/deleted/markObjection";
 export const GET_REQUEST_STATUS = "/requestStatus";
 
+//TRAINEE_DESERVE_WARNING
+export const GET_TRAINEES_DESERVES_WARNINGS = "/traineesDeservesWarnings";
+export const GET_TRAINEE_DESERVE_WARNING_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TRAINEE_DESERVE_WARNING = "/add/TraineeDeserveWarning";
+export const UPDATE_TRAINEE_DESERVE_WARNING = "/update/TraineeDeserveWarning";
+export const DELETE_TRAINEE_DESERVE_WARNING = "/deleted/TraineeDeserveWarning";
+
 //JustifyTraineeAbsence
 export const GET_JUSTIFY_TRAINEES_ABSENCE = "/justifyTraineesAbsence";
 export const GET_JUSTIFY_TRAINEE_ABSENCE_DELETED_VALUE = "/deleted";

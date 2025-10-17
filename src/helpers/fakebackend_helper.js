@@ -2307,6 +2307,27 @@ export const deleteMarkObjection = data =>
 //request status
 export const getRequestStatus = data => post(url.GET_REQUEST_STATUS, data);
 
+//MARK_OBJECTION
+export const getTraineesDeservesWarnings = data =>
+  post(url.GET_TRAINEES_DESERVES_WARNINGS, data);
+
+// add TraineeDeserveWarnings
+
+export const addNewTraineeDeserveWarning = data =>
+  post(url.ADD_NEW_TRAINEE_DESERVE_WARNING, data);
+
+//TRAINEE_DESERVE_WARNING
+export const getTraineeDeserveWarningDeletedValue = () =>
+  get(url.GET_TRAINEE_DESERVE_WARNING_DELETED_VALUE);
+
+//update TraineeDeserveWarnings
+export const updateTraineeDeserveWarning = data =>
+  post(url.UPDATE_TRAINEE_DESERVE_WARNING, data);
+
+//delete TraineeDeserveWarnings
+export const deleteTraineeDeserveWarning = data =>
+  post(url.DELETE_TRAINEE_DESERVE_WARNING, data);
+
 //JustifyTraineeAbsence
 
 export const getJustifyTraineesAbsence = data =>
