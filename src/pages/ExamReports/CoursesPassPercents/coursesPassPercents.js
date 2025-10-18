@@ -46,7 +46,6 @@ import paginationFactory, {
 
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
-// import OtherChart from "pages/generate-SIDs/OtherChart";
 import { getYears } from "store/years/actions";
 
 // import { getCurrentSemester } from "store/semesters/actions";

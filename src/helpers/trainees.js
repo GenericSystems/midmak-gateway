@@ -50,7 +50,6 @@ import paginationFactory, {
 
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
-// import OtherChart from "pages/generate-SIDs/OtherChart";
 
 // import { getCurrentSemester } from "store/semesters/actions";
 // import { getStudentsRequests } from "store/students-requests/actions";
