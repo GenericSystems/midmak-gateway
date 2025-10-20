@@ -118,7 +118,7 @@ function* fetchCoursesCatalogs(selectedpayload) {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "Settings_QualificationTracks",
-    fields: `Id,${titleField}`,
+    fields: `Id,${titleField},code`,
   };
 
   try {
@@ -241,7 +241,6 @@ function* onUpdateCoursesCatalog({ payload }) {
     const response = yield call(updateCoursesCatalog, payload);
     console.log("updatePayloadddddddddd", payload);
     console.log("updateResponseeeeeee", response);
-
 
     yield put(updateCoursesCatalogSuccess(response[0]));
   } catch (error) {

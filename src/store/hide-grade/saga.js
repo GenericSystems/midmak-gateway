@@ -107,7 +107,10 @@ function* onGetHideReasons() {
   };
   try {
     const response = yield call(getHideReasons, get_HideReasons_req);
-    console.log("responseresponseresponseresponseresponseresponseresponse", response);
+    console.log(
+      "responseresponseresponseresponseresponseresponseresponse",
+      response
+    );
     yield put(getHideReasonSuccess(response));
   } catch (error) {
     yield put(getHideReasonFail(error));
