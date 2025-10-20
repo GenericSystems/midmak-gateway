@@ -83,6 +83,7 @@ import {
 } from "../../../utils/menuUtils";
     
 let regReqDocId = 0;
+let TraineeId = 0;
 class TraineesList extends Component {
   constructor(props) {
     super(props);
@@ -422,6 +423,7 @@ class TraineesList extends Component {
 
   handleButtonFileClick = (cellContent, Row) => {
     if (this.fileInputRef.current){
+      TraineeId = Row.Id;
       regReqDocId =  Row.regReqDocId;
       this.fileInputRef.current.click(); // Trigger file input
     }
@@ -1709,7 +1711,7 @@ class TraineesList extends Component {
     // `file`,`entity`,`entityId`,`entityProp`,`entityPropId`,`entityPropSeq`,`entityProp_entity`
     const fileData= {
       file: file, 
-      entityId:0, 
+      entityId: TraineeId, 
       entity: "Common_Trainee", 
       entityProp: "uploadedDocument", 
       entityPropId: rowId, 
