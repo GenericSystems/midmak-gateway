@@ -210,20 +210,20 @@ class HiddenGradesList extends Component {
     }
   };
   handleEditHiddenGrade = hiddenGrade => {
-  console.log("Editing Hidden Grade:", hiddenGrade);
+    console.log("Editing Hidden Grade:", hiddenGrade);
 
-  this.setState({
-    hiddenGrade: hiddenGrade, // full object for Formik or modal
-    selectedCourseId: hiddenGrade.courseOfferingId,
-    courseCode: hiddenGrade.courseCode,
-    selectedHideReason: hiddenGrade.hideReasonId,
-    fromDate: hiddenGrade.fromDate,
-    toDate: hiddenGrade.toDate,
-    isEdit: true,
-  });
+    this.setState({
+      hiddenGrade: hiddenGrade, // full object for Formik or modal
+      selectedCourseId: hiddenGrade.courseOfferingId,
+      courseCode: hiddenGrade.courseCode,
+      selectedHideReason: hiddenGrade.hideReasonId,
+      fromDate: hiddenGrade.fromDate,
+      toDate: hiddenGrade.toDate,
+      isEdit: true,
+    });
 
-  this.toggle(); // open modal for editing
-};
+    this.toggle(); // open modal for editing
+  };
 
   handleSave = values => {
     console.log("valueessssss", values);
@@ -677,7 +677,7 @@ class HiddenGradesList extends Component {
           size="lg"
         >
           <ModalHeader toggle={this.toggle} tag="h4">
-            {!!isEdit ? t("Edit Hidden Grade") : t("Add Grades Data")}
+            {!!isEdit ? t("Edit Hidden Grade") : t("Add Hidden Grade")}
           </ModalHeader>
 
           <ModalBody>
@@ -688,7 +688,8 @@ class HiddenGradesList extends Component {
                   Id: hiddenGrade.Id,
                 }),
                 courseOfferingId:
-                  (hiddenGrade && hiddenGrade.courseOfferingId) || selectedCourseId,
+                  (hiddenGrade && hiddenGrade.courseOfferingId) ||
+                  selectedCourseId,
                 hideReasonId:
                   (hiddenGrade && hiddenGrade.hideReasonId) ||
                   selectedHideReasonId,
@@ -717,9 +718,6 @@ class HiddenGradesList extends Component {
               }) => (
                 <Form>
                   <Card>
-                    <CardTitle id="course_header">
-                      {t("Add Hidden Grade")}
-                    </CardTitle>
                     <CardBody>
                       <div className="mb-5">
                         <Row>
@@ -747,7 +745,9 @@ class HiddenGradesList extends Component {
                                     )
                                   }
                                   defaultValue={coursesOffering.find(
-                                    opt => opt.value === hiddenGrade?.courseOfferingId
+                                    opt =>
+                                      opt.value ===
+                                      hiddenGrade?.courseOfferingId
                                   )}
                                 />
                               </Col>
@@ -821,7 +821,7 @@ class HiddenGradesList extends Component {
                               </Col>
                             </Row>
                             <Row>
-                              <Col >
+                              <Col>
                                 <Field
                                   name="toDate"
                                   className={`form-control`}
@@ -855,7 +855,7 @@ class HiddenGradesList extends Component {
                           </Col>
                         </Row>
                         <Row>
-                            <Col className="col-6">
+                          <Col className="col-6">
                             <Select
                               // className={`form-control ${
                               //   // nationalityError ? "is-invalid" : ""
@@ -876,10 +876,7 @@ class HiddenGradesList extends Component {
                               )}
                             />
                           </Col>
-                        
-
                         </Row>
-                        
                       </div>
                     </CardBody>
                   </Card>

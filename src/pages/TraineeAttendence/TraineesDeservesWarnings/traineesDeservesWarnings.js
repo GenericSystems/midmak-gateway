@@ -77,8 +77,7 @@ class TraineesDeservesWarningsList extends Component {
       showSearchButton: false,
       activeTab: "5",
       years: [],
-    };
-    this.state = {
+      selectedYear: null,
       deleteModal: false,
       duplicateError: null,
       selectedRowId: null,
@@ -102,6 +101,7 @@ class TraineesDeservesWarningsList extends Component {
       selectedRequestStatus: null,
     };
     this.toggle = this.toggle.bind(this);
+    this.toggle1 = this.toggle1.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
 
@@ -212,21 +212,18 @@ class TraineesDeservesWarningsList extends Component {
   };
 
   toggle1(tab) {
-    console.log(
-      "000000000000000000111111111111111111111",
-      this.props.traineesDeservesWarnings
-    );
-    // const { onGetCoursesOffering } = this.props;
-    // const { ifUpdateCourse, selectedYear } = this.state;
+    // console.log(
+    //   "000000000000000000111111111111111111111",
+    //   this.props.traineesDeservesWarnings
+    // );
+    // const { onGetTraineesDeservesWarnings } = this.props;
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab,
       });
     }
-    // if (ifUpdateCourse != 0) {
-    // onGetCoursesOffering();
-    // this.setState({ ifUpdateCourse: 0 });
-    // }
+
+    // onGetTraineesDeservesWarnings();
   }
 
   toggleDeleteModal = () => {
@@ -436,6 +433,7 @@ class TraineesDeservesWarningsList extends Component {
       years,
     } = this.props;
     const {
+      selectedYear,
       selectedRequestStatus,
       testExamError,
       selectedCourseId,
@@ -516,7 +514,8 @@ class TraineesDeservesWarningsList extends Component {
         text: this.props.t("Last Absence Date"),
         sort: true,
         editable: false,
-        formatter: (cellContent, row) => this.handleValidDate(row.startDate),
+        formatter: (cellContent, row) =>
+          this.handleValidDate(row.lastAbsenceDate),
       },
       {
         dataField: "absenceRate",
@@ -923,7 +922,7 @@ class TraineesDeservesWarningsList extends Component {
                           </PaginationProvider>
                         </div>
                       </TabPane>
-                      <TabPane tabId="6">
+                      <TabPane tabId="7">
                         <div>
                           {duplicateError && (
                             <Alert

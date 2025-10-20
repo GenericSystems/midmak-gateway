@@ -136,6 +136,8 @@ import checkedGradesSaga from "./checkGrades/saga";
 
 import archiveGradesSaga from "./archiveGrades/saga";
 
+import UnarchiveCourseRequestsSaga from "./Unarchive-course-requests/saga";
+
 import DiplomaLevelSaga from "./diploma-level/saga";
 
 import HighStudyTypeSaga from "./high-study-types/saga";
@@ -268,6 +270,7 @@ export default function* rootSaga() {
     fork(enteredGradesSaga),
     fork(checkedGradesSaga),
     fork(archiveGradesSaga),
+    fork(UnarchiveCourseRequestsSaga),
     fork(DiplomaLevelSaga),
     fork(HighStudyTypeSaga),
     fork(DocumentTypesSaga),

@@ -252,12 +252,12 @@ class MarksObjectionsList extends Component {
     console.log("values", values);
 
     values["courseNameId"] = selectedCourseId;
-    values["traineeNameId"] = selectedTraineeId;
+    values["traineeId"] = selectedTraineeId;
     values["testExamId"] = selectedTestExam;
     if (
       values.requestNum === "" ||
       values.applyingDate === "" ||
-      values.traineeNameId === "" ||
+      values.traineeId === "" ||
       values.courseNameId === "" ||
       (values.testExamId === "" && selectedTestExam === null)
     ) {
@@ -290,7 +290,7 @@ class MarksObjectionsList extends Component {
           employeeinfo[key] = values[key];
       });
       employeeinfo["courseNameId"] = selectedCourseId;
-      employeeinfo["traineeNameId"] = selectedTraineeId;
+      employeeinfo["traineeId"] = selectedTraineeId;
       employeeinfo["testExamId"] = selectedTestExam;
       this.setState({
         errorMessages: {},
@@ -723,9 +723,9 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.applyingDate) ||
                                           "",
-                                        traineeNameId:
+                                        traineeId:
                                           (markObjection &&
-                                            markObjection.traineeNameId) ||
+                                            markObjection.traineeId) ||
                                           "",
                                         courseNameId:
                                           (markObjection &&
@@ -889,7 +889,7 @@ class MarksObjectionsList extends Component {
                                                       <div className="mb-3">
                                                         <Row>
                                                           <Col className="col-4">
-                                                            <Label for="traineeNameId">
+                                                            <Label for="traineeId">
                                                               {this.props.t(
                                                                 "Trainee Name"
                                                               )}
@@ -900,7 +900,7 @@ class MarksObjectionsList extends Component {
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Field
-                                                              name="traineeNameId"
+                                                              name="traineeId"
                                                               as="input"
                                                               id="traineeName-Id"
                                                               type="text"
@@ -909,54 +909,54 @@ class MarksObjectionsList extends Component {
                                                               )}
                                                               className={
                                                                 "form-control" +
-                                                                ((errors.traineeNameId &&
-                                                                  touched.traineeNameId) ||
+                                                                ((errors.traineeId &&
+                                                                  touched.traineeId) ||
                                                                 traineeError
                                                                   ? " is-invalid"
                                                                   : "")
                                                               }
-                                                              value={
-                                                                traineesOpt.find(
-                                                                  trainee =>
-                                                                    trainee.key ===
-                                                                    this.state
-                                                                      .selectedTraineeId
-                                                                )?.value || ""
-                                                              }
-                                                              onChange={e => {
-                                                                const newValue =
-                                                                  e.target
-                                                                    .value;
+                                                              // value={
+                                                              //   traineesOpt.find(
+                                                              //     trainee =>
+                                                              //       trainee.key ===
+                                                              //       this.state
+                                                              //         .selectedTraineeId
+                                                              //   )?.value || ""
+                                                              // }
+                                                              // onChange={e => {
+                                                              //   const newValue =
+                                                              //     e.target
+                                                              //       .value;
 
-                                                                const selectedTrainee =
-                                                                  traineesOpt.find(
-                                                                    trainee =>
-                                                                      trainee.value ===
-                                                                      newValue
-                                                                  );
+                                                              //   const selectedTrainee =
+                                                              //     traineesOpt.find(
+                                                              //       trainee =>
+                                                              //         trainee.value ===
+                                                              //         newValue
+                                                              //     );
 
-                                                                if (
-                                                                  selectedTrainee
-                                                                ) {
-                                                                  this.setState(
-                                                                    {
-                                                                      selectedTraineeId:
-                                                                        selectedTrainee.key,
-                                                                      traineeName:
-                                                                        selectedTrainee.value,
-                                                                    }
-                                                                  );
-                                                                } else {
-                                                                  this.setState(
-                                                                    {
-                                                                      selectedTraineeId:
-                                                                        null,
-                                                                      traineeName:
-                                                                        newValue,
-                                                                    }
-                                                                  );
-                                                                }
-                                                              }}
+                                                              //   if (
+                                                              //     selectedTrainee
+                                                              //   ) {
+                                                              //     this.setState(
+                                                              //       {
+                                                              //         selectedTraineeId:
+                                                              //           selectedTrainee.key,
+                                                              //         traineeName:
+                                                              //           selectedTrainee.value,
+                                                              //       }
+                                                              //     );
+                                                              //   } else {
+                                                              //     this.setState(
+                                                              //       {
+                                                              //         selectedTraineeId:
+                                                              //           null,
+                                                              //         traineeName:
+                                                              //           newValue,
+                                                              //       }
+                                                              //     );
+                                                              //   }
+                                                              // }}
                                                               list="traineesId"
                                                               autoComplete="off"
                                                             />
@@ -1265,9 +1265,9 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.applyingDate) ||
                                           "",
-                                        traineeNameId:
+                                        traineeId:
                                           (markObjection &&
-                                            markObjection.traineeNameId) ||
+                                            markObjection.traineeId) ||
                                           "",
                                         courseNameId:
                                           (markObjection &&

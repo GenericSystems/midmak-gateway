@@ -110,6 +110,7 @@ class CourseCatalogeList extends Component {
       enCoursenameError: false,
       trainingProgramError: false,
       qualificationCodeError: false,
+      qualificationCode: "",
       courseCodeError: false,
       courseTypeError: false,
       traningSectorError: false,
@@ -542,10 +543,13 @@ class CourseCatalogeList extends Component {
     }
 
     if (fieldName == "qualificationTrackId") {
+      console.log("selecteddddddd", selectedValue);
       this.setState({
-        selectedQualificationTrack: selectedValue,
+        selectedQualificationTrack: selectedValue.value,
+        qualificationCode: selectedValue.code,
         courseCataloge: values,
       });
+      console.log("sectorsCode", qualificationCode);
     }
 
     if (fieldName == "programId") {
@@ -617,7 +621,7 @@ class CourseCatalogeList extends Component {
       filtredPreReqCourses: filteredPreReqCourses,
       selectedCoursId: arg.Id,
       selectedTrainingFormat: arg.trainingFormatId,
-
+      qualificationCode: arg.qualificationCode,
       courseSectors: sectorsArray,
 
       sectorsCode: concatenatedCodes,
@@ -1131,9 +1135,9 @@ class CourseCatalogeList extends Component {
                                             courseCataloge?.arTitle || "",
                                           enTitle:
                                             courseCataloge?.enTitle || "",
-                                          qualificationCode:
-                                            courseCataloge?.qualificationCode ||
-                                            "",
+                                          // qualificationCode:
+                                          //   courseCataloge?.qualificationCode ||
+                                          //   "",
 
                                           //  sectorId :
                                           //     courseCataloge?.sectorId ||
@@ -1428,7 +1432,7 @@ class CourseCatalogeList extends Component {
                                                                           onChange={newValue =>
                                                                             this.handleSelect(
                                                                               "qualificationTrackId",
-                                                                              newValue.value,
+                                                                              newValue,
                                                                               values
                                                                             )
                                                                           }
@@ -1460,6 +1464,13 @@ class CourseCatalogeList extends Component {
                                                                           type="text"
                                                                           name="qualificationCode"
                                                                           id="qualificationCode"
+                                                                          value={
+                                                                            this
+                                                                              .state
+                                                                              .qualificationCode ||
+                                                                            courseCataloge.qualificationCode ||
+                                                                            ""
+                                                                          }
                                                                           className="form-control"
                                                                         />
                                                                       </Col>

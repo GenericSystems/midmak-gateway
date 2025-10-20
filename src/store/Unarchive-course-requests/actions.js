@@ -14,6 +14,9 @@ import {
   GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE,
   GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE_SUCCESS,
   GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE_FAIL,
+  GET_OPERATIONS_NEEDED,
+  GET_OPERATIONS_NEEDED_SUCCESS,
+  GET_OPERATIONS_NEEDED_FAIL,
 } from "./actionTypes";
 
 // GET
@@ -91,5 +94,19 @@ export const getUnarchiveCourseRequestDeletedValueSuccess = deleted => ({
 
 export const getUnarchiveCourseRequestDeletedValueFail = error => ({
   type: GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE_FAIL,
+  payload: error,
+});
+
+export const getOperationsNeeded = () => ({
+  type: GET_OPERATIONS_NEEDED,
+});
+
+export const getOperationsNeededSuccess = operations => ({
+  type: GET_OPERATIONS_NEEDED_SUCCESS,
+  payload: operations,
+});
+
+export const getOperationsNeededFail = error => ({
+  type: GET_OPERATIONS_NEEDED_FAIL,
   payload: error,
 });

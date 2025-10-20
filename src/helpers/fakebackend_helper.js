@@ -2662,6 +2662,10 @@ export const deleteUnarchiveCourseRequest = data =>
 export const getUnarchiveCourseRequestDeletedValue = () =>
   get(url.GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE);
 
+//operation needed
+export const getOperationsNeeded = data =>
+  post(url.GET_OPERATIONS_NEEDED, data);
+
 //diploma levels
 export const getDiplomaLevels = data => post(url.GET_DIPLOMALEVELS, data);
 export const getDiplomaLevelDeletedValue = () =>
