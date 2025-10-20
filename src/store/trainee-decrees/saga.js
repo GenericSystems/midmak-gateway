@@ -52,12 +52,13 @@ import {
 
 function* fetchFilteredCoursesPlan(obj) {
   console.log("objobjobj", obj.payload);
+  const traineeId = obj.payload?.Id || obj.payload?.key;
   const get_filteredCourses_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Current_Common_TrianeeCurriculalines",
-    filter: `traineeId = ${obj.payload.Id} and archived = 0`,
+    filter: `traineeId = ${traineeId} and archived = 0`,
   };
   try {
     const response = yield call(

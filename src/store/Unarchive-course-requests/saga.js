@@ -20,12 +20,26 @@ import {
   deleteUnarchiveCourseRequestFail,
   getUnarchiveCourseRequestDeletedValueSuccess,
   getUnarchiveCourseRequestDeletedValueFail,
+  getOperationsNeededSuccess,
+  getOperationsNeededFail,
 } from "./actions";
 
 import {
   getDecisionStatusFail,
   getDecisionStatusSuccess,
 } from "../decisions/actions";
+
+import { getTraineesOptSuccess, getTraineesOptFail } from "../trainees/actions";
+
+import {
+  getGradeTypesSuccess,
+  getGradeTypesFail,
+} from "../grade-types/actions";
+
+import {
+  getEmployeesNamesSuccess,
+  getEmployeesNamesFail,
+} from "../HR/employees/actions";
 
 import {
   getUnarchiveCourseRequests,
@@ -34,6 +48,10 @@ import {
   deleteUnarchiveCourseRequest,
   getUnarchiveCourseRequestDeletedValue,
   getDecisionStatus,
+  getTraineesOpt,
+  getGradeTypes,
+  getEmployeesNames,
+  getOperationsNeeded,
 } from "../../helpers/fakebackend_helper";
 
 // Fetch
@@ -51,9 +69,22 @@ function* fetchUnarchiveCourseRequests() {
   } catch (error) {
     yield put(getUnarchiveCourseRequestsFail(error));
   }
-}
 
-function* fetchDecisionStatus() {
+  const get_trainees_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_Trainee",
+    fields: "Id,fullName,TraineeNum",
+  };
+  try {
+    const response = yield call(getTraineesOpt, get_trainees_req);
+    console.log("responseresponseresponse", response);
+    yield put(getTraineesOptSuccess(response));
+  } catch (error) {
+    yield put(getTraineesOptFail(error));
+  }
+
   const get_decisionStatus_req = {
     source: "db",
     procedure: "SisApp_getData",
@@ -65,6 +96,46 @@ function* fetchDecisionStatus() {
     yield put(getDecisionStatusSuccess(response));
   } catch (error) {
     yield put(getDecisionStatusFail(error));
+  }
+  const get_gradeType_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_CourseContents",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getGradeTypes, get_gradeType_req);
+    yield put(getGradeTypesSuccess(response));
+  } catch (error) {
+    yield put(getGradeTypesFail(error));
+  }
+  const get_operationNeeded_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_CourseContents",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getOperationsNeeded, get_operationNeeded_req);
+    yield put(getOperationsNeededSuccess(response));
+  } catch (error) {
+    yield put(getOperationsNeededFail(error));
+  }
+  const get_employeeName_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_EmployeeOption",
+    fields: "Id,fullName",
+  };
+  try {
+    const response = yield call(getEmployeesNames, get_employeeName_req);
+    console.log("employeeName", response);
+    yield put(getEmployeesNamesSuccess(response));
+  } catch (error) {
+    yield put(getEmployeesNamesFail(error));
   }
 }
 
@@ -140,7 +211,6 @@ function* UnarchiveCourseRequestsSaga() {
     GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE,
     onGetUnarchiveCourseRequestDeletedValue
   );
-  yield takeEvery(GET_DECISION_STATUS, fetchDecisionStatus);
 }
 
 export default UnarchiveCourseRequestsSaga;

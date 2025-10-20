@@ -1305,6 +1305,10 @@ export const DELETE_UNARCHIVE_COURSE_REQUEST = "/delete/unarchiveCourseRequest";
 export const UPDATE_UNARCHIVE_COURSE_REQUEST = "/update/unarchiveCourseRequest";
 export const GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE = "/deleted";
 
+//operation needed
+
+export const GET_OPERATIONS_NEEDED = "/operationsNeeded";
+
 //diploma levels
 export const GET_DIPLOMALEVELS = "/diplomalevels";
 export const GET_DIPLOMALEVEL_DELETED_VALUE = "/deleted";

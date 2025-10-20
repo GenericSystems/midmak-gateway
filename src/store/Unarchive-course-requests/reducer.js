@@ -9,10 +9,13 @@ import {
   DELETE_UNARCHIVE_COURSE_REQUEST_FAIL,
   GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE_SUCCESS,
   GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE_FAIL,
+  GET_OPERATIONS_NEEDED_SUCCESS,
+  GET_OPERATIONS_NEEDED_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   unarchiveCourseRequests: [],
+  operationsNeeded: [],
   deleted: {},
   error: {},
 };
@@ -80,6 +83,17 @@ const unarchiveCourseRequests = (state = INIT_STATE, action) => {
         deleted: action.payload.deleted,
       };
     case GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_OPERATIONS_NEEDED_SUCCESS:
+      return {
+        ...state,
+        operationsNeeded: action.payload,
+      };
+    case GET_OPERATIONS_NEEDED_FAIL:
       return {
         ...state,
         error: action.payload,

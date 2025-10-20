@@ -850,5 +850,9 @@
   "Last Absence Date": "تاريخ اخر غياب",
   "Absence Rate": "نسبة الغياب",
   "Trainees Deserves Warnings": "المتدربون الواجب انذارهم",
+  "Canceled Grade": "الدرجة الملغاة",
+  "Unarchive Course Requests": "طلبات إلغاء أرشفة الدورات التدريبية",
+  "Archive Notes": "ملاحظات الأرشيف",
+  "Request status": "حالة الطلب",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }
