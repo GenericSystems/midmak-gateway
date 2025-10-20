@@ -200,6 +200,7 @@ export const addRequiredDocs = tempTrainee => ({
   payload: tempTrainee,
 });
 
+
 export const addRequiredDocsSuccess = tempTrainee => ({
   type: ADD_REQUIRED_DOCS_SUCCESS,
   payload: tempTrainee,

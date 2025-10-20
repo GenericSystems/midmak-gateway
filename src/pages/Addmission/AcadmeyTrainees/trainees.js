@@ -53,12 +53,17 @@ import paginationFactory, {
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
 
+
+
+import {
+  uploadFile
+} from "store/_common/actions";
+
 import {
   getTrainees,
   addNewTrainee,
   updateTrainee,
-  deleteTrainee,
-  getTraineeById,
+  deleteTrainee
   // getTraineeRegReqDocs,
 } from "store/trainees/actions";
 import {
@@ -1696,12 +1701,35 @@ class TraineesList extends Component {
     this.toggle1();
   };
 
-  handleupload(rowId, event){
-    const file = event;
-    console.log("event", event);
+  handleupload(rowId, file){
+    console.log("rowId", rowId);
     console.log("file", file);
-    console.log("row:", rowId);
-    // TBD Upload the file !!s
+    const { onUploadFile } = this.props;
+    const reader = new FileReader();
+    // `file`,`entity`,`entityId`,`entityProp`,`entityPropId`,`entityPropSeq`,`entityProp_entity`
+    const fileData= {
+      file: file, 
+      entityId:0, 
+      entity: "Common_Trainee", 
+      entityProp: "uploadedDocument", 
+      entityPropId: rowId, 
+      entityPropSeq:0,
+      entityProp_entity: "Common_RegReqDocTrainee"
+    };
+    onUploadFile(fileData);
+    reader.onloadend = () => {
+      console.log("reader.result", reader.result);
+      /*
+      this.setState({
+        photoURL: reader.result,
+      });
+      */
+    };
+/*
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+*/
   };
 
   render() {
@@ -2308,9 +2336,10 @@ class TraineesList extends Component {
             >
             {this.props.t("Upload File")}
             </button>
+            {this.fileInputRef != null}
              <input
                 type="file"
-                ref={this.fileInputRef}
+                ref= {this.fileInputRef}
                 style={{ display: 'none' }}
                 onChange={(event)=>{this.handleFileChange(event,row)}}
                 accept="image/*,.pdf"
@@ -9692,6 +9721,7 @@ const mapDispatchToProps = dispatch => ({
   onDeleteProfessionalExperience: profExperience =>
     dispatch(deleteProfessionalExperience(profExperience)),
   onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
+  onUploadFile: fileData => dispatch(uploadFile(fileData)),
 });
 
 export default connect(

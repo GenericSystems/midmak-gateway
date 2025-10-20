@@ -7,7 +7,7 @@ import { GET_DATA_ITEMS, uploadFileToStorage } from "./url_helper";
 const token = accessToken;
 
 //apply base url for axios
-const API_URL = "https://www.keyinhands.com:5555";
+const API_URL = "https://www.keyinhands.com:5556";
 
 const axiosApi = axios.create({
   baseURL: "",
@@ -58,11 +58,18 @@ async function getDataFromProcedure(url, dataconf, config = {}) {
   return fromNet;
 }
 
-export async function uploadFile(imageFile){
+export async function uploadFile(fileData){
   try {
+    
     const formData = new FormData();
-    formData.append('file', imageFile);
-    formData.append('upload_preset', 'your_upload_preset'); // if needed by your API
+    formData.append('entityId', fileData.entityId);
+    formData.append('entity', fileData.entity);
+    formData.append('entityProp', fileData.entityProp);
+    formData.append('entityPropId', fileData.entityPropId);
+    formData.append('entityPropSeq', fileData.entityPropSeq);
+    formData.append('entityProp_entity', fileData.entityProp_entity);
+    formData.append('file', fileData.file);
+    
     const response = await axiosApi_2.post('/uploadFile', formData, { 
       headers: {
         'Content-Type': 'multipart/form-data',
