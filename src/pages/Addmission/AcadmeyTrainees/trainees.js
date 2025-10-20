@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component }  from "react";
 import classnames from "classnames";
 
 import {
@@ -76,9 +76,13 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+    
+let regReqDocId = 0;
 class TraineesList extends Component {
   constructor(props) {
     super(props);
+    this.fileInputRef = React.createRef();
+    
     this.state = {
       profExperiencesArray: [],
       trainees: {},
@@ -284,7 +288,7 @@ class TraineesList extends Component {
       selectedRegUniDate: "",
       isTempTraineeSaved: false,
       selectedTraineeId: 0,
-      isAdd: false,
+      isAdd: false
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -410,6 +414,19 @@ class TraineesList extends Component {
       );
     }
   }
+
+  handleButtonFileClick = (cellContent, Row) => {
+    if (this.fileInputRef.current){
+      regReqDocId =  Row.regReqDocId;
+      this.fileInputRef.current.click(); // Trigger file input
+    }
+  };
+
+  handleFileChange = (event, row) => {
+    const file = event.target.files[0];
+    this.handleupload(regReqDocId, file); // Your upload logic
+  };
+
   updateShowAddButton = (menu, pathname) => {
     const showAddButton = checkIsAddForPage(menu, pathname);
     this.setState({ showAddButton });
@@ -1679,6 +1696,14 @@ class TraineesList extends Component {
     this.toggle1();
   };
 
+  handleupload(rowId, event){
+    const file = event;
+    console.log("event", event);
+    console.log("file", file);
+    console.log("row:", rowId);
+    // TBD Upload the file !!s
+  };
+
   render() {
     const {
       trainees,
@@ -1918,9 +1943,9 @@ class TraineesList extends Component {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={event => this.handleupload(row.Id, event)}
+              onClick={this.handleButtonFileClick(cellContent, row)}
             >
-              {this.props.t("Upload File")}
+            {this.props.t("Upload File")}
             </button>
           </div>
         ),
@@ -2279,10 +2304,17 @@ class TraineesList extends Component {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={event => this.handleupload(row.Id, event)}
+              onClick={(event) => {console.log("input clicked",row);this.handleButtonFileClick(event,row)}}
             >
-              {this.props.t("Upload File")}
+            {this.props.t("Upload File")}
             </button>
+             <input
+                type="file"
+                ref={this.fileInputRef}
+                style={{ display: 'none' }}
+                onChange={(event)=>{this.handleFileChange(event,row)}}
+                accept="image/*,.pdf"
+              />
           </div>
         ),
       },
