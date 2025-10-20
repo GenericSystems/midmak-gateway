@@ -23,6 +23,7 @@ import {
 } from "./actions";
 
 import { getTraineesOptSuccess, getTraineesOptFail } from "../trainees/actions";
+import { getYearsSuccess, getYearsFail } from "../years/actions";
 import {
   getCoursesOfferingSuccess,
   getCoursesOfferingFail,
@@ -36,6 +37,7 @@ import {
   deleteTraineeDeserveWarning,
   getTraineesOpt,
   getCoursesOffering,
+  getYears,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchTraineesDeservesWarnings() {
@@ -53,6 +55,21 @@ function* fetchTraineesDeservesWarnings() {
     yield put(getTraineesDeservesWarningsSuccess(response));
   } catch (error) {
     yield put(getTraineesDeservesWarningsFail(error));
+  }
+
+  const get_years_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Years",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getYears, get_years_req);
+    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", response);
+    yield put(getYearsSuccess(response));
+  } catch (error) {
+    yield put(getYearsFail(error));
   }
 
   const get_trainees_req = {

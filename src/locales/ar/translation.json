@@ -844,5 +844,11 @@
   "Qualification Track Code": "رمز المساق التأهيلي",
   "Is Need Lab": "يحتاج إلى فئة؟",
   "Is Need Section": "يحتاج إلى شعبة؟",
+  "Warned or Must Warned": "المنذرون والواجب انذارهم",
+  "Must Warned Only": "الواجب انذارهم فقط",
+  "Warned Only": "المنذرون فقط",
+  "Last Absence Date": "تاريخ اخر غياب",
+  "Absence Rate": "نسبة الغياب",
+  "Trainees Deserves Warnings": "المتدربون الواجب انذارهم",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

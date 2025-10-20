@@ -1657,15 +1657,8 @@ class ApplicantsList extends Component {
   };
 
   handleValidDate = date => {
-    if (
-      !date ||
-      date === "1970-01-01" ||
-      date === "0000-00-00" ||
-      moment(date).year() === 1970
-    ) {
-      return "";
-    }
-    return moment(date).format("DD-MM-YYYY");
+    const date1 = moment(new Date(date)).format("DD /MM/ Y");
+    return date1;
   };
 
   handleButtonClick = (fieldName, option) => {
