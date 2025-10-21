@@ -2335,7 +2335,7 @@ class TraineesList extends Component {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={(event) => {console.log("input clicked",row);this.handleButtonFileClick(event,row)}}
+              onClick={(event) => {this.handleButtonFileClick(event,row)}}
             >
             {this.props.t("Upload File")}
             </button>
