@@ -423,7 +423,8 @@ class TraineesList extends Component {
 
   handleButtonFileClick = (cellContent, Row) => {
     if (this.fileInputRef.current){
-      TraineeId = Row.Id;
+      TraineeId = this.state.selectedTraineeId;
+      console.log(this.state)
       regReqDocId =  Row.regReqDocId;
       this.fileInputRef.current.click(); // Trigger file input
     }
@@ -1711,7 +1712,7 @@ class TraineesList extends Component {
     // `file`,`entity`,`entityId`,`entityProp`,`entityPropId`,`entityPropSeq`,`entityProp_entity`
     const fileData= {
       file: file, 
-      entityId: TraineeId, 
+      entityId: this.state.selectedTraineeId, 
       entity: "Common_Trainee", 
       entityProp: "uploadedDocument", 
       entityPropId: rowId, 
