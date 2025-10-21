@@ -1,4 +1,4 @@
-import React, { Component }  from "react";
+import React, { Component } from "react";
 import classnames from "classnames";
 
 import {
@@ -53,17 +53,13 @@ import paginationFactory, {
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
 
-
-
-import {
-  uploadFile
-} from "store/_common/actions";
+import { uploadFile } from "store/_common/actions";
 
 import {
   getTrainees,
   addNewTrainee,
   updateTrainee,
-  deleteTrainee
+  deleteTrainee,
   // getTraineeRegReqDocs,
 } from "store/trainees/actions";
 import {
@@ -81,14 +77,14 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
-    
+
 let regReqDocId = 0;
 let TraineeId = 0;
 class TraineesList extends Component {
   constructor(props) {
     super(props);
     this.fileInputRef = React.createRef();
-    
+
     this.state = {
       profExperiencesArray: [],
       trainees: {},
@@ -294,7 +290,7 @@ class TraineesList extends Component {
       selectedRegUniDate: "",
       isTempTraineeSaved: false,
       selectedTraineeId: 0,
-      isAdd: false
+      isAdd: false,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -422,10 +418,10 @@ class TraineesList extends Component {
   }
 
   handleButtonFileClick = (cellContent, Row) => {
-    if (this.fileInputRef.current){
+    if (this.fileInputRef.current) {
       TraineeId = this.state.selectedTraineeId;
-      console.log(this.state)
-      regReqDocId =  Row.regReqDocId;
+      console.log(this.state);
+      regReqDocId = Row.regReqDocId;
       this.fileInputRef.current.click(); // Trigger file input
     }
   };
@@ -1704,20 +1700,20 @@ class TraineesList extends Component {
     this.toggle1();
   };
 
-  handleupload(rowId, file){
+  handleupload(rowId, file) {
     console.log("rowId", rowId);
     console.log("file", file);
     const { onUploadFile } = this.props;
     const reader = new FileReader();
     // `file`,`entity`,`entityId`,`entityProp`,`entityPropId`,`entityPropSeq`,`entityProp_entity`
-    const fileData= {
-      file: file, 
-      entityId: this.state.selectedTraineeId, 
-      entity: "Common_Trainee", 
-      entityProp: "uploadedDocument", 
-      entityPropId: rowId, 
-      entityPropSeq:0,
-      entityProp_entity: "Common_RegReqDocTrainee"
+    const fileData = {
+      file: file,
+      entityId: this.state.selectedTraineeId,
+      entity: "Common_Trainee",
+      entityProp: "uploadedDocument",
+      entityPropId: rowId,
+      entityPropSeq: 0,
+      entityProp_entity: "Common_RegReqDocTrainee",
     };
     onUploadFile(fileData);
     reader.onloadend = () => {
@@ -1728,12 +1724,12 @@ class TraineesList extends Component {
       });
       */
     };
-/*
+    /*
     if (file) {
       reader.readAsDataURL(file);
     }
 */
-  };
+  }
 
   render() {
     const {
@@ -1976,7 +1972,7 @@ class TraineesList extends Component {
               className="btn btn-primary"
               onClick={this.handleButtonFileClick(cellContent, row)}
             >
-            {this.props.t("Upload File")}
+              {this.props.t("Upload File")}
             </button>
           </div>
         ),
@@ -2259,94 +2255,69 @@ class TraineesList extends Component {
           />
         ),
       },
-
-      // {
-      //   dataField: "attestated",
-
-      //   text: this.props.t("Attestated"),
-      //   formatter: (cellContent, row) => (
-      //     <div className="btn-group">
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           row.attestated === 1 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.Id, "attestated", 1)
-      //         }
-      //       >
-      //         {this.props.t("Yes")}
-      //       </button>
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           row.attestated === 0 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.Id, "attestated", 0)
-      //         }
-      //       >
-      //         {this.props.t("No")}
-      //       </button>
-      //     </div>
-      //   ),
-      //   editorRenderer: (
-      //     editorProps,
-      //     value,
-      //     row,
-      //     column,
-      //     rowIndex,
-      //     columnIndex
-      //   ) => (
-      //     <div className="btn-group">
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           value === 1 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 1)
-      //         }
-      //       >
-      //         {this.props.t("Yes")}
-      //       </button>
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           value === 0 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 0)
-      //         }
-      //       >
-      //         {this.props.t("No")}
-      //       </button>
-      //     </div>
-      //   ),
-      // },
       {
         dataField: "uploadFile",
         id: 8,
         key: "file",
         text: this.props.t("Upload File"),
         editable: false,
+        //   formatter: (cellContent, row) => (
+        //     <div className="btn-group">
+        //       <label
+        //         htmlFor={`fileInput-${row.Id}`}
+        //         className="btn btn-sm btn-outline-secondary p-1 m-0"
+        //         style={{
+        //           cursor: "pointer",
+        //           display: "flex",
+        //           alignItems: "center",
+        //         }}
+        //       >
+        //         <i className="mdi mdi-upload me-1"></i>
+        //         {this.props.t("Upload")}
+        //       </label>
+        //       {this.fileInputRef != null}
+        //       <input
+        //         type="file"
+        //         id={`fileInput-${row.Id}`}
+        //         ref={this.fileInputRef}
+        //         style={{ display: "none" }}
+        //         onChange={event => {
+        //           this.handleFileChange(event, row);
+        //         }}
+        //         accept="image/*,.pdf"
+        //       />
+        //     </div>
+        //   ),
+        // },
         formatter: (cellContent, row) => (
-          <div className="btn-group">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={(event) => {this.handleButtonFileClick(event,row)}}
+          <div className="d-flex gap-2 upload-btn-container">
+            <label
+              className="btn btn-sm btn-outline-secondary p-1 m-0"
+              onClick={event => this.handleButtonFileClick(event, row)}
             >
-            {this.props.t("Upload File")}
-            </button>
-            {this.fileInputRef != null}
-             <input
-                type="file"
-                ref= {this.fileInputRef}
-                style={{ display: 'none' }}
-                onChange={(event)=>{this.handleFileChange(event,row)}}
-                accept="image/*,.pdf"
-              />
+              <i className="mdi mdi-upload me-1"></i>
+              {this.props.t("Upload")}
+            </label>
+
+            <input
+              type="file"
+              ref={this.fileInputRef}
+              style={{ display: "none" }}
+              onChange={event => this.handleFileChange(event, row)}
+              accept="image/*,.pdf"
+            />
+
+            {(row.selectedFileName || row.fileName) && (
+              <a
+                href={row.filePath || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-truncate"
+                style={{ maxWidth: "150px", textDecoration: "underline" }}
+              >
+                {row.selectedFileName || row.fileName}
+              </a>
+            )}
           </div>
         ),
       },
