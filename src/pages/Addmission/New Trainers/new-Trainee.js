@@ -633,7 +633,13 @@ class NewTrainee extends Component {
     const { onUploadFile } = this.props;
     const file = event.target.files[0];
     const reader = new FileReader();
-    const fileData= {file: file, id:0, table: "Trainee", field: "photo", index:0};
+    const fileData = {
+      file: file,
+      id: 0,
+      table: "Trainee",
+      field: "photo",
+      index: 0,
+    };
     onUploadFile(fileData);
     reader.onloadend = () => {
       this.setState({
@@ -1564,71 +1570,6 @@ class NewTrainee extends Component {
           />
         ),
       },
-
-      // {
-      //   dataField: "attestated",
-
-      //   text: this.props.t("Attestated"),
-      //   formatter: (cellContent, row) => (
-      //     <div className="btn-group">
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           row.attestated === 1 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.Id, "attestated", 1)
-      //         }
-      //       >
-      //         {this.props.t("Yes")}
-      //       </button>
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           row.attestated === 0 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.Id, "attestated", 0)
-      //         }
-      //       >
-      //         {this.props.t("No")}
-      //       </button>
-      //     </div>
-      //   ),
-      //   editorRenderer: (
-      //     editorProps,
-      //     value,
-      //     row,
-      //     column,
-      //     rowIndex,
-      //     columnIndex
-      //   ) => (
-      //     <div className="btn-group">
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           value === 1 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 1)
-      //         }
-      //       >
-      //         {this.props.t("Yes")}
-      //       </button>
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           value === 0 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 0)
-      //         }
-      //       >
-      //         {this.props.t("No")}
-      //       </button>
-      //     </div>
-      //   ),
-      // },
       {
         dataField: "uploadFile",
         id: 8,
