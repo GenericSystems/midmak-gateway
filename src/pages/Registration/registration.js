@@ -1820,6 +1820,7 @@ class RegistrationList extends Component {
                                 keyField="Id"
                                 columns={columns2}
                                 defaultSorted={defaultSorting}
+                                bootstrap4
                                 data={nonActiveCurrs.filter(
                                   item => item.active === 1
                                 )}
@@ -1854,6 +1855,7 @@ class RegistrationList extends Component {
                                       keyField="Id"
                                       columns={columns3}
                                       defaultSorted={defaultSorting}
+                                      bootstrap4
                                       data={registrations}
                                     />
                                   </Col>

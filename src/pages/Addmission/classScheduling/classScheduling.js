@@ -136,6 +136,8 @@ class ClassSchedulingList extends Component {
       selectedRowData: null,
       selectedHallKey: null,
       defaultHallName: "",
+      hallError: "",
+      instructorError: "",
       errorMessage: null,
       successMessage: null,
       values: "",
@@ -710,7 +712,7 @@ class ClassSchedulingList extends Component {
         timing.dayId === weekdayId &&
         timing.lecturePeriodId === lectureId
     );
-    console.log("✅ scheduledTiming:", scheduledTiming);
+    console.log(" scheduledTiming:", scheduledTiming);
 
     if (
       scheduledTiming
@@ -1070,79 +1072,91 @@ class ClassSchedulingList extends Component {
     values["instructorsId"] = formattedInstructors;
 
     let scheduleTimingInfo = {};
+    if (selectedHallKey && formattedInstructors !== null) {
+      Object.keys(values).forEach(function (key) {
+        if (
+          values[key] != undefined &&
+          values[key] !== null &&
+          (values[key].length > 0 || values[key] != "")
+        )
+          scheduleTimingInfo[key] = values[key];
+      });
+      scheduleTimingInfo.hallId = this.state.selectedHallKey;
 
-    Object.keys(values).forEach(function (key) {
-      if (
-        values[key] != undefined &&
-        values[key] !== null &&
-        (values[key].length > 0 || values[key] != "")
-      )
-        scheduleTimingInfo[key] = values[key];
-    });
-    scheduleTimingInfo.hallId = this.state.selectedHallKey;
+      console.log("scheduleTimingInfo", scheduleTimingInfo);
+      const fieldErrors = {};
+      // if (
+      //   scheduleTimingInfo.instructorsId &&
+      //   scheduleTimingInfo.instructorsId.length > 0
+      // ) {
+      //   const invalidInstructors = scheduleTimingInfo.instructorsId.filter(
+      //     id => !instructors.some(ins => ins.value === id)
+      //   );
+      //   if (invalidInstructors.length > 0) {
+      //     fieldErrors.instructorsId = "Please select valid instructor(s).";
+      //   }
+      // }
 
-    console.log("scheduleTimingInfo", scheduleTimingInfo);
-    const fieldErrors = {};
-    // if (
-    //   scheduleTimingInfo.instructorsId &&
-    //   scheduleTimingInfo.instructorsId.length > 0
-    // ) {
-    //   const invalidInstructors = scheduleTimingInfo.instructorsId.filter(
-    //     id => !instructors.some(ins => ins.value === id)
-    //   );
-    //   if (invalidInstructors.length > 0) {
-    //     fieldErrors.instructorsId = "Please select valid instructor(s).";
-    //   }
-    // }
+      // if (
+      //   scheduleTimingInfo.hallId === null ||
+      //   scheduleTimingInfo.hallId === undefined
+      // ) {
+      //   fieldErrors.hallId = "Hall is required.";
+      // } else {
+      //   const hallExists = halls.some(
+      //     hall => hall.value === scheduleTimingInfo.hallId
+      //   );
+      //   if (!hallExists) {
+      //     fieldErrors.hallId = "Please select a valid hall.";
+      //   }
+      // }
 
-    // if (
-    //   scheduleTimingInfo.hallId === null ||
-    //   scheduleTimingInfo.hallId === undefined
-    // ) {
-    //   fieldErrors.hallId = "Hall is required.";
-    // } else {
-    //   const hallExists = halls.some(
-    //     hall => hall.value === scheduleTimingInfo.hallId
-    //   );
-    //   if (!hallExists) {
-    //     fieldErrors.hallId = "Please select a valid hall.";
-    //   }
-    // }
+      if (Object.keys(fieldErrors).length > 0) {
+        return fieldErrors;
+      }
+      // const selectedHallObj = halls.find(hall => hall.value === selectedHall);
+      // if (selectedHallObj) {
+      //   scheduleTimingInfo.hallId = selectedHallObj.key;
+      // } else {
+      //   scheduleTimingInfo.hallId = null;
+      // }
 
-    if (Object.keys(fieldErrors).length > 0) {
-      return fieldErrors;
-    }
-    // const selectedHallObj = halls.find(hall => hall.value === selectedHall);
-    // if (selectedHallObj) {
-    //   scheduleTimingInfo.hallId = selectedHallObj.key;
-    // } else {
-    //   scheduleTimingInfo.hallId = null;
-    // }
+      // if (
+      //   scheduleTimingInfo.instructorsId &&
+      //   scheduleTimingInfo.instructorsId.length > 0
+      // ) {
+      //   scheduleTimingInfo.instructorsId = scheduleTimingInfo.instructorsId
+      //     .map(id => {
+      //       const instructorObj = instructors.find(ins => ins.value === id);
+      //       return instructorObj ? instructorObj.Id : null;
+      //     })
+      //     .filter(id => id !== null);
+      // } else {
+      //   scheduleTimingInfo.instructorsId = [];
+      // }
 
-    // if (
-    //   scheduleTimingInfo.instructorsId &&
-    //   scheduleTimingInfo.instructorsId.length > 0
-    // ) {
-    //   scheduleTimingInfo.instructorsId = scheduleTimingInfo.instructorsId
-    //     .map(id => {
-    //       const instructorObj = instructors.find(ins => ins.value === id);
-    //       return instructorObj ? instructorObj.Id : null;
-    //     })
-    //     .filter(id => id !== null);
-    // } else {
-    //   scheduleTimingInfo.instructorsId = [];
-    // }
-
-    // scheduleTimingInfo["type"] = selectedRowSectionLab.type;
-    // scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
-    if (isEdit1) {
-      scheduleTimingInfo["Id"] = selectedScheduleRow.Id;
-      onUpdateSectionLabDetail(scheduleTimingInfo);
-      this.toggle3();
+      // scheduleTimingInfo["type"] = selectedRowSectionLab.type;
+      // scheduleTimingInfo["sectionLabId"] = selectedRowSectionLab.Id;
+      if (isEdit1) {
+        scheduleTimingInfo["Id"] = selectedScheduleRow.Id;
+        onUpdateSectionLabDetail(scheduleTimingInfo);
+        this.toggle3();
+      } else {
+        console.log("saaaaave", scheduleTimingInfo);
+        onAddNewSectionLabDetail(scheduleTimingInfo);
+        this.toggle3();
+      }
     } else {
-      console.log("saaaaave", scheduleTimingInfo);
-      onAddNewSectionLabDetail(scheduleTimingInfo);
-      this.toggle3();
+      if (formattedInstructors === undefined) {
+        this.setState({ instructorError: true, saveError: true });
+      }
+      if (this.state.selectedHallKey === undefined) {
+        this.setState({ hallError: true, saveError: true });
+      }
+
+      const emptyError = this.props.t("Fill the Required Fields");
+
+      this.setState({ emptyError: emptyError });
     }
   };
 
@@ -1221,6 +1235,8 @@ class ClassSchedulingList extends Component {
       hallTimings,
     } = this.props;
     const {
+      hallError,
+      instructorError,
       duplicateError,
       deleteModal,
       deleteModal1,
@@ -1297,6 +1313,16 @@ class ClassSchedulingList extends Component {
     ];
     const columns = [
       { dataField: "Id", text: t("ID"), hidden: true },
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex, extraData) => {
+          const currentPage = extraData?.currentPage || 1;
+          const sizePerPage = extraData?.sizePerPage || pageOptions.sizePerPage;
+          return rowIndex + 1 + (currentPage - 1) * sizePerPage;
+        },
+        editable: false,
+      },
       {
         dataField: languageState === "ar" ? "arTitle" : "enTitle",
         text:
@@ -1636,11 +1662,13 @@ class ClassSchedulingList extends Component {
       sizePerPage: 20,
       totalSize: coursesOffering.length,
       custom: true,
+      page: 1,
     };
     const pageOptions2 = {
       sizePerPage: 20,
       totalSize: offeringCourses.length,
       custom: true,
+      page: 1,
     };
     return (
       <React.Fragment>
@@ -1771,19 +1799,39 @@ class ClassSchedulingList extends Component {
                                           sectionLabs={
                                             "table align-middle table-nowrap table-hover"
                                           }
+                                          //bootstrap4 To make table headings into one format
+                                          bootstrap4
+                                          hover
                                           columns={columns.map(col => {
+                                            let formatter = col.formatter;
+                                            if (col.dataField === "serial") {
+                                              formatter = (
+                                                cell,
+                                                row,
+                                                rowIndex
+                                              ) =>
+                                                rowIndex +
+                                                1 +
+                                                (paginationProps.page - 1) *
+                                                  paginationProps.sizePerPage;
+                                            }
+
+                                            let formatExtraData =
+                                              col.formatExtraData;
                                             if (col.dataField === "select") {
-                                              return {
-                                                ...col,
-                                                formatExtraData: {
-                                                  ...col.formatExtraData,
-                                                  pageRows:
-                                                    paginationTableProps.data ||
-                                                    [],
-                                                },
+                                              formatExtraData = {
+                                                ...col.formatExtraData,
+                                                pageRows:
+                                                  paginationTableProps.data ||
+                                                  [],
                                               };
                                             }
-                                            return col;
+
+                                            return {
+                                              ...col,
+                                              formatter,
+                                              formatExtraData,
+                                            };
                                           })}
                                           cellEdit={cellEditFactory({
                                             mode: "click",
@@ -2188,8 +2236,11 @@ class ClassSchedulingList extends Component {
                                                 className="d-flex justify-content-center align-items-center alert-dismissible fade show"
                                                 role="alert"
                                               >
-                                                Please click on the Schedule
-                                                Timing button before adding
+                                                <span>
+                                                  {t(
+                                                    "Please click on the Schedule Timing button before adding"
+                                                  )}
+                                                </span>
                                                 <button
                                                   type="button"
                                                   className="btn-close"
@@ -2804,15 +2855,6 @@ class ClassSchedulingList extends Component {
                                           "",
                                       }}
                                       enableReinitialize={true}
-                                      validationSchema={Yup.object().shape({
-                                        instructorsId: Yup.string().required(
-                                          "Please Enter Instructor"
-                                        ),
-                                        hallId:
-                                          Yup.string().required(
-                                            "Please Enter Hall"
-                                          ),
-                                      })}
                                     >
                                       {({
                                         errors,
@@ -2824,6 +2866,25 @@ class ClassSchedulingList extends Component {
                                         setFieldValue,
                                       }) => (
                                         <Form>
+                                          {emptyError && (
+                                            <Alert
+                                              color="danger"
+                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                              role="alert"
+                                            >
+                                              {emptyError}
+                                              <button
+                                                type="button"
+                                                className="btn-close"
+                                                aria-label="Close"
+                                                onClick={() =>
+                                                  this.handleAlertClose(
+                                                    "emptyError"
+                                                  )
+                                                }
+                                              ></button>
+                                            </Alert>
+                                          )}
                                           <Col md="12">
                                             <Row>
                                               <Col className="col-4 mb-3">
@@ -2842,8 +2903,9 @@ class ClassSchedulingList extends Component {
                                                   placeholder="Search..."
                                                   className={
                                                     "form-control" +
-                                                    (errors.hallId &&
-                                                    touched.hallId
+                                                    ((errors.hallId &&
+                                                      touched.hallId) ||
+                                                    hallError
                                                       ? " is-invalid"
                                                       : "")
                                                   }
@@ -2897,6 +2959,13 @@ class ClassSchedulingList extends Component {
                                                     />
                                                   ))}
                                                 </datalist>
+                                                {hallError && (
+                                                  <div className="invalid-feedback">
+                                                    {this.props.t(
+                                                      "Hall is required"
+                                                    )}
+                                                  </div>
+                                                )}
                                               </Col>
                                             </Row>
                                             <Row>
@@ -2910,7 +2979,13 @@ class ClassSchedulingList extends Component {
                                               </Col>
                                               <Col className="col-8">
                                                 <Select
-                                                  classNamePrefix="select2-selection"
+                                                  className={
+                                                    (errors.instructorsId &&
+                                                      touched.instructorsId) ||
+                                                    instructorError
+                                                      ? " is-invalid"
+                                                      : ""
+                                                  }
                                                   id="instructor"
                                                   name="instructorsId"
                                                   key={`instructorsId`}
@@ -2924,6 +2999,13 @@ class ClassSchedulingList extends Component {
                                                   isMulti
                                                   value={instructorsArray}
                                                 />
+                                                {instructorError && (
+                                                  <div className="invalid-feedback">
+                                                    {this.props.t(
+                                                      "Instructor is required"
+                                                    )}
+                                                  </div>
+                                                )}
                                                 <ErrorMessage
                                                   name="instructorsId"
                                                   component="div"
@@ -3088,6 +3170,25 @@ class ClassSchedulingList extends Component {
                                                         onClick={() =>
                                                           this.handleAlertClose(
                                                             "duplicateError"
+                                                          )
+                                                        }
+                                                      ></button>
+                                                    </Alert>
+                                                  )}
+                                                  {emptyError && (
+                                                    <Alert
+                                                      color="danger"
+                                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                      role="alert"
+                                                    >
+                                                      {emptyError}
+                                                      <button
+                                                        type="button"
+                                                        className="btn-close"
+                                                        aria-label="Close"
+                                                        onClick={() =>
+                                                          this.handleAlertClose(
+                                                            "emptyError"
                                                           )
                                                         }
                                                       ></button>

@@ -783,6 +783,16 @@ class CourseCatalogeList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex, extraData) => {
+          const currentPage = extraData?.currentPage || 1;
+          const sizePerPage = extraData?.sizePerPage || pageOptions.sizePerPage;
+          return rowIndex + 1 + (currentPage - 1) * sizePerPage;
+        },
+        editable: false,
+      },
+      {
         dataField: languageState === "ar" ? "arTitle" : "enTitle",
         text:
           languageState === "ar"
@@ -969,6 +979,7 @@ class CourseCatalogeList extends Component {
       sizePerPage: 10,
       totalSize: coursesCatalogs.length,
       custom: true,
+      page: 1,
     };
     return (
       <React.Fragment>
@@ -1109,7 +1120,17 @@ class CourseCatalogeList extends Component {
                                     {...toolkitprops.baseProps}
                                     {...paginationTableProps}
                                     data={coursesCatalogs}
-                                    columns={columns}
+                                    columns={columns.map(col => ({
+                                      ...col,
+                                      formatter:
+                                        col.dataField === "serial"
+                                          ? (cell, row, rowIndex) =>
+                                              rowIndex +
+                                              1 +
+                                              (paginationProps.page - 1) *
+                                                paginationProps.sizePerPage
+                                          : col.formatter,
+                                    }))}
                                     noDataIndication={this.props.t(
                                       "No Course Cataloge Found"
                                     )}

@@ -1606,7 +1606,7 @@ class TraineesList extends Component {
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
-    const { socialStatus, tempTraineeStatus } = this.props;
+    const { socialStatus, traineeStatus } = this.props;
     if (fieldName == "socialStatusId") {
       const name = socialStatus.find(
         socialStat => socialStat.value === selectedValue
@@ -1620,7 +1620,7 @@ class TraineesList extends Component {
       });
     }
     if (fieldName == "statusId") {
-      const name = tempTraineeStatus.find(
+      const name = traineeStatus.find(
         traineeStatu => traineeStatu.value === selectedValue
       );
       console.log("naaaaamesooo", name);
@@ -4970,173 +4970,6 @@ class TraineesList extends Component {
                                                       )}
                                                     </a>
                                                   </li>
-                                                  {/* <li>
-                                                    <a
-                                                      href="#"
-                                                      onClick={
-                                                        this
-                                                          .handleUniTraineesDropdown
-                                                      }
-                                                    >
-                                                      {this.props.t(
-                                                        "Trainee Life"
-                                                      )}
-                                                      {showTraineeLifeLi && (
-                                                        <span>
-                                                          <i className="mdi mdi-chevron-down float-end" />
-                                                        </span>
-                                                      )}
-                                                      {!showTraineeLifeLi && (
-                                                        <span>
-                                                          <i className="bx bx-chevron-right float-end" />
-                                                        </span>
-                                                      )}
-                                                    </a>
-                                                    {showTraineeLifeLi && (
-                                                      <ul className="included-items">
-                                                        <li>
-                                                          <a>
-                                                            {this.props.t(
-                                                              "Trainee status"
-                                                            )}
-                                                          </a>
-                                                        </li>
-                                                        <li>
-                                                          <a>
-                                                            {this.props.t(
-                                                              "Remaining Courses"
-                                                            )}
-                                                          </a>
-                                                        </li>
-                                                        <li>
-                                                          <a>
-                                                            {this.props.t(
-                                                              "Trainee Performance"
-                                                            )}
-                                                          </a>
-                                                        </li>
-                                                        <li>
-                                                          <a>
-                                                            {this.props.t(
-                                                              "Trainee Requests"
-                                                            )}
-                                                          </a>
-                                                        </li>
-                                                        <li>
-                                                          <a>
-                                                            {this.props.t(
-                                                              "Trainee Exceptions"
-                                                            )}
-                                                          </a>
-                                                        </li>
-                                                        <li>
-                                                          <a>
-                                                            {this.props.t(
-                                                              "Disciplinary Decisions"
-                                                            )}
-                                                          </a>
-                                                        </li>
-                                                        <li>
-                                                          <a>
-                                                            {this.props.t(
-                                                              "Decisions of the Registered Office"
-                                                            )}
-                                                          </a>
-                                                        </li>
-                                                        <li>
-                                                          <a>
-                                                            {this.props.t(
-                                                              "Documents Requests"
-                                                            )}
-                                                          </a>
-                                                        </li>
-
-                                                        <li>
-                                                          <a
-                                                            href="#"
-                                                            onClick={
-                                                              this
-                                                                .handleReportsDropdown
-                                                            }
-                                                          >
-                                                            {this.props.t(
-                                                              "Trainee Reports"
-                                                            )}
-                                                            {showReportsLi && (
-                                                              <span>
-                                                                <i className="mdi mdi-chevron-down float-end" />
-                                                              </span>
-                                                            )}
-                                                            {!showReportsLi && (
-                                                              <span>
-                                                                <i className="bx bx-chevron-right float-end" />
-                                                              </span>
-                                                            )}
-                                                          </a>
-                                                          {showReportsLi && (
-                                                            <ul className="included-items">
-                                                              <li>
-                                                                <a>
-                                                                  {this.props.t(
-                                                                    "Grades detection (all majors)"
-                                                                  )}
-                                                                </a>
-                                                              </li>
-                                                              <li>
-                                                                <a>
-                                                                  {this.props.t(
-                                                                    "Current Semester Grades"
-                                                                  )}
-                                                                </a>
-                                                              </li>
-                                                              <li>
-                                                                <a>
-                                                                  {this.props.t(
-                                                                    "Grade detection (according to current semester)"
-                                                                  )}
-                                                                </a>
-                                                              </li>
-                                                              <li>
-                                                                <a>
-                                                                  {this.props.t(
-                                                                    "Grade detection (according to certificates)"
-                                                                  )}
-                                                                </a>
-                                                              </li>
-                                                              <li>
-                                                                <a>
-                                                                  {this.props.t(
-                                                                    "Grade detection (according to requirements)"
-                                                                  )}
-                                                                </a>
-                                                              </li>
-                                                              <li>
-                                                                <a>
-                                                                  {this.props.t(
-                                                                    "Grade detection (according to courses)"
-                                                                  )}
-                                                                </a>
-                                                              </li>
-                                                              <li>
-                                                                <a>
-                                                                  {this.props.t(
-                                                                    "Grade detection (according to courses newspaper)"
-                                                                  )}
-                                                                </a>
-                                                              </li>
-                                                              <li>
-                                                                <a>
-                                                                  {this.props.t(
-                                                                    "Grade detection (without blocking)"
-                                                                  )}
-                                                                </a>
-                                                              </li>
-                                                            </ul>
-                                                          )}
-                                                        </li>
-                                                      </ul>
-                                                    )}
-                                                  </li> */}
                                                 </ul>
                                               </div>
                                               <div className="collapse-button">
@@ -5958,6 +5791,28 @@ class TraineesList extends Component {
                                                         <Form>
                                                           <Col lg="12">
                                                             <Card>
+                                                              <div>
+                                                                {successMessage && (
+                                                                  <Alert
+                                                                    color="success"
+                                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                                    role="alert"
+                                                                  >
+                                                                    {
+                                                                      successMessage
+                                                                    }
+                                                                    <button
+                                                                      type="button"
+                                                                      className="btn-close"
+                                                                      aria-label="Close"
+                                                                      onClick={
+                                                                        this
+                                                                          .handleSuccessClose
+                                                                      }
+                                                                    ></button>
+                                                                  </Alert>
+                                                                )}
+                                                              </div>
                                                               <CardBody>
                                                                 <div className="wizard clearfix">
                                                                   <div className="steps clearfix">
