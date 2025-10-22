@@ -7,6 +7,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import * as Yup from "yup";
 import Select from "react-select";
+import * as moment from "moment";
 import {
   Card,
   CardBody,
@@ -61,6 +62,7 @@ import {
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
 import unarchiveCourseRequests from "store/Unarchive-course-requests/reducer";
+import UnarchiveCourseRequestsSaga from "store/Unarchive-course-requests/saga";
 class UnarchiveCourseReq extends Component {
   constructor(props) {
     super(props);
@@ -90,8 +92,9 @@ class UnarchiveCourseReq extends Component {
       values: "",
       selectedUserName: null,
       userName: "",
-      selectedCourse: "",
-      selectedOperstion: "",
+      selectedCourse: null,
+      selectedOperstion: null,
+      selectedRequestStatus: null,
       CoursenameError: false,
       traineeError: false,
       startDateError: false,
@@ -142,6 +145,14 @@ class UnarchiveCourseReq extends Component {
       coursesOffering,
       gradeTypes,
       operationsNeeded,
+    });
+
+    const currentDate = new Date();
+
+    const formattedDate = currentDate.toISOString().slice(0, 10);
+
+    this.setState({
+      applyingDate: formattedDate,
     });
   }
 
@@ -246,8 +257,11 @@ class UnarchiveCourseReq extends Component {
 
   handleSubmit = values => {
     console.log(values);
-    const { onAddNewUnarchiveCourseRequest, onUpdateUnarchiveCourseRequest } =
-      this.props;
+    const {
+      onAddNewUnarchiveCourseRequest,
+      onUpdateUnarchiveCourseRequest,
+      traineesOpt,
+    } = this.props;
 
     const {
       isEdit,
@@ -257,18 +271,24 @@ class UnarchiveCourseReq extends Component {
       selectedEndDate,
       selectedCourse,
       selectedOperstion,
-      selectedUser,
+      selectedUserName,
       selectedArchivedDetaile,
+      selectedRequestStatus,
+      selectedApplyingDate,
     } = this.state;
-
+    values["userNameId"] = selectedUserName;
+    values["archiveDetailsId"] = selectedArchivedDetaile;
+    values["operationNeededId"] = selectedOperstion;
+    values["courseId"] = selectedCourse;
+    values["requestStatusId"] = selectedRequestStatus;
     if (
       values.startDate === "" ||
       values.endDate === "" ||
       values.traineeName === "" ||
-      values.userNameId === "" ||
       (values.archiveDetailsId === "" && selectedArchivedDetaile === "") ||
       (values.operationNeededId === "" && selectedOperstion === "") ||
-      (values.courseId === "" && selectedCourse === "")
+      (values.courseId === "" && selectedCourse === "") ||
+      (values.userNameId === "" && selectedUserName === "")
     ) {
       this.setState({ firstNameError: true, saveError: true });
 
@@ -282,11 +302,11 @@ class UnarchiveCourseReq extends Component {
       if (values.traineeName.trim() === "") {
         this.setState({ traineeError: true, saveError: true });
       }
-      if (values.userNameId.trim() === "") {
-        this.setState({ userNameError: true, saveError: true });
-      }
       if (values.courseId === "" && selectedCourse === "") {
         this.setState({ courseError: true, saveError: true });
+      }
+      if (values.userNameId === "" && selectedUserName === "") {
+        this.setState({ userNameError: true, saveError: true });
       }
       if (values.operationNeededId === "" && selectedOperstion === "") {
         this.setState({ operationNeededError: true, saveError: true });
@@ -316,24 +336,25 @@ class UnarchiveCourseReq extends Component {
         )
           unarchiveinfo[key] = values[key];
       });
+      unarchiveinfo.userNameId = this.state.selectedUserName;
+
       delete unarchiveinfo.traineeName;
-      unarchiveinfo["traineeId"] = traineesOpt.find(
-        trainee => trainee.value === values["traineeName"]
-      ).key;
+      console.log("traineesOpttraineesOpttraineesOpt", traineesOpt);
+      const traineeNamePart = values.traineeName.split(" - ")[0].trim();
+
+      const trainee = traineesOpt.find(t => t.value.trim() === traineeNamePart);
+
+      unarchiveinfo["traineeId"] = trainee?.key || null;
       console.log(
         "unarchiveinfounarchiveinfounarchiveinfounarchiveinfo",
         unarchiveinfo
       );
-      if (isEdit) {
-        console.log("edit");
-        unarchiveinfo["Id"] = traineesDecree["Id"];
-        onUpdateUnarchiveCourseRequest(unarchiveinfo);
-        this.toggle();
-      } else {
-        // unarchiveinfo["decreeStateId"] = 4;
-        onAddNewUnarchiveCourseRequest(unarchiveinfo);
-        this.toggle();
+      if (selectedApplyingDate) {
+        unarchiveinfo["applyingDate"] = selectedApplyingDate;
       }
+
+      onAddNewUnarchiveCourseRequest(unarchiveinfo);
+      this.toggle();
     }
   };
   handleSelect = (fieldName, selectedValue, values) => {
@@ -428,6 +449,7 @@ class UnarchiveCourseReq extends Component {
       employeesNames,
     } = this.props;
     const {
+      selectedRequestStatus,
       userNameError,
       operationNeededError,
       archiveDetailsError,
@@ -499,7 +521,7 @@ class UnarchiveCourseReq extends Component {
       },
 
       {
-        dataField: "courseName",
+        dataField: "courseId",
         text: this.props.t("Course Name"),
         sort: true,
         editable: false,
@@ -538,13 +560,13 @@ class UnarchiveCourseReq extends Component {
         formatter: (cellContent, row) => this.handleValidDate(row.applyingDate),
       },
       {
-        dataField: "applyingUser",
+        dataField: "userNameId",
         text: this.props.t("Applying User"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "requestStatus",
+        dataField: "requestStatusId",
         text: this.props.t("Request Status"),
         sort: true,
         editable: false,
@@ -556,7 +578,7 @@ class UnarchiveCourseReq extends Component {
         editable: false,
         formatter: (cellContent, unarchiveCourseRequest) => (
           <div className="d-flex gap-3">
-            <Tooltip title={this.props.t("Edit")} placement="top">
+            {/* <Tooltip title={this.props.t("Edit")} placement="top">
               <Link className="text-sm-end" to="#">
                 <i
                   className="mdi mdi-pencil font-size-18"
@@ -565,7 +587,7 @@ class UnarchiveCourseReq extends Component {
                   }
                 ></i>
               </Link>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title={this.props.t("Delete")} placement="top">
               <Link className="text-danger" to="#">
                 <i
@@ -763,11 +785,11 @@ class UnarchiveCourseReq extends Component {
 
                                         courseId:
                                           unarchiveCourseRequest?.courseId ||
-                                          selectedCourse,
+                                          "",
 
                                         operationNeededId:
                                           unarchiveCourseRequest?.operationNeededId ||
-                                          selectedOperstion,
+                                          "",
                                         userNameId:
                                           unarchiveCourseRequest?.userNameId ||
                                           selectedUser,
@@ -776,7 +798,7 @@ class UnarchiveCourseReq extends Component {
                                           "",
                                         applyingDate:
                                           unarchiveCourseRequest?.applyingDate ||
-                                          "",
+                                          selectedApplyingDate,
 
                                         archiveNotes:
                                           unarchiveCourseRequest?.archiveNotes ||
@@ -1010,7 +1032,7 @@ class UnarchiveCourseReq extends Component {
                                                                               newValue.value
                                                                             );
                                                                           }}
-                                                                          defaultValue={filteredCoursesModified.find(
+                                                                          value={filteredCoursesModified.find(
                                                                             opt =>
                                                                               opt.value ===
                                                                               unarchiveCourseRequest?.courseId
@@ -1163,8 +1185,7 @@ class UnarchiveCourseReq extends Component {
                                                                           onChange={newValue => {
                                                                             this.handleSelect(
                                                                               "archiveDetailsId",
-                                                                              newValue.value,
-                                                                              values
+                                                                              newValue.value
                                                                             );
                                                                           }}
                                                                           value={gradeTypes.find(
@@ -1215,11 +1236,10 @@ class UnarchiveCourseReq extends Component {
                                                                           onChange={newValue => {
                                                                             this.handleSelect(
                                                                               "operationNeededId",
-                                                                              newValue.value,
-                                                                              values
+                                                                              newValue.value
                                                                             );
                                                                           }}
-                                                                          defaultValue={operationsNeeded.find(
+                                                                          value={operationsNeeded.find(
                                                                             opt =>
                                                                               opt.value ===
                                                                               unarchiveCourseRequest?.operationNeededId
@@ -1440,7 +1460,7 @@ class UnarchiveCourseReq extends Component {
                                                             <Row className="d-flex justify-content-center ml-5 mt-6">
                                                               <Col lg="4">
                                                                 <Label
-                                                                  for="studentOrder-Id"
+                                                                  for="requestStatus-Id"
                                                                   className="form-label d-flex"
                                                                 >
                                                                   {this.props.t(
@@ -1470,26 +1490,33 @@ class UnarchiveCourseReq extends Component {
                                                                           <input
                                                                             type="radio"
                                                                             className={`btn-check button-or ${
-                                                                              selectedDecisionStatus ===
+                                                                              selectedRequestStatus ===
                                                                               status.Id
                                                                                 ? "active"
                                                                                 : ""
                                                                             }`}
-                                                                            name="decisionStatusId"
+                                                                            name="requestStatusId"
                                                                             id={`btnradio${index}`}
                                                                             autoComplete="off"
-                                                                            defaultChecked={
-                                                                              selectedDecisionStatus ===
+                                                                            checked={
+                                                                              selectedRequestStatus ===
                                                                               status.Id
                                                                                 ? "active"
                                                                                 : ""
                                                                             }
-                                                                            onChange={() =>
+                                                                            onChange={() => {
                                                                               setFieldValue(
-                                                                                "decisionStatusId",
+                                                                                "requestStatusId",
                                                                                 status.Id
-                                                                              )
-                                                                            }
+                                                                              );
+
+                                                                              this.setState(
+                                                                                {
+                                                                                  selectedRequestStatus:
+                                                                                    status.Id,
+                                                                                }
+                                                                              );
+                                                                            }}
                                                                           />
                                                                           <Label
                                                                             className="btn btn-outline-primary smallButton w-sm"

@@ -1433,6 +1433,11 @@ class NewTrainee extends Component {
       custom: true,
     };
 
+    const formattedRegistrationDate =
+      tempTrainee && tempTrainee.RegistrationDate
+        ? new Date(tempTrainee.RegistrationDate).toISOString().split("T")[0]
+        : selectedRegistrationDate;
+
     const defaultSorted = [
       {
         id: 99,

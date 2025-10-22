@@ -38,6 +38,7 @@ import {
   getTraineesOpt,
   getCoursesOffering,
   getYears,
+  getRequestStatus,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchTraineesDeservesWarnings() {

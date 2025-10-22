@@ -857,5 +857,7 @@
   "Unarchive Course Requests": "طلبات إلغاء أرشفة الدورات التدريبية",
   "Archive Notes": "ملاحظات الأرشيف",
   "Request status": "حالة الطلب",
+  "Add Course Catalog Data": "إضافة بيانات فهرس الدورات",
+  "Edit Course Catalog Data": "تعديل بيانات فهرس الدورات",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

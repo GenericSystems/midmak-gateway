@@ -80,6 +80,7 @@ class CourseCatalogeList extends Component {
       showSearchButton: false,
       trainingSectorOptions: [],
       sectorsCode: [],
+      qualificationCode: [],
       qualificationTrackOptions: [],
       trainingProgramOptions: [],
       // trainingModuleOptions: [],
@@ -273,6 +274,7 @@ class CourseCatalogeList extends Component {
     this.setState({
       courseCataloge: "",
       sectorsCode: "",
+      qualificationCode: "",
       isEdit: false,
       isOpen: false,
       isAdd: true,
@@ -367,6 +369,7 @@ class CourseCatalogeList extends Component {
       selectedIsNeedLabs,
       selectedIsNeedSection,
       sectorsCode,
+      qualificationCode,
     } = this.state;
 
     let arCoursenameError = false;
@@ -393,10 +396,10 @@ class CourseCatalogeList extends Component {
     values["enTitle"] = values["enTitle"] || "";
     values["courseSectors"] = courseSectors;
     values["qualificationTrackId"] = selectedQualificationTrack;
-    values["qualificationCode"] = values["qualificationCode"] || "";
     values["programId"] = selectedTrainingProgram;
     values["Code"] = values["Code"] || "";
     values["sectorsCode"] = sectorsCode || "";
+    values["qualificationCode"] = qualificationCode || "";
     values["courseTypeId"] = selectedTrainingType;
     values["totalTrainingHours"] = values["totalTrainingHours"] || "";
     // values["trainingModule"] = values["trainingModule"] || "";
@@ -512,21 +515,37 @@ class CourseCatalogeList extends Component {
       emptyError: "",
     });
   };
+
+  // handleMultiSectors = (fieldName, selectedMulti) => {
+  //   if (fieldName === "sectorId") {
+  //     const courseSectors = selectedMulti || [];
+
+  //     const concatenatedCodes = courseSectors
+  //       .map(sector => sector.code)
+  //       .join(",");
+
+  //     this.setState({
+  //       courseSectors: courseSectors,
+  //       sectorsCode: concatenatedCodes, // store concatenated codes
+  //     });
+
+  //     console.log("courseSectors:", courseSectors);
+  //     console.log("sectorsCode:", concatenatedCodes);
+  //   }
+  // };
+
   handleMultiSectors = (fieldName, selectedMulti) => {
     if (fieldName === "sectorId") {
       const courseSectors = selectedMulti || [];
 
-      const concatenatedCodes = courseSectors
-        .map(sector => sector.code)
-        .join(",");
+      const concatenatedCodes = courseSectors.map(s => s.value).join(",");
+      const courseSectorsNames = courseSectors.map(s => s.label).join(" , ");
 
       this.setState({
-        courseSectors: courseSectors,
-        sectorsCode: concatenatedCodes, // store concatenated codes
+        courseSectors,
+        sectorsCode: concatenatedCodes,
+        courseSectorsNames,
       });
-
-      console.log("courseSectors:", courseSectors);
-      console.log("sectorsCode:", concatenatedCodes);
     }
   };
 
@@ -549,7 +568,6 @@ class CourseCatalogeList extends Component {
         qualificationCode: selectedValue.code,
         courseCataloge: values,
       });
-      console.log("sectorsCode", qualificationCode);
     }
 
     if (fieldName == "programId") {
@@ -589,17 +607,57 @@ class CourseCatalogeList extends Component {
     onGetCoursesCatalogDeletedValue();
   };
 
-  handleEditCourse = arg => {
-    const {
-      preReqCourses,
-      onGetCourseCatalogePrerequisites,
-      trainingSectorOptions = [],
-    } = this.props;
-    console.log("argsssss", arg);
+  // handleEditCourse = arg => {
+  //   const {
+  //     preReqCourses,
+  //     onGetCourseCatalogePrerequisites,
+  //     trainingSectorOptions = [],
+  //   } = this.props;
+  //   console.log("argsssss", arg);
 
-    const filteredPreReqCourses = preReqCourses.filter(
-      course => course.key !== arg.Id
-    );
+  //   const filteredPreReqCourses = preReqCourses.filter(
+  //     course => course.key !== arg.Id
+  //   );
+
+  //   const sectorsArray = Array.isArray(arg.courseSectors)
+  //     ? arg.courseSectors.map(s => {
+  //         const match = trainingSectorOptions.find(
+  //           opt => opt.value === s.sectorId
+  //         );
+  //         return match || { value: s.sectorId, label: s.sectorName };
+  //       })
+  //     : [];
+
+  //   // Generate sector code for read-only field
+  //   const concatenatedCodes =
+  //     arg.sectorCode || sectorsArray.map(s => s.value).join(",");
+  //   console.log("sectorsArray", sectorsArray);
+
+  //   this.setState({
+  //     courseCataloge: arg,
+  //     isEdit: true,
+  //     filtredPreReqCourses: filteredPreReqCourses,
+  //     selectedCoursId: arg.Id,
+  //     selectedTrainingFormat: arg.trainingFormatId,
+  //     qualificationCode: arg.qualificationCode,
+  //     courseSectors: sectorsArray,
+
+  //     sectorsCode: concatenatedCodes,
+
+  //     selectedQualificationTrack: arg.qualificationTrackId,
+  //     selectedIsNeedLabs: arg.isNeedLab,
+  //     selectedIsNeedSection: arg.isNeedSection,
+  //     selectedTrainingProgram: arg.programId,
+  //     selectedTrainingType: arg.courseTypeId,
+  //   });
+  //   console.log("sectorsArray", sectorsArray);
+
+  //   onGetCourseCatalogePrerequisites(arg.Id);
+  //   this.toggle();
+  // };
+
+  handleEditCourse = arg => {
+    const { trainingSectorOptions = [] } = this.props;
 
     const sectorsArray = Array.isArray(arg.courseSectors)
       ? arg.courseSectors.map(s => {
@@ -610,31 +668,14 @@ class CourseCatalogeList extends Component {
         })
       : [];
 
-    // Generate sector code for read-only field
-    const concatenatedCodes =
-      arg.sectorCode || sectorsArray.map(s => s.value).join(",");
-    console.log("sectorsArray", sectorsArray);
-
     this.setState({
       courseCataloge: arg,
       isEdit: true,
-      filtredPreReqCourses: filteredPreReqCourses,
-      selectedCoursId: arg.Id,
-      selectedTrainingFormat: arg.trainingFormatId,
-      qualificationCode: arg.qualificationCode,
       courseSectors: sectorsArray,
-
-      sectorsCode: concatenatedCodes,
-
-      selectedQualificationTrack: arg.qualificationTrackId,
-      selectedIsNeedLabs: arg.isNeedLab,
-      selectedIsNeedSection: arg.isNeedSection,
-      selectedTrainingProgram: arg.programId,
-      selectedTrainingType: arg.courseTypeId,
+      courseSectorsNames: sectorsArray.map(s => s.label).join(" , "),
+      sectorsCode: sectorsArray.map(s => s.value).join(","),
     });
-    console.log("sectorsArray", sectorsArray);
 
-    onGetCourseCatalogePrerequisites(arg.Id);
     this.toggle();
   };
 
@@ -1069,18 +1110,6 @@ class CourseCatalogeList extends Component {
                                     {...paginationTableProps}
                                     data={coursesCatalogs}
                                     columns={columns}
-                                    cellEdit={cellEditFactory({
-                                      mode: "click",
-                                      blurToSave: true,
-                                      afterSaveCell: (
-                                        oldValue,
-                                        newValue,
-                                        row,
-                                        column
-                                      ) => {
-                                        row.Id, column.dataField, newValue;
-                                      },
-                                    })}
                                     noDataIndication={this.props.t(
                                       "No Course Cataloge Found"
                                     )}
@@ -1311,7 +1340,7 @@ class CourseCatalogeList extends Component {
                                                                         </span>
                                                                       </Col>
                                                                       <Col className="col-8">
-                                                                        <Select
+                                                                        {/* <Select
                                                                           id="sector"
                                                                           name="sectorId"
                                                                           key="sectorId"
@@ -1334,6 +1363,32 @@ class CourseCatalogeList extends Component {
                                                                           isMulti
                                                                           value={
                                                                             courseSectors
+                                                                          }
+                                                                        /> */}
+                                                                        <Select
+                                                                          id="sector"
+                                                                          name="sectorId"
+                                                                          options={
+                                                                            trainingSectorOptions
+                                                                          }
+                                                                          isMulti
+                                                                          value={
+                                                                            this
+                                                                              .state
+                                                                              .courseSectors
+                                                                          } // array من {value, label}
+                                                                          onChange={newValue =>
+                                                                            this.handleMultiSectors(
+                                                                              "sectorId",
+                                                                              newValue
+                                                                            )
+                                                                          }
+                                                                          className={
+                                                                            "form-control" +
+                                                                            (errors.sectorId &&
+                                                                            touched.sectorId
+                                                                              ? " is-invalid"
+                                                                              : "")
                                                                           }
                                                                         />
                                                                       </Col>
