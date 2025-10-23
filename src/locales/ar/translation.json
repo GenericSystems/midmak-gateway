@@ -864,5 +864,9 @@
   "Please click on the Schedule Timing button before adding": "الرجاء النقر على زر جدولة التوقيت قبل الإضافة",
   "Fill the Required Fields": "إملأ الحقول المطلوبة *",
   "Data filled in successfully": "تم تعبئة البيانات بنجاح",
+  "Trainees Deserves Dismiss": "الطلاب الواجب فصلهم",
+  "Dismissed or Must Dismissed": "المفصولون والواجب فصلهم",
+  "Must Dismissed Only": "الواجب فصلهم فقط",
+  "Dismissed Only": "المفصولون فقط",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

@@ -2,57 +2,75 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 // Crypto Redux States
 import {
-  GET_MARKS_OBJECTIONS,
-  GET_MARK_OBJECTION_DELETED_VALUE,
-  ADD_NEW_MARK_OBJECTION,
-  UPDATE_MARK_OBJECTION,
-  DELETE_MARK_OBJECTION,
+  GET_TRAINEES_DESERVES_DISMISS,
+  GET_TRAINEE_DESERVE_DISMISS_DELETED_VALUE,
+  ADD_NEW_TRAINEE_DESERVE_DISMISS,
+  UPDATE_TRAINEE_DESERVE_DISMISS,
+  DELETE_TRAINEE_DESERVE_DISMISS,
 } from "./actionTypes";
 
 import {
-  getMarksObjectionsSuccess,
-  getMarksObjectionsFail,
-  getMarkObjectionDeletedValueSuccess,
-  getMarkObjectionDeletedValueFail,
-  addMarkObjectionFail,
-  addMarkObjectionSuccess,
-  updateMarkObjectionSuccess,
-  updateMarkObjectionFail,
-  deleteMarkObjectionSuccess,
-  deleteMarkObjectionFail,
-  getRequestStatusSuccess,
-  getRequestStatusFail,
+  getTraineesDeservesDismissSuccess,
+  getTraineesDeservesDismissFail,
+  getTraineeDeserveDismissDeletedValueSuccess,
+  getTraineeDeserveDismissDeletedValueFail,
+  addTraineeDeserveDismissFail,
+  addTraineeDeserveDismissSuccess,
+  updateTraineeDeserveDismissSuccess,
+  updateTraineeDeserveDismissFail,
+  deleteTraineeDeserveDismissSuccess,
+  deleteTraineeDeserveDismissFail,
 } from "./actions";
 
 import { getTraineesOptSuccess, getTraineesOptFail } from "../trainees/actions";
+import { getYearsSuccess, getYearsFail } from "../years/actions";
 import {
   getCoursesOfferingSuccess,
   getCoursesOfferingFail,
 } from "../classScheduling/actions";
 //Include Both Helper File with needed methods
 import {
-  getMarksObjections,
-  getMarkObjectionDeletedValue,
-  addNewMarkObjection,
-  updateMarkObjection,
-  deleteMarkObjection,
+  getTraineesDeservesDismiss,
+  getTraineeDeserveDismissDeletedValue,
+  addNewTraineeDeserveDismiss,
+  updateTraineeDeserveDismiss,
+  deleteTraineeDeserveDismiss,
   getTraineesOpt,
   getCoursesOffering,
+  getYears,
   getRequestStatus,
 } from "../../helpers/fakebackend_helper";
 
-function* fetchMarksObjections() {
-  const get_MarksObjections_req = {
+function* fetchTraineesDeservesDismiss() {
+  const get_TraineesDeservesDismiss_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_Trainee",
   };
   try {
-    const response = yield call(getMarksObjections, get_MarksObjections_req);
-    yield put(getMarksObjectionsSuccess(response));
+    const response = yield call(
+      getTraineesDeservesDismiss,
+      get_TraineesDeservesDismiss_req
+    );
+    yield put(getTraineesDeservesDismissSuccess(response));
   } catch (error) {
-    yield put(getMarksObjectionsFail(error));
+    yield put(getTraineesDeservesDismissFail(error));
+  }
+
+  const get_years_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Years",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getYears, get_years_req);
+    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", response);
+    yield put(getYearsSuccess(response));
+  } catch (error) {
+    yield put(getYearsFail(error));
   }
 
   const get_trainees_req = {
@@ -84,33 +102,33 @@ function* fetchMarksObjections() {
     yield put(getCoursesOfferingFail(error));
   }
 
-  const get_RequestStatus_req = {
-    source: "db",
-    procedure: "SisApp_getData",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_DecreeStatus",
-  };
-  try {
-    const response = yield call(getRequestStatus, get_RequestStatus_req);
-    yield put(getRequestStatusSuccess(response));
-  } catch (error) {
-    yield put(getRequestStatusFail(error));
-  }
+  // const get_RequestStatus_req = {
+  //   source: "db",
+  //   procedure: "SisApp_getData",
+  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+  //   tablename: "Settings_DecreeStatus",
+  // };
+  // try {
+  //   const response = yield call(getRequestStatus, get_RequestStatus_req);
+  //   yield put(getRequestStatusSuccess(response));
+  // } catch (error) {
+  //   yield put(getRequestStatusFail(error));
+  // }
 
   //   const get_contractType_req = {
   //     source: "db",
   //     procedure: "Generic_getOptions",
   //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "Settings_MarkObjectionType",
+  //     tablename: "Settings_TraineeDeserveDismissType",
   //     fields: "Id,arTitle",
   //   };
 
   //   try {
-  //     const response = yield call(getMarksObjectionsTypes, get_contractType_req);
+  //     const response = yield call(getTraineesDeservesDismissTypes, get_contractType_req);
   //     console.log("999999999999999999999999999", response);
-  //     yield put(getMarksObjectionsTypesSuccess(response));
+  //     yield put(getTraineesDeservesDismissTypesSuccess(response));
   //   } catch (error) {
-  //     yield put(getMarksObjectionsTypesFail(error));
+  //     yield put(getTraineesDeservesDismissTypesFail(error));
   //   }
 
   //   const get_work_classification_req = {
@@ -235,82 +253,94 @@ function* fetchMarksObjections() {
   //   }
 }
 
-function* getMarkObjectionProfile() {
+function* getTraineeDeserveDismissProfile() {
   try {
-    const response = yield call(getMarkObjectionDeletedValue);
-    yield put(getMarkObjectionDeletedValueSuccess(response));
+    const response = yield call(getTraineeDeserveDismissDeletedValue);
+    yield put(getTraineeDeserveDismissDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getMarkObjectionDeletedValueFail(error));
+    yield put(getTraineeDeserveDismissDeletedValueFail(error));
   }
 }
 
-function* onAddNewMarkObjection({ payload }) {
+function* onAddNewTraineeDeserveDismiss({ payload }) {
   console.log("xxxxxxxxxxxxxxxxx", payload);
   delete payload["id"];
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_MarkObjection";
-  payload["queryname"] = "_Common_MarkObjection";
+  payload["tablename"] = "Common_TraineeDeserveDismiss";
+  payload["queryname"] = "_Common_TraineeDeserveDismiss";
 
   try {
-    const response = yield call(addNewMarkObjection, payload);
+    const response = yield call(addNewTraineeDeserveDismiss, payload);
     //console.log("ppppppppppppppppppppp", response);
-    yield put(addMarkObjectionSuccess(response[0]));
+    yield put(addTraineeDeserveDismissSuccess(response[0]));
   } catch (error) {
-    yield put(addMarkObjectionFail(error));
+    yield put(addTraineeDeserveDismissFail(error));
   }
 }
 
-function* onDeleteMarkObjection({ payload, contract }) {
+function* onDeleteTraineeDeserveDismiss({ payload, contract }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_MarkObjection";
+  payload["tablename"] = "Common_TraineeDeserveDismiss";
 
   try {
-    const response = yield call(deleteMarkObjection, payload);
-    yield put(deleteMarkObjectionSuccess(response[0]));
+    const response = yield call(deleteTraineeDeserveDismiss, payload);
+    yield put(deleteTraineeDeserveDismissSuccess(response[0]));
   } catch (error) {
-    yield put(deleteMarkObjectionFail(error));
+    yield put(deleteTraineeDeserveDismissFail(error));
   }
 }
 
-function* onUpdateMarkObjection({ payload }) {
+function* onUpdateTraineeDeserveDismiss({ payload }) {
   console.log("qqqqqqqqqqqqqqqq", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_MarkObjection";
-  payload["queryname"] = "_Common_MarkObjection";
+  payload["tablename"] = "Common_TraineeDeserveDismiss";
+  payload["queryname"] = "_Common_TraineeDeserveDismiss";
   try {
-    const respupdate = yield call(updateMarkObjection, payload);
-    console.log("UpdateMarkObjection", respupdate);
-    yield put(updateMarkObjectionSuccess(respupdate[0]));
+    const respupdate = yield call(updateTraineeDeserveDismiss, payload);
+    console.log("UpdateTraineeDeserveDismiss", respupdate);
+    yield put(updateTraineeDeserveDismissSuccess(respupdate[0]));
   } catch (error) {
-    yield put(updateMarkObjectionFail(error));
+    yield put(updateTraineeDeserveDismissFail(error));
   }
 }
 
-function* onGetMarkObjectionDeletedValue() {
+function* onGetTraineeDeserveDismissDeletedValue() {
   try {
-    const response = yield call(getMarkObjectionDeletedValue);
-    yield put(getMarkObjectionDeletedValueSuccess(response));
+    const response = yield call(getTraineeDeserveDismissDeletedValue);
+    yield put(getTraineeDeserveDismissDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getMarkObjectionDeletedValueFail(error));
+    yield put(getTraineeDeserveDismissDeletedValueFail(error));
   }
 }
 
-function* MarksObjectionsSaga() {
-  yield takeEvery(GET_MARKS_OBJECTIONS, fetchMarksObjections);
+function* TraineesDeservesDismissSaga() {
+  yield takeEvery(GET_TRAINEES_DESERVES_DISMISS, fetchTraineesDeservesDismiss);
   yield takeEvery(
-    GET_MARK_OBJECTION_DELETED_VALUE,
-    onGetMarkObjectionDeletedValue
+    GET_TRAINEE_DESERVE_DISMISS_DELETED_VALUE,
+    onGetTraineeDeserveDismissDeletedValue
   );
-  yield takeEvery(GET_MARK_OBJECTION_DELETED_VALUE, getMarkObjectionProfile);
-  yield takeEvery(ADD_NEW_MARK_OBJECTION, onAddNewMarkObjection);
-  yield takeEvery(UPDATE_MARK_OBJECTION, onUpdateMarkObjection);
-  yield takeEvery(DELETE_MARK_OBJECTION, onDeleteMarkObjection);
+  yield takeEvery(
+    GET_TRAINEE_DESERVE_DISMISS_DELETED_VALUE,
+    getTraineeDeserveDismissProfile
+  );
+  yield takeEvery(
+    ADD_NEW_TRAINEE_DESERVE_DISMISS,
+    onAddNewTraineeDeserveDismiss
+  );
+  yield takeEvery(
+    UPDATE_TRAINEE_DESERVE_DISMISS,
+    onUpdateTraineeDeserveDismiss
+  );
+  yield takeEvery(
+    DELETE_TRAINEE_DESERVE_DISMISS,
+    onDeleteTraineeDeserveDismiss
+  );
 }
 
-export default MarksObjectionsSaga;
+export default TraineesDeservesDismissSaga;

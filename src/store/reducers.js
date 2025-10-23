@@ -329,6 +329,9 @@ import justifyTraineesAbsence from "./justifyTraineeAbsence/reducer";
 //traineesDeservesWarnings
 import traineesDeservesWarnings from "./traineesDeservesWarnings/reducer";
 
+//traineesDeservesDismiss
+import traineesDeservesDismiss from "./traineesDeservesDismiss/reducer";
+
 //ExamsAttendance
 import examsAttendance from "./examAttendance/reducer";
 
@@ -482,6 +485,7 @@ const rootReducer = combineReducers({
   marksObjections,
   justifyTraineesAbsence,
   traineesDeservesWarnings,
+  traineesDeservesDismiss,
   examsAttendance,
   attendanceObservers,
   hallSchedules,

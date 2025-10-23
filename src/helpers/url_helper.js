@@ -1142,6 +1142,13 @@ export const ADD_NEW_TRAINEE_DESERVE_WARNING = "/add/TraineeDeserveWarning";
 export const UPDATE_TRAINEE_DESERVE_WARNING = "/update/TraineeDeserveWarning";
 export const DELETE_TRAINEE_DESERVE_WARNING = "/deleted/TraineeDeserveWarning";
 
+//TRAINEE_DESERVE_DISMISS
+export const GET_TRAINEES_DESERVES_DISMISS = "/traineesDeservesDismiss";
+export const GET_TRAINEE_DESERVE_DISMISS_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TRAINEE_DESERVE_DISMISS = "/add/TraineeDeserveDismiss";
+export const UPDATE_TRAINEE_DESERVE_DISMISS = "/update/TraineeDeserveDismiss";
+export const DELETE_TRAINEE_DESERVE_DISMISS = "/deleted/TraineeDeserveDismiss";
+
 //JustifyTraineeAbsence
 export const GET_JUSTIFY_TRAINEES_ABSENCE = "/justifyTraineesAbsence";
 export const GET_JUSTIFY_TRAINEE_ABSENCE_DELETED_VALUE = "/deleted";
