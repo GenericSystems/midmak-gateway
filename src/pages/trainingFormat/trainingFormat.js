@@ -51,13 +51,27 @@ class TrainingFormatsList extends Component {
   }
 
   componentDidMount() {
-    const { onGetTrainingFormats, user_menu, location } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+    const { onGetTrainingFormats, trainingFormats, user_menu, location, i18n } =
+      this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetTrainingFormats();
+    this.setState({ trainingFormats, languageState: lang });
+
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+  handleLanguageChange = lng => {
+    const { onGetTrainingFormats } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    this.setState({ languageState: lng });
+    // onGetTrainingFormats(lng);
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -105,6 +119,12 @@ class TrainingFormatsList extends Component {
 
   toggleDeleteModal = () => {
     this.setState(prev => ({ deleteModal: !prev.deleteModal }));
+  };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
   };
 
   onClickDelete = row => {
@@ -181,9 +201,12 @@ class TrainingFormatsList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      languageState,
     } = this.state;
 
     const { SearchBar } = Search;
+
+    const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const pageOptions = {
       sizePerPage: 10,
@@ -241,7 +264,7 @@ class TrainingFormatsList extends Component {
             this.setState({ deleteModal: false, selectedRowId: null })
           }
         />
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <Container fluid>
             <Breadcrumbs breadcrumbItem={t("Training Formats")} />
             <Row>

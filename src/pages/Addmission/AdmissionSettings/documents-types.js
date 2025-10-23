@@ -56,6 +56,7 @@ class DocumentsTypesList extends Component {
       showAddButton: false,
       showEditButton: false,
       showSearchButton: false,
+      languageState: "",
     };
     this.state = {
       duplicateError: null,
@@ -64,7 +65,8 @@ class DocumentsTypesList extends Component {
   }
 
   componentDidMount() {
-    const { documents, onGetDocuments, user_menu } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+    const { documents, i18n, onGetDocuments, user_menu } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
 
     this.updateShowEditButton(user_menu, this.props.location.pathname);
@@ -74,8 +76,19 @@ class DocumentsTypesList extends Component {
     // }
     onGetDocuments();
 
-    this.setState({ documents });
+    this.setState({ documents, languageState: lang });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { i18n, onGetDocuments } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    // onGetDocuments(lang);
+    this.setState({ languageState: lng });
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -123,6 +136,12 @@ class DocumentsTypesList extends Component {
     ) {
       this.node.current.props.pagination.options.onPageChange(page);
     }
+  };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
   };
 
   handleAddRow = () => {
@@ -185,7 +204,7 @@ class DocumentsTypesList extends Component {
     const { documents, t, deleted } = this.props;
     const {
       duplicateError,
-
+      languageState,
       showAlert,
       showAddButton,
 
@@ -193,6 +212,7 @@ class DocumentsTypesList extends Component {
       showSearchButton,
     } = this.state;
     const { SearchBar } = Search;
+    const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const defaultSorting = [
       {
@@ -240,7 +260,7 @@ class DocumentsTypesList extends Component {
 
     return (
       <React.Fragment>
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={this.props.t("documents")} />
             <Row>

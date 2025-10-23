@@ -71,11 +71,14 @@ class RegReqDocumentsTable extends Component {
       showSearchButton: false,
       sidebarOpen: true,
       checkedId: 1,
+      languageState: "",
     };
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      i18n,
       onfetchSetting,
       regReqDocuments,
       user_menu,
@@ -109,10 +112,23 @@ class RegReqDocumentsTable extends Component {
         currentSemester,
         years,
         regcertificates,
+        languageState: lang,
       });
     }
     this.setState({ isCurrentYear: true });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { i18n, onGetRegReqDocuments } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    // onGetRegReqDocuments(lang);
+    this.setState({ languageState: lng });
+    // }
+  };
+
   componentDidUpdate(prevProps, prevState) {
     const { years, currentSemester, onGetRegReqDocuments } = this.props;
 
@@ -225,6 +241,12 @@ class RegReqDocumentsTable extends Component {
   };
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
+  };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
   };
 
   handleAddRow = () => {
@@ -422,6 +444,7 @@ class RegReqDocumentsTable extends Component {
       showAddButton,
       showDeleteButton,
       showEditButton,
+      languageState,
       showSearchButton,
     } = this.state;
     const { SearchBar } = Search;
@@ -434,6 +457,8 @@ class RegReqDocumentsTable extends Component {
       currentSemester,
       regcertificates,
     } = this.props;
+
+    const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
@@ -601,15 +626,15 @@ class RegReqDocumentsTable extends Component {
     };
 
     return (
-      <React.Fragment>
-        <DeleteModal
-          show={deleteModal}
-          onDeleteClick={this.handleDeleteRow}
-          onCloseClick={() =>
-            this.setState({ deleteModal: false, selectedRowId: null })
-          }
-        />
-        <div className="page-content">
+      <div dir={direction} className="page-content">
+        <React.Fragment>
+          <DeleteModal
+            show={deleteModal}
+            onDeleteClick={this.handleDeleteRow}
+            onCloseClick={() =>
+              this.setState({ deleteModal: false, selectedRowId: null })
+            }
+          />
           <div className="container-fluid">
             <Breadcrumbs
               breadcrumbItem={this.props.t("Registration Required Documents ")}
@@ -694,7 +719,9 @@ class RegReqDocumentsTable extends Component {
                                     className="btn btn-outline-primary big-width-check"
                                     htmlFor={`btncheck${certificate.value}`}
                                   >
-                                    {this.props.t(certificate.label)}
+                                    {languageState === "ar"
+                                      ? certificate.label + " "
+                                      : certificate.enTitle + " "}
                                   </label>
                                 </Col>
                               </Row>
@@ -855,8 +882,8 @@ class RegReqDocumentsTable extends Component {
               </CardBody>
             </Card>
           </div>
-        </div>
-      </React.Fragment>
+        </React.Fragment>
+      </div>
     );
   }
 }

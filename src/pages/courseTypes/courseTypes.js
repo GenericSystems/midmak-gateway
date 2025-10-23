@@ -47,18 +47,34 @@ class CourseTypesList extends Component {
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      languageState: "",
     };
   }
 
   componentDidMount() {
-    const { courseTypes, onGetCourseTypes, user_menu, location } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+    const { courseTypes, i18n, onGetCourseTypes, user_menu, location } =
+      this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     onGetCourseTypes();
     this.setState({ courseTypes });
+    this.setState({ languageState: lang });
+
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { onGetCourseTypes } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    this.setState({ languageState: lng });
+    // onGetCourseTypes(lng);
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -106,6 +122,12 @@ class CourseTypesList extends Component {
 
   toggleDeleteModal = () => {
     this.setState(prev => ({ deleteModal: !prev.deleteModal }));
+  };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
   };
 
   onClickDelete = row => {
@@ -180,6 +202,7 @@ class CourseTypesList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      languageState,
     } = this.state;
 
     const { SearchBar } = Search;
@@ -190,7 +213,7 @@ class CourseTypesList extends Component {
       custom: true,
       page: 1,
     };
-
+    const direction = languageState === "ar" ? "rtl" : "ltr";
     const columns = [
       { dataField: "Id", text: t("ID"), hidden: true },
       {
@@ -240,7 +263,7 @@ class CourseTypesList extends Component {
             this.setState({ deleteModal: false, selectedRowId: null })
           }
         />
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <Container fluid>
             <Breadcrumbs breadcrumbItem={t("Course Types")} />
             <Row>

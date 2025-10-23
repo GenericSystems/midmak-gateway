@@ -130,7 +130,7 @@ function* fetchRegReqDocSettings() {
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "AdmissionSettings_RegisterUnderCertificates",
-    fields: "Id,arTitle",
+    fields: "Id,arTitle,enTitle",
     // filter: "checkLevel = 1",
   };
 

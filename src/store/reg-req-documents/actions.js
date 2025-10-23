@@ -1,5 +1,4 @@
 import {
-
   GET_REG_REQ_DOCUMENT_DELETED_VALUE,
   GET_REG_REQ_DOCUMENT_DELETED_VALUE_FAIL,
   GET_REG_REQ_DOCUMENT_DELETED_VALUE_SUCCESS,
@@ -24,7 +23,6 @@ import {
 export const getRegReqDocuments = RegReqDocuments => ({
   type: GET_REG_REQ_DOCUMENTS,
   payload: RegReqDocuments,
-
 });
 
 export const getRegReqDocumentsSuccess = RegReqDocuments => ({
@@ -113,6 +111,6 @@ export const copyRegReqDocFail = error => ({
   payload: error,
 });
 
- export const fetchRegReqDocSettings = () => ({
-    type: GET_REG_REQ_DOC_SETTINGS,
-  });
+export const fetchRegReqDocSettings = () => ({
+  type: GET_REG_REQ_DOC_SETTINGS,
+});

@@ -66,15 +66,18 @@ class QualificationsTracksList extends Component {
     this.state = {
       duplicateError: null,
       deleteModal: false,
+      languageState: "",
     };
   }
 
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
       qualificationTracks,
       onGetQualificationsTracks,
       deleted,
       user_menu,
+      i18n,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -86,8 +89,20 @@ class QualificationsTracksList extends Component {
     onGetQualificationsTracks();
     this.setState({ qualificationTracks });
     this.setState({ deleted });
+    this.setState({ languageState: lang });
+
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
 
+  handleLanguageChange = lng => {
+    const { onGetQualificationsTracks } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    this.setState({ languageState: lng });
+    // onGetQualificationsTracks(lng);
+    // }
+  };
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       this.props.user_menu !== prevProps.user_menu ||
@@ -148,6 +163,13 @@ class QualificationsTracksList extends Component {
       deleteModal: !prevState.deleteModal,
     }));
   };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
@@ -239,6 +261,7 @@ class QualificationsTracksList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      languageState,
     } = this.state;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
@@ -249,6 +272,8 @@ class QualificationsTracksList extends Component {
         order: "desc",
       },
     ];
+
+    const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const pageOptions = {
       sizePerPage: 10,
@@ -317,7 +342,7 @@ class QualificationsTracksList extends Component {
             this.setState({ deleteModal: false, selectedRowId: null })
           }
         />
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
               breadcrumbItem={this.props.t("Qualifications Tracks")}

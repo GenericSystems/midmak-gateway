@@ -66,13 +66,14 @@ class SectorsList extends Component {
     this.state = {
       duplicateError: null,
       deleteModal: false,
-      currentPage: 1,
-      sizePerPage: 10,
+      languageState: "",
+      ؤ,
     };
   }
 
   componentDidMount() {
-    const { sectors, onGetSectors, deleted, user_menu } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+    const { sectors, onGetSectors, deleted, user_menu, i18n } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
@@ -83,7 +84,20 @@ class SectorsList extends Component {
     onGetSectors();
     this.setState({ sectors });
     this.setState({ deleted });
+    this.setState({ languageState: lang });
+
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { onGetSectors } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    this.setState({ languageState: lng });
+    // onGetSectors(lng);
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -145,6 +159,13 @@ class SectorsList extends Component {
       deleteModal: !prevState.deleteModal,
     }));
   };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
@@ -240,8 +261,7 @@ class SectorsList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
-      currentPage,
-      sizePerPage,
+      languageState,
     } = this.state;
     const alertMessage =
       deleted == 0 ? t("Can't Delete") : t("Deleted Successfully");
@@ -252,6 +272,8 @@ class SectorsList extends Component {
         order: "desc",
       },
     ];
+
+    const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const pageOptions = {
       sizePerPage: 10,
@@ -320,7 +342,7 @@ class SectorsList extends Component {
             this.setState({ deleteModal: false, selectedRowId: null })
           }
         />
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={this.props.t("Sectors List")} />
 

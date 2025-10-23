@@ -168,6 +168,7 @@ class NewTrainee extends Component {
       lastUsedExperienceId: 0,
       profExperiencesArray: [],
       photo: null,
+      languageState: "",
     };
     this.toggle = this.toggle.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
@@ -178,7 +179,6 @@ class NewTrainee extends Component {
 
   componentDidMount() {
     const lang = localStorage.getItem("I18N_LANGUAGE");
-
     const {
       trnProfExperiences,
       last_created_trainee,
@@ -280,6 +280,12 @@ class NewTrainee extends Component {
   collapse = () => {
     this.setState(prevState => ({
       isOpen: !prevState.isOpen,
+    }));
+  };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
     }));
   };
 
@@ -441,12 +447,7 @@ class NewTrainee extends Component {
         selectedRegistrationDate,
         selectedGender,
         selectedSocialStatus,
-        relativesArray,
         averageValue,
-        stdDocsArray,
-        siblingsArray,
-        trnProfExperiences,
-        selectedDiplomaId,
       } = this.state;
 
       const { onUpdateTempTrainee, onAddNewTempTrainee, tempTrainee } =
@@ -762,40 +763,6 @@ class NewTrainee extends Component {
     this.setState({ errorMessage1: null, showAlert: null });
   };
 
-  // handleSelectNationalityDetails = (rowId, fieldName, selectedValue) => {
-  //   const { onUpdateRegReqDocument } = this.props;
-  //   const { regReqDocuments } = this.state;
-
-  //   const isValueExists = regReqDocuments.some(
-  //     row => row.documentTypeId === selectedValue
-  //   );
-
-  //   this.setState({
-  //     selectedParentNationality: selectedValue,
-  //   });
-
-  //   let onUpdate = { Id: rowId, [fieldName]: selectedValue };
-  //   onUpdateRegReqDocument(onUpdate);
-  // };
-
-  // handleParentsDataChange = (id, fieldName, newValue) => {
-  //   this.setState(prevState => {
-  //     const updatedRelatives = prevState.relativesArray.map(relative => {
-  //       if (relative.Id === id) {
-  //         return {
-  //           ...relative,
-  //           [fieldName]: newValue,
-  //         };
-  //       }
-  //       return relative;
-  //     });
-
-  //     return {
-  //       relativesArray: updatedRelatives,
-  //     };
-  //   });
-  // };
-
   handelAddExperience = () => {
     const { onAddNewProfessionalExperience, lastAddedId, trnProfExperiences } =
       this.props;
@@ -871,64 +838,6 @@ class NewTrainee extends Component {
       };
     });
   };
-
-  // handleAddRowRelative = () => {
-  //   const { relativesArray, lastUsedId } = this.state;
-  //   const emptyRowsExist = relativesArray.some(
-  //     relative => relative.arName.trim() === ""
-  //   );
-  //   if (emptyRowsExist) {
-  //     const errorMessage = this.props.t("Fill in the empty row");
-  //     this.setState({ duplicateErrorRelative: errorMessage });
-  //   } else {
-  //     const newRelative = {
-  //       Id: lastUsedId,
-  //       arName: "",
-  //       enName: "",
-  //       relativeId: null,
-  //       nationalityId: null,
-  //       phone: "",
-  //       cellular: "",
-  //     };
-  //     this.setState({
-  //       relativesArray: [...relativesArray, newRelative],
-  //       lastUsedId: lastUsedId + 1,
-  //     });
-  //     this.setState({ duplicateErrorRelative: null });
-  //   }
-  // };
-
-  // handleSelectChangeDetails = (rowId, fieldName, selectedValue) => {
-  //   this.setState(prevState => {
-  //     const updatedRelatives = prevState.relativesArray.map(relative => {
-  //       if (relative.Id === rowId) {
-  //         return {
-  //           ...relative,
-  //           [fieldName]: selectedValue,
-  //         };
-  //       }
-  //       return relative;
-  //     });
-
-  //     return {
-  //       relativesArray: updatedRelatives,
-  //     };
-  //   });
-  // };
-  // deleteRelative = relative => {
-  //   this.setState(prevState => {
-  //     const updatedRelatives = prevState.relativesArray.filter(
-  //       item => item.Id !== relative.Id
-  //     );
-
-  //     return {
-  //       relativesArray: updatedRelatives,
-  //     };
-  //   });
-  // };
-  // handleAlertCloseRelative = () => {
-  //   this.setState({ duplicateErrorRelative: null });
-  // };
 
   handleDiplomaSelect = (event, fieldName, setFieldValue, values) => {
     const { diplomalevels } = this.props;
@@ -1058,15 +967,6 @@ class NewTrainee extends Component {
     }
   };
 
-  // handleHasBrotherChange = event => {
-  //   const { name, checked } = event.target;
-  //   const value = checked ? 1 : 0;
-  //   this.setState({
-  //     HasBrotherCheck: value,
-  //     showSiblingsSelect: checked,
-  //   });
-  // };
-
   handleSelectChange = (fieldName, selectedValue, values) => {
     const { nationalities } = this.props;
     console.log("values before setState", values);
@@ -1097,84 +997,6 @@ class NewTrainee extends Component {
       });
     }
   };
-
-  // handleAddRowSiblings = () => {
-  //   const { siblingsArray, lastUsedId } = this.state;
-  //   const emptyRowsExist = siblingsArray.some(
-  //     sibling => sibling.brotherSID.trim() === ""
-  //   );
-  //   if (emptyRowsExist) {
-  //     const errorMessage = this.props.t("Fill in the empty row");
-  //     this.setState({ duplicateErrorSibling: errorMessage });
-  //   } else {
-  //     const newSibling = {
-  //       Id: lastUsedId,
-  //       brotherSID: null,
-  //     };
-  //     this.setState({
-  //       siblingsArray: [...siblingsArray, newSibling],
-  //       lastUsedId: lastUsedId + 1,
-  //     });
-  //     this.setState({ duplicateErrorSibling: null });
-  //   }
-  // };
-
-  // handleDeleteSibling = sibling => {
-  //   this.setState(prevState => {
-  //     const updatedSiblings = prevState.siblingsArray.filter(
-  //       item => item.Id !== sibling.Id
-  //     );
-
-  //     return {
-  //       siblingsArray: updatedSiblings,
-  //     };
-  //   });
-  // };
-
-  // handleSelectBrother = (rowId, fieldName, selectedValue, oldValue) => {
-  //   const { studentsOpt, onUpdateBrother } = this.props;
-  //   const { siblingsArray } = this.state;
-
-  //   const selectBro = studentsOpt.find(
-  //     studentOpt => studentOpt.value + " " + studentOpt.key == oldValue
-  //   );
-  //   this.setState({ oldBrother: selectBro });
-
-  //   const brotherObj = studentsOpt.find(
-  //     studentOpt => studentOpt.value + " " + studentOpt.key === selectedValue
-  //   );
-
-  //   if (brotherObj) {
-  //     this.setState({ oldBrother: {} });
-  //     const isDuplicate = siblingsArray.some(
-  //       studentBrother =>
-  //         studentBrother.Id !== rowId &&
-  //         studentBrother.brotherSID === brotherObj.key
-  //     );
-  //     if (isDuplicate) {
-  //       const errorMessage = this.props.t("Sibling already exists");
-  //       this.setState({ duplicateErrorSibling: errorMessage });
-  //       console.error("value exist");
-  //     } else {
-  //       this.setState({ duplicateErrorSibling: null });
-  //       this.setState(prevState => {
-  //         const updatedSiblings = prevState.siblingsArray.map(sibling => {
-  //           if (sibling.Id === rowId) {
-  //             return {
-  //               ...sibling,
-  //               [fieldName]: brotherObj.key,
-  //             };
-  //           }
-  //           return sibling;
-  //         });
-
-  //         return {
-  //           siblingsArray: updatedSiblings,
-  //         };
-  //       });
-  //     }
-  //   }
-  // };
 
   handleAlertClose = () => {
     this.setState({ duplicateErrorProfExperiences: null });
@@ -1301,8 +1123,6 @@ class NewTrainee extends Component {
 
     const {
       profExperiencesArray,
-      duplicateError,
-      duplicateErrorRelative,
       diplomaIdError,
       duplicateErrorProfExperiences,
       selectedRegistrationDate,
@@ -1318,20 +1138,12 @@ class NewTrainee extends Component {
       selectedDiplomaDate,
       selectedDiplomaVerificationDate,
       selectedNationalityId,
-      nationalityName,
-      genderName,
       selectedFacultyId,
-      selectedStudyPlanId,
-      facultyName,
-      studyPlanName,
       selectedCountry,
       selectedUnivCountry,
-      selectedCity,
-      selectedSemester,
       selectedGovernorate,
       selectedSocialStatus,
       selectedGender,
-      emptyTempTrainee,
       firstNameError,
       lastNameError,
       fatherNameError,
@@ -1344,22 +1156,10 @@ class NewTrainee extends Component {
       facultyError,
       errorMessage,
       successMessage,
-      averageValue,
       HasBrotherCheck,
       diplomaError,
-      averageError,
-      IsSpecial,
-      showSiblingsSelect,
-      stdTotalGradeError,
-      diplomaNumberError,
-      relativesArray,
-      studentGrade,
-      totalGradeValue,
       showGenerateButton,
-      attestatedValue,
-      duplicateErrorSibling,
       stdDocsArray,
-      siblingsArray,
       gradeError,
       selectedInstituteCountry,
       selectedHightStudyTypeId,
@@ -1371,12 +1171,6 @@ class NewTrainee extends Component {
       plan_studyError,
       showAlert,
     } = this.state;
-    const gradeOptions = [
-      { value: 1, label: "Good" },
-      { value: 2, label: "Very Good" },
-      { value: 3, label: "Excellent" },
-      { value: 4, label: "Fair" },
-    ];
 
     const showNewInput = selectedregistrationCertLevelId === 1;
 
@@ -1392,34 +1186,26 @@ class NewTrainee extends Component {
 
     const {
       lastAddedId,
-      trnProfExperiences,
       tempTrainees,
       socialStatus,
       tempTrainee,
-      tempTraineesDocuments,
       nationalities,
       faculties,
       countries,
-      currentSemester,
       cities,
       deleted,
       diplomalevels,
       governorates,
       genders,
-      admissionConditions,
-      academiccertificates,
-      filteredAcademicCertificates,
-      onGetFilteredAcademicCertificates,
-      getFilteredFaculties,
-      generated_student,
       t,
-      relatives,
       regcertificates,
       highstudytypes,
       estimates,
     } = this.props;
 
     const { isEdit, deleteModal, generateModal } = this.state;
+
+    const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const trainee = this.state.trainee;
     console.log("std", stdDocsArray);
@@ -1640,7 +1426,7 @@ class NewTrainee extends Component {
 
     return (
       <React.Fragment>
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <Container fluid>
             {/* Render Breadcrumbs */}
             <Breadcrumbs

@@ -257,6 +257,12 @@ class CourseCatalogeList extends Component {
     }));
   };
 
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   toggle = () => {
     this.setState(prevState => ({
       modal: !prevState.modal,
@@ -755,6 +761,9 @@ class CourseCatalogeList extends Component {
       NeedLabError,
     } = this.state;
     const { SearchBar } = Search;
+
+    const direction = languageState === "ar" ? "rtl" : "ltr";
+
     const alertMessage =
       deleted == 0
         ? this.props.t("Can't Delete")
@@ -990,7 +999,7 @@ class CourseCatalogeList extends Component {
             this.setState({ deleteModal: false, selectedRowId: null })
           }
         />
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={this.props.t("Course Catalog")} />
             <Row>

@@ -64,12 +64,19 @@ class CertificateTypesList extends Component {
       deleteModal: false,
       duplicateError: null,
       selectedRowId: null,
+      languageState: "",
     };
   }
 
   componentDidMount() {
-    const { certificateTypes, onGetCertificateTypes, deleted, user_menu } =
-      this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+    const {
+      certificateTypes,
+      i18n,
+      onGetCertificateTypes,
+      deleted,
+      user_menu,
+    } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
@@ -79,7 +86,20 @@ class CertificateTypesList extends Component {
     //  }
     onGetCertificateTypes();
     this.setState({ certificateTypes, deleted });
+    this.setState({ languageState: lang });
+
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { onGetCertificateTypes } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    this.setState({ languageState: lng });
+    // onGetCertificateTypes(lng);
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { certificateTypes } = this.props;
@@ -142,6 +162,13 @@ class CertificateTypesList extends Component {
       deleteModal: !prevState.deleteModal,
     }));
   };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
@@ -246,7 +273,11 @@ class CertificateTypesList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      languageState,
     } = this.state;
+
+    const direction = languageState === "ar" ? "rtl" : "ltr";
+
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -327,7 +358,7 @@ class CertificateTypesList extends Component {
             this.setState({ deleteModal: false, selectedRowId: null })
           }
         />
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
               breadcrumbItem={this.props.t("CertificateTypes List")}

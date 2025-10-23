@@ -388,13 +388,13 @@ class TraineesList extends Component {
     console.log(this.state.currentYearObj, "gggg");
   }
   handleLanguageChange = lng => {
-    const { onGetTrainees } = this.props;
-    const lang = localStorage.getItem("I18N_LANGUAGE");
+    // const { onGetTrainees } = this.props;
+    // const lang = localStorage.getItem("I18N_LANGUAGE");
 
-    if (lang != lng) {
-      this.setState({ languageState: lng });
-      onGetTrainees(lng);
-    }
+    // if (lang != lng) {
+    this.setState({ languageState: lng });
+    // onGetTrainees(lng);
+    // }
   };
 
   componentDidUpdate(prevProps) {
@@ -416,6 +416,12 @@ class TraineesList extends Component {
       );
     }
   }
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
 
   handleButtonFileClick = (cellContent, Row) => {
     if (this.fileInputRef.current) {
@@ -1778,15 +1784,10 @@ class TraineesList extends Component {
       duplicateErrorProfExperiences,
       selectedRegistrationDate,
       selectedRegistrationCertLevelId,
-      selectedStudyPattern,
       selectedExaminationSession,
       selectedBirthDate,
       selectedRegistrationDiplomaDate,
-      selectedIdentityIssueDate,
-      selectedPassportIssueDate,
-      selectedPassportExpiryDate,
       selectedDiploma,
-      selectedDiplomaDate,
       selectedDiplomaVerificationDate,
       selectedNationalityId,
       showRegistrationForm,
@@ -1794,8 +1795,6 @@ class TraineesList extends Component {
       showDocuments,
       showTraineeFile,
       showTranscriptNoHide,
-      showReportsLi,
-      showTraineeLifeLi,
       languageState,
       duplicateError,
       errorMessage,
@@ -1870,19 +1869,11 @@ class TraineesList extends Component {
       showAcademyCouncilDate,
       showAcademyCouncilNo,
       showAlert,
-      showAddButton,
-      showDeleteButton,
-      showSearchButton,
       selectedFacultyId,
-      selectedStudyPlanId,
       facultyName,
-      studyPlanName,
       selectedCountry,
       selectedUnivCountry,
-      selectedCity,
-      selectedSemester,
       selectedGovernorate,
-      selectedSocialStatus,
       selectedGender,
       emptyTrainee,
       firstNameError,
@@ -1896,26 +1887,21 @@ class TraineesList extends Component {
       genderError,
       facultyError,
       HasBrotherCheck,
-      showGenerateButton,
-      attestatedValue,
-      duplicateErrorSibling,
       stdDocsArray,
       gradeError,
       selectedInstituteCountry,
       selectedHightStudyTypeId,
       selectedEstimateId,
-      selectedRegUniDate,
       nationalNoError,
       identityNoError,
       plan_studyError,
-      examinationSessionError,
-      averageError,
       errorMessage1,
       successMessage1,
       diplomaIdError,
-      modal1,
       isOpen,
     } = this.state;
+
+    const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const showNewInput =
       selectedRegistrationCertLevelId === 1 ||
@@ -3077,13 +3063,13 @@ class TraineesList extends Component {
     };
 
     return (
-      <React.Fragment>
-        <DeleteModal
-          show={deleteModal}
-          onDeleteClick={this.handleDeleteRow}
-          onCloseClick={() => this.setState({ deleteModal: false })}
-        />
-        <div className="page-content">
+      <div dir={direction} className="page-content">
+        <React.Fragment>
+          <DeleteModal
+            show={deleteModal}
+            onDeleteClick={this.handleDeleteRow}
+            onCloseClick={() => this.setState({ deleteModal: false })}
+          />
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={t("Academy Trainees")} />
 
@@ -9477,8 +9463,8 @@ class TraineesList extends Component {
               )}
             </Row>
           </div>
-        </div>
-      </React.Fragment>
+        </React.Fragment>
+      </div>
     );
   }
 }

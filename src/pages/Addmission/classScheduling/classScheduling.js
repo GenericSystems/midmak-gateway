@@ -254,16 +254,16 @@ class ClassSchedulingList extends Component {
 
     console.log(this.state.currentYearObj, "gggg");
   }
-  //mays
-  // handleLanguageChange = lng => {
-  //   const { onGetCoursesOffering } = this.props;
-  //   const lang = localStorage.getItem("I18N_LANGUAGE");
+  mays;
+  handleLanguageChange = lng => {
+    // const { onGetCoursesOffering } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
 
-  //   if (lang != lng) {
-  //     onGetCoursesOffering(lng);
-  //     this.setState({ languageState: lng });
-  //   }
-  // };
+    // if (lang != lng) {
+    // onGetCoursesOffering(lng);
+    this.setState({ languageState: lng });
+    // }
+  };
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       this.props.user_menu !== prevProps.user_menu ||
@@ -343,6 +343,12 @@ class ClassSchedulingList extends Component {
   toggleDeleteModal2 = () => {
     this.setState(prevState => ({
       deleteModal2: !prevState.deleteModal2,
+    }));
+  };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
     }));
   };
 
@@ -1277,7 +1283,8 @@ class ClassSchedulingList extends Component {
       isScheduleEditable,
       instructorsArray,
     } = this.state;
-    console.log("sectionLabDatasectionLabData", sectionLabData);
+
+    const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const defaultStartDate = sectionLabData?.startDate
       ? moment.utc(sectionLabData.startDate).local().format("YYYY-MM-DD")
@@ -1672,7 +1679,7 @@ class ClassSchedulingList extends Component {
     };
     return (
       <React.Fragment>
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={this.props.t("Class Scheduling")} />
             <div className="checkout-tabs">
