@@ -172,6 +172,9 @@ import coursecontents from "./coursecontents/reducer";
 //Course Types
 import courseTypes from "./coursetypes/reducer";
 
+//Mismatched Grade
+import mismatchedGrades from "./mismatchedGrades/reducer";
+
 //GrantSponsors
 import grantSponsors from "./grantSponsors/reducer";
 
@@ -445,6 +448,7 @@ const rootReducer = combineReducers({
   estimates,
   coursecontents,
   courseTypes,
+  mismatchedGrades,
   levels,
   departments,
   schedules,

@@ -59,6 +59,7 @@ import coursesSaga from "./courses/saga";
 import estimatesSaga from "./estimates/saga";
 import courseContentsSaga from "./coursecontents/saga";
 import courseTypesSaga from "./coursetypes/saga";
+import MismatchedGradesSaga from "./mismatchedGrades/saga";
 import levelsSaga from "./levels/saga";
 import departmentsSaga from "./departments/saga";
 import schedulesSaga from "./schedules/saga";
@@ -208,6 +209,7 @@ export default function* rootSaga() {
     fork(hiddenGradesSaga),
     fork(courseContentsSaga),
     fork(courseTypesSaga),
+    fork(MismatchedGradesSaga),
     fork(levelsSaga),
     fork(departmentsSaga),
     fork(schedulesSaga),

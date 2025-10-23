@@ -588,11 +588,18 @@ export const UPDATE_COURSE_CONTENT = "/update/courseContent";
 export const DELETE_COURSE_CONTENT = "/delete/courseContent";
 
 //course Types
-export const GET_COURSETYPES = "/coursecontents";
+export const GET_COURSETYPES = "/courseTypes";
 export const GET_COURSETYPE_DELETED_VALUE = "/courseType";
 export const ADD_NEW_COURSETYPE = "/add/courseType";
 export const UPDATE_COURSETYPE = "/update/courseType";
 export const DELETE_COURSETYPE = "/delete/courseType";
+
+//course Types
+export const GET_MISMATCHED_GRADES = "/mismatchedGrades";
+export const GET_MISMATCHED_GRADE_DELETED_VALUE = "/mismatchedGrade";
+export const ADD_NEW_MISMATCHED_GRADE = "/add/mismatchedGrade";
+export const UPDATE_MISMATCHED_GRADE = "/update/mismatchedGrade";
+export const DELETE_MISMATCHED_GRADE = "/delete/mismatchedGrade";
 
 //UNIVERSITYREQUIREMENTS
 export const GET_UNIVERSITYREQUIREMENTS = "/universityrequirements";

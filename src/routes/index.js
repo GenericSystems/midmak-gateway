@@ -261,10 +261,13 @@ import WorkClassificationsList from "../pages/HR/workClassifications/workClassif
 //CoursesPassPercentsList
 import CoursesPassPercentsList from "../pages/ExamReports/CoursesPassPercents/coursesPassPercents";
 
+//mismatchedGrades
+import MismatchedGradesList from "../pages/ExamReports/MismatchedGrades/mismatchedGrades";
+
 //Employees
 import EmployeesList from "../pages/HR/employees/employees";
 
-//cERTIFICATELEVELS
+//CertificateTypes
 import CertificateTypesList from "../pages/CertificatesTypes/certificates-types";
 
 import TrainingMembersList from "../pages/TrainingMembers/training-members";
@@ -416,7 +419,7 @@ const authProtectedRoutes = [
 
   // TraineesReport
 
-  { path: "/traineesGradeDetailsReport", component: TraineesReportList },
+  { path: "/gradeDetailsReport", component: TraineesReportList },
 
   // gradesVersions
 
@@ -517,9 +520,12 @@ const authProtectedRoutes = [
   // employees
 
   { path: "/employees", component: EmployeesList },
-  // CoursesPassPercentsList
 
+  // CoursesPassPercentsList
   { path: "/coursesPassPercents", component: CoursesPassPercentsList },
+
+  // MismatchedGradesList
+  { path: "/mismatchedGrades", component: MismatchedGradesList },
 
   // Grades
   { path: "/certificateGrades", component: CertificateGradesList },

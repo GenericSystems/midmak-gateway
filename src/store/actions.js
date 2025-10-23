@@ -205,6 +205,9 @@ export * from "./coursecontents/actions";
 //CourseType
 export * from "./coursetypes/actions";
 
+//Mismatched Grade
+export * from "./mismatchedGrades/actions";
+
 //Level
 export * from "./levels/actions";
 

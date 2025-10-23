@@ -1442,6 +1442,26 @@ export const updateCourseType = data => post(url.UPDATE_COURSETYPE, data);
 //delete CourseType
 export const deleteCourseType = data => post(url.DELETE_COURSETYPE, data);
 
+// get MismatchedGrade
+export const getMismatchedGrades = data =>
+  post(url.GET_MISMATCHED_GRADES, data);
+
+//get MismatchedGrade profile
+export const getMismatchedGradeDeletedValue = () =>
+  get(url.GET_MISMATCHED_GRADE_DELETED_VALUE);
+
+// add MismatchedGrade
+export const addNewMismatchedGrade = data =>
+  post(url.ADD_NEW_MISMATCHED_GRADE, data);
+
+//update MismatchedGrade
+export const updateMismatchedGrade = data =>
+  post(url.UPDATE_MISMATCHED_GRADE, data);
+
+//delete MismatchedGrade
+export const deleteMismatchedGrade = data =>
+  post(url.DELETE_MISMATCHED_GRADE, data);
+
 // get Level
 export const getLevels = data => post(url.GET_LEVELS, data);
 
