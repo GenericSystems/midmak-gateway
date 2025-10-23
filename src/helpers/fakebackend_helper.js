@@ -2369,6 +2369,27 @@ export const updateTraineeDeserveDismiss = data =>
 export const deleteTraineeDeserveDismiss = data =>
   post(url.DELETE_TRAINEE_DESERVE_DISMISS, data);
 
+//TraineeDeserveDeprivation
+export const getTraineesDeservesDeprivation = data =>
+  post(url.GET_TRAINEES_DESERVES_DEPRIVATION, data);
+
+// add TraineeDeserveDeprivation
+
+export const addNewTraineeDeserveDeprivation = data =>
+  post(url.ADD_NEW_TRAINEE_DESERVE_DEPRIVATION, data);
+
+//TRAINEE_DESERVE_DEPRIVATION
+export const getTraineeDeserveDeprivationDeletedValue = () =>
+  get(url.GET_TRAINEE_DESERVE_DEPRIVATION_DELETED_VALUE);
+
+//update TraineeDeserveDeprivations
+export const updateTraineeDeserveDeprivation = data =>
+  post(url.UPDATE_TRAINEE_DESERVE_DEPRIVATION, data);
+
+//delete TraineeDeserveDeprivations
+export const deleteTraineeDeserveDeprivation = data =>
+  post(url.DELETE_TRAINEE_DESERVE_DEPRIVATION, data);
+
 //JustifyTraineeAbsence
 
 export const getJustifyTraineesAbsence = data =>

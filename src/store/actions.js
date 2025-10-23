@@ -322,6 +322,10 @@ export * from "./traineesDeservesWarnings/actions";
 
 export * from "./traineesDeservesDismiss/actions";
 
+//traineesDeserveDeprivation
+
+export * from "./traineesDeservesDeprivation/actions";
+
 //ExamAttendance
 
 export * from "./examAttendance/actions";

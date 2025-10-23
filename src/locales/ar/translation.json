@@ -354,7 +354,7 @@
   "Edit Floor": "تعديل الطابق",
   "Edit Hall": "تعديل القاعة",
   "Trainee Name": "اسم المتدرب",
-  "Course Name": "اسم الدورة",
+  "Course Name": "اسم المسار التدريبي",
   "Archive Detailes": "التفاصيل",
   "Operation Needed": "العملية المطلوبة",
   "Applyning Date": "تاريخ التقديم",
@@ -869,5 +869,9 @@
   "Must Dismissed Only": "الواجب فصلهم فقط",
   "Dismissed Only": "المفصولون فقط",
   "Mismatched Grades": "العلامات غير المتطابقة",
+  "No Mismatched Grades found": "لا يوجد علامات غير متطابقة",
+  "Trainees Deserves Deprivation": "الطلاب الواجب حرمانهم",
+  "Min Percent": "النسبة المطلوبة للتأهل",
+  "Trainee Result": "نتيجة المتدرب",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

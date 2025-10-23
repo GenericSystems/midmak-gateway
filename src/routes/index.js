@@ -240,6 +240,9 @@ import TraineesDeservesWarningsList from "../pages/TraineeAttendence/TraineesDes
 //trainees Deserves Dismiss
 import TraineesDeservesDismissList from "../pages/TraineeAttendence/TraineesDeservesDismiss/traineesDeservesDismiss";
 
+//Trainees Deserve Deprivation
+import TraineesDeservesDeprivationList from "../pages/TraineeAttendence/TraineesDeservesDeprivation/traineesDeservesDeprivation";
+
 //ExamsAttendance
 import ExamsAttendance from "../pages/Exam/ExamAttendance/examAttendance";
 
@@ -458,6 +461,13 @@ const authProtectedRoutes = [
   // Trainees Deserves Dismiss
 
   { path: "/traineesDeservesDismiss", component: TraineesDeservesDismissList },
+
+  // Trainees Deserves Deprivation
+
+  {
+    path: "/traineesDeservesDeprivation",
+    component: TraineesDeservesDeprivationList,
+  },
 
   // ExamsAttendance
 

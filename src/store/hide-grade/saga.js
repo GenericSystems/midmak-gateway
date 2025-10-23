@@ -88,6 +88,7 @@ function* onAddNewHiddenGrade({ payload, hiddenGrade }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_HiddenGrades ";
+  payload["queryname"] = "_Common_HiddenGrades";
   try {
     const response = yield call(addNewHiddenGrade, payload);
     console.log("payload", payload);
@@ -122,6 +123,8 @@ function* onUpdatehiddenGrade({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_HiddenGrades";
+  payload["queryname"] = "_Common_HiddenGrades";
+
   try {
     const respupdate = yield call(updateHiddenGrade, payload);
     console.log("999999999999999", respupdate);

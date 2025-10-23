@@ -1156,6 +1156,16 @@ export const ADD_NEW_TRAINEE_DESERVE_DISMISS = "/add/TraineeDeserveDismiss";
 export const UPDATE_TRAINEE_DESERVE_DISMISS = "/update/TraineeDeserveDismiss";
 export const DELETE_TRAINEE_DESERVE_DISMISS = "/deleted/TraineeDeserveDismiss";
 
+//TRAINEE_DESERVE_DEPRIVATION
+export const GET_TRAINEES_DESERVES_DEPRIVATION = "/traineesDeservesDeprivation";
+export const GET_TRAINEE_DESERVE_DEPRIVATION_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TRAINEE_DESERVE_DEPRIVATION =
+  "/add/TraineeDeserveDeprivation";
+export const UPDATE_TRAINEE_DESERVE_DEPRIVATION =
+  "/update/TraineeDeserveDeprivation";
+export const DELETE_TRAINEE_DESERVE_DEPRIVATION =
+  "/deleted/TraineeDeserveDeprivation";
+
 //JustifyTraineeAbsence
 export const GET_JUSTIFY_TRAINEES_ABSENCE = "/justifyTraineesAbsence";
 export const GET_JUSTIFY_TRAINEE_ABSENCE_DELETED_VALUE = "/deleted";
