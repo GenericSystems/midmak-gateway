@@ -60,7 +60,6 @@ import {
   addNewProfessionalExperience,
   deleteProfessionalExperience,
   addRequiredDocs,
-  uploadFile,
 } from "store/new-Trainee/actions";
 import { isEmpty, size, map, values } from "lodash";
 

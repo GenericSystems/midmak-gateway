@@ -42,7 +42,6 @@ import {
   deleteJustifyTraineeAbsence,
   getJustifyTraineeAbsenceDeletedValue,
 } from "store/justifyTraineeAbsence/actions";
-import { uploadFile } from "store/new-Trainee/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -316,22 +315,6 @@ class JustifyTraineesAbsenceList extends Component {
 
   handleToggleChange = (field, value) => {
     this.setState({ [field]: value });
-  };
-
-  handleFileChange = event => {
-    const { onUploadFile } = this.props;
-    const file = event.target.files[0];
-    onUploadFile(file);
-
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        this.setState({ filePreview: reader.result });
-      };
-      reader.readAsDataURL(file);
-    } else {
-      this.setState({ filePreview: file.name });
-    }
   };
 
   handleSave = values => {
@@ -1297,7 +1280,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteJustifyTraineeAbsence(justifyTraineeAbsence)),
   onGetJustifyTraineeAbsenceDeletedValue: () =>
     dispatch(getJustifyTraineeAbsenceDeletedValue()),
-  onUploadFile: fileData => dispatch(uploadFile(fileData)),
 });
 
 export default connect(

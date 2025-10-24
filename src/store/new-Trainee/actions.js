@@ -44,9 +44,6 @@ import {
   GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS,
   GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_SUCCESS,
   GET_TEMP_TRAINEE_DEFAULT_REGREQDOCS_FAIL,
-  UPLOAD_FILE,
-  UPLOAD_FILE_FAIL,
-  UPLOAD_FILE_SUCCESS,
 } from "./actionTypes";
 
 export const getTempTrainees = tempTrainees => ({
@@ -200,7 +197,6 @@ export const addRequiredDocs = tempTrainee => ({
   payload: tempTrainee,
 });
 
-
 export const addRequiredDocsSuccess = tempTrainee => ({
   type: ADD_REQUIRED_DOCS_SUCCESS,
   payload: tempTrainee,
@@ -239,21 +235,6 @@ export const generateTempTraineeSuccess = tempTrainee => ({
 export const generateTempTraineeFail = error => ({
   type: GENERATE_TEMP_TRAINEE_FAIL,
   payload: error,
-});
-
-export const uploadFile = fileData => ({
-  type: UPLOAD_FILE,
-  payload: fileData,
-});
-
-export const uploadFileFail = error => ({
-  type: UPLOAD_FILE_FAIL,
-  payload: error,
-});
-
-export const uploadFileSuccess = fileData => ({
-  type: UPLOAD_FILE_SUCCESS,
-  payload: fileData,
 });
 
 export const getTempTraieeStatus = tempTraineeStatus => ({
