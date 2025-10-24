@@ -629,28 +629,28 @@ class NewTrainee extends Component {
     photoURL: "https://picsum.photos/300/200", // Default photo URL
   };
 
-  handlePhotoChange = event => {
-    const { onUploadFile } = this.props;
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    const fileData = {
-      file: file,
-      id: 0,
-      table: "Trainee",
-      field: "photo",
-      index: 0,
-    };
-    onUploadFile(fileData);
-    reader.onloadend = () => {
-      this.setState({
-        photoURL: reader.result,
-      });
-    };
+  // handlePhotoChange = event => {
+  //   const { onUploadFile } = this.props;
+  //   const file = event.target.files[0];
+  //   const reader = new FileReader();
+  //   const fileData = {
+  //     file: file,
+  //     id: 0,
+  //     table: "Trainee",
+  //     field: "photo",
+  //     index: 0,
+  //   };
+  //   onUploadFile(fileData);
+  //   reader.onloadend = () => {
+  //     this.setState({
+  //       photoURL: reader.result,
+  //     });
+  //   };
 
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
+  //   if (file) {
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   toggleTab(tab) {
     if (tab === 5 && !this.state.isTempTraineeSaved) {
@@ -5206,7 +5206,6 @@ const mapDispatchToProps = dispatch => ({
   onDeleteProfessionalExperience: profExperience =>
     dispatch(deleteProfessionalExperience(profExperience)),
   onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
-  onUploadFile: fileData => dispatch(uploadFile(fileData)),
 });
 
 export default connect(
