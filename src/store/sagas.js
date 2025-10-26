@@ -1,6 +1,7 @@
 import { all, fork } from "redux-saga/effects";
 
 //public
+import _CommonSaga from "./_common/saga";
 import AccountSaga from "./auth/register/saga";
 import AuthSaga from "./auth/login/saga";
 import ForgetSaga from "./auth/forgetpwd/saga";
@@ -181,6 +182,7 @@ export default function* rootSaga() {
     fork(CertificatesSaga),
     fork(CertificatelevelSaga),
     fork(traineesSaga),
+    fork(_CommonSaga),
     fork(regTraineesAttendanceSaga),
     fork(StudentManagementSaga),
     fork(nationalitiesSaga),

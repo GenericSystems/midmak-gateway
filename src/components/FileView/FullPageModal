@@ -1,0 +1,49 @@
+// components/FullPageModal.js
+import React, { Component } from 'react';
+
+class FullPageModal extends Component {
+  render() {
+    const { children, onClose } = this.props;
+
+    return (
+      <div style={styles.overlay}>
+        <div style={styles.content}>
+          <button type='button' onClick={onClose} style={styles.close}>×</button>
+          {children}
+        </div>
+      </div>
+    );
+  }
+}
+
+const styles = {
+  overlay: {
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    zIndex: 1000,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  content: {
+    background: '#fff',
+    width: '90%',
+    height: '90%',
+    borderRadius: '8px',
+    overflow: 'auto',
+    position: 'relative',
+    padding: '1rem',
+  },
+  close: {
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem',
+    fontSize: '1.5rem',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+  },
+};
+
+export default FullPageModal;

@@ -52,7 +52,8 @@ import paginationFactory, {
 
 import { withRouter, Link } from "react-router-dom";
 import DeleteModal from "components/Common/DeleteModal";
-
+import FilePage from "pages/FilePage";
+import FullPageModal from "components/FileView/FullPageModal";
 import { uploadFile } from "store/_common/actions";
 
 import {
@@ -80,6 +81,7 @@ import {
 
 let regReqDocId = 0;
 let TraineeId = 0;
+let fileId = "";
 class TraineesList extends Component {
   constructor(props) {
     super(props);
@@ -169,6 +171,8 @@ class TraineesList extends Component {
       showDecisionNote: false,
       modal: false,
       modal1: false,
+      showModal: false,
+      fileName: "",
       selectedMulti: null,
       selectedFromAdmSemes: "",
       selectedToAdmSemes: "",
@@ -294,6 +298,8 @@ class TraineesList extends Component {
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleColorChange = this.handleColorChange.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -358,7 +364,7 @@ class TraineesList extends Component {
       nationalities,
       regcertificates,
       diplomalevels,
-      traineeStatus,
+      traineeStatus
     });
     // }
 
@@ -385,8 +391,24 @@ class TraineesList extends Component {
     this.setState({ languageState: lang });
 
     i18n.on("languageChanged", this.handleLanguageChange);
-    console.log(this.state.currentYearObj, "gggg");
+   
   }
+
+  openModal = (event, fileName) => {
+    console.log("Opening modal",event, fileName);
+   this.setState({ showModal: true , fileName: fileName}, () => {
+      console.log('Updated:', this.state.showModal. this.state.fileName);
+      });
+
+  };
+
+  
+  closeModal = () => {
+      console.log("Closing modal");
+      this.setState({ showModal: false });
+  };
+
+
   handleLanguageChange = lng => {
     // const { onGetTrainees } = this.props;
     // const lang = localStorage.getItem("I18N_LANGUAGE");
@@ -517,6 +539,13 @@ class TraineesList extends Component {
   toggleDeleteModal = () => {
     this.setState(prevState => ({
       deleteModal: !prevState.deleteModal,
+    }));
+  };
+
+  handleShowFile = (values) => {
+    setFileId(values.fileId);
+     this.setState(prevState => ({
+      showViewer: !prevState.showViewer,
     }));
   };
 
@@ -1682,9 +1711,6 @@ class TraineesList extends Component {
       certificate => certificate.value === event.target.value
     );
     console.log(diplomaObject, "ollllllll");
-    // let obj = { certificateLevelId: diplomaObject.key };
-    // console.log("objobjobj", obj);
-    // onGetempTraineesDocuments(obj);
     setFieldValue("diplomaId", selectedValue);
 
     if (diplomaObject) {
@@ -1721,20 +1747,8 @@ class TraineesList extends Component {
       entityPropSeq: 0,
       entityProp_entity: "Common_RegReqDocTrainee",
     };
+    console.log("Calling with fileData", fileData);
     onUploadFile(fileData);
-    reader.onloadend = () => {
-      console.log("reader.result", reader.result);
-      /*
-      this.setState({
-        photoURL: reader.result,
-      });
-      */
-    };
-    /*
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-*/
   }
 
   render() {
@@ -1801,6 +1815,7 @@ class TraineesList extends Component {
       successMessage,
       sidebarOpen,
       deleteModal,
+      showViewer,
       isEdit,
       showTraineeStatus,
       showTempStatus,
@@ -1899,6 +1914,7 @@ class TraineesList extends Component {
       successMessage1,
       diplomaIdError,
       isOpen,
+      showModal,
     } = this.state;
 
     const direction = languageState === "ar" ? "rtl" : "ltr";
@@ -2132,25 +2148,26 @@ class TraineesList extends Component {
     const preReqColumns = [
       {
         dataField: "Id",
+        Id:1,
         text: this.props.t("#"),
         editable: false,
         hidden: true,
       },
       {
         dataField: "docName",
-
+        Id:2,
         text: this.props.t("Document Name"),
         editable: false,
       },
       {
         dataField: "requiredNumber",
-
+        Id:3,
         text: this.props.t("Required Number"),
         editable: false,
       },
       {
         dataField: "availableNumber",
-
+        Id:4,
         text: this.props.t("Available Number"),
         editor: {
           type: "number",
@@ -2167,7 +2184,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "preventAdmission",
-
+        Id:5,
         text: this.props.t("Prevent Admission"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2181,7 +2198,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "preventRegistration",
-
+        Id:6,
         text: this.props.t("Prevent Registration"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2197,7 +2214,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "preventGraduation",
-
+        Id:7,
         text: this.props.t("Prevent Graduation"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2213,7 +2230,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "requireAttestation",
-
+        Id:8,
         text: this.props.t("Require Attestation"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2229,7 +2246,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "attestated",
-
+        Id:9,
         text: this.props.t("Attestated"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2241,40 +2258,13 @@ class TraineesList extends Component {
           />
         ),
       },
+
       {
         dataField: "uploadFile",
-        id: 8,
+        id: 10,
         key: "file",
         text: this.props.t("Upload File"),
         editable: false,
-        //   formatter: (cellContent, row) => (
-        //     <div className="btn-group">
-        //       <label
-        //         htmlFor={`fileInput-${row.Id}`}
-        //         className="btn btn-sm btn-outline-secondary p-1 m-0"
-        //         style={{
-        //           cursor: "pointer",
-        //           display: "flex",
-        //           alignItems: "center",
-        //         }}
-        //       >
-        //         <i className="mdi mdi-upload me-1"></i>
-        //         {this.props.t("Upload")}
-        //       </label>
-        //       {this.fileInputRef != null}
-        //       <input
-        //         type="file"
-        //         id={`fileInput-${row.Id}`}
-        //         ref={this.fileInputRef}
-        //         style={{ display: "none" }}
-        //         onChange={event => {
-        //           this.handleFileChange(event, row);
-        //         }}
-        //         accept="image/*,.pdf"
-        //       />
-        //     </div>
-        //   ),
-        // },
         formatter: (cellContent, row) => (
           <div className="d-flex gap-2 upload-btn-container">
             <label
@@ -2292,13 +2282,12 @@ class TraineesList extends Component {
               onChange={event => this.handleFileChange(event, row)}
               accept="image/*,.pdf"
             />
-
             {(row.selectedFileName || row.fileName) && (
               <a
-                href={row.filePath || "#"}
-                target="_blank"
+                href={"#"}
                 rel="noopener noreferrer"
                 className="text-truncate"
+                onClick={event => {console.log('SelectedText',row.filePath, row.selectedFileName, row.fileName); this.fileName = row.fileName;this.openModal(event,row.filePath)}}
                 style={{ maxWidth: "150px", textDecoration: "underline" }}
               >
                 {row.selectedFileName || row.fileName}
@@ -3072,7 +3061,7 @@ class TraineesList extends Component {
           />
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={t("Academy Trainees")} />
-
+            
             <Row>
               {sidebarOpen && (
                 <Row>
@@ -9443,7 +9432,15 @@ class TraineesList extends Component {
                                                       </div>
                                                     )}
                                                   </Formik>
+                                                  
                                                 )}
+
+                                                {this.state.showModal && (
+                                                  <FullPageModal onClose={this.closeModal}>
+                                                    <FilePage fileId={this.state.fileName} onClose={this.closeModal} />
+                                                  </FullPageModal>
+                                                )}
+
                                               </div>
                                             </div>
                                           </ModalBody>
@@ -9458,10 +9455,12 @@ class TraineesList extends Component {
                         </div>
                       </CardBody>
                     </Card>
+                    
                   </Col>
                 </Row>
               )}
             </Row>
+            
           </div>
         </React.Fragment>
       </div>

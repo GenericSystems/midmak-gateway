@@ -76,7 +76,7 @@ export async function uploadFile(fileData){
       },
     });
     console.log(response.data)
-    return response.data.imageUrl; // Assuming your API returns the URL of the uploaded image
+    return response.data;
   } catch (error) {
     console.error('Error uploading image:', error);
     throw error; // Re-throw the error to be handled by the calling component
