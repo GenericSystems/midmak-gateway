@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import classnames from "classnames";
+import { fetchFile } from '../../../store/_common/actions'; // adjust path
 
 import {
   Row,
@@ -394,12 +395,16 @@ class TraineesList extends Component {
    
   }
 
+  handleFetch(fileName) {
+    const { onFetchFile } = this.props;
+    console.log("Calling with fileData", fileName, onFetchFile);
+    onFetchFile(fileName);
+  }
+
+
   openModal = (event, fileName) => {
     console.log("Opening modal",event, fileName);
-   this.setState({ showModal: true , fileName: fileName}, () => {
-      console.log('Updated:', this.state.showModal. this.state.fileName);
-      });
-
+    this.handleFetch(fileName)
   };
 
   
@@ -9435,11 +9440,6 @@ class TraineesList extends Component {
                                                   
                                                 )}
 
-                                                {this.state.showModal && (
-                                                  <FullPageModal onClose={this.closeModal}>
-                                                    <FilePage fileId={this.state.fileName} onClose={this.closeModal} />
-                                                  </FullPageModal>
-                                                )}
 
                                               </div>
                                             </div>
@@ -9536,6 +9536,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteProfessionalExperience(profExperience)),
   onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
   onUploadFile: fileData => dispatch(uploadFile(fileData)),
+  onFetchFile: fileId => dispatch(fetchFile(fileId)),
+  
 });
 
 export default connect(

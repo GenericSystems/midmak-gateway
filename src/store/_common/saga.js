@@ -14,7 +14,7 @@ import {
   fetchFile,
 } from "./actions";
 
-import { uploadFile } from "helpers/api_helper";
+import { downloadFile, uploadFile } from "helpers/api_helper";
 
 // GEN
 function* onUploadFile({ payload }) {
@@ -36,14 +36,8 @@ function* onUploadFile({ payload }) {
 function* fetchFileSaga(action) {
   console.log(`Fetching file with ID: ${action.payload}`);
   try {
-    const response = yield call(axios.get, `https://yourserver.com/files/${action.payload}`, {
-      responseType: 'blob',
-      headers: {
-        Authorization: `Bearer YOUR_TOKEN`,
-      },
-    });
-
-    const blob = response.data;
+    const response = yield call(downloadFile, action.payload);
+    const blob = response;
     const dataUrl = yield call(blobToDataURL, blob);
 
     yield put({ type: FETCH_FILE_SUCCESS, payload: { dataUrl, mimeType: blob.type } });

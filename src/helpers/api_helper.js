@@ -83,6 +83,27 @@ export async function uploadFile(fileData){
   }
 };
 
+export async function downloadFile(fileData){
+  try {
+    
+    const formData = new FormData();
+    formData.append('filePath', fileData);
+    console.log(`Downloading file from path: ${fileData}`);
+    const response = await axiosApi_2.post('/download', formData, { 
+      responseType: 'blob',
+      headers: {
+        Authorization: `Bearer YOUR_TOKEN`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error; // Re-throw the error to be handled by the calling component
+  }
+};
+
 export async function get(url, config = {}) {
   console.log(url);
   if (url == "/orders1") {
