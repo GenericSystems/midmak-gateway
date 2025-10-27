@@ -3,14 +3,18 @@ import { call, put, takeEvery } from "redux-saga/effects";
 // Redux States
 import {
   UPLOAD_FILE,
+  FETCH_FILE_REQUEST,
+  FETCH_FILE_SUCCESS,
+  FETCH_FILE_FAILURE,
 } from "./actionTypes";
 
 import {
   uploadFileSuccess,
   uploadFileFail,
+  fetchFile,
 } from "./actions";
 
-import { uploadFile } from "helpers/api_helper";
+import { downloadFile, uploadFile } from "helpers/api_helper";
 
 // GEN
 function* onUploadFile({ payload }) {
@@ -21,15 +25,39 @@ function* onUploadFile({ payload }) {
   
   try {
     const response = yield call(uploadFile, payload);
-    console.log("response", response);
+    console.log("response:", response);
     yield put(uploadFileSuccess(response[0]));
   } catch (error) {
     yield put(uploadFileFail(error));
   }
 }
 
+
+function* fetchFileSaga(action) {
+  console.log(`Fetching file with ID: ${action.payload}`);
+  try {
+    const response = yield call(downloadFile, action.payload);
+    const blob = response;
+    const dataUrl = yield call(blobToDataURL, blob);
+
+    yield put({ type: FETCH_FILE_SUCCESS, payload: { dataUrl, mimeType: blob.type } });
+  } catch (error) {
+    yield put({ type: FETCH_FILE_FAILURE, payload: error.message });
+  }
+}
+
+function blobToDataURL(blob) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
+
 function* _CommonSaga() {
   yield takeEvery(UPLOAD_FILE, onUploadFile);
+  yield takeEvery(FETCH_FILE_REQUEST, fetchFileSaga);
 }
 
 export default _CommonSaga;
