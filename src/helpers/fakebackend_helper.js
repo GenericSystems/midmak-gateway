@@ -2327,6 +2327,9 @@ export const deleteMarkObjection = data =>
 //request status
 export const getRequestStatus = data => post(url.GET_REQUEST_STATUS, data);
 
+//request Types
+export const getRequestTypes = data => post(url.GET_REQUEST_TYPES, data);
+
 //TraineeDeserveWarnings
 export const getTraineesDeservesWarnings = data =>
   post(url.GET_TRAINEES_DESERVES_WARNINGS, data);

@@ -122,7 +122,6 @@ class UnarchiveCourseReq extends Component {
       i18n,
       operationsNeeded,
       gradeTypes,
-      coursesOffering,
       unarchiveCourseRequests,
       decisionStatus,
       deleted,
@@ -142,7 +141,6 @@ class UnarchiveCourseReq extends Component {
     this.setState({
       unarchiveCourseRequests,
       traineesOpt,
-      coursesOffering,
       gradeTypes,
       operationsNeeded,
     });
@@ -290,8 +288,6 @@ class UnarchiveCourseReq extends Component {
       (values.courseId === "" && selectedCourse === "") ||
       (values.userNameId === "" && selectedUserName === "")
     ) {
-      this.setState({ firstNameError: true, saveError: true });
-
       if (values.startDate.trim() === "") {
         this.setState({ startDateError: true, saveError: true });
       }
@@ -508,7 +504,7 @@ class UnarchiveCourseReq extends Component {
         editable: false,
       },
       {
-        dataField: "traineeNum",
+        dataField: "TraineeNum",
         text: this.props.t("Trainee Num"),
         sort: true,
         editable: false,
@@ -521,13 +517,13 @@ class UnarchiveCourseReq extends Component {
       },
 
       {
-        dataField: "courseId",
+        dataField: "courseName",
         text: this.props.t("Course Name"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "code",
+        dataField: "Code",
         text: this.props.t("Course Code"),
         sort: true,
         editable: false,
@@ -560,7 +556,7 @@ class UnarchiveCourseReq extends Component {
         formatter: (cellContent, row) => this.handleValidDate(row.applyingDate),
       },
       {
-        dataField: "userNameId",
+        dataField: "userName",
         text: this.props.t("Applying User"),
         sort: true,
         editable: false,
@@ -730,6 +726,7 @@ class UnarchiveCourseReq extends Component {
                                   {...paginationTableProps}
                                   data={unarchiveCourseRequests}
                                   columns={columns}
+                                  bootstrap4
                                   cellEdit={cellEditFactory({
                                     mode: "click",
                                     blurToSave: true,

@@ -463,7 +463,7 @@ class HiddenGradesList extends Component {
       },
 
       {
-        dataField: "hideReasonId",
+        dataField: "hideReason",
         text: this.props.t("Hide Reason"),
         sort: true,
         editable: false,

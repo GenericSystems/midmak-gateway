@@ -18,15 +18,19 @@ import {
   GET_REQUEST_STATUS,
   GET_REQUEST_STATUS_FAIL,
   GET_REQUEST_STATUS_SUCCESS,
+  GET_REQUEST_TYPES,
+  GET_REQUEST_TYPES_FAIL,
+  GET_REQUEST_TYPES_SUCCESS,
 } from "./actionTypes";
+import marksObjections from "./reducer";
 
 export const getMarksObjections = () => ({
   type: GET_MARKS_OBJECTIONS,
 });
 
-export const getMarksObjectionsSuccess = contracts => ({
+export const getMarksObjectionsSuccess = marksObjection => ({
   type: GET_MARKS_OBJECTIONS_SUCCESS,
-  payload: contracts,
+  payload: marksObjection,
 });
 
 export const getMarksObjectionsFail = error => ({
@@ -99,12 +103,26 @@ export const getRequestStatus = () => ({
   type: GET_REQUEST_STATUS,
 });
 
-export const getRequestStatusSuccess = contracts => ({
+export const getRequestStatusSuccess = marksObjection => ({
   type: GET_REQUEST_STATUS_SUCCESS,
-  payload: contracts,
+  payload: marksObjection,
 });
 
 export const getRequestStatusFail = error => ({
   type: GET_REQUEST_STATUS_FAIL,
+  payload: error,
+});
+
+export const getRequestTypes = () => ({
+  type: GET_REQUEST_TYPES,
+});
+
+export const getRequestTypesSuccess = marksObjection => ({
+  type: GET_REQUEST_TYPES_SUCCESS,
+  payload: marksObjection,
+});
+
+export const getRequestTypesFail = error => ({
+  type: GET_REQUEST_TYPES_FAIL,
   payload: error,
 });

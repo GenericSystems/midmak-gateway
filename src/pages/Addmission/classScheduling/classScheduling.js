@@ -1346,7 +1346,7 @@ class ClassSchedulingList extends Component {
         sort: true,
       },
       {
-        dataField: "sectorName",
+        dataField: "courseSectorsNames",
         text: this.props.t("Training Sector"),
         sort: true,
         editable: false,

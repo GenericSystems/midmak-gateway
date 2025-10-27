@@ -42,6 +42,7 @@ import {
   deleteMarkObjection,
   getMarkObjectionDeletedValue,
 } from "store/marks-objections/actions";
+import { getFilteredCoursesPlans } from "store/trainee-decrees/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -103,9 +104,9 @@ class MarksObjectionsList extends Component {
       marksObjections,
       onGetMarksObjections,
       traineeOpt,
-      coursesOffering,
       deleted,
       user_menu,
+      requestTypes,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -119,8 +120,8 @@ class MarksObjectionsList extends Component {
       requestStatus,
       marksObjections,
       deleted,
-      coursesOffering,
       traineeOpt,
+      requestTypes,
     });
   }
 
@@ -251,28 +252,38 @@ class MarksObjectionsList extends Component {
     const { onAddNewEmployee, onUpdateEmployee } = this.props;
     console.log("values", values);
 
-    values["courseNameId"] = selectedCourseId;
-    values["traineeId"] = selectedTraineeId;
+    values["courseId"] = selectedCourseId;
     values["testExamId"] = selectedTestExam;
+    values["requestTypeId"] = selectedRequestType;
     if (
       values.requestNum === "" ||
       values.applyingDate === "" ||
-      values.traineeId === "" ||
-      values.courseNameId === "" ||
+      values.traineeName === "" ||
+      (values.courseId === "" && selectedCourse === "") ||
       (values.testExamId === "" && selectedTestExam === null)
     ) {
-      this.setState({ requestNumError: true, saveError: true });
+      if (values.requestNum.trim() === "") {
+        this.setState({ requestNumError: true, saveError: true });
+      }
 
-      this.setState({ applyingDateError: true, saveError: true });
+      if (values.applyingDate.trim() === "") {
+        this.setState({ applyingDateError: true, saveError: true });
+      }
+      if (values.traineeName.trim() === "") {
+        this.setState({ traineeError: true, saveError: true });
+      }
+      if (values.courseId === "" && selectedCourseId === "") {
+        this.setState({ courseError: true, saveError: true });
+      }
+      if (values.courseId === "" && selectedTestExam === "") {
+        this.setState({ testExamError: true, saveError: true });
+      }
 
-      this.setState({ traineeError: true, saveError: true });
-
-      this.setState({ courseError: true, saveError: true });
-
-      this.setState({ testExamError: true, saveError: true });
       const emptyError = this.props.t("Fill the Required Fields to Save");
 
-      this.setState({ emptyError: emptyError });
+      this.setState({ errorMessage: errorSave }, () => {
+        window.scrollTo(0, 0);
+      });
     } else {
       this.setState({ requestNumError: false, saveError: false });
       this.setState({ applyingDateError: false, saveError: false });
@@ -280,34 +291,36 @@ class MarksObjectionsList extends Component {
       this.setState({ courseError: false, saveError: false });
       this.setState({ testExamError: false, saveError: false });
 
-      let employeeinfo = {};
+      let objectioninfo = {};
 
       Object.keys(values).forEach(function (key) {
         if (
           values[key] != undefined &&
           (values[key].length > 0 || values[key] != "")
         )
-          employeeinfo[key] = values[key];
+          objectioninfo[key] = values[key];
       });
-      employeeinfo["courseNameId"] = selectedCourseId;
-      employeeinfo["traineeId"] = selectedTraineeId;
-      employeeinfo["testExamId"] = selectedTestExam;
+      objectioninfo["courseId"] = selectedCourseId;
+      objectioninfo["traineeId"] = selectedTraineeId;
+      objectioninfo["testExamId"] = selectedTestExam;
+      console.log("qqqqqqqqqqqqqqq", objectioninfo);
+
       this.setState({
         errorMessages: {},
       });
 
       if (isEdit) {
-        console.log("rrrrrrrrrrrrrrr", employeeinfo);
-        // onUpdateEmployee(employeeinfo);
-      } else if (isAdd) {
-        console.log("employeeinfoemployeeinfo", employeeinfo);
+        console.log("rrrrrrrrrrrrrrr", objectioninfo);
+        // onUpdateEmployee(objectioninfo);
+      } else {
+        console.log("objectioninfoobjectioninfo", objectioninfo);
 
-        // onAddNewEmployee(employeeinfo);
+        // onAddNewEmployee(objectioninfo);
       }
 
-      const saveEmployeeMessage = "Saved successfully ";
+      const saveMessage = "Saved successfully ";
       this.setState({
-        successMessage: saveEmployeeMessage,
+        successMessage: saveMessage,
       });
 
       this.toggle();
@@ -362,14 +375,16 @@ class MarksObjectionsList extends Component {
 
   render() {
     const markObjection = this.state.markObjection;
-    const employee = this.state.employee;
     const {
       requestStatus,
       coursesOffering,
       traineesOpt,
       marksObjections,
+      onGetFilteredCoursesPlan,
+      filteredCourses,
       t,
       deleted,
+      requestTypes,
     } = this.props;
     const {
       selectedRequestStatus,
@@ -391,6 +406,14 @@ class MarksObjectionsList extends Component {
       emptyError,
       showAlert,
     } = this.state;
+
+    const filteredCoursesModified =
+      filteredCourses &&
+      filteredCourses.map(item => ({
+        label: `${item.code} - ${item.CourseName}`,
+        value: item.courseId,
+      }));
+
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -456,7 +479,7 @@ class MarksObjectionsList extends Component {
         editable: false,
       },
       {
-        dataField: "requestType",
+        dataField: "requestTypeId",
         text: this.props.t("Request Type"),
         sort: true,
         editable: false,
@@ -727,9 +750,9 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.traineeId) ||
                                           "",
-                                        courseNameId:
+                                        courseId:
                                           (markObjection &&
-                                            markObjection.courseNameId) ||
+                                            markObjection.courseId) ||
                                           "",
                                         testExamId:
                                           (markObjection &&
@@ -739,9 +762,9 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.oldMark) ||
                                           "",
-                                        requestType:
+                                        requestTypeId:
                                           (markObjection &&
-                                            markObjection.requestType) ||
+                                            markObjection.requestTypeId) ||
                                           "",
                                         applyingNotes:
                                           (markObjection &&
@@ -900,13 +923,11 @@ class MarksObjectionsList extends Component {
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Field
-                                                              name="traineeId"
+                                                              name="traineeName"
+                                                              type="text"
+                                                              list="traineeNameList"
                                                               as="input"
                                                               id="traineeName-Id"
-                                                              type="text"
-                                                              placeholder={t(
-                                                                "Search..."
-                                                              )}
                                                               className={
                                                                 "form-control" +
                                                                 ((errors.traineeId &&
@@ -915,61 +936,42 @@ class MarksObjectionsList extends Component {
                                                                   ? " is-invalid"
                                                                   : "")
                                                               }
-                                                              // value={
-                                                              //   traineesOpt.find(
-                                                              //     trainee =>
-                                                              //       trainee.key ===
-                                                              //       this.state
-                                                              //         .selectedTraineeId
-                                                              //   )?.value || ""
-                                                              // }
-                                                              // onChange={e => {
-                                                              //   const newValue =
-                                                              //     e.target
-                                                              //       .value;
+                                                              onChange={e => {
+                                                                const traineeInput =
+                                                                  e.target
+                                                                    .value;
 
-                                                              //   const selectedTrainee =
-                                                              //     traineesOpt.find(
-                                                              //       trainee =>
-                                                              //         trainee.value ===
-                                                              //         newValue
-                                                              //     );
+                                                                const traineeName =
+                                                                  traineeInput.split(
+                                                                    " - "
+                                                                  )[0];
 
-                                                              //   if (
-                                                              //     selectedTrainee
-                                                              //   ) {
-                                                              //     this.setState(
-                                                              //       {
-                                                              //         selectedTraineeId:
-                                                              //           selectedTrainee.key,
-                                                              //         traineeName:
-                                                              //           selectedTrainee.value,
-                                                              //       }
-                                                              //     );
-                                                              //   } else {
-                                                              //     this.setState(
-                                                              //       {
-                                                              //         selectedTraineeId:
-                                                              //           null,
-                                                              //         traineeName:
-                                                              //           newValue,
-                                                              //       }
-                                                              //     );
-                                                              //   }
-                                                              // }}
-                                                              list="traineesId"
-                                                              autoComplete="off"
+                                                                const plan =
+                                                                  traineesOpt.find(
+                                                                    trainee =>
+                                                                      trainee.value ===
+                                                                      traineeName
+                                                                  );
+                                                                console.log(
+                                                                  "planplanplan",
+                                                                  traineesOpt
+                                                                );
+                                                                if (plan) {
+                                                                  onGetFilteredCoursesPlan(
+                                                                    plan
+                                                                  );
+                                                                }
+                                                                handleChange(e);
+                                                              }}
                                                             />
-                                                            <datalist id="traineesId">
+                                                            <datalist id="traineeNameList">
                                                               {traineesOpt.map(
                                                                 traineeOpt => (
                                                                   <option
                                                                     key={
                                                                       traineeOpt.key
                                                                     }
-                                                                    value={
-                                                                      traineeOpt.value
-                                                                    }
+                                                                    value={`${traineeOpt.value} - ${traineeOpt.TraineeNum}`}
                                                                   />
                                                                 )
                                                               )}
@@ -987,7 +989,7 @@ class MarksObjectionsList extends Component {
                                                       <div className="mb-3">
                                                         <Row>
                                                           <Col className="col-4">
-                                                            <Label for="courseNameId">
+                                                            <Label for="courseId">
                                                               {this.props.t(
                                                                 "Courses"
                                                               )}
@@ -997,81 +999,33 @@ class MarksObjectionsList extends Component {
                                                             </span>
                                                           </Col>
                                                           <Col className="col-8">
-                                                            <Field
-                                                              name="courseNameId"
-                                                              as="input"
-                                                              id="courseName-Id"
-                                                              type="text"
-                                                              placeholder={t(
-                                                                "Search..."
+                                                            <Select
+                                                              name="courseId"
+                                                              options={
+                                                                filteredCoursesModified
+                                                              }
+                                                              key={`select_course`}
+                                                              onChange={newValue => {
+                                                                this.handleSelect(
+                                                                  "courseId",
+                                                                  newValue.value
+                                                                );
+                                                              }}
+                                                              value={filteredCoursesModified.find(
+                                                                opt =>
+                                                                  opt.value ===
+                                                                  markObjection?.courseId
                                                               )}
                                                               className={
                                                                 "form-control" +
-                                                                ((errors.courseNameId &&
-                                                                  touched.courseNameId) ||
+                                                                ((errors.courseId &&
+                                                                  touched.courseId) ||
                                                                 courseError
                                                                   ? " is-invalid"
                                                                   : "")
                                                               }
-                                                              value={
-                                                                coursesOffering.find(
-                                                                  course =>
-                                                                    course.key ===
-                                                                    this.state
-                                                                      .selectedCourseId
-                                                                )?.value || ""
-                                                              }
-                                                              onChange={e => {
-                                                                const newValue =
-                                                                  e.target
-                                                                    .value;
-
-                                                                const selectedCouese =
-                                                                  coursesOffering.find(
-                                                                    course =>
-                                                                      course.value ===
-                                                                      newValue
-                                                                  );
-
-                                                                if (
-                                                                  selectedCouese
-                                                                ) {
-                                                                  this.setState(
-                                                                    {
-                                                                      selectedCourseId:
-                                                                        selectedCouese.key,
-                                                                      courseName:
-                                                                        selectedCouese.value,
-                                                                    }
-                                                                  );
-                                                                } else {
-                                                                  this.setState(
-                                                                    {
-                                                                      selectedCourseId:
-                                                                        null,
-                                                                      courseName:
-                                                                        newValue,
-                                                                    }
-                                                                  );
-                                                                }
-                                                              }}
-                                                              list="courseName"
-                                                              autoComplete="off"
                                                             />
-                                                            <datalist id="courseName">
-                                                              {coursesOffering.map(
-                                                                course => (
-                                                                  <option
-                                                                    key={
-                                                                      course.key
-                                                                    }
-                                                                    value={
-                                                                      course.value
-                                                                    }
-                                                                  />
-                                                                )
-                                                              )}
-                                                            </datalist>
+
                                                             {courseError && (
                                                               <div className="invalid-feedback">
                                                                 {this.props.t(
@@ -1166,9 +1120,9 @@ class MarksObjectionsList extends Component {
                                                             <Select
                                                               name="requestTypeId"
                                                               key={`select_requestType`}
-                                                              // options={
-                                                              //  requestTypeOpt
-                                                              // }
+                                                              options={
+                                                                requestTypes
+                                                              }
                                                               className={
                                                                 "form-control"
                                                               }
@@ -1179,11 +1133,11 @@ class MarksObjectionsList extends Component {
                                                                   values
                                                                 );
                                                               }}
-                                                              // defaultValue={requestTypeOpt.find(
-                                                              //   opt =>
-                                                              //     opt.value ===
-                                                              //     markObjection?.requestTypeId
-                                                              // )}
+                                                              defaultValue={requestTypes.find(
+                                                                opt =>
+                                                                  opt.value ===
+                                                                  markObjection?.requestTypeId
+                                                              )}
                                                             />
                                                           </Col>
                                                         </Row>
@@ -1269,9 +1223,9 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.traineeId) ||
                                           "",
-                                        courseNameId:
+                                        courseId:
                                           (markObjection &&
-                                            markObjection.courseNameId) ||
+                                            markObjection.courseId) ||
                                           "",
                                         testExamId:
                                           (markObjection &&
@@ -1281,9 +1235,9 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.oldMark) ||
                                           "",
-                                        requestType:
+                                        requestTypeId:
                                           (markObjection &&
-                                            markObjection.requestType) ||
+                                            markObjection.requestTypeId) ||
                                           "",
                                         applyingNotes:
                                           (markObjection &&
@@ -1332,7 +1286,7 @@ class MarksObjectionsList extends Component {
                                                   <div className="mb-3">
                                                     <Row>
                                                       <Col className="col-4">
-                                                        <Label for="courseNameId">
+                                                        <Label for="courseId">
                                                           {this.props.t(
                                                             "Courses"
                                                           )}
@@ -1342,74 +1296,33 @@ class MarksObjectionsList extends Component {
                                                         </span>
                                                       </Col>
                                                       <Col className="col-8">
-                                                        <Field
-                                                          name="courseNameId"
-                                                          as="input"
-                                                          id="courseName-Id"
-                                                          type="text"
-                                                          placeholder={t(
-                                                            "Search..."
-                                                          )}
+                                                        <Select
+                                                          name="courseId"
+                                                          // options={
+                                                          //   filteredCoursesModified
+                                                          // }
+                                                          key={`select_course`}
+                                                          // onChange={newValue => {
+                                                          //   this.handleSelect(
+                                                          //     "courseId",
+                                                          //     newValue.value
+                                                          //   );
+                                                          // }}
+                                                          // value={filteredCoursesModified.find(
+                                                          //   opt =>
+                                                          //     opt.value ===
+                                                          //     markObjection?.courseId
+                                                          // )}
                                                           className={
                                                             "form-control" +
-                                                            ((errors.courseNameId &&
-                                                              touched.courseNameId) ||
+                                                            ((errors.courseId &&
+                                                              touched.courseId) ||
                                                             courseError
                                                               ? " is-invalid"
                                                               : "")
                                                           }
-                                                          value={
-                                                            coursesOffering.find(
-                                                              course =>
-                                                                course.key ===
-                                                                this.state
-                                                                  .selectedCourseId
-                                                            )?.value || ""
-                                                          }
-                                                          onChange={e => {
-                                                            const newValue =
-                                                              e.target.value;
-
-                                                            const selectedCouese =
-                                                              coursesOffering.find(
-                                                                course =>
-                                                                  course.value ===
-                                                                  newValue
-                                                              );
-
-                                                            if (
-                                                              selectedCouese
-                                                            ) {
-                                                              this.setState({
-                                                                selectedCourseId:
-                                                                  selectedCouese.key,
-                                                                courseName:
-                                                                  selectedCouese.value,
-                                                              });
-                                                            } else {
-                                                              this.setState({
-                                                                selectedCourseId:
-                                                                  null,
-                                                                courseName:
-                                                                  newValue,
-                                                              });
-                                                            }
-                                                          }}
-                                                          list="courseName"
-                                                          autoComplete="off"
                                                         />
-                                                        <datalist id="courseName">
-                                                          {coursesOffering.map(
-                                                            course => (
-                                                              <option
-                                                                key={course.key}
-                                                                value={
-                                                                  course.value
-                                                                }
-                                                              />
-                                                            )
-                                                          )}
-                                                        </datalist>
+
                                                         {courseError && (
                                                           <div className="invalid-feedback">
                                                             {this.props.t(
@@ -1420,11 +1333,11 @@ class MarksObjectionsList extends Component {
                                                       </Col>
                                                     </Row>
                                                   </div>
-                                                  <Row>
+                                                  {/*<Row>
                                                     <Col lg="12">
                                                       <BootstrapTable
                                                         keyField="Id"
-                                                        data={coursesOffering}
+                                                        // data={coursesOffering}
                                                         columns={gradeColumns}
                                                         cellEdit={cellEditFactory(
                                                           {
@@ -1446,7 +1359,7 @@ class MarksObjectionsList extends Component {
                                                         )}
                                                       />
                                                     </Col>
-                                                  </Row>
+                                                  </Row>*/}
                                                   <Row>
                                                     <Col className="col-6">
                                                       <div className="mb-3">
@@ -1709,7 +1622,7 @@ class MarksObjectionsList extends Component {
                                                     </div>
                                                   </Col>
                                                 </Row>
-                                                <div className="mb-3">
+                                                <div className="mb-3 mt-3">
                                                   <Row>
                                                     <Col lg="4">
                                                       <label
@@ -1744,7 +1657,7 @@ class MarksObjectionsList extends Component {
                                                                       : ""
                                                                   }`}
                                                                   name="requestStateId"
-                                                                  id={`btnradio${status.Id}`}
+                                                                  id={`btnradio${index}`}
                                                                   autoComplete="off"
                                                                   defaultChecked={
                                                                     selectedRequestStatus ===
@@ -1761,7 +1674,7 @@ class MarksObjectionsList extends Component {
                                                                 />
                                                                 <label
                                                                   className="btn btn-outline-primary smallButton w-sm"
-                                                                  htmlFor={`btnradio${status.Id}`}
+                                                                  htmlFor={`btnradio${index}`}
                                                                 >
                                                                   {
                                                                     status.arTitle
@@ -1776,6 +1689,7 @@ class MarksObjectionsList extends Component {
                                                   </Row>
                                                 </div>
                                               </div>
+
                                               <div className="bordered">
                                                 <div className="mb-3">
                                                   <Row>
@@ -1909,25 +1823,13 @@ const mapStateToProps = ({
   traineesDecrees,
   menu_items,
   employees,
-  employmentCases,
-  workClassifications,
   trainees,
-  classScheduling,
 }) => ({
-  coursesOffering: classScheduling.coursesOffering,
-  workClassifications: workClassifications.workClassifications || [],
-  requestStatus: marksObjections.requestStatus,
-  // physicalWorkLocationsOpt: employees.physicalWorkLocationsOpt || [],
-  jobRanksOpt: employees.jobRanksOpt || [],
-  jobTitlesOpt: employees.jobTitlesOpt || [],
-  // corporateNodesOpt: employees.corporateNodesOpt || [],
+  filteredCourses: traineesDecrees.filteredCoursesPlans,
   traineesOpt: trainees.traineesOpt,
-  genders: employees.genders,
-  nationalitiesOpt: employees.nationalitiesOpt,
-  academicYearsOpt: employees.academicYearsOpt,
-  employmentCases: employmentCases.employmentCases,
+  requestStatus: marksObjections.requestStatus,
+  requestTypes: marksObjections.requestTypes,
   marksObjections: marksObjections.marksObjections,
-  genders: employees.genders,
   employeesNames: employees.employeesNames,
   employees: employees.employees,
   deleted: marksObjections.deleted,
@@ -1942,6 +1844,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateMarkObjection(markObjection)),
   onDeleteMarkObjection: markObjection =>
     dispatch(deleteMarkObjection(markObjection)),
+  onGetFilteredCoursesPlan: trainee =>
+    dispatch(getFilteredCoursesPlans(trainee)),
   onGetMarkObjectionDeletedValue: () =>
     dispatch(getMarkObjectionDeletedValue()),
 });

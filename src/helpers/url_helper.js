@@ -1141,6 +1141,7 @@ export const ADD_NEW_MARK_OBJECTION = "/add/markObjection";
 export const UPDATE_MARK_OBJECTION = "/update/markObjection";
 export const DELETE_MARK_OBJECTION = "/deleted/markObjection";
 export const GET_REQUEST_STATUS = "/requestStatus";
+export const GET_REQUEST_TYPES = "/requestTypes";
 
 //TRAINEE_DESERVE_WARNING
 export const GET_TRAINEES_DESERVES_WARNINGS = "/traineesDeservesWarnings";
