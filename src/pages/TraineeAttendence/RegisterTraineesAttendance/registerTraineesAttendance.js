@@ -73,7 +73,6 @@ import {
 } from "../../../utils/menuUtils";
 import TraineesAttendance from "components/Common/TraineesAttendance";
 import E from "react-script";
-import trainees from "helpers/trainees";
 class RegisterTraineesAttendance extends Component {
   constructor(props) {
     super(props);
@@ -1400,15 +1399,13 @@ class RegisterTraineesAttendance extends Component {
                     <div className="table-responsive">
                       <PaginationProvider
                         pagination={paginationFactory(pageOptions)}
-                        key="unique-pagination-key"
-                        keyField="Pagination-Provider"
+                        keyField="Id"
                         columns={MainInfoColumns}
                         data={regTrainees}
                       >
                         {({ paginationProps, paginationTableProps }) => (
                           <ToolkitProvider
-                            keyField="Pagination-Provider"
-                            key="unique-pagination-key"
+                            keyField="Id"
                             data={regTrainees}
                             columns={MainInfoColumns}
                             search

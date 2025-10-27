@@ -577,7 +577,7 @@ class JustifyTraineesAbsenceList extends Component {
                   <ModalBody>
                     <Row>
                       <Col className="col-4 mb-3">
-                        <Label for="inst">{t("Trainee Name")}</Label>
+                        <Label for="trainee-Id">{t("Trainee Name")}</Label>
                         <span className="text-danger">*</span>
                       </Col>
                       <Col className="col-8">
@@ -627,11 +627,12 @@ class JustifyTraineesAbsenceList extends Component {
                           }
                           list="traineeIdList"
                           autoComplete="off"
+                          id="trainee-Id"
                         />
 
                         <datalist id="traineeIdList">
-                          {traineesArray.map(employee => (
-                            <option key={employee.key} value={employee.value} />
+                          {traineesArray.map(trainee => (
+                            <option key={trainee.key} value={trainee.value} />
                           ))}
                         </datalist>
                       </Col>

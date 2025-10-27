@@ -1408,7 +1408,7 @@ class ClassSchedulingList extends Component {
                 <Link className="text-danger" to="#">
                   <i
                     className="mdi mdi-delete font-size-18"
-                    id="deletetooltip"
+                    id="courseofferingdeletetooltip"
                     onClick={() => this.onClickDelete2(row)}
                   ></i>
                 </Link>
@@ -1500,7 +1500,7 @@ class ClassSchedulingList extends Component {
               <Link className="section-button text-secondary" to="#">
                 <i
                   className="bx bx-calendar-event font-size-18"
-                  id="edittooltip"
+                  id="editbranchtooltip"
                   onClick={() => this.handleEditBranch(branch)}
                 ></i>
               </Link>
@@ -1570,7 +1570,7 @@ class ClassSchedulingList extends Component {
               <Link className="text-secondary" to="#">
                 <i
                   className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
+                  id="editsectionlabtooltip"
                   onClick={() => this.handleEditSectionLab(sectionLabData)}
                 ></i>
               </Link>
@@ -1579,7 +1579,7 @@ class ClassSchedulingList extends Component {
               <Link className="text-danger m-0" to="#">
                 <i
                   className="mdi mdi-delete font-size-18"
-                  id="deletetooltip"
+                  id="deletesectionlabtooltip"
                   onClick={() => this.onClickDelete(sectionLabData)}
                 ></i>
               </Link>
@@ -1633,7 +1633,7 @@ class ClassSchedulingList extends Component {
             <Link className="" to="#">
               <i
                 className="mdi mdi-google-classroom font-size-18"
-                id="edittooltip"
+                id="viewhalltooltip"
                 onClick={() => this.handleViewHallSchedule(sectionLabDetails)}
               ></i>
             </Link>
@@ -3284,7 +3284,7 @@ class ClassSchedulingList extends Component {
                                                           <div className="mb-3">
                                                             <Row>
                                                               <Col>
-                                                                <Label for="startDate">
+                                                                <Label for="startDateSecLab">
                                                                   {this.props.t(
                                                                     "Start Date"
                                                                   )}
@@ -3328,7 +3328,7 @@ class ClassSchedulingList extends Component {
                                                                   onBlur={
                                                                     handleBlur
                                                                   }
-                                                                  id="startDate-date-input"
+                                                                  id="startDateSecLab-date-input"
                                                                 />
                                                                 <ErrorMessage
                                                                   name="startDate"
@@ -3345,7 +3345,7 @@ class ClassSchedulingList extends Component {
                                                           <div className="mb-3">
                                                             <Row>
                                                               <Col>
-                                                                <Label for="endDate">
+                                                                <Label for="endDateSecLab">
                                                                   {this.props.t(
                                                                     "End Date"
                                                                   )}
@@ -3389,7 +3389,7 @@ class ClassSchedulingList extends Component {
                                                                   onBlur={
                                                                     handleBlur
                                                                   }
-                                                                  id="endDate-date-input"
+                                                                  id="endDateSecLab-date-input"
                                                                 />
                                                                 <ErrorMessage
                                                                   name="endDate"
@@ -3713,7 +3713,7 @@ class ClassSchedulingList extends Component {
                                                           <div className="mb-3">
                                                             <Row>
                                                               <Col>
-                                                                <Label for="startDate">
+                                                                <Label for="startDateSecLab">
                                                                   {this.props.t(
                                                                     "Start Date"
                                                                   )}
@@ -3757,7 +3757,7 @@ class ClassSchedulingList extends Component {
                                                                   onBlur={
                                                                     handleBlur
                                                                   }
-                                                                  id="startDate-date-input"
+                                                                  id="startDateSecLab-date-input"
                                                                 />
                                                                 <ErrorMessage
                                                                   name="startDate"
@@ -3774,7 +3774,7 @@ class ClassSchedulingList extends Component {
                                                           <div className="mb-3">
                                                             <Row>
                                                               <Col>
-                                                                <Label for="endDate">
+                                                                <Label for="endDateSecLab">
                                                                   {this.props.t(
                                                                     "End Date"
                                                                   )}
@@ -3818,7 +3818,7 @@ class ClassSchedulingList extends Component {
                                                                   onBlur={
                                                                     handleBlur
                                                                   }
-                                                                  id="endDate-date-input"
+                                                                  id="endDateSecLab-date-input"
                                                                 />
                                                                 <ErrorMessage
                                                                   name="endDate"

@@ -1,31 +1,31 @@
-import React, { Component } from "react"
-import PropTypes from "prop-types"
-import { connect } from "react-redux"
-import { withRouter } from "react-router-dom"
-import { isEmpty, size } from "lodash"
-import BootstrapTable from "react-bootstrap-table-next"
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { isEmpty, size } from "lodash";
+import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
-} from "react-bootstrap-table2-paginator"
-import ToolkitProvider from 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit';
+} from "react-bootstrap-table2-paginator";
+import ToolkitProvider from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
-import { Button, Card, CardBody, Badge } from "reactstrap"
+import { Button, Card, CardBody, Badge } from "reactstrap";
 
 import {
   getOrders,
   addNewOrder,
   updateOrder,
-  deleteOrder
-} from "store/actions"
+  deleteOrder,
+} from "store/actions";
 
-import EcommerceOrdersModal from "../Ecommerce/EcommerceOrders/EcommerceOrdersModal"
+import EcommerceOrdersModal from "../Ecommerce/EcommerceOrders/EcommerceOrdersModal";
 
 class LatestTranaction extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       viewmodal: false,
       modal: false,
@@ -36,11 +36,7 @@ class LatestTranaction extends Component {
           dataField: "id",
           sort: true,
           hidden: true,
-          formatter: (cellContent, user) => (
-            <>
-              {order.id}
-            </>
-          ),
+          formatter: (cellContent, user) => <>{order.id}</>,
         },
         {
           dataField: "orderId",
@@ -60,7 +56,7 @@ class LatestTranaction extends Component {
         {
           dataField: "orderdate",
           text: "Date",
-          sort: true
+          sort: true,
         },
         {
           dataField: "total",
@@ -88,11 +84,15 @@ class LatestTranaction extends Component {
           sort: true,
           formatter: (cellContent, row) => (
             <>
-              <i className={
-                (row.paymentMethod !== 'COD') ?
-                  'fab fa-cc-' + this.toLowerCase1(row.paymentMethod) + " me-1"
-                  : 'fab fas fa-money-bill-alt me-1'
-              } />{" "}
+              <i
+                className={
+                  row.paymentMethod !== "COD"
+                    ? "fab fa-cc-" +
+                      this.toLowerCase1(row.paymentMethod) +
+                      " me-1"
+                    : "fab fas fa-money-bill-alt me-1"
+                }
+              />{" "}
               {row.paymentMethod}
             </>
           ),
@@ -112,11 +112,11 @@ class LatestTranaction extends Component {
               View Details
             </Button>
           ),
-        }
-      ]
-    }
-    this.toggle = this.toggle.bind(this)
-    this.toLowerCase1 = this.toLowerCase1.bind(this)
+        },
+      ],
+    };
+    this.toggle = this.toggle.bind(this);
+    this.toLowerCase1 = this.toLowerCase1.bind(this);
   }
 
   toLowerCase1(str) {
@@ -124,50 +124,51 @@ class LatestTranaction extends Component {
   }
 
   componentDidMount() {
-    const { orders, onGetOrders } = this.props
+    const { orders, onGetOrders } = this.props;
     if (orders && !orders.length) {
-      onGetOrders()
+      onGetOrders();
     }
-    this.setState({ orders })
+    this.setState({ orders });
   }
 
   // eslint-disable-next-line no-unused-vars
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { orders } = this.props
+    const { orders } = this.props;
     if (!isEmpty(orders) && size(prevProps.orders) !== size(orders)) {
-      this.setState({ orders: {}, isEdit: false })
+      this.setState({ orders: {}, isEdit: false });
     }
   }
 
   toggle() {
     this.setState(prevState => ({
       modal: !prevState.modal,
-    }))
+    }));
   }
-
 
   toggleViewModal = () => {
     this.setState(prevState => ({
       viewmodal: !prevState.viewmodal,
-    }))
-  }
+    }));
+  };
   render() {
-    const { orders } = this.props
+    const { orders } = this.props;
 
     //pagination customization
     const pageOptions = {
       sizePerPage: 6,
       totalSize: orders.length, // replace later with size(Order),
       custom: true,
-    }
+    };
 
-    const defaultSorted = [{
-      dataField: 'orderId',
-      order: 'desc'
-    }];
+    const defaultSorted = [
+      {
+        dataField: "orderId",
+        order: "desc",
+      },
+    ];
 
     const selectRow = {
-      mode: 'checkbox',
+      mode: "checkbox",
     };
 
     return (
@@ -181,13 +182,13 @@ class LatestTranaction extends Component {
             <div className="mb-4 h4 card-title">Latest Transaction</div>
             <PaginationProvider
               pagination={paginationFactory(pageOptions)}
-              keyField='id'
+              keyField="Id"
               columns={this.state.EcommerceOrderColumns}
               data={orders}
             >
               {({ paginationProps, paginationTableProps }) => (
                 <ToolkitProvider
-                  keyField="id"
+                  keyField="Id"
                   data={orders}
                   columns={this.state.EcommerceOrderColumns}
                   bootstrap4
@@ -200,6 +201,7 @@ class LatestTranaction extends Component {
                           {...toolkitProps.baseProps}
                           {...paginationTableProps}
                           responsive
+                          keyField="Id"
                           defaultSorted={defaultSorted}
                           bordered={false}
                           striped={false}
@@ -211,9 +213,7 @@ class LatestTranaction extends Component {
                         />
                       </div>
                       <div className="pagination pagination-rounded justify-content-end">
-                        <PaginationListStandalone
-                          {...paginationProps}
-                        />
+                        <PaginationListStandalone {...paginationProps} />
                       </div>
                     </React.Fragment>
                   )}
@@ -223,7 +223,7 @@ class LatestTranaction extends Component {
           </CardBody>
         </Card>
       </React.Fragment>
-    )
+    );
   }
 }
 
@@ -232,21 +232,21 @@ LatestTranaction.propTypes = {
   onGetOrders: PropTypes.func,
   onAddNewOrder: PropTypes.func,
   onDeleteOrder: PropTypes.func,
-  onUpdateOrder: PropTypes.func
-}
+  onUpdateOrder: PropTypes.func,
+};
 
 const mapStateToProps = state => ({
   orders: state.ecommerce.orders,
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   onGetOrders: () => dispatch(getOrders()),
   onAddNewOrder: order => dispatch(addNewOrder(order)),
   onUpdateOrder: order => dispatch(updateOrder(order)),
   onDeleteOrder: order => dispatch(deleteOrder(order)),
-})
+});
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(LatestTranaction))
+)(withRouter(LatestTranaction));

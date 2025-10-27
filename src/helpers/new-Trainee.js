@@ -1388,67 +1388,6 @@ class NewTrainee extends Component {
       custom: true,
     };
 
-    const siblingsColumns = [
-      { dataField: "Id", text: t("ID"), hidden: true },
-      {
-        dataField: "brotherSID",
-        text: t("Sibling"),
-        sort: true,
-        formatter: (cell, row) => (
-          <div className="col-9">
-            <Input
-              type="text"
-              id="brotherSID"
-              list="brothersOptionlist"
-              className="form-control"
-              defaultValue={
-                (
-                  studentsOpt.find(
-                    filteredOption => filteredOption.key === row.brotherSID
-                  ) || ""
-                ).value
-              }
-              onChange={event => {
-                this.handleSelectBrother(
-                  row.Id,
-                  "brotherSID",
-                  event.target.value,
-                  row.brotherSID
-                );
-              }}
-              autoComplete="off"
-            />
-
-            <datalist id="brothersOptionlist">
-              {studentsOpt.map(uniTrainee => (
-                <option
-                  key={uniTrainee.key}
-                  value={uniTrainee.value + " " + uniTrainee.key}
-                />
-              ))}
-            </datalist>
-          </div>
-        ),
-
-        editable: false,
-      },
-      {
-        dataField: "delete",
-        text: "",
-        isDummyField: true,
-        editable: false,
-        formatter: (cellContent, brother) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.handleDeleteSibling(brother)}
-            ></i>
-          </Link>
-        ),
-      },
-    ];
-
     const defaultSorted = [
       {
         id: 99,
@@ -1671,69 +1610,6 @@ class NewTrainee extends Component {
       },
     ];
 
-    const ParentsColumns = [
-      { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "arName", text: t("Name(ar)"), sort: true },
-      { dataField: "enName", text: t("Name(en)"), sort: true },
-      {
-        dataField: "relativeId",
-        text: t("Relatives"),
-        formatter: (cell, row) => (
-          <Select
-            key={`relative_Id`}
-            options={relatives}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "relativeId",
-                newValue.value
-              );
-            }}
-            value={relatives.find(opt => opt.value == row.relativeId)}
-          />
-        ),
-        editable: false,
-      },
-
-      {
-        dataField: "nationalityId",
-        text: t("Nationality"),
-        formatter: (cell, row) => (
-          <Select
-            key={`nationality_Id`}
-            options={nationalities}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "nationalityId",
-                newValue.value
-              );
-            }}
-            defaultValue={nationalities.find(
-              opt => opt.value == row.nationalityId
-            )}
-          />
-        ),
-        editable: false,
-      },
-      { dataField: "phone", text: t("Phone Number") },
-      { dataField: "cellular", text: t("Cellular Number") },
-      {
-        dataField: "delete",
-        text: "",
-        isDummyField: true,
-        editable: false,
-        formatter: (cellContent, relative) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.deleteRelative(relative)}
-            ></i>
-          </Link>
-        ),
-      },
-    ];
     const trnProfExperienceColumns = [
       { dataField: "Id", text: t("ID"), hidden: true },
       { dataField: "workType", text: t("Work Type"), sort: true },
@@ -4298,7 +4174,7 @@ class NewTrainee extends Component {
                                                                   onBlur={
                                                                     handleBlur
                                                                   }
-                                                                  id="diploma-Id"
+                                                                  id="diplomaCountry"
                                                                 />
 
                                                                 <datalist id="CountrydatalistOptions">

@@ -730,7 +730,7 @@ class DefineExamDatesList extends Component {
               >
                 <i
                   className="dripicons-document-edit font-size-16 mt=-5"
-                  id="viewEdittooltip"
+                  id="viewedittooltip"
                   onClick={() => this.handleExamDateDetailEdit(defineExamDate)}
                 ></i>
               </Link>
@@ -827,7 +827,7 @@ class DefineExamDatesList extends Component {
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
+              id="deletedefineperiodtooltip"
               onClick={() => this.onClickDelete1(definePeriod)}
             ></i>
           </Link>

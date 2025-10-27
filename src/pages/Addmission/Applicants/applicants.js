@@ -2291,35 +2291,6 @@ class ApplicantsList extends Component {
         ? new Date(tempTrainee.RegistrationDate).toISOString().split("T")[0]
         : selectedRegistrationDate;
 
-    const formattedEmissionDate =
-      isEdit && tempTrainee && tempTrainee.EmissionDate
-        ? new Date(tempTrainee.EmissionDate).toISOString().split("T")[0]
-        : selectedEmissionDate;
-
-    const formattedPassportGrantDate =
-      isEdit && tempTrainee && tempTrainee.passportGrantDate
-        ? new Date(tempTrainee.passportGrantDate).toISOString().split("T")[0]
-        : selectedPassportGrantDate;
-
-    const formattedPassportExpirationDate =
-      isEdit && tempTrainee && tempTrainee.passportExpirationDate
-        ? new Date(tempTrainee.passportExpirationDate)
-            .toISOString()
-            .split("T")[0]
-        : selectedPassportExpirationDate;
-
-    const formattedDiplomaDate =
-      isEdit && tempTrainee && tempTrainee.diplomaDate
-        ? new Date(tempTrainee.diplomaDate).toISOString().split("T")[0]
-        : selectedDiplomaDate;
-
-    const formattedDiplomaVerificationDate =
-      isEdit && tempTrainee && tempTrainee.diplomaVerificationDate
-        ? new Date(tempTrainee.diplomaVerificationDate)
-            .toISOString()
-            .split("T")[0]
-        : selectedDiplomaVerificationDate;
-
     const selectRow = {
       mode: "checkbox",
     };
@@ -2436,71 +2407,6 @@ class ApplicantsList extends Component {
           />
         ),
       },
-
-      // {
-      //   dataField: "attestated",
-
-      //   text: this.props.t("Attestated"),
-      //   formatter: (cellContent, row) => (
-      //     <div className="btn-group">
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           row.attestated === 1 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.Id, "attestated", 1)
-      //         }
-      //       >
-      //         {this.props.t("Yes")}
-      //       </button>
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           row.attestated === 0 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.Id, "attestated", 0)
-      //         }
-      //       >
-      //         {this.props.t("No")}
-      //       </button>
-      //     </div>
-      //   ),
-      //   editorRenderer: (
-      //     editorProps,
-      //     value,
-      //     row,
-      //     column,
-      //     rowIndex,
-      //     columnIndex
-      //   ) => (
-      //     <div className="btn-group">
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           value === 1 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 1)
-      //         }
-      //       >
-      //         {this.props.t("Yes")}
-      //       </button>
-      //       <button
-      //         type="button"
-      //         className={`btn ${
-      //           value === 0 ? "btn-primary" : "btn-outline-secondary"
-      //         }`}
-      //         onClick={() =>
-      //           this.handleRegReqDocDataChange(row.regReqDocId, "attestated", 0)
-      //         }
-      //       >
-      //         {this.props.t("No")}
-      //       </button>
-      //     </div>
-      //   ),
-      // },
       {
         dataField: "uploadFile",
         id: 8,
@@ -2556,7 +2462,7 @@ class ApplicantsList extends Component {
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
+              id="trnprofdeletetooltip"
               onClick={() => this.onClickDelete(trnProfExperience)}
             ></i>
           </Link>
@@ -2564,16 +2470,6 @@ class ApplicantsList extends Component {
       },
     ];
 
-    const bloodTypes = [
-      { value: "A+", label: "A+" },
-      { value: "A-", label: "A-" },
-      { value: "B+", label: "B+" },
-      { value: "B-", label: "B-" },
-      { value: "AB+", label: "AB+" },
-      { value: "AB-", label: "AB-" },
-      { value: "O+", label: "O+" },
-      { value: "O-", label: "O-" },
-    ];
     return (
       <React.Fragment>
         <DeleteModal
@@ -2593,15 +2489,13 @@ class ApplicantsList extends Component {
                   <CardBody>
                     <PaginationProvider
                       pagination={paginationFactory(pageOptions)}
-                      key="unique-pagination-key"
-                      keyField="Pagination-Provider"
+                      keyField="Id"
                       columns={columns}
                       data={tempTrainees}
                     >
                       {({ paginationProps, paginationTableProps }) => (
                         <ToolkitProvider
-                          key="unique-toolkit-key"
-                          keyField="Toolkit-Provider"
+                          keyField="Id"
                           columns={columns}
                           data={tempTrainees}
                           search
