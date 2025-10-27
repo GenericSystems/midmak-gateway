@@ -182,13 +182,13 @@ class LatestTranaction extends Component {
             <div className="mb-4 h4 card-title">Latest Transaction</div>
             <PaginationProvider
               pagination={paginationFactory(pageOptions)}
-              keyField="Id"
+              keyField="id"
               columns={this.state.EcommerceOrderColumns}
               data={orders}
             >
               {({ paginationProps, paginationTableProps }) => (
                 <ToolkitProvider
-                  keyField="Id"
+                  keyField="id"
                   data={orders}
                   columns={this.state.EcommerceOrderColumns}
                   bootstrap4
@@ -201,7 +201,6 @@ class LatestTranaction extends Component {
                           {...toolkitProps.baseProps}
                           {...paginationTableProps}
                           responsive
-                          keyField="Id"
                           defaultSorted={defaultSorted}
                           bordered={false}
                           striped={false}

@@ -2682,15 +2682,13 @@ class ApplicantsList extends Component {
                   <CardBody>
                     <PaginationProvider
                       pagination={paginationFactory(pageOptions)}
-                      key="unique-pagination-key"
-                      keyField="Pagination-Provider"
+                      keyField="Id"
                       columns={traineeListColumns}
                       data={trainees}
                     >
                       {({ paginationProps, paginationTableProps }) => (
                         <ToolkitProvider
-                          key="unique-toolkit-key"
-                          keyField="Toolkit-Provider"
+                          keyField="Id"
                           columns={traineeListColumns}
                           data={trainees}
                           search
@@ -2771,6 +2769,7 @@ class ApplicantsList extends Component {
                                     <BootstrapTable
                                       {...toolkitprops.baseProps}
                                       {...paginationTableProps}
+                                      keyField="Id"
                                       selectRow={selectRow}
                                       defaultSorted={defaultSorted}
                                       classes={

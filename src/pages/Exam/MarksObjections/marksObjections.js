@@ -208,8 +208,6 @@ class MarksObjectionsList extends Component {
       selectedTraineeId: null,
       traineeName: "",
       isEdit: false,
-      isOpen: false,
-      isAdd: true,
     });
     this.toggle();
   };
@@ -250,7 +248,8 @@ class MarksObjectionsList extends Component {
       selectedTestExam,
       selectedRequestType,
     } = this.state;
-    const { onAddNewEmployee, onUpdateEmployee } = this.props;
+    const { traineesOpt, onAddNewMarkObjection, onUpdateMarkObjection } =
+      this.props;
     console.log("values", values);
 
     values["courseId"] = selectedCourseId;
@@ -302,8 +301,14 @@ class MarksObjectionsList extends Component {
           objectioninfo[key] = values[key];
       });
       objectioninfo["courseId"] = selectedCourseId;
-      // objectioninfo["traineeName"] = selectedTraineeId;
       objectioninfo["testExamId"] = selectedTestExam;
+      objectioninfo["requestTypeId"] = selectedRequestType;
+      delete objectioninfo.traineeName;
+      const traineeNamePart = values.traineeName.split(" - ")[0].trim();
+
+      const trainee = traineesOpt.find(t => t.value.trim() === traineeNamePart);
+
+      objectioninfo["traineeId"] = trainee?.key || null;
       console.log("qqqqqqqqqqqqqqq", objectioninfo);
 
       this.setState({
@@ -312,19 +317,24 @@ class MarksObjectionsList extends Component {
 
       if (isEdit) {
         console.log("rrrrrrrrrrrrrrr", objectioninfo);
-        // onUpdateEmployee(objectioninfo);
+        // onUpdatemar(objectioninfo);
+        const saveMessage = "Saved successfully ";
+        this.setState({
+          successMessage: saveMessage,
+        });
+
+        this.toggle();
       } else {
         console.log("objectioninfoobjectioninfo", objectioninfo);
 
         // onAddNewEmployee(objectioninfo);
+        const saveMessage = "Saved successfully ";
+        this.setState({
+          successMessage: saveMessage,
+        });
+
+        this.toggle();
       }
-
-      const saveMessage = "Saved successfully ";
-      this.setState({
-        successMessage: saveMessage,
-      });
-
-      this.toggle();
     }
   };
 
@@ -362,7 +372,7 @@ class MarksObjectionsList extends Component {
   handleSelect = (fieldName, selectedValue, values) => {
     if (fieldName == "courseId") {
       this.setState({
-        selectedCourse: selectedValue,
+        selectedCourseId: selectedValue,
         markObjection: values,
       });
     }
