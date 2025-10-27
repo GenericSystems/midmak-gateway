@@ -248,6 +248,7 @@ class MarksObjectionsList extends Component {
       selectedTraineeId,
       selectedCourseId,
       selectedTestExam,
+      selectedRequestType,
     } = this.state;
     const { onAddNewEmployee, onUpdateEmployee } = this.props;
     console.log("values", values);
@@ -259,8 +260,8 @@ class MarksObjectionsList extends Component {
       values.requestNum === "" ||
       values.applyingDate === "" ||
       values.traineeName === "" ||
-      (values.courseId === "" && selectedCourse === "") ||
-      (values.testExamId === "" && selectedTestExam === null)
+      (values.courseId === "" && selectedCourseId === "") ||
+      (values.testExamId === "" && selectedTestExam === "")
     ) {
       if (values.requestNum.trim() === "") {
         this.setState({ requestNumError: true, saveError: true });
@@ -275,11 +276,11 @@ class MarksObjectionsList extends Component {
       if (values.courseId === "" && selectedCourseId === "") {
         this.setState({ courseError: true, saveError: true });
       }
-      if (values.courseId === "" && selectedTestExam === "") {
+      if (values.testExamId === "" && selectedTestExam === "") {
         this.setState({ testExamError: true, saveError: true });
       }
 
-      const emptyError = this.props.t("Fill the Required Fields to Save");
+      const errorSave = this.props.t("Fill the Required Fields to Save");
 
       this.setState({ errorMessage: errorSave }, () => {
         window.scrollTo(0, 0);
@@ -301,7 +302,7 @@ class MarksObjectionsList extends Component {
           objectioninfo[key] = values[key];
       });
       objectioninfo["courseId"] = selectedCourseId;
-      objectioninfo["traineeId"] = selectedTraineeId;
+      // objectioninfo["traineeName"] = selectedTraineeId;
       objectioninfo["testExamId"] = selectedTestExam;
       console.log("qqqqqqqqqqqqqqq", objectioninfo);
 
@@ -359,6 +360,12 @@ class MarksObjectionsList extends Component {
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
+    if (fieldName == "courseId") {
+      this.setState({
+        selectedCourse: selectedValue,
+        markObjection: values,
+      });
+    }
     if (fieldName == "testExamId") {
       this.setState({
         selectedTestExam: selectedValue,
@@ -387,6 +394,7 @@ class MarksObjectionsList extends Component {
       requestTypes,
     } = this.props;
     const {
+      errorMessage,
       selectedRequestStatus,
       testExamError,
       selectedCourseId,
@@ -746,10 +754,8 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.applyingDate) ||
                                           "",
-                                        traineeId:
-                                          (markObjection &&
-                                            markObjection.traineeId) ||
-                                          "",
+                                        traineeName:
+                                          markObjection?.selectedTrainee || "",
                                         courseId:
                                           (markObjection &&
                                             markObjection.courseId) ||
@@ -800,20 +806,20 @@ class MarksObjectionsList extends Component {
                                           <Form>
                                             <Card id="employee-card">
                                               <CardBody className="cardBody">
-                                                {emptyError && (
+                                                {errorMessage && (
                                                   <Alert
                                                     color="danger"
                                                     className="d-flex justify-content-center align-items-center alert-dismissible fade show"
                                                     role="alert"
                                                   >
-                                                    {emptyError}
+                                                    {errorMessage}
                                                     <button
                                                       type="button"
                                                       className="btn-close"
                                                       aria-label="Close"
                                                       onClick={() =>
                                                         this.handleAlertClose(
-                                                          "emptyError"
+                                                          "errorMessage"
                                                         )
                                                       }
                                                     ></button>
@@ -912,7 +918,7 @@ class MarksObjectionsList extends Component {
                                                       <div className="mb-3">
                                                         <Row>
                                                           <Col className="col-4">
-                                                            <Label for="traineeId">
+                                                            <Label for="traineeName">
                                                               {this.props.t(
                                                                 "Trainee Name"
                                                               )}
@@ -930,8 +936,8 @@ class MarksObjectionsList extends Component {
                                                               id="traineeName-Id"
                                                               className={
                                                                 "form-control" +
-                                                                ((errors.traineeId &&
-                                                                  touched.traineeId) ||
+                                                                ((errors.traineeName &&
+                                                                  touched.traineeName) ||
                                                                 traineeError
                                                                   ? " is-invalid"
                                                                   : "")
@@ -1219,10 +1225,8 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.applyingDate) ||
                                           "",
-                                        traineeId:
-                                          (markObjection &&
-                                            markObjection.traineeId) ||
-                                          "",
+                                        traineeName:
+                                          markObjection?.selectedTrainee || "",
                                         courseId:
                                           (markObjection &&
                                             markObjection.courseId) ||
@@ -1261,21 +1265,19 @@ class MarksObjectionsList extends Component {
                                               {t("")}
                                             </CardTitle>
                                             <CardBody className="cardBody">
-                                              {emptyError && (
+                                              {errorMessage && (
                                                 <Alert
                                                   color="danger"
                                                   className="d-flex justify-content-center align-items-center alert-dismissible fade show"
                                                   role="alert"
                                                 >
-                                                  {emptyError}
+                                                  {errorMessage}
                                                   <button
                                                     type="button"
                                                     className="btn-close"
                                                     aria-label="Close"
-                                                    onClick={() =>
-                                                      this.handleAlertClose(
-                                                        "emptyError"
-                                                      )
+                                                    onClick={
+                                                      this.handleAlertClose
                                                     }
                                                   ></button>
                                                 </Alert>
@@ -1298,21 +1300,21 @@ class MarksObjectionsList extends Component {
                                                       <Col className="col-8">
                                                         <Select
                                                           name="courseId"
-                                                          // options={
-                                                          //   filteredCoursesModified
-                                                          // }
+                                                          options={
+                                                            filteredCoursesModified
+                                                          }
                                                           key={`select_course`}
-                                                          // onChange={newValue => {
-                                                          //   this.handleSelect(
-                                                          //     "courseId",
-                                                          //     newValue.value
-                                                          //   );
-                                                          // }}
-                                                          // value={filteredCoursesModified.find(
-                                                          //   opt =>
-                                                          //     opt.value ===
-                                                          //     markObjection?.courseId
-                                                          // )}
+                                                          onChange={newValue => {
+                                                            this.handleSelect(
+                                                              "courseId",
+                                                              newValue.value
+                                                            );
+                                                          }}
+                                                          value={filteredCoursesModified.find(
+                                                            opt =>
+                                                              opt.value ===
+                                                              markObjection?.courseId
+                                                          )}
                                                           className={
                                                             "form-control" +
                                                             ((errors.courseId &&

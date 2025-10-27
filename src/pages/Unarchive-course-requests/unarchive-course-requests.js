@@ -375,7 +375,7 @@ class UnarchiveCourseReq extends Component {
   };
 
   handleAlertClose = () => {
-    this.setState({ emptyError: null });
+    this.setState({ errorMessage: null });
   };
 
   handleSuccessClose = () => {
@@ -445,6 +445,7 @@ class UnarchiveCourseReq extends Component {
       employeesNames,
     } = this.props;
     const {
+      errorMessage,
       selectedRequestStatus,
       userNameError,
       operationNeededError,
@@ -824,13 +825,13 @@ class UnarchiveCourseReq extends Component {
                                         <Form>
                                           <Card id="employee-card mt-8">
                                             <CardBody className="cardBody">
-                                              {emptyError && (
+                                              {errorMessage && (
                                                 <Alert
                                                   color="danger"
                                                   className="d-flex justify-content-center align-items-center alert-dismissible fade show"
                                                   role="alert"
                                                 >
-                                                  {emptyError}
+                                                  {errorMessage}
                                                   <button
                                                     type="button"
                                                     className="btn-close"
