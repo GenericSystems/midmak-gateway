@@ -298,6 +298,7 @@ class TraineesList extends Component {
       isAdd: false,
       mimeType: null ,
       dataUrl: null ,
+      downloadfinished: null,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -355,7 +356,7 @@ class TraineesList extends Component {
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     // if (trainees && !trainees.length) {
     onGetTrainees(lang);
-    this.setState({ dataUrl: this.dataUrl, mimeType: this.mimeType  });
+    this.setState({ dataUrl, mimeType, downloadfinished });
     this.setState({ trainees, tempTrainee });
     this.setState({
       deleted,
@@ -400,7 +401,7 @@ class TraineesList extends Component {
   handleFetch(fileName) {
     const { onFetchFile } = this.props;
     console.log("Calling with fileData", fileName, onFetchFile);
-    this.setState({ dataUrl: null, mimeType: null  });
+    this.setState({ dataUrl: null, mimeType: null, downloadfinished :this.props.downloadfinished });
     onFetchFile(fileName);
   }
 
@@ -1796,6 +1797,7 @@ class TraineesList extends Component {
       regcertificates,
       highstudytypes,
       estimates,
+      downloadfinished
     } = this.props;
     const {
       trainee,
@@ -9427,9 +9429,13 @@ class TraineesList extends Component {
                                                             </Card>
                                                           </Col>
                                                         </Form>
+                                                        {(downloadfinished) &&  (<p>Download Finished </p>)}  
+                                                        {!(downloadfinished) && (<p>Download Not Finished</p>)}  
+                                                  
                                                       </div>
                                                     )}
                                                   </Formik>
+                                                  
                                                 )}
                                               </div>
                                             </div>
@@ -9481,6 +9487,7 @@ const mapStateToProps = ({
   estimates,
   dataUrl,
   mimeType,
+  downloadfinished
 }) => ({
   trainees: trainees.trainees,
   // trainee: trainees.trainee,
@@ -9499,7 +9506,7 @@ const mapStateToProps = ({
   genders: genders.genders,
   academiccertificates: academiccertificates.academiccertificates,
   filteredAcademicCertificates:
-    academiccertificates.filteredAcademicCertificates,
+  academiccertificates.filteredAcademicCertificates,
   socialStatus: tempTrainees.socialStatus,
   relatives: relatives.relatives,
   regcertificates: tempTrainees.regcertificates,
@@ -9511,6 +9518,7 @@ const mapStateToProps = ({
   user_menu: menu_items.user_menu || [],
   dataUrl: dataUrl,
   mimeType: mimeType,
+  downloadfinished: downloadfinished
 });
 
 const mapDispatchToProps = dispatch => ({

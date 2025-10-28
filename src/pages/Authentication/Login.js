@@ -314,7 +314,7 @@ Login.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { error } = state.Login;
+  const { error } = state.login;
   return { error };
 };
 

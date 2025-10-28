@@ -10,14 +10,18 @@ const INIT_STATE = {
   _commonObjects: [],
   deleted: {},
   error: {},
-  loading: false,
-  dataUrl: null,
-  mimeType: null,
-  error: null,
+  loading: {},
+  dataUrl: {},
+  mimeType: {},
+  downloadfinished:{},
+  downloadstatus:
+  {
+    finished: null,
+    error: null,
+  }
 };
 
 const _Common = (state = INIT_STATE, action) => {
-  console.log("Reducer _Common action",state, action);
   switch (action.type) {
     case UPLOAD_FILE_SUCCESS:
       return { ...state, loading: true, error: null };
@@ -27,16 +31,21 @@ const _Common = (state = INIT_STATE, action) => {
         error: action.payload,
       };
     case FETCH_FILE_REQUEST:
-      return { ...state, loading: true, error: null };
+      return { ...state, loading: true, error: null, downloadfinished:0, downloadstatus: {finished:0, error : 0} };
     case FETCH_FILE_SUCCESS:
-      return {
+      console.log(`obret in FETCH_FILE_SUCCESS=`, state);
+      const obret = {
         ...state,
         loading: false,
         dataUrl: action.payload.dataUrl,
         mimeType: action.payload.mimeType,
+         downloadfinished:1,
+        downloadstatus: {finished:1, error : 0},
       };
+      console.log(`obret in FETCH_FILE_SUCCESS=`, obret);
+      return obret;
     case FETCH_FILE_FAILURE:
-      return { ...state, loading: false, error: action.payload };
+      return { ...state, loading: false, error: action.payload, downloadfinished:-1, downloadstatus: {finished:1, error : -1} };
     default:
       return state;
   }
