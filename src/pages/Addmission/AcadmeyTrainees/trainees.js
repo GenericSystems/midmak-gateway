@@ -298,7 +298,7 @@ class TraineesList extends Component {
       isAdd: false,
       mimeType: null ,
       dataUrl: null ,
-      downloadfinished: null,
+      downloadfinished: 0,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -351,6 +351,7 @@ class TraineesList extends Component {
       i18n,
       mimeType,
       dataUrl,
+      downloadfinished
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
