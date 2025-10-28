@@ -563,7 +563,7 @@ class UnarchiveCourseReq extends Component {
         editable: false,
       },
       {
-        dataField: "requestStatusId",
+        dataField: "statusName",
         text: this.props.t("Request Status"),
         sort: true,
         editable: false,
@@ -1004,57 +1004,7 @@ class UnarchiveCourseReq extends Component {
                                                                       </Col>
                                                                     </Row>
                                                                   </div>
-                                                                  {/* Course Name */}
-                                                                  <div className="mb-3">
-                                                                    <Row>
-                                                                      <Col className="col-4">
-                                                                        <Label for="courseId">
-                                                                          {this.props.t(
-                                                                            "Courses"
-                                                                          )}
-                                                                        </Label>
-                                                                        <span className="text-danger">
-                                                                          *
-                                                                        </span>
-                                                                      </Col>
-                                                                      <Col className="col-8">
-                                                                        <Select
-                                                                          name="courseId"
-                                                                          options={
-                                                                            filteredCoursesModified
-                                                                          }
-                                                                          key={`select_course`}
-                                                                          onChange={newValue => {
-                                                                            this.handleSelect(
-                                                                              "courseId",
-                                                                              newValue.value
-                                                                            );
-                                                                          }}
-                                                                          value={filteredCoursesModified.find(
-                                                                            opt =>
-                                                                              opt.value ===
-                                                                              unarchiveCourseRequest?.courseId
-                                                                          )}
-                                                                          className={
-                                                                            "form-control" +
-                                                                            ((errors.courseId &&
-                                                                              touched.courseId) ||
-                                                                            courseError
-                                                                              ? " is-invalid"
-                                                                              : "")
-                                                                          }
-                                                                        />
 
-                                                                        {courseError && (
-                                                                          <div className="invalid-feedback">
-                                                                            {this.props.t(
-                                                                              "Courses is required"
-                                                                            )}
-                                                                          </div>
-                                                                        )}
-                                                                      </Col>
-                                                                    </Row>
-                                                                  </div>
                                                                   {/* Start Date */}
                                                                   <div className="mb-3">
                                                                     <Row>
@@ -1106,14 +1056,12 @@ class UnarchiveCourseReq extends Component {
                                                                       </Col>
                                                                     </Row>
                                                                   </div>
-
-                                                                  {/* End Date */}
                                                                   <div className="mb-3">
                                                                     <Row>
                                                                       <Col className="col-4">
-                                                                        <Label for="endDate">
+                                                                        <Label for="userName-Id">
                                                                           {this.props.t(
-                                                                            "End Date"
+                                                                            "User Name"
                                                                           )}
                                                                         </Label>
                                                                         <span className="text-danger">
@@ -1122,36 +1070,87 @@ class UnarchiveCourseReq extends Component {
                                                                       </Col>
                                                                       <Col className="col-8">
                                                                         <Field
-                                                                          name="endDate"
-                                                                          className={`form-control ${
-                                                                            endDateError
-                                                                              ? "is-invalid"
-                                                                              : ""
-                                                                          }`}
-                                                                          type="date"
+                                                                          name="userNameId"
+                                                                          as="input"
+                                                                          id="userName-Id"
+                                                                          className={
+                                                                            "form-control" +
+                                                                            ((errors.userNameId &&
+                                                                              touched.userNameId) ||
+                                                                            userNameError
+                                                                              ? " is-invalid"
+                                                                              : "")
+                                                                          }
+                                                                          type="text"
+                                                                          placeholder="Search..."
                                                                           value={
-                                                                            values.endDate
-                                                                              ? new Date(
-                                                                                  values.endDate
-                                                                                )
-                                                                                  .toISOString()
-                                                                                  .split(
-                                                                                    "T"
-                                                                                  )[0]
-                                                                              : ""
+                                                                            employeesNames.find(
+                                                                              empl =>
+                                                                                empl.key ===
+                                                                                this
+                                                                                  .state
+                                                                                  .selectedUserName
+                                                                            )
+                                                                              ?.value ||
+                                                                            ""
                                                                           }
-                                                                          onChange={
-                                                                            handleChange
-                                                                          }
-                                                                          onBlur={
-                                                                            handleBlur
-                                                                          }
-                                                                          id="endDate-date-input"
+                                                                          onChange={e => {
+                                                                            const newValue =
+                                                                              e
+                                                                                .target
+                                                                                .value;
+
+                                                                            const selectedEmployee =
+                                                                              employeesNames.find(
+                                                                                empl =>
+                                                                                  empl.value ===
+                                                                                  newValue
+                                                                              );
+
+                                                                            if (
+                                                                              selectedEmployee
+                                                                            ) {
+                                                                              this.setState(
+                                                                                {
+                                                                                  selectedUserName:
+                                                                                    selectedEmployee.key,
+                                                                                  userName:
+                                                                                    selectedEmployee.value,
+                                                                                }
+                                                                              );
+                                                                            } else {
+                                                                              this.setState(
+                                                                                {
+                                                                                  selectedUserName:
+                                                                                    null,
+                                                                                  userName:
+                                                                                    newValue,
+                                                                                }
+                                                                              );
+                                                                            }
+                                                                          }}
+                                                                          list="fullNames"
+                                                                          autoComplete="off"
                                                                         />
-                                                                        {endDateError && (
+
+                                                                        <datalist id="fullNames">
+                                                                          {employeesNames.map(
+                                                                            employeesName => (
+                                                                              <option
+                                                                                key={
+                                                                                  employeesName.key
+                                                                                }
+                                                                                value={
+                                                                                  employeesName.value
+                                                                                }
+                                                                              />
+                                                                            )
+                                                                          )}
+                                                                        </datalist>
+                                                                        {userNameError && (
                                                                           <div className="invalid-feedback">
                                                                             {this.props.t(
-                                                                              "End Date is required"
+                                                                              "User Name is required"
                                                                             )}
                                                                           </div>
                                                                         )}
@@ -1264,6 +1263,107 @@ class UnarchiveCourseReq extends Component {
                                                                 </Row>
                                                               </Col>
                                                               <Col lg="6">
+                                                                {/* Course Name */}
+                                                                <div className="mb-3">
+                                                                  <Row>
+                                                                    <Col className="col-4">
+                                                                      <Label for="courseId">
+                                                                        {this.props.t(
+                                                                          "Courses"
+                                                                        )}
+                                                                      </Label>
+                                                                      <span className="text-danger">
+                                                                        *
+                                                                      </span>
+                                                                    </Col>
+                                                                    <Col className="col-8">
+                                                                      <Select
+                                                                        name="courseId"
+                                                                        options={
+                                                                          filteredCoursesModified
+                                                                        }
+                                                                        key={`select_course`}
+                                                                        onChange={newValue => {
+                                                                          this.handleSelect(
+                                                                            "courseId",
+                                                                            newValue.value
+                                                                          );
+                                                                        }}
+                                                                        value={filteredCoursesModified.find(
+                                                                          opt =>
+                                                                            opt.value ===
+                                                                            unarchiveCourseRequest?.courseId
+                                                                        )}
+                                                                        className={
+                                                                          (errors.courseId &&
+                                                                            touched.courseId) ||
+                                                                          courseError
+                                                                            ? " is-invalid"
+                                                                            : ""
+                                                                        }
+                                                                      />
+
+                                                                      {courseError && (
+                                                                        <div className="invalid-feedback">
+                                                                          {this.props.t(
+                                                                            "Courses is required"
+                                                                          )}
+                                                                        </div>
+                                                                      )}
+                                                                    </Col>
+                                                                  </Row>
+                                                                </div>
+                                                                {/* End Date */}
+                                                                <div className="mb-3">
+                                                                  <Row>
+                                                                    <Col className="col-4">
+                                                                      <Label for="endDate">
+                                                                        {this.props.t(
+                                                                          "End Date"
+                                                                        )}
+                                                                      </Label>
+                                                                      <span className="text-danger">
+                                                                        *
+                                                                      </span>
+                                                                    </Col>
+                                                                    <Col className="col-8">
+                                                                      <Field
+                                                                        name="endDate"
+                                                                        className={`form-control ${
+                                                                          endDateError
+                                                                            ? "is-invalid"
+                                                                            : ""
+                                                                        }`}
+                                                                        type="date"
+                                                                        value={
+                                                                          values.endDate
+                                                                            ? new Date(
+                                                                                values.endDate
+                                                                              )
+                                                                                .toISOString()
+                                                                                .split(
+                                                                                  "T"
+                                                                                )[0]
+                                                                            : ""
+                                                                        }
+                                                                        onChange={
+                                                                          handleChange
+                                                                        }
+                                                                        onBlur={
+                                                                          handleBlur
+                                                                        }
+                                                                        id="endDate-date-input"
+                                                                      />
+                                                                      {endDateError && (
+                                                                        <div className="invalid-feedback">
+                                                                          {this.props.t(
+                                                                            "End Date is required"
+                                                                          )}
+                                                                        </div>
+                                                                      )}
+                                                                    </Col>
+                                                                  </Row>
+                                                                </div>
                                                                 <div className="mb-3">
                                                                   <Row>
                                                                     <Col className="col-4">
@@ -1307,108 +1407,6 @@ class UnarchiveCourseReq extends Component {
                                                                         id="archiveNotes"
                                                                         className="form-control"
                                                                       />
-                                                                    </Col>
-                                                                  </Row>
-                                                                </div>
-
-                                                                <div className="mb-3">
-                                                                  <Row>
-                                                                    <Col className="col-4">
-                                                                      <Label for="userName-Id">
-                                                                        {this.props.t(
-                                                                          "User Name"
-                                                                        )}
-                                                                      </Label>
-                                                                      <span className="text-danger">
-                                                                        *
-                                                                      </span>
-                                                                    </Col>
-                                                                    <Col className="col-8">
-                                                                      <Field
-                                                                        name="userNameId"
-                                                                        as="input"
-                                                                        id="userName-Id"
-                                                                        className={
-                                                                          "form-control" +
-                                                                          ((errors.userNameId &&
-                                                                            touched.userNameId) ||
-                                                                          userNameError
-                                                                            ? " is-invalid"
-                                                                            : "")
-                                                                        }
-                                                                        type="text"
-                                                                        placeholder="Search..."
-                                                                        value={
-                                                                          employeesNames.find(
-                                                                            empl =>
-                                                                              empl.key ===
-                                                                              this
-                                                                                .state
-                                                                                .selectedUserName
-                                                                          )
-                                                                            ?.value ||
-                                                                          ""
-                                                                        }
-                                                                        onChange={e => {
-                                                                          const newValue =
-                                                                            e
-                                                                              .target
-                                                                              .value;
-
-                                                                          const selectedEmployee =
-                                                                            employeesNames.find(
-                                                                              empl =>
-                                                                                empl.value ===
-                                                                                newValue
-                                                                            );
-
-                                                                          if (
-                                                                            selectedEmployee
-                                                                          ) {
-                                                                            this.setState(
-                                                                              {
-                                                                                selectedUserName:
-                                                                                  selectedEmployee.key,
-                                                                                userName:
-                                                                                  selectedEmployee.value,
-                                                                              }
-                                                                            );
-                                                                          } else {
-                                                                            this.setState(
-                                                                              {
-                                                                                selectedUserName:
-                                                                                  null,
-                                                                                userName:
-                                                                                  newValue,
-                                                                              }
-                                                                            );
-                                                                          }
-                                                                        }}
-                                                                        list="fullNames"
-                                                                        autoComplete="off"
-                                                                      />
-
-                                                                      <datalist id="fullNames">
-                                                                        {employeesNames.map(
-                                                                          employeesName => (
-                                                                            <option
-                                                                              key={
-                                                                                employeesName.key
-                                                                              }
-                                                                              value={
-                                                                                employeesName.value
-                                                                              }
-                                                                            />
-                                                                          )
-                                                                        )}
-                                                                      </datalist>
-                                                                      {userNameError && (
-                                                                        <div className="invalid-feedback">
-                                                                          {this.props.t(
-                                                                            "User Name is required"
-                                                                          )}
-                                                                        </div>
-                                                                      )}
                                                                     </Col>
                                                                   </Row>
                                                                 </div>

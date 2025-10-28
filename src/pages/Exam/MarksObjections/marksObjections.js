@@ -107,6 +107,7 @@ class MarksObjectionsList extends Component {
       deleted,
       user_menu,
       requestTypes,
+      gradeTypes,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -122,6 +123,7 @@ class MarksObjectionsList extends Component {
       deleted,
       traineeOpt,
       requestTypes,
+      gradeTypes,
     });
   }
 
@@ -247,6 +249,7 @@ class MarksObjectionsList extends Component {
       selectedCourseId,
       selectedTestExam,
       selectedRequestType,
+      selectedRequestStatus,
     } = this.state;
     const { traineesOpt, onAddNewMarkObjection, onUpdateMarkObjection } =
       this.props;
@@ -255,6 +258,7 @@ class MarksObjectionsList extends Component {
     values["courseId"] = selectedCourseId;
     values["testExamId"] = selectedTestExam;
     values["requestTypeId"] = selectedRequestType;
+    values.requestStatusId = isEdit ? selectedRequestStatus : 4;
     if (
       values.requestNum === "" ||
       values.applyingDate === "" ||
@@ -323,11 +327,11 @@ class MarksObjectionsList extends Component {
           successMessage: saveMessage,
         });
 
-        this.toggle();
+        this.toggleEdit();
       } else {
         console.log("objectioninfoobjectioninfo", objectioninfo);
 
-        // onAddNewEmployee(objectioninfo);
+        onAddNewMarkObjection(objectioninfo);
         const saveMessage = "Saved successfully ";
         this.setState({
           successMessage: saveMessage,
@@ -356,9 +360,21 @@ class MarksObjectionsList extends Component {
 
   handleMarkObjectionClick = arg => {
     console.log("arg", arg);
+    const { traineesOpt, onGetFilteredCoursesPlan } = this.props;
+    console.log("traineetraineetrainee", traineesOpt);
+    let markObjection = arg;
+    const trainee = traineesOpt.find(
+      trainee => trainee.fullName === markObjection["traineeName"]
+    );
+    console.log("traineetraineetrainee", trainee);
+    onGetFilteredCoursesPlan(trainee);
+    console.log("traineetraineetrainee", markObjection);
 
     this.setState({
-      markObjection: arg,
+      markObjection,
+      selectedTestExam: markObjection[testExamId],
+      selectedRequestType: markObjection[requestTypeId],
+      selectedRequestStatus: markObjection[requestStatusId],
       isEdit: true,
     });
     this.toggleEdit();
@@ -379,13 +395,13 @@ class MarksObjectionsList extends Component {
     if (fieldName == "testExamId") {
       this.setState({
         selectedTestExam: selectedValue,
-        markObjection: values,
+        // markObjection: values,
       });
     }
     if (fieldName == "requestTypeId") {
       this.setState({
         selectedRequestType: selectedValue,
-        markObjection: values,
+        // markObjection: values,
       });
     }
   };
@@ -402,6 +418,7 @@ class MarksObjectionsList extends Component {
       t,
       deleted,
       requestTypes,
+      gradeTypes,
     } = this.props;
     const {
       errorMessage,
@@ -527,7 +544,7 @@ class MarksObjectionsList extends Component {
         editable: false,
       },
       {
-        dataField: "requestStatus",
+        dataField: "requestStatusId",
         text: this.props.t("Request Status"),
         sort: true,
         editable: false,
@@ -853,7 +870,7 @@ class MarksObjectionsList extends Component {
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Field
-                                                              type="text"
+                                                              type="number"
                                                               name="requestNum"
                                                               id="requestNum"
                                                               className={
@@ -1068,9 +1085,9 @@ class MarksObjectionsList extends Component {
                                                             <Select
                                                               name="testExamId"
                                                               key={`select_testExam`}
-                                                              // options={
-                                                              //   testExamOpt
-                                                              // }
+                                                              options={
+                                                                gradeTypes
+                                                              }
                                                               className={
                                                                 "form-control" +
                                                                 ((errors.testExamId &&
@@ -1086,11 +1103,11 @@ class MarksObjectionsList extends Component {
                                                                   values
                                                                 );
                                                               }}
-                                                              // defaultValue={decreeReasons.find(
-                                                              //   opt =>
-                                                              //     opt.value ===
-                                                              //     markObjection?.testExamId
-                                                              // )}
+                                                              value={gradeTypes.find(
+                                                                opt =>
+                                                                  opt.value ===
+                                                                  markObjection?.testExamId
+                                                              )}
                                                             />
                                                             {testExamError && (
                                                               <div className="invalid-feedback">
@@ -1113,7 +1130,7 @@ class MarksObjectionsList extends Component {
                                                           </Col>
                                                           <Col className="col-8">
                                                             <Field
-                                                              type="text"
+                                                              type="number"
                                                               name="oldMark"
                                                               id="oldMark"
                                                               className={
@@ -1638,7 +1655,7 @@ class MarksObjectionsList extends Component {
                                                   <Row>
                                                     <Col lg="4">
                                                       <label
-                                                        htmlFor="requestStatus"
+                                                        htmlFor="requestStatusId"
                                                         className="form-label d-flex"
                                                       >
                                                         {this.props.t(
@@ -1668,7 +1685,7 @@ class MarksObjectionsList extends Component {
                                                                       ? "active"
                                                                       : ""
                                                                   }`}
-                                                                  name="requestStateId"
+                                                                  name="requestStatusId"
                                                                   id={`btnradio${index}`}
                                                                   autoComplete="off"
                                                                   defaultChecked={
@@ -1679,7 +1696,7 @@ class MarksObjectionsList extends Component {
                                                                   }
                                                                   onChange={() =>
                                                                     setFieldValue(
-                                                                      "requestStateId",
+                                                                      "requestStatusId",
                                                                       status.Id
                                                                     )
                                                                   }
@@ -1836,6 +1853,7 @@ const mapStateToProps = ({
   menu_items,
   employees,
   trainees,
+  gradeTypes,
 }) => ({
   filteredCourses: traineesDecrees.filteredCoursesPlans,
   traineesOpt: trainees.traineesOpt,
@@ -1846,6 +1864,7 @@ const mapStateToProps = ({
   employees: employees.employees,
   deleted: marksObjections.deleted,
   user_menu: menu_items.user_menu || [],
+  gradeTypes: gradeTypes.gradeTypes,
 });
 
 const mapDispatchToProps = dispatch => ({

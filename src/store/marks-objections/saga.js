@@ -26,11 +26,12 @@ import {
   getRequestTypesFail,
 } from "./actions";
 
-import { getTraineesOptSuccess, getTraineesOptFail } from "../trainees/actions";
 import {
-  getCoursesOfferingSuccess,
-  getCoursesOfferingFail,
-} from "../classScheduling/actions";
+  getGradeTypesSuccess,
+  getGradeTypesFail,
+} from "../grade-types/actions";
+
+import { getTraineesOptSuccess, getTraineesOptFail } from "../trainees/actions";
 //Include Both Helper File with needed methods
 import {
   getMarksObjections,
@@ -42,6 +43,7 @@ import {
   getCoursesOffering,
   getRequestStatus,
   getRequestTypes,
+  getGradeTypes,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchMarksObjections() {
@@ -70,21 +72,6 @@ function* fetchMarksObjections() {
     yield put(getTraineesOptSuccess(response));
   } catch (error) {
     yield put(getTraineesOptFail(error));
-  }
-
-  const get_courses_req = {
-    source: "db",
-    procedure: "Generic_Optiondatalist",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_CourseOffering",
-    filter: `isOffered = 1`,
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getCoursesOffering, get_courses_req);
-    yield put(getCoursesOfferingSuccess(response));
-  } catch (error) {
-    yield put(getCoursesOfferingFail(error));
   }
 
   const get_RequestStatus_req = {
@@ -116,126 +103,19 @@ function* fetchMarksObjections() {
     yield put(getRequestTypesFail(error));
   }
 
-  //   const get_work_classification_req = {
-  //     source: "db",
-  //     procedure: "Generic_getOptions",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "Settings_JobClassifications",
-  //     fields: "Id,arTitle",
-  //   };
-
-  //   try {
-  //     const response = yield call(
-  //       getWorkClassifications,
-  //       get_work_classification_req
-  //     );
-  //     console.log("11111111111111111", response);
-  //     yield put(getWorkClassificationsSuccess(response));
-  //   } catch (error) {
-  //     yield put(getWorkClassificationsFail(error));
-  //   }
-
-  //   const get_employmentCase_req = {
-  //     source: "db",
-  //     procedure: "Generic_getOptions",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "Settings_EmploymentCases",
-  //     fields: "Id,arTitle",
-  //   };
-  //   try {
-  //     const response = yield call(getEmploymentCases, get_employmentCase_req);
-  //     console.log("22222222222222222", response);
-  //     yield put(getEmploymentCasesSuccess(response));
-  //   } catch (error) {
-  //     yield put(getEmploymentCasesFail(error));
-  //   }
-
-  //   const get_AcademicYears_req = {
-  //     source: "db",
-  //     procedure: "Generic_Optiondatalist",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "Settings_Years",
-  //     fields: "Id,arTitle",
-  //   };
-  //   try {
-  //     const response = yield call(getAcademicYearsOpt, get_AcademicYears_req);
-  //     console.log("3333333333333333", response);
-  //     yield put(getAcademicYearsOptSuccess(response));
-  //   } catch (error) {
-  //     yield put(getAcademicYearsOptFail(error));
-  //   }
-  //   const get_JobRanks_req = {
-  //     source: "db",
-  //     procedure: "Generic_getOptions",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "Settings_JobRanks",
-  //     fields: "Id,arTitle",
-  //   };
-  //   try {
-  //     const response = yield call(getJobRanksOpt, get_JobRanks_req);
-  //     console.log("444444444444444444", response);
-  //     yield put(getJobRanksOptSuccess(response));
-  //   } catch (error) {
-  //     yield put(getJobRanksOptFail(error));
-  //   }
-
-  //   const get_JobTitles_req = {
-  //     source: "db",
-  //     procedure: "Generic_Optiondatalist",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "Settings_JobTitles",
-  //     fields: "Id,arTitle",
-  //   };
-  //   try {
-  //     const response = yield call(getJobTitlesOpt, get_JobTitles_req);
-  //     console.log("55555555555555555555", response);
-  //     yield put(getJobTitlesOptSuccess(response));
-  //   } catch (error) {
-  //     yield put(getJobTitlesOptFail(error));
-  //   }
-
-  //   const get_gender_req = {
-  //     source: "db",
-  //     procedure: "Generic_getOptions",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "Settings_Gender",
-  //     fields: "Id,arTitle",
-  //   };
-  //   try {
-  //     const response = yield call(getGendersch, get_gender_req);
-  //     yield put(getGenderschSuccess(response));
-  //   } catch (error) {
-  //     yield put(getGenderschFail(error));
-  //   }
-
-  //   const get_nationality_req = {
-  //     source: "db",
-  //     procedure: "Generic_getOptions",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "Settings_Nationality",
-  //     fields: "Id,arTitle",
-  //   };
-  //   try {
-  //     const response = yield call(getNationalitiesOpt, get_nationality_req);
-  //     yield put(getNationalitiesOptSuccess(response));
-  //   } catch (error) {
-  //     yield put(getNationalitiesOptFail(error));
-  //   }
-
-  //   const get_employeeName_req = {
-  //     source: "db",
-  //     procedure: "Generic_Optiondatalist",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "_Common_EmployeeOption",
-  //     fields: "Id,fullName",
-  //   };
-  //   try {
-  //     const response = yield call(getEmployeesNames, get_employeeName_req);
-  //     console.log("employeeName", response);
-  //     yield put(getEmployeesNamesSuccess(response));
-  //   } catch (error) {
-  //     yield put(getEmployeesNamesFail(error));
-  //   }
+  const get_gradeType_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_CourseContents",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getGradeTypes, get_gradeType_req);
+    yield put(getGradeTypesSuccess(response));
+  } catch (error) {
+    yield put(getGradeTypesFail(error));
+  }
 }
 
 function* getMarkObjectionProfile() {
