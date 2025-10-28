@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import classnames from "classnames";
-import { fetchFile } from '../../../store/_common/actions'; // adjust path
+import { fetchFile } from "../../../store/_common/actions"; // adjust path
 
 import {
   Row,
@@ -395,7 +395,6 @@ class TraineesList extends Component {
     }
     this.setState({ languageState: lang });
     i18n.on("languageChanged", this.handleLanguageChange);
-   
   }
 
   handleFetch(fileName) {
@@ -405,18 +404,15 @@ class TraineesList extends Component {
     onFetchFile(fileName);
   }
 
-
   openModal = (event, fileName) => {
-    console.log("Opening modal",event, fileName);
-    this.handleFetch(fileName)
+    console.log("Opening modal", event, fileName);
+    this.handleFetch(fileName);
   };
 
-  
   closeModal = () => {
-      console.log("Closing modal");
-      this.setState({ showModal: false });
+    console.log("Closing modal");
+    this.setState({ showModal: false });
   };
-
 
   handleLanguageChange = lng => {
     // const { onGetTrainees } = this.props;
@@ -551,9 +547,9 @@ class TraineesList extends Component {
     }));
   };
 
-  handleShowFile = (values) => {
+  handleShowFile = values => {
     setFileId(values.fileId);
-     this.setState(prevState => ({
+    this.setState(prevState => ({
       showViewer: !prevState.showViewer,
     }));
   };
@@ -1999,7 +1995,7 @@ class TraineesList extends Component {
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
+              id="trnprofdeletetooltip"
               onClick={() => this.onClickDelete(trnProfExperience)}
             ></i>
           </Link>
@@ -2158,26 +2154,26 @@ class TraineesList extends Component {
     const preReqColumns = [
       {
         dataField: "Id",
-        Id:1,
+        Id: 1,
         text: this.props.t("#"),
         editable: false,
         hidden: true,
       },
       {
         dataField: "docName",
-        Id:2,
+        Id: 2,
         text: this.props.t("Document Name"),
         editable: false,
       },
       {
         dataField: "requiredNumber",
-        Id:3,
+        Id: 3,
         text: this.props.t("Required Number"),
         editable: false,
       },
       {
         dataField: "availableNumber",
-        Id:4,
+        Id: 4,
         text: this.props.t("Available Number"),
         editor: {
           type: "number",
@@ -2194,7 +2190,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "preventAdmission",
-        Id:5,
+        Id: 5,
         text: this.props.t("Prevent Admission"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2208,7 +2204,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "preventRegistration",
-        Id:6,
+        Id: 6,
         text: this.props.t("Prevent Registration"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2224,7 +2220,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "preventGraduation",
-        Id:7,
+        Id: 7,
         text: this.props.t("Prevent Graduation"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2240,7 +2236,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "requireAttestation",
-        Id:8,
+        Id: 8,
         text: this.props.t("Require Attestation"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2256,7 +2252,7 @@ class TraineesList extends Component {
       },
       {
         dataField: "attestated",
-        Id:9,
+        Id: 9,
         text: this.props.t("Attestated"),
         editable: false,
         formatter: (cellContent, row) => (
@@ -2297,7 +2293,16 @@ class TraineesList extends Component {
                 href={"#"}
                 rel="noopener noreferrer"
                 className="text-truncate"
-                onClick={event => {console.log('SelectedText',row.filePath, row.selectedFileName, row.fileName); this.fileName = row.fileName;this.openModal(event,row.filePath)}}
+                onClick={event => {
+                  console.log(
+                    "SelectedText",
+                    row.filePath,
+                    row.selectedFileName,
+                    row.fileName
+                  );
+                  this.fileName = row.fileName;
+                  this.openModal(event, row.filePath);
+                }}
                 style={{ maxWidth: "150px", textDecoration: "underline" }}
               >
                 {row.selectedFileName || row.fileName}
@@ -3071,7 +3076,7 @@ class TraineesList extends Component {
           />
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={t("Academy Trainees")} />
-            
+
             <Row>
               {sidebarOpen && (
                 <Row>
@@ -4739,15 +4744,13 @@ class TraineesList extends Component {
                         <div className="table-responsive">
                           <PaginationProvider
                             pagination={paginationFactory(pageOptions)}
-                            key="unique-pagination-key"
-                            keyField="Pagination-Provider"
+                            keyField="Id"
                             columns={MainInfoColumns}
                             data={trainees}
                           >
                             {({ paginationProps, paginationTableProps }) => (
                               <ToolkitProvider
-                                keyField="Pagination-Provider"
-                                key="unique-pagination-key"
+                                keyField="Id"
                                 data={trainees}
                                 columns={MainInfoColumns}
                                 search
@@ -8087,7 +8090,7 @@ class TraineesList extends Component {
                                                                                           onBlur={
                                                                                             handleBlur
                                                                                           }
-                                                                                          id="diploma-Id"
+                                                                                          id="diplomaCountry"
                                                                                         />
 
                                                                                         <datalist id="CountrydatalistOptions">
@@ -9427,10 +9430,7 @@ class TraineesList extends Component {
                                                       </div>
                                                     )}
                                                   </Formik>
-                                                  
                                                 )}
-
-
                                               </div>
                                             </div>
                                           </ModalBody>
@@ -9445,12 +9445,10 @@ class TraineesList extends Component {
                         </div>
                       </CardBody>
                     </Card>
-                    
                   </Col>
                 </Row>
               )}
             </Row>
-            
           </div>
         </React.Fragment>
       </div>
@@ -9531,7 +9529,6 @@ const mapDispatchToProps = dispatch => ({
   onAddRequiredDocs: trainee => dispatch(addRequiredDocs(trainee)),
   onUploadFile: fileData => dispatch(uploadFile(fileData)),
   onFetchFile: fileId => dispatch(fetchFile(fileId)),
-  
 });
 
 export default connect(

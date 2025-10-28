@@ -603,7 +603,7 @@ class Certificates extends Component {
               <Link className="text-primary" to="#">
                 <i
                   className="mdi mdi-qrcode font-size-18"
-                  id="edittooltip"
+                  id="qrcodetooltip"
                   onClick={() => this.handleGenerateQR(certificate)}
                 ></i>
               </Link>

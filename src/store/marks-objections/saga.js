@@ -22,6 +22,8 @@ import {
   deleteMarkObjectionFail,
   getRequestStatusSuccess,
   getRequestStatusFail,
+  getRequestTypesSuccess,
+  getRequestTypesFail,
 } from "./actions";
 
 import { getTraineesOptSuccess, getTraineesOptFail } from "../trainees/actions";
@@ -39,6 +41,7 @@ import {
   getTraineesOpt,
   getCoursesOffering,
   getRequestStatus,
+  getRequestTypes,
 } from "../../helpers/fakebackend_helper";
 
 function* fetchMarksObjections() {
@@ -46,7 +49,7 @@ function* fetchMarksObjections() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_Trainee",
+    tablename: "Common_MarksObjections",
   };
   try {
     const response = yield call(getMarksObjections, get_MarksObjections_req);
@@ -60,7 +63,7 @@ function* fetchMarksObjections() {
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_Trainee",
-    fields: "Id,fullName",
+    fields: "Id,fullName,TraineeNum",
   };
   try {
     const response = yield call(getTraineesOpt, get_trainees_req);
@@ -97,21 +100,21 @@ function* fetchMarksObjections() {
     yield put(getRequestStatusFail(error));
   }
 
-  //   const get_contractType_req = {
-  //     source: "db",
-  //     procedure: "Generic_getOptions",
-  //     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //     tablename: "Settings_MarkObjectionType",
-  //     fields: "Id,arTitle",
-  //   };
+  const get_RequestType_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_RequestType",
+    fields: "Id,arTitle",
+  };
 
-  //   try {
-  //     const response = yield call(getMarksObjectionsTypes, get_contractType_req);
-  //     console.log("999999999999999999999999999", response);
-  //     yield put(getMarksObjectionsTypesSuccess(response));
-  //   } catch (error) {
-  //     yield put(getMarksObjectionsTypesFail(error));
-  //   }
+  try {
+    const response = yield call(getRequestTypes, get_RequestType_req);
+    console.log("999999999999999999999999999", response);
+    yield put(getRequestTypesSuccess(response));
+  } catch (error) {
+    yield put(getRequestTypesFail(error));
+  }
 
   //   const get_work_classification_req = {
   //     source: "db",
@@ -250,8 +253,8 @@ function* onAddNewMarkObjection({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_MarkObjection";
-  payload["queryname"] = "_Common_MarkObjection";
+  payload["tablename"] = "Common_MarksObjections";
+  payload["queryname"] = "_Common_MarksObjections";
 
   try {
     const response = yield call(addNewMarkObjection, payload);
@@ -266,8 +269,8 @@ function* onDeleteMarkObjection({ payload, contract }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_MarkObjection";
-
+  payload["tablename"] = "Common_MarksObjections";
+  payload["queryname"] = "_Common_MarksObjections";
   try {
     const response = yield call(deleteMarkObjection, payload);
     yield put(deleteMarkObjectionSuccess(response[0]));
@@ -281,8 +284,8 @@ function* onUpdateMarkObjection({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Common_MarkObjection";
-  payload["queryname"] = "_Common_MarkObjection";
+  payload["tablename"] = "Common_MarksObjections";
+  payload["queryname"] = "_Common_MarksObjections";
   try {
     const respupdate = yield call(updateMarkObjection, payload);
     console.log("UpdateMarkObjection", respupdate);

@@ -248,6 +248,7 @@ class DiplomaLevelsList extends Component {
                     )}
                     <PaginationProvider
                       pagination={paginationFactory(pageOptions)}
+                      keyField="Id"
                     >
                       {({ paginationProps, paginationTableProps }) => (
                         <ToolkitProvider

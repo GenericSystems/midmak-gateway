@@ -2413,70 +2413,6 @@ class ApplicantsList extends Component {
       mode: "checkbox",
     };
 
-    const ParentsColumns = [
-      { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "arName", text: t("Name(ar)"), sort: true },
-      { dataField: "enName", text: t("Name(en)"), sort: true },
-      {
-        dataField: "relativeId",
-        text: t("Relatives"),
-        formatter: (cell, row) => (
-          <Select
-            key={`relative_Id`}
-            options={relatives}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "relativeId",
-                newValue.value
-              );
-            }}
-            value={relatives.find(opt => opt.value == row.relativeId)}
-          />
-        ),
-        editable: false,
-      },
-
-      {
-        dataField: "nationalityId",
-        text: t("Nationality"),
-        formatter: (cell, row) => (
-          <Select
-            key={`nationality_Id`}
-            options={nationalities}
-            onChange={newValue => {
-              this.handleSelectChangeDetails(
-                row.Id,
-                "nationalityId",
-                newValue.value
-              );
-            }}
-            defaultValue={nationalities.find(
-              opt => opt.value == row.ationalityId
-            )}
-          />
-        ),
-        editable: false,
-      },
-      { dataField: "phone", text: t("Phone Number") },
-      { dataField: "cellular", text: t("Cellular Number") },
-      {
-        dataField: "delete",
-        text: "",
-        isDummyField: true,
-        editable: false,
-        formatter: (cellContent, relative) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
-              onClick={() => this.deleteRelative(relative)}
-            ></i>
-          </Link>
-        ),
-      },
-    ];
-
     const preReqColumns = [
       {
         dataField: "Id",
@@ -2709,7 +2645,7 @@ class ApplicantsList extends Component {
           <Link className="text-danger" to="#">
             <i
               className="mdi mdi-delete font-size-18"
-              id="deletetooltip"
+              id="trnProfdeletetooltip"
               onClick={() => this.onClickDelete(trnProfExperience)}
             ></i>
           </Link>
@@ -5630,7 +5566,7 @@ class ApplicantsList extends Component {
                                                                               onBlur={
                                                                                 handleBlur
                                                                               }
-                                                                              id="diploma-Id"
+                                                                              id="diplomaCountry"
                                                                             />
 
                                                                             <datalist id="CountrydatalistOptions">

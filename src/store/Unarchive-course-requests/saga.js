@@ -60,7 +60,7 @@ function* fetchUnarchiveCourseRequests() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_UnarchiveCourseRequest",
+    tablename: "_Common_UnarchiveCourseRequest",
   };
 
   try {
@@ -146,6 +146,7 @@ function* onAddUnarchiveCourseRequest({ payload }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_UnarchiveCourseRequest";
+  payload["queryname"] = "_Common_UnarchiveCourseRequest";
 
   try {
     const response = yield call(addUnarchiveCourseRequest, payload);
@@ -161,6 +162,7 @@ function* onUpdateUnarchiveCourseRequest({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_UnarchiveCourseRequest";
+  payload["queryname"] = "_Common_UnarchiveCourseRequest";
 
   try {
     const response = yield call(updateUnarchiveCourseRequest, payload);

@@ -390,7 +390,8 @@ class DatatableTables extends Component {
     const { SearchBar } = Search;
 
     //meta title
-    document.title = "Data Tables | keyInHands - React Admin & Dashboard Template";
+    document.title =
+      "Data Tables | keyInHands - React Admin & Dashboard Template";
 
     return (
       <React.Fragment>
@@ -411,13 +412,13 @@ class DatatableTables extends Component {
                     </p>
                     <PaginationProvider
                       pagination={paginationFactory(pageOptions)}
-                      keyField="id"
+                      keyField="Id"
                       columns={columns}
                       data={this.state.productData}
                     >
                       {({ paginationProps, paginationTableProps }) => (
                         <ToolkitProvider
-                          keyField="id"
+                          keyField="Id"
                           columns={columns}
                           data={this.state.productData}
                           search
@@ -441,7 +442,7 @@ class DatatableTables extends Component {
                                 <Col xl="12">
                                   <div className="table-responsive">
                                     <BootstrapTable
-                                      keyField={"id"}
+                                      keyField="Id"
                                       responsive
                                       bordered={false}
                                       striped={false}

@@ -275,13 +275,13 @@ class EcommerceCustomers extends Component {
                   <CardBody>
                     <PaginationProvider
                       pagination={paginationFactory(pageOptions)}
-                      keyField="id"
+                      keyField="Id"
                       columns={this.state.EcommerceCustomerColumns}
                       data={customers}
                     >
                       {({ paginationProps, paginationTableProps }) => (
                         <ToolkitProvider
-                          keyField="id"
+                          keyField="Id"
                           columns={this.state.EcommerceCustomerColumns}
                           data={customers}
                           search
@@ -316,7 +316,7 @@ class EcommerceCustomers extends Component {
 
                               <div className="table-responsive">
                                 <BootstrapTable
-                                  keyField={"id"}
+                                  keyField="Id"
                                   responsive
                                   bordered={false}
                                   striped={false}

@@ -12,11 +12,14 @@ import {
   DELETE_MARK_OBJECTION_FAIL,
   GET_REQUEST_STATUS_SUCCESS,
   GET_REQUEST_STATUS_FAIL,
+  GET_REQUEST_TYPES_SUCCESS,
+  GET_REQUEST_TYPES_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   marksObjections: [],
   requestStatus: [],
+  requestTypes: [],
   deleted: {},
   error: {},
 };
@@ -100,6 +103,19 @@ const marksObjections = (state = INIT_STATE, action) => {
       };
 
     case GET_REQUEST_STATUS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_REQUEST_TYPES_SUCCESS:
+      return {
+        ...state,
+        requestTypes: action.payload,
+        deleted: {},
+      };
+
+    case GET_REQUEST_TYPES_FAIL:
       return {
         ...state,
         error: action.payload,
