@@ -17,7 +17,7 @@ const INIT_STATE = {
 };
 
 const _Common = (state = INIT_STATE, action) => {
-  
+  console.log("Reducer _Common action",state, action);
   switch (action.type) {
     case UPLOAD_FILE_SUCCESS:
       return { ...state, loading: true, error: null };
