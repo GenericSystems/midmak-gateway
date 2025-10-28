@@ -298,13 +298,12 @@ class TraineesList extends Component {
       isAdd: false,
       mimeType: null ,
       dataUrl: null ,
-      downloadstatus: null,
+      downloadfinished: null,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleColorChange = this.handleColorChange.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.downloadstatus = this.downloadstatus.bind(this);
   }
 
   componentDidMount() {
@@ -352,13 +351,12 @@ class TraineesList extends Component {
       i18n,
       mimeType,
       dataUrl,
-      downloadstatus
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     // if (trainees && !trainees.length) {
     onGetTrainees(lang);
-    this.setState({ dataUrl, mimeType, downloadstatus });
+    this.setState({ dataUrl, mimeType, downloadfinished });
     this.setState({ trainees, tempTrainee });
     this.setState({
       deleted,
@@ -403,7 +401,7 @@ class TraineesList extends Component {
   handleFetch(fileName) {
     const { onFetchFile } = this.props;
     console.log("Calling with fileData", fileName, onFetchFile);
-    this.setState({ dataUrl: null, mimeType: null, downloadstatus :this.props.downloadstatus });
+    this.setState({ dataUrl: null, mimeType: null, downloadfinished :this.props.downloadfinished });
     onFetchFile(fileName);
   }
 
@@ -1799,7 +1797,7 @@ class TraineesList extends Component {
       regcertificates,
       highstudytypes,
       estimates,
-      downloadstatus
+      downloadfinished
     } = this.props;
     const {
       trainee,
@@ -9431,8 +9429,8 @@ class TraineesList extends Component {
                                                             </Card>
                                                           </Col>
                                                         </Form>
-                                                        {(downloadstatus.downloadfinished == 1) &&  (<p>Download Finished </p>)}  
-                                                        {(downloadstatus.downloadfinished == 0) && (<p>Download Not Finished</p>)}  
+                                                        {(downloadfinished) &&  (<p>Download Finished </p>)}  
+                                                        {!(downloadfinished) && (<p>Download Not Finished</p>)}  
                                                   
                                                       </div>
                                                     )}
@@ -9489,7 +9487,7 @@ const mapStateToProps = ({
   estimates,
   dataUrl,
   mimeType,
-  downloadstatus
+  downloadfinished
 }) => ({
   trainees: trainees.trainees,
   // trainee: trainees.trainee,
@@ -9520,7 +9518,7 @@ const mapStateToProps = ({
   user_menu: menu_items.user_menu || [],
   dataUrl: dataUrl,
   mimeType: mimeType,
-  downloadstatus: downloadstatus
+  downloadfinished: downloadfinished
 });
 
 const mapDispatchToProps = dispatch => ({
