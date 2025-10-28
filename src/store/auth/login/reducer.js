@@ -16,7 +16,7 @@ const initialState = {
 };
 
 const login = (state = initialState, action) => {
-  console.log("reducer login", state, action);
+  // console.log("reducer login", state, action);
 
   if (action.type.includes("SUCCESS") && action.payload === undefined) {
     const error = "An Error Occurred";

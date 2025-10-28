@@ -87,7 +87,7 @@ class TraineesList extends Component {
   constructor(props) {
     super(props);
     this.fileInputRef = React.createRef();
-
+    console.log("Constructor props", props);
     this.state = {
       profExperiencesArray: [],
       trainees: {},
@@ -296,6 +296,8 @@ class TraineesList extends Component {
       isTempTraineeSaved: false,
       selectedTraineeId: 0,
       isAdd: false,
+      mimeType: null ,
+      dataUrl: null ,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -346,12 +348,14 @@ class TraineesList extends Component {
       deleted,
       user_menu,
       i18n,
+      mimeType,
+      dataUrl,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     // if (trainees && !trainees.length) {
     onGetTrainees(lang);
-
+    this.setState({ dataUrl: this.dataUrl, mimeType: this.mimeType  });
     this.setState({ trainees, tempTrainee });
     this.setState({
       deleted,
@@ -365,7 +369,7 @@ class TraineesList extends Component {
       nationalities,
       regcertificates,
       diplomalevels,
-      traineeStatus
+      traineeStatus,
     });
     // }
 
@@ -390,7 +394,6 @@ class TraineesList extends Component {
       }
     }
     this.setState({ languageState: lang });
-
     i18n.on("languageChanged", this.handleLanguageChange);
    
   }
@@ -398,6 +401,7 @@ class TraineesList extends Component {
   handleFetch(fileName) {
     const { onFetchFile } = this.props;
     console.log("Calling with fileData", fileName, onFetchFile);
+    this.setState({ dataUrl: null, mimeType: null  });
     onFetchFile(fileName);
   }
 
@@ -1023,7 +1027,7 @@ class TraineesList extends Component {
           : [],
       isEdit: true,
     });
-    // console.log("traaaaaaaaaaaineeeerrrrr", selectedTraineeId);
+    console.log(`Selected Trainee ID: ${arg}`);
     this.toggle();
   };
 
@@ -1921,7 +1925,8 @@ class TraineesList extends Component {
       isOpen,
       showModal,
     } = this.state;
-
+    console.log("state", this.state);
+    console.log("props", this.props);
     const direction = languageState === "ar" ? "rtl" : "ltr";
 
     const showNewInput =
@@ -3042,7 +3047,7 @@ class TraineesList extends Component {
               <IconButton onClick={() => this.handleViewTrainee(trainee)}>
                 <i
                   className="bx bxs-user font-size-18 text-secondary"
-                  id="deletetooltip"
+                  id="viewtraineetooltip"
                 ></i>
               </IconButton>
             </Tooltip>
@@ -4730,6 +4735,7 @@ class TraineesList extends Component {
                             </Alert>
                           )}
                         </div>
+                       
                         <div className="table-responsive">
                           <PaginationProvider
                             pagination={paginationFactory(pageOptions)}
@@ -4760,22 +4766,6 @@ class TraineesList extends Component {
                                           </div>
                                         </div>
                                       </Col>
-                                      {/*    {showAddButton && ( */}
-                                      {/* <Col sm="8">
-                                        <div className="text-sm-end">
-                                          <Tooltip
-                                            title={this.props.t("Add")}
-                                            placement="top"
-                                          >
-                                            <IconButton
-                                              color="primary"
-                                              onClick={this.handleAddRow}
-                                            >
-                                              <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                            </IconButton>
-                                          </Tooltip>
-                                        </div>
-                                      </Col> */}
                                     </Row>
                                     <Col xl="12">
                                       <div className="table-responsive">
@@ -5340,7 +5330,7 @@ class TraineesList extends Component {
                                                     </Card>
                                                   </div>
                                                 )}
-
+                                                
                                                 {showRegistrationForm && (
                                                   <Formik
                                                     enableReinitialize={true}
@@ -9491,6 +9481,8 @@ const mapStateToProps = ({
   years,
   relatives,
   estimates,
+  dataUrl,
+  mimeType,
 }) => ({
   trainees: trainees.trainees,
   // trainee: trainees.trainee,
@@ -9519,6 +9511,8 @@ const mapStateToProps = ({
   requiredDocs: tempTrainees.requiredDocs,
   traineeStatus: trainees.traineeStatus,
   user_menu: menu_items.user_menu || [],
+  dataUrl: dataUrl,
+  mimeType: mimeType,
 });
 
 const mapDispatchToProps = dispatch => ({

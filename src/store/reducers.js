@@ -4,7 +4,7 @@ import { combineReducers } from "redux";
 import Layout from "./layout/reducer";
 
 // Authentication
-import Login from "./auth/login/reducer";
+import login from "./auth/login/reducer";
 import Account from "./auth/register/reducer";
 import ForgetPassword from "./auth/forgetpwd/reducer";
 import Profile from "./auth/profile/reducer";
@@ -383,6 +383,8 @@ import diplomalevels from "./diploma-level/reducer";
 
 //HighStudyType
 import highstudytypes from "./high-study-types/reducer";
+// _Common
+import _Common from "./_common/reducer";
 
 const rootReducer = combineReducers({
   // public
@@ -393,7 +395,7 @@ const rootReducer = combineReducers({
   userMngs,
   roles,
   Layout,
-  Login,
+  login,
   Account,
   ForgetPassword,
   Profile,
@@ -518,6 +520,7 @@ const rootReducer = combineReducers({
   diplomalevels,
   highstudytypes,
   gradesVersions,
+  _Common
 });
 
 export default rootReducer;
