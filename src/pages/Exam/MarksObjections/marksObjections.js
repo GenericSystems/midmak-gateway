@@ -250,6 +250,7 @@ class MarksObjectionsList extends Component {
       selectedTestExam,
       selectedRequestType,
       selectedRequestStatus,
+      markObjection,
     } = this.state;
     const { traineesOpt, onAddNewMarkObjection, onUpdateMarkObjection } =
       this.props;
@@ -266,10 +267,9 @@ class MarksObjectionsList extends Component {
       (values.courseId === "" && selectedCourseId === "") ||
       (values.testExamId === "" && selectedTestExam === "")
     ) {
-      if (values.requestNum.trim() === "") {
-        this.setState({ requestNumError: true, saveError: true });
-      }
-
+      // if (values.requestNum === "") {
+      //   this.setState({ requestNumError: true, saveError: true });
+      // }
       if (values.applyingDate.trim() === "") {
         this.setState({ applyingDateError: true, saveError: true });
       }
@@ -320,6 +320,7 @@ class MarksObjectionsList extends Component {
       });
 
       if (isEdit) {
+        objectioninfo["Id"] = markObjection["Id"];
         console.log("rrrrrrrrrrrrrrr", objectioninfo);
         // onUpdatemar(objectioninfo);
         const saveMessage = "Saved successfully ";
@@ -361,20 +362,25 @@ class MarksObjectionsList extends Component {
   handleMarkObjectionClick = arg => {
     console.log("arg", arg);
     const { traineesOpt, onGetFilteredCoursesPlan } = this.props;
-    console.log("traineetraineetrainee", traineesOpt);
     let markObjection = arg;
-    const trainee = traineesOpt.find(
-      trainee => trainee.fullName === markObjection["traineeName"]
-    );
-    console.log("traineetraineetrainee", trainee);
-    onGetFilteredCoursesPlan(trainee);
+    // const trainee = traineesOpt.find(
+    //   trainee => trainee.fullName === markObjection["traineeName"]
+    // );
+    // console.log("traineetraineetrainee", trainee);
+    // onGetFilteredCoursesPlan(trainee);
     console.log("traineetraineetrainee", markObjection);
+    const foundTrainee = traineesOpt.find(
+      trainee => String(trainee.Id) === String(arg["traineeId"])
+    );
+    markObjection["traineeName"] = foundTrainee?.fullName || "";
 
     this.setState({
       markObjection,
-      selectedTestExam: markObjection[testExamId],
-      selectedRequestType: markObjection[requestTypeId],
-      selectedRequestStatus: markObjection[requestStatusId],
+      selectedTestExam: markObjection["testExamId"],
+      selectedRequestType: markObjection["requestTypeId"],
+      selectedRequestStatus: markObjection["requestStatusId"],
+      selectedCourseId: markObjection["courseId"],
+      selectedCourseName: markObjection["courseName"],
       isEdit: true,
     });
     this.toggleEdit();
@@ -389,7 +395,7 @@ class MarksObjectionsList extends Component {
     if (fieldName == "courseId") {
       this.setState({
         selectedCourseId: selectedValue,
-        markObjection: values,
+        // markObjection: values,
       });
     }
     if (fieldName == "testExamId") {
@@ -801,7 +807,7 @@ class MarksObjectionsList extends Component {
                                           "",
                                         applyingNotes:
                                           (markObjection &&
-                                            markObjection.absencePercent) ||
+                                            markObjection.applyingNotes) ||
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({
@@ -1266,13 +1272,41 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.oldMark) ||
                                           "",
+                                        newMark:
+                                          (markObjection &&
+                                            markObjection.newMark) ||
+                                          "",
                                         requestTypeId:
                                           (markObjection &&
                                             markObjection.requestTypeId) ||
                                           "",
                                         applyingNotes:
                                           (markObjection &&
-                                            markObjection.absencePercent) ||
+                                            markObjection.applyingNotes) ||
+                                          "",
+                                        decisionDate:
+                                          (markObjection &&
+                                            markObjection.decisionDate) ||
+                                          "",
+                                        decisionUser:
+                                          (markObjection &&
+                                            markObjection.decisionUser) ||
+                                          "",
+                                        decisionNotes:
+                                          (markObjection &&
+                                            markObjection.decisionNotes) ||
+                                          "",
+                                        turnDate:
+                                          (markObjection &&
+                                            markObjection.turnDate) ||
+                                          "",
+                                        turnUser:
+                                          (markObjection &&
+                                            markObjection.turnUser) ||
+                                          "",
+                                        turnNotes:
+                                          (markObjection &&
+                                            markObjection.turnNotes) ||
                                           "",
                                       }}
                                       validationSchema={Yup.object().shape({})}
@@ -1303,8 +1337,10 @@ class MarksObjectionsList extends Component {
                                                     type="button"
                                                     className="btn-close"
                                                     aria-label="Close"
-                                                    onClick={
-                                                      this.handleAlertClose
+                                                    onClick={() =>
+                                                      this.handleAlertClose(
+                                                        "errorMessage"
+                                                      )
                                                     }
                                                   ></button>
                                                 </Alert>
@@ -1404,9 +1440,9 @@ class MarksObjectionsList extends Component {
                                                             <Select
                                                               name="testExamId"
                                                               key={`select_testExam`}
-                                                              // options={
-                                                              //   testExamOpt
-                                                              // }
+                                                              options={
+                                                                gradeTypes
+                                                              }
                                                               className={
                                                                 "form-control"
                                                               }
@@ -1417,11 +1453,11 @@ class MarksObjectionsList extends Component {
                                                                   values
                                                                 );
                                                               }}
-                                                              // defaultValue={decreeReasons.find(
-                                                              //   opt =>
-                                                              //     opt.value ===
-                                                              //     markObjection?.testExamId
-                                                              // )}
+                                                              value={gradeTypes.find(
+                                                                opt =>
+                                                                  opt.value ===
+                                                                  markObjection?.testExamId
+                                                              )}
                                                             />
                                                           </Col>
                                                         </Row>
@@ -1441,9 +1477,9 @@ class MarksObjectionsList extends Component {
                                                             <Select
                                                               name="requestTypeId"
                                                               key={`select_requestType`}
-                                                              // options={
-                                                              //  requestTypeOpt
-                                                              // }
+                                                              options={
+                                                                requestTypes
+                                                              }
                                                               className={
                                                                 "form-control"
                                                               }
@@ -1454,11 +1490,11 @@ class MarksObjectionsList extends Component {
                                                                   values
                                                                 );
                                                               }}
-                                                              // defaultValue={requestTypeOpt.find(
-                                                              //   opt =>
-                                                              //     opt.value ===
-                                                              //     markObjection?.requestTypeId
-                                                              // )}
+                                                              value={requestTypes.find(
+                                                                opt =>
+                                                                  opt.value ===
+                                                                  markObjection?.requestTypeId
+                                                              )}
                                                             />
                                                           </Col>
                                                         </Row>

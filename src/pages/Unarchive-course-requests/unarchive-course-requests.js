@@ -847,11 +847,6 @@ class UnarchiveCourseReq extends Component {
                                                   <div className="bordered">
                                                     <Col lg="12">
                                                       <Card>
-                                                        <CardTitle id="card_header">
-                                                          {t(
-                                                            "Basic Information"
-                                                          )}
-                                                        </CardTitle>
                                                         <CardBody className="cardBody">
                                                           <Row>
                                                             <Row>
@@ -1209,57 +1204,82 @@ class UnarchiveCourseReq extends Component {
                                                                       </Col>
                                                                     </Row>
                                                                   </div>
-
-                                                                  {/* Operation Needed */}
-                                                                  <div className="mb-3">
-                                                                    <Row>
-                                                                      <Col className="col-4">
-                                                                        <Label for="operationNeededId">
-                                                                          {this.props.t(
-                                                                            "Operation Needed"
-                                                                          )}
-                                                                        </Label>
+                                                                  <Row className="d-flex justify-content-center ml-5 mt-6">
+                                                                    <Col lg="4">
+                                                                      <Label
+                                                                        for="requestStatus-Id"
+                                                                        className="form-label d-flex"
+                                                                      >
+                                                                        {this.props.t(
+                                                                          "Request status"
+                                                                        )}
                                                                         <span className="text-danger">
                                                                           *
                                                                         </span>
-                                                                      </Col>
-                                                                      <Col className="col-8">
-                                                                        <Select
-                                                                          name="operationNeededId"
-                                                                          key={`select_operationNeeded`}
-                                                                          options={
-                                                                            operationsNeeded
-                                                                          }
-                                                                          onChange={newValue => {
-                                                                            this.handleSelect(
-                                                                              "operationNeededId",
-                                                                              newValue.value
-                                                                            );
-                                                                          }}
-                                                                          value={operationsNeeded.find(
-                                                                            opt =>
-                                                                              opt.value ===
-                                                                              unarchiveCourseRequest?.operationNeededId
+                                                                      </Label>
+                                                                    </Col>
+                                                                    <Col lg="8">
+                                                                      <div className="d-flex flex-wrap  gap-3">
+                                                                        <div
+                                                                          className="btn-group button-or"
+                                                                          role="group"
+                                                                        >
+                                                                          {decisionStatus.map(
+                                                                            (
+                                                                              status,
+                                                                              index
+                                                                            ) => (
+                                                                              <React.Fragment
+                                                                                key={
+                                                                                  index
+                                                                                }
+                                                                              >
+                                                                                <input
+                                                                                  type="radio"
+                                                                                  className={`btn-check button-or ${
+                                                                                    selectedRequestStatus ===
+                                                                                    status.Id
+                                                                                      ? "active"
+                                                                                      : ""
+                                                                                  }`}
+                                                                                  name="requestStatusId"
+                                                                                  id={`btnradio${index}`}
+                                                                                  autoComplete="off"
+                                                                                  checked={
+                                                                                    selectedRequestStatus ===
+                                                                                    status.Id
+                                                                                      ? "active"
+                                                                                      : ""
+                                                                                  }
+                                                                                  onChange={() => {
+                                                                                    setFieldValue(
+                                                                                      "requestStatusId",
+                                                                                      status.Id
+                                                                                    );
+
+                                                                                    this.setState(
+                                                                                      {
+                                                                                        selectedRequestStatus:
+                                                                                          status.Id,
+                                                                                      }
+                                                                                    );
+                                                                                  }}
+                                                                                />
+                                                                                <Label
+                                                                                  className="btn btn-outline-primary smallButton w-sm"
+                                                                                  for={`btnradio${index}`}
+                                                                                >
+                                                                                  {
+                                                                                    status.arTitle
+                                                                                  }
+                                                                                </Label>
+                                                                              </React.Fragment>
+                                                                            )
                                                                           )}
-                                                                          className={
-                                                                            "form-control" +
-                                                                            ((errors.operationNeededId &&
-                                                                              touched.operationNeededId) ||
-                                                                            operationNeededError
-                                                                              ? " is-invalid"
-                                                                              : "")
-                                                                          }
-                                                                        />
-                                                                        {operationNeededError && (
-                                                                          <div className="invalid-feedback">
-                                                                            {this.props.t(
-                                                                              "Operation Needed is required"
-                                                                            )}
-                                                                          </div>
-                                                                        )}
-                                                                      </Col>
-                                                                    </Row>
-                                                                  </div>
+                                                                        </div>
+                                                                      </div>
+                                                                    </Col>
+                                                                  </Row>
                                                                 </Row>
                                                               </Col>
                                                               <Col lg="6">
@@ -1391,6 +1411,57 @@ class UnarchiveCourseReq extends Component {
                                                                   </Row>
                                                                 </div>
 
+                                                                {/* Operation Needed */}
+                                                                <div className="mb-3">
+                                                                  <Row>
+                                                                    <Col className="col-4">
+                                                                      <Label for="operationNeededId">
+                                                                        {this.props.t(
+                                                                          "Operation Needed"
+                                                                        )}
+                                                                      </Label>
+                                                                      <span className="text-danger">
+                                                                        *
+                                                                      </span>
+                                                                    </Col>
+                                                                    <Col className="col-8">
+                                                                      <Select
+                                                                        name="operationNeededId"
+                                                                        key={`select_operationNeeded`}
+                                                                        options={
+                                                                          operationsNeeded
+                                                                        }
+                                                                        onChange={newValue => {
+                                                                          this.handleSelect(
+                                                                            "operationNeededId",
+                                                                            newValue.value
+                                                                          );
+                                                                        }}
+                                                                        value={operationsNeeded.find(
+                                                                          opt =>
+                                                                            opt.value ===
+                                                                            unarchiveCourseRequest?.operationNeededId
+                                                                        )}
+                                                                        className={
+                                                                          "form-control" +
+                                                                          ((errors.operationNeededId &&
+                                                                            touched.operationNeededId) ||
+                                                                          operationNeededError
+                                                                            ? " is-invalid"
+                                                                            : "")
+                                                                        }
+                                                                      />
+                                                                      {operationNeededError && (
+                                                                        <div className="invalid-feedback">
+                                                                          {this.props.t(
+                                                                            "Operation Needed is required"
+                                                                          )}
+                                                                        </div>
+                                                                      )}
+                                                                    </Col>
+                                                                  </Row>
+                                                                </div>
+
                                                                 <div className="mb-3">
                                                                   <Row>
                                                                     <Col className="col-4">
@@ -1410,125 +1481,49 @@ class UnarchiveCourseReq extends Component {
                                                                     </Col>
                                                                   </Row>
                                                                 </div>
-
-                                                                <Col lg="12">
-                                                                  <div
-                                                                    className="upload-box p-2 mx-auto"
-                                                                    style={{
-                                                                      maxWidth:
-                                                                        "300px",
-                                                                      cursor:
-                                                                        "pointer",
-                                                                    }}
-                                                                    onClick={() =>
-                                                                      document
-                                                                        .getElementById(
-                                                                          "fileInput"
-                                                                        )
-                                                                        .click()
-                                                                    }
-                                                                  >
-                                                                    <div className="upload-content text-center">
-                                                                      <div className="upload-icon-wrapper mb-2">
-                                                                        <i className="bx bx-upload upload-icon"></i>
-                                                                      </div>
-                                                                      <p className="upload-text">
-                                                                        {this.props.t(
-                                                                          "Click or drag file to upload"
-                                                                        )}
-                                                                      </p>
-                                                                    </div>
-
-                                                                    <input
-                                                                      id="fileInput"
-                                                                      name="file"
-                                                                      type="file"
-                                                                      className="d-none"
-                                                                      onChange={
-                                                                        this
-                                                                          .handleFileChange
-                                                                      }
-                                                                    />
-                                                                  </div>
-                                                                </Col>
                                                               </Col>
                                                             </Row>
-                                                            <Row className="d-flex justify-content-center ml-5 mt-6">
-                                                              <Col lg="4">
-                                                                <Label
-                                                                  for="requestStatus-Id"
-                                                                  className="form-label d-flex"
-                                                                >
-                                                                  {this.props.t(
-                                                                    "Request status"
-                                                                  )}
-                                                                  <span className="text-danger">
-                                                                    *
-                                                                  </span>
-                                                                </Label>
-                                                              </Col>
-                                                              <Col lg="8">
-                                                                <div className="d-flex flex-wrap  gap-3">
-                                                                  <div
-                                                                    className="btn-group button-or"
-                                                                    role="group"
-                                                                  >
-                                                                    {decisionStatus.map(
-                                                                      (
-                                                                        status,
-                                                                        index
-                                                                      ) => (
-                                                                        <React.Fragment
-                                                                          key={
-                                                                            index
-                                                                          }
-                                                                        >
-                                                                          <input
-                                                                            type="radio"
-                                                                            className={`btn-check button-or ${
-                                                                              selectedRequestStatus ===
-                                                                              status.Id
-                                                                                ? "active"
-                                                                                : ""
-                                                                            }`}
-                                                                            name="requestStatusId"
-                                                                            id={`btnradio${index}`}
-                                                                            autoComplete="off"
-                                                                            checked={
-                                                                              selectedRequestStatus ===
-                                                                              status.Id
-                                                                                ? "active"
-                                                                                : ""
-                                                                            }
-                                                                            onChange={() => {
-                                                                              setFieldValue(
-                                                                                "requestStatusId",
-                                                                                status.Id
-                                                                              );
-
-                                                                              this.setState(
-                                                                                {
-                                                                                  selectedRequestStatus:
-                                                                                    status.Id,
-                                                                                }
-                                                                              );
-                                                                            }}
-                                                                          />
-                                                                          <Label
-                                                                            className="btn btn-outline-primary smallButton w-sm"
-                                                                            for={`btnradio${index}`}
-                                                                          >
-                                                                            {
-                                                                              status.arTitle
-                                                                            }
-                                                                          </Label>
-                                                                        </React.Fragment>
-                                                                      )
+                                                            <Row className="d-flex justify-content-center">
+                                                              <div
+                                                                className="upload-box p-2 mx-auto text-center"
+                                                                style={{
+                                                                  maxWidth:
+                                                                    "300px",
+                                                                  cursor:
+                                                                    "pointer",
+                                                                }}
+                                                                onClick={() =>
+                                                                  document
+                                                                    .getElementById(
+                                                                      "fileInput"
+                                                                    )
+                                                                    .click()
+                                                                }
+                                                              >
+                                                                <div className="upload-content text-center">
+                                                                  <div className="upload-icon-wrapper mb-2">
+                                                                    <i className="bx bx-upload upload-icon"></i>
+                                                                  </div>
+                                                                  <p className="upload-text">
+                                                                    {this.props.t(
+                                                                      "Click or drag file to upload"
                                                                     )}
-                                                                  </div>
+                                                                  </p>
                                                                 </div>
-                                                              </Col>
+
+                                                                <input
+                                                                  id="fileInput"
+                                                                  name="file"
+                                                                  type="file"
+                                                                  className="d-none"
+                                                                  onChange={
+                                                                    this
+                                                                      .handleFileChange
+                                                                  }
+                                                                />
+                                                              </div>
                                                             </Row>
+
                                                             <Col
                                                               lg="12 mt-6"
                                                               className="mt-4"
