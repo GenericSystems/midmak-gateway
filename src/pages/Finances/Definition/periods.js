@@ -146,25 +146,26 @@ class PeriodsList extends Component {
   };
 
   handleSave = values => {
+    console.log("valuesvalues", values);
     const { onAddNewPeriod, yearSemesters } = this.props;
     const { selectedContentId, selectedToSemester, selectedFromSemester } =
       this.state;
 
-    const fromSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedFromSemester
-    );
+    // const fromSemesterObj = yearSemesters.find(
+    //   semes => semes.value === selectedFromSemester
+    // );
 
-    const toSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedToSemester
-    );
+    // const toSemesterObj = yearSemesters.find(
+    //   semes => semes.value === selectedToSemester
+    // );
 
     const obj = {
-      arTitle: values["Title(ar)"],
-      enTitle: values["Title(en)"],
+      arTitle: values.arTitle,
+      enTitle: values.enTitle,
       contentId: selectedContentId,
-      fromSemesterId: fromSemesterObj.key,
-      toSemesterId: toSemesterObj.key,
-      note: values["note"],
+      // fromSemesterId: fromSemesterObj.key,
+      // toSemesterId: toSemesterObj.key,
+      note: values.note,
       isDefault: 0,
     };
     onAddNewPeriod(obj);
@@ -180,21 +181,21 @@ class PeriodsList extends Component {
       periodId,
     } = this.state;
 
-    const fromSemesterObj = yearSemesters.find(
-      opt => opt.value === selectedFromSemester
-    );
+    // const fromSemesterObj = yearSemesters.find(
+    //   opt => opt.value === selectedFromSemester
+    // );
 
-    const toSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedToSemester
-    );
+    // const toSemesterObj = yearSemesters.find(
+    //   semes => semes.value === selectedToSemester
+    // );
 
     const obj = {
       Id: periodId,
       arTitle: values["arTitle"],
       enTitle: values["enTitle"],
       contentId: selectedContentId,
-      fromSemesterId: fromSemesterObj.key,
-      toSemesterId: toSemesterObj.key,
+      // fromSemesterId: fromSemesterObj.key,
+      // toSemesterId: toSemesterObj.key,
       note: values["note"],
     };
 
@@ -323,6 +324,10 @@ class PeriodsList extends Component {
         fiscalYear => fiscalYear.value === selectedValue
       );
       this.setState({ selectedFinanceYear: selectedValue });
+      console.log(
+        "financeObjfinanceObjfinanceObjfinanceObjfinanceObj",
+        fiscalYears
+      );
       let obj = { fiscalYearId: financeObj.key };
       onGetFiscalYearContents(obj);
     }
@@ -381,8 +386,8 @@ class PeriodsList extends Component {
       selectedContentId: period.contentId,
       contentName: period.contentName,
       fiscalYearName: period.fiscalYear,
-      selectedFromSemesterId: period.fromSemesterId,
-      selectedToSemesterId: period.toSemesterId,
+      // selectedFromSemesterId: period.fromSemesterId,
+      // selectedToSemesterId: period.toSemesterId,
       notePeriod: period.note,
 
       isEdit: true,
@@ -402,23 +407,23 @@ class PeriodsList extends Component {
       onGetFiscalYearContents(obj);
     }
 
-    if (period.fromSemesterId) {
-      const fromSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === period.fromSemesterId
-      );
-      this.setState({
-        selectedFromSemester: fromSemes.value,
-      });
-    }
+    // if (period.fromSemesterId) {
+    //   const fromSemes = yearSemesters.find(
+    //     yearSemester => yearSemester.key === period.fromSemesterId
+    //   );
+    //   this.setState({
+    //     selectedFromSemester: fromSemes.value,
+    //   });
+    // }
 
-    if (period.toSemesterId) {
-      const toSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === period.toSemesterId
-      );
-      this.setState({
-        selectedToSemester: toSemes.value,
-      });
-    }
+    // if (period.toSemesterId) {
+    //   const toSemes = yearSemesters.find(
+    //     yearSemester => yearSemester.key === period.toSemesterId
+    //   );
+    //   this.setState({
+    //     selectedToSemester: toSemes.value,
+    //   });
+    // }
 
     this.toggle();
   };
@@ -498,7 +503,7 @@ class PeriodsList extends Component {
 
       {
         dataField: "arTitle",
-        text: t("Period"),
+        text: t("Period (ar)"),
         sort: true,
         editable: false,
       },
@@ -660,39 +665,39 @@ class PeriodsList extends Component {
                   arTitle: arPeriod,
                   enTitle: enPeriod,
                   contentId: period && period.contentId,
-                  fromSemesterId: period && period.fromSemesterId,
-                  toSemesterId: period && period.toSemesterId,
+                  // fromSemesterId: period && period.fromSemesterId,
+                  // toSemesterId: period && period.toSemesterId,
                   note: notePeriod,
                 }) ||
                 (!isEdit && {
                   arTitle: "",
                   enTitle: "",
                   contentId: null,
-                  fromSemesterId: null,
-                  toSemesterId: null,
+                  // fromSemesterId: null,
+                  // toSemesterId: null,
                   note: "",
                 })
               }
               enableReinitialize={true}
-              validationSchema={
-                (!isEdit &&
-                  Yup.object().shape({
-                    arTitle: Yup.string()
-                      .required("arTitle is required")
-                      .notOneOf(
-                        periods.map(user => user.arTitle),
-                        "arTitle already taken"
-                      ),
+              // validationSchema={
+              //   (!isEdit &&
+              //     Yup.object().shape({
+              //       arTitle: Yup.string()
+              //         .required("arTitle is required")
+              //         .notOneOf(
+              //           periods.map(user => user.arTitle),
+              //           "arTitle already taken"
+              //         ),
 
-                    enTitle: Yup.string().required("enTitle is required"),
-                  })) ||
-                (isEdit &&
-                  Yup.object().shape({
-                    arTitle: Yup.string().required("arTitle is required"),
+              //       enTitle: Yup.string().required("enTitle is required"),
+              //     })) ||
+              //   (isEdit &&
+              //     Yup.object().shape({
+              //       arTitle: Yup.string().required("arTitle is required"),
 
-                    enTitle: Yup.string().required("enTitle is required"),
-                  }))
-              }
+              //       enTitle: Yup.string().required("enTitle is required"),
+              //     }))
+              // }
               onSubmit={(values, { setSubmitting }) => {
                 if (isEdit) {
                   const updatePeriod = {

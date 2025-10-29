@@ -697,13 +697,13 @@ class FeesDefinitionList extends Component {
       selectedCurrencyId,
     } = this.state;
 
-    const fromSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedFromSemester
-    );
+    // const fromSemesterObj = yearSemesters.find(
+    //   semes => semes.value === selectedFromSemester
+    // );
 
-    const toSemesterObj = yearSemesters.find(
-      semes => semes.value === selectedToSemester
-    );
+    // const toSemesterObj = yearSemesters.find(
+    //   semes => semes.value === selectedToSemester
+    // );
 
     const fiscalYearObj = fiscalYears.find(
       year => year.value === selectedFiscalYear
@@ -713,8 +713,8 @@ class FeesDefinitionList extends Component {
       arTitle: values["arTitle"],
       enTitle: values["enTitle"],
       fiscalYearId: fiscalYearObj.key,
-      fromSemesterId: fromSemesterObj.key,
-      toSemesterId: toSemesterObj.key,
+      // fromSemesterId: fromSemesterObj.key,
+      // toSemesterId: toSemesterObj.key,
       currencyId: selectedCurrencyId,
       arNote: values["arNote"],
       enNote: values["enNote"],
@@ -731,8 +731,8 @@ class FeesDefinitionList extends Component {
       arFees: fees.arTitle,
       enFees: fees.enTitle,
       selectedFiscalYearId: fees.fiscalYearId,
-      selectedFromSemesterId: fees.fromSemesterId,
-      selectedToSemesterId: fees.toSemesterId,
+      // selectedFromSemesterId: fees.fromSemesterId,
+      // selectedToSemesterId: fees.toSemesterId,
       selectedCurrencyId: fees.currencyId,
       arNoteFees: fees.arNote,
       enNoteFees: fees.enNote,
@@ -764,23 +764,23 @@ class FeesDefinitionList extends Component {
       });
     }
 
-    if (fees.fromSemesterId) {
-      const fromSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === fees.fromSemesterId
-      );
-      this.setState({
-        selectedFromSemester: fromSemes.value,
-      });
-    }
+    // if (fees.fromSemesterId) {
+    //   const fromSemes = yearSemesters.find(
+    //     yearSemester => yearSemester.key === fees.fromSemesterId
+    //   );
+    //   this.setState({
+    //     selectedFromSemester: fromSemes.value,
+    //   });
+    // }
 
-    if (fees.toSemesterId) {
-      const toSemes = yearSemesters.find(
-        yearSemester => yearSemester.key === fees.toSemesterId
-      );
-      this.setState({
-        selectedToSemester: toSemes.value,
-      });
-    }
+    // if (fees.toSemesterId) {
+    //   const toSemes = yearSemesters.find(
+    //     yearSemester => yearSemester.key === fees.toSemesterId
+    //   );
+    //   this.setState({
+    //     selectedToSemester: toSemes.value,
+    //   });
+    // }
   };
 
   handleUpdate = values => {

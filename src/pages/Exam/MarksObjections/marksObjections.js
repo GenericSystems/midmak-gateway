@@ -240,6 +240,108 @@ class MarksObjectionsList extends Component {
     }
   };
 
+  // handleSave = values => {
+  //   const {
+  //     isEdit,
+  //     isAdd,
+  //     isOpen,
+  //     selectedTraineeId,
+  //     selectedCourseId,
+  //     selectedTestExam,
+  //     selectedRequestType,
+  //     selectedRequestStatus,
+  //     markObjection,
+  //   } = this.state;
+  //   const { traineesOpt, onAddNewMarkObjection, onUpdateMarkObjection } =
+  //     this.props;
+  //   console.log("values", values);
+
+  //   values["courseId"] = selectedCourseId;
+  //   values["testExamId"] = selectedTestExam;
+  //   values["requestTypeId"] = selectedRequestType;
+  //   values.requestStatusId = isEdit ? selectedRequestStatus : 4;
+  //   // if (
+  //   //   values.requestNum === "" ||
+  //   //   values.applyingDate === "" ||
+  //   //   values.traineeName === "" ||
+  //   //   (values.courseId === "" && selectedCourseId === "") ||
+  //   //   (values.testExamId === "" && selectedTestExam === "")
+  //   // ) {
+  //   //   // if (values.requestNum === "") {
+  //   //   //   this.setState({ requestNumError: true, saveError: true });
+  //   //   // }
+  //   //   if (values.applyingDate.trim() === "") {
+  //   //     this.setState({ applyingDateError: true, saveError: true });
+  //   //   }
+  //   //   if (values.traineeName.trim() === "") {
+  //   //     this.setState({ traineeError: true, saveError: true });
+  //   //   }
+  //   //   if (values.courseId === "" && selectedCourseId === "") {
+  //   //     this.setState({ courseError: true, saveError: true });
+  //   //   }
+  //   //   if (values.testExamId === "" && selectedTestExam === "") {
+  //   //     this.setState({ testExamError: true, saveError: true });
+  //   //   }
+
+  //   //   const errorSave = this.props.t("Fill the Required Fields to Save");
+
+  //   //   this.setState({ errorMessage: errorSave }, () => {
+  //   //     window.scrollTo(0, 0);
+  //   //   });
+  //   // } else {
+  //   // this.setState({ requestNumError: false, saveError: false });
+  //   // this.setState({ applyingDateError: false, saveError: false });
+  //   // this.setState({ traineeError: false, saveError: false });
+  //   // this.setState({ courseError: false, saveError: false });
+  //   // this.setState({ testExamError: false, saveError: false });
+
+  //   let objectioninfo = {};
+
+  //   Object.keys(values).forEach(function (key) {
+  //     if (
+  //       values[key] != undefined &&
+  //       (values[key].length > 0 || values[key] != "")
+  //     )
+  //       objectioninfo[key] = values[key];
+  //   });
+  //   objectioninfo["courseId"] = selectedCourseId;
+  //   objectioninfo["testExamId"] = selectedTestExam;
+  //   objectioninfo["requestTypeId"] = selectedRequestType;
+
+  //   //delete objectioninfo.traineeName;
+  //   // const traineeNamePart = values.traineeName.split(" - ")[0].trim();
+
+  //   // const trainee = traineesOpt.find(t => t.value.trim() === traineeNamePart);
+
+  //   // objectioninfo["traineeId"] = trainee?.key || null;
+  //   console.log("qqqqqqqqqqqqqqq", objectioninfo);
+
+  //   this.setState({
+  //     errorMessages: {},
+  //   });
+
+  //   if (isEdit) {
+  //     objectioninfo["Id"] = markObjection["Id"];
+  //     console.log("rrrrrrrrrrrrrrr", objectioninfo);
+  //     onUpdateMarkObjection(objectioninfo);
+  //     const saveMessage = "Saved successfully ";
+  //     this.setState({
+  //       successMessage: saveMessage,
+  //     });
+
+  //     this.toggleEdit();
+  //   } else {
+  //     console.log("objectioninfoobjectioninfo", objectioninfo);
+  //     onAddNewMarkObjection(objectioninfo);
+  //     const saveMessage = "Saved successfully ";
+  //     this.setState({
+  //       successMessage: saveMessage,
+  //     });
+
+  //     this.toggle();
+  //   }
+  //   // }
+  // };
   handleSave = values => {
     const {
       isEdit,
@@ -254,40 +356,45 @@ class MarksObjectionsList extends Component {
     } = this.state;
     const { traineesOpt, onAddNewMarkObjection, onUpdateMarkObjection } =
       this.props;
+
     console.log("values", values);
 
     values["courseId"] = selectedCourseId;
     values["testExamId"] = selectedTestExam;
     values["requestTypeId"] = selectedRequestType;
-    values.requestStatusId = isEdit ? selectedRequestStatus : 4;
+    // values.requestStatusId = isEdit ? selectedRequestStatus : 4;
+
     if (
-      values.requestNum === "" ||
-      values.applyingDate === "" ||
-      values.traineeName === "" ||
-      (values.courseId === "" && selectedCourseId === "") ||
-      (values.testExamId === "" && selectedTestExam === "")
+      !isEdit &&
+      (!values.traineeName ||
+        values.traineeName.trim() === "" ||
+        values.requestNum === "" ||
+        values.applyingDate === "" ||
+        (values.courseId === "" && selectedCourseId === "") ||
+        (values.testExamId === "" && selectedTestExam === ""))
     ) {
-      // if (values.requestNum === "") {
-      //   this.setState({ requestNumError: true, saveError: true });
-      // }
-      if (values.applyingDate.trim() === "") {
+      if (!values.traineeName || values.traineeName.trim() === "") {
+        this.setState({
+          traineeError: true,
+          saveError: true,
+          errorMessage: this.props.t("Trainee name is required"),
+        });
+      }
+      if (values.requestNum === "") {
+        this.setState({ requestNumError: true, saveError: true });
+      }
+      if (values.applyingDate === "") {
         this.setState({ applyingDateError: true, saveError: true });
       }
-      if (values.traineeName.trim() === "") {
-        this.setState({ traineeError: true, saveError: true });
-      }
-      if (values.courseId === "" && selectedCourseId === "") {
-        this.setState({ courseError: true, saveError: true });
-      }
-      if (values.testExamId === "" && selectedTestExam === "") {
-        this.setState({ testExamError: true, saveError: true });
-      }
+      // if (values.courseId === "" && selectedCourseId === "") {
+      this.setState({ courseError: true, saveError: true });
+      // }
+      // if (values.testExamId === "" && selectedTestExam === "") {
+      this.setState({ testExamError: true, saveError: true });
+      // }
 
       const errorSave = this.props.t("Fill the Required Fields to Save");
-
-      this.setState({ errorMessage: errorSave }, () => {
-        window.scrollTo(0, 0);
-      });
+      this.setState({ errorMessage: errorSave }, () => window.scrollTo(0, 0));
     } else {
       this.setState({ requestNumError: false, saveError: false });
       this.setState({ applyingDateError: false, saveError: false });
@@ -304,40 +411,34 @@ class MarksObjectionsList extends Component {
         )
           objectioninfo[key] = values[key];
       });
+
       objectioninfo["courseId"] = selectedCourseId;
       objectioninfo["testExamId"] = selectedTestExam;
       objectioninfo["requestTypeId"] = selectedRequestType;
-      delete objectioninfo.traineeName;
-      const traineeNamePart = values.traineeName.split(" - ")[0].trim();
 
-      const trainee = traineesOpt.find(t => t.value.trim() === traineeNamePart);
-
-      objectioninfo["traineeId"] = trainee?.key || null;
       console.log("qqqqqqqqqqqqqqq", objectioninfo);
 
-      this.setState({
-        errorMessages: {},
-      });
+      this.setState({ errorMessages: {} });
 
       if (isEdit) {
         objectioninfo["Id"] = markObjection["Id"];
         console.log("rrrrrrrrrrrrrrr", objectioninfo);
-        // onUpdatemar(objectioninfo);
-        const saveMessage = "Saved successfully ";
-        this.setState({
-          successMessage: saveMessage,
-        });
-
+        onUpdateMarkObjection(objectioninfo);
+        this.setState({ successMessage: "Saved successfully" });
         this.toggleEdit();
       } else {
+        delete objectioninfo.traineeName;
+        const traineeNamePart = values.traineeName.split(" - ")[0].trim();
+
+        const trainee = traineesOpt.find(
+          t => t.value.trim() === traineeNamePart
+        );
+
+        objectioninfo["traineeId"] = trainee?.key || null;
+        objectioninfo["requestStatusId"] = 4;
         console.log("objectioninfoobjectioninfo", objectioninfo);
-
         onAddNewMarkObjection(objectioninfo);
-        const saveMessage = "Saved successfully ";
-        this.setState({
-          successMessage: saveMessage,
-        });
-
+        this.setState({ successMessage: "Saved successfully" });
         this.toggle();
       }
     }
@@ -359,30 +460,65 @@ class MarksObjectionsList extends Component {
     onGetMarkObjectionDeletedValue();
   };
 
+  // handleMarkObjectionClick = arg => {
+  //   console.log("arg", arg);
+  //   const { traineesOpt, onGetFilteredCoursesPlan } = this.props;
+  //   let markObjection = arg;
+  //   // const trainee = traineesOpt.find(
+  //   //   trainee => trainee.fullName === markObjection["traineeName"]
+  //   // );
+  //   const foundTrainee = traineesOpt.find(
+  //     trainee => String(trainee.key) === String(arg.traineeId)
+  //   );
+  //   markObjection["traineeName"] = foundTrainee?.fullName || "";
+  //   console.log("traineetraineetrainee", foundTrainee);
+
+  //   const trainee = traineesOpt.find(
+  //     trainee => trainee.value === markObjection["traineeName"]
+  //   );
+  //   console.log("111111111111111", traineesOpt);
+  //   onGetFilteredCoursesPlan(trainee);
+  //   console.log("3333333333333333", markObjection);
+
+  //   this.setState({
+  //     markObjection,
+  //     selectedTestExam: markObjection["testExamId"],
+  //     selectedTraineeId: markObjection["traineeId"],
+  //     selectedRequestType: markObjection["requestTypeId"],
+  //     selectedRequestStatus: markObjection["requestStatusId"],
+  //     selectedCourseId: markObjection["courseId"],
+  //     selectedCourseName: markObjection["courseName"],
+  //     isEdit: true,
+  //   });
+  //   this.toggleEdit();
+  // };
+
   handleMarkObjectionClick = arg => {
     console.log("arg", arg);
     const { traineesOpt, onGetFilteredCoursesPlan } = this.props;
-    let markObjection = arg;
-    // const trainee = traineesOpt.find(
-    //   trainee => trainee.fullName === markObjection["traineeName"]
-    // );
-    // console.log("traineetraineetrainee", trainee);
-    // onGetFilteredCoursesPlan(trainee);
-    console.log("traineetraineetrainee", markObjection);
+
     const foundTrainee = traineesOpt.find(
-      trainee => String(trainee.Id) === String(arg["traineeId"])
+      trainee => String(trainee.key) === String(arg.traineeId)
     );
-    markObjection["traineeName"] = foundTrainee?.fullName || "";
+
+    const markObjection = {
+      ...arg,
+      traineeName: foundTrainee.value || "",
+    };
+
+    onGetFilteredCoursesPlan(foundTrainee);
 
     this.setState({
       markObjection,
-      selectedTestExam: markObjection["testExamId"],
-      selectedRequestType: markObjection["requestTypeId"],
-      selectedRequestStatus: markObjection["requestStatusId"],
-      selectedCourseId: markObjection["courseId"],
-      selectedCourseName: markObjection["courseName"],
+      selectedTestExam: markObjection.testExamId,
+      selectedTraineeId: markObjection.traineeId,
+      selectedRequestType: markObjection.requestTypeId,
+      selectedRequestStatus: markObjection.requestStatusId,
+      selectedCourseId: markObjection.courseId,
+      selectedCourseName: markObjection.courseName,
       isEdit: true,
     });
+
     this.toggleEdit();
   };
 
@@ -476,7 +612,7 @@ class MarksObjectionsList extends Component {
         editable: false,
       },
       {
-        dataField: "traineeNum",
+        dataField: "TraineeNum",
         text: this.props.t("Trainee Num"),
         sort: true,
         editable: false,
@@ -501,7 +637,7 @@ class MarksObjectionsList extends Component {
         editable: false,
       },
       {
-        dataField: "courseCode",
+        dataField: "codeName",
         text: this.props.t("Course Code"),
         sort: true,
         editable: false,
@@ -548,6 +684,7 @@ class MarksObjectionsList extends Component {
         text: this.props.t("Marks Difference"),
         sort: true,
         editable: false,
+        formatter: (cell, row) => row.newMark - row.oldMark,
       },
       {
         dataField: "requestStatusId",
@@ -784,9 +921,12 @@ class MarksObjectionsList extends Component {
                                             markObjection.requestNum) ||
                                           "",
                                         applyingDate:
-                                          (markObjection &&
-                                            markObjection.applyingDate) ||
-                                          "",
+                                          markObjection?.applyingDate
+                                            ? moment
+                                                .utc(markObjection.applyingDate)
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
                                         traineeName:
                                           markObjection?.selectedTrainee || "",
                                         courseId:
@@ -1255,11 +1395,12 @@ class MarksObjectionsList extends Component {
                                             markObjection.requestNum) ||
                                           "",
                                         applyingDate:
-                                          (markObjection &&
-                                            markObjection.applyingDate) ||
-                                          "",
-                                        traineeName:
-                                          markObjection?.selectedTrainee || "",
+                                          markObjection?.applyingDate
+                                            ? moment
+                                                .utc(markObjection.applyingDate)
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
                                         courseId:
                                           (markObjection &&
                                             markObjection.courseId) ||
@@ -1284,10 +1425,17 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.applyingNotes) ||
                                           "",
-                                        decisionDate:
+                                        applyingUser:
                                           (markObjection &&
-                                            markObjection.decisionDate) ||
+                                            markObjection.applyingUser) ||
                                           "",
+                                        decisionDate:
+                                          markObjection?.decisionDate
+                                            ? moment
+                                                .utc(markObjection.decisionDate)
+                                                .local()
+                                                .format("YYYY-MM-DD")
+                                            : "",
                                         decisionUser:
                                           (markObjection &&
                                             markObjection.decisionUser) ||
@@ -1296,10 +1444,12 @@ class MarksObjectionsList extends Component {
                                           (markObjection &&
                                             markObjection.decisionNotes) ||
                                           "",
-                                        turnDate:
-                                          (markObjection &&
-                                            markObjection.turnDate) ||
-                                          "",
+                                        turnDate: markObjection?.turnDate
+                                          ? moment
+                                              .utc(markObjection.turnDate)
+                                              .local()
+                                              .format("YYYY-MM-DD")
+                                          : "",
                                         turnUser:
                                           (markObjection &&
                                             markObjection.turnUser) ||

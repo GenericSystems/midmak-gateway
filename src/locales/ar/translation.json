@@ -873,5 +873,17 @@
   "Trainees Deserves Deprivation": "الطلاب الواجب حرمانهم",
   "Min Percent": "النسبة المطلوبة للتأهل",
   "Trainee Result": "نتيجة المتدرب",
+  "Currencies": "العملات",
+  "Currency Type(ar)": "نوع العملة(عربي)",
+  "Currency Type(en)": "نوع العملة(انكليزي)",
+  "Currency Type": "نوع العملة",
+  "Currency Code": "رمز العملة",
+  "Default Currency": "العملة الافتراضية",
+  "Periods List": "قائمة الفترات",
+  "Periods": "الفترات",
+  "Period (en)": "الفترة (انكليزي)",
+  "Period (ar)": "الفترة (عربي)",
+  "content type": "نوع المحتوى",
+  "Note": "الفترات",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }
