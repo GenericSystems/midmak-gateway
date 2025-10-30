@@ -83,6 +83,9 @@ class DefineExamDatesList extends Component {
       showEditButton: false,
       showSearchButton: false,
       activeTable: "first",
+      years: [],
+      selectedYear: null,
+      currentYearObj: {},
     };
     this.state = {
       languageState: "",
@@ -152,6 +155,26 @@ class DefineExamDatesList extends Component {
       isLoading,
       coursesOffering,
     });
+    let curentYeardata = localStorage.getItem("authUser");
+    if (curentYeardata) {
+      try {
+        const parsed = JSON.parse(curentYeardata);
+        const firstYear = parsed[0];
+        const selectedYear = {
+          value: firstYear.currentYearId,
+          label: firstYear.currentYearName,
+        };
+        this.setState({
+          selectedYear,
+          currentYearObj: {
+            currentYearId: firstYear.currentYearId,
+            currentYearName: firstYear.currentYearName,
+          },
+        });
+      } catch (error) {
+        console.error("Error parsing authUser:", error);
+      }
+    }
     i18n.on("languageChanged", this.handleLanguageChange);
   }
 
@@ -612,10 +635,24 @@ class DefineExamDatesList extends Component {
     this.toggle3();
   };
 
+  handleSelectYear = (name, value) => {
+    document.getElementById("square-switch1").checked = false;
+    //const { onGetDefineExamDates} = this.props;
+    this.setState({
+      selectedYear: value,
+      currentYearObj: {
+        currentYearId: value.value,
+        currentYearName: value.label,
+      },
+    });
+    // onGetDefineExamDates();
+  };
+
   render() {
     const defineExamDate = this.state.defineExamDate;
 
     const {
+      years,
       definePeriods,
       defineExamDates,
       studentsOrder,
@@ -653,6 +690,7 @@ class DefineExamDatesList extends Component {
       selectedExamType,
       selectedStudentsOrder,
       isShowPreReq,
+      selectedYear,
     } = this.state;
     console.log("allDaysArray", allDaysArray);
     console.log("definePeriods", examPeriods);
@@ -894,36 +932,60 @@ class DefineExamDatesList extends Component {
         text: t("Trainee Num"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "traineeName",
         text: t("Trainee Name"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "examDate",
         text: t("Exam Date"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "examCounts",
         text: t("Exam Counts"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "exams",
         text: t("Exams"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "schedules",
         text: t("Schedules"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
     ];
     const conflictsByPeriodColumns = [
@@ -933,42 +995,70 @@ class DefineExamDatesList extends Component {
         text: t("Trainee Num"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "traineeName",
         text: t("Trainee Name"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "examDate",
         text: t("Exam Date"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "startTime",
         text: t("Start Time"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "examCounts",
         text: t("Exam Counts"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "exams",
         text: t("Exams"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
       {
         dataField: "schedules",
         text: t("Schedules"),
         sort: true,
         // editable: true,
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
     ];
 
@@ -1073,8 +1163,24 @@ class DefineExamDatesList extends Component {
                                         </div>
                                       </div>
                                     </Col>
+                                    <Col lg="3">
+                                      <Select
+                                        className="select-style-year"
+                                        name="yearId"
+                                        key={`yearId`}
+                                        options={years}
+                                        onChange={newValue => {
+                                          this.handleSelectYear(
+                                            "yearId",
+                                            newValue
+                                          );
+                                        }}
+                                        value={selectedYear}
+                                      />
+                                    </Col>
+                                    <Col sm="4"></Col>
                                     {/*    {showAddButton && ( */}
-                                    <Col sm="8">
+                                    <Col sm="1">
                                       <div className="text-sm-end">
                                         <Tooltip
                                           title={this.props.t("Add")}
@@ -1787,7 +1893,7 @@ class DefineExamDatesList extends Component {
                                           {t("Conflicts")}
                                         </CardTitle>
                                         <CardBody className="cardBody">
-                                          <div className="mb-3 d-flex gap-3">
+                                          <div className="mb-3 d-flex justify-content-center gap-3">
                                             <button
                                               className={`btn ${
                                                 activeTable === "first"
@@ -2020,10 +2126,10 @@ class DefineExamDatesList extends Component {
                                                     {...provided.droppableProps}
                                                   >
                                                     <Card>
-                                                      <CardTitle>
+                                                      <CardTitle id="course_header">
                                                         {t("Courses")}
                                                       </CardTitle>
-                                                      <CardBody>
+                                                      <CardBody className="cardBody">
                                                         {Array.isArray(
                                                           coursesOffering
                                                         ) &&
@@ -2348,6 +2454,7 @@ const mapStateToProps = ({
   gradeTypes,
   classScheduling,
   defineExamDates,
+  years,
 }) => ({
   defineExamDates: defineExamDates.defineExamDates,
   coursesOffering: classScheduling.coursesOffering,
@@ -2356,6 +2463,7 @@ const mapStateToProps = ({
   lastAddedId: defineExamDates.lastAddedId,
   isLoading: defineExamDates.isLoading,
   last_all_days: defineExamDates.last_all_days,
+  years: years.years,
   deleted: defineExamDates.deleted,
   gradeTypes: gradeTypes.gradeTypes,
   user_menu: menu_items.user_menu || [],

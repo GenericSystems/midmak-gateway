@@ -50,6 +50,8 @@ import {
   getGradeTypesFail,
 } from "../../grade-types/actions";
 
+import { getYearsSuccess, getYearsFail } from "../../years/actions";
+
 //Include Both Helper File with needed methods
 import {
   getDefineExamDates,
@@ -65,6 +67,7 @@ import {
   updateDefinePeriod,
   deleteDefinePeriod,
   getCoursesOffering,
+  getYears,
 } from "../../../helpers/fakebackend_helper";
 
 function* fetchDefineExamDates(selectedpayload) {
@@ -129,6 +132,20 @@ function* fetchDefineExamDates(selectedpayload) {
     yield put(getCoursesOfferingSuccess(response));
   } catch (error) {
     yield put(getCoursesOfferingFail(error));
+  }
+  const get_years_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Years",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getYears, get_years_req);
+    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", response);
+    yield put(getYearsSuccess(response));
+  } catch (error) {
+    yield put(getYearsFail(error));
   }
 }
 

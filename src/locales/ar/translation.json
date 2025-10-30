@@ -736,9 +736,9 @@
   "Reason": "سبب الغياب",
   "Justified": "مبرر",
   "Justify Document": "وثيقة التبرير",
-  "Update Trainee Absent Justify": "تأكيد",
+  "Update Trainee Absent Justify": "تحديث المتدرب غائب مبرر",
   "Exam Counts": "عدد الامتحانات",
-  "Schedules": "تأكيد",
+  "Schedules": "الجداول الزمنية",
   "Conflicts By Period": "تعارضات الفترات",
   "Conflicts By Date": "تعارضات الأيام",
   "Exam Conflicts": "تعارضات الامتحان",
@@ -885,5 +885,6 @@
   "Period (ar)": "الفترة (عربي)",
   "content type": "نوع المحتوى",
   "Note": "الفترات",
+  "Exam Days": "أيام الامتحان",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

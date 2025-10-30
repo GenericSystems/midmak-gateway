@@ -254,7 +254,7 @@ class ClassSchedulingList extends Component {
 
     console.log(this.state.currentYearObj, "gggg");
   }
-  mays;
+  // mays
   handleLanguageChange = lng => {
     // const { onGetCoursesOffering } = this.props;
     const lang = localStorage.getItem("I18N_LANGUAGE");

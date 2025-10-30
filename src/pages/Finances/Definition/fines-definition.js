@@ -559,231 +559,263 @@ class FinesDefinitionList extends Component {
     };
 
     return (
-      <Card>
-        <CardBody>
-          <DeleteModal
-            show={deleteModal}
-            onDeleteClick={this.handleDeleteRow}
-            onCloseClick={() =>
-              this.setState({ deleteModal: false, selectedRowId: null })
-            }
-          />
-          <Row>
-            {sidebarOpen && (
-              <div style={{ width: sidebarOpen ? "23%" : "0" }}>
-                <div className="mb-3">
-                  <Row>
-                    <Col lg="4">
-                      <Label className="form-label">{t("Currency")}</Label>
-                    </Col>
-                    <Col lg="8" style={{ width: "37%" }}>
-                      <Select
-                        className="select-style"
-                        name="currencyId"
-                        key="currency_select"
-                        options={currencies}
-                        onChange={newValue =>
-                          this.handleSelectOption("currencyId", newValue.value)
-                        }
-                        defaultValue={currencies.find(
-                          opt => opt.label === selectedCurrency
-                        )}
-                      />
-                    </Col>
-                  </Row>
-                </div>
+      <React.Fragment>
+        <DeleteModal
+          show={deleteModal}
+          onDeleteClick={this.handleDeleteFeesRow}
+          onCloseClick={() =>
+            this.setState({ deleteModal: false, selectedRow: null })
+          }
+        />
 
-                <div className="mb-3">
-                  <Row>
-                    <Col lg="4">
-                      <Label className="form-label">{t("Semester")}</Label>
-                    </Col>
-                    <Col lg="8" style={{ width: "37%" }}>
-                      <Select
-                        className="select-style"
-                        name="semesterId"
-                        key="semester_select"
-                        options={yearSemesters}
-                        onChange={newValue =>
-                          this.handleSelectOption("semesterId", newValue)
-                        }
-                        value={defaultSemester}
-                      />
-                    </Col>
-                  </Row>
-                </div>
+        <div className="page-content">
+          <div className="container-fluid">
+            <Breadcrumbs
+              title={this.props.t("Fees Definition")}
+              breadcrumbItem={this.props.t("Fees Definition")}
+            />
 
-                <div className="mb-3">
-                  <Row>
-                    <Col lg="4">
-                      <Label className="form-label">{t("Faculty")}</Label>
-                    </Col>
-                    <Col lg="8" style={{ width: "37%" }}>
-                      <Input
-                        type="text"
-                        id="facultyId"
-                        key="faculty_select"
-                        list="FacultydatalistOptions"
-                        className="form-control"
-                        placeholder="search.."
-                        style={{ width: "200%" }}
-                        defaultValue={
-                          (
-                            faculties.find(
-                              faculty => faculty.key === selectedFaculty
-                            ) || {}
-                          ).value
-                        }
-                        onChange={event => {
-                          this.handleSelectOption(
-                            "facultyId",
-                            event.target.value
-                          );
-                        }}
-                        autoComplete="off"
-                      />
+            <Card>
+              <CardBody>
+                <DeleteModal
+                  show={deleteModal}
+                  onDeleteClick={this.handleDeleteRow}
+                  onCloseClick={() =>
+                    this.setState({ deleteModal: false, selectedRowId: null })
+                  }
+                />
+                <Row>
+                  {sidebarOpen && (
+                    <div style={{ width: sidebarOpen ? "23%" : "0" }}>
+                      <div className="mb-3">
+                        <Row>
+                          <Col lg="4">
+                            <Label className="form-label">
+                              {t("Currency")}
+                            </Label>
+                          </Col>
+                          <Col lg="8" style={{ width: "37%" }}>
+                            <Select
+                              className="select-style"
+                              name="currencyId"
+                              key="currency_select"
+                              options={currencies}
+                              onChange={newValue =>
+                                this.handleSelectOption(
+                                  "currencyId",
+                                  newValue.value
+                                )
+                              }
+                              defaultValue={currencies.find(
+                                opt => opt.label === selectedCurrency
+                              )}
+                            />
+                          </Col>
+                        </Row>
+                      </div>
 
-                      <datalist id="FacultydatalistOptions">
-                        {faculties.map(faculty => (
-                          <option key={faculty.key} value={faculty.value} />
-                        ))}
-                      </datalist>
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-            )}
+                      <div className="mb-3">
+                        <Row>
+                          <Col lg="4">
+                            <Label className="form-label">
+                              {t("Semester")}
+                            </Label>
+                          </Col>
+                          <Col lg="8" style={{ width: "37%" }}>
+                            <Select
+                              className="select-style"
+                              name="semesterId"
+                              key="semester_select"
+                              options={yearSemesters}
+                              onChange={newValue =>
+                                this.handleSelectOption("semesterId", newValue)
+                              }
+                              value={defaultSemester}
+                            />
+                          </Col>
+                        </Row>
+                      </div>
 
-            <Col lg="auto" className="p-0">
-              <div className="collapse-course">
-                <i onClick={this.toggleSidebar} className="bx bx-menu"></i>
-              </div>
-            </Col>
+                      <div className="mb-3">
+                        <Row>
+                          <Col lg="4">
+                            <Label className="form-label">{t("Faculty")}</Label>
+                          </Col>
+                          <Col lg="8" style={{ width: "37%" }}>
+                            <Input
+                              type="text"
+                              id="facultyId"
+                              key="faculty_select"
+                              list="FacultydatalistOptions"
+                              className="form-control"
+                              placeholder="search.."
+                              style={{ width: "200%" }}
+                              defaultValue={
+                                (
+                                  faculties.find(
+                                    faculty => faculty.key === selectedFaculty
+                                  ) || {}
+                                ).value
+                              }
+                              onChange={event => {
+                                this.handleSelectOption(
+                                  "facultyId",
+                                  event.target.value
+                                );
+                              }}
+                              autoComplete="off"
+                            />
 
-            <div style={{ width: sidebarOpen ? "74%" : "97%" }}>
-              <Card>
-                <CardTitle className="definition-tabPanes">
-                  <>{this.props.t("Addition fines")}</>
-                </CardTitle>
-                <CardBody>
-                  <div className="table-responsive">
-                    <PaginationProvider
-                      pagination={paginationFactory(pageOptions)}
-                      keyField="Id"
-                      columns={columns}
-                      data={finesDefinition}
-                    >
-                      {({ paginationProps, paginationTableProps }) => (
-                        <ToolkitProvider
-                          keyField="Id"
-                          data={finesDefinition}
-                          columns={columns}
-                          search
-                        >
-                          {toolkitprops => (
-                            <React.Fragment>
-                              <Row>
-                                <Col sm="3">
-                                  <div className="search-box ms-2 mb-2 d-inline-block">
-                                    {showSearchButton && (
-                                      <div className="position-relative">
-                                        <SearchBar
-                                          {...toolkitprops.searchProps}
-                                        />
-                                      </div>
-                                    )}
-                                  </div>
-                                </Col>
-                                <Col>
-                                  <div className="text-sm-end">
-                                    <Tooltip
-                                      title={this.props.t("Copy")}
-                                      onClick={this.handleCopyFines}
-                                      placement="top"
-                                    >
-                                      <IconButton color="primary">
-                                        <i className="mdi mdi-content-copy blue-noti-icon" />
-                                      </IconButton>
-                                    </Tooltip>
-                                    {showAddButton && (
-                                      <Tooltip
-                                        title={this.props.t("Add")}
-                                        placement="top"
-                                      >
-                                        <IconButton
-                                          color="primary"
-                                          onClick={this.handleAddRow}
-                                        >
-                                          <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                        </IconButton>
-                                      </Tooltip>
-                                    )}
-                                  </div>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <div>
-                                  {errorMessage && (
-                                    <Alert
-                                      color="danger"
-                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                      role="alert"
-                                    >
-                                      {errorMessage}
-                                      <button
-                                        type="button"
-                                        className="btn-close"
-                                        aria-label="Close"
-                                        onClick={this.handleErrorClose}
-                                      ></button>
-                                    </Alert>
-                                  )}
-                                </div>
-                              </Row>
-                              <BootstrapTable
+                            <datalist id="FacultydatalistOptions">
+                              {faculties.map(faculty => (
+                                <option
+                                  key={faculty.key}
+                                  value={faculty.value}
+                                />
+                              ))}
+                            </datalist>
+                          </Col>
+                        </Row>
+                      </div>
+                    </div>
+                  )}
+
+                  <Col lg="auto" className="p-0">
+                    <div className="collapse-course">
+                      <i
+                        onClick={this.toggleSidebar}
+                        className="bx bx-menu"
+                      ></i>
+                    </div>
+                  </Col>
+
+                  <div style={{ width: sidebarOpen ? "74%" : "97%" }}>
+                    <Card>
+                      <CardTitle className="definition-tabPanes">
+                        <>{this.props.t("Addition fines")}</>
+                      </CardTitle>
+                      <CardBody>
+                        <div className="table-responsive">
+                          <PaginationProvider
+                            pagination={paginationFactory(pageOptions)}
+                            keyField="Id"
+                            columns={columns}
+                            data={finesDefinition}
+                          >
+                            {({ paginationProps, paginationTableProps }) => (
+                              <ToolkitProvider
                                 keyField="Id"
-                                {...toolkitprops.baseProps}
-                                {...paginationTableProps}
                                 data={finesDefinition}
                                 columns={columns}
-                                cellEdit={cellEditFactory({
-                                  mode: "click",
-                                  blurToSave: true,
-                                  afterSaveCell: (
-                                    oldValue,
-                                    newValue,
-                                    row,
-                                    column
-                                  ) => {
-                                    this.handleFineDefinitionDataChange(
-                                      row.Id,
-                                      column.dataField,
-                                      newValue
-                                    );
-                                  },
-                                })}
-                                noDataIndication={t(
-                                  "No Fines Definition found"
+                                search
+                              >
+                                {toolkitprops => (
+                                  <React.Fragment>
+                                    <Row>
+                                      <Col sm="3">
+                                        <div className="search-box ms-2 mb-2 d-inline-block">
+                                          {showSearchButton && (
+                                            <div className="position-relative">
+                                              <SearchBar
+                                                {...toolkitprops.searchProps}
+                                              />
+                                            </div>
+                                          )}
+                                        </div>
+                                      </Col>
+                                      <Col>
+                                        <div className="text-sm-end">
+                                          <Tooltip
+                                            title={this.props.t("Copy")}
+                                            onClick={this.handleCopyFines}
+                                            placement="top"
+                                          >
+                                            <IconButton color="primary">
+                                              <i className="mdi mdi-content-copy blue-noti-icon" />
+                                            </IconButton>
+                                          </Tooltip>
+                                          {showAddButton && (
+                                            <Tooltip
+                                              title={this.props.t("Add")}
+                                              placement="top"
+                                            >
+                                              <IconButton
+                                                color="primary"
+                                                onClick={this.handleAddRow}
+                                              >
+                                                <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                              </IconButton>
+                                            </Tooltip>
+                                          )}
+                                        </div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <div>
+                                        {errorMessage && (
+                                          <Alert
+                                            color="danger"
+                                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                            role="alert"
+                                          >
+                                            {errorMessage}
+                                            <button
+                                              type="button"
+                                              className="btn-close"
+                                              aria-label="Close"
+                                              onClick={this.handleErrorClose}
+                                            ></button>
+                                          </Alert>
+                                        )}
+                                      </div>
+                                    </Row>
+                                    <BootstrapTable
+                                      keyField="Id"
+                                      {...toolkitprops.baseProps}
+                                      {...paginationTableProps}
+                                      data={finesDefinition}
+                                      columns={columns}
+                                      cellEdit={cellEditFactory({
+                                        mode: "click",
+                                        blurToSave: true,
+                                        afterSaveCell: (
+                                          oldValue,
+                                          newValue,
+                                          row,
+                                          column
+                                        ) => {
+                                          this.handleFineDefinitionDataChange(
+                                            row.Id,
+                                            column.dataField,
+                                            newValue
+                                          );
+                                        },
+                                      })}
+                                      noDataIndication={t(
+                                        "No Fines Definition found"
+                                      )}
+                                      defaultSorted={defaultSorting}
+                                    />
+                                    <Col className="pagination pagination-rounded justify-content-end mb-2">
+                                      <PaginationListStandalone
+                                        {...paginationProps}
+                                      />
+                                    </Col>
+                                  </React.Fragment>
                                 )}
-                                defaultSorted={defaultSorting}
-                              />
-                              <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                <PaginationListStandalone
-                                  {...paginationProps}
-                                />
-                              </Col>
-                            </React.Fragment>
-                          )}
-                        </ToolkitProvider>
-                      )}
-                    </PaginationProvider>
+                              </ToolkitProvider>
+                            )}
+                          </PaginationProvider>
+                        </div>
+                      </CardBody>
+                    </Card>
                   </div>
-                </CardBody>
-              </Card>
-            </div>
-          </Row>
-        </CardBody>
-      </Card>
+                </Row>
+              </CardBody>
+            </Card>
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 }
