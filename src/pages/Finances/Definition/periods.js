@@ -293,15 +293,15 @@ class PeriodsList extends Component {
     this.setState({ passwordDuplicateError: null });
   };
   handleSuccessClose = () => {
-    const { onGetPeriodDeletedValue } = this.props;
+    // const { onGetPeriodDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetPeriodDeletedValue();
+    // onGetPeriodDeletedValue();
   };
 
   handleErrorClose = () => {
-    const { onGetPeriodDeletedValue } = this.props;
+    // const { onGetPeriodDeletedValue } = this.props;
     this.setState({ showAlert: null });
-    onGetPeriodDeletedValue();
+    // onGetPeriodDeletedValue();
   };
 
   handleDataListChange = (event, fieldName) => {
@@ -370,21 +370,21 @@ class PeriodsList extends Component {
   handleSelectChange = (fieldName, selectedValue) => {
     if (fieldName == "contentId") {
       this.setState({
-        contentObj: selectedValue,
-        selectedContentId: selectedValue.value,
+        selectedContentId: selectedValue,
       });
     }
   };
 
   handleEditPeriod = arg => {
+    console.log("aaaaaaaaaa", arg);
     const period = arg;
     const { yearSemesters } = this.props;
     this.setState({
+      period,
       periodId: period.Id,
       arPeriod: period.arTitle,
       enPeriod: period.enTitle,
       selectedContentId: period.contentId,
-      contentName: period.contentName,
       fiscalYearName: period.fiscalYear,
       // selectedFromSemesterId: period.fromSemesterId,
       // selectedToSemesterId: period.toSemesterId,
@@ -818,9 +818,7 @@ class PeriodsList extends Component {
                           </Col>
                           <Col>
                             <Row>
-                              <Label className="form-label">
-                                {t("content type")}
-                              </Label>
+                              <Label for="contentId">{t("content type")}</Label>
                             </Row>
                             <Select
                               className={`select-style-std`}
@@ -828,15 +826,14 @@ class PeriodsList extends Component {
                               key={`content_select`}
                               options={fiscalYearContents}
                               onChange={newValue => {
-                                this.handleSelectChange("contentId", newValue);
+                                this.handleSelectChange(
+                                  "contentId",
+                                  newValue.value
+                                );
                               }}
-                              value={
-                                (
-                                  fiscalYearContents.find(
-                                    opt => opt.label == contentName
-                                  ) || ""
-                                ).label
-                              }
+                              value={fiscalYearContents.find(
+                                opt => opt.value === period?.contentId
+                              )}
                             />
                           </Col>
                         </Row>

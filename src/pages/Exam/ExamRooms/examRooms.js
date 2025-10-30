@@ -302,10 +302,10 @@ class ExamRoomsList extends Component {
         //   />
         // ),
         editable: false,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-          hidden: !showSearchButton,
-        }),
+        // filter: textFilter({
+        //   placeholder: this.props.t("Search..."),
+        //   hidden: !showSearchButton,
+        // }),
       },
 
       {
