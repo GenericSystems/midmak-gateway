@@ -182,7 +182,7 @@ function* onAddNewDefineExamDate({ payload }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_DefineExamDates";
-  // payload["queryname"] = "_Common_DefineExamDate";
+  payload["queryname"] = "_Common_DefineExamDates";
 
   try {
     const response = yield call(addNewDefineExamDate, payload);
@@ -217,7 +217,7 @@ function* onUpdateDefineExamDate({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_DefineExamDates";
-  payload["queryname"] = "_Common_DefineExamDate";
+  payload["queryname"] = "_Common_DefineExamDates";
   try {
     const respupdate = yield call(updateDefineExamDate, payload);
     console.log("UpdateDefineExamDate", respupdate);

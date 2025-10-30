@@ -886,5 +886,7 @@
   "content type": "نوع المحتوى",
   "Note": "الفترات",
   "Exam Days": "أيام الامتحان",
+  "Exam Attendance (Trainees)": "تسجيل الحضور(للمتدربين)",
+  "Exam Attendance (Observers)": "تسجيل الحضور(المراقبين)",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }
