@@ -17,6 +17,9 @@ import {
   GET_OPERATIONS_NEEDED,
   GET_OPERATIONS_NEEDED_SUCCESS,
   GET_OPERATIONS_NEEDED_FAIL,
+  GET_FILTERED_COURSES_UN_ARCHIVED,
+  GET_FILTERED_COURSES_UN_ARCHIVED_SUCCESS,
+  GET_FILTERED_COURSES_UN_ARCHIVED_FAIL,
 } from "./actionTypes";
 
 // GET
@@ -108,5 +111,21 @@ export const getOperationsNeededSuccess = operations => ({
 
 export const getOperationsNeededFail = error => ({
   type: GET_OPERATIONS_NEEDED_FAIL,
+  payload: error,
+});
+
+// GET
+export const getFilteredCoursesUnArchive = plan => ({
+  type: GET_FILTERED_COURSES_UN_ARCHIVED,
+  payload: plan,
+});
+
+export const getFilteredCoursesUnArchiveSuccess = trainee => ({
+  type: GET_FILTERED_COURSES_UN_ARCHIVED_SUCCESS,
+  payload: trainee,
+});
+
+export const getFilteredCoursesUnArchiveFail = error => ({
+  type: GET_FILTERED_COURSES_UN_ARCHIVED_FAIL,
   payload: error,
 });

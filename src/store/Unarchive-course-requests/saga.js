@@ -5,6 +5,7 @@ import {
   UPDATE_UNARCHIVE_COURSE_REQUEST,
   DELETE_UNARCHIVE_COURSE_REQUEST,
   GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE,
+  GET_FILTERED_COURSES_UN_ARCHIVED,
 } from "./actionTypes";
 
 import { GET_DECISION_STATUS } from "../decisions/actionTypes";
@@ -22,6 +23,8 @@ import {
   getUnarchiveCourseRequestDeletedValueFail,
   getOperationsNeededSuccess,
   getOperationsNeededFail,
+  getFilteredCoursesUnArchiveSuccess,
+  getFilteredCoursesUnArchiveFail,
 } from "./actions";
 
 import {
@@ -52,6 +55,7 @@ import {
   getGradeTypes,
   getEmployeesNames,
   getOperationsNeeded,
+  getFilteredCoursesUnArchive,
 } from "../../helpers/fakebackend_helper";
 
 // Fetch
@@ -139,6 +143,27 @@ function* fetchUnarchiveCourseRequests() {
   }
 }
 
+function* fetchFilteredCoursesUnArchive(obj) {
+  console.log("111111111111111111", obj.payload);
+  const traineeId = obj.payload?.Id || obj.payload?.key;
+  const get_filteredCourses_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Current_Common_TrianeeCurriculalines",
+    filter: `traineeId = ${traineeId} and archived = 1`,
+  };
+  try {
+    const response = yield call(
+      getFilteredCoursesUnArchive,
+      get_filteredCourses_req
+    );
+    yield put(getFilteredCoursesUnArchiveSuccess(response));
+  } catch (error) {
+    yield put(getFilteredCoursesUnArchiveFail(error));
+  }
+}
+
 // Add
 function* onAddUnarchiveCourseRequest({ payload }) {
   delete payload["id"];
@@ -200,6 +225,10 @@ function* onGetUnarchiveCourseRequestDeletedValue() {
 // Watcher Saga
 function* UnarchiveCourseRequestsSaga() {
   yield takeEvery(UNARCHIVE_COURSE_REQUESTS, fetchUnarchiveCourseRequests);
+  yield takeEvery(
+    GET_FILTERED_COURSES_UN_ARCHIVED,
+    fetchFilteredCoursesUnArchive
+  );
   yield takeEvery(ADD_UNARCHIVE_COURSE_REQUEST, onAddUnarchiveCourseRequest);
   yield takeEvery(
     UPDATE_UNARCHIVE_COURSE_REQUEST,

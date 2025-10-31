@@ -1334,6 +1334,9 @@ export const GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE = "/deleted";
 
 export const GET_OPERATIONS_NEEDED = "/operationsNeeded";
 
+//filtered courses un archive
+export const GET_FILTERED_COURSES_UN_ARCHIVED = "/filteredCoursesUnArchive";
+
 //diploma levels
 export const GET_DIPLOMALEVELS = "/diplomalevels";
 export const GET_DIPLOMALEVEL_DELETED_VALUE = "/deleted";

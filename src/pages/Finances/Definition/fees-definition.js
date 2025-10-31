@@ -830,7 +830,7 @@ class FeesDefinitionList extends Component {
   toggleFeesStudy(tab) {
     const { onGetFeesPrices, fiscalYearDetails, onGetFeesServices } =
       this.props;
-
+    console.log("fiscalYearDetailsfiscalYearDetails", fiscalYearDetails);
     if (fiscalYearDetails.length > 0) {
       const filteredPeriod = fiscalYearDetails
         .filter(item => item.contentId === tab)

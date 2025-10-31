@@ -44,10 +44,10 @@ import {
   addUnarchiveCourseRequest,
   updateUnarchiveCourseRequest,
   deleteUnarchiveCourseRequest,
+  getFilteredCoursesUnArchive,
 } from "store/Unarchive-course-requests/actions";
 
 import { getDecisionStatus } from "store/decisions/actions";
-import { getFilteredCoursesPlans } from "store/trainee-decrees/actions";
 
 import paginationFactory, {
   PaginationProvider,
@@ -93,6 +93,7 @@ class UnarchiveCourseReq extends Component {
       selectedUserName: null,
       userName: "",
       selectedCourse: null,
+      selectedCurrId: null,
       selectedOperstion: null,
       selectedRequestStatus: null,
       CoursenameError: false,
@@ -268,6 +269,7 @@ class UnarchiveCourseReq extends Component {
       selectedStartDate,
       selectedEndDate,
       selectedCourse,
+      selectedCurrId,
       selectedOperstion,
       selectedUserName,
       selectedArchivedDetaile,
@@ -278,6 +280,7 @@ class UnarchiveCourseReq extends Component {
     values["archiveDetailsId"] = selectedArchivedDetaile;
     values["operationNeededId"] = selectedOperstion;
     values["courseId"] = selectedCourse;
+    values["currId"] = selectedCurrId;
     values["requestStatusId"] = selectedRequestStatus;
     if (
       values.startDate === "" ||
@@ -354,9 +357,11 @@ class UnarchiveCourseReq extends Component {
     }
   };
   handleSelect = (fieldName, selectedValue, values) => {
+    console.log("selectedValueselectedValueselectedValue", selectedValue);
     if (fieldName == "courseId") {
       this.setState({
-        selectedCourse: selectedValue,
+        selectedCourse: selectedValue.value,
+        selectedCurrId: selectedValue.currId,
         // unarchiveCourseRequest: values,
       });
     }
@@ -439,7 +444,7 @@ class UnarchiveCourseReq extends Component {
       deleted,
       decisionStatus,
       traineesOpt,
-      onGetFilteredCoursesPlan,
+      onGetFilteredCoursesUnArchive,
       filteredCourses,
       operationsNeeded,
       employeesNames,
@@ -480,6 +485,7 @@ class UnarchiveCourseReq extends Component {
       filteredCourses.map(item => ({
         label: `${item.code} - ${item.CourseName}`,
         value: item.courseId,
+        currId: item.Id,
       }));
 
     const { SearchBar } = Search;
@@ -496,10 +502,9 @@ class UnarchiveCourseReq extends Component {
     ];
 
     const columns = [
-      { dataField: "Id", text: this.props.t("ID"), hidden: true },
-
+      // { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "requestNum",
+        dataField: "Id",
         text: this.props.t("Request Num"),
         sort: true,
         editable: false,
@@ -568,34 +573,34 @@ class UnarchiveCourseReq extends Component {
         sort: true,
         editable: false,
       },
-      {
-        dataField: "menu",
-        text: "",
-        isDummyField: true,
-        editable: false,
-        formatter: (cellContent, unarchiveCourseRequest) => (
-          <div className="d-flex gap-3">
-            {/* <Tooltip title={this.props.t("Edit")} placement="top">
-              <Link className="text-sm-end" to="#">
-                <i
-                  className="mdi mdi-pencil font-size-18"
-                  onClick={() =>
-                    this.handleEditArchivedCourse(unarchiveCourseRequest)
-                  }
-                ></i>
-              </Link>
-            </Tooltip> */}
-            <Tooltip title={this.props.t("Delete")} placement="top">
-              <Link className="text-danger" to="#">
-                <i
-                  className="mdi mdi-delete font-size-18"
-                  onClick={() => this.onClickDelete(unarchiveCourseRequest)}
-                ></i>
-              </Link>
-            </Tooltip>
-          </div>
-        ),
-      },
+      // {
+      //   dataField: "menu",
+      //   text: "",
+      //   isDummyField: true,
+      //   editable: false,
+      //   formatter: (cellContent, unarchiveCourseRequest) => (
+      //     <div className="d-flex gap-3">
+      //       {/* <Tooltip title={this.props.t("Edit")} placement="top">
+      //         <Link className="text-sm-end" to="#">
+      //           <i
+      //             className="mdi mdi-pencil font-size-18"
+      //             onClick={() =>
+      //               this.handleEditArchivedCourse(unarchiveCourseRequest)
+      //             }
+      //           ></i>
+      //         </Link>
+      //       </Tooltip> */}
+      //       <Tooltip title={this.props.t("Delete")} placement="top">
+      //         <Link className="text-danger" to="#">
+      //           <i
+      //             className="mdi mdi-delete font-size-18"
+      //             onClick={() => this.onClickDelete(unarchiveCourseRequest)}
+      //           ></i>
+      //         </Link>
+      //       </Tooltip>
+      //     </div>
+      //   ),
+      // },
     ];
 
     const pageOptions = {
@@ -950,25 +955,25 @@ class UnarchiveCourseReq extends Component {
                                                                                 .target
                                                                                 .value;
 
-                                                                            const traineeName =
-                                                                              traineeInput.split(
-                                                                                " - "
-                                                                              )[0];
-
                                                                             const plan =
                                                                               traineesOpt.find(
-                                                                                trainee =>
-                                                                                  trainee.value ===
-                                                                                  traineeName
+                                                                                trainee => {
+                                                                                  const fullNameWithNum =
+                                                                                    `${trainee.value} - ${trainee.TraineeNum}`
+                                                                                      .trim()
+                                                                                      .toLowerCase();
+                                                                                  return (
+                                                                                    fullNameWithNum ===
+                                                                                    traineeInput
+                                                                                      .trim()
+                                                                                      .toLowerCase()
+                                                                                  );
+                                                                                }
                                                                               );
-                                                                            console.log(
-                                                                              "planplanplan",
-                                                                              traineesOpt
-                                                                            );
                                                                             if (
                                                                               plan
                                                                             ) {
-                                                                              onGetFilteredCoursesPlan(
+                                                                              onGetFilteredCoursesUnArchive(
                                                                                 plan
                                                                               );
                                                                             }
@@ -1306,7 +1311,7 @@ class UnarchiveCourseReq extends Component {
                                                                         onChange={newValue => {
                                                                           this.handleSelect(
                                                                             "courseId",
-                                                                            newValue.value
+                                                                            newValue
                                                                           );
                                                                         }}
                                                                         value={filteredCoursesModified.find(
@@ -1596,7 +1601,7 @@ const mapStateToProps = ({
   user_menu: menu_items.user_menu || [],
   decisionStatus: decisions.decisionStatus,
   traineesOpt: trainees.traineesOpt,
-  filteredCourses: traineesDecrees.filteredCoursesPlans,
+  filteredCourses: unarchiveCourseRequests.filteredCoursesUnArchive,
   gradeTypes: gradeTypes.gradeTypes,
   employeesNames: employees.employeesNames,
 });
@@ -1611,8 +1616,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteUnarchiveCourseRequest(unarchiveCourseRequest)),
   onGetUnarchiveCourseRequestDeletedValue: () =>
     dispatch(getUnarchiveCourseRequestDeletedValue()),
-  onGetFilteredCoursesPlan: trainee =>
-    dispatch(getFilteredCoursesPlans(trainee)),
+  onGetFilteredCoursesUnArchive: trainee =>
+    dispatch(getFilteredCoursesUnArchive(trainee)),
   onGetDecisionStatus: () => dispatch(getDecisionStatus()),
 });
 

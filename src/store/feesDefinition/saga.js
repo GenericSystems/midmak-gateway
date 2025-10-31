@@ -24,11 +24,9 @@ import {
   COPY_FEES_SERVICE,
   GET_FISCAL_YEAR_DETAILS,
   GET_EXECUTE_METHODS,
-  
 } from "./actionTypes";
 
 import { GET_FILTERED_ACADEMIC_CERTIFICATES } from "../academicvertificates/actionTypes";
-
 
 import {
   getFeesDefinitionSuccess,
@@ -106,7 +104,10 @@ import {
 
 import { getCurrenciesSuccess, getCurrenciesFail } from "../currencies/actions";
 import { getSemestersSuccess, getSemestersFail } from "../semesters/actions";
-import { getAcademicCertificatesSuccess, getAcademicCertificatesFail } from "../academicvertificates/actions";
+import {
+  getAcademicCertificatesSuccess,
+  getAcademicCertificatesFail,
+} from "../academicvertificates/actions";
 
 //Include Both Helper File with needed methods
 import {
@@ -142,8 +143,7 @@ import {
   getExecuteMethods,
   getFilteredAcademicCertificates,
   getAcademicCertificates,
-  getSemesters
-
+  getSemesters,
 } from "../../helpers/fakebackend_helper";
 
 import {
@@ -243,7 +243,7 @@ function* fetchFiscalYears() {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_country",
+    tablename: "Settings_Country",
     fields: "Id,arTitle",
   };
   try {
@@ -258,7 +258,7 @@ function* fetchFiscalYears() {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "settings_nationality",
+    tablename: "AdmissionSettings_Nationality",
     fields: "Id,arTitle",
   };
   try {
@@ -284,9 +284,7 @@ function* fetchFiscalYears() {
   }
 }
 
-function* fetchFiscalYearContents(obj) {
-  
-}
+function* fetchFiscalYearContents(obj) {}
 
 function* onCopyFees({ payload }) {
   payload["source"] = "db";
@@ -363,6 +361,7 @@ function* onDeleteFeesCondition({ payload, feesCondition }) {
 }
 
 function* fetchFeesPrices(fees) {
+  console.log("qwwwwwwwwwww", fees);
   const get_feesPrice_req = {
     source: "db",
     procedure: "SisApp_getData",
@@ -502,8 +501,8 @@ function* onCopyFeesService({ payload }) {
   }
 }
 
-
 function* fetchFiscalYearDetails(fees) {
+  console.log("qwwwwwww", fees.payload.Id);
   const get_filtered_details = {
     source: "db",
     procedure: "SisApp_getData",
@@ -550,23 +549,23 @@ function* fetchFiscalYearDetails(fees) {
     yield put(getFacultiesFail(error));
   }
 
-
-    //get academicCertif
-    const get_academicCertif_opt = {
-      source: "db",
-      procedure: "Generic_getOptions",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "settings_AcadmicCertificates",
-      fields: "Id,arTitle",
-    };
-    try {
-      const response = yield call(getAcademicCertificates, get_academicCertif_opt);
-      yield put(getAcademicCertificatesSuccess(response));
-    } catch (error) {
-      yield put(getAcademicCertificatesFail(error));
-    }
-  
-
+  //get academicCertif
+  const get_academicCertif_opt = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "settings_AcadmicCertificates",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(
+      getAcademicCertificates,
+      get_academicCertif_opt
+    );
+    yield put(getAcademicCertificatesSuccess(response));
+  } catch (error) {
+    yield put(getAcademicCertificatesFail(error));
+  }
 
   //period
   const get_filtered_periods = {
@@ -584,51 +583,51 @@ function* fetchFiscalYearDetails(fees) {
     yield put(getPeriodsFail(error));
   }
 
-    //get request
-    const get_request_opt = {
-      source: "db",
-      procedure: "Generic_getOptions",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "financeSetting_requests",
-      fields: "Id,arTitle",
-    };
-    try {
-      const response = yield call(getRequests, get_request_opt);
-      yield put(getRequestsSuccess(response));
-    } catch (error) {
-      yield put(getRequestsFail(error));
-    }
+  //get request
+  const get_request_opt = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "financeSetting_requests",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getRequests, get_request_opt);
+    yield put(getRequestsSuccess(response));
+  } catch (error) {
+    yield put(getRequestsFail(error));
+  }
 
-     //get semester
-     const get_semester_opt = {
-      source: "db",
-      procedure: "Generic_Optiondatalist",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "settings_Semesters",
-      fields: "Id,arTitle",
-    };
-    try {
-      const response = yield call(getSemesters, get_semester_opt);
-      yield put(getSemestersSuccess(response));
-    } catch (error) {
-      yield put(getSemestersFail(error));
-    }
+  //get semester
+  const get_semester_opt = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "settings_Semesters",
+    fields: "Id,arTitle",
+  };
+  try {
+    const response = yield call(getSemesters, get_semester_opt);
+    yield put(getSemestersSuccess(response));
+  } catch (error) {
+    yield put(getSemestersFail(error));
+  }
 
-    //execute methods 
-    const get_execute_method = {
-      source: "db",
-      procedure: "Generic_getOptions",
-      apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-      tablename: "financeSetting_ExecuteMethod",
-      fields: "Id,arTitle",
-    };
-  
-    try {
-      const response = yield call(getExecuteMethods, get_execute_method);
-      yield put(getExecuteMethodsSuccess(response));
-    } catch (error) {
-      yield put(getExecuteMethodsFail(error));
-    }
+  //execute methods
+  const get_execute_method = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "financeSetting_ExecuteMethod",
+    fields: "Id,arTitle",
+  };
+
+  try {
+    const response = yield call(getExecuteMethods, get_execute_method);
+    yield put(getExecuteMethodsSuccess(response));
+  } catch (error) {
+    yield put(getExecuteMethodsFail(error));
+  }
 }
 
 function* onGetFilteredAcademicCertificates(obj) {
@@ -679,8 +678,10 @@ function* feesDefinitionSaga() {
   yield takeEvery(DELETE_FEES_SERVICE, onDeleteFeesService);
   yield takeEvery(COPY_FEES_SERVICE, onCopyFeesService);
   yield takeEvery(GET_FISCAL_YEAR_DETAILS, fetchFiscalYearDetails);
-  yield takeEvery(GET_FILTERED_ACADEMIC_CERTIFICATES, onGetFilteredAcademicCertificates);
-
+  yield takeEvery(
+    GET_FILTERED_ACADEMIC_CERTIFICATES,
+    onGetFilteredAcademicCertificates
+  );
 }
 
 export default feesDefinitionSaga;

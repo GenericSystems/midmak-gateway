@@ -11,11 +11,14 @@ import {
   GET_UNARCHIVE_COURSE_REQUEST_DELETED_VALUE_FAIL,
   GET_OPERATIONS_NEEDED_SUCCESS,
   GET_OPERATIONS_NEEDED_FAIL,
+  GET_FILTERED_COURSES_UN_ARCHIVED_SUCCESS,
+  GET_FILTERED_COURSES_UN_ARCHIVED_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   unarchiveCourseRequests: [],
   operationsNeeded: [],
+  filteredCoursesUnArchive: [],
   deleted: {},
   error: {},
 };
@@ -94,6 +97,16 @@ const unarchiveCourseRequests = (state = INIT_STATE, action) => {
         operationsNeeded: action.payload,
       };
     case GET_OPERATIONS_NEEDED_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case GET_FILTERED_COURSES_UN_ARCHIVED_SUCCESS:
+      return {
+        ...state,
+        filteredCoursesUnArchive: action.payload,
+      };
+    case GET_FILTERED_COURSES_UN_ARCHIVED_FAIL:
       return {
         ...state,
         error: action.payload,

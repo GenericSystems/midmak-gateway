@@ -656,7 +656,7 @@ class MarksObjectionsList extends Component {
         editable: false,
       },
       {
-        dataField: "requestTypeId",
+        dataField: "requestType",
         text: this.props.t("Request Type"),
         sort: true,
         editable: false,
@@ -680,20 +680,19 @@ class MarksObjectionsList extends Component {
         editable: false,
       },
       {
-        dataField: "marksDifference",
+        dataField: "differenceMark",
         text: this.props.t("Marks Difference"),
         sort: true,
         editable: false,
-        formatter: (cell, row) => row.newMark - row.oldMark,
       },
       {
-        dataField: "requestStatusId",
+        dataField: "requestStatus",
         text: this.props.t("Request Status"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "applliedThrough",
+        dataField: "applyFrom",
         text: this.props.t("Appllied Through"),
         sort: true,
         editable: false,
