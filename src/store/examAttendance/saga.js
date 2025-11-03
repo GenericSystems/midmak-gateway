@@ -7,9 +7,13 @@ import {
   DELETE_EXAM_ATTENDANCE,
   UPDATE_EXAM_ATTENDANCE,
   GET_EXAM_ATTENDANCE_DELETED_VALUE,
+  GET_EXAMS_NAMES,
 } from "./actionTypes";
 
-import { GET_USER_TYPES_OPT } from "../user-types/actionTypes";
+import {
+  getHallsSuccess,
+  getHallsFail,
+} from "../academyBuildingStructure/actions";
 
 import {
   getExamsAttendanceSuccess,
@@ -24,6 +28,10 @@ import {
   getExamAttendanceDeletedValueFail,
   getAttendStatusSuccess,
   getAttendStatusFail,
+  getExamsNamesSuccess,
+  getExamsNamesFail,
+  getExamsPeriodsSuccess,
+  getExamsPeriodsFail,
 } from "./actions";
 
 import {
@@ -39,14 +47,14 @@ import { getSectorsFail, getSectorsSuccess } from "../sectors/actions";
 // } from "../certificateGrades/actions";
 
 import {
-  getExamAttendanceTypesFail,
-  getExamAttendanceTypesSuccess,
-} from "../certificateTypes/actions";
+  getEmployeesNamesSuccess,
+  getEmployeesNamesFail,
+} from "../HR/employees/actions";
 
 import {
-  getFilteredMembersFail,
-  getFilteredMembersSuccess,
-} from "../trainingMembers/actions";
+  getCoursesOfferingSuccess,
+  getCoursesOfferingFail,
+} from "../classScheduling/actions";
 
 import { getYearsFail, getYearsSuccess } from "../years/actions";
 
@@ -62,39 +70,87 @@ import {
   getYears,
   getFilteredMembers,
   getAttendStatus,
+  getExamsNames,
+  getExamsPeriods,
+  getEmployeesNames,
+  getHalls,
+  getCoursesOffering,
 } from "../../helpers/fakebackend_helper";
 
-function* fetchUsers() {
+function* fetchExamName() {
   //user types
-  const get_userTypes_req = {
+  const get_ExamsNames_req = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_UserType",
+    tablename: "_Common_DefineExamDates",
     fields: "Id,arTitle",
   };
 
   try {
-    const response = yield call(getUserTypesOpt, get_userTypes_req);
-    yield put(getUserTypesOptSuccess(response));
+    const response = yield call(getExamsNames, get_ExamsNames_req);
+    yield put(getExamsNamesSuccess(response));
   } catch (error) {
-    yield put(getUserTypesOptFail(error));
+    yield put(getExamsNamesFail(error));
+  }
+  const get_Examsper_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_DefineExamDates",
+    fields: "Id,examPeriods",
+  };
+
+  try {
+    const response = yield call(getExamsPeriods, get_Examsper_req);
+    console.log("rrrrrrrrrrrrrre", response);
+    yield put(getExamsPeriodsSuccess(response));
+  } catch (error) {
+    yield put(getExamsPeriodsFail(error));
   }
 
-  //Sectors
-  const get_sectors_req = {
+  const get_courses_req = {
     source: "db",
-    procedure: "Generic_getOptions",
+    procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Sector",
+    tablename: "_Common_CourseOffering",
+    filter: `isOffered = 1`,
     fields: "Id,arTitle",
   };
-
   try {
-    const response = yield call(getSectors, get_sectors_req);
-    yield put(getSectorsSuccess(response));
+    const response = yield call(getCoursesOffering, get_courses_req);
+    yield put(getCoursesOfferingSuccess(response));
   } catch (error) {
-    yield put(getSectorsFail(error));
+    yield put(getCoursesOfferingFail(error));
+  }
+  const get_halls_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Common_Hall",
+    fields: `Id,arTitle`,
+  };
+  try {
+    const response = yield call(getHalls, get_halls_req);
+    console.log("hallllllllllllllls", response);
+    yield put(getHallsSuccess(response));
+  } catch (error) {
+    yield put(getHallsFail(error));
+  }
+
+  const get_observers_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Common_EmployeeOption",
+    fields: "Id,fullName",
+  };
+  try {
+    const response = yield call(getEmployeesNames, get_observers_req);
+    console.log("employeeName", response);
+    yield put(getEmployeesNamesSuccess(response));
+  } catch (error) {
+    yield put(getEmployeesNamesFail(error));
   }
 
   //years
@@ -114,22 +170,53 @@ function* fetchUsers() {
 }
 
 function* fetchExamsAttendance(obj) {
+  // console.log("in saga obj", obj);
+  // const userTypeId = obj.payload.userTypeId;
+
+  // const get_ExamsAttendance_req = {
+  //   source: "db",
+  //   procedure: "SisApp_getData",
+  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+  //   tablename: "_Common_Certificates",
+  //   filter: `userTypeId = ${userTypeId}`,
+  // };
+  // try {
+  //   const response = yield call(getExamsAttendance, get_ExamsAttendance_req);
+  //   /* response.map(resp => {
+  //     resp["sector"] = JSON.parse(resp["sector"]);
+  //   }); */
+  //   console.log("responseresponse", response);
+  //   yield put(getExamsAttendanceSuccess(response));
+  // } catch (error) {
+  //   yield put(getExamsAttendanceFail(error));
+  // }
+
   console.log("in saga obj", obj);
-  const userTypeId = obj.payload.userTypeId;
+
+  const payload = obj.payload;
+
+  let filter = Object.entries(payload)
+    .map(([key, value]) => {
+      if (typeof value === "number") {
+        return `${key} = ${value}`;
+      }
+      return `${key} = '${value}'`;
+    })
+    .join(" and ");
+
+  console.log(" 22222222222222:", filter);
 
   const get_ExamsAttendance_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Common_Certificates",
-    filter: `userTypeId = ${userTypeId}`,
+    tablename: "_Common_DefineExamDates",
+    filter: filter || "1=1",
   };
+
   try {
     const response = yield call(getExamsAttendance, get_ExamsAttendance_req);
-    /* response.map(resp => {
-      resp["sector"] = JSON.parse(resp["sector"]);
-    }); */
-    console.log("responseresponse", response);
+    console.log("response", response);
     yield put(getExamsAttendanceSuccess(response));
   } catch (error) {
     yield put(getExamsAttendanceFail(error));
@@ -147,22 +234,6 @@ function* fetchExamsAttendance(obj) {
     yield put(getAttendStatusSuccess(response));
   } catch (error) {
     yield put(getAttendStatusFail(error));
-  }
-
-  const get_trainer_req = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_TrainingMembers",
-    fields: "Id,name",
-    filter: `userTypeId = ${userTypeId}`,
-  };
-  try {
-    const response = yield call(getFilteredMembers, get_trainer_req);
-
-    yield put(getFilteredMembersSuccess(response));
-  } catch (error) {
-    yield put(getFilteredMembersFail(error));
   }
 
   // // trainer grade
@@ -237,7 +308,7 @@ function* onGetExamAttendanceDeletedValue() {
 }
 
 function* ExamsAttendanceSaga() {
-  yield takeEvery(GET_USER_TYPES_OPT, fetchUsers);
+  yield takeEvery(GET_EXAMS_NAMES, fetchExamName);
   yield takeEvery(GET_EXAMS_ATTENDANCE, fetchExamsAttendance);
   yield takeEvery(ADD_NEW_EXAM_ATTENDANCE, onAddNewExamAttendance);
   yield takeEvery(UPDATE_EXAM_ATTENDANCE, onUpdateExamAttendance);

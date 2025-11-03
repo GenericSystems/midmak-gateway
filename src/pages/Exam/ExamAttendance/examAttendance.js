@@ -32,8 +32,8 @@ import {
   updateExamAttendance,
   deleteExamAttendance,
   getExamAttendanceDeletedValue,
+  getExamsNames,
 } from "store/examAttendance/actions";
-import { getUserTypesOpt } from "store/user-types/actions";
 
 import * as Yup from "yup";
 import ToolkitProvider, {
@@ -78,14 +78,24 @@ class ExamsAttendance extends Component {
       QRModal: false,
       qr: "",
       sidebarOpen: true,
-      selectedUserType: "",
+      selectedExamName: "",
+      selectedExamKey: null,
+      selectedExamValue: "",
+      selectedPeriodKey: null,
+      selectedPeriodValue: "",
+      selectedCourseKey: null,
+      selectedCourseValue: "",
+      selectedHallKey: null,
+      selectedHallValue: "",
+      selectedObserverKey: null,
+      selectedObserverValue: "",
     };
   }
 
   /*  initializeState() {
-    const {selectedUserType} = this.state
-    console.log("selectedUserType in initail state", selectedUserType)
-    this.setState({selectedUserType :selectedUserType})
+    const {selectedExamName} = this.state
+    console.log("selectedExamName in initail state", selectedExamName)
+    this.setState({selectedExamName :selectedExamName})
   } */
 
   componentDidMount() {
@@ -94,20 +104,24 @@ class ExamsAttendance extends Component {
       examAttendanceTypes,
       deleted,
       user_menu,
-      userTypesOpt,
+      examsNames,
+      coursesOffering,
+      employeesNames,
+      halls,
+      examsPeriods,
       sectors,
       years,
       attendStatus,
       filteredExamAttendanceGrades,
       filteredMembers,
-      onGetUsers,
+      onGetExamsNames,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
     if (examsAttendance && !examsAttendance.length) {
-      onGetUsers();
+      onGetExamsNames();
     }
     // this.props.onGetExamsAttendance();
     this.setState({
@@ -115,7 +129,11 @@ class ExamsAttendance extends Component {
       examsAttendance,
       examAttendanceTypes,
       deleted,
-      userTypesOpt,
+      examsNames,
+      coursesOffering,
+      employeesNames,
+      halls,
+      examsPeriods,
       sectors,
       filteredExamAttendanceGrades,
       filteredMembers,
@@ -145,11 +163,11 @@ class ExamsAttendance extends Component {
         this.props.location.pathname
       );
     }
-    /*     const {selectedUserType} = this.state
+    /*     const {selectedExamName} = this.state
     if (
-      (selectedUserType &&
-        selectedUserType !==
-          prevProps.selectedUserType) 
+      (selectedExamName &&
+        selectedExamName !==
+          prevProps.selectedExamName) 
     ) {
       this.initializeState();
     } */
@@ -266,48 +284,63 @@ class ExamsAttendance extends Component {
     }));
   };
 
-  handleSelectChange = (fieldName, selectedValue) => {
-    if (fieldName === "trainerId") {
+  handleDatalistChange = (fieldName, optionsArray, value) => {
+    const selected = optionsArray.find(opt => opt.value === value);
+    if (selected) {
       this.setState({
-        selectedMember: selectedValue,
+        [`selected${fieldName}Key`]: selected.key,
+        [`selected${fieldName}Value`]: selected.value,
       });
-    } else if (fieldName == "userTypeId") {
-      console.log("selected value", selectedValue);
-
-      const { onGetExamsAttendance } = this.props;
-      console.log("{ userTypeId: selectedValue }", {
-        userTypeId: selectedValue,
-      });
-      onGetExamsAttendance({ userTypeId: selectedValue });
+    } else {
       this.setState({
-        selectedUserType: selectedValue,
+        [`selected${fieldName}Key`]: null,
+        [`selected${fieldName}Value`]: value,
       });
-    }
-    // else if (fieldName == "trainerGradeId") {
-    //   this.setState({
-    //     selectedMemberGrade: selectedValue,
-    //   });
-    // } else if (fieldName == "examAttendanceTypeId") {
-    //   this.setState({
-    //     selectedExamAttendanceType: selectedValue,
-    //   });
-    // } else if (fieldName == "yearId") {
-    //   this.setState({
-    //     selectedYear: selectedValue,
-    //   });
-    // }
-  };
-
-  handleMulti = (fieldName, selectedMulti) => {
-    if (fieldName === "sector") {
-      this.setState({ sectorsArray: selectedMulti });
     }
   };
 
+  handleExamChange = selectedOption => {
+    if (!selectedOption) return;
+    const selectedExamId = selectedOption.value;
+    const filteredPeriods = (this.props.examsPeriods || []).filter(
+      item => item.key === selectedExamId && item.value
+    );
+
+    this.setState({
+      selectedExamKey: selectedExamId,
+      selectedExamValue: selectedOption.label,
+      filteredPeriods,
+      selectedPeriodKey: null,
+      selectedPeriodValue: "",
+    });
+  };
+
+  handleSearch = () => {
+    const {
+      selectedExamKey,
+      selectedPeriodKey,
+      selectedCourseKey,
+      selectedHallKey,
+      selectedObserverKey,
+    } = this.state;
+
+    const filterData = {};
+    if (selectedExamKey) filterData.Id = Number(selectedExamKey);
+    if (selectedPeriodKey) filterData.periodId = selectedPeriodKey;
+    if (selectedCourseKey) filterData.courseId = selectedCourseKey;
+    if (selectedHallKey) filterData.hallId = selectedHallKey;
+    if (selectedObserverKey) filterData.observerId = selectedObserverKey;
+
+    console.log("Search filterData:", filterData);
+
+    if (this.props.onGetExamsAttendance) {
+      this.props.onGetExamsAttendance(filterData);
+    }
+  };
   handleSave = values => {
     const {
       isEdit,
-      selectedUserType,
+      selectedExamName,
       selectedMember,
       selectedExamAttendanceType,
       selectedMemberGrade,
@@ -322,12 +355,12 @@ class ExamsAttendance extends Component {
 
     values["yearId"] = selectedYear;
     values["trainerId"] = selectedMember;
-    values["userTypeId"] = selectedUserType;
+    values["examNameId"] = selectedExamName;
     values["examAttendanceTypeId"] = selectedExamAttendanceType;
     values["trainerGradeId"] = selectedMemberGrade;
     values["sector"] = sectorsArray;
 
-    console.log("selectedUserType0", selectedUserType);
+    console.log("selectedExamName0", selectedExamName);
 
     if (values.academicCode === "") {
       this.setState({ academicCodeError: true });
@@ -337,7 +370,7 @@ class ExamsAttendance extends Component {
 
     if (
       values.academicCode &&
-      selectedUserType !== null &&
+      selectedExamName !== null &&
       selectedMember !== null &&
       selectedYear !== null &&
       selectedExamAttendanceType !== null &&
@@ -364,8 +397,8 @@ class ExamsAttendance extends Component {
       this.toggle();
     } else {
       let emptyError = "";
-      console.log("selectedUserType", selectedUserType);
-      if (selectedUserType === undefined) {
+      console.log("selectedExamName", selectedExamName);
+      if (selectedExamName === undefined) {
         emptyError = "Fill the empty select";
       }
       if (selectedMember === undefined) {
@@ -405,23 +438,6 @@ class ExamsAttendance extends Component {
     }));
   };
 
-  handleSearch = () => {
-    const { exam, period, course, room, observer } = this.state;
-    const { examsAttendance } = this.props;
-
-    const filtered = examsAttendance.filter(row => {
-      return (
-        (!exam || row.exam === exam) &&
-        (!period || row.period === period) &&
-        (!course || row.course === course) &&
-        (!room || row.room === room) &&
-        (!observer || row.observer === observer)
-      );
-    });
-
-    this.setState({ filteredData: filtered });
-  };
-
   handleSelect = (rowId, fieldName, selectedValue) => {
     const { onUpdateHiddenGrade } = this.props;
 
@@ -455,7 +471,11 @@ class ExamsAttendance extends Component {
       examsAttendance,
       user_menu,
       deleted,
-      userTypesOpt,
+      examsNames,
+      coursesOffering,
+      employeesNames,
+      halls,
+      examsPeriods,
       years,
       sectors,
       examAttendanceTypes,
@@ -475,7 +495,7 @@ class ExamsAttendance extends Component {
       QRModal,
       qr,
       sidebarOpen,
-      selectedUserType,
+      selectedExamName,
       duplicateError,
       errorMessage,
       emptyError,
@@ -485,8 +505,14 @@ class ExamsAttendance extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      selectedExamValue,
+      selectedPeriodValue,
+      selectedCourseValue,
+      selectedHallValue,
+      selectedObserverValue,
+      filteredPeriods,
     } = this.state;
-
+    console.log("eaaaaaaaaaaaa", examsPeriods);
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
     const {} = this.state;
@@ -502,7 +528,7 @@ class ExamsAttendance extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "trainerName",
+        dataField: "arTitle",
         text: this.props.t("Course Name"),
         sort: true,
         editable: false,
@@ -534,7 +560,7 @@ class ExamsAttendance extends Component {
         }),
       },
       {
-        dataField: "userType",
+        dataField: "examDate",
         text: this.props.t("Exam Date"),
         sort: true,
 
@@ -560,16 +586,6 @@ class ExamsAttendance extends Component {
         text: this.props.t("Sector"),
         sort: true,
         editable: false,
-        formatter: (cellContent, row) => {
-          if (row.sector && Array.isArray(row.sector)) {
-            return row.sector.map(item => item.label).join(", ");
-          }
-          return "";
-        },
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-          //  hidden: !showSearchButton,
-        }),
       },
       {
         dataField: "examAttendanceYear",
@@ -748,18 +764,15 @@ class ExamsAttendance extends Component {
                                   <Col lg="8">
                                     <Select
                                       className="form-style "
-                                      name="userTypeId"
-                                      key="courseType_select"
-                                      options={userTypesOpt}
-                                      onChange={newValue =>
-                                        this.handleSelectChange(
-                                          "userTypeId",
-                                          newValue.value
-                                        )
-                                      }
-                                      value={userTypesOpt.find(
-                                        opt => opt.label === selectedUserType
+                                      name="examNameId"
+                                      key="examName_select"
+                                      options={examsNames}
+                                      value={examsNames.find(
+                                        opt =>
+                                          opt.value ===
+                                          this.state.selectedExamKey
                                       )}
+                                      onChange={this.handleExamChange}
                                     />
                                   </Col>
                                 </Row>
@@ -775,23 +788,29 @@ class ExamsAttendance extends Component {
                                     <input
                                       type="text"
                                       list="periodOptions"
-                                      name="period"
+                                      name="periodId"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={this.state.selectedPeriod || ""}
+                                      value={selectedPeriodValue || ""}
                                       onChange={e =>
-                                        this.setState({
-                                          selectedPeriod: e.target.value,
-                                        })
+                                        this.handleDatalistChange(
+                                          "Period",
+                                          filteredPeriods.flatMap(item =>
+                                            JSON.parse(item.value)
+                                          ),
+                                          e.target.value
+                                        )
                                       }
                                     />
                                     <datalist id="periodOptions">
-                                      {userTypesOpt.map(opt => (
-                                        <option
-                                          key={opt.value}
-                                          value={opt.label}
-                                        />
-                                      ))}
+                                      {(filteredPeriods || [])
+                                        .flatMap(item => JSON.parse(item.value))
+                                        .map(period => (
+                                          <option
+                                            key={period.Id}
+                                            value={`${period.flag} (${period.startTime} → ${period.endTime})`}
+                                          />
+                                        ))}
                                     </datalist>
                                   </Col>
                                 </Row>
@@ -810,18 +829,20 @@ class ExamsAttendance extends Component {
                                       name="course"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={this.state.selectedCourse || ""}
+                                      value={selectedCourseValue || ""}
                                       onChange={e =>
-                                        this.setState({
-                                          selectedCourse: e.target.value,
-                                        })
+                                        this.handleDatalistChange(
+                                          "Course",
+                                          coursesOffering,
+                                          e.target.value
+                                        )
                                       }
                                     />
                                     <datalist id="courseOptions">
-                                      {userTypesOpt.map(opt => (
+                                      {coursesOffering.map(opt => (
                                         <option
-                                          key={opt.value}
-                                          value={opt.label}
+                                          key={opt.key}
+                                          value={opt.value}
                                         />
                                       ))}
                                     </datalist>
@@ -831,7 +852,10 @@ class ExamsAttendance extends Component {
                                 {/* Room */}
                                 <Row className="mb-3">
                                   <Col lg="4">
-                                    <Label className="form-label user-style">
+                                    <Label
+                                      className="form-label user-style"
+                                      for="hall-Id"
+                                    >
                                       {t("Room")}:
                                     </Label>
                                   </Col>
@@ -839,21 +863,24 @@ class ExamsAttendance extends Component {
                                     <input
                                       type="text"
                                       list="roomOptions"
-                                      name="room"
+                                      name="hallId"
+                                      id="hall-Id"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={this.state.selectedRoom || ""}
+                                      value={selectedHallValue || ""}
                                       onChange={e =>
-                                        this.setState({
-                                          selectedRoom: e.target.value,
-                                        })
+                                        this.handleDatalistChange(
+                                          "Hall",
+                                          halls,
+                                          e.target.value
+                                        )
                                       }
                                     />
                                     <datalist id="roomOptions">
-                                      {userTypesOpt.map(opt => (
+                                      {halls.map(opt => (
                                         <option
-                                          key={opt.value}
-                                          value={opt.label}
+                                          key={opt.key}
+                                          value={opt.value}
                                         />
                                       ))}
                                     </datalist>
@@ -863,7 +890,10 @@ class ExamsAttendance extends Component {
                                 {/* Observer */}
                                 <Row className="mb-3">
                                   <Col lg="4">
-                                    <Label className="form-label user-style">
+                                    <Label
+                                      className="form-label user-style"
+                                      for="observer_Id"
+                                    >
                                       {t("Observer")} {""}:
                                     </Label>
                                   </Col>
@@ -871,21 +901,24 @@ class ExamsAttendance extends Component {
                                     <input
                                       type="text"
                                       list="observerOptions"
-                                      name="observer"
+                                      name="observerId"
+                                      id="observer_Id"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={this.state.selectedObserver || ""}
+                                      value={selectedObserverValue || ""}
                                       onChange={e =>
-                                        this.setState({
-                                          selectedObserver: e.target.value,
-                                        })
+                                        this.handleDatalistChange(
+                                          "Observer",
+                                          employeesNames,
+                                          e.target.value
+                                        )
                                       }
                                     />
                                     <datalist id="observerOptions">
-                                      {userTypesOpt.map(opt => (
+                                      {employeesNames.map(altEmp => (
                                         <option
-                                          key={opt.value}
-                                          value={opt.label}
+                                          key={altEmp.key}
+                                          value={altEmp.value}
                                         />
                                       ))}
                                     </datalist>
@@ -997,7 +1030,7 @@ class ExamsAttendance extends Component {
                                           </div>
                                         </Col>
                                         <Col sm="8">
-                                          {/* {selectedUserType && (
+                                          {/* {selectedExamName && (
                                             <div className="text-sm-end">
                                               <Tooltip
                                                 title={this.props.t("Add")}
@@ -1230,17 +1263,20 @@ const mapStateToProps = ({
   examsAttendance,
   menu_items,
   years,
-  userTypes,
-  examAttendanceTypes,
+  employees,
   sectors,
   examAttendanceGrades,
-  trainingMembers,
+  classScheduling,
+  academyBuildingStructures,
 }) => ({
   examsAttendance: examsAttendance.examsAttendance,
+  coursesOffering: classScheduling.coursesOffering,
   attendStatus: examsAttendance.attendStatus,
-  userTypesOpt: userTypes.userTypesOpt,
+  examsNames: examsAttendance.examsNames,
+  examsPeriods: examsAttendance.examsPeriods,
   sectors: sectors.sectors,
-  filteredMembers: trainingMembers.filteredMembers,
+  halls: academyBuildingStructures.halls,
+  employeesNames: employees.employeesNames,
   //   filteredExamAttendanceGrades:
   //     examAttendanceGrades.filteredExamAttendanceGrades,
   years: years.years,
@@ -1251,7 +1287,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = dispatch => ({
   onGetExamsAttendance: examAttendance =>
     dispatch(getExamsAttendance(examAttendance)),
-  onGetUsers: () => dispatch(getUserTypesOpt()),
+  onGetExamsNames: () => dispatch(getExamsNames()),
   onAddNewExamAttendance: examAttendance =>
     dispatch(addNewExamAttendance(examAttendance)),
   onUpdateExamAttendance: examAttendance =>

@@ -1177,6 +1177,12 @@ export const DELETE_JUSTIFY_TRAINEE_ABSENCE = "/deleted/justifyTraineeAbsence";
 //attend status
 export const GET_ATTEND_STATUS = "/attendStatus";
 
+//Exams Name
+export const GET_EXAMS_NAMES = "/examsNames";
+
+//ExamsPeriods
+export const GET_EXAMS_PERIODS = "/examsPeriods";
+
 //ExamAttendance
 export const GET_EXAMS_ATTENDANCE = "/examAttendance";
 export const GET_EXAM_ATTENDANCE_DELETED_VALUE = "/deleted";

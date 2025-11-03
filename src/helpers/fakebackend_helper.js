@@ -2418,6 +2418,12 @@ export const deleteJustifyTraineeAbsence = data =>
 //attend status
 export const getAttendStatus = data => post(url.GET_ATTEND_STATUS, data);
 
+//exams name
+export const getExamsNames = data => post(url.GET_EXAMS_NAMES, data);
+
+//ExamsPeriods
+export const getExamsPeriods = data => post(url.GET_EXAMS_PERIODS, data);
+
 //ExamAttendance
 export const getExamsAttendance = data => post(url.GET_EXAMS_ATTENDANCE, data);
 

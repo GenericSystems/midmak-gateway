@@ -98,14 +98,18 @@ class ExamAttendanceObservers extends Component {
 
   componentDidMount() {
     const {
+      examsAttendance,
       attendanceObservers,
       deleted,
       user_menu,
       userTypesOpt,
       years,
       attendStatus,
-      // filteredExamAttendanceObserverGrades,
-      // filteredMembers,
+      examsNames,
+      coursesOffering,
+      employeesNames,
+      halls,
+      examsPeriods,
       onGetUsers,
       onGetAttendStatus,
       onGetExamAttendanceObservers,
@@ -114,8 +118,8 @@ class ExamAttendanceObservers extends Component {
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
     this.updateShowEditButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
-    if (attendanceObservers && !attendanceObservers.length) {
-      // onGetUsers();
+    if (examsAttendance && !examsAttendance.length) {
+      onGetExamsNames();
     }
     onGetExamAttendanceObservers();
     // onGetAttendStatus();
@@ -525,6 +529,60 @@ class ExamAttendanceObservers extends Component {
     }
   };
 
+  handleDatalistChange = (fieldName, optionsArray, value) => {
+    const selected = optionsArray.find(opt => opt.value === value);
+    if (selected) {
+      this.setState({
+        [`selected${fieldName}Key`]: selected.key,
+        [`selected${fieldName}Value`]: selected.value,
+      });
+    } else {
+      this.setState({
+        [`selected${fieldName}Key`]: null,
+        [`selected${fieldName}Value`]: value,
+      });
+    }
+  };
+
+  handleExamChange = selectedOption => {
+    if (!selectedOption) return;
+    const selectedExamId = selectedOption.value;
+    const filteredPeriods = (this.props.examsPeriods || []).filter(
+      item => item.key === selectedExamId && item.value
+    );
+
+    this.setState({
+      selectedExamKey: selectedExamId,
+      selectedExamValue: selectedOption.label,
+      filteredPeriods,
+      selectedPeriodKey: null,
+      selectedPeriodValue: "",
+    });
+  };
+
+  handleSearch = () => {
+    const {
+      selectedExamKey,
+      selectedPeriodKey,
+      selectedCourseKey,
+      selectedHallKey,
+      selectedObserverKey,
+    } = this.state;
+
+    const filterData = {};
+    if (selectedExamKey) filterData.Id = Number(selectedExamKey);
+    if (selectedPeriodKey) filterData.periodId = selectedPeriodKey;
+    if (selectedCourseKey) filterData.courseId = selectedCourseKey;
+    if (selectedHallKey) filterData.hallId = selectedHallKey;
+    if (selectedObserverKey) filterData.observerId = selectedObserverKey;
+
+    console.log("Search filterData:", filterData);
+
+    if (this.props.onGetExamsAttendance) {
+      this.props.onGetExamsAttendance(filterData);
+    }
+  };
+
   render() {
     const { filteredData } = this.state;
     const { SearchBar } = Search;
@@ -838,27 +896,18 @@ class ExamAttendanceObservers extends Component {
                                     </Label>
                                   </Col>
                                   <Col lg="8">
-                                    <input
-                                      type="text"
-                                      list="examOptions"
-                                      name="exam"
-                                      placeholder="Type to search..."
-                                      className="form-control"
-                                      value={this.state.selectedExam || ""}
-                                      onChange={e =>
-                                        this.setState({
-                                          selectedExam: e.target.value,
-                                        })
-                                      }
+                                    <Select
+                                      className="form-style "
+                                      name="examNameId"
+                                      key="examName_select"
+                                      options={examsNames}
+                                      value={examsNames.find(
+                                        opt =>
+                                          opt.value ===
+                                          this.state.selectedExamKey
+                                      )}
+                                      onChange={this.handleExamChange}
                                     />
-                                    <datalist id="examOptions">
-                                      {userTypesOpt.map(opt => (
-                                        <option
-                                          key={opt.value}
-                                          value={opt.label}
-                                        />
-                                      ))}
-                                    </datalist>
                                   </Col>
                                 </Row>
 
@@ -873,23 +922,29 @@ class ExamAttendanceObservers extends Component {
                                     <input
                                       type="text"
                                       list="periodOptions"
-                                      name="period"
+                                      name="periodId"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={this.state.selectedPeriod || ""}
+                                      value={selectedPeriodValue || ""}
                                       onChange={e =>
-                                        this.setState({
-                                          selectedPeriod: e.target.value,
-                                        })
+                                        this.handleDatalistChange(
+                                          "Period",
+                                          filteredPeriods.flatMap(item =>
+                                            JSON.parse(item.value)
+                                          ),
+                                          e.target.value
+                                        )
                                       }
                                     />
                                     <datalist id="periodOptions">
-                                      {userTypesOpt.map(opt => (
-                                        <option
-                                          key={opt.value}
-                                          value={opt.label}
-                                        />
-                                      ))}
+                                      {(filteredPeriods || [])
+                                        .flatMap(item => JSON.parse(item.value))
+                                        .map(period => (
+                                          <option
+                                            key={period.Id}
+                                            value={`${period.flag} (${period.startTime} → ${period.endTime})`}
+                                          />
+                                        ))}
                                     </datalist>
                                   </Col>
                                 </Row>
@@ -908,18 +963,20 @@ class ExamAttendanceObservers extends Component {
                                       name="course"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={this.state.selectedCourse || ""}
+                                      value={selectedCourseValue || ""}
                                       onChange={e =>
-                                        this.setState({
-                                          selectedCourse: e.target.value,
-                                        })
+                                        this.handleDatalistChange(
+                                          "Course",
+                                          coursesOffering,
+                                          e.target.value
+                                        )
                                       }
                                     />
                                     <datalist id="courseOptions">
-                                      {userTypesOpt.map(opt => (
+                                      {coursesOffering.map(opt => (
                                         <option
-                                          key={opt.value}
-                                          value={opt.label}
+                                          key={opt.key}
+                                          value={opt.value}
                                         />
                                       ))}
                                     </datalist>
@@ -929,7 +986,10 @@ class ExamAttendanceObservers extends Component {
                                 {/* Room */}
                                 <Row className="mb-3">
                                   <Col lg="4">
-                                    <Label className="form-label user-style">
+                                    <Label
+                                      className="form-label user-style"
+                                      for="hall-Id"
+                                    >
                                       {t("Room")}:
                                     </Label>
                                   </Col>
@@ -937,21 +997,24 @@ class ExamAttendanceObservers extends Component {
                                     <input
                                       type="text"
                                       list="roomOptions"
-                                      name="room"
+                                      name="hallId"
+                                      id="hall-Id"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={this.state.selectedRoom || ""}
+                                      value={selectedHallValue || ""}
                                       onChange={e =>
-                                        this.setState({
-                                          selectedRoom: e.target.value,
-                                        })
+                                        this.handleDatalistChange(
+                                          "Hall",
+                                          halls,
+                                          e.target.value
+                                        )
                                       }
                                     />
                                     <datalist id="roomOptions">
-                                      {userTypesOpt.map(opt => (
+                                      {halls.map(opt => (
                                         <option
-                                          key={opt.value}
-                                          value={opt.label}
+                                          key={opt.key}
+                                          value={opt.value}
                                         />
                                       ))}
                                     </datalist>
@@ -961,7 +1024,10 @@ class ExamAttendanceObservers extends Component {
                                 {/* Observer */}
                                 <Row className="mb-3">
                                   <Col lg="4">
-                                    <Label className="form-label user-style">
+                                    <Label
+                                      className="form-label user-style"
+                                      for="observer_Id"
+                                    >
                                       {t("Observer")} {""}:
                                     </Label>
                                   </Col>
@@ -969,21 +1035,24 @@ class ExamAttendanceObservers extends Component {
                                     <input
                                       type="text"
                                       list="observerOptions"
-                                      name="observer"
+                                      name="observerId"
+                                      id="observer_Id"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={this.state.selectedObserver || ""}
+                                      value={selectedObserverValue || ""}
                                       onChange={e =>
-                                        this.setState({
-                                          selectedObserver: e.target.value,
-                                        })
+                                        this.handleDatalistChange(
+                                          "Observer",
+                                          employeesNames,
+                                          e.target.value
+                                        )
                                       }
                                     />
                                     <datalist id="observerOptions">
-                                      {userTypesOpt.map(opt => (
+                                      {employeesNames.map(altEmp => (
                                         <option
-                                          key={opt.value}
-                                          value={opt.label}
+                                          key={altEmp.key}
+                                          value={altEmp.value}
                                         />
                                       ))}
                                     </datalist>
@@ -1642,19 +1711,17 @@ const mapStateToProps = ({
   examsAttendance,
   menu_items,
   years,
-  userTypes,
-  attendanceObserverTypes,
-  sectors,
-  attendanceObserverGrades,
-  trainingMembers,
+  employees,
+  classScheduling,
+  academyBuildingStructures,
 }) => ({
   attendanceObservers: attendanceObservers.attendanceObservers,
   attendStatus: examsAttendance.attendStatus,
-  userTypesOpt: userTypes.userTypesOpt,
-  sectors: sectors.sectors,
-  filteredMembers: trainingMembers.filteredMembers,
-  //   filteredExamAttendanceObserverGrades:
-  //     attendanceObserverGrades.filteredExamAttendanceObserverGrades,
+  coursesOffering: classScheduling.coursesOffering,
+  examsNames: examsAttendance.examsNames,
+  examsPeriods: examsAttendance.examsPeriods,
+  halls: academyBuildingStructures.halls,
+  employeesNames: employees.employeesNames,
   years: years.years,
   deleted: attendanceObservers.deleted,
   user_menu: menu_items.user_menu || [],

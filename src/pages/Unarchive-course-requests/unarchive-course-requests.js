@@ -549,7 +549,7 @@ class UnarchiveCourseReq extends Component {
         formatter: (cellContent, row) => this.handleValidDate(row.endDate),
       },
       {
-        dataField: "canceledGrade",
+        dataField: "archiveDetails",
         text: this.props.t("Canceled Grade"),
         sort: true,
         editable: false,

@@ -17,6 +17,12 @@ import {
   GET_EXAM_ATTENDANCE_DELETED_VALUE,
   GET_EXAM_ATTENDANCE_DELETED_VALUE_FAIL,
   GET_EXAM_ATTENDANCE_DELETED_VALUE_SUCCESS,
+  GET_EXAMS_NAMES,
+  GET_EXAMS_NAMES_FAIL,
+  GET_EXAMS_NAMES_SUCCESS,
+  GET_EXAMS_PERIODS,
+  GET_EXAMS_PERIODS_FAIL,
+  GET_EXAMS_PERIODS_SUCCESS,
 } from "./actionTypes";
 
 export const getExamsAttendance = examsAttendance => ({
@@ -107,5 +113,35 @@ export const getAttendStatusSuccess = attendStatus => ({
 
 export const getAttendStatusFail = error => ({
   type: GET_ATTEND_STATUS_FAIL,
+  payload: error,
+});
+
+export const getExamsNames = examsNames => ({
+  type: GET_EXAMS_NAMES,
+  payload: examsNames,
+});
+
+export const getExamsNamesSuccess = examsNames => ({
+  type: GET_EXAMS_NAMES_SUCCESS,
+  payload: examsNames,
+});
+
+export const getExamsNamesFail = error => ({
+  type: GET_EXAMS_NAMES_FAIL,
+  payload: error,
+});
+
+export const getExamsPeriods = examsPeriods => ({
+  type: GET_EXAMS_PERIODS,
+  payload: examsPeriods,
+});
+
+export const getExamsPeriodsSuccess = examsPeriods => ({
+  type: GET_EXAMS_PERIODS_SUCCESS,
+  payload: examsPeriods,
+});
+
+export const getExamsPeriodsFail = error => ({
+  type: GET_EXAMS_PERIODS_FAIL,
   payload: error,
 });

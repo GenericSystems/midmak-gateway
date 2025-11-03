@@ -523,6 +523,48 @@ class TraineesDeservesWarningsList extends Component {
         sort: true,
         editable: false,
       },
+    ];
+
+    const columns2 = [
+      { dataField: "Id", text: this.props.t("ID"), hidden: true },
+      {
+        dataField: "TraineeNum",
+        text: this.props.t("Trainee Num"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "traineeName",
+        text: this.props.t("Trainee Name"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "courseName",
+        text: this.props.t("Course Name"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "courseCode",
+        text: this.props.t("Course Code"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "lastAbsenceDate",
+        text: this.props.t("Last Absence Date"),
+        sort: true,
+        editable: false,
+        formatter: (cellContent, row) => this.handleValidDate(row.startDate),
+      },
+      {
+        dataField: "absenceRate",
+        text: this.props.t("Absence Rate"),
+        sort: true,
+        editable: false,
+      },
+      ,
       {
         dataField: "menu",
         text: "",
@@ -542,8 +584,7 @@ class TraineesDeservesWarningsList extends Component {
         ),
       },
     ];
-
-    const columns2 = [
+    const columns3 = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
         dataField: "TraineeNum",
@@ -1023,7 +1064,7 @@ class TraineesDeservesWarningsList extends Component {
                                       {...paginationTableProps}
                                       data={traineesDeservesWarnings}
                                       selectRow={selectRow}
-                                      columns={columns2}
+                                      columns={columns3}
                                       cellEdit={cellEditFactory({
                                         mode: "dbclick",
                                         blurToSave: true,
