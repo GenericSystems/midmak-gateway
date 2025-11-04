@@ -87,8 +87,6 @@ class ExamRoomsList extends Component {
       studentManagements,
       examRooms,
       defineExamDates,
-      onGetDefineExamDates,
-
       levels,
       user_menu,
       i18n,
@@ -100,7 +98,6 @@ class ExamRoomsList extends Component {
     if (examRooms && !examRooms.length) {
     }
 
-    onGetDefineExamDates();
     this.setState({ examRooms });
     this.setState({ defineExamDates });
     console.log("defineExamDates", defineExamDates);
@@ -270,12 +267,22 @@ class ExamRoomsList extends Component {
     } = this.state;
     const { t, studentManagements, examRooms, levels, defineExamDates } =
       this.props;
-    console.log("DefineExamDates from props:", this.props.defineExamDates);
     const pageOptions = {
       sizePerPage: 20,
       totalSize: examRooms.length,
       custom: true,
     };
+
+    const flattenedHalls = examRooms.flatMap(exam =>
+      exam.halls.map(hall => ({
+        examId: exam.Id,
+        hallId: hall.hallId,
+        hallName: hall.hallName,
+        hallNum: hall.hallNum,
+        buildingName: hall.buildingName,
+        examCapacity: hall.examCapacity,
+      }))
+    );
 
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
@@ -286,7 +293,7 @@ class ExamRoomsList extends Component {
       },
 
       {
-        dataField: "hallArName",
+        dataField: "hallName",
         text: this.props.t("Room Name"),
         // formatter: (cell, row) => (
         //   <Select
@@ -310,7 +317,7 @@ class ExamRoomsList extends Component {
 
       {
         key: "hallNum",
-        dataField: "defineExamDateNum",
+        dataField: "hallNum",
         text: this.props.t("Room No."),
         editable: false,
         // formatter: (cellContent, row, column) => (
@@ -328,8 +335,8 @@ class ExamRoomsList extends Component {
         // ),
       },
       {
-        key: "buildingArName",
-        dataField: "buildingArName",
+        key: "buildingName",
+        dataField: "buildingName",
         text: this.props.t("Building Name"),
         editable: false,
         // formatter: (cellContent, row, column) => (
@@ -476,7 +483,7 @@ class ExamRoomsList extends Component {
                                 // data={defineExamDates.filter(
                                 //   d => d.Id === defineExamDate.Id
                                 // )}
-                                data={examRooms}
+                                data={flattenedHalls}
                                 columns={columns}
                                 filter={filterFactory()}
                                 cellEdit={cellEditFactory({
@@ -534,7 +541,6 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   onGetExamRooms: defineExamDates => dispatch(getExamRooms(defineExamDates)),
-  onGetDefineExamDates: () => dispatch(getDefineExamDates()),
   onAddNewExamRoom: examRoom => dispatch(addNewExamRoom(examRoom)),
   onUpdateExamRoom: examRoom => dispatch(updateExamRoom(examRoom)),
   onDeleteExamRoom: examRoom => dispatch(deleteExamRoom(examRoom)),

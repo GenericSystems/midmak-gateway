@@ -67,7 +67,6 @@ class SectorsList extends Component {
       duplicateError: null,
       deleteModal: false,
       languageState: "",
-      ؤ,
     };
   }
 

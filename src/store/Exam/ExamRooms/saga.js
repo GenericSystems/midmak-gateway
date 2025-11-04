@@ -57,7 +57,7 @@ function* fetchDefineExamDate() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_DefineExamDates",
+    tablename: "_Common_DefineExamDates",
   };
   try {
     const response = yield call(getDefineExamDates, get_defineExamDate_req);
@@ -91,14 +91,14 @@ function* fetchExamRooms(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_AcadmeyBuildingStructure",
-    Fields: "Id,buildingArName,hallArName,hallNum",
+    tablename: "_Common_DefineExamDates",
+    // Fields: "Id,buildingArName,hallArName,hallNum",
     // filter: ` defineExamDateId = ${defineExamDate}`,
   };
   try {
     const response = yield call(getExamRooms, get_ExamRooms_req);
     response.map(resp => {
-      resp["floors"] = JSON.parse(resp["floors"]);
+      resp["halls"] = JSON.parse(resp["halls"]);
     });
     console.log("33333333333333", response);
     yield put(getExamRoomsSuccess(response));
