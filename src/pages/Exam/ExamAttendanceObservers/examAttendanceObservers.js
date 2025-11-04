@@ -87,6 +87,17 @@ class ExamAttendanceObservers extends Component {
       selectedObserverId: null,
       selectedResponsibility: null,
       selectedAttendType: null,
+      selectedExamName: "",
+      selectedExamKey: null,
+      selectedExamValue: "",
+      selectedPeriodKey: null,
+      selectedPeriodValue: "",
+      selectedCourseKey: null,
+      selectedCourseValue: "",
+      selectedHallKey: null,
+      selectedHallValue: "",
+      selectedObserverKey: null,
+      selectedObserverValue: "",
     };
   }
 
@@ -625,6 +636,10 @@ class ExamAttendanceObservers extends Component {
       selectedResponsibility,
       filteredPeriods,
       selectedAttendType,
+      selectedPeriodValue,
+      selectedCourseValue,
+      selectedHallValue,
+      selectedObserverValue,
     } = this.state;
 
     const alertMessage =

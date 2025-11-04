@@ -99,6 +99,7 @@ class Certificates extends Component {
       filteredCertificateGrades,
       filteredMembers,
       onGetUsers,
+      traineesOpt,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -116,6 +117,7 @@ class Certificates extends Component {
       filteredCertificateGrades,
       filteredMembers,
       years,
+      traineesOpt,
     });
   }
 
@@ -454,6 +456,7 @@ class Certificates extends Component {
       filteredCertificateGrades,
       filteredMembers,
       t,
+      traineesOpt,
     } = this.props;
     const {
       modal,
@@ -1278,6 +1281,7 @@ const mapStateToProps = ({
   sectors,
   certificateGrades,
   trainingMembers,
+  trainees,
 }) => ({
   certificates: certificates.certificates,
   certificateTypes: certificateTypes.certificateTypes,
@@ -1287,6 +1291,7 @@ const mapStateToProps = ({
   filteredCertificateGrades: certificateGrades.filteredCertificateGrades,
   years: years.years,
   deleted: certificates.deleted,
+  traineesOpt: trainees.traineesOpt,
   user_menu: menu_items.user_menu || [],
 });
 

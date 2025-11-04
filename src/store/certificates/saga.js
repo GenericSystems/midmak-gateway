@@ -147,13 +147,23 @@ function* fetchCertificates(obj) {
     yield put(getCertificatesFail(error));
   }
 
+  let membersTableName = "";
+  let membersFields = "";
+  if (userTypeId === 1) {
+    membersTableName = "Common_TrainingMembers";
+    membersFields = "Id,name";
+  } else if (userTypeId === 2) {
+    membersTableName = "_Common_Trainee";
+    membersFields = "Id,fullName";
+  }
+
   const get_trainer_req = {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_TrainingMembers",
-    fields: "Id,name",
-    filter: `userTypeId = ${userTypeId}`,
+    tablename: membersTableName,
+    fields: membersFields,
+    // filter: `userTypeId = ${userTypeId}`,
   };
   try {
     const response = yield call(getFilteredMembers, get_trainer_req);
