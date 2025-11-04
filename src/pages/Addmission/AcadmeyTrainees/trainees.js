@@ -296,8 +296,8 @@ class TraineesList extends Component {
       isTempTraineeSaved: false,
       selectedTraineeId: 0,
       isAdd: false,
-      mimeType: null ,
-      dataUrl: null ,
+      mimeType: null,
+      dataUrl: null,
       downloadfinished: 0,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
@@ -351,7 +351,7 @@ class TraineesList extends Component {
       i18n,
       mimeType,
       dataUrl,
-      downloadfinished
+      downloadfinished,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
@@ -402,7 +402,11 @@ class TraineesList extends Component {
   handleFetch(fileName) {
     const { onFetchFile } = this.props;
     console.log("Calling with fileData", fileName, onFetchFile);
-    this.setState({ dataUrl: null, mimeType: null, downloadfinished :this.props.downloadfinished });
+    this.setState({
+      dataUrl: null,
+      mimeType: null,
+      downloadfinished: this.props.downloadfinished,
+    });
     onFetchFile(fileName);
   }
 
@@ -1798,7 +1802,7 @@ class TraineesList extends Component {
       regcertificates,
       highstudytypes,
       estimates,
-      downloadfinished
+      downloadfinished,
     } = this.props;
     const {
       trainee,
@@ -2368,16 +2372,16 @@ class TraineesList extends Component {
           placeholder: this.props.t("Search..."),
         }),
       },
-      {
-        dataField: "tempStatusId",
-        text: this.props.t("Temporary Trainee Status"),
-        sort: true,
-        editable: false,
-        hidden: !showTempStatus,
-        filter: textFilter({
-          placeholder: this.props.t("Search..."),
-        }),
-      },
+      // {
+      //   dataField: "tempStatusId",
+      //   text: this.props.t("Temporary Trainee Status"),
+      //   sort: true,
+      //   editable: false,
+      //   hidden: !showTempStatus,
+      //   filter: textFilter({
+      //     placeholder: this.props.t("Search..."),
+      //   }),
+      // },
 
       {
         dataField: "FirstName",
@@ -4743,7 +4747,7 @@ class TraineesList extends Component {
                             </Alert>
                           )}
                         </div>
-                       
+
                         <div className="table-responsive">
                           <PaginationProvider
                             pagination={paginationFactory(pageOptions)}
@@ -5336,7 +5340,7 @@ class TraineesList extends Component {
                                                     </Card>
                                                   </div>
                                                 )}
-                                                
+
                                                 {showRegistrationForm && (
                                                   <Formik
                                                     enableReinitialize={true}
@@ -9430,13 +9434,20 @@ class TraineesList extends Component {
                                                             </Card>
                                                           </Col>
                                                         </Form>
-                                                        {(downloadfinished) &&  (<p>Download Finished </p>)}  
-                                                        {!(downloadfinished) && (<p>Download Not Finished</p>)}  
-                                                  
+                                                        {downloadfinished && (
+                                                          <p>
+                                                            Download Finished{" "}
+                                                          </p>
+                                                        )}
+                                                        {!downloadfinished && (
+                                                          <p>
+                                                            Download Not
+                                                            Finished
+                                                          </p>
+                                                        )}
                                                       </div>
                                                     )}
                                                   </Formik>
-                                                  
                                                 )}
                                               </div>
                                             </div>
@@ -9488,7 +9499,7 @@ const mapStateToProps = ({
   estimates,
   dataUrl,
   mimeType,
-  downloadfinished
+  downloadfinished,
 }) => ({
   trainees: trainees.trainees,
   // trainee: trainees.trainee,
@@ -9507,7 +9518,7 @@ const mapStateToProps = ({
   genders: genders.genders,
   academiccertificates: academiccertificates.academiccertificates,
   filteredAcademicCertificates:
-  academiccertificates.filteredAcademicCertificates,
+    academiccertificates.filteredAcademicCertificates,
   socialStatus: tempTrainees.socialStatus,
   relatives: relatives.relatives,
   regcertificates: tempTrainees.regcertificates,
@@ -9519,7 +9530,7 @@ const mapStateToProps = ({
   user_menu: menu_items.user_menu || [],
   dataUrl: dataUrl,
   mimeType: mimeType,
-  downloadfinished: downloadfinished
+  downloadfinished: downloadfinished,
 });
 
 const mapDispatchToProps = dispatch => ({

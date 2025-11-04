@@ -1188,7 +1188,7 @@ class RegistrationList extends Component {
         sort: true,
       },
       { dataField: "practicalGroup", text: t("Practical Group"), sort: true },
-      { dataField: "clinicalGroup", text: t("Clinical Group"), sort: true },
+      // { dataField: "clinicalGroup", text: t("Clinical Group"), sort: true },
 
       { dataField: "saturday", text: t("Saturday"), sort: true },
       { dataField: "sunday", text: t("Sunday"), sort: true },
