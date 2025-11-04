@@ -875,9 +875,9 @@ class DistributingCoursesMethods extends Component {
                           {toolkitprops => (
                             <React.Fragment>
                               <Row className="mb-2">
-                                <Col sm="4"></Col>
-                                <Col sm="8">
-                                  <div className="text-sm-end d-none">
+                                <Col sm="10"></Col>
+                                <Col sm="2">
+                                  <div className="text-sm-end">
                                     {/* <Tooltip
                                       title={this.props.t("Copy")}
                                       placement="top"

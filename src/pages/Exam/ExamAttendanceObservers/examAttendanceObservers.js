@@ -590,11 +590,11 @@ class ExamAttendanceObservers extends Component {
       attendanceObservers,
       user_menu,
       deleted,
-      userTypesOpt,
-      years,
-      sectors,
-      attendanceObserverTypes,
-      filteredExamAttendanceObserverGrades,
+      examsNames,
+      coursesOffering,
+      employeesNames,
+      halls,
+      examsPeriods,
       filteredMembers,
       t,
       attendStatus,
@@ -623,6 +623,7 @@ class ExamAttendanceObservers extends Component {
       showSearchButton,
       selectedExamTime,
       selectedResponsibility,
+      filteredPeriods,
       selectedAttendType,
     } = this.state;
 
@@ -925,7 +926,9 @@ class ExamAttendanceObservers extends Component {
                                       name="periodId"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={selectedPeriodValue || ""}
+                                      value={
+                                        this.state.selectedPeriodValue || ""
+                                      }
                                       onChange={e =>
                                         this.handleDatalistChange(
                                           "Period",

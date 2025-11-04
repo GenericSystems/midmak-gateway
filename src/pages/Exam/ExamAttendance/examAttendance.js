@@ -476,10 +476,6 @@ class ExamsAttendance extends Component {
       employeesNames,
       halls,
       examsPeriods,
-      years,
-      sectors,
-      examAttendanceTypes,
-      filteredExamAttendanceGrades,
       filteredMembers,
       t,
       attendStatus,
@@ -791,7 +787,9 @@ class ExamsAttendance extends Component {
                                       name="periodId"
                                       placeholder="Type to search..."
                                       className="form-control"
-                                      value={selectedPeriodValue || ""}
+                                      value={
+                                        this.state.selectedPeriodValue || ""
+                                      }
                                       onChange={e =>
                                         this.handleDatalistChange(
                                           "Period",
