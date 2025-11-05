@@ -282,6 +282,7 @@ export const ADD_NEW_CERTIFICATE = "/add/certificate";
 export const UPDATE_CERTIFICATE = "/update/certificate";
 export const DELETE_CERTIFICATE = "/delete/certificate";
 export const GET_CERTIFICATE_DELETED_VALUE = "/deleted";
+export const GET_FILTERED_COURSES_CERTIFICATES = "/coursesCertificates";
 
 //CERTIFICATES_TYPES
 export const GET_GRADES = "/grades";

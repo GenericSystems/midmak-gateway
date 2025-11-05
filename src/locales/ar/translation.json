@@ -776,6 +776,7 @@
   "Absence Warning": "إنذار الغياب",
   "Decree Status": "حالة القرار",
   "Decree Reason": "سبب القرار",
+  "Decree Reason": "سبب القرار",
   "Update Decree Details": "تعديل تفاصيل قرار التأديب",
   "Add Decree": "إضافة القرار",
   "Decree Code": "رمز القرار",
@@ -886,6 +887,7 @@
   "content type": "نوع المحتوى",
   "Note": "الفترات",
   "Exam Days": "أيام الامتحان",
+  "Grant Date": "تاريخ المنح",
   "Exam Attendance (Trainees)": "تسجيل الحضور(للمتدربين)",
   "Exam Attendance (Observers)": "تسجيل الحضور(المراقبين)",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"

@@ -635,6 +635,10 @@ export const deleteCertificate = data => post(url.DELETE_CERTIFICATE, data);
 export const getCertificateDeletedValue = () =>
   get(url.GET_CERTIFICATE_DELETED_VALUE);
 
+// get CoursesCertificates
+export const getFilteredCoursesCertificates = data =>
+  post(url.GET_FILTERED_COURSES_CERTIFICATES, data);
+
 // get Grades
 export const getGrades = data => post(url.GET_GRADES, data);
 

@@ -87,6 +87,8 @@ class ExamRoomsList extends Component {
       studentManagements,
       examRooms,
       defineExamDates,
+      onGetDefineExamDates,
+
       levels,
       user_menu,
       i18n,
@@ -98,6 +100,7 @@ class ExamRoomsList extends Component {
     if (examRooms && !examRooms.length) {
     }
 
+    onGetDefineExamDates();
     this.setState({ examRooms });
     this.setState({ defineExamDates });
     console.log("defineExamDates", defineExamDates);
@@ -541,6 +544,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   onGetExamRooms: defineExamDates => dispatch(getExamRooms(defineExamDates)),
+  onGetDefineExamDates: () => dispatch(getDefineExamDates()),
   onAddNewExamRoom: examRoom => dispatch(addNewExamRoom(examRoom)),
   onUpdateExamRoom: examRoom => dispatch(updateExamRoom(examRoom)),
   onDeleteExamRoom: examRoom => dispatch(deleteExamRoom(examRoom)),

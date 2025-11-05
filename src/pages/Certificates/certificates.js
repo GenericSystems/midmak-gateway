@@ -12,6 +12,7 @@ import {
   Button,
   ModalHeader,
   ModalBody,
+  Input,
 } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -32,6 +33,7 @@ import {
   updateCertificate,
   deleteCertificate,
   getCertificateDeletedValue,
+  getFilteredCoursesCertificates,
 } from "store/certificates/actions";
 import { getUserTypesOpt } from "store/user-types/actions";
 
@@ -78,6 +80,8 @@ class Certificates extends Component {
       qr: "",
       sidebarOpen: true,
       selectedUserType: "",
+      filteredCoursesModified: [],
+      selectedGrantDate: new Date().toISOString().split("T")[0],
     };
   }
 
@@ -100,6 +104,7 @@ class Certificates extends Component {
       filteredMembers,
       onGetUsers,
       traineesOpt,
+      filteredCourses,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowDeleteButton(user_menu, this.props.location.pathname);
@@ -118,6 +123,15 @@ class Certificates extends Component {
       filteredMembers,
       years,
       traineesOpt,
+      filteredCourses,
+    });
+
+    const currentDate = new Date();
+
+    const formattedDate = currentDate.toISOString().slice(0, 10);
+
+    this.setState({
+      grantDate: formattedDate,
     });
   }
 
@@ -275,6 +289,8 @@ class Certificates extends Component {
 
   handleSelectChange = (fieldName, selectedValue) => {
     if (fieldName === "trainerId") {
+      console.log("selected value2222222222222222", selectedValue);
+
       this.setState({
         selectedMember: selectedValue,
       });
@@ -443,6 +459,15 @@ class Certificates extends Component {
     console.log(repData);
   };
 
+  handleSelect = (fieldName, selectedValue, values) => {
+    console.log("selectedValueselectedValueselectedValue", selectedValue);
+    if (fieldName == "courseId") {
+      this.setState({
+        selectedCourse: selectedValue.value,
+      });
+    }
+  };
+
   render() {
     const { SearchBar } = Search;
     const {
@@ -457,6 +482,8 @@ class Certificates extends Component {
       filteredMembers,
       t,
       traineesOpt,
+      filteredCourses,
+      onGetFilteredCoursesCertificates,
     } = this.props;
     const {
       modal,
@@ -468,11 +495,6 @@ class Certificates extends Component {
       qr,
       sidebarOpen,
       selectedUserType,
-    } = this.state;
-
-    const alertMessage =
-      deleted == 0 ? "Can't Delete " : "Deleted Successfully";
-    const {
       duplicateError,
       errorMessage,
       emptyError,
@@ -481,9 +503,26 @@ class Certificates extends Component {
       showAddButton,
       showDeleteButton,
       showEditButton,
+      selectedGrantDate,
       showSearchButton,
     } = this.state;
+
+    const alertMessage =
+      deleted == 0 ? "Can't Delete " : "Deleted Successfully";
+
     console.log("filteredMembers", filteredMembers);
+
+    const filteredCoursesModified =
+      filteredCourses &&
+      filteredCourses.map(item => ({
+        label: `${item.code} - ${item.CourseName}`,
+        value: item.courseId,
+      }));
+
+    const formattedGrantDate =
+      certificate && certificate.grantDate
+        ? new Date(certificate.grantDate).toISOString().split("T")[0]
+        : selectedGrantDate;
 
     const defaultSorting = [
       {
@@ -549,16 +588,16 @@ class Certificates extends Component {
         }),
       },
       {
-        dataField: "sector",
+        dataField: "sectorName",
         text: this.props.t("Sector"),
         sort: true,
         editable: false,
-        formatter: (cellContent, row) => {
-          if (row.sector && Array.isArray(row.sector)) {
-            return row.sector.map(item => item.label).join(", ");
-          }
-          return "";
-        },
+        // formatter: (cellContent, row) => {
+        //   if (row.sector && Array.isArray(row.sector)) {
+        //     return row.sector.map(item => item.label).join(", ");
+        //   }
+        //   return "";
+        // },
         filter: textFilter({
           placeholder: this.props.t("Search..."),
           //  hidden: !showSearchButton,
@@ -876,6 +915,14 @@ class Certificates extends Component {
                                                 (certificate &&
                                                   certificate.trainerId) ||
                                                 "",
+                                              courseId:
+                                                (certificate &&
+                                                  certificate.courseId) ||
+                                                "",
+                                              grantDate:
+                                                (certificate &&
+                                                  certificate.grantDate) ||
+                                                selectedGrantDate,
                                               sector:
                                                 (certificate &&
                                                   certificate.sector) ||
@@ -900,6 +947,8 @@ class Certificates extends Component {
                                               status,
                                               touched,
                                               values,
+                                              handleChange,
+                                              handleBlur,
                                             }) => (
                                               <Form>
                                                 <Row>
@@ -952,6 +1001,15 @@ class Certificates extends Component {
                                                               "trainerId",
                                                               newValue.value
                                                             );
+                                                            console.log(
+                                                              "newValuenewValuenewValue",
+                                                              newValue
+                                                            );
+                                                            if (newValue) {
+                                                              onGetFilteredCoursesCertificates(
+                                                                newValue.value
+                                                              );
+                                                            }
                                                           }}
                                                           defaultValue={filteredMembers.find(
                                                             opt =>
@@ -1004,6 +1062,92 @@ class Certificates extends Component {
                                                         />
                                                       </Col>
                                                     </Row>
+
+                                                    <div className="mb-3">
+                                                      {selectedUserType ===
+                                                        2 && (
+                                                        <Row>
+                                                          <Col
+                                                            lg="3"
+                                                            className="col-padding"
+                                                          >
+                                                            <Label>
+                                                              <strong>
+                                                                {t("Courses")}
+                                                              </strong>
+                                                            </Label>
+                                                          </Col>
+                                                          <Col className="col-6">
+                                                            <Select
+                                                              name="courseId"
+                                                              options={
+                                                                filteredCoursesModified
+                                                              }
+                                                              key={`select_course`}
+                                                              onChange={newValue => {
+                                                                this.handleSelect(
+                                                                  "courseId",
+                                                                  newValue
+                                                                );
+                                                              }}
+                                                              value={filteredCoursesModified.find(
+                                                                opt =>
+                                                                  opt.value ===
+                                                                  certificate?.courseId
+                                                              )}
+                                                            />
+                                                          </Col>
+                                                        </Row>
+                                                      )}
+                                                    </div>
+                                                    <div className="mb-3">
+                                                      {selectedUserType ===
+                                                        2 && (
+                                                        <Row>
+                                                          <Col lg="3">
+                                                            <Label for="grantDate">
+                                                              <strong>
+                                                                {this.props.t(
+                                                                  "Grant Date"
+                                                                )}
+                                                              </strong>
+                                                            </Label>
+                                                          </Col>
+                                                          {isEdit && (
+                                                            <Col lg="6">
+                                                              <Input
+                                                                type="text"
+                                                                name="grantDate"
+                                                                id="reg-date"
+                                                                className={
+                                                                  "form-control"
+                                                                }
+                                                                value={
+                                                                  formattedGrantDate
+                                                                }
+                                                                readOnly
+                                                              />
+                                                            </Col>
+                                                          )}
+                                                          {!isEdit && (
+                                                            <Col lg="6">
+                                                              <Input
+                                                                type="text"
+                                                                name="grantDate"
+                                                                id="reg-date"
+                                                                className={
+                                                                  "form-control"
+                                                                }
+                                                                defaultValue={
+                                                                  selectedGrantDate
+                                                                }
+                                                                readOnly
+                                                              />
+                                                            </Col>
+                                                          )}
+                                                        </Row>
+                                                      )}
+                                                    </div>
 
                                                     <Row>
                                                       <Col lg="6">
@@ -1284,6 +1428,7 @@ const mapStateToProps = ({
   trainees,
 }) => ({
   certificates: certificates.certificates,
+  filteredCourses: certificates.filteredCoursesTrainees,
   certificateTypes: certificateTypes.certificateTypes,
   userTypesOpt: userTypes.userTypesOpt,
   sectors: sectors.sectors,
@@ -1297,6 +1442,8 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   onGetCertificates: certificate => dispatch(getCertificates(certificate)),
+  onGetFilteredCoursesCertificates: traineeId =>
+    dispatch(getFilteredCoursesCertificates(traineeId)),
   onGetUsers: () => dispatch(getUserTypesOpt()),
   onAddNewCertificate: certificate => dispatch(addNewCertificate(certificate)),
   onUpdateCertificate: certificate => dispatch(updateCertificate(certificate)),

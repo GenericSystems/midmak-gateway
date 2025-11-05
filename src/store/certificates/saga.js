@@ -7,6 +7,7 @@ import {
   DELETE_CERTIFICATE,
   UPDATE_CERTIFICATE,
   GET_CERTIFICATE_DELETED_VALUE,
+  GET_FILTERED_COURSES_CERTIFICATES,
 } from "./actionTypes";
 
 import { GET_USER_TYPES_OPT } from "../user-types/actionTypes";
@@ -22,6 +23,8 @@ import {
   deleteCertificateFail,
   getCertificateDeletedValueSuccess,
   getCertificateDeletedValueFail,
+  getFilteredCoursesCertificatesSuccess,
+  getFilteredCoursesCertificatesFail,
 } from "./actions";
 
 import {
@@ -59,6 +62,7 @@ import {
   getCertificateTypes,
   getCertificateDeletedValue,
   getYears,
+  getFilteredCoursesCertificates,
   getFilteredMembers,
 } from "../../helpers/fakebackend_helper";
 
@@ -191,6 +195,27 @@ function* fetchCertificates(obj) {
   }
 }
 
+function* fetchFilteredCourses(obj) {
+  console.log("111111111111111111", obj.payload);
+  const traineeId = obj.payload;
+  const get_filteredCourses_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Current_Common_TrianeeCurriculalines",
+    filter: `traineeId = ${traineeId} and archived = 1 and totalGrade >= 49`,
+  };
+  try {
+    const response = yield call(
+      getFilteredCoursesCertificates,
+      get_filteredCourses_req
+    );
+    yield put(getFilteredCoursesCertificatesSuccess(response));
+  } catch (error) {
+    yield put(getFilteredCoursesCertificatesFail(error));
+  }
+}
+
 function* onAddNewCertificate({ payload }) {
   delete payload["id"];
   payload["source"] = "db";
@@ -247,6 +272,7 @@ function* onGetCountryDeletedValue() {
 function* CertificatesSaga() {
   yield takeEvery(GET_USER_TYPES_OPT, fetchUsers);
   yield takeEvery(GET_CERTIFICATES, fetchCertificates);
+  yield takeEvery(GET_FILTERED_COURSES_CERTIFICATES, fetchFilteredCourses);
   yield takeEvery(ADD_NEW_CERTIFICATE, onAddNewCertificate);
   yield takeEvery(UPDATE_CERTIFICATE, onUpdateCertificate);
   yield takeEvery(DELETE_CERTIFICATE, onDeleteCertificate);
