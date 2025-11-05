@@ -197,6 +197,8 @@ class TraineesList extends Component {
       showRegistrationForm: false,
       showTranscript: false,
       showDocuments: false,
+      showProfessionalExperiences: false,
+      showTraineeDecisions: false,
       showTranscriptNoHide: false,
       showReportsLi: false,
       showTraineeLifeLi: false,
@@ -1040,6 +1042,8 @@ class TraineesList extends Component {
       showTranscript: false,
       showDocuments: false,
       showTranscriptNoHide: false,
+      showTraineeDecisions: false,
+      showProfessionalExperiences: false,
     });
   };
 
@@ -1050,6 +1054,8 @@ class TraineesList extends Component {
       showTranscript: false,
       showDocuments: false,
       showTranscriptNoHide: false,
+      showTraineeDecisions: false,
+      showProfessionalExperiences: false,
     });
   };
   handleTranscript = () => {
@@ -1059,6 +1065,8 @@ class TraineesList extends Component {
       showTranscript: true,
       showDocuments: false,
       showTranscriptNoHide: false,
+      showTraineeDecisions: false,
+      showProfessionalExperiences: false,
     });
   };
   handleTranscriptNoHide = () => {
@@ -1068,8 +1076,11 @@ class TraineesList extends Component {
       showTranscript: false,
       showDocuments: false,
       showTranscriptNoHide: true,
+      showTraineeDecisions: false,
+      showProfessionalExperiences: false,
     });
   };
+
   handleDocuments = () => {
     this.setState({
       showTraineeFile: false,
@@ -1077,48 +1088,33 @@ class TraineesList extends Component {
       showDocuments: true,
       showTranscript: false,
       showTranscriptNoHide: false,
+      showTraineeDecisions: false,
+      showProfessionalExperiences: false,
     });
   };
 
-  handleReportsDropdown = () => {
-    const {
-      showTraineeFile,
-      showRegistrationForm,
-      showTranscript,
-      showDocuments,
-      showTranscriptNoHide,
-    } = this.state;
-
+  handleTraineeDecisions = () => {
     this.setState({
-      showTraineeFile: showTraineeFile ? true : false,
-      showRegistrationForm: showRegistrationForm ? true : false,
-      showTranscript: showTranscript ? true : false,
-      showDocuments: showDocuments ? true : false,
-      showTranscriptNoHide: showTranscriptNoHide ? true : false,
+      showTraineeFile: false,
+      showRegistrationForm: false,
+      showDocuments: false,
+      showTranscript: false,
+      showTranscriptNoHide: false,
+      showTraineeDecisions: true,
+      showProfessionalExperiences: false,
     });
-    this.setState(prevState => ({
-      showReportsLi: !prevState.showReportsLi,
-    }));
   };
 
-  handleUniTraineesDropdown = () => {
-    const {
-      showTraineeFile,
-      showRegistrationForm,
-      showReportsLi,
-      showTranscript,
-    } = this.state;
+  handleProfessionalExperiences = () => {
     this.setState({
-      showTraineeFile: showTraineeFile ? true : false,
-      showRegistrationForm: showRegistrationForm ? true : false,
-      showReportsLi: showReportsLi ? true : false,
-      showTranscript: showTranscript ? true : false,
-      showDocuments: showDocuments ? true : false,
-      showTranscriptNoHide: showTranscriptNoHide ? true : false,
+      showTraineeFile: false,
+      showRegistrationForm: false,
+      showDocuments: false,
+      showTranscript: false,
+      showTranscriptNoHide: false,
+      showTraineeDecisions: false,
+      showProfessionalExperiences: true,
     });
-    this.setState(prevState => ({
-      showTraineeLifeLi: !prevState.showTraineeLifeLi,
-    }));
   };
 
   toggleTab(tab) {
@@ -1806,6 +1802,8 @@ class TraineesList extends Component {
     } = this.props;
     const {
       trainee,
+      showProfessionalExperiences,
+      showTraineeDecisions,
       profExperiencesArray,
       duplicateErrorProfExperiences,
       selectedRegistrationDate,
@@ -1968,12 +1966,37 @@ class TraineesList extends Component {
     };
 
     const trnProfExperienceColumns = [
-      { dataField: "Id", text: t("ID"), hidden: true },
-      { dataField: "jobTitle", text: t("Job Title"), sort: true },
-      { dataField: "workPlace", text: t("Work Place"), sort: true },
-      { dataField: "workAddress", text: t("Work Address"), sort: true },
-      { dataField: "workField", text: t("Work Field"), sort: true },
-      { dataField: "workDuration", text: t("Work Duration"), sort: true },
+      { dataField: "Id", text: t("ID"), hidden: true, editable: false },
+      {
+        dataField: "jobTitle",
+        text: t("Job Title"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "workPlace",
+        text: t("Work Place"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "workAddress",
+        text: t("Work Address"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "workField",
+        text: t("Work Field"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "workDuration",
+        text: t("Work Duration"),
+        sort: true,
+        editable: false,
+      },
       {
         dataField: "uploadFile",
         id: 8,
@@ -1985,28 +2008,63 @@ class TraineesList extends Component {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={this.handleButtonFileClick(cellContent, row)}
+              // onClick={this.handleButtonFileClick(cellContent, row)}
             >
               {this.props.t("Upload File")}
             </button>
           </div>
         ),
       },
+    ];
+
+    const decisionColumns = [
       {
-        dataField: "delete",
-        text: "",
-        isDummyField: true,
+        dataField: "Id",
+        text: this.props.t("#"),
         editable: false,
-        // hidden: !showDeleteButton,
-        formatter: (cellContent, trnProfExperience) => (
-          <Link className="text-danger" to="#">
-            <i
-              className="mdi mdi-delete font-size-18"
-              id="trnprofdeletetooltip"
-              onClick={() => this.onClickDelete(trnProfExperience)}
-            ></i>
-          </Link>
-        ),
+        hidden: true,
+      },
+      {
+        dataField: "decisionCode",
+
+        text: this.props.t("Decision Code"),
+        editable: false,
+      },
+      {
+        dataField: "decisionType",
+
+        text: this.props.t("Decision Type"),
+        editable: false,
+      },
+      {
+        dataField: "decisionDate",
+
+        text: this.props.t("Decision Date"),
+        editable: false,
+      },
+      {
+        dataField: "applyingDate",
+
+        text: this.props.t("Applying Date"),
+        editable: false,
+      },
+      {
+        dataField: "academyCouncilNo",
+
+        text: this.props.t("Academy Council No"),
+        editable: false,
+      },
+      {
+        dataField: "academyCouncilDate",
+
+        text: this.props.t("Academy Council Date"),
+        editable: false,
+      },
+      {
+        dataField: "decisionNote",
+
+        text: this.props.t("Decision Note"),
+        editable: false,
       },
     ];
 
@@ -4331,7 +4389,7 @@ class TraineesList extends Component {
                                 </div>
                               </Accordion.Body>{" "}
                             </Accordion.Item>
-                            <Accordion.Item eventKey="4">
+                            {/* <Accordion.Item eventKey="4">
                               <Accordion.Header>
                                 {t("Professional experiences")}
                               </Accordion.Header>
@@ -4447,7 +4505,7 @@ class TraineesList extends Component {
                                   </Row>
                                 </div>
                               </Accordion.Body>{" "}
-                            </Accordion.Item>
+                            </Accordion.Item> */}
                             <Accordion.Item eventKey="5">
                               <Accordion.Header>
                                 {t("Register Info")}
@@ -4521,7 +4579,7 @@ class TraineesList extends Component {
                                 </div>
                               </Accordion.Body>{" "}
                             </Accordion.Item>
-                            <Accordion.Item eventKey="6">
+                            {/* <Accordion.Item eventKey="6">
                               <Accordion.Header>
                                 {t("Trainee Decisions")}
                               </Accordion.Header>
@@ -4685,7 +4743,7 @@ class TraineesList extends Component {
                                   </Row>
                                 </div>
                               </Accordion.Body>{" "}
-                            </Accordion.Item>
+                            </Accordion.Item> */}
                           </Accordion>
                         </CardBody>
                       </Card>
@@ -4947,6 +5005,44 @@ class TraineesList extends Component {
                                                     >
                                                       {this.props.t(
                                                         "Requested Documents"
+                                                      )}
+                                                    </a>
+                                                  </li>
+                                                  <li>
+                                                    <a
+                                                      href="#"
+                                                      onClick={
+                                                        this
+                                                          .handleProfessionalExperiences
+                                                      }
+                                                      style={{
+                                                        color:
+                                                          showProfessionalExperiences
+                                                            ? "orange"
+                                                            : "black",
+                                                      }}
+                                                    >
+                                                      {this.props.t(
+                                                        "Professional Experiences"
+                                                      )}
+                                                    </a>
+                                                  </li>
+                                                  <li>
+                                                    <a
+                                                      href="#"
+                                                      onClick={
+                                                        this
+                                                          .handleTraineeDecisions
+                                                      }
+                                                      style={{
+                                                        color:
+                                                          showTraineeDecisions
+                                                            ? "orange"
+                                                            : "black",
+                                                      }}
+                                                    >
+                                                      {this.props.t(
+                                                        "Trainee Decisions"
                                                       )}
                                                     </a>
                                                   </li>
@@ -5336,6 +5432,138 @@ class TraineesList extends Component {
                                                             />
                                                           </ModalBody>
                                                         </Modal>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </div>
+                                                )}
+
+                                                {showProfessionalExperiences && (
+                                                  <div>
+                                                    <Card className="bordered">
+                                                      <CardHeader className="card-header">
+                                                        <h4>
+                                                          <i className="fas fa-user-circle" />{" "}
+                                                          {languageState ===
+                                                          "ar"
+                                                            ? trainee.FirstName +
+                                                              " " +
+                                                              trainee.FatherName +
+                                                              " " +
+                                                              trainee.LastName +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"
+                                                            : trainee.FirstNameE +
+                                                              " " +
+                                                              trainee.FatherNameE +
+                                                              " " +
+                                                              trainee.LastNameE +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"}
+                                                        </h4>
+                                                      </CardHeader>
+                                                      <CardBody>
+                                                        <div>
+                                                          <BootstrapTable
+                                                            keyField="Id"
+                                                            data={
+                                                              profExperiencesArray
+                                                            }
+                                                            columns={
+                                                              trnProfExperienceColumns
+                                                            }
+                                                            cellEdit={cellEditFactory(
+                                                              {
+                                                                mode: "dbclick",
+                                                                blurToSave: true,
+                                                                // afterSaveCell: (
+                                                                //   oldValue,
+                                                                //   newValue,
+                                                                //   row,
+                                                                //   column
+                                                                // ) => {
+                                                                //   this.handleParentsDataChange(
+                                                                //     row.Id,
+                                                                //     column.dataField,
+                                                                //     newValue
+                                                                //   );
+                                                                // },
+                                                              }
+                                                            )}
+                                                            noDataIndication={t(
+                                                              "No Relatives Found"
+                                                            )}
+                                                            defaultSorted={
+                                                              defaultSorting
+                                                            }
+                                                          />
+                                                        </div>
+                                                      </CardBody>
+                                                    </Card>
+                                                  </div>
+                                                )}
+
+                                                {showTraineeDecisions && (
+                                                  <div>
+                                                    <Card className="bordered">
+                                                      <CardHeader className="card-header">
+                                                        <h4>
+                                                          <i className="fas fa-user-circle" />{" "}
+                                                          {languageState ===
+                                                          "ar"
+                                                            ? trainee.FirstName +
+                                                              " " +
+                                                              trainee.FatherName +
+                                                              " " +
+                                                              trainee.LastName +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"
+                                                            : trainee.FirstNameE +
+                                                              " " +
+                                                              trainee.FatherNameE +
+                                                              " " +
+                                                              trainee.LastNameE +
+                                                              " [" +
+                                                              trainee.TraineeNum +
+                                                              "]"}
+                                                        </h4>
+                                                      </CardHeader>
+                                                      <CardBody>
+                                                        <div>
+                                                          <BootstrapTable
+                                                            keyField="Id"
+                                                            data={trainees}
+                                                            columns={
+                                                              decisionColumns
+                                                            }
+                                                            cellEdit={cellEditFactory(
+                                                              {
+                                                                mode: "dbclick",
+                                                                blurToSave: true,
+                                                                // afterSaveCell: (
+                                                                //   oldValue,
+                                                                //   newValue,
+                                                                //   row,
+                                                                //   column
+                                                                // ) => {
+                                                                //   this.handleParentsDataChange(
+                                                                //     row.Id,
+                                                                //     column.dataField,
+                                                                //     newValue
+                                                                //   );
+                                                                // },
+                                                              }
+                                                            )}
+                                                            noDataIndication={t(
+                                                              "No Relatives Found"
+                                                            )}
+                                                            defaultSorted={
+                                                              defaultSorting
+                                                            }
+                                                          />
+                                                        </div>
                                                       </CardBody>
                                                     </Card>
                                                   </div>

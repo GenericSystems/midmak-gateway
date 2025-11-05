@@ -7,6 +7,7 @@ import {
   ADD_NEW_EXAM_ROOM,
   DELETE_EXAM_ROOM,
   UPDATE_EXAM_ROOM,
+  GET_SETTING_EXAM_ROOM,
 } from "./actionTypes";
 
 import {
@@ -66,22 +67,6 @@ function* fetchDefineExamDate() {
   } catch (error) {
     yield put(getDefineExamDatesFail(error));
   }
-
-  //get course level
-  // const get_Level = {
-  //   source: "db",
-  //   procedure: "Generic_getOptions",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "Common_Floor",
-  //   fields: "Id,arTitle",
-  // };
-  // try {
-  //   const response = yield call(getDefineExamDates, get_Level);
-
-  //   yield put(getDefineExamDatesSuccess(response));
-  // } catch (error) {
-  //   yield put(getDefineExamDatesFail(error));
-  // }
 }
 
 function* fetchExamRooms(obj) {
@@ -92,8 +77,7 @@ function* fetchExamRooms(obj) {
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_DefineExamDates",
-    // Fields: "Id,buildingArName,hallArName,hallNum",
-    // filter: ` defineExamDateId = ${defineExamDate}`,
+    filter: ` Id = ${defineExamDate}`,
   };
   try {
     const response = yield call(getExamRooms, get_ExamRooms_req);
@@ -105,22 +89,6 @@ function* fetchExamRooms(obj) {
   } catch (error) {
     yield put(getExamRoomsFail(error));
   }
-
-  // const get_studentManagement_opt = {
-  //   source: "db",
-  //   procedure: "SisApp_getData",
-  //   apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-  //   tablename: "_SisApp_ActiveStudents",
-  // };
-  // try {
-  //   const response = yield call(
-  //     getStudentManagements,
-  //     get_studentManagement_opt
-  //   );
-  //   yield put(getStudentManagementsSuccess(response));
-  // } catch (error) {
-  //   yield put(getStudentManagementsFail(error));
-  // }
 }
 
 function* fetchExamRoomProfile() {
@@ -137,7 +105,7 @@ function* onAddNewExamRoom({ payload, ExamRoom }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "mobApp_FacultiesAccessConfig";
+  payload["tablename"] = "Common_ExamHalls";
 
   try {
     const response = yield call(addNewExamRoom, payload);
@@ -151,7 +119,7 @@ function* onUpdateExamRoom({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "updateActiveStudentsAccordingFacultyAccess";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["queryname"] = "mobApp_FacultiesAccessConfig";
+  payload["queryname"] = "Common_ExamHalls";
 
   try {
     const respupdate = yield call(updateExamRoom, payload);
@@ -176,7 +144,7 @@ function* onDeleteExamRoom({ payload, ExamRoom }) {
 }
 
 function* ExamRoomsSaga() {
-  yield takeEvery(GET_HALLS, fetchDefineExamDate);
+  yield takeEvery(GET_SETTING_EXAM_ROOM, fetchDefineExamDate);
   yield takeEvery(GET_EXAM_ROOMS, fetchExamRooms);
   yield takeEvery(GET_EXAM_ROOM_PROFILE, fetchExamRoomProfile);
   yield takeEvery(ADD_NEW_EXAM_ROOM, onAddNewExamRoom);

@@ -35,6 +35,7 @@ import {
   addNewExamRoom,
   updateExamRoom,
   deleteExamRoom,
+  fetchSettingExam,
 } from "store/Exam/ExamRooms/actions";
 
 import { getDefineExamDates } from "store/Exam/DefineExamDates/actions";
@@ -59,12 +60,15 @@ class ExamRoomsList extends Component {
       duplicateError: null,
       selectedLevel: null,
       verticalActiveTab: 0,
-      currentDefineExamDatesId: null,
+      currentExamId: null,
       showAddButton: false,
       showDeleteButton: false,
       showEditButton: false,
       showSearchButton: false,
+      modal: false,
       languageState: "",
+      selectedHallId: "",
+      selectedEaxmId: "",
     };
     this.toggleVertical = this.toggleVertical.bind(this);
   }
@@ -76,7 +80,7 @@ class ExamRoomsList extends Component {
     if (verticalActiveTab !== defineExamDateId) {
       this.setState({
         verticalActiveTab: defineExamDateId,
-        currentDefineExamDatesId: defineExamDateId,
+        currentExamId: defineExamDateId,
       });
       onGetExamRooms(defineExamDateId);
     }
@@ -87,7 +91,7 @@ class ExamRoomsList extends Component {
       studentManagements,
       examRooms,
       defineExamDates,
-      onGetDefineExamDates,
+      onfetchSetting,
 
       levels,
       user_menu,
@@ -100,11 +104,10 @@ class ExamRoomsList extends Component {
     if (examRooms && !examRooms.length) {
     }
 
-    onGetDefineExamDates();
     this.setState({ examRooms });
     this.setState({ defineExamDates });
-    console.log("defineExamDates", defineExamDates);
     this.setState({ languageState: lang });
+    onfetchSetting();
 
     i18n.on("languageChanged", this.handleLanguageChange);
   }
@@ -161,25 +164,23 @@ class ExamRoomsList extends Component {
     this.setState({ showSearchButton });
   };
 
-  handleAddRow = () => {
-    const { onAddNewExamRoom, examRooms } = this.props;
-    const { currentDefineExamDatesId } = this.state;
-    const emptyLevelExists = examRooms.some(row => row.levelId === null);
-    if (emptyLevelExists) {
-      const errorMessage = this.props.t("Fill in the empty row");
-      this.setState({ duplicateError: errorMessage });
-      return;
-    } else {
-      const newRow = {
-        defineExamDatesId: currentDefineExamDatesId,
-        AllLogin: 0,
-        AllowRegister: 0,
-        AllowPay: 0,
-      };
-      this.setState({ duplicateError: null });
-      onAddNewExamRoom(newRow);
-    }
+  toggle = () => {
+    this.setState(prevState => ({
+      modal: !prevState.modal,
+    }));
   };
+
+  // handleAddRow = () => {
+  //   const { onAddNewExamRoom, examRooms } = this.props;
+  //   const { currentExamId } = this.state;
+
+  //   const newRow = {
+  //     defineExamDatesId: currentExamId,
+  //     examCapacity: 0,
+  //   };
+  //   this.setState({ duplicateError: null });
+  //   onAddNewExamRoom(newRow);
+  // };
 
   handleDeleteRow = rowId => {
     const { onDeleteExamRoom } = this.props;
@@ -187,74 +188,26 @@ class ExamRoomsList extends Component {
     onDeleteExamRoom(onDelete);
   };
 
-  handleChangeCheckbox = (row, currentStatus, fieldName) => {
-    const { onUpdateExamRoom } = this.props;
-    const { currentDefineExamDatesId } = this.state;
-    const newStatus = currentStatus ? 1 : 0;
-    let ob = {
-      Id: row.Id,
-      hallId: row.levelId,
-      defineExamDateId: currentDefineExamDatesId,
-      AllLogin: fieldName === "AllLogin" ? newStatus : rlogin,
-      AllowRegister: fieldName === "AllowRegister" ? newStatus : rAllowRegister,
-      AllowPay: fieldName === "AllowPay" ? newStatus : rAllowPay,
-    };
-    onUpdateExamRoom(ob);
-  };
-  resetExamRoom = row => {
-    const { currentDefineExamDatesId } = this.state;
-    const { onUpdateExamRoom } = this.props;
-    let ob = {};
-    ob["Id"] = row.Id;
-    ob["levelId"] = row.levelId;
-    (ob["defineExamDateId"] = currentDefineExamDatesId), (ob["AllLogin"] = 0);
-    ob["AllowRegister"] = 0;
-    ob["AllowPay"] = 0;
-
-    onUpdateExamRoom(ob);
-  };
-
-  toggleCheckboxEditMode = () => {
-    this.setState(prevState => ({
-      checkboxEditable: !prevState.checkboxEditable,
-    }));
-  };
-
-  handleSelectChange = (rowId, fieldName, selectedValue) => {
-    this.setState({
-      selectedLevel: selectedValue,
-    });
-    const { onUpdateExamRoom, examRooms } = this.props;
-    const levelExists = examRooms.some(row => row.levelId === selectedValue);
-    if (levelExists) {
-      return;
-    }
-    let onUpdate = { Id: rowId, [fieldName]: selectedValue };
-    onUpdateExamRoom(onUpdate);
-  };
   handleAlertClose = () => {
     this.setState({ duplicateError: null });
   };
 
-  handleExamRoomDataChange = (rowId, fieldName, fieldValue) => {
-    const { examRooms, onUpdateExamRoom } = this.props;
+  handleExamRoomDataChange = (row, fieldName, fieldValue) => {
+    const { examRooms, onUpdateExamRoom, onAddNewExamRoom } = this.props;
+    console.log("flattenedHalls", row);
+    this.setState({ duplicateError: null });
+    const capacity = Number(fieldValue);
+    if (!row.Id) {
+      const newRow = {
+        examDateId: row.examId,
+        hallId: row.hallId,
+        examCapacity: capacity,
+      };
 
-    const isDuplicate = examRooms.some(examRoom => {
-      return (
-        examRoom.Id !== rowId &&
-        examRoom.examCapacity.trim() === fieldValue.trim()
-      );
-    });
-
-    if (isDuplicate) {
-      const errorMessage = this.props.t("Value already exists");
-      this.setState({ duplicateError: errorMessage });
-      let onUpdate = { Id: rowId, [fieldName]: "-----" };
-      onUpdateExamRoom(onUpdate);
+      onAddNewExamRoom(newRow);
     } else {
-      this.setState({ duplicateError: null });
-      let onUpdate = { Id: rowId, [fieldName]: fieldValue };
-      onUpdateExamRoom(onUpdate);
+      let updatedRow = { Id: row.Id, examCapacity: capacity };
+      onUpdateExamRoom(updatedRow);
     }
   };
 
@@ -267,6 +220,7 @@ class ExamRoomsList extends Component {
       showDeleteButton,
       showEditButton,
       showSearchButton,
+      modal,
     } = this.state;
     const { t, studentManagements, examRooms, levels, defineExamDates } =
       this.props;
@@ -275,9 +229,10 @@ class ExamRoomsList extends Component {
       totalSize: examRooms.length,
       custom: true,
     };
-
+    console.log("examRooms", examRooms);
     const flattenedHalls = examRooms.flatMap(exam =>
       exam.halls.map(hall => ({
+        Id: hall.Id || null,
         examId: exam.Id,
         hallId: hall.hallId,
         hallName: hall.hallName,
@@ -286,13 +241,14 @@ class ExamRoomsList extends Component {
         examCapacity: hall.examCapacity,
       }))
     );
+    console.log("flattenedHalls", flattenedHalls);
 
     const columns = [
-      { dataField: "Id", text: this.props.t("ID"), hidden: true },
+      { dataField: "Id", text: this.props.t("ID"), hidden: false },
       {
-        dataField: "defineExamDateId",
+        dataField: "examId",
         text: this.props.t("defineExamDateId"),
-        hidden: true,
+        hidden: false,
       },
 
       {
@@ -466,21 +422,21 @@ class ExamRoomsList extends Component {
                             </div>
 
                             <div className="table-responsive">
-                              {showAddButton && (
-                                <div className="text-sm-end">
-                                  <Tooltip
-                                    title={this.props.t("Add")}
-                                    placement="top"
+                              {/* {showAddButton && ( */}
+                              {/* <div className="text-sm-end">
+                                <Tooltip
+                                  title={this.props.t("Add")}
+                                  placement="top"
+                                >
+                                  <IconButton
+                                    color="primary"
+                                    onClick={this.handleAddRow}
                                   >
-                                    <IconButton
-                                      color="primary"
-                                      onClick={this.handleAddRow}
-                                    >
-                                      <i className="mdi mdi-plus-circle blue-noti-icon" />
-                                    </IconButton>
-                                  </Tooltip>
-                                </div>
-                              )}
+                                    <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                  </IconButton>
+                                </Tooltip>
+                              </div> */}
+                              {/* )} */}
                               <BootstrapTable
                                 keyField="Id"
                                 // data={defineExamDates.filter(
@@ -499,7 +455,7 @@ class ExamRoomsList extends Component {
                                     column
                                   ) => {
                                     this.handleExamRoomDataChange(
-                                      row.Id,
+                                      row,
                                       column.dataField,
                                       newValue
                                     );
@@ -527,22 +483,20 @@ class ExamRoomsList extends Component {
 
 const mapStateToProps = ({
   examRooms,
-  academyBuildingStructures,
   studentManagements,
   defineExamDates,
   levels,
   menu_items,
 }) => ({
-  defineExamDates: academyBuildingStructures.defineExamDates,
   defineExamDates: defineExamDates.defineExamDates,
   examRooms: examRooms.examRooms,
   // studentManagements: studentManagements.studentManagements,
   // levels: levels.levels,
-  // faculties: examRooms.faculties,
   user_menu: menu_items.user_menu || [],
 });
 
 const mapDispatchToProps = dispatch => ({
+  onfetchSetting: () => dispatch(fetchSettingExam()),
   onGetExamRooms: defineExamDates => dispatch(getExamRooms(defineExamDates)),
   onGetDefineExamDates: () => dispatch(getDefineExamDates()),
   onAddNewExamRoom: examRoom => dispatch(addNewExamRoom(examRoom)),

@@ -14,6 +14,7 @@ import {
   DELETE_EXAM_ROOM,
   DELETE_EXAM_ROOM_SUCCESS,
   DELETE_EXAM_ROOM_FAIL,
+  GET_SETTING_EXAM_ROOM,
 } from "./actionTypes";
 
 export const getExamRooms = examRooms => ({
@@ -89,4 +90,8 @@ export const deleteExamRoomSuccess = examRoom => ({
 export const deleteExamRoomFail = error => ({
   type: DELETE_EXAM_ROOM_FAIL,
   payload: error,
+});
+
+export const fetchSettingExam = () => ({
+  type: GET_SETTING_EXAM_ROOM,
 });
