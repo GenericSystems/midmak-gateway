@@ -117,7 +117,7 @@ function* onAddNewExamRoom({ payload, ExamRoom }) {
 
 function* onUpdateExamRoom({ payload }) {
   payload["source"] = "db";
-  payload["procedure"] = "updateActiveStudentsAccordingFacultyAccess";
+  payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["queryname"] = "Common_ExamHalls";
 

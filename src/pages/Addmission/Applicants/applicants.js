@@ -91,6 +91,7 @@ import {
 } from "../../../utils/menuUtils";
 import { ChevronDoubleLeftIcon, ConsoleIcon } from "@icons/material";
 import { is } from "date-fns/locale";
+import highstudytypes from "store/high-study-types/reducer";
 // import { departments } from "common/data";
 // import certificateLevel from "pages/Certificateslevels/certificate-level";
 class ApplicantsList extends Component {
@@ -122,6 +123,8 @@ class ApplicantsList extends Component {
       facultyName: "",
       studyPlanName: "",
       socialStatusName: "",
+      traineeStatusName: "",
+      highStudyName: "",
       estimateName: "",
       selectedRegistrationCertLevelId: "",
       selectedStudyPattern: "",
@@ -206,7 +209,7 @@ class ApplicantsList extends Component {
       selectedInstituteCountry: "",
       selectedTempTraineeStatus: "",
       languageState: "",
-      selectedHightStudyTypeId: "",
+      selectedHightStudyTypeId: null,
       selectedEstimateId: "",
       selectedRegUniDate: "",
       selectedRowId: null,
@@ -1073,6 +1076,8 @@ class ApplicantsList extends Component {
       selectedRegistrationCertLevelId: arg.registrationCertLevelId || "",
       // selectedSocialStatus: arg.socialStatusId || "",
       socialStatusName: arg.socialStatusName || null,
+      highStudyName: arg.highStudyName || null,
+      traineeStatusName: arg.traineeStatusName || null,
       selectedRegistrationDiplomaDate: arg.registrationDiplomaDate || "",
       //   // },
       //   tempTraineeId: arg.Id,
@@ -1299,8 +1304,6 @@ class ApplicantsList extends Component {
       selectedGovernorate,
       selectedCity,
       selectedBrother,
-      selectedTransferUnivCountry,
-      selectedSemester,
     } = this.state;
 
     if (fieldName == "diplomaId") {
@@ -1319,14 +1322,6 @@ class ApplicantsList extends Component {
       this.setState({ selectedCity });
     }
 
-    if (fieldName == "TransferUnivCountryId") {
-      this.setState({ selectedTransferUnivCountry });
-    }
-
-    if (fieldName == "registerYearSemesterId") {
-      this.setState({ selectedSemester });
-    }
-
     if (fieldName == "traineeNum") {
       this.setState({ selectedBrother });
     }
@@ -1338,8 +1333,6 @@ class ApplicantsList extends Component {
       selectedCountry,
       selectedGovernorate,
       selectedCity,
-      selectedTransferUnivCountry,
-      selectedSemester,
       selectedBrother,
     } = this.state;
 
@@ -1359,15 +1352,7 @@ class ApplicantsList extends Component {
       this.setState({ selectedCity });
     }
 
-    if (fieldName == "TransferUnivCountryId") {
-      this.setState({ selectedTransferUnivCountry });
-    }
-
-    if (fieldName == "registerYearSemesterId") {
-      this.setState({ selectedSemester });
-    }
-
-    if (fieldName == "traineeSID") {
+    if (fieldName == "traineeNum") {
       this.setState({ selectedBrother });
     }
   };
@@ -1434,7 +1419,19 @@ class ApplicantsList extends Component {
 
       this.setState({
         selectedTempTraineeStatus: selectedValue,
-        socialStatusName: name.label,
+        traineeStatusName: name.label,
+        tempTrainee: values,
+      });
+    }
+    if (fieldName == "HighStudyTypeId") {
+      const name = highstudytypes.find(
+        highstudytype => highstudytype.value === selectedValue
+      );
+      console.log("naaaaamesooo", name);
+
+      this.setState({
+        selectedHightStudyTypeId: selectedValue,
+        highStudyName: name.label,
         tempTrainee: values,
       });
     }
@@ -1451,12 +1448,12 @@ class ApplicantsList extends Component {
   };
 
   handleGenerateTempTrainee = tempId => {
-    const { onGenerateTempTrainee } = this.props;
+    // const { onGenerateTempTrainee } = this.props;
 
-    const { isEdit } = this.state;
-    if (isEdit) {
-      onGenerateTempTrainee(tempId);
-    }
+    // const { isEdit } = this.state;
+    // if (isEdit) {
+    //   onGenerateTempTrainee(tempId);
+    // }
 
     this.setState({ generateModal: true });
   };
@@ -2088,16 +2085,15 @@ class ApplicantsList extends Component {
       tempTrainee,
     } = this.state;
 
-    const showNewInput =
-      selectedRegistrationCertLevelId === 1 ||
-      selectedRegistrationCertLevelId === 2;
+    const showNewInput = selectedRegistrationCertLevelId === 1;
+
+    const showUniForm = selectedRegistrationCertLevelId === 4;
+
     const isShowInstituteinfo = selectedRegistrationCertLevelId === 2;
 
     const isShowUlterStudy = selectedRegistrationCertLevelId === 5;
 
     const isHightSchooll = selectedRegistrationCertLevelId === 3;
-
-    const showUniForm = selectedRegistrationCertLevelId === 79;
 
     const {
       tempTraineeStatus,
@@ -4461,22 +4457,24 @@ class ApplicantsList extends Component {
                                                                             </Col>
                                                                             <Col className="col-8">
                                                                               <Select
-                                                                                className={`select-style-std ${
-                                                                                  facultyError
-                                                                                    ? "is-invalid"
-                                                                                    : ""
-                                                                                }`}
                                                                                 name="HighStudyTypeId"
                                                                                 key={`HighStudyType_select`}
                                                                                 options={
                                                                                   highstudytypes
                                                                                 }
-                                                                                onChange={hight => {
-                                                                                  setFieldValue(
+                                                                                className={`form-control`}
+                                                                                onChange={newValue => {
+                                                                                  this.handleSelect(
                                                                                     "HighStudyTypeId",
-                                                                                    hight.value
+                                                                                    newValue.value,
+                                                                                    values
                                                                                   );
                                                                                 }}
+                                                                                defaultValue={highstudytypes.find(
+                                                                                  opt =>
+                                                                                    opt.value ===
+                                                                                    tempTrainee?.HighStudyTypeId
+                                                                                )}
                                                                               />
                                                                             </Col>
                                                                           </Row>
