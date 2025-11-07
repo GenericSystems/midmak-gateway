@@ -51,10 +51,13 @@ import {
   checkIsEditForPage,
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
+import examRooms from "store/Exam/ExamRooms/reducer";
 class ExamRoomsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      examRooms: [],
+      examRoom: "",
       defineExamDates: [],
       defineExamDate: "",
       duplicateError: null,
@@ -194,12 +197,13 @@ class ExamRoomsList extends Component {
 
   handleExamRoomDataChange = (row, fieldName, fieldValue) => {
     const { examRooms, onUpdateExamRoom, onAddNewExamRoom } = this.props;
+    const { currentExamId } = this.state;
     console.log("flattenedHalls", row);
     this.setState({ duplicateError: null });
     const capacity = Number(fieldValue);
     if (!row.Id) {
       const newRow = {
-        examDateId: row.examId,
+        examDateId: currentExamId,
         hallId: row.hallId,
         examCapacity: capacity,
       };
@@ -230,27 +234,9 @@ class ExamRoomsList extends Component {
       custom: true,
     };
     console.log("examRooms", examRooms);
-    const flattenedHalls = examRooms.flatMap(exam =>
-      exam.halls.map(hall => ({
-        Id: hall.Id || null,
-        examId: exam.Id,
-        hallId: hall.hallId,
-        hallName: hall.hallName,
-        hallNum: hall.hallNum,
-        buildingName: hall.buildingName,
-        examCapacity: hall.examCapacity,
-      }))
-    );
-    console.log("flattenedHalls", flattenedHalls);
 
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: false },
-      {
-        dataField: "examId",
-        text: this.props.t("defineExamDateId"),
-        hidden: false,
-      },
-
       {
         dataField: "hallName",
         text: this.props.t("Room Name"),
@@ -438,17 +424,17 @@ class ExamRoomsList extends Component {
                               </div> */}
                               {/* )} */}
                               <BootstrapTable
-                                keyField="Id"
+                                keyField="key"
                                 // data={defineExamDates.filter(
                                 //   d => d.Id === defineExamDate.Id
                                 // )}
-                                data={flattenedHalls}
+                                data={examRooms}
                                 columns={columns}
                                 filter={filterFactory()}
                                 cellEdit={cellEditFactory({
                                   mode: "dbclick",
                                   blurToSave: true,
-                                  afterSaveCell: (
+                                  afterSaveCell: async (
                                     oldValue,
                                     newValue,
                                     row,
@@ -498,7 +484,6 @@ const mapStateToProps = ({
 const mapDispatchToProps = dispatch => ({
   onfetchSetting: () => dispatch(fetchSettingExam()),
   onGetExamRooms: defineExamDates => dispatch(getExamRooms(defineExamDates)),
-  onGetDefineExamDates: () => dispatch(getDefineExamDates()),
   onAddNewExamRoom: examRoom => dispatch(addNewExamRoom(examRoom)),
   onUpdateExamRoom: examRoom => dispatch(updateExamRoom(examRoom)),
   onDeleteExamRoom: examRoom => dispatch(deleteExamRoom(examRoom)),

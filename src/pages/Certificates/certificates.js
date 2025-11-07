@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import JsBarcode from "jsbarcode";
 import {
   Row,
   Col,
@@ -406,43 +406,58 @@ class Certificates extends Component {
     }
   };
 
-  handleCertificateClick = arg => {
-    const { certificate } = this.state;
-    console.log("arg", arg);
+  // handleCertificateClick = arg => {
+  //   const { certificate } = this.state;
+  //   console.log("arg", arg);
 
-    this.setState({
-      certificate: arg,
-      selectedUserType: arg.userTypeId,
-      selectedMember: arg.trainerId,
-      selectedCertificateType: arg.certificateTypeId,
-      selectedMemberGrade: arg.trainerGradeId,
-      sectorsArray: arg.sector,
-      selectedYear: arg.yearId,
-      isEdit: true,
+  //   this.setState({
+  //     certificate: arg,
+  //     selectedUserType: arg.userTypeId,
+  //     selectedMember: arg.trainerId,
+  //     selectedCertificateType: arg.certificateTypeId,
+  //     selectedMemberGrade: arg.trainerGradeId,
+  //     sectorsArray: arg.sector,
+  //     selectedYear: arg.yearId,
+  //     isEdit: true,
+  //   });
+
+  //   this.toggle();
+  // };
+
+  // handleGenerateQR = certificate => {
+  //   console.log("certificate in QR", certificate);
+  //   this.setState({ QRModal: true, certificate });
+  //   QRCode.toDataURL(
+  //     certificate.certificateNum,
+  //     {
+  //       width: 200,
+  //       margin: 2,
+  //       color: {
+  //         dark: "#000",
+  //         light: "#EEEEEEFF",
+  //       },
+  //     },
+  //     (err, url) => {
+  //       if (err) return console.error(err);
+  //       console.log(url);
+  //       this.setState({ qr: url, QRModal: true });
+  //     }
+  //   );
+  // };
+
+  handleGenerateBarcode = certificate => {
+    const canvas = document.createElement("canvas");
+    this.setState({ QRModal: true, certificate });
+    JsBarcode(canvas, certificate.certificateNum, {
+      format: "CODE128",
+      displayValue: true,
+      width: 2,
+      height: 80,
+      margin: 10,
     });
 
-    this.toggle();
-  };
-
-  handleGenerateQR = certificate => {
-    console.log("certificate in QR", certificate);
-    this.setState({ QRModal: true, certificate });
-    QRCode.toDataURL(
-      certificate.certificateNum,
-      {
-        width: 200,
-        margin: 2,
-        color: {
-          dark: "#000",
-          light: "#EEEEEEFF",
-        },
-      },
-      (err, url) => {
-        if (err) return console.error(err);
-        console.log(url);
-        this.setState({ qr: url, QRModal: true });
-      }
-    );
+    const barcodeURL = canvas.toDataURL("image/png");
+    this.setState({ qr: barcodeURL, QRModal: true });
   };
 
   onCloseQRModal = () => {
@@ -644,9 +659,9 @@ class Certificates extends Component {
             <Tooltip title={this.props.t("QR")} placement="top">
               <Link className="text-primary" to="#">
                 <i
-                  className="mdi mdi-qrcode font-size-18"
+                  className="mdi mdi-barcode-scan font-size-18"
                   id="qrcodetooltip"
-                  onClick={() => this.handleGenerateQR(certificate)}
+                  onClick={() => this.handleGenerateBarcode(certificate)}
                 ></i>
               </Link>
             </Tooltip>
@@ -1341,7 +1356,7 @@ class Certificates extends Component {
                                           </Formik>
                                         </ModalBody>
                                       </Modal>
-                                      <Modal isOpen={QRModal} centered={true}>
+                                      {/* <Modal isOpen={QRModal} centered={true}>
                                         <ModalHeader
                                           toggle={this.onCloseQRModal}
                                           tag="h4"
@@ -1385,6 +1400,60 @@ class Certificates extends Component {
                                                         certificate.trainerName +
                                                         certificate.certificateNum
                                                       }.png`;
+                                                      link.click();
+                                                    }}
+                                                  >
+                                                    {this.props.t("Download")}
+                                                  </Button>
+                                                )}
+                                              </div>
+                                            </Col>
+                                          </Row>
+                                        </ModalBody>
+                                      </Modal> */}
+                                      <Modal isOpen={QRModal} centered={true}>
+                                        <ModalHeader
+                                          toggle={this.onCloseQRModal}
+                                          tag="h4"
+                                        >
+                                          <div className="text-center">
+                                            {this.props.t("Barcode")}
+                                          </div>
+                                        </ModalHeader>
+                                        <ModalBody className="py-3 px-5">
+                                          <Row>
+                                            <Col lg={12}>
+                                              <div className="text-center">
+                                                <h4 className="text-primary">
+                                                  {certificate.trainerName}
+                                                </h4>
+                                                <h6 className="text-primary">
+                                                  {certificate.certificateNum}
+                                                </h6>
+                                                {qr && (
+                                                  <img
+                                                    src={qr}
+                                                    alt={`${certificate.trainerName} ${certificate.certificateNum}`}
+                                                  />
+                                                )}
+                                              </div>
+                                            </Col>
+                                          </Row>
+                                          <Row>
+                                            <Col>
+                                              <div className="text-center mt-3">
+                                                {qr && (
+                                                  <Button
+                                                    color="success"
+                                                    size="lg"
+                                                    className="me-2"
+                                                    onClick={() => {
+                                                      const link =
+                                                        document.createElement(
+                                                          "a"
+                                                        );
+                                                      link.href = qr;
+                                                      link.download = `${certificate.trainerName}_${certificate.certificateNum}.png`;
                                                       link.click();
                                                     }}
                                                   >

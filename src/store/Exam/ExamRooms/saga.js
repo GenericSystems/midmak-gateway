@@ -74,16 +74,14 @@ function* fetchExamRooms(obj) {
 
   const get_ExamRooms_req = {
     source: "db",
-    procedure: "SisApp_getData",
+    procedure: "getExamHalls",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_DefineExamDates",
-    filter: ` Id = ${defineExamDate}`,
+    examDateId: defineExamDate,
+    // filter: ` examDateId = ${defineExamDate}`,
   };
   try {
     const response = yield call(getExamRooms, get_ExamRooms_req);
-    response.map(resp => {
-      resp["halls"] = JSON.parse(resp["halls"]);
-    });
     console.log("33333333333333", response);
     yield put(getExamRoomsSuccess(response));
   } catch (error) {
@@ -106,6 +104,7 @@ function* onAddNewExamRoom({ payload, ExamRoom }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_ExamHalls";
+  payload["queryname"] = "_Common_ExamHalls";
 
   try {
     const response = yield call(addNewExamRoom, payload);
@@ -119,7 +118,8 @@ function* onUpdateExamRoom({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["queryname"] = "Common_ExamHalls";
+  payload["tablename"] = "Common_ExamHalls";
+  payload["queryname"] = "_Common_ExamHalls";
 
   try {
     const respupdate = yield call(updateExamRoom, payload);

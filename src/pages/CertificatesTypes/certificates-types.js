@@ -328,6 +328,12 @@ class CertificateTypesList extends Component {
         sort: true,
         editable: showEditButton,
       },
+      {
+        dataField: "prefix",
+        text: "Prefix",
+        sort: true,
+        editable: showEditButton,
+      },
 
       {
         dataField: "delete",
