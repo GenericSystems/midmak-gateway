@@ -406,23 +406,23 @@ class Certificates extends Component {
     }
   };
 
-  // handleCertificateClick = arg => {
-  //   const { certificate } = this.state;
-  //   console.log("arg", arg);
+  handleCertificateClick = arg => {
+    const { certificate } = this.state;
+    console.log("arg", arg);
 
-  //   this.setState({
-  //     certificate: arg,
-  //     selectedUserType: arg.userTypeId,
-  //     selectedMember: arg.trainerId,
-  //     selectedCertificateType: arg.certificateTypeId,
-  //     selectedMemberGrade: arg.trainerGradeId,
-  //     sectorsArray: arg.sector,
-  //     selectedYear: arg.yearId,
-  //     isEdit: true,
-  //   });
+    this.setState({
+      certificate: arg,
+      selectedUserType: arg.userTypeId,
+      selectedMember: arg.trainerId,
+      selectedCertificateType: arg.certificateTypeId,
+      selectedMemberGrade: arg.trainerGradeId,
+      sectorsArray: arg.sector,
+      selectedYear: arg.yearId,
+      isEdit: true,
+    });
 
-  //   this.toggle();
-  // };
+    this.toggle();
+  };
 
   // handleGenerateQR = certificate => {
   //   console.log("certificate in QR", certificate);
@@ -1434,6 +1434,12 @@ class Certificates extends Component {
                                                   <img
                                                     src={qr}
                                                     alt={`${certificate.trainerName} ${certificate.certificateNum}`}
+                                                    style={{
+                                                      display: "block",
+                                                      margin: "0 auto",
+                                                      maxWidth: "100%",
+                                                      height: "auto",
+                                                    }}
                                                   />
                                                 )}
                                               </div>
