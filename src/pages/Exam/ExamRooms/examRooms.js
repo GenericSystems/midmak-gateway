@@ -196,7 +196,7 @@ class ExamRoomsList extends Component {
   };
 
   handleExamRoomDataChange = (row, fieldName, fieldValue) => {
-    const { examRooms, onUpdateExamRoom, onAddNewExamRoom } = this.props;
+    const { examRooms, onUpdateExamRoom, onAddNewExamRoom, onGetExamRooms } = this.props;
     const { currentExamId } = this.state;
     console.log("flattenedHalls", row);
     this.setState({ duplicateError: null });
@@ -209,6 +209,7 @@ class ExamRoomsList extends Component {
       };
 
       onAddNewExamRoom(newRow);
+      onGetExamRooms(currentExamId);
     } else {
       let updatedRow = { Id: row.Id, examCapacity: capacity };
       onUpdateExamRoom(updatedRow);
@@ -445,9 +446,7 @@ class ExamRoomsList extends Component {
                                       column.dataField,
                                       newValue
                                     );
-                                    await this.props.onGetExamRooms(
-                                      this.state.currentExamId
-                                    );
+                                  
                                   },
                                 })}
                                 noDataIndication={this.props.t(
