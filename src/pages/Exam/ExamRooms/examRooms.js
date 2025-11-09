@@ -445,6 +445,9 @@ class ExamRoomsList extends Component {
                                       column.dataField,
                                       newValue
                                     );
+                                    await this.props.onGetExamRooms(
+                                      this.state.currentExamId
+                                    );
                                   },
                                 })}
                                 noDataIndication={this.props.t(
