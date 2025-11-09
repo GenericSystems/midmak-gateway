@@ -56,6 +56,7 @@ import {
   checkIsSearchForPage,
 } from "../../utils/menuUtils";
 import QRCode from "qrcode";
+import sectorsSaga from "store/sectors/saga";
 
 class Certificates extends Component {
   constructor(props) {
@@ -63,6 +64,7 @@ class Certificates extends Component {
     this.state = {
       certificates: [],
       certificate: "",
+      sectorsArray: [],
       selectedCertLevel: null,
       deleteModal: false,
       duplicateError: null,
@@ -75,7 +77,6 @@ class Certificates extends Component {
       modal: false,
       academicCodeError: false,
       isEdit: false,
-      sectorsArray: [],
       QRModal: false,
       qr: "",
       sidebarOpen: true,
@@ -212,6 +213,8 @@ class Certificates extends Component {
   handleAddRow = () => {
     this.setState({
       certificate: "",
+      sectorsArray: [],
+      sector: [],
       isEdit: false,
     });
     this.toggle();
@@ -416,7 +419,7 @@ class Certificates extends Component {
       selectedMember: arg.trainerId,
       selectedCertificateType: arg.certificateTypeId,
       selectedMemberGrade: arg.trainerGradeId,
-      sectorsArray: arg.sector,
+      sectorsArray: JSON.parse(arg.sector),
       selectedYear: arg.yearId,
       isEdit: true,
     });
@@ -913,7 +916,7 @@ class Certificates extends Component {
                                               academicCode:
                                                 (certificate &&
                                                   certificate.academicCode) ||
-                                                "01",
+                                                "",
                                               userTypeId:
                                                 (certificate &&
                                                   certificate.userTypeId) ||
