@@ -434,6 +434,16 @@ export const GET_ROLE_DELETED_VALUE = "/deleted";
 // ROLE_USER
 export const ADD_NEW_ROLE_USER = "/add/roleUser";
 
+// LECTURE_PERMISSION
+export const GET_LECTURE_PERMISSIONS = "/lecturePermissions";
+export const ADD_NEW_LECTURE_PERMISSION = "/add/lecturePermission";
+export const UPDATE_LECTURE_PERMISSION = "/update/lecturePermission";
+export const DELETE_LECTURE_PERMISSION = "/delete/lecturePermission";
+export const GET_LECTURE_PERMISSION_DELETED_VALUE = "/deleted";
+
+// LECTURE_PERMISSION_USER
+export const ADD_NEW_LECTURE_PERMISSION_USER = "/add/lecturePermissionUser";
+
 // ROLE_PERMISSION
 export const GET_ROLE_PERMISSIONS = "/role_permissions";
 export const ADD_NEW_ROLE_PERMISSION = "/add/role_permission";
@@ -1110,6 +1120,13 @@ export const UPDATE_EMPLOYEE = "/update/employee";
 export const DELETE_EMPLOYEE = "/delete/employee";
 export const GET_NATIONALITIES_OPT = "/nationalities";
 export const GET_GENDERSCH = "/genders";
+
+//TRAINERS
+export const GET_TRAINERS = "/trainers";
+export const GET_TRAINER_DELETED_VALUE = "/deleted";
+export const ADD_NEW_TRAINER = "/add/trainer";
+export const UPDATE_TRAINER = "/update/trainer";
+export const DELETE_TRAINER = "/delete/trainer";
 
 //DEFINE EXAM DATE
 export const GET_DEFINE_EXAM_DATES = "/defineExamDates";

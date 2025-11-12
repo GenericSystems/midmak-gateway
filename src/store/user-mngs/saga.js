@@ -47,7 +47,6 @@ import {
   addNewUserRole,
 } from "../../helpers/fakebackend_helper";
 
-
 function* fetchUserMngs() {
   const get_userMngs_req = {
     source: "db",
@@ -64,7 +63,6 @@ function* fetchUserMngs() {
   } catch (error) {
     yield put(getUserMngsFail(error));
   }
-
 }
 
 function* onAddNewUserMng({ payload, userMng }) {
@@ -107,23 +105,21 @@ function* onDeleteUserMng({ payload, UserMng }) {
 }
 function* onGetUserMngDeletedValue() {
   try {
-    const response = yield call(getUserMngDeletedValue)
-    yield put(getUserMngDeletedValueSuccess(response))
+    const response = yield call(getUserMngDeletedValue);
+    yield put(getUserMngDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getUserMngDeletedValueFail(error))
+    yield put(getUserMngDeletedValueFail(error));
   }
-
 }
 
-
 function* fetchUserFaculties(obj) {
-  let userId = obj.payload
+  let userId = obj.payload;
   const get_userFaculties_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_systemUserFaculty",
-    filter: `userId = ${userId}`
+    filter: `userId = ${userId}`,
   };
   try {
     const response = yield call(getUserFaculties, get_userFaculties_req);
@@ -139,7 +135,7 @@ function* onAddNewUserFaculty({ payload, userFaculty }) {
   payload["procedure"] = "Roles_updateUserFaculties";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_systemUserFaculty";
-  payload["queryname"] = "_Common_systemUserFaculty"
+  payload["queryname"] = "_Common_systemUserFaculty";
   try {
     const response = yield call(addNewUserFaculty, payload);
     yield put(addUserFacultySuccess(response));
@@ -149,7 +145,6 @@ function* onAddNewUserFaculty({ payload, userFaculty }) {
 }
 
 function* onDeleteUserFaculty({ payload, UserFaculty }) {
-
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
@@ -163,14 +158,12 @@ function* onDeleteUserFaculty({ payload, UserFaculty }) {
 }
 function* onGetUserFacultyDeletedValue() {
   try {
-    const response = yield call(getUserFacultyDeletedValue)
-    yield put(getUserFacultyDeletedValueSuccess(response))
+    const response = yield call(getUserFacultyDeletedValue);
+    yield put(getUserFacultyDeletedValueSuccess(response));
   } catch (error) {
-    yield put(getUserFacultyDeletedValueFail(error))
+    yield put(getUserFacultyDeletedValueFail(error));
   }
-
 }
-
 
 function* onAddNewUserRole({ payload, role }) {
   delete payload["id"];
@@ -188,7 +181,6 @@ function* onAddNewUserRole({ payload, role }) {
     yield put(addUserRoleFail(error));
   }
 }
-
 
 function* userMngsSaga() {
   yield takeEvery(GET_USER_MNGS, fetchUserMngs);

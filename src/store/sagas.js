@@ -79,6 +79,7 @@ import traineesDecreesSaga from "./trainee-decrees/saga";
 import DecisionsSaga from "./decisions/saga";
 import grantsSaga from "./grants/saga";
 import rolesSaga from "./roles/saga";
+import lecturePermissionsSaga from "./changeLecturePermissions/saga";
 import userMngsSaga from "./user-mngs/saga";
 import academyInfoSaga from "./academydef/saga";
 // import universityOrgStructure from "./universityOrgStructure/saga";
@@ -101,6 +102,7 @@ import ExamObserversSaga from "./examObservers/saga";
 import employmentCasesSaga from "./HR/employmentCases/saga";
 import workClassificationsSaga from "./HR/workClassifications/saga";
 import employeesSaga from "./HR/employees/saga";
+import trainersSaga from "./trainers/saga";
 import DistributingCoursesMethodsSaga from "./distributing-courses-methods/saga";
 import letterGradesSaga from "./letter-grade/saga";
 import transportLinesSaga from "./transportLines/saga";
@@ -232,6 +234,7 @@ export default function* rootSaga() {
     fork(traineesDecreesSaga),
     fork(DecisionsSaga),
     fork(rolesSaga),
+    fork(lecturePermissionsSaga),
     fork(userMngsSaga),
     fork(academyInfoSaga),
     fork(qualificationTracksSaga),
@@ -248,6 +251,7 @@ export default function* rootSaga() {
     fork(employmentCasesSaga),
     fork(workClassificationsSaga),
     fork(employeesSaga),
+    fork(trainersSaga),
     fork(academicLoadSaga),
     fork(DistributingCoursesMethodsSaga),
     fork(letterGradesSaga),

@@ -977,6 +977,26 @@ export const getRoleDeletedValue = () => get(url.GET_ROLE_DELETED_VALUE);
 // get RoleUsers
 export const addNewRoleUser = data => post(url.ADD_NEW_ROLE_USER, data);
 
+// get LecturePermissions
+export const getLecturePermissions = data =>
+  post(url.GET_LECTURE_PERMISSIONS, data);
+
+export const addNewLecturePermission = data =>
+  post(url.ADD_NEW_LECTURE_PERMISSION, data);
+
+export const updateLecturePermission = data =>
+  post(url.UPDATE_LECTURE_PERMISSION, data);
+
+export const deleteLecturePermission = data =>
+  post(url.DELETE_LECTURE_PERMISSION, data);
+
+export const getLecturePermissionDeletedValue = () =>
+  get(url.GET_LECTURE_PERMISSION_DELETED_VALUE);
+
+// get RoleUsers
+export const addNewLecturePermissionUser = data =>
+  post(url.ADD_NEW_LECTURE_PERMISSION_USER, data);
+
 // get RolePermissions
 export const getRolePermissions = data => post(url.GET_ROLE_PERMISSIONS, data);
 
@@ -2261,6 +2281,22 @@ export const updateEmployee = data => post(url.UPDATE_EMPLOYEE, data);
 
 //delete Employee
 export const deleteEmployee = data => post(url.DELETE_EMPLOYEE, data);
+
+//trainers
+export const getTrainers = data => post(url.GET_TRAINERS, data);
+
+// add trainer
+
+export const addNewTrainer = data => post(url.ADD_NEW_TRAINER, data);
+
+//trainer
+export const getTrainerDeletedValue = () => get(url.GET_TRAINER_DELETED_VALUE);
+
+//update trainer
+export const updateTrainer = data => post(url.UPDATE_TRAINER, data);
+
+//delete trainer
+export const deleteTrainer = data => post(url.DELETE_TRAINER, data);
 
 export const getNationalitiesOpt = data =>
   post(url.GET_NATIONALITIES_OPT, data);

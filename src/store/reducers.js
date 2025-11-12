@@ -227,6 +227,9 @@ import userMngs from "./user-mngs/reducer";
 //roles
 import roles from "./roles/reducer";
 
+//lecturePermission
+import lecturePermissions from "./changeLecturePermissions/reducer";
+
 // import universityOrgStructures from "./universityOrgStructure/reducer";
 
 //sidbarcontent
@@ -301,6 +304,9 @@ import workClassifications from "./HR/workClassifications/reducer";
 
 // employees
 import employees from "./HR/employees/reducer";
+
+// trainers
+import trainers from "./trainers/reducer";
 
 //Distributing courses methods
 
@@ -394,6 +400,7 @@ const rootReducer = combineReducers({
   grants,
   userMngs,
   roles,
+  lecturePermissions,
   Layout,
   login,
   Account,
@@ -490,6 +497,7 @@ const rootReducer = combineReducers({
   employmentCases,
   workClassifications,
   employees,
+  trainers,
   contracts,
   marksObjections,
   justifyTraineesAbsence,
@@ -520,7 +528,7 @@ const rootReducer = combineReducers({
   diplomalevels,
   highstudytypes,
   gradesVersions,
-  _Common
+  _Common,
 });
 
 export default rootReducer;

@@ -270,6 +270,12 @@ import MismatchedGradesList from "../pages/ExamReports/MismatchedGrades/mismatch
 //Employees
 import EmployeesList from "../pages/HR/employees/employees";
 
+//trainers
+import TrainersList from "../pages/HR/trainers/trainers";
+
+//lecture permissions
+import ChangeLecturePermissions from "../pages/TraineeAttendence/AttendenceSettings/changeLecturePermissions";
+
 //CertificateTypes
 import CertificateTypesList from "../pages/CertificatesTypes/certificates-types";
 
@@ -530,6 +536,14 @@ const authProtectedRoutes = [
   // employees
 
   { path: "/employees", component: EmployeesList },
+
+  // trainers
+
+  { path: "/trainers", component: TrainersList },
+
+  // ChangeLecturePermissions
+
+  { path: "/changeLecturePermissions", component: ChangeLecturePermissions },
 
   // CoursesPassPercentsList
   { path: "/coursesPassPercents", component: CoursesPassPercentsList },

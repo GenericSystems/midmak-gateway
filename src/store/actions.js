@@ -143,6 +143,12 @@ export * from "./HR/workClassifications/actions";
 //employees
 export * from "./HR/employees/actions";
 
+//trainers
+export * from "./trainers/actions";
+
+//Lecture Permissions
+export * from "./changeLecturePermissions/actions";
+
 //certificateTypes
 export * from "./certificateTypes/actions";
 //studentManagements

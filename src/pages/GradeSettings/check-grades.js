@@ -9,8 +9,17 @@ import {
   CardTitle,
   Input,
   Label,
+  Modal,
+  ModalBody,
+  ModalHeader,
 } from "reactstrap";
-import Tooltip from "@mui/material/Tooltip";
+import {
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { Dropdown, DropdownToggle, DropdownMenu } from "reactstrap";
 import Select from "react-select";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -73,6 +82,7 @@ class CheckGradesList extends Component {
       showEditButton: false,
       selectedCourseId: null,
       isFirstSelect: true,
+      openConfirm: false,
     };
     this.handleGradeDataChange = this.handleGradeDataChange.bind(this);
   }
@@ -138,6 +148,14 @@ class CheckGradesList extends Component {
     ) {
       this.node.current.props.pagination.options.onPageChange(page);
     }
+  };
+
+  handleOpenConfirm = () => {
+    this.setState({ openConfirm: true });
+  };
+
+  handleCloseConfirm = () => {
+    this.setState({ openConfirm: false });
   };
 
   handleButtonClick = (fieldName, selectedValue) => {
@@ -323,30 +341,6 @@ class CheckGradesList extends Component {
     }));
   }
 
-  handleImport = () => {
-    const { onImportCheckedGrades } = this.props;
-    const { selectedSection, selectedCourseId, selectedCourseCode } =
-      this.state;
-
-    if (!selectedCourseId) {
-      alert("Please select a course first");
-      return;
-    }
-
-    const obj = {
-      courseId: selectedCourseId,
-      // CourseCode: selectedCourseCode,
-      // SectionNumber: selectedSection,
-      // active: 1,
-    };
-
-    // obj[
-    //   "filter"
-    // ] = `courseId = ${obj.courseId} and code = ''''${obj.CourseCode}'''' and active = ${obj.active}`;
-
-    onImportCheckedGrades(obj);
-  };
-
   //if we want condition to first select
   // handleSelectCourse = (fieldName, selectedValue) => {
   //   const {
@@ -403,10 +397,10 @@ class CheckGradesList extends Component {
     const { onImportCheckedGrades } = this.props;
     const { selectedCourseId } = this.state;
 
-    if (!selectedCourseId) {
-      alert("Please select a course first");
-      return;
-    }
+    // if (!selectedCourseId) {
+    //   alert("Please select a course first");
+    //   return;
+    // }
 
     onImportCheckedGrades({ courseId: selectedCourseId });
   };
@@ -681,12 +675,64 @@ class CheckGradesList extends Component {
                             >
                               <IconButton
                                 color="primary"
-                                onClick={this.handleImport}
+                                onClick={() =>
+                                  this.setState({ openConfirm: true })
+                                }
                               >
                                 <i className="bx bx-upload blue-noti-icon fs-1 mx-2" />
                               </IconButton>
                             </Tooltip>
                           </div>
+                          <Modal
+                            isOpen={this.state.openConfirm}
+                            centered={true}
+                          >
+                            <ModalBody className="py-3 px-5">
+                              <Row>
+                                <Col lg={12}>
+                                  <div className="text-center">
+                                    <i
+                                      className="mdi mdi-alert-circle-outline"
+                                      style={{
+                                        fontSize: "9em",
+                                        color: "orange",
+                                      }}
+                                    />
+                                    <h2>{this.props.t("Are you sure ?")}</h2>
+                                    <h4>
+                                      {this.props.t(
+                                        "Importing existing data will reset the existing scores to zero !"
+                                      )}
+                                    </h4>
+                                  </div>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col>
+                                  <div className="text-center mt-3">
+                                    <button
+                                      type="button"
+                                      className="btn btn-success btn-lg me-2"
+                                      onClick={this.handleImport}
+                                    >
+                                      {this.props.t("Yes, import it!")}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger btn-lg me-2"
+                                      onClick={() =>
+                                        this.setState({
+                                          openConfirm: false,
+                                        })
+                                      }
+                                    >
+                                      {this.props.t("Cancel")}
+                                    </button>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </ModalBody>
+                          </Modal>
                         </CardBody>
                       </Card>
                     </Col>

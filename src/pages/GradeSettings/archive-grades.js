@@ -567,18 +567,6 @@ class ArchiveGradesList extends Component {
             ),
           },
           {
-            key: "inProgress",
-            dataField: "inProgress",
-            text: "In Progress",
-            formatter: (cellContent, row, column) => (
-              <input
-                type="checkbox"
-                defaultChecked={cellContent == 1}
-                disabled={true}
-              />
-            ),
-          },
-          {
             key: "archived",
             dataField: "archived",
             text: "Archived",
@@ -624,18 +612,6 @@ class ArchiveGradesList extends Component {
           ),
         },
         {
-          key: "inProgress",
-          dataField: "inProgress",
-          text: "In Progress",
-          formatter: (cellContent, row, column) => (
-            <input
-              type="checkbox"
-              defaultChecked={cellContent == 1}
-              disabled={true}
-            />
-          ),
-        },
-        {
           key: "archived",
           dataField: "archived",
           text: "Archived",
@@ -675,7 +651,6 @@ class ArchiveGradesList extends Component {
             totalGrade: grade.totalGrade || "",
             letter_grade: grade.letter_grade || "",
             deprivedFromExam: grade.deprivedFromExam || false,
-            inProgress: grade.inProgress || false,
             archived: grade.archived || false,
           };
 
@@ -703,7 +678,6 @@ class ArchiveGradesList extends Component {
           Total: "",
           Letter: "",
           deprivedFromExam: false,
-          inProgress: false,
           archived: false,
         });
       }

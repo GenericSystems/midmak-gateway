@@ -1388,7 +1388,7 @@ class AcademyBuildingStructuresList extends Component {
                           htmlFor="buildingName"
                           className="col-form-label"
                         >
-                          {t("Building Name")}:
+                          {t("Building Name(en)")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1398,7 +1398,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="enTitle"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Building Name")}
+                          placeholder={t("Building Name(en)")}
                           value={newBuildingEnName}
                           onChange={e => {
                             this.handleBuildingDataChange(
@@ -1604,7 +1604,7 @@ class AcademyBuildingStructuresList extends Component {
                           htmlFor="BuildingName"
                           className="col-form-label"
                         >
-                          {t("Building Name")}:
+                          {t("Building Name(en)")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -1614,7 +1614,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="enTitle"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Building Name")}
+                          placeholder={t("Building Name(en)")}
                           value={editBuildingEnName}
                           onChange={e => {
                             this.handleBuildingDataChange(
@@ -2203,7 +2203,7 @@ class AcademyBuildingStructuresList extends Component {
                           htmlFor="BuildingName"
                           className="col-form-label"
                         >
-                          {t("Building Name")}:
+                          {t("Building Name(en)")}:
                         </label>
                       </Col>
                       <Col md="4">
@@ -2213,7 +2213,7 @@ class AcademyBuildingStructuresList extends Component {
                           name="enTitle"
                           autoComplete="off"
                           className="form-control mb-2"
-                          placeholder={t("Building Name")}
+                          placeholder={t("Building Name(en)")}
                           value={editBuildingEnName}
                           onChange={e => {
                             this.handleBuildingDataChange(
