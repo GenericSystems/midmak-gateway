@@ -67,12 +67,15 @@ class ArchiveGradesList extends Component {
       showSearchButton: false,
       showEditButton: false,
       selectedCourseId: null,
+      languageState: "",
       archived_grades: [],
     };
     // this.handleGradeDataChange = this.handleGradeDataChange.bind(this);
   }
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      i18n,
       archived_grades,
       onGetCoursesOpt,
       coursesOpt,
@@ -95,7 +98,18 @@ class ArchiveGradesList extends Component {
       this.setState({ coursesOpt });
       this.setState({ filteredSections });
     }
+    this.setState({ languageState: lang });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+  handleLanguageChange = lng => {
+    const { i18n, onGetGrades } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    // onGetGrades(lang);
+    this.setState({ languageState: lng });
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -449,6 +463,12 @@ class ArchiveGradesList extends Component {
     }
   };
 
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   render() {
     const {
       archived_grades,
@@ -468,6 +488,7 @@ class ArchiveGradesList extends Component {
       sidebarOpen,
       showSearchButton,
       showEditButton,
+      languageState,
       selectedCourseId,
     } = this.state;
     const { SearchBar } = Search;
@@ -478,7 +499,7 @@ class ArchiveGradesList extends Component {
         order: "desc",
       },
     ];
-
+    const direction = languageState === "ar" ? "rtl" : "ltr";
     const renderClassName = (rowId, dataField) => {
       const isUpdated = updatedCells.some(
         cell => cell.rowId === rowId && cell.dataField === dataField
@@ -588,7 +609,7 @@ class ArchiveGradesList extends Component {
       const columns = courseContentsEnteredGrades.map(column => ({
         key: column.orderContent,
         dataField: column.dataField,
-        text: column.textField,
+        text: languageState === "ar" ? column.textField : column.textFieldE,
         editable: false,
         classes: (cell, row, rowIndex, colIndex) => {
           if (!cell) return "";
@@ -606,7 +627,7 @@ class ArchiveGradesList extends Component {
         {
           key: "deprivedFromExam",
           dataField: "deprivedFromExam",
-          text: "Deprived from Exam 25%",
+          text: t("Deprived from Exam 25%"),
           formatter: cell => (
             <input type="checkbox" checked={!!cell} disabled={true} />
           ),
@@ -614,7 +635,7 @@ class ArchiveGradesList extends Component {
         {
           key: "archived",
           dataField: "archived",
-          text: "Archived",
+          text: t("Archived"),
           sort: true,
           editable: false,
           formatter: (cellContent, row, column) => (
@@ -697,7 +718,7 @@ class ArchiveGradesList extends Component {
 
     return (
       <React.Fragment>
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
               title={t("Grades")}
@@ -727,7 +748,7 @@ class ArchiveGradesList extends Component {
                                   id="prerequiseCourseId"
                                   list="CoursedatalistOptions"
                                   className="form-control"
-                                  placeholder="search.."
+                                  placeholder={t("Search")}
                                   defaultValue={
                                     (
                                       coursesOpt.find(
@@ -841,7 +862,7 @@ class ArchiveGradesList extends Component {
                               </Col>
                             </Row>
                           </div> */}
-                          <Col lg="12">
+                          {/* <Col lg="12">
                             <div
                               className="upload-box"
                               onClick={() =>
@@ -865,7 +886,7 @@ class ArchiveGradesList extends Component {
                                 onChange={this.handleFileChange}
                               />
                             </div>
-                          </Col>
+                          </Col> */}
                         </CardBody>
                       </Card>
                     </Col>

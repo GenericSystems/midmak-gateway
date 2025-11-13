@@ -411,12 +411,14 @@ class Certificates extends Component {
 
   handleCertificateClick = arg => {
     const { certificate } = this.state;
-    console.log("arg", arg);
+    console.log("arg", arg.courseNameE, arg.courseName);
 
     this.setState({
       certificate: arg,
       selectedUserType: arg.userTypeId,
       selectedMember: arg.trainerId,
+      trainerCourseNameE: arg.courseNameE,
+      trainerCourseName: arg.courseName,
       selectedCertificateType: arg.certificateTypeId,
       selectedMemberGrade: arg.trainerGradeId,
       sectorsArray: JSON.parse(arg.sector),
@@ -896,6 +898,7 @@ class Certificates extends Component {
                                       <Modal
                                         isOpen={modal}
                                         className={this.props.className}
+                                        size="lg"
                                       >
                                         <ModalHeader
                                           toggle={this.toggle}
@@ -944,6 +947,14 @@ class Certificates extends Component {
                                               sector:
                                                 (certificate &&
                                                   certificate.sector) ||
+                                                "",
+                                              trainerCourseName:
+                                                (certificate &&
+                                                  certificate.trainerCourseName) ||
+                                                "",
+                                              trainerCourseNameE:
+                                                (certificate &&
+                                                  certificate.trainerCourseNameE) ||
                                                 "",
                                             }}
                                             validationSchema={Yup.object().shape(
@@ -1167,6 +1178,64 @@ class Certificates extends Component {
                                                       )}
                                                     </div>
 
+                                                    <div className="mb-3">
+                                                      {selectedUserType ===
+                                                        1 && (
+                                                        <Row>
+                                                          <Col
+                                                            lg="4"
+                                                            className="col-padding"
+                                                          >
+                                                            <Label>
+                                                              <strong>
+                                                                {t(
+                                                                  "Trainer Course Name(ar)"
+                                                                )}
+                                                              </strong>
+                                                            </Label>
+                                                          </Col>
+                                                          <Col lg="6">
+                                                            <Field
+                                                              type="text"
+                                                              name="trainerCourseName"
+                                                              id="trainerCourseName"
+                                                              className={
+                                                                "form-control"
+                                                              }
+                                                            />
+                                                          </Col>
+                                                        </Row>
+                                                      )}
+                                                    </div>
+                                                    <div className="mb-3">
+                                                      {selectedUserType ===
+                                                        1 && (
+                                                        <Row>
+                                                          <Col
+                                                            lg="4"
+                                                            className="col-padding"
+                                                          >
+                                                            <Label for="trainerCourseNameE">
+                                                              <strong>
+                                                                {t(
+                                                                  "Trainer Course Name(en)"
+                                                                )}
+                                                              </strong>
+                                                            </Label>
+                                                          </Col>
+                                                          <Col lg="6">
+                                                            <Field
+                                                              type="text"
+                                                              name="trainerCourseNameE"
+                                                              id="trainerCourseNameE"
+                                                              className={
+                                                                "form-control"
+                                                              }
+                                                            />
+                                                          </Col>
+                                                        </Row>
+                                                      )}
+                                                    </div>
                                                     <Row>
                                                       <Col lg="6">
                                                         <label

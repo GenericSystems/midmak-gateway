@@ -65,12 +65,15 @@ class EnterGradesList extends Component {
       errorMessage: null,
       sidebarOpen: true,
       selectedCourseId: null,
+      languageState: "",
       showEditButton: false,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
   }
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      i18n,
       enteredGrades,
       onGetCoursesOpt,
       coursesOpt,
@@ -91,7 +94,19 @@ class EnterGradesList extends Component {
       this.setState({ coursesOpt });
       this.setState({ filteredSections });
     }
+    this.setState({ languageState: lang });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { i18n, onGetGrades } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    // onGetGrades(lang);
+    this.setState({ languageState: lng });
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -308,6 +323,12 @@ class EnterGradesList extends Component {
     }));
   }
 
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   render() {
     const {
       enteredGrades,
@@ -325,10 +346,11 @@ class EnterGradesList extends Component {
       sidebarOpen,
       showEditButton,
       showSearchButton,
+      languageState,
       selectedCourseId,
     } = this.state;
     const { SearchBar } = Search;
-
+    const direction = languageState === "ar" ? "rtl" : "ltr";
     const defaultSorting = [
       {
         dataField: "Id",
@@ -341,7 +363,7 @@ class EnterGradesList extends Component {
         const columns = courseContentsEnteredGrades.map(column => ({
           key: column.orderContent,
           dataField: column.dataField,
-          text: column.textField,
+          text: languageState === "ar" ? column.textField : column.textFieldE,
 
           editable: (cell, row) => {
             if (row.archived === 1) {
@@ -430,7 +452,7 @@ class EnterGradesList extends Component {
 
     return (
       <React.Fragment>
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
               title={t("Grades")}
@@ -460,7 +482,7 @@ class EnterGradesList extends Component {
                                   id="prerequiseCourseId"
                                   list="CoursedatalistOptions"
                                   className="form-control"
-                                  placeholder="search.."
+                                  placeholder={t("Search")}
                                   defaultValue={
                                     (
                                       coursesOpt.find(
@@ -574,14 +596,14 @@ class EnterGradesList extends Component {
                               </Col>
                             </Row>
                           </div>
-                          <div className="mb-3 d-flex justify-content-end">
+                          {/* <div className="mb-3 d-flex justify-content-end">
                             <Tooltip title={"upload"} placement="top">
                               <i className="bx bx-upload blue-noti-icon fs-1 mx-2" />
                             </Tooltip>
                             <Tooltip title={"download"} placement="top">
                               <i className="bx bx-download blue-noti-icon fs-1 mx-2" />
                             </Tooltip>
-                          </div>
+                          </div> */}
                         </CardBody>
                       </Card>
                     </Col>

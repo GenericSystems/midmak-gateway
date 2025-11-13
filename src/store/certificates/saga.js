@@ -99,21 +99,6 @@ function* fetchUsers() {
     yield put(getSectorsFail(error));
   }
 
-  //certificate Type
-  const get_certificateType_req = {
-    source: "db",
-    procedure: "Generic_getOptions",
-    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_CertificateType",
-    fields: "Id,arTitle",
-  };
-  try {
-    const response = yield call(getCertificateTypes, get_certificateType_req);
-    yield put(getCertificateTypesSuccess(response));
-  } catch (error) {
-    yield put(getCertificateTypesFail(error));
-  }
-
   //years
   const get_years_req = {
     source: "db",
@@ -154,8 +139,8 @@ function* fetchCertificates(obj) {
   let membersTableName = "";
   let membersFields = "";
   if (userTypeId === 1) {
-    membersTableName = "Common_TrainingMembers";
-    membersFields = "Id,name";
+    membersTableName = "_Common_EmployeeOption";
+    membersFields = "Id,fullName";
   } else if (userTypeId === 2) {
     membersTableName = "_Common_Trainee";
     membersFields = "Id,fullName";
@@ -192,6 +177,22 @@ function* fetchCertificates(obj) {
     yield put(getFilteredCertificateGradesSuccess(response));
   } catch (error) {
     yield put(getFilteredCertificateGradesFail(error));
+  }
+
+  //certificate Type
+  const get_certificateType_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_CertificateType",
+    fields: "Id,arTitle",
+    filter: `userTypeId = ${userTypeId}`,
+  };
+  try {
+    const response = yield call(getCertificateTypes, get_certificateType_req);
+    yield put(getCertificateTypesSuccess(response));
+  } catch (error) {
+    yield put(getCertificateTypesFail(error));
   }
 }
 

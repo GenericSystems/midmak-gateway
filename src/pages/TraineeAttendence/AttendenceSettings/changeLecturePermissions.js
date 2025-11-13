@@ -565,14 +565,14 @@ class ChangeLecturePermissions extends Component {
         editable: showEditButton,
       },
       {
-        dataField: "viewRolw",
-        text: "View Rolw",
+        dataField: "viewRole",
+        text: "View Role",
         sort: true,
         editable: showEditButton,
       },
       {
-        dataField: "editRolw",
-        text: "Edit Rolw",
+        dataField: "editRole",
+        text: "Edit Role",
         sort: true,
         editable: showEditButton,
       },

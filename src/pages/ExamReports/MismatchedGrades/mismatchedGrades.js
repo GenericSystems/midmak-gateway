@@ -234,7 +234,7 @@ class MismatchedGradesList extends Component {
         editable: false,
       },
       {
-        dataField: "traineeNum",
+        dataField: "TraineeNum",
         text: t("Trainee Num"),
         sort: true,
       },

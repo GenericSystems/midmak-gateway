@@ -82,12 +82,15 @@ class CheckGradesList extends Component {
       showEditButton: false,
       selectedCourseId: null,
       isFirstSelect: true,
+      languageState: "",
       openConfirm: false,
     };
     this.handleGradeDataChange = this.handleGradeDataChange.bind(this);
   }
   componentDidMount() {
+    const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
+      i18n,
       checked_grades,
       onGetCoursesOpt,
       coursesOpt,
@@ -110,7 +113,19 @@ class CheckGradesList extends Component {
       this.setState({ coursesOpt });
       this.setState({ filteredSections });
     }
+    this.setState({ languageState: lang });
+    i18n.on("languageChanged", this.handleLanguageChange);
   }
+
+  handleLanguageChange = lng => {
+    const { i18n, onGetGrades } = this.props;
+    const lang = localStorage.getItem("I18N_LANGUAGE");
+
+    // if (lang != lng) {
+    // onGetGrades(lang);
+    this.setState({ languageState: lng });
+    // }
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
@@ -404,6 +419,11 @@ class CheckGradesList extends Component {
 
     onImportCheckedGrades({ courseId: selectedCourseId });
   };
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
 
   render() {
     const {
@@ -423,6 +443,7 @@ class CheckGradesList extends Component {
       updatedCells,
       sidebarOpen,
       showSearchButton,
+      languageState,
       showEditButton,
       selectedCourseId,
     } = this.state;
@@ -434,7 +455,7 @@ class CheckGradesList extends Component {
         order: "desc",
       },
     ];
-
+    const direction = languageState === "ar" ? "rtl" : "ltr";
     const renderClassName = (rowId, dataField) => {
       const isUpdated = updatedCells.some(
         cell => cell.rowId === rowId && cell.dataField === dataField
@@ -447,7 +468,7 @@ class CheckGradesList extends Component {
         const columns = courseContentsEnteredGrades.map(column => ({
           key: column.orderContent,
           dataField: column.dataField,
-          text: column.textField,
+          text: languageState === "ar" ? column.textField : column.textFieldE,
           editable: ![
             "TraineeNum",
             "traineeName",
@@ -524,7 +545,7 @@ class CheckGradesList extends Component {
 
     return (
       <React.Fragment>
-        <div className="page-content">
+        <div dir={direction} className="page-content">
           <div className="container-fluid">
             <Breadcrumbs
               title={t("Grades")}
@@ -554,7 +575,7 @@ class CheckGradesList extends Component {
                                   id="prerequiseCourseId"
                                   list="CoursedatalistOptions"
                                   className="form-control"
-                                  placeholder="search.."
+                                  placeholder={t("Search")}
                                   defaultValue={
                                     (
                                       coursesOpt.find(

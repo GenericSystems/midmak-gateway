@@ -368,6 +368,7 @@
   "Period Time": "وقت الحصة",
   "Major": "اختصاص",
   "Section Number": "الرمز",
+  "Section Code": "رمز الشعبة",
   "Room": "القاعة",
   "Section Capacity": "السعة",
   "Lab Capacity": "السعة",
@@ -888,6 +889,9 @@
   "Note": "الفترات",
   "Exam Days": "أيام الامتحان",
   "Grant Date": "تاريخ المنح",
+  "Archived": "مؤرشف",
+  "Trainer Course Name(ar)": "اسم دورة المدرب (عربي)",
+  "Trainer Course Name(en)": "اسم دورة المدرب (إنكليزي)",
   "Exam Attendance (Trainees)": "تسجيل الحضور(للمتدربين)",
   "Exam Attendance (Observers)": "تسجيل الحضور(المراقبين)",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"

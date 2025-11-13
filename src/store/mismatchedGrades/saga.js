@@ -36,11 +36,17 @@ function* fetchMismatchedGrades() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_MismatchedGrades",
+    tablename: "_Common_CurriculalinesWithCheck",
   };
   try {
     const response = yield call(getMismatchedGrades, get_settings_req);
-    yield put(getMismatchedGradesSuccess(response));
+    const mismatched = response.filter(
+      row =>
+        row.totalGrade1 !== undefined &&
+        row.totalGrade2 !== undefined &&
+        row.totalGrade1 !== row.totalGrade2
+    );
+    yield put(getMismatchedGradesSuccess(mismatched));
   } catch (error) {
     yield put(getMismatchedGradesFail(error));
   }
