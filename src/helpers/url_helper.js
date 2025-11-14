@@ -1160,6 +1160,7 @@ export const UPDATE_MARK_OBJECTION = "/update/markObjection";
 export const DELETE_MARK_OBJECTION = "/deleted/markObjection";
 export const GET_REQUEST_STATUS = "/requestStatus";
 export const GET_REQUEST_TYPES = "/requestTypes";
+export const GET_FILTERED_COURSES_OBJECTION = "/coursesObjection";
 
 //TRAINEE_DESERVE_WARNING
 export const GET_TRAINEES_DESERVES_WARNINGS = "/traineesDeservesWarnings";

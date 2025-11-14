@@ -41,8 +41,8 @@ import {
   updateMarkObjection,
   deleteMarkObjection,
   getMarkObjectionDeletedValue,
+  getFilteredCoursesObjection,
 } from "store/marks-objections/actions";
-import { getFilteredCoursesPlans } from "store/trainee-decrees/actions";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
@@ -462,7 +462,7 @@ class MarksObjectionsList extends Component {
 
   // handleMarkObjectionClick = arg => {
   //   console.log("arg", arg);
-  //   const { traineesOpt, onGetFilteredCoursesPlan } = this.props;
+  //   const { traineesOpt, onGetFilteredCoursesObjection} = this.props;
   //   let markObjection = arg;
   //   // const trainee = traineesOpt.find(
   //   //   trainee => trainee.fullName === markObjection["traineeName"]
@@ -477,7 +477,7 @@ class MarksObjectionsList extends Component {
   //     trainee => trainee.value === markObjection["traineeName"]
   //   );
   //   console.log("111111111111111", traineesOpt);
-  //   onGetFilteredCoursesPlan(trainee);
+  //   onGetFilteredCoursesObjection(trainee);
   //   console.log("3333333333333333", markObjection);
 
   //   this.setState({
@@ -495,18 +495,15 @@ class MarksObjectionsList extends Component {
 
   handleMarkObjectionClick = arg => {
     console.log("arg", arg);
-    const { traineesOpt, onGetFilteredCoursesPlan } = this.props;
+    const { traineesOpt, onGetFilteredCoursesObjection } = this.props;
 
     const foundTrainee = traineesOpt.find(
       trainee => String(trainee.key) === String(arg.traineeId)
     );
 
-    const markObjection = {
-      ...arg,
-      traineeName: foundTrainee.value || "",
-    };
+    const markObjection = arg;
 
-    onGetFilteredCoursesPlan(foundTrainee);
+    onGetFilteredCoursesObjection(foundTrainee);
 
     this.setState({
       markObjection,
@@ -528,9 +525,11 @@ class MarksObjectionsList extends Component {
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
+    console.log("......................", selectedValue);
     if (fieldName == "courseId") {
       this.setState({
-        selectedCourseId: selectedValue,
+        selectedCourseId: selectedValue.value,
+        selectedCourseName: selectedValue.label,
         // markObjection: values,
       });
     }
@@ -555,8 +554,8 @@ class MarksObjectionsList extends Component {
       coursesOffering,
       traineesOpt,
       marksObjections,
-      onGetFilteredCoursesPlan,
-      filteredCourses,
+      onGetFilteredCoursesObjection,
+      coursesMarkObjection,
       t,
       deleted,
       requestTypes,
@@ -585,8 +584,8 @@ class MarksObjectionsList extends Component {
     } = this.state;
 
     const filteredCoursesModified =
-      filteredCourses &&
-      filteredCourses.map(item => ({
+      coursesMarkObjection &&
+      coursesMarkObjection.map(item => ({
         label: `${item.code} - ${item.CourseName}`,
         value: item.courseId,
       }));
@@ -1135,7 +1134,7 @@ class MarksObjectionsList extends Component {
                                                                   traineesOpt
                                                                 );
                                                                 if (plan) {
-                                                                  onGetFilteredCoursesPlan(
+                                                                  onGetFilteredCoursesObjection(
                                                                     plan
                                                                   );
                                                                 }
@@ -1186,7 +1185,7 @@ class MarksObjectionsList extends Component {
                                                               onChange={newValue => {
                                                                 this.handleSelect(
                                                                   "courseId",
-                                                                  newValue.value
+                                                                  newValue
                                                                 );
                                                               }}
                                                               value={filteredCoursesModified.find(
@@ -1519,14 +1518,20 @@ class MarksObjectionsList extends Component {
                                                           onChange={newValue => {
                                                             this.handleSelect(
                                                               "courseId",
-                                                              newValue.value
+                                                              newValue
                                                             );
                                                           }}
-                                                          value={filteredCoursesModified.find(
-                                                            opt =>
-                                                              opt.value ===
-                                                              markObjection?.courseId
-                                                          )}
+                                                          value={
+                                                            filteredCoursesModified.find(
+                                                              opt =>
+                                                                String(
+                                                                  opt.value
+                                                                ) ===
+                                                                String(
+                                                                  markObjection?.courseId
+                                                                )
+                                                            ) || null
+                                                          }
                                                           className={
                                                             "form-control" +
                                                             ((errors.courseId &&
@@ -2040,7 +2045,7 @@ const mapStateToProps = ({
   trainees,
   gradeTypes,
 }) => ({
-  filteredCourses: traineesDecrees.filteredCoursesPlans,
+  coursesMarkObjection: marksObjections.coursesObjection,
   traineesOpt: trainees.traineesOpt,
   requestStatus: marksObjections.requestStatus,
   requestTypes: marksObjections.requestTypes,
@@ -2060,8 +2065,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateMarkObjection(markObjection)),
   onDeleteMarkObjection: markObjection =>
     dispatch(deleteMarkObjection(markObjection)),
-  onGetFilteredCoursesPlan: trainee =>
-    dispatch(getFilteredCoursesPlans(trainee)),
+  onGetFilteredCoursesObjection: trainee =>
+    dispatch(getFilteredCoursesObjection(trainee)),
   onGetMarkObjectionDeletedValue: () =>
     dispatch(getMarkObjectionDeletedValue()),
 });

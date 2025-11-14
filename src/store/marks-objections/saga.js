@@ -7,6 +7,7 @@ import {
   ADD_NEW_MARK_OBJECTION,
   UPDATE_MARK_OBJECTION,
   DELETE_MARK_OBJECTION,
+  GET_FILTERED_COURSES_OBJECTION,
 } from "./actionTypes";
 
 import {
@@ -24,6 +25,8 @@ import {
   getRequestStatusFail,
   getRequestTypesSuccess,
   getRequestTypesFail,
+  getFilteredCoursesObjectionSuccess,
+  getFilteredCoursesObjectionFail,
 } from "./actions";
 
 import {
@@ -44,7 +47,9 @@ import {
   getRequestStatus,
   getRequestTypes,
   getGradeTypes,
+  getFilteredCoursesObjection,
 } from "../../helpers/fakebackend_helper";
+import { GET_FILTERED_COURSES } from "store/study-plans/actionTypes";
 
 function* fetchMarksObjections() {
   const get_MarksObjections_req = {
@@ -115,6 +120,27 @@ function* fetchMarksObjections() {
     yield put(getGradeTypesSuccess(response));
   } catch (error) {
     yield put(getGradeTypesFail(error));
+  }
+}
+
+function* fetchFilteredCoursesObjection(obj) {
+  console.log("333333333", obj);
+  const traineeId = obj.payload?.Id || obj.payload?.key;
+  const get_filteredCourses_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "_Current_Common_TrianeeCurriculalines",
+    filter: `traineeId = ${traineeId}`,
+  };
+  try {
+    const response = yield call(
+      getFilteredCoursesObjection,
+      get_filteredCourses_req
+    );
+    yield put(getFilteredCoursesObjectionSuccess(response));
+  } catch (error) {
+    yield put(getFilteredCoursesObjectionFail(error));
   }
 }
 
@@ -189,6 +215,10 @@ function* MarksObjectionsSaga() {
   yield takeEvery(
     GET_MARK_OBJECTION_DELETED_VALUE,
     onGetMarkObjectionDeletedValue
+  );
+  yield takeEvery(
+    GET_FILTERED_COURSES_OBJECTION,
+    fetchFilteredCoursesObjection
   );
   yield takeEvery(GET_MARK_OBJECTION_DELETED_VALUE, getMarkObjectionProfile);
   yield takeEvery(ADD_NEW_MARK_OBJECTION, onAddNewMarkObjection);

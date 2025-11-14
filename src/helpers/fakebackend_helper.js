@@ -2367,6 +2367,10 @@ export const deleteMarkObjection = data =>
 //request status
 export const getRequestStatus = data => post(url.GET_REQUEST_STATUS, data);
 
+//request status
+export const getFilteredCoursesObjection = data =>
+  post(url.GET_FILTERED_COURSES_OBJECTION, data);
+
 //request Types
 export const getRequestTypes = data => post(url.GET_REQUEST_TYPES, data);
 

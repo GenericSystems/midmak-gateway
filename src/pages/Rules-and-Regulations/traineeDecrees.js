@@ -543,7 +543,7 @@ class TraineesDecreesList extends Component {
       },
       {
         text: this.props.t("Decree Rule"),
-        dataField: "decisionRuleId",
+        dataField: "decreeName",
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -552,7 +552,7 @@ class TraineesDecreesList extends Component {
       },
       {
         text: this.props.t("Decree Rule Reason"),
-        dataField: "decisionRuleReasonId",
+        dataField: "decreeReasonName",
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -581,7 +581,7 @@ class TraineesDecreesList extends Component {
       },
       {
         text: this.props.t("Decree Status"),
-        dataField: "decreeStateId",
+        dataField: "decreeStateName",
         sort: true,
         filter: textFilter({
           placeholder: this.props.t("Search..."),
@@ -1518,7 +1518,8 @@ class TraineesDecreesList extends Component {
                                                           .toISOString()
                                                           .split("T")[0]
                                                       : "",
-                                                  note: traineesDecree.note,
+                                                  note:
+                                                    traineesDecree.note || "",
                                                   TraineesDecreesCourses:
                                                     stdCoursesArray,
                                                   decreeNum:
@@ -2218,16 +2219,7 @@ class TraineesDecreesList extends Component {
                                                           <Field
                                                             name="note"
                                                             as="textarea"
-                                                            className={`form-control ${
-                                                              window.confirmWindowOpen
-                                                                ? "is-invalid"
-                                                                : ""
-                                                            }`}
-                                                          />
-                                                          <ErrorMessage
-                                                            name="note"
-                                                            component="div"
-                                                            className="invalid-feedback"
+                                                            className={`form-control`}
                                                           />
                                                         </Col>
                                                       </Row>

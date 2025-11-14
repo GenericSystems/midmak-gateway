@@ -823,7 +823,7 @@ class CoursesPassPercentsList extends Component {
           <div className="container-fluid">
             <Breadcrumbs
               title={t("Courses Pass Percents")}
-              breadcrumbItem={t("Courses Pass Percents List")}
+              breadcrumbItem={t("Courses Pass Percents")}
             />
 
             <Card>

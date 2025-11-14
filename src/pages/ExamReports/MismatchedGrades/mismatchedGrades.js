@@ -221,6 +221,19 @@ class MismatchedGradesList extends Component {
       page: 1,
     };
     const direction = languageState === "ar" ? "rtl" : "ltr";
+
+    const highlightIfDifferent = cell => {
+      if (!cell) return "";
+
+      const parts = cell.split("|").map(p => parseFloat(p.trim()));
+
+      if (parts.length === 2 && parts[0] !== parts[1]) {
+        return "warning-cell";
+      }
+
+      return "";
+    };
+
     const columns = [
       { dataField: "Id", text: t("ID"), hidden: true },
       {
@@ -244,24 +257,33 @@ class MismatchedGradesList extends Component {
         sort: true,
       },
       {
-        dataField: "examName",
-        text: t("Exam Name"),
+        dataField: "courseName",
+        text: t("Course Name"),
         sort: true,
       },
       {
-        dataField: "enterGrade",
-        text: t("Enter Grade"),
+        dataField: "Ex1",
+        text: t("Test 1"),
         sort: true,
+        classes: cell => highlightIfDifferent(cell),
       },
       {
-        dataField: "auditGrade",
-        text: t("Audit Grade"),
+        dataField: "Ex2",
+        text: t("Test 2"),
         sort: true,
+        classes: cell => highlightIfDifferent(cell),
       },
       {
-        dataField: "marksDifference",
-        text: t("Marks Difference"),
+        dataField: "Ex3",
+        text: t("Final Exam"),
         sort: true,
+        classes: cell => highlightIfDifferent(cell),
+      },
+      {
+        dataField: "totalGrade",
+        text: t("Total Grade"),
+        sort: true,
+        classes: cell => highlightIfDifferent(cell),
       },
     ];
 

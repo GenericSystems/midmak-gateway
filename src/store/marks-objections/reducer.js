@@ -14,12 +14,15 @@ import {
   GET_REQUEST_STATUS_FAIL,
   GET_REQUEST_TYPES_SUCCESS,
   GET_REQUEST_TYPES_FAIL,
+  GET_FILTERED_COURSES_OBJECTION_SUCCESS,
+  GET_FILTERED_COURSES_OBJECTION_FAIL,
 } from "./actionTypes";
 
 const INIT_STATE = {
   marksObjections: [],
   requestStatus: [],
   requestTypes: [],
+  coursesObjection: [],
   deleted: {},
   error: {},
 };
@@ -116,6 +119,18 @@ const marksObjections = (state = INIT_STATE, action) => {
       };
 
     case GET_REQUEST_TYPES_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_FILTERED_COURSES_OBJECTION_SUCCESS:
+      return {
+        ...state,
+        coursesObjection: action.payload,
+      };
+
+    case GET_FILTERED_COURSES_OBJECTION_FAIL:
       return {
         ...state,
         error: action.payload,

@@ -21,6 +21,9 @@ import {
   GET_REQUEST_TYPES,
   GET_REQUEST_TYPES_FAIL,
   GET_REQUEST_TYPES_SUCCESS,
+  GET_FILTERED_COURSES_OBJECTION,
+  GET_FILTERED_COURSES_OBJECTION_FAIL,
+  GET_FILTERED_COURSES_OBJECTION_SUCCESS,
 } from "./actionTypes";
 import marksObjections from "./reducer";
 
@@ -124,5 +127,20 @@ export const getRequestTypesSuccess = marksObjection => ({
 
 export const getRequestTypesFail = error => ({
   type: GET_REQUEST_TYPES_FAIL,
+  payload: error,
+});
+
+export const getFilteredCoursesObjection = marksObjection => ({
+  type: GET_FILTERED_COURSES_OBJECTION,
+  payload: marksObjection,
+});
+
+export const getFilteredCoursesObjectionSuccess = marksObjection => ({
+  type: GET_FILTERED_COURSES_OBJECTION_SUCCESS,
+  payload: marksObjection,
+});
+
+export const getFilteredCoursesObjectionFail = error => ({
+  type: GET_FILTERED_COURSES_OBJECTION_FAIL,
   payload: error,
 });
