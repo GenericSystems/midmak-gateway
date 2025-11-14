@@ -657,6 +657,16 @@ class ArchiveGradesList extends Component {
     const selectedCourseColumns = generateColumns(updatedCells);
 
     const generateData = () => {
+      //clear cash
+      console.log("selectedCourseId", selectedCourseId);
+      if (
+        !selectedCourseId ||
+        !archived_grades ||
+        archived_grades.length === 0
+      ) {
+        return [];
+      }
+
       let mappedDataArray = [];
 
       if (archived_grades && archived_grades.length !== 0) {

@@ -488,6 +488,11 @@ class CheckGradesList extends Component {
     const selectedCourseColumns = generateColumns();
 
     const generateData = () => {
+      //clear cash
+      console.log("selectedCourseId", selectedCourseId);
+      if (!selectedCourseId || !checked_grades || checked_grades.length === 0) {
+        return [];
+      }
       let mappedDataArray = [];
 
       if (checked_grades && checked_grades.length !== 0) {

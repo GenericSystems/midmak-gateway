@@ -92,6 +92,7 @@ class DecisionsList extends Component {
       duplicateError: null,
       selectedRowId: null,
       isEdit: false,
+      loginUser: "",
     };
     this.toggle = this.toggle.bind(this);
     this.addToggle = this.addToggle.bind(this);
@@ -99,6 +100,21 @@ class DecisionsList extends Component {
     this.handleSelect = this.handleSelect.bind(this);
   }
   componentDidMount() {
+    const authUserStr = localStorage.getItem("authUser");
+    let loginUser = "";
+
+    if (authUserStr) {
+      try {
+        const parsed = JSON.parse(authUserStr);
+        if (parsed && parsed.length > 0) {
+          loginUser = parsed[0].userName;
+        }
+      } catch (e) {
+        console.error("authUser parsing failed", e);
+      }
+    }
+
+    this.setState({ loginUser });
     const {
       decisions,
       decisionsTypes,
@@ -1578,6 +1594,11 @@ class DecisionsList extends Component {
                                             decisionStatusId:
                                               decision &&
                                               decision.decisionStatusId,
+                                            turnUser: this.state.loginUser,
+                                            turnNotes:
+                                              (decision &&
+                                                decision.turnNotes) ||
+                                              "",
                                           }}
                                           validationSchema={Yup.object().shape({
                                             decisionNumber: Yup.number()
@@ -2385,6 +2406,58 @@ class DecisionsList extends Component {
                                                         </Row>
                                                       </div>
                                                     </Col>
+                                                    {selectedDecisionStatus ===
+                                                      2 && (
+                                                      <Row>
+                                                        <Col className="col-6">
+                                                          <div className="mb-3">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="turnUser">
+                                                                  {this.props.t(
+                                                                    "Turn User"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  type="text"
+                                                                  name="turnUser"
+                                                                  id="turnUser"
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                        </Col>
+                                                        <Col className="col-6">
+                                                          <div className="md-2">
+                                                            <Row>
+                                                              <Col className="col-4">
+                                                                <Label for="turnNotes">
+                                                                  {this.props.t(
+                                                                    "Turn Notes"
+                                                                  )}
+                                                                </Label>
+                                                              </Col>
+                                                              <Col className="col-8">
+                                                                <Field
+                                                                  type="textarea"
+                                                                  name="turnNotes"
+                                                                  as="textarea"
+                                                                  id="turnNotes"
+                                                                  className={
+                                                                    "form-control"
+                                                                  }
+                                                                />
+                                                              </Col>
+                                                            </Row>
+                                                          </div>
+                                                        </Col>
+                                                      </Row>
+                                                    )}
                                                   </CardBody>
                                                 </Card>
                                               </Row>

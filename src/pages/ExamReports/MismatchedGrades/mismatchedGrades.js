@@ -252,12 +252,12 @@ class MismatchedGradesList extends Component {
         sort: true,
       },
       {
-        dataField: "traineeName",
+        dataField: languageState === "ar" ? "traineeName" : "traineeNameE",
         text: t("Trainee Name"),
         sort: true,
       },
       {
-        dataField: "courseName",
+        dataField: languageState === "ar" ? "courseName" : "courseNameE",
         text: t("Course Name"),
         sort: true,
       },

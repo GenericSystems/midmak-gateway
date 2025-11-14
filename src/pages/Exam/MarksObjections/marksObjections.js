@@ -512,7 +512,7 @@ class MarksObjectionsList extends Component {
       selectedRequestType: markObjection.requestTypeId,
       selectedRequestStatus: markObjection.requestStatusId,
       selectedCourseId: markObjection.courseId,
-      selectedCourseName: markObjection.courseName,
+      // selectedCourseName: markObjection.courseName,
       isEdit: true,
     });
 
@@ -525,11 +525,9 @@ class MarksObjectionsList extends Component {
   };
 
   handleSelect = (fieldName, selectedValue, values) => {
-    console.log("......................", selectedValue);
     if (fieldName == "courseId") {
       this.setState({
-        selectedCourseId: selectedValue.value,
-        selectedCourseName: selectedValue.label,
+        selectedCourseId: selectedValue,
         // markObjection: values,
       });
     }
@@ -1185,7 +1183,7 @@ class MarksObjectionsList extends Component {
                                                               onChange={newValue => {
                                                                 this.handleSelect(
                                                                   "courseId",
-                                                                  newValue
+                                                                  newValue.value
                                                                 );
                                                               }}
                                                               value={filteredCoursesModified.find(

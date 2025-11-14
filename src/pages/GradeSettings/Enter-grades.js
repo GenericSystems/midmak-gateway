@@ -59,12 +59,11 @@ class EnterGradesList extends Component {
       selectedView: "",
       selectedSection: "",
       selectedCourse: "",
-      selectedCourseId: "",
+      selectedCourseId: null,
       selectedCourseCode: "",
       selectedCourseData: [],
       errorMessage: null,
       sidebarOpen: true,
-      selectedCourseId: null,
       languageState: "",
       showEditButton: false,
     };
@@ -181,6 +180,7 @@ class EnterGradesList extends Component {
       onGetCourseContentsGrades,
       courseContentsEnteredGrades,
     } = this.props;
+
     const courseobj = coursesOpt.find(
       courseOpt =>
         `${courseOpt.value} ${courseOpt.courseName}` === selectedValue
@@ -298,6 +298,7 @@ class EnterGradesList extends Component {
   handleErrorClose = () => {
     this.setState({ errorMessage: null });
   };
+
   handleDropdownToggle = flag => {
     const { selectedCourseId } = this.state;
     const { OnGetCourseStatistics } = this.props;
@@ -389,6 +390,11 @@ class EnterGradesList extends Component {
 
     const generateData = () => {
       let mappedDataArray = [];
+
+      //clear cash
+      if (!selectedCourseId || !enteredGrades || enteredGrades.length === 0) {
+        return [];
+      }
 
       if (enteredGrades && enteredGrades.length !== 0) {
         enteredGrades.forEach(grade => {
