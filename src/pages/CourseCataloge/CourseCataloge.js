@@ -663,7 +663,17 @@ class CourseCatalogeList extends Component {
   // };
 
   handleEditCourse = arg => {
-    const { trainingSectorOptions = [] } = this.props;
+    console.log("111111111111", arg);
+
+    const {
+      trainingSectorOptions = [],
+      preReqCourses,
+      onGetCourseCatalogePrerequisites,
+    } = this.props;
+
+    const filteredPreReqCourses = preReqCourses.filter(
+      course => course.key !== arg.Id
+    );
 
     const sectorsArray = Array.isArray(arg.courseSectors)
       ? arg.courseSectors.map(s => {
@@ -677,11 +687,16 @@ class CourseCatalogeList extends Component {
     this.setState({
       courseCataloge: arg,
       isEdit: true,
+      selectedCoursId: arg.Id,
       courseSectors: sectorsArray,
       courseSectorsNames: sectorsArray.map(s => s.label).join(" , "),
       sectorsCode: sectorsArray.map(s => s.value).join(","),
+      filtredPreReqCourses: filteredPreReqCourses,
+      selectedIsNeedLabs: arg.isNeedLab,
+      selectedIsNeedSection: arg.isNeedSection,
     });
 
+    onGetCourseCatalogePrerequisites(arg.Id);
     this.toggle();
   };
 

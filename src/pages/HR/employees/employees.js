@@ -145,7 +145,9 @@ class EmployeesList extends Component {
       values: "",
       languageState: "",
       showDecision: false,
+      showClassification: false,
       showEmployeeData: false,
+      nationalNoError: false,
     };
     this.toggle = this.toggle.bind(this);
     this.toggle2 = this.toggle2.bind(this);
@@ -319,12 +321,29 @@ class EmployeesList extends Component {
   handleEmployeeClick = arg => {
     console.log("arg", arg);
 
+    let ageFormatted = "";
+    if (arg.birthDate) {
+      const bd = new Date(arg.birthDate);
+      const today = new Date();
+
+      let years = today.getFullYear() - bd.getFullYear();
+      let months = today.getMonth() - bd.getMonth();
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      if (months === 0 && today.getDate() < bd.getDate()) {
+        months = 11;
+        years--;
+      }
+
+      ageFormatted = `${years} سنة و ${months} شهر`;
+    }
+
     this.setState({
       employee: arg,
-      // perosonalCardNum: arg.perosonalCardNum,
-      // perosonalCardGrantDate: arg.perosonalCardGrantDate,
-      // perosonalCardExpirationDate: arg.perosonalCardExpirationDate,
-      // amanaNum: arg.amanaNum,
       selectedGender: arg.genderId,
       selectedNationality: arg.nationalityId,
       selectedStateId: arg.stateId,
@@ -334,6 +353,7 @@ class EmployeesList extends Component {
       selectedCityId: arg.cityId,
       cityName: arg.cityName,
       isEdit: true,
+      age: ageFormatted,
     });
     this.toggle();
   };
@@ -407,6 +427,7 @@ class EmployeesList extends Component {
       values.motherName === "" ||
       values.birthLocation === "" ||
       values.birthdate === "" ||
+      values.nationalNo === "" ||
       (values.nationalityId === "" && selectedNationality === "")
     ) {
       this.setState({ firstNameError: true, saveError: true });
@@ -423,6 +444,8 @@ class EmployeesList extends Component {
 
       this.setState({ birthDateError: true, saveError: true });
 
+      this.setState({ nationalNo: true, saveError: true });
+
       this.setState({ nationalityError: true, saveError: true });
 
       const emptyError = this.props.t(
@@ -438,6 +461,7 @@ class EmployeesList extends Component {
       this.setState({ birthLocError: false, saveError: false });
       this.setState({ birthDateError: false, saveError: false });
       this.setState({ nationalityError: false, saveError: false });
+      this.setState({ nationalNo: false, saveError: false });
       this.setState({ grandFatherNameError: false, saveError: false });
 
       let employeeinfo = {};
@@ -491,6 +515,25 @@ class EmployeesList extends Component {
 
       if (selectedResidenceGrantedDate) {
         employeeinfo["residenceGrantedDate"] = selectedResidenceGrantedDate;
+      }
+
+      const isDuplicateNationalNo = tempTrainees.some(
+        trainee =>
+          trainee.nationalNo &&
+          trainee.nationalNo.trim() === values.nationalNo.trim()
+      );
+
+      if (isDuplicateNationalNo) {
+        const duplicateErrorMessage = this.props.t(
+          "New Trainee already exists"
+        );
+        this.setState({
+          errorMessage: duplicateErrorMessage,
+          nationalNoError: true,
+          saveError: true,
+        });
+        window.scrollTo(0, 0);
+        return;
       }
 
       if (isEdit) {
@@ -794,18 +837,12 @@ class EmployeesList extends Component {
     console.log("arg", arg);
     this.setState({
       employee: arg,
-      selectedCountryId: arg.countryId || null,
-      // diplomaTypeName: arg.diplomaTypeName || null,
-      // averageValue: arg.Average || null,
-      // selectedCountry: arg.DiplomaCountryId || null,
-      // facultyName: arg.facultyName || "",
-      // selectedFacultyId: arg.FacultyId || null,
-      // studyPlanName: arg.plan_study || "",
-      // selectedGovernorate: arg.DiplomaGovernorateId || null,
-      // selectedExaminationSession: arg.ExaminationSession || "",
-      // selectedRegistrationCertLevelId: arg.registrationCertLevelId || "",
-      // socialStatusName: arg.socialStatusName || null,
-      // selectedRegistrationDiplomaDate: arg.registrationDiplomaDate || "",
+      selectedStateId: arg.stateId,
+      stateName: arg.stateName,
+      selectedCountryId: arg.countryId,
+      countryName: arg.countryName,
+      selectedCityId: arg.cityId,
+      cityName: arg.cityName,
       isView: true,
     });
     this.toggle3();
@@ -815,6 +852,7 @@ class EmployeesList extends Component {
     this.setState({
       showDecision: true,
       showEmployeeData: false,
+      showClassification: false,
     });
   };
 
@@ -822,8 +860,20 @@ class EmployeesList extends Component {
     this.setState({
       showEmployeeData: true,
       showDecision: false,
+      showClassification: false,
     });
   };
+
+  handleClassification = () => {
+    this.setState({
+      showClassification: true,
+      showDecision: false,
+      showEmployeeData: false,
+    });
+  };
+
+  getLabelById = (arr, id) =>
+    arr.find(x => Number(x.value) === Number(id))?.label || "";
 
   render() {
     const employee = this.state.employee;
@@ -851,6 +901,7 @@ class EmployeesList extends Component {
     } = this.props;
     const {
       languageState,
+      nationalNoError,
       duplicateError,
       deleteModal,
       modal,
@@ -898,6 +949,7 @@ class EmployeesList extends Component {
       showEditButton,
       showSearchButton,
       showDecision,
+      showClassification,
       showEmployeeData,
     } = this.state;
     console.log("employeeeeeeeeeeeeeeeee", employees);
@@ -913,8 +965,26 @@ class EmployeesList extends Component {
         order: "desc",
       },
     ];
+
+    const pageOptions = {
+      sizePerPage: 10,
+      totalSize: employees.length,
+      custom: true,
+      page: 1,
+    };
+
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
+      {
+        dataField: "serial",
+        text: "#",
+        formatter: (cell, row, rowIndex, extraData) => {
+          const currentPage = extraData?.currentPage || 1;
+          const sizePerPage = extraData?.sizePerPage || pageOptions.sizePerPage;
+          return rowIndex + 1 + (currentPage - 1) * sizePerPage;
+        },
+        editable: false,
+      },
       {
         dataField: "fullName",
         text: this.props.t("Full Name"),
@@ -960,6 +1030,27 @@ class EmployeesList extends Component {
         filter: textFilter({
           placeholder: this.props.t("Search..."),
         }),
+        formatter: (cell, row) => {
+          if (!row.birthDate) return "";
+
+          const bd = new Date(row.birthDate);
+          const today = new Date();
+
+          let years = today.getFullYear() - bd.getFullYear();
+          let months = today.getMonth() - bd.getMonth();
+
+          if (months < 0) {
+            years--;
+            months += 12;
+          }
+
+          if (months === 0 && today.getDate() < bd.getDate()) {
+            months = 11;
+            years--;
+          }
+
+          return `${years} سنة و ${months} شهر`;
+        },
       },
       {
         dataField: "gender",
@@ -989,7 +1080,10 @@ class EmployeesList extends Component {
           <div className="d-flex gap-3">
             <Tooltip title={this.props.t("Add Contract")} placement="top">
               <IconButton onClick={() => this.handleOnClick(employee)}>
-                <i className="mdi mdi-plus-circle blue-noti-icon"></i>
+                <i
+                  className="mdi mdi-plus-circle blue-noti-icon"
+                  id="addcontracttooltip"
+                ></i>
               </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("Edit")} placement="top">
@@ -1005,23 +1099,76 @@ class EmployeesList extends Component {
                 ></i>
               </IconButton>
             </Tooltip>
-            <Tooltip title={this.props.t("Delete")} placement="top">
+            {/* <Tooltip title={this.props.t("Delete")} placement="top">
               <IconButton onClick={() => this.onClickDelete(employee)}>
                 <i
                   className="mdi mdi-delete font-size-18"
                   id="deletetooltip"
                 ></i>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
           </div>
         ),
       },
     ];
-    const pageOptions = {
-      sizePerPage: 10,
-      totalSize: employees.length,
-      custom: true,
-    };
+
+    const decisionColumns = [
+      {
+        dataField: "Id",
+        text: this.props.t("#"),
+        editable: false,
+        hidden: true,
+      },
+      {
+        dataField: "decisionNo",
+
+        text: this.props.t("Decision No"),
+        editable: false,
+      },
+      {
+        dataField: "decisionType",
+
+        text: this.props.t("Decision Type"),
+        editable: false,
+      },
+      {
+        dataField: "decisionStatus",
+
+        text: this.props.t("Decision Status"),
+        editable: false,
+      },
+      {
+        dataField: "decisionDate",
+
+        text: this.props.t("Decision Date"),
+        editable: false,
+      },
+      {
+        dataField: "applyingDate",
+
+        text: this.props.t("Applying Date"),
+        editable: false,
+      },
+      {
+        dataField: "academyCouncilNo",
+
+        text: this.props.t("Academy Council No"),
+        editable: false,
+      },
+      {
+        dataField: "academyCouncilDate",
+
+        text: this.props.t("Academy Council Date"),
+        editable: false,
+      },
+      {
+        dataField: "decisionNote",
+
+        text: this.props.t("Decision Note"),
+        editable: false,
+      },
+    ];
+
     return (
       <React.Fragment>
         <DeleteModal
@@ -1143,7 +1290,17 @@ class EmployeesList extends Component {
                                   {...toolkitprops.baseProps}
                                   {...paginationTableProps}
                                   data={employees}
-                                  columns={columns}
+                                  columns={columns.map(col => ({
+                                    ...col,
+                                    formatter:
+                                      col.dataField === "serial"
+                                        ? (cell, row, rowIndex) =>
+                                            rowIndex +
+                                            1 +
+                                            (paginationProps.page - 1) *
+                                              paginationProps.sizePerPage
+                                        : col.formatter,
+                                  }))}
                                   cellEdit={cellEditFactory({
                                     mode: "click",
                                     blurToSave: true,
@@ -1241,57 +1398,54 @@ class EmployeesList extends Component {
                                           (employee && employee.genderId) ||
                                           selectedGender,
                                         age: (employee && employee.age) || "",
-                                        idNumber:
-                                          (employee && employee.idNumber) || "",
-                                        perosonalCardNum:
-                                          (employee &&
-                                            employee.perosonalCardNum) ||
+                                        nationalNo:
+                                          (employee && employee.nationalNo) ||
                                           "",
-                                        perosonalCardGrantDate:
-                                          employee?.perosonalCardGrantDate
+                                        identityNo:
+                                          (employee && employee.identityNo) ||
+                                          "",
+                                        identityIssueDate:
+                                          employee?.identityIssueDate
                                             ? moment
-                                                .utc(
-                                                  employee.perosonalCardGrantDate
-                                                )
+                                                .utc(employee.identityIssueDate)
                                                 .local()
                                                 .format("YYYY-MM-DD")
                                             : "",
-                                        perosonalCardExpirationDate:
-                                          employee?.perosonalCardExpirationDate
-                                            ? moment
-                                                .utc(
-                                                  employee.perosonalCardExpirationDate
-                                                )
-                                                .local()
-                                                .format("YYYY-MM-DD")
-                                            : "",
+                                        // perosonalCardExpirationDate:
+                                        //   employee?.perosonalCardExpirationDate
+                                        //     ? moment
+                                        //         .utc(
+                                        //           employee.perosonalCardExpirationDate
+                                        //         )
+                                        //         .local()
+                                        //         .format("YYYY-MM-DD")
+                                        //     : "",
 
-                                        amanaNum:
-                                          (employee && employee.amanaNum) || "",
-                                        registrationPlace:
-                                          (employee &&
-                                            employee.registrationPlace) ||
+                                        civicZone:
+                                          (employee && employee.civicZone) ||
                                           "",
-                                        registrationNum:
-                                          (employee &&
-                                            employee.registrationNum) ||
+                                        registerZone:
+                                          (employee && employee.registerZone) ||
+                                          "",
+                                        registerNo:
+                                          (employee && employee.registerNo) ||
                                           "",
                                         passNumber:
                                           (employee && employee.passNumber) ||
                                           "",
-                                        passportGrantDate:
-                                          employee?.passportGrantDate
+                                        passportIssueDate:
+                                          employee?.passportIssueDate
                                             ? moment
-                                                .utc(employee.passportGrantDate)
+                                                .utc(employee.passportIssueDate)
                                                 .local()
                                                 .format("YYYY-MM-DD")
                                             : "",
 
-                                        passportExpirationDate:
-                                          employee?.passportExpirationDate
+                                        passportExpiryDate:
+                                          employee?.passportExpiryDate
                                             ? moment
                                                 .utc(
-                                                  employee.passportExpirationDate
+                                                  employee.passportExpiryDate
                                                 )
                                                 .local()
                                                 .format("YYYY-MM-DD")
@@ -1594,7 +1748,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="argrandFatherName">
                                                                       {this.props.t(
-                                                                        "Grandfather Name ar"
+                                                                        "Grandfather Name(ar)"
                                                                       )}
                                                                     </Label>
                                                                     <span className="text-danger">
@@ -1695,7 +1849,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="enfirstName">
                                                                       {this.props.t(
-                                                                        "First Name"
+                                                                        "First Name(En)"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
@@ -1716,7 +1870,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="enlastName">
                                                                       {this.props.t(
-                                                                        "Last Name"
+                                                                        "Last Name(En)"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
@@ -1737,7 +1891,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="enfatherName">
                                                                       {this.props.t(
-                                                                        "Father Name"
+                                                                        "Father Name(En)"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
@@ -1758,7 +1912,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="enGrandFatherName">
                                                                       {this.props.t(
-                                                                        "Grandfather Name"
+                                                                        "Grandfather Name(En)"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
@@ -1779,7 +1933,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="enMotherName">
                                                                       {this.props.t(
-                                                                        "Mother Name"
+                                                                        "Mother Name(En)"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
@@ -1874,7 +2028,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="arbirthLoc">
                                                                       {this.props.t(
-                                                                        "Birth Location(ar)"
+                                                                        "Birth Location"
                                                                       )}
                                                                     </Label>
                                                                     <span className="text-danger">
@@ -1943,9 +2097,50 @@ class EmployeesList extends Component {
                                                                               )[0]
                                                                           : ""
                                                                       }
-                                                                      onChange={
-                                                                        handleChange
-                                                                      }
+                                                                      onChange={e => {
+                                                                        handleChange(
+                                                                          e
+                                                                        );
+
+                                                                        const birthDate =
+                                                                          new Date(
+                                                                            e.target.value
+                                                                          );
+                                                                        const today =
+                                                                          new Date();
+
+                                                                        let years =
+                                                                          today.getFullYear() -
+                                                                          birthDate.getFullYear();
+                                                                        let months =
+                                                                          today.getMonth() -
+                                                                          birthDate.getMonth();
+
+                                                                        if (
+                                                                          months <
+                                                                          0
+                                                                        ) {
+                                                                          years--;
+                                                                          months += 12;
+                                                                        }
+
+                                                                        if (
+                                                                          months ===
+                                                                            0 &&
+                                                                          today.getDate() <
+                                                                            birthDate.getDate()
+                                                                        ) {
+                                                                          months = 11;
+                                                                          years--;
+                                                                        }
+
+                                                                        const ageFormatted = `${years} سنة و ${months} شهر`;
+
+                                                                        setFieldValue(
+                                                                          "age",
+                                                                          ageFormatted
+                                                                        );
+                                                                      }}
                                                                       onBlur={
                                                                         handleBlur
                                                                       }
@@ -1974,10 +2169,12 @@ class EmployeesList extends Component {
                                                                     <Field
                                                                       type="text"
                                                                       name="age"
-                                                                      id="age"
-                                                                      className={
-                                                                        "form-control"
+                                                                      value={
+                                                                        values.age
                                                                       }
+                                                                      id="age"
+                                                                      className="form-control"
+                                                                      disabled
                                                                     />
                                                                   </Col>
                                                                 </Row>
@@ -2116,7 +2313,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="idNum">
                                                                       {this.props.t(
-                                                                        "ID Number"
+                                                                        "National No"
                                                                       )}
                                                                     </Label>
                                                                     <span className="text-danger">
@@ -2126,11 +2323,28 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Field
                                                                       type="text"
-                                                                      name="idNumber"
+                                                                      name="nationalNo"
                                                                       id="idNum"
                                                                       className={
-                                                                        "form-control"
+                                                                        "form-control" +
+                                                                        ((errors.nationalNo &&
+                                                                          touched.nationalNo) ||
+                                                                        nationalNoError
+                                                                          ? " is-invalid"
+                                                                          : "")
                                                                       }
+                                                                    />
+                                                                    {nationalNoError && (
+                                                                      <div className="invalid-feedback">
+                                                                        {this.props.t(
+                                                                          "National Number is required"
+                                                                        )}
+                                                                      </div>
+                                                                    )}{" "}
+                                                                    <ErrorMessage
+                                                                      name="nationalNo"
+                                                                      component="div"
+                                                                      className="invalid-feedback"
                                                                     />
                                                                   </Col>
                                                                 </Row>
@@ -2140,14 +2354,14 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="cardNum">
                                                                       {this.props.t(
-                                                                        "Card Number"
+                                                                        "Identity No"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-6">
                                                                     <Field
                                                                       type="text"
-                                                                      name="perosonalCardNum"
+                                                                      name="identityNo"
                                                                       id="cardNum"
                                                                       className={
                                                                         "form-control"
@@ -2159,24 +2373,24 @@ class EmployeesList extends Component {
                                                               <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
-                                                                    <Label for="perosonalCardGrantDate">
+                                                                    <Label for="identityIssue-date">
                                                                       {this.props.t(
-                                                                        "Grant Date"
+                                                                        "Identity Issue Date"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-6">
                                                                     <Field
                                                                       type="date"
-                                                                      name="perosonalCardGrantDate"
-                                                                      id="perosonalCardGrantDate-date-input"
+                                                                      name="identityIssueDate"
+                                                                      id="identityIssue-date"
                                                                       className={
                                                                         "form-control"
                                                                       }
                                                                       value={
-                                                                        values.perosonalCardGrantDate
+                                                                        values.identityIssueDate
                                                                           ? new Date(
-                                                                              values.perosonalCardGrantDate
+                                                                              values.identityIssueDate
                                                                             )
                                                                               .toISOString()
                                                                               .split(
@@ -2194,7 +2408,7 @@ class EmployeesList extends Component {
                                                                   </Col>
                                                                 </Row>
                                                               </div>
-                                                              <div className="mb-2">
+                                                              {/* <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
                                                                     <Label for="perosonalCardExpirationDate">
@@ -2231,20 +2445,20 @@ class EmployeesList extends Component {
                                                                     />
                                                                   </Col>
                                                                 </Row>
-                                                              </div>
+                                                              </div> */}
                                                               <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
                                                                     <Label for="cardCaza">
                                                                       {this.props.t(
-                                                                        "amanaNum"
+                                                                        "Civic Zone"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-6">
                                                                     <Field
                                                                       type="text"
-                                                                      name="amanaNum"
+                                                                      name="civicZone"
                                                                       id="cardCaza"
                                                                       className={
                                                                         "form-control"
@@ -2258,14 +2472,14 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="cardCazaReg">
                                                                       {this.props.t(
-                                                                        "Place of Registration"
+                                                                        "Register Zone"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-6">
                                                                     <Field
                                                                       type="text"
-                                                                      name="registrationPlace"
+                                                                      name="registerZone"
                                                                       id="cardCazaReg"
                                                                       className={
                                                                         "form-control"
@@ -2279,7 +2493,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Label for="cardRegNum">
                                                                       {this.props.t(
-                                                                        "Number of Registration"
+                                                                        "Register No"
                                                                       )}
                                                                     </Label>
                                                                     <span className="text-danger">
@@ -2289,7 +2503,7 @@ class EmployeesList extends Component {
                                                                   <Col className="col-6">
                                                                     <Field
                                                                       type="text"
-                                                                      name="registrationNum"
+                                                                      name="registerNo"
                                                                       id="cardRegNum"
                                                                       className={
                                                                         "form-control"
@@ -2341,16 +2555,16 @@ class EmployeesList extends Component {
                                                               <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
-                                                                    <Label for="passGrantdate">
+                                                                    <Label for="passportGrantDate-date-input">
                                                                       {this.props.t(
-                                                                        "Grant Date"
+                                                                        "Passport Issue Date"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-6">
                                                                     <Field
                                                                       type="date"
-                                                                      name="passportGrantDate"
+                                                                      name="passportIssueDate"
                                                                       className={`form-control`}
                                                                       value={
                                                                         values.passportGrantDate
@@ -2377,21 +2591,21 @@ class EmployeesList extends Component {
                                                               <div className="mb-2">
                                                                 <Row>
                                                                   <Col className="col-6">
-                                                                    <Label for="passExpDate">
+                                                                    <Label for="passportExpirationDate-date-input">
                                                                       {this.props.t(
-                                                                        "Expiration Date"
+                                                                        "Passport Expiry Date"
                                                                       )}
                                                                     </Label>
                                                                   </Col>
                                                                   <Col className="col-6">
                                                                     <Field
                                                                       type="date"
-                                                                      name="passportExpirationDate"
+                                                                      name="passportExpiryDate"
                                                                       className={`form-control`}
                                                                       value={
-                                                                        values.passportExpirationDate
+                                                                        values.passportExpiryDate
                                                                           ? new Date(
-                                                                              values.passportExpirationDate
+                                                                              values.passportExpiryDate
                                                                             )
                                                                               .toISOString()
                                                                               .split(
@@ -4247,6 +4461,23 @@ class EmployeesList extends Component {
                                                   )}
                                                 </a>
                                               </li>
+                                              <li>
+                                                <a
+                                                  href="#"
+                                                  onClick={
+                                                    this.handleClassification
+                                                  }
+                                                  style={{
+                                                    color: showClassification
+                                                      ? "orange"
+                                                      : "black",
+                                                  }}
+                                                >
+                                                  {this.props.t(
+                                                    "Classification"
+                                                  )}
+                                                </a>
+                                              </li>
                                             </ul>
                                           </div>
 
@@ -4346,7 +4577,7 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Label for="argrandFatherName">
                                                                         {this.props.t(
-                                                                          "Grandfather Name ar"
+                                                                          "Grandfather Name(ar)"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
@@ -4391,7 +4622,7 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Label for="enfirstName">
                                                                         {this.props.t(
-                                                                          "First Name"
+                                                                          "First Name(En)"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
@@ -4404,7 +4635,7 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Label for="enlastName">
                                                                         {this.props.t(
-                                                                          "Last Name"
+                                                                          "Last Name(En)"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
@@ -4417,7 +4648,7 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Label for="enfatherName">
                                                                         {this.props.t(
-                                                                          "Father Name"
+                                                                          "Father Name(En)"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
@@ -4430,7 +4661,7 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Label for="enGrandFatherName">
                                                                         {this.props.t(
-                                                                          "Grandfather Name"
+                                                                          "Grandfather Name(En)"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
@@ -4443,7 +4674,7 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Label for="enMotherName">
                                                                         {this.props.t(
-                                                                          "Mother Name"
+                                                                          "Mother Name(En)"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
@@ -4506,7 +4737,7 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Label for="arbirthLoc">
                                                                         {this.props.t(
-                                                                          "Birth Location(ar)"
+                                                                          "Birth Location"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
@@ -4535,12 +4766,48 @@ class EmployeesList extends Component {
                                                                         {this.props.t(
                                                                           "Age"
                                                                         )}
-                                                                        {""}:
+                                                                        :{" "}
                                                                       </Label>
                                                                       <Label className="left-label">
-                                                                        {
-                                                                          employee.age
-                                                                        }
+                                                                        {employee.age
+                                                                          ? employee.age
+                                                                          : employee.birthDate
+                                                                          ? (() => {
+                                                                              const bd =
+                                                                                new Date(
+                                                                                  employee.birthDate
+                                                                                );
+                                                                              const today =
+                                                                                new Date();
+
+                                                                              let years =
+                                                                                today.getFullYear() -
+                                                                                bd.getFullYear();
+                                                                              let months =
+                                                                                today.getMonth() -
+                                                                                bd.getMonth();
+
+                                                                              if (
+                                                                                months <
+                                                                                0
+                                                                              ) {
+                                                                                years--;
+                                                                                months += 12;
+                                                                              }
+
+                                                                              if (
+                                                                                months ===
+                                                                                  0 &&
+                                                                                today.getDate() <
+                                                                                  bd.getDate()
+                                                                              ) {
+                                                                                months = 11;
+                                                                                years--;
+                                                                              }
+
+                                                                              return `${years} سنة و ${months} شهر`;
+                                                                            })()
+                                                                          : ""}
                                                                       </Label>
                                                                     </div>
                                                                     <div className="mb-2">
@@ -4607,93 +4874,80 @@ class EmployeesList extends Component {
                                                                     <div className="mb-2">
                                                                       <Label for="idNum">
                                                                         {this.props.t(
-                                                                          "ID Number"
+                                                                          "National No"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
+
                                                                       <Label className="left-label">
                                                                         {
-                                                                          employee.idNumber
+                                                                          employee.nationalNo
                                                                         }
                                                                       </Label>
                                                                     </div>
                                                                     <div className="mb-2">
                                                                       <Label for="cardNum">
                                                                         {this.props.t(
-                                                                          "Card Number"
+                                                                          "Identity No"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
                                                                       <Label className="left-label">
                                                                         {
-                                                                          employee.perosonalCardNum
+                                                                          employee.identityNo
                                                                         }
                                                                       </Label>
                                                                     </div>
                                                                     <div className="mb-2">
                                                                       <Label for="perosonalCardGrantDate">
                                                                         {this.props.t(
-                                                                          "Grant Date"
+                                                                          "Identity Issue Date"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
                                                                       <Label className="left-label">
-                                                                        {employee?.perosonalCardGrantDate &&
+                                                                        {employee?.identityIssueDate &&
                                                                           new Date(
-                                                                            employee.perosonalCardGrantDate
-                                                                          ).toLocaleDateString()}
-                                                                      </Label>
-                                                                    </div>
-                                                                    <div className="mb-2">
-                                                                      <Label for="perosonalCardExpirationDate">
-                                                                        {this.props.t(
-                                                                          "End Date"
-                                                                        )}
-                                                                        {""}:
-                                                                      </Label>
-                                                                      <Label className="left-label">
-                                                                        {employee?.perosonalCardExpirationDate &&
-                                                                          new Date(
-                                                                            employee.perosonalCardExpirationDate
+                                                                            employee.identityIssueDate
                                                                           ).toLocaleDateString()}
                                                                       </Label>
                                                                     </div>
                                                                     <div className="mb-2">
                                                                       <Label for="cardCaza">
                                                                         {this.props.t(
-                                                                          "Amana Num"
+                                                                          "Civic Zone"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
                                                                       <Label className="left-label">
                                                                         {
-                                                                          employee.amanaNum
+                                                                          employee.civicZone
                                                                         }
                                                                       </Label>
                                                                     </div>
                                                                     <div className="mb-2">
                                                                       <Label for="cardCazaReg">
                                                                         {this.props.t(
-                                                                          "Place of Registration"
+                                                                          "Register Zone"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
                                                                       <Label className="left-label">
                                                                         {
-                                                                          employee.registrationPlace
+                                                                          employee.registerZone
                                                                         }
                                                                       </Label>
                                                                     </div>
                                                                     <div className="mb-2">
                                                                       <Label for="cardRegNum">
                                                                         {this.props.t(
-                                                                          "Number of Registration"
+                                                                          "Register No"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
                                                                       <Label className="left-label">
                                                                         {
-                                                                          employee.registrationNum
+                                                                          employee.registerNo
                                                                         }
                                                                       </Label>
                                                                     </div>
@@ -4737,23 +4991,23 @@ class EmployeesList extends Component {
                                                                         {""}:
                                                                       </Label>
                                                                       <Label className="left-label">
-                                                                        {employee?.passportGrantDate &&
+                                                                        {employee?.passportIssueDate &&
                                                                           new Date(
-                                                                            employee.passportGrantDate
+                                                                            employee.passportIssueDate
                                                                           ).toLocaleDateString()}
                                                                       </Label>
                                                                     </div>
                                                                     <div className="mb-2">
                                                                       <Label for="passExpDate">
                                                                         {this.props.t(
-                                                                          "Expiration Date"
+                                                                          "Passport Expiry Date"
                                                                         )}
                                                                         {""}:
                                                                       </Label>
                                                                       <Label className="left-label">
-                                                                        {employee?.passportExpirationDate &&
+                                                                        {employee?.passportExpiryDate &&
                                                                           new Date(
-                                                                            employee.passportExpirationDate
+                                                                            employee.passportExpiryDate
                                                                           ).toLocaleDateString()}
                                                                       </Label>
                                                                     </div>
@@ -4822,19 +5076,19 @@ class EmployeesList extends Component {
                                                                     {this.props.t(
                                                                       "Country"
                                                                     )}
-                                                                    {""}:
+                                                                    :{" "}
                                                                   </Label>
-
                                                                   <Label className="left-label">
-                                                                    {
-                                                                      (
-                                                                        countries.find(
-                                                                          countryOpt =>
-                                                                            countryOpt.value ===
-                                                                            employee?.countryId
-                                                                        ) || {}
-                                                                      ).label
-                                                                    }
+                                                                    {countries.find(
+                                                                      c =>
+                                                                        Number(
+                                                                          c.key
+                                                                        ) ===
+                                                                        Number(
+                                                                          employee?.countryId
+                                                                        )
+                                                                    )?.value ||
+                                                                      ""}
                                                                   </Label>
                                                                 </div>
                                                                 <div className="mb-3">
@@ -4845,15 +5099,16 @@ class EmployeesList extends Component {
                                                                     {""}:
                                                                   </Label>
                                                                   <Label className="left-label">
-                                                                    {
-                                                                      (
-                                                                        governorates.find(
-                                                                          state =>
-                                                                            state.value ===
-                                                                            employee.stateId
-                                                                        ) || {}
-                                                                      ).value
-                                                                    }
+                                                                    {governorates.find(
+                                                                      state =>
+                                                                        Number(
+                                                                          state.key
+                                                                        ) ===
+                                                                        Number(
+                                                                          employee?.stateId
+                                                                        )
+                                                                    )?.value ||
+                                                                      ""}
                                                                   </Label>
                                                                 </div>
                                                                 <div className="mb-3">
@@ -4864,15 +5119,16 @@ class EmployeesList extends Component {
                                                                     {""}:
                                                                   </Label>
                                                                   <Label className="left-label">
-                                                                    {
-                                                                      (
-                                                                        cities.find(
-                                                                          city =>
-                                                                            city.value ===
-                                                                            employee.cityId
-                                                                        ) || {}
-                                                                      ).value
-                                                                    }
+                                                                    {cities.find(
+                                                                      city =>
+                                                                        Number(
+                                                                          city.key
+                                                                        ) ===
+                                                                        Number(
+                                                                          employee?.cityId
+                                                                        )
+                                                                    )?.value ||
+                                                                      ""}
                                                                   </Label>
                                                                 </div>
                                                                 <Row>
@@ -4980,6 +5236,322 @@ class EmployeesList extends Component {
                                                         </div>
                                                       </Col>
                                                     </Row>
+                                                  </CardBody>
+                                                </Card>
+                                              </div>
+                                            )}
+                                            {showDecision && (
+                                              <div>
+                                                <Card className="bordered">
+                                                  <CardBody>
+                                                    <BootstrapTable
+                                                      keyField="Id"
+                                                      {...toolkitprops.baseProps}
+                                                      {...paginationTableProps}
+                                                      data={employees}
+                                                      columns={decisionColumns.map(
+                                                        col => ({
+                                                          ...col,
+                                                          formatter:
+                                                            col.dataField ===
+                                                            "serial"
+                                                              ? (
+                                                                  cell,
+                                                                  row,
+                                                                  rowIndex
+                                                                ) =>
+                                                                  rowIndex +
+                                                                  1 +
+                                                                  (paginationProps.page -
+                                                                    1) *
+                                                                    paginationProps.sizePerPage
+                                                              : col.formatter,
+                                                        })
+                                                      )}
+                                                      cellEdit={cellEditFactory(
+                                                        {
+                                                          mode: "click",
+                                                          blurToSave: true,
+                                                          afterSaveCell: (
+                                                            oldValue,
+                                                            newValue,
+                                                            row,
+                                                            column
+                                                          ) => {
+                                                            this.handleEmployeeDataChange(
+                                                              row.Id,
+                                                              column.dataField,
+                                                              newValue
+                                                            );
+                                                          },
+                                                        }
+                                                      )}
+                                                      noDataIndication={this.props.t(
+                                                        "No Employees found"
+                                                      )}
+                                                      defaultSorted={
+                                                        defaultSorting
+                                                      }
+                                                      bordered={true}
+                                                      striped={false}
+                                                      responsive
+                                                      filter={filterFactory()}
+                                                    />
+                                                  </CardBody>
+                                                </Card>
+                                              </div>
+                                            )}
+                                            {showClassification && (
+                                              <div>
+                                                <Card className="bordered">
+                                                  <CardBody>
+                                                    <Card className="bordered">
+                                                      <CardHeader className="card-header">
+                                                        {" "}
+                                                        {this.props.t(
+                                                          "Employee Status"
+                                                        )}
+                                                      </CardHeader>
+                                                      <CardBody>
+                                                        <Row>
+                                                          <Col lg="3">
+                                                            <Label for="currentStatus">
+                                                              {this.props.t(
+                                                                "Current Status"
+                                                              )}
+                                                              {""}:
+                                                            </Label>
+                                                            <Label className="left-label">
+                                                              {
+                                                                employee.currentStatus
+                                                              }
+                                                            </Label>
+                                                          </Col>
+                                                          <Col lg="3">
+                                                            <Label for="changeCurrentStatusDate">
+                                                              {this.props.t(
+                                                                "Change Current Status Date"
+                                                              )}
+                                                              {""}:
+                                                            </Label>
+                                                            <Label className="left-label">
+                                                              {
+                                                                employee.changeCurrentStatusDate
+                                                              }
+                                                            </Label>
+                                                          </Col>
+                                                        </Row>
+                                                        <Row>
+                                                          <Col lg="3">
+                                                            <Label for="currentClassification">
+                                                              {this.props.t(
+                                                                "Current Classification"
+                                                              )}
+                                                              {""}:
+                                                            </Label>
+                                                            <Label className="left-label">
+                                                              {
+                                                                employee.currentClassification
+                                                              }
+                                                            </Label>
+                                                          </Col>
+                                                          <Col lg="3">
+                                                            <Label for="changeCurrentClassificationDate">
+                                                              {this.props.t(
+                                                                "Change Current Classification Date"
+                                                              )}
+                                                              {""}:
+                                                            </Label>
+                                                            <Label className="left-label">
+                                                              {
+                                                                employee.changeCurrentClassificationDate
+                                                              }
+                                                            </Label>
+                                                          </Col>
+                                                        </Row>
+                                                      </CardBody>
+                                                    </Card>
+                                                    <Card className="bordered">
+                                                      <CardHeader className="card-header">
+                                                        {" "}
+                                                        {this.props.t(
+                                                          "New Status"
+                                                        )}
+                                                      </CardHeader>
+                                                      <CardBody>
+                                                        <div className="mb-2">
+                                                          <Row>
+                                                            <Col className="col-3">
+                                                              <Label for="newEmployeeStatusId">
+                                                                {this.props.t(
+                                                                  "Employee Status"
+                                                                )}
+                                                              </Label>
+                                                              <span className="text-danger">
+                                                                *
+                                                              </span>
+                                                            </Col>
+                                                            <Col className="col-4">
+                                                              <Select
+                                                                // className={`form-control ${
+                                                                //   nationalityError
+                                                                //     ? "is-invalid"
+                                                                //     : ""
+                                                                // }`}
+                                                                name="newEmployeeStatusId"
+                                                                id="newEmployeeStatusId"
+                                                                key="nationality_select"
+                                                                options={
+                                                                  nationalitiesOpt
+                                                                }
+                                                                onChange={newValue =>
+                                                                  this.handleSelectChange(
+                                                                    "newEmployeeStatusId",
+                                                                    newValue.value,
+                                                                    values
+                                                                  )
+                                                                }
+                                                                defaultValue={nationalitiesOpt.find(
+                                                                  opt =>
+                                                                    opt.value ===
+                                                                    employee?.newEmployeeStatusId
+                                                                )}
+                                                              />
+                                                            </Col>
+                                                            {/* {nationalityError && (
+                                                          <div className="invalid-feedback">
+                                                            {this.props.t(
+                                                              "Nationality is required"
+                                                            )}
+                                                          </div>
+                                                        )}
+                                                        <ErrorMessage
+                                                          name="nationalityId"
+                                                          component="div"
+                                                          className="invalid-feedback"
+                                                        /> */}
+                                                          </Row>
+                                                        </div>
+                                                        <div className="mb-2">
+                                                          <Row>
+                                                            <Col className="col-3">
+                                                              <Label for="classificationId">
+                                                                {this.props.t(
+                                                                  "Classification"
+                                                                )}
+                                                              </Label>
+                                                              <span className="text-danger">
+                                                                *
+                                                              </span>
+                                                            </Col>
+                                                            <Col className="col-4">
+                                                              <Select
+                                                                // className={`form-control ${
+                                                                //   nationalityError
+                                                                //     ? "is-invalid"
+                                                                //     : ""
+                                                                // }`}
+                                                                name="classificationId"
+                                                                id="classificationId"
+                                                                key="classification_select"
+                                                                options={
+                                                                  nationalitiesOpt
+                                                                }
+                                                                onChange={newValue =>
+                                                                  this.handleSelectChange(
+                                                                    "classificationId",
+                                                                    newValue.value,
+                                                                    values
+                                                                  )
+                                                                }
+                                                                defaultValue={nationalitiesOpt.find(
+                                                                  opt =>
+                                                                    opt.value ===
+                                                                    employee?.classificationId
+                                                                )}
+                                                              />
+                                                            </Col>
+                                                            {/* {nationalityError && (
+                                                          <div className="invalid-feedback">
+                                                            {this.props.t(
+                                                              "Nationality is required"
+                                                            )}
+                                                          </div>
+                                                        )}
+                                                        <ErrorMessage
+                                                          name="nationalityId"
+                                                          component="div"
+                                                          className="invalid-feedback"
+                                                        /> */}
+                                                          </Row>
+                                                        </div>
+                                                      </CardBody>
+                                                    </Card>
+                                                    <Card className="bordered">
+                                                      <CardHeader className="card-header">
+                                                        {this.props.t(
+                                                          "Previous Classification"
+                                                        )}
+                                                      </CardHeader>
+                                                      <CardBody>
+                                                        <Row>
+                                                          <Col lg="3">
+                                                            <Label for="previousStatus">
+                                                              {this.props.t(
+                                                                "Previous Status"
+                                                              )}
+                                                              {""}:
+                                                            </Label>
+                                                            <Label className="left-label">
+                                                              {
+                                                                employee.previousStatus
+                                                              }
+                                                            </Label>
+                                                          </Col>
+                                                          <Col lg="3">
+                                                            <Label for="changePreviousStatusDate">
+                                                              {this.props.t(
+                                                                "Change Previous Status Date"
+                                                              )}
+                                                              {""}:
+                                                            </Label>
+                                                            <Label className="left-label">
+                                                              {
+                                                                employee.changePreviousStatusDate
+                                                              }
+                                                            </Label>
+                                                          </Col>
+                                                        </Row>
+                                                        <Row>
+                                                          <Col lg="3">
+                                                            <Label for="previousClassification">
+                                                              {this.props.t(
+                                                                "Previous Classification"
+                                                              )}
+                                                              {""}:
+                                                            </Label>
+                                                            <Label className="left-label">
+                                                              {
+                                                                employee.previousClassification
+                                                              }
+                                                            </Label>
+                                                          </Col>
+                                                          <Col lg="3">
+                                                            <Label for="changePreviousClassificationDate">
+                                                              {this.props.t(
+                                                                "Change Previous Classification Date"
+                                                              )}
+                                                              {""}:
+                                                            </Label>
+                                                            <Label className="left-label">
+                                                              {
+                                                                employee.changePreviousClassificationDate
+                                                              }
+                                                            </Label>
+                                                          </Col>
+                                                        </Row>
+                                                      </CardBody>
+                                                    </Card>
                                                   </CardBody>
                                                 </Card>
                                               </div>

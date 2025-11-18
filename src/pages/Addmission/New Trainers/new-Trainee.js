@@ -2844,7 +2844,7 @@ class NewTrainee extends Component {
                                                                     onBlur={
                                                                       handleBlur
                                                                     }
-                                                                    id="passportIssueDate-date-input"
+                                                                    id="passGrantdate"
                                                                   />
                                                                 </Col>
                                                               </Row>

@@ -132,7 +132,7 @@
   "Grandfather Name(En)": "اسم الجد(إنكليزي)",
   "Personal Photo": "الصورة الشخصية",
   "Add your photo": "أضف صورتك",
-  "Birth Location(ar)": "(عربي) مكان الولادة",
+  "Birth Location(ar)": "مكان الولادة(عربي)",
   "Birth Location": "مكان الولادة",
   "Birth Location(En)": "مكان الولادة (إنكليزي)",
   "Date of Birth": "تاريخ الولادة",
@@ -302,7 +302,7 @@
   "Create Distributing Method": "اضافة طريقة التوزيع",
   "Distribution type": "طريقة التوزيع",
   "Yes, copy it!": "نعم قم بالنسخ",
-  "Human Resources": "الموارد بشرية",
+  "Human Resources": "الموارد البشرية",
   "Admission": "القبول والتسجيل",
   "Exams": "الامتحانات",
   "Courses Registration": "تسجيل الدورات",
@@ -910,5 +910,7 @@
   "Test 2": "الاختبار 2",
   "Final Exam": "الامتحان النهائي",
   "Total Grade": "الكلي",
+  "Certificates Types": "أنواع الشهادات",
+  "Rules and Regulations": "القوانين والانظمة",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

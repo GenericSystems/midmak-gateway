@@ -78,6 +78,7 @@ class Certificates extends Component {
       academicCodeError: false,
       isEdit: false,
       QRModal: false,
+      BarModal: false,
       qr: "",
       sidebarOpen: true,
       selectedUserType: "",
@@ -429,30 +430,31 @@ class Certificates extends Component {
     this.toggle();
   };
 
-  // handleGenerateQR = certificate => {
-  //   console.log("certificate in QR", certificate);
-  //   this.setState({ QRModal: true, certificate });
-  //   QRCode.toDataURL(
-  //     certificate.certificateNum,
-  //     {
-  //       width: 200,
-  //       margin: 2,
-  //       color: {
-  //         dark: "#000",
-  //         light: "#EEEEEEFF",
-  //       },
-  //     },
-  //     (err, url) => {
-  //       if (err) return console.error(err);
-  //       console.log(url);
-  //       this.setState({ qr: url, QRModal: true });
-  //     }
-  //   );
-  // };
+  handleGenerateQR = certificate => {
+    console.log("certificate in QR", certificate);
+    this.setState({ QRModal: true, certificate });
+
+    QRCode.toDataURL(
+      certificate.certificateLink,
+      {
+        width: 200,
+        margin: 2,
+        color: {
+          dark: "#000",
+          light: "#EEEEEEFF",
+        },
+      },
+      (err, url) => {
+        if (err) return console.error(err);
+        console.log(url);
+        this.setState({ qr: url, QRModal: true });
+      }
+    );
+  };
 
   handleGenerateBarcode = certificate => {
     const canvas = document.createElement("canvas");
-    this.setState({ QRModal: true, certificate });
+    this.setState({ BarModal: true, certificate });
     JsBarcode(canvas, certificate.certificateNum, {
       format: "CODE128",
       displayValue: true,
@@ -462,11 +464,15 @@ class Certificates extends Component {
     });
 
     const barcodeURL = canvas.toDataURL("image/png");
-    this.setState({ qr: barcodeURL, QRModal: true });
+    this.setState({ qr: barcodeURL, BarModal: true });
   };
 
   onCloseQRModal = () => {
     this.setState({ QRModal: false });
+  };
+
+  onCloseBarModal = () => {
+    this.setState({ BarModal: false });
   };
 
   toggleSidebar = () => {
@@ -512,6 +518,7 @@ class Certificates extends Component {
       academicCodeError,
       sectorsArray,
       QRModal,
+      BarModal,
       qr,
       sidebarOpen,
       selectedUserType,
@@ -665,8 +672,17 @@ class Certificates extends Component {
               <Link className="text-primary" to="#">
                 <i
                   className="mdi mdi-barcode-scan font-size-18"
-                  id="qrcodetooltip"
+                  id="barcodetooltip"
                   onClick={() => this.handleGenerateBarcode(certificate)}
+                ></i>
+              </Link>
+            </Tooltip>
+            <Tooltip title={this.props.t("QR")} placement="top">
+              <Link className="text-primary" to="#">
+                <i
+                  className="mdi mdi-qrcode font-size-18"
+                  id="qrcodetooltip"
+                  onClick={() => this.handleGenerateQR(certificate)}
                 ></i>
               </Link>
             </Tooltip>
@@ -1428,7 +1444,7 @@ class Certificates extends Component {
                                           </Formik>
                                         </ModalBody>
                                       </Modal>
-                                      {/* <Modal isOpen={QRModal} centered={true}>
+                                      <Modal isOpen={QRModal} centered={true}>
                                         <ModalHeader
                                           toggle={this.onCloseQRModal}
                                           tag="h4"
@@ -1482,10 +1498,10 @@ class Certificates extends Component {
                                             </Col>
                                           </Row>
                                         </ModalBody>
-                                      </Modal> */}
-                                      <Modal isOpen={QRModal} centered={true}>
+                                      </Modal>
+                                      <Modal isOpen={BarModal} centered={true}>
                                         <ModalHeader
-                                          toggle={this.onCloseQRModal}
+                                          toggle={this.onCloseBarModal}
                                           tag="h4"
                                         >
                                           <div className="text-center">
