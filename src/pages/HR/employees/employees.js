@@ -762,6 +762,17 @@ class EmployeesList extends Component {
         contract: values,
       });
     }
+    if (fieldName == "classificationId") {
+      this.setState({
+        selectedClassification: selectedValue,
+      });
+    }
+    if (fieldName == "newEmployeeStatusId") {
+      this.setState({
+        selectedWorkClassification: selectedValue,
+        contract: values,
+      });
+    }
     if (fieldName === "jobTitleId") {
       const selected = jobTitlesOpt.find(job => job.arTitle === selectedValue);
 
@@ -5402,7 +5413,7 @@ class EmployeesList extends Component {
                                                                 id="newEmployeeStatusId"
                                                                 key="nationality_select"
                                                                 options={
-                                                                  nationalitiesOpt
+                                                                  employmentCases
                                                                 }
                                                                 onChange={newValue =>
                                                                   this.handleSelectChange(
@@ -5411,7 +5422,7 @@ class EmployeesList extends Component {
                                                                     values
                                                                   )
                                                                 }
-                                                                defaultValue={nationalitiesOpt.find(
+                                                                defaultValue={employmentCases.find(
                                                                   opt =>
                                                                     opt.value ===
                                                                     employee?.newEmployeeStatusId
@@ -5455,7 +5466,7 @@ class EmployeesList extends Component {
                                                                 id="classificationId"
                                                                 key="classification_select"
                                                                 options={
-                                                                  nationalitiesOpt
+                                                                  workClassifications
                                                                 }
                                                                 onChange={newValue =>
                                                                   this.handleSelectChange(
@@ -5464,7 +5475,7 @@ class EmployeesList extends Component {
                                                                     values
                                                                   )
                                                                 }
-                                                                defaultValue={nationalitiesOpt.find(
+                                                                defaultValue={workClassifications.find(
                                                                   opt =>
                                                                     opt.value ===
                                                                     employee?.classificationId

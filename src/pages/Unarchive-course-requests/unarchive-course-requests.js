@@ -395,14 +395,14 @@ class UnarchiveCourseReq extends Component {
     onGetUnarchiveCourseRequestDeletedValue();
   };
 
-  handleEditArchivedCourse = arg => {
-    this.setState({
-      unarchiveCourseRequest: arg,
-      isEdit: true,
-    });
+  // handleEditArchivedCourse = arg => {
+  //   this.setState({
+  //     unarchiveCourseRequest: arg,
+  //     isEdit: true,
+  //   });
 
-    this.toggle();
-  };
+  //   this.toggle();
+  // };
 
   onClickDelete = rowId => {
     this.setState({ selectedRowId: rowId, deleteModal: true });

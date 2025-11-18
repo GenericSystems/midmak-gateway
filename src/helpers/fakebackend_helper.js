@@ -2344,6 +2344,23 @@ export const updateContract = data => post(url.UPDATE_CONTRACT, data);
 //delete Contract
 export const deleteContract = data => post(url.DELETE_CONTRACT, data);
 
+//CONTRACT
+export const getPositions = data => post(url.GET_POSITIONS, data);
+
+// add Position
+
+export const addNewPosition = data => post(url.ADD_NEW_POSITION, data);
+
+//POSITION
+export const getPositionDeletedValue = () =>
+  get(url.GET_POSITION_DELETED_VALUE);
+
+//update Position
+export const updatePosition = data => post(url.UPDATE_POSITION, data);
+
+//delete Position
+export const deletePosition = data => post(url.DELETE_POSITION, data);
+
 //MARK_OBJECTION
 export const getMarksObjections = data => post(url.GET_MARKS_OBJECTIONS, data);
 

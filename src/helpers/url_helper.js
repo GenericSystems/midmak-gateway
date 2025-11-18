@@ -1152,6 +1152,13 @@ export const ADD_NEW_CONTRACT = "/add/contract";
 export const UPDATE_CONTRACT = "/update/contract";
 export const DELETE_CONTRACT = "/deleted/contract";
 
+//CONTRACTS
+export const GET_POSITIONS = "/positions";
+export const GET_POSITION_DELETED_VALUE = "/deleted";
+export const ADD_NEW_POSITION = "/add/position";
+export const UPDATE_POSITION = "/update/position";
+export const DELETE_POSITION = "/deleted/position";
+
 //MARKS_OBJECTIONS
 export const GET_MARKS_OBJECTIONS = "/marksObjections";
 export const GET_MARK_OBJECTION_DELETED_VALUE = "/deleted";

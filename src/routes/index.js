@@ -231,6 +231,9 @@ import DecisionsList from "../pages/HR/decisions/decisions";
 //Contracts
 import ContractsList from "../pages/HR/contracts/contracts";
 
+//positions
+import PositionsList from "../pages/HR/positions&JobTitles/positions&JobTitles";
+
 //justify TraineeAbsence
 import JustifyTraineeAbsenceList from "../pages/TraineeAttendence/JustifyTraineeAbsence/justifyTraineeAbsence";
 
@@ -452,6 +455,10 @@ const authProtectedRoutes = [
   // contracts
 
   { path: "/contracts", component: ContractsList },
+
+  // Positions
+
+  { path: "/positions&JobTitles", component: PositionsList },
 
   // justify Trainee Absence
 

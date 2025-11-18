@@ -312,6 +312,10 @@ export * from "./students-requests/actions";
 
 export * from "./HR/contracts/actions";
 
+///position
+
+export * from "./job&position/actions";
+
 //markObjection
 
 export * from "./marks-objections/actions";

@@ -81,7 +81,7 @@ class Certificates extends Component {
       BarModal: false,
       qr: "",
       sidebarOpen: true,
-      selectedUserType: "",
+      selectedUserType: null,
       filteredCoursesModified: [],
       selectedGrantDate: new Date().toISOString().split("T")[0],
     };
@@ -338,6 +338,7 @@ class Certificates extends Component {
       selectedYear,
       certificate,
       sectorsArray,
+      selectedCourse,
     } = this.state;
     const { onAddNewCertificate, onUpdateCertificate, certificates } =
       this.props;
@@ -346,17 +347,18 @@ class Certificates extends Component {
     values["yearId"] = selectedYear;
     values["trainerId"] = selectedMember;
     values["userTypeId"] = selectedUserType;
+    values["courseId"] = selectedCourse;
     values["certificateTypeId"] = selectedCertificateType;
     values["trainerGradeId"] = selectedMemberGrade;
     values["sector"] = sectorsArray;
 
     console.log("selectedUserType0", selectedUserType);
 
-    if (values.academicCode === "") {
-      this.setState({ academicCodeError: true });
-    } else {
-      this.setState({ academicCodeError: false });
-    }
+    // if (values.academicCode === "") {
+    //   this.setState({ academicCodeError: true });
+    // } else {
+    //   this.setState({ academicCodeError: false });
+    // }
 
     if (
       values.academicCode &&
@@ -391,6 +393,9 @@ class Certificates extends Component {
       if (selectedUserType === undefined) {
         emptyError = "Fill the empty select";
       }
+      if (selectedUserType === "") {
+        emptyError = "Fill the empty Feilds";
+      }
       if (selectedMember === undefined) {
         emptyError = "Fill the empty select";
       }
@@ -411,8 +416,11 @@ class Certificates extends Component {
   };
 
   handleCertificateClick = arg => {
+    console.log("arg", arg);
     const { certificate } = this.state;
-    console.log("arg", arg.courseNameE, arg.courseName);
+    const { onGetFilteredCoursesCertificates } = this.props;
+
+    onGetFilteredCoursesCertificates(arg.trainerId);
 
     this.setState({
       certificate: arg,
@@ -537,11 +545,12 @@ class Certificates extends Component {
     const alertMessage =
       deleted == 0 ? "Can't Delete " : "Deleted Successfully";
 
-    console.log("filteredMembers", filteredMembers);
+    console.log("filteredMembers", filteredCourses);
 
     const filteredCoursesModified =
       filteredCourses &&
       filteredCourses.map(item => ({
+        ...item,
         label: `${item.code} - ${item.CourseName}`,
         value: item.courseId,
       }));
@@ -550,6 +559,16 @@ class Certificates extends Component {
       certificate && certificate.grantDate
         ? new Date(certificate.grantDate).toISOString().split("T")[0]
         : selectedGrantDate;
+
+    const certificatesToShow = selectedUserType
+      ? certificates.filter(cert => {
+          let userMatch = selectedUserType
+            ? cert.userTypeId === selectedUserType
+            : true;
+
+          return userMatch;
+        })
+      : [];
 
     const defaultSorting = [
       {
@@ -882,7 +901,7 @@ class Certificates extends Component {
                                         keyField="Id"
                                         {...toolkitprops.baseProps}
                                         {...paginationTableProps}
-                                        data={certificates}
+                                        data={certificatesToShow}
                                         columns={columns}
                                         cellEdit={cellEditFactory({
                                           mode: "click",
@@ -972,6 +991,14 @@ class Certificates extends Component {
                                                 (certificate &&
                                                   certificate.trainerCourseNameE) ||
                                                 "",
+                                              grade:
+                                                (certificate &&
+                                                  certificate.grade) ||
+                                                "",
+                                              estimate:
+                                                (certificate &&
+                                                  certificate.estimate) ||
+                                                "",
                                             }}
                                             validationSchema={Yup.object().shape(
                                               {
@@ -994,6 +1021,7 @@ class Certificates extends Component {
                                               values,
                                               handleChange,
                                               handleBlur,
+                                              setFieldValue,
                                             }) => (
                                               <Form>
                                                 <Row>
@@ -1017,7 +1045,7 @@ class Certificates extends Component {
                                                   <Col>
                                                     <Row className="mb-3">
                                                       <Col
-                                                        lg="3"
+                                                        lg="2"
                                                         className="col-padding"
                                                       >
                                                         <Label>
@@ -1034,7 +1062,7 @@ class Certificates extends Component {
                                                           </span>
                                                         </Label>
                                                       </Col>
-                                                      <Col lg="6">
+                                                      <Col lg="4">
                                                         <Select
                                                           name="trainerId"
                                                           key={`select_fromSemester`}
@@ -1063,11 +1091,57 @@ class Certificates extends Component {
                                                           )}
                                                         />
                                                       </Col>
-                                                    </Row>
 
+                                                      {selectedUserType ===
+                                                        2 && (
+                                                        <>
+                                                          <Col lg="2">
+                                                            <Label for="grantDate">
+                                                              <strong>
+                                                                {this.props.t(
+                                                                  "Grant Date"
+                                                                )}
+                                                              </strong>
+                                                            </Label>
+                                                          </Col>
+                                                          {isEdit && (
+                                                            <Col lg="4">
+                                                              <Input
+                                                                type="text"
+                                                                name="grantDate"
+                                                                id="reg-date"
+                                                                className={
+                                                                  "form-control"
+                                                                }
+                                                                value={
+                                                                  formattedGrantDate
+                                                                }
+                                                                readOnly
+                                                              />
+                                                            </Col>
+                                                          )}
+                                                          {!isEdit && (
+                                                            <Col lg="4">
+                                                              <Input
+                                                                type="text"
+                                                                name="grantDate"
+                                                                id="reg-date"
+                                                                className={
+                                                                  "form-control"
+                                                                }
+                                                                defaultValue={
+                                                                  selectedGrantDate
+                                                                }
+                                                                readOnly
+                                                              />
+                                                            </Col>
+                                                          )}
+                                                        </>
+                                                      )}
+                                                    </Row>
                                                     <Row className="mb-3">
                                                       <Col
-                                                        lg="3"
+                                                        lg="2"
                                                         className="col-padding"
                                                       >
                                                         <Label>
@@ -1086,7 +1160,7 @@ class Certificates extends Component {
                                                           </span>
                                                         </Label>
                                                       </Col>
-                                                      <Col lg="6">
+                                                      <Col lg="4">
                                                         <Select
                                                           name="certificateTypeId"
                                                           key={`select_fromSemester`}
@@ -1106,23 +1180,17 @@ class Certificates extends Component {
                                                           )}
                                                         />
                                                       </Col>
-                                                    </Row>
-
-                                                    <div className="mb-3">
                                                       {selectedUserType ===
                                                         2 && (
-                                                        <Row>
-                                                          <Col
-                                                            lg="3"
-                                                            className="col-padding"
-                                                          >
+                                                        <>
+                                                          <Col lg="2">
                                                             <Label>
                                                               <strong>
                                                                 {t("Courses")}
                                                               </strong>
                                                             </Label>
                                                           </Col>
-                                                          <Col className="col-6">
+                                                          <Col lg="4">
                                                             <Select
                                                               name="courseId"
                                                               options={
@@ -1134,6 +1202,16 @@ class Certificates extends Component {
                                                                   "courseId",
                                                                   newValue
                                                                 );
+                                                                setFieldValue(
+                                                                  "grade",
+                                                                  newValue.totalGrade ||
+                                                                    ""
+                                                                );
+                                                                setFieldValue(
+                                                                  "estimate",
+                                                                  newValue.letter_grade ||
+                                                                    ""
+                                                                );
                                                               }}
                                                               value={filteredCoursesModified.find(
                                                                 opt =>
@@ -1142,116 +1220,102 @@ class Certificates extends Component {
                                                               )}
                                                             />
                                                           </Col>
-                                                        </Row>
+                                                        </>
                                                       )}
-                                                    </div>
-                                                    <div className="mb-3">
-                                                      {selectedUserType ===
-                                                        2 && (
-                                                        <Row>
-                                                          <Col lg="3">
-                                                            <Label for="grantDate">
-                                                              <strong>
-                                                                {this.props.t(
-                                                                  "Grant Date"
-                                                                )}
-                                                              </strong>
-                                                            </Label>
-                                                          </Col>
-                                                          {isEdit && (
-                                                            <Col lg="6">
-                                                              <Input
-                                                                type="text"
-                                                                name="grantDate"
-                                                                id="reg-date"
-                                                                className={
-                                                                  "form-control"
-                                                                }
-                                                                value={
-                                                                  formattedGrantDate
-                                                                }
-                                                                readOnly
-                                                              />
-                                                            </Col>
-                                                          )}
-                                                          {!isEdit && (
-                                                            <Col lg="6">
-                                                              <Input
-                                                                type="text"
-                                                                name="grantDate"
-                                                                id="reg-date"
-                                                                className={
-                                                                  "form-control"
-                                                                }
-                                                                defaultValue={
-                                                                  selectedGrantDate
-                                                                }
-                                                                readOnly
-                                                              />
-                                                            </Col>
-                                                          )}
-                                                        </Row>
-                                                      )}
-                                                    </div>
-
-                                                    <div className="mb-3">
-                                                      {selectedUserType ===
-                                                        1 && (
-                                                        <Row>
-                                                          <Col
-                                                            lg="4"
-                                                            className="col-padding"
-                                                          >
-                                                            <Label>
-                                                              <strong>
-                                                                {t(
-                                                                  "Trainer Course Name(ar)"
-                                                                )}
-                                                              </strong>
-                                                            </Label>
-                                                          </Col>
-                                                          <Col lg="6">
-                                                            <Field
-                                                              type="text"
-                                                              name="trainerCourseName"
-                                                              id="trainerCourseName"
-                                                              className={
-                                                                "form-control"
-                                                              }
-                                                            />
-                                                          </Col>
-                                                        </Row>
-                                                      )}
-                                                    </div>
-                                                    <div className="mb-3">
-                                                      {selectedUserType ===
-                                                        1 && (
-                                                        <Row>
-                                                          <Col
-                                                            lg="4"
-                                                            className="col-padding"
-                                                          >
-                                                            <Label for="trainerCourseNameE">
-                                                              <strong>
-                                                                {t(
-                                                                  "Trainer Course Name(en)"
-                                                                )}
-                                                              </strong>
-                                                            </Label>
-                                                          </Col>
-                                                          <Col lg="6">
-                                                            <Field
-                                                              type="text"
-                                                              name="trainerCourseNameE"
-                                                              id="trainerCourseNameE"
-                                                              className={
-                                                                "form-control"
-                                                              }
-                                                            />
-                                                          </Col>
-                                                        </Row>
-                                                      )}
-                                                    </div>
+                                                    </Row>
+                                                    {selectedUserType === 2 && (
+                                                      <Row className="mb-3">
+                                                        <Col
+                                                          lg="2"
+                                                          className="col-padding"
+                                                        >
+                                                          <Label for="grade">
+                                                            <strong>
+                                                              {this.props.t(
+                                                                "Total Grade"
+                                                              )}
+                                                            </strong>
+                                                          </Label>
+                                                        </Col>
+                                                        <Col lg="4">
+                                                          {" "}
+                                                          <Field
+                                                            name="grade"
+                                                            type="text"
+                                                            className={
+                                                              "form-control"
+                                                            }
+                                                          />
+                                                        </Col>
+                                                        <Col lg="2">
+                                                          <Label for="estimate">
+                                                            <strong>
+                                                              {this.props.t(
+                                                                "Estimate"
+                                                              )}
+                                                            </strong>
+                                                          </Label>
+                                                        </Col>
+                                                        <Col lg="4">
+                                                          {" "}
+                                                          <Field
+                                                            name="estimate"
+                                                            type="text"
+                                                            className={
+                                                              "form-control"
+                                                            }
+                                                          />
+                                                        </Col>
+                                                      </Row>
+                                                    )}
+                                                    {selectedUserType === 1 && (
+                                                      <Row>
+                                                        <Col
+                                                          lg="2"
+                                                          className="col-padding"
+                                                        >
+                                                          <Label>
+                                                            <strong>
+                                                              {t(
+                                                                "Trainer Course Name(ar)"
+                                                              )}
+                                                            </strong>
+                                                          </Label>
+                                                        </Col>
+                                                        <Col lg="4">
+                                                          <Field
+                                                            type="text"
+                                                            name="trainerCourseName"
+                                                            id="trainerCourseName"
+                                                            className={
+                                                              "form-control"
+                                                            }
+                                                          />
+                                                        </Col>
+                                                        <Col
+                                                          lg="2"
+                                                          className="col-padding"
+                                                        >
+                                                          <Label for="trainerCourseNameE">
+                                                            <strong>
+                                                              {t(
+                                                                "Trainer Course Name(en)"
+                                                              )}
+                                                            </strong>
+                                                          </Label>
+                                                        </Col>
+                                                        <Col lg="4">
+                                                          <Field
+                                                            type="text"
+                                                            name="trainerCourseNameE"
+                                                            id="trainerCourseNameE"
+                                                            className={
+                                                              "form-control"
+                                                            }
+                                                          />
+                                                        </Col>
+                                                      </Row>
+                                                    )}
                                                     <Row>
                                                       <Col lg="6">
                                                         <label
