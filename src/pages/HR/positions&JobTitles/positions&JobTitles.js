@@ -77,6 +77,7 @@ class PositionsList extends Component {
       isOpen: false,
       isAdd: false,
       selectedPositionType: null,
+      selectedPosition: null,
       positionTypeError: false,
       positionError: false,
       errorMessage: null,
@@ -301,131 +302,174 @@ class PositionsList extends Component {
     }
   };
 
+  // handleSubmit = values => {
+  //   console.log("values", values);
+  //   let flag = 0;
+  //   const { selectedRowData, selectedOption, isEdit, positionJobTitleData } =
+  //     this.state;
+
+  //   const { onAddNewPosition, onUpdatePosition, positions } = this.props;
+
+  //   let positionInfo = {};
+  //   if (!isEdit) {
+  //     Object.keys(values).forEach(function (key) {
+  //       if (
+  //         values[key] != undefined &&
+  //         (values[key].length > 0 || values[key] != "")
+  //       )
+  //         positionInfo[key] = values[key];
+  //     });
+  //   } else {
+  //     positionInfo = values;
+  //   }
+
+  //   console.log("positionInfo", positionInfo);
+  //   const fieldErrors = {};
+
+  //   // if (selectedOption === "Position") {
+  //   //   if (
+  //   //     !positionInfo.PositionNumber ||
+  //   //     (typeof positionInfo.PositionNumber === "string" &&
+  //   //       positionInfo.PositionNumber.trim() === "")
+  //   //   ) {
+  //   //     fieldErrors.PositionNumber = "Please enter Position Number.";
+  //   //   }
+  //   // }
+  //   // if (selectedOption === "Lab") {
+  //   //   if (
+  //   //     !positionInfo.LabNumber ||
+  //   //     (typeof positionInfo.LabNumber === "string" &&
+  //   //       positionInfo.LabNumber.trim() === "")
+  //   //   ) {
+  //   //     fieldErrors.LabNumber = "Please enter Lab Number.";
+  //   //   }
+  //   // }
+
+  //   // if (Object.keys(fieldErrors).length > 0) {
+  //   //   return fieldErrors;
+  //   // }
+
+  //   const enteredNumber =
+  //     selectedOption === "Position"
+  //       ? positionInfo.PositionNumber
+  //       : positionInfo.LabNumber;
+
+  //   const filteredPositionLabs = positions.filter(
+  //     position =>
+  //       (selectedOption === "Position" && position.type === "Position") ||
+  //       (selectedOption === "JobTitle" && position.type === "JobTitle")
+  //   );
+
+  //   // let isDuplicate = false;
+
+  //   // for (const positionLab of filteredPositionLabs) {
+  //   //   if (positionLab.PositionLabNumber == enteredNumber && !isEdit) {
+  //   //     isDuplicate = true;
+  //   //     break;
+  //   //   }
+  //   // }
+
+  //   // if (isDuplicate) {
+  //   //   const errorMessage = this.props.t(
+  //   //     `${selectedOption} Number already exists.`
+  //   //   );
+  //   //   this.setState({ duplicateError: errorMessage });
+  //   //   return;
+  //   // }
+
+  //   positionInfo["tablename"] =
+  //     selectedOption === "Position" ? "Common_Position" : "Common_JobTitle";
+  //   if (flag === 0) {
+  //     if (isEdit) {
+  //       positionInfo["Id"] = positionJobTitleData.Id;
+  //       const filteredPositionLabsEdit = position.filter(
+  //         position =>
+  //           (selectedOption === "Position" && position.type === "Position") ||
+  //           (selectedOption === "JobTitle" && position.type === "JobTitle")
+  //       );
+
+  //       // let isDuplicateEdit = false;
+
+  //       // for (const positionLab of filteredPositionLabsEdit) {
+  //       //   if (
+  //       //     positionInfo.Id != positionLab.Id &&
+  //       //     positionLab.PositionLabNumber == enteredNumber
+  //       //   ) {
+  //       //     isDuplicateEdit = true;
+  //       //     break;
+  //       //   }
+  //       // }
+  //       // if (!isDuplicateEdit) {
+  //       onUpdatePosition(positionInfo);
+  //       this.setState({ selectedOption: "" });
+
+  //       this.toggleNestedModal();
+  //       // }
+  //       // else {
+  //       //   const errorMessage = this.props.t(
+  //       //     `${selectedOption} Number already exists.`
+  //       //   );
+  //       //   this.setState({ duplicateError: errorMessage });
+  //       //   return;
+  //       // }
+  //     } else {
+  //       console.log("saaaaave", positionInfo);
+  //       onAddNewPosition(positionInfo);
+  //       this.setState({ selectedOption: "" });
+
+  //       this.toggleNestedModal();
+  //     }
+  //   }
+  // };
+
   handleSubmit = values => {
     const {
-      // selectedAdministrativeSupervisor,
-      selectedPhysicalWorkLocations,
-      selectedJobRank,
-      selectedJobTitle,
-      selectedCorporateNode,
-      selectedPositionType,
-      selectedEmploymentCase,
-      selectedNcsDate,
-      selectedEndDate,
-      selectedHireDate,
-      selectedSignatureDate,
-      selectedWorkClassification,
-      selectedAcademicYearId,
-      position,
+      selectedOption,
       isEdit,
-      isAdd,
-      selectEmpId,
-      selectedHasMinistryApprove,
-      selectedGovernmentWorker,
-      selectedFullName,
-      fullNamesOpt,
+      positionJobTitleData,
+      selectedPositionType,
+      selectedPosition,
+      selectedCorporateKey,
     } = this.state;
-    const { onAddNewPosition, onUpdatePosition } = this.props;
-
-    //values["administrativeSupervisor"] = selectedAdministrativeSupervisor;
-    // values["physicalWorkLocation"] = selectedPhysicalWorkLocations;
-    // values["employeeId"] = selectEmpId;
-
-    values["jobRankId"] = selectedJobRank;
-    values["jobTitleId"] = selectedJobTitle;
-    // values["corporateNodeId"] = selectedCorporateNode;
-    values["positionTypeId"] = selectedPositionType;
-    values["employeeId"] = selectedFullName;
-    values["employmentCaseId"] = selectedEmploymentCase;
-    values["hasMinistryApprove"] = selectedHasMinistryApprove;
-    values["governmentWorker"] = selectedGovernmentWorker;
-    values["workClassificationId"] = selectedWorkClassification;
-    values["academicYearId"] = selectedAcademicYearId;
-    console.log("valuesssssssssssssssssssss", values);
+    const { onAddNewPosition, onUpdatePosition, positions } = this.props;
 
     let positionInfo = {};
-    // if (values.employeeId) {
-    //   const nameObject = fullNamesOpt.find(
-    //     fullName => fullName.value === values.employeeId
-    //   );
-    //   console.log("nameObject", nameObject);
-    //   values["employeeId"] = nameObject.key;
-    // }
-    // console.log("valuesssssssssssssssssssss", values);
-    if (
-      values.jobNumber &&
-      values.biometricCode &&
-      values.positionNumber &&
-      values.sequenceInWorkplace &&
-      values.quorum &&
-      values.ncsDate &&
-      values.endDate &&
-      values.hireDate &&
-      values.signatureDate &&
-      // selectedAdministrativeSupervisor !== null &&
-      // selectedPhysicalWorkLocations !== null &&
-      selectedJobRank !== null &&
-      selectedAcademicYearId !== null &&
-      selectedWorkClassification !== null &&
-      selectedJobTitle !== null &&
-      // selectedCorporateNode !== null &&
-      selectedPositionType !== null &&
-      selectedEmploymentCase !== null &&
-      selectedFullName !== null
-    ) {
-      console.log("selectedFullName", selectedFullName);
-      Object.keys(values).forEach(function (key) {
-        if (
-          values[key] != undefined &&
-          (values[key].length > 0 || values[key] != "")
-        )
-          console.log("9999999", positionInfo);
-        positionInfo[key] = values[key];
-      });
-      if (isEdit) {
-        console.log("9999999", positionInfo);
-        onUpdatePosition(positionInfo);
-      } else {
-        onAddNewPosition(positionInfo);
-      }
-      this.setState({
-        errorMessages: {},
-      });
-      this.toggle();
-    } else {
-      let emptyError = "";
-      // if (selectedAdministrativeSupervisor === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      // if (selectedPhysicalWorkLocations === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      if (selectedJobTitle === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedNcsDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedPositionType === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedAcademicYearId === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedHireDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedSignatureDate === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      if (selectedFullName === undefined) {
-        emptyError = "Fill the empty select";
-      }
-      // if (selectedCorporateNode === undefined) {
-      //   emptyError = "Fill the empty select";
-      // }
-      this.setState({ emptyError: emptyError });
+
+    if (selectedOption === "Position") {
+      positionInfo = {
+        positionAr: values.positionAr,
+        positionEn: values.positionEn,
+        positionCode: values.positionCode,
+        positionRank: values.positionRank,
+        positionTypeId: selectedPositionType,
+        tablename: "Common_Position",
+      };
     }
+
+    if (selectedOption === "JobTitle") {
+      positionInfo = {
+        jobTitleAr: values.jobTitleAr,
+        jobTitleEn: values.jobTitleEn,
+        jobTitleCode: values.jobTitleCode,
+        positionId: selectedPosition,
+        corporateNodeId: selectedCorporateKey,
+        tablename: "Common_JobTitle",
+      };
+    }
+    console.log(
+      "positionJobTitleDatapositionJobTitleDatapositionJobTitleData",
+      positionInfo
+    );
+
+    if (isEdit) {
+      positionInfo.Id = positionJobTitleData.Id;
+      // onUpdatePosition(positionInfo);
+    } else {
+      // onAddNewPosition(positionInfo);
+    }
+
+    this.setState({ selectedOption: "" });
+    this.toggleNestedModal();
   };
 
   handleSelect = (fieldName, selectedValue) => {
@@ -578,7 +622,7 @@ class PositionsList extends Component {
 
   handleSelectChange = (fieldName, selectedValue, values) => {
     console.log("selectedValue", selectedValue);
-    const { positionTypes, countries, cities, governorates } = this.props;
+    const { positionTypes, positionsOpt } = this.props;
 
     if (fieldName == "positionTypeId") {
       const name = positionTypes.find(
@@ -588,6 +632,17 @@ class PositionsList extends Component {
       this.setState({
         selectedPositionType: selectedValue,
         positionTypeId: name.label,
+      });
+    }
+
+    if (fieldName == "positionId") {
+      const name = positionsOpt.find(
+        position => position.value === selectedValue
+      );
+
+      this.setState({
+        selectedPosition: selectedValue,
+        positionId: name.label,
       });
     }
   };
@@ -1440,11 +1495,6 @@ class PositionsList extends Component {
                                                                     newValue,
                                                                 });
                                                               }
-                                                              this.onChangeHall(
-                                                                this.state
-                                                                  .corporateNodeName,
-                                                                newValue
-                                                              );
                                                             }}
                                                             list="corporateNodesList"
                                                             autoComplete="off"
