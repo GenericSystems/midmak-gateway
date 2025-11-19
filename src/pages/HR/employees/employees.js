@@ -890,8 +890,156 @@ class EmployeesList extends Component {
     });
   };
 
-  getLabelById = (arr, id) =>
-    arr.find(x => Number(x.value) === Number(id))?.label || "";
+  // handleSelectCalssification = (field, value) => {
+  //   this.setState(prev => {
+  //     const e = prev.employee;
+
+  //     if (field === "newEmployeeStatusId") {
+  //       return {
+  //         employee: {
+  //           ...e,
+  //           newEmployeeStatusId: value,
+  //           previousStatus: e.currentStatus,
+  //           currentStatus: value,
+  //         },
+  //       };
+  //     }
+
+  //     if (field === "classificationId") {
+  //       return {
+  //         employee: {
+  //           ...e,
+  //           classificationId: value,
+  //           previousClassification: e.currentClassification,
+  //           currentClassification: value,
+  //         },
+  //       };
+  //     }
+
+  //     return prev;
+  //   });
+  // };
+
+  // handleSelectCalssification = (field, value) => {
+  //   const { employmentCases, workClassifications } = this.props;
+  //   this.setState(prev => {
+  //     const e = prev.employee;
+  //     const currentDate = new Date().toISOString().split("T")[0];
+  //     if (field === "newEmployeeStatusId") {
+  //       const newStatusLabel =
+  //         employmentCases.find(opt => opt.value === value)?.label || "";
+
+  //       return {
+  //         employee: {
+  //           ...e,
+  //           newEmployeeStatusId: value,
+  //           currentStatus: value,
+  //           currentStatusLabel: newStatusLabel,
+  //           previousStatus: e.currentStatus || null,
+  //           previousStatusLabel: e.currentStatusLabel || "",
+  //           changeCurrentStatusDate: currentDate,
+  //           changePreviousStatusDate: e.currentStatus
+  //             ? e.changeCurrentStatusDate
+  //             : null,
+  //           newStatusLabel: newStatusLabel,
+  //         },
+  //       };
+  //     }
+
+  //     if (field === "classificationId") {
+  //       const newClassificationLabel =
+  //         workClassifications.find(opt => opt.value === value)?.label || "";
+
+  //       return {
+  //         employee: {
+  //           ...e,
+  //           classificationId: value,
+  //           currentClassification: value,
+  //           currentClassificationLabel: newClassificationLabel,
+  //           previousClassification: e.currentClassification || null,
+  //           previousClassificationLabel: e.currentClassificationLabel || "",
+  //           changeCurrentClassificationDate: currentDate,
+  //           changePreviousClassificationDate: e.currentClassification
+  //             ? e.changeCurrentClassificationDate
+  //             : null,
+  //           newClassificationLabel: newClassificationLabel,
+  //         },
+  //       };
+  //     }
+
+  //     return prev;
+  //   });
+  // };
+
+  handleSelectCalssification = (field, value) => {
+    const { employmentCases, workClassifications } = this.props;
+    this.setState(prev => {
+      const e = prev.employee;
+      const currentDate = new Date().toISOString().split("T")[0];
+
+      let updatedEmployee = { ...e };
+
+      if (field === "newEmployeeStatusId") {
+        const newStatusLabel =
+          employmentCases.find(opt => opt.value === value)?.label || "";
+
+        updatedEmployee = {
+          ...updatedEmployee,
+          newEmployeeStatusId: value,
+          currentStatus: value,
+          currentStatusLabel: newStatusLabel,
+          previousStatus: e.currentStatus || null,
+          previousStatusLabel: e.currentStatusLabel || "",
+          changeCurrentStatusDate: currentDate,
+          changePreviousStatusDate: e.currentStatus
+            ? e.changeCurrentStatusDate
+            : null,
+          newStatusLabel: newStatusLabel,
+        };
+
+        if (this.props.onAddStatus) {
+          this.props.onAddStatus({
+            employeeId: e.id,
+            newStatusId: value,
+            currentStatus: updatedEmployee.currentStatus,
+            previousStatus: updatedEmployee.previousStatus,
+            changeCurrentStatusDate: currentDate,
+          });
+        }
+      }
+
+      if (field === "classificationId") {
+        const newClassificationLabel =
+          workClassifications.find(opt => opt.value === value)?.label || "";
+
+        updatedEmployee = {
+          ...updatedEmployee,
+          classificationId: value,
+          currentClassification: value,
+          currentClassificationLabel: newClassificationLabel,
+          previousClassification: e.currentClassification || null,
+          previousClassificationLabel: e.currentClassificationLabel || "",
+          changeCurrentClassificationDate: currentDate,
+          changePreviousClassificationDate: e.currentClassification
+            ? e.changeCurrentClassificationDate
+            : null,
+          newClassificationLabel: newClassificationLabel,
+        };
+
+        if (this.props.onAddClassification) {
+          this.props.onAddClassification({
+            employeeId: e.id,
+            newClassificationId: value,
+            currentClassification: updatedEmployee.currentClassification,
+            previousClassification: updatedEmployee.previousClassification,
+            changeCurrentClassificationDate: currentDate,
+          });
+        }
+      }
+
+      return { employee: updatedEmployee };
+    });
+  };
 
   render() {
     const employee = this.state.employee;
@@ -5320,123 +5468,257 @@ class EmployeesList extends Component {
                                               </div>
                                             )}
                                             {showClassification && (
-                                              <div>
-                                                <Card className="bordered">
-                                                  <CardBody>
-                                                    <Card className="bordered">
-                                                      <CardHeader className="card-header">
-                                                        {" "}
-                                                        {this.props.t(
-                                                          "Employee Status"
-                                                        )}
-                                                      </CardHeader>
-                                                      <CardBody>
-                                                        <Row>
-                                                          <Col lg="3">
-                                                            <Label for="currentStatus">
+                                              <Formik
+                                                enableReinitialize={true}
+                                                initialValues={{
+                                                  // ...(isOpen && {
+                                                  //   Id: employee.Id,
+                                                  // }),
+                                                  jobNumber:
+                                                    (contract &&
+                                                      contract.jobNumber) ||
+                                                    "",
+                                                  biometricCode:
+                                                    (contract &&
+                                                      contract.biometricCode) ||
+                                                    "",
+                                                  contractTypeId:
+                                                    (contract &&
+                                                      contract.contractTypeId) ||
+                                                    "",
+                                                  contractNumber:
+                                                    (contract &&
+                                                      contract.contractNumber) ||
+                                                    "",
+                                                  jobTitleId:
+                                                    (contract &&
+                                                      contract.jobTitleId) ||
+                                                    "",
+                                                  // corporateNodeId:
+                                                  //   (contract &&
+                                                  //     contract.corporateNodeId) ||
+                                                  //   "",
+                                                  // physicalWorkLocation:
+                                                  //   (contract &&
+                                                  //     contract.physicalWorkLocation) ||
+                                                  //   "",
+                                                  quorum:
+                                                    (contract &&
+                                                      contract.quorum) ||
+                                                    "",
+                                                  sequenceInWorkplace:
+                                                    (contract &&
+                                                      contract.sequenceInWorkplace) ||
+                                                    "",
+                                                  hireDate:
+                                                    (contract &&
+                                                      contract.hireDate) ||
+                                                    "",
+                                                  signatureDate:
+                                                    (contract &&
+                                                      contract.signatureDate) ||
+                                                    "",
+                                                  endDate:
+                                                    (contract &&
+                                                      contract.endDate) ||
+                                                    "",
+                                                  ncsDate:
+                                                    (contract &&
+                                                      contract.ncsDate) ||
+                                                    "",
+                                                  // administrativeSupervisor:
+                                                  //   (contract &&
+                                                  //     contract.administrativeSupervisor) ||
+                                                  //   "",
+                                                  jobRankId:
+                                                    (contract &&
+                                                      contract.jobRankId) ||
+                                                    "",
+                                                  workClassificationId:
+                                                    (contract &&
+                                                      contract.workClassificationId) ||
+                                                    "",
+                                                  academicYearId:
+                                                    (contract &&
+                                                      contract.academicYearId) ||
+                                                    "",
+                                                  governmentWorker:
+                                                    (contract &&
+                                                      contract.governmentWorker) ||
+                                                    "",
+                                                  hasMinistryApprove:
+                                                    (contract &&
+                                                      contract.hasMinistryApprove) ||
+                                                    "",
+                                                  employmentCaseId:
+                                                    (contract &&
+                                                      contract.employmentCaseId) ||
+                                                    "",
+                                                }}
+                                                validationSchema={Yup.object().shape(
+                                                  {
+                                                    contratType:
+                                                      Yup.string().required(
+                                                        "Please Enter Your Contract Type"
+                                                      ),
+                                                    ncsDate: Yup.date()
+                                                      .typeError(
+                                                        "Please Enter a valid NCS Date"
+                                                      )
+                                                      .required(
+                                                        "Please Enter Your NCS Date"
+                                                      ),
+
+                                                    hireDate: Yup.date()
+                                                      .typeError(
+                                                        "Please Enter a valid Hire Date"
+                                                      )
+                                                      .required(
+                                                        "Please Enter Your Hire Date"
+                                                      ),
+
+                                                    signatureDate: Yup.date()
+                                                      .typeError(
+                                                        "Please Enter a valid Signature Date"
+                                                      )
+                                                      .required(
+                                                        "Please Enter Your Signature Date"
+                                                      ),
+
+                                                    jobTitleId:
+                                                      Yup.string().required(
+                                                        "Please Select Your Job Title"
+                                                      ),
+                                                  }
+                                                )}
+                                              >
+                                                {({
+                                                  errors,
+                                                  status,
+                                                  touched,
+                                                  values,
+                                                  handleChange,
+                                                  handleBlur,
+                                                  setFieldValue,
+                                                }) => (
+                                                  <Form>
+                                                    <div>
+                                                      <Card className="bordered">
+                                                        <CardBody>
+                                                          <Card className="bordered">
+                                                            <CardHeader className="card-header">
+                                                              {" "}
                                                               {this.props.t(
-                                                                "Current Status"
+                                                                "Employee Status"
                                                               )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                employee.currentStatus
-                                                              }
-                                                            </Label>
-                                                          </Col>
-                                                          <Col lg="3">
-                                                            <Label for="changeCurrentStatusDate">
+                                                            </CardHeader>
+                                                            <CardBody>
+                                                              <Row>
+                                                                <Col lg="3">
+                                                                  <Label for="currentStatus">
+                                                                    {this.props.t(
+                                                                      "Current Status"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      employee.currentStatusLabel
+                                                                    }
+                                                                  </Label>
+                                                                </Col>
+                                                                <Col lg="3">
+                                                                  <Label for="changeCurrentStatusDate">
+                                                                    {this.props.t(
+                                                                      "Change Current Status Date"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      employee.changeCurrentStatusDate
+                                                                    }
+                                                                  </Label>
+                                                                </Col>
+                                                              </Row>
+                                                              <Row>
+                                                                <Col lg="3">
+                                                                  <Label for="currentClassification">
+                                                                    {this.props.t(
+                                                                      "Current Classification"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      employee.currentClassificationLabel
+                                                                    }
+                                                                  </Label>
+                                                                </Col>
+                                                                <Col lg="3">
+                                                                  <Label for="changeCurrentClassificationDate">
+                                                                    {this.props.t(
+                                                                      "Change Current Classification Date"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      employee.changeCurrentClassificationDate
+                                                                    }
+                                                                  </Label>
+                                                                </Col>
+                                                              </Row>
+                                                            </CardBody>
+                                                          </Card>
+                                                          <Card className="bordered">
+                                                            <CardHeader className="card-header">
+                                                              {" "}
                                                               {this.props.t(
-                                                                "Change Current Status Date"
+                                                                "New Status"
                                                               )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                employee.changeCurrentStatusDate
-                                                              }
-                                                            </Label>
-                                                          </Col>
-                                                        </Row>
-                                                        <Row>
-                                                          <Col lg="3">
-                                                            <Label for="currentClassification">
-                                                              {this.props.t(
-                                                                "Current Classification"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                employee.currentClassification
-                                                              }
-                                                            </Label>
-                                                          </Col>
-                                                          <Col lg="3">
-                                                            <Label for="changeCurrentClassificationDate">
-                                                              {this.props.t(
-                                                                "Change Current Classification Date"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                employee.changeCurrentClassificationDate
-                                                              }
-                                                            </Label>
-                                                          </Col>
-                                                        </Row>
-                                                      </CardBody>
-                                                    </Card>
-                                                    <Card className="bordered">
-                                                      <CardHeader className="card-header">
-                                                        {" "}
-                                                        {this.props.t(
-                                                          "New Status"
-                                                        )}
-                                                      </CardHeader>
-                                                      <CardBody>
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-3">
-                                                              <Label for="newEmployeeStatusId">
-                                                                {this.props.t(
-                                                                  "Employee Status"
-                                                                )}
-                                                              </Label>
-                                                              <span className="text-danger">
-                                                                *
-                                                              </span>
-                                                            </Col>
-                                                            <Col className="col-4">
-                                                              <Select
-                                                                // className={`form-control ${
-                                                                //   nationalityError
-                                                                //     ? "is-invalid"
-                                                                //     : ""
-                                                                // }`}
-                                                                name="newEmployeeStatusId"
-                                                                id="newEmployeeStatusId"
-                                                                key="nationality_select"
-                                                                options={
-                                                                  employmentCases
-                                                                }
-                                                                onChange={newValue =>
-                                                                  this.handleSelectChange(
-                                                                    "newEmployeeStatusId",
-                                                                    newValue.value,
-                                                                    values
-                                                                  )
-                                                                }
-                                                                defaultValue={employmentCases.find(
-                                                                  opt =>
-                                                                    opt.value ===
-                                                                    employee?.newEmployeeStatusId
-                                                                )}
-                                                              />
-                                                            </Col>
-                                                            {/* {nationalityError && (
+                                                            </CardHeader>
+                                                            <CardBody>
+                                                              <div className="mb-2">
+                                                                <Row>
+                                                                  <Col className="col-3">
+                                                                    <Label for="newEmployeeStatusId">
+                                                                      {this.props.t(
+                                                                        "Employee Status"
+                                                                      )}
+                                                                    </Label>
+                                                                    <span className="text-danger">
+                                                                      *
+                                                                    </span>
+                                                                  </Col>
+                                                                  <Col className="col-4">
+                                                                    <Select
+                                                                      // className={`form-control ${
+                                                                      //   nationalityError
+                                                                      //     ? "is-invalid"
+                                                                      //     : ""
+                                                                      // }`}
+                                                                      name="newEmployeeStatusId"
+                                                                      id="newEmployeeStatusId"
+                                                                      key="nationality_select"
+                                                                      options={
+                                                                        employmentCases
+                                                                      }
+                                                                      onChange={newValue =>
+                                                                        this.handleSelectCalssification(
+                                                                          "newEmployeeStatusId",
+                                                                          newValue.value,
+                                                                          values
+                                                                        )
+                                                                      }
+                                                                      defaultValue={employmentCases.find(
+                                                                        opt =>
+                                                                          opt.value ===
+                                                                          employee?.newEmployeeStatusId
+                                                                      )}
+                                                                    />
+                                                                  </Col>
+                                                                  {/* {nationalityError && (
                                                           <div className="invalid-feedback">
                                                             {this.props.t(
                                                               "Nationality is required"
@@ -5448,48 +5730,48 @@ class EmployeesList extends Component {
                                                           component="div"
                                                           className="invalid-feedback"
                                                         /> */}
-                                                          </Row>
-                                                        </div>
-                                                        <div className="mb-2">
-                                                          <Row>
-                                                            <Col className="col-3">
-                                                              <Label for="classificationId">
-                                                                {this.props.t(
-                                                                  "Classification"
-                                                                )}
-                                                              </Label>
-                                                              <span className="text-danger">
-                                                                *
-                                                              </span>
-                                                            </Col>
-                                                            <Col className="col-4">
-                                                              <Select
-                                                                // className={`form-control ${
-                                                                //   nationalityError
-                                                                //     ? "is-invalid"
-                                                                //     : ""
-                                                                // }`}
-                                                                name="classificationId"
-                                                                id="classificationId"
-                                                                key="classification_select"
-                                                                options={
-                                                                  workClassifications
-                                                                }
-                                                                onChange={newValue =>
-                                                                  this.handleSelectChange(
-                                                                    "classificationId",
-                                                                    newValue.value,
-                                                                    values
-                                                                  )
-                                                                }
-                                                                defaultValue={workClassifications.find(
-                                                                  opt =>
-                                                                    opt.value ===
-                                                                    employee?.classificationId
-                                                                )}
-                                                              />
-                                                            </Col>
-                                                            {/* {nationalityError && (
+                                                                </Row>
+                                                              </div>
+                                                              <div className="mb-2">
+                                                                <Row>
+                                                                  <Col className="col-3">
+                                                                    <Label for="classificationId">
+                                                                      {this.props.t(
+                                                                        "Classification"
+                                                                      )}
+                                                                    </Label>
+                                                                    <span className="text-danger">
+                                                                      *
+                                                                    </span>
+                                                                  </Col>
+                                                                  <Col className="col-4">
+                                                                    <Select
+                                                                      // className={`form-control ${
+                                                                      //   nationalityError
+                                                                      //     ? "is-invalid"
+                                                                      //     : ""
+                                                                      // }`}
+                                                                      name="classificationId"
+                                                                      id="classificationId"
+                                                                      key="classification_select"
+                                                                      options={
+                                                                        workClassifications
+                                                                      }
+                                                                      onChange={newValue =>
+                                                                        this.handleSelectCalssification(
+                                                                          "classificationId",
+                                                                          newValue.value,
+                                                                          values
+                                                                        )
+                                                                      }
+                                                                      defaultValue={workClassifications.find(
+                                                                        opt =>
+                                                                          opt.value ===
+                                                                          employee?.classificationId
+                                                                      )}
+                                                                    />
+                                                                  </Col>
+                                                                  {/* {nationalityError && (
                                                           <div className="invalid-feedback">
                                                             {this.props.t(
                                                               "Nationality is required"
@@ -5501,78 +5783,81 @@ class EmployeesList extends Component {
                                                           component="div"
                                                           className="invalid-feedback"
                                                         /> */}
-                                                          </Row>
-                                                        </div>
-                                                      </CardBody>
-                                                    </Card>
-                                                    <Card className="bordered">
-                                                      <CardHeader className="card-header">
-                                                        {this.props.t(
-                                                          "Previous Classification"
-                                                        )}
-                                                      </CardHeader>
-                                                      <CardBody>
-                                                        <Row>
-                                                          <Col lg="3">
-                                                            <Label for="previousStatus">
-                                                              {this.props.t(
-                                                                "Previous Status"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                employee.previousStatus
-                                                              }
-                                                            </Label>
-                                                          </Col>
-                                                          <Col lg="3">
-                                                            <Label for="changePreviousStatusDate">
-                                                              {this.props.t(
-                                                                "Change Previous Status Date"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                employee.changePreviousStatusDate
-                                                              }
-                                                            </Label>
-                                                          </Col>
-                                                        </Row>
-                                                        <Row>
-                                                          <Col lg="3">
-                                                            <Label for="previousClassification">
+                                                                </Row>
+                                                              </div>
+                                                            </CardBody>
+                                                          </Card>
+                                                          <Card className="bordered">
+                                                            <CardHeader className="card-header">
                                                               {this.props.t(
                                                                 "Previous Classification"
                                                               )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                employee.previousClassification
-                                                              }
-                                                            </Label>
-                                                          </Col>
-                                                          <Col lg="3">
-                                                            <Label for="changePreviousClassificationDate">
-                                                              {this.props.t(
-                                                                "Change Previous Classification Date"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                employee.changePreviousClassificationDate
-                                                              }
-                                                            </Label>
-                                                          </Col>
-                                                        </Row>
-                                                      </CardBody>
-                                                    </Card>
-                                                  </CardBody>
-                                                </Card>
-                                              </div>
+                                                            </CardHeader>
+                                                            <CardBody>
+                                                              <Row>
+                                                                <Col lg="3">
+                                                                  <Label for="previousStatus">
+                                                                    {this.props.t(
+                                                                      "Previous Status"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      employee.previousStatusLabel
+                                                                    }
+                                                                  </Label>
+                                                                </Col>
+                                                                <Col lg="3">
+                                                                  <Label for="changePreviousStatusDate">
+                                                                    {this.props.t(
+                                                                      "Change Previous Status Date"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      employee.changePreviousStatusDate
+                                                                    }
+                                                                  </Label>
+                                                                </Col>
+                                                              </Row>
+                                                              <Row>
+                                                                <Col lg="3">
+                                                                  <Label for="previousClassification">
+                                                                    {this.props.t(
+                                                                      "Previous Classification"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      employee.previousClassificationLabel
+                                                                    }
+                                                                  </Label>
+                                                                </Col>
+                                                                <Col lg="3">
+                                                                  <Label for="changePreviousClassificationDate">
+                                                                    {this.props.t(
+                                                                      "Change Previous Classification Date"
+                                                                    )}
+                                                                    {""}:
+                                                                  </Label>
+                                                                  <Label className="left-label">
+                                                                    {
+                                                                      employee.changePreviousClassificationDate
+                                                                    }
+                                                                  </Label>
+                                                                </Col>
+                                                              </Row>
+                                                            </CardBody>
+                                                          </Card>
+                                                        </CardBody>
+                                                      </Card>
+                                                    </div>
+                                                  </Form>
+                                                )}
+                                              </Formik>
                                             )}
                                           </div>
                                         </div>
