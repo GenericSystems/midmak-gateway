@@ -1,6 +1,10 @@
 import {
   GET_POSITIONS_SUCCESS,
   GET_POSITIONS_FAIL,
+  GET_POSITION_TYPES_SUCCESS,
+  GET_POSITION_TYPES_FAIL,
+  GET_POSITIONS_OPT_SUCCESS,
+  GET_POSITIONS_OPT_FAIL,
   ADD_POSITION_SUCCESS,
   ADD_POSITION_FAIL,
   UPDATE_POSITION_SUCCESS,
@@ -13,6 +17,8 @@ import {
 
 const INIT_STATE = {
   positions: [],
+  positionTypes: [],
+  positionsOpt: [],
   deleted: {},
   error: {},
 };
@@ -82,6 +88,32 @@ const positions = (state = INIT_STATE, action) => {
       };
 
     case DELETE_POSITION_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_POSITION_TYPES_SUCCESS:
+      return {
+        ...state,
+        positionTypes: action.payload,
+        deleted: {},
+      };
+
+    case GET_POSITION_TYPES_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_POSITIONS_OPT_SUCCESS:
+      return {
+        ...state,
+        positionsOpt: action.payload,
+        deleted: {},
+      };
+
+    case GET_POSITIONS_OPT_FAIL:
       return {
         ...state,
         error: action.payload,

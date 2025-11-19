@@ -1158,6 +1158,8 @@ export const GET_POSITION_DELETED_VALUE = "/deleted";
 export const ADD_NEW_POSITION = "/add/position";
 export const UPDATE_POSITION = "/update/position";
 export const DELETE_POSITION = "/deleted/position";
+export const GET_POSITION_TYPES = "/positionTypes";
+export const GET_POSITIONS_OPT = "/positionsOpt";
 
 //MARKS_OBJECTIONS
 export const GET_MARKS_OBJECTIONS = "/marksObjections";

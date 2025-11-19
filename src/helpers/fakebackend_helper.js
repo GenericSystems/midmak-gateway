@@ -2344,8 +2344,14 @@ export const updateContract = data => post(url.UPDATE_CONTRACT, data);
 //delete Contract
 export const deleteContract = data => post(url.DELETE_CONTRACT, data);
 
-//CONTRACT
+//Position
 export const getPositions = data => post(url.GET_POSITIONS, data);
+
+//PositionTypes
+export const getPositionTypes = data => post(url.GET_POSITION_TYPES, data);
+
+//PositionOpt
+export const getPositionsOpt = data => post(url.GET_POSITIONS_OPT, data);
 
 // add Position
 

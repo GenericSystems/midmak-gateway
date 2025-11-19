@@ -308,6 +308,13 @@ class EmployeesList extends Component {
       modal3: !prevState.modal3,
     }));
   };
+
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   toggleDeleteModal = () => {
     this.setState(prevState => ({
       deleteModal: !prevState.deleteModal,

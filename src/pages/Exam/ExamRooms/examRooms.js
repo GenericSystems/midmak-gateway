@@ -173,6 +173,12 @@ class ExamRoomsList extends Component {
     }));
   };
 
+  toggleLanguage = () => {
+    this.setState(prevState => ({
+      languageState: prevState.languageState === "ar" ? "en" : "ar",
+    }));
+  };
+
   // handleAddRow = () => {
   //   const { onAddNewExamRoom, examRooms } = this.props;
   //   const { currentExamId } = this.state;
@@ -196,7 +202,8 @@ class ExamRoomsList extends Component {
   };
 
   handleExamRoomDataChange = (row, fieldName, fieldValue) => {
-    const { examRooms, onUpdateExamRoom, onAddNewExamRoom, onGetExamRooms } = this.props;
+    const { examRooms, onUpdateExamRoom, onAddNewExamRoom, onGetExamRooms } =
+      this.props;
     const { currentExamId } = this.state;
     console.log("flattenedHalls", row);
     this.setState({ duplicateError: null });
@@ -446,7 +453,6 @@ class ExamRoomsList extends Component {
                                       column.dataField,
                                       newValue
                                     );
-                                  
                                   },
                                 })}
                                 noDataIndication={this.props.t(

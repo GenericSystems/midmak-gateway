@@ -15,10 +15,17 @@ import {
   DELETE_POSITION,
   DELETE_POSITION_SUCCESS,
   DELETE_POSITION_FAIL,
+  GET_POSITION_TYPES,
+  GET_POSITION_TYPES_FAIL,
+  GET_POSITION_TYPES_SUCCESS,
+  GET_POSITIONS_OPT,
+  GET_POSITIONS_OPT_FAIL,
+  GET_POSITIONS_OPT_SUCCESS,
 } from "./actionTypes";
 
-export const getPositions = () => ({
+export const getPositions = positions => ({
   type: GET_POSITIONS,
+  payload: positions,
 });
 
 export const getPositionsSuccess = positions => ({
@@ -89,5 +96,33 @@ export const deletePositionSuccess = position => ({
 
 export const deletePositionFail = error => ({
   type: DELETE_POSITION_FAIL,
+  payload: error,
+});
+
+export const getPositionTypes = () => ({
+  type: GET_POSITION_TYPES,
+});
+
+export const getPositionTypesSuccess = positions => ({
+  type: GET_POSITION_TYPES_SUCCESS,
+  payload: positions,
+});
+
+export const getPositionTypesFail = error => ({
+  type: GET_POSITION_TYPES_FAIL,
+  payload: error,
+});
+
+export const getPositionsOpt = () => ({
+  type: GET_POSITIONS_OPT,
+});
+
+export const getPositionsOptSuccess = positions => ({
+  type: GET_POSITIONS_OPT_SUCCESS,
+  payload: positions,
+});
+
+export const getPositionsOptFail = error => ({
+  type: GET_POSITIONS_OPT_FAIL,
   payload: error,
 });

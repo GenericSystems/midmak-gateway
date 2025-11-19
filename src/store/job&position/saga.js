@@ -20,7 +20,16 @@ import {
   updatePositionFail,
   deletePositionSuccess,
   deletePositionFail,
+  getPositionTypesSuccess,
+  getPositionTypesFail,
+  getPositionsOptSuccess,
+  getPositionsOptFail,
 } from "./actions";
+
+import {
+  getCorporateNodesOptSuccess,
+  getCorporateNodesOptFail,
+} from "../HR/employees/actions";
 
 //Include Both Helper File with needed methods
 import {
@@ -29,9 +38,15 @@ import {
   addNewPosition,
   updatePosition,
   deletePosition,
+  getPositionTypes,
+  getPositionsOpt,
+  getCorporateNodesOpt,
 } from "../../helpers/fakebackend_helper";
 
-function* fetchPositions() {
+function* fetchPositions(selectedpayload) {
+  let lang = selectedpayload.payload;
+  console.log("selectedpayloadselectedpayload", selectedpayload);
+  const titleField = lang === "en" ? "enTitle" : "arTitle";
   const get_position_req = {
     source: "db",
     procedure: "SisApp_getData",
@@ -44,6 +59,50 @@ function* fetchPositions() {
     yield put(getPositionsSuccess(response));
   } catch (error) {
     yield put(getPositionsFail(error));
+  }
+
+  const get_positionType_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_ContractType",
+    fields: `Id,${titleField}`,
+  };
+
+  try {
+    const response = yield call(getPositionTypes, get_positionType_req);
+    yield put(getPositionTypesSuccess(response));
+  } catch (error) {
+    yield put(getPositionTypesFail(error));
+  }
+
+  const get_positionOpt_req = {
+    source: "db",
+    procedure: "Generic_getOptions",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_ContractType",
+    fields: `Id,${titleField}`,
+  };
+
+  try {
+    const response = yield call(getPositionsOpt, get_positionOpt_req);
+    yield put(getPositionsOptSuccess(response));
+  } catch (error) {
+    yield put(getPositionsOptFail(error));
+  }
+
+  const get_CorporateNodes_req = {
+    source: "db",
+    procedure: "Generic_Optiondatalist",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_Gender",
+    fields: `Id,${titleField}`,
+  };
+  try {
+    const response = yield call(getCorporateNodesOpt, get_CorporateNodes_req);
+    yield put(getCorporateNodesOptSuccess(response));
+  } catch (error) {
+    yield put(getCorporateNodesOptFail(error));
   }
 }
 
