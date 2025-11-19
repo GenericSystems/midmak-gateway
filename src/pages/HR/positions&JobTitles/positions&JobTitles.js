@@ -711,7 +711,9 @@ class PositionsList extends Component {
         />
         <div dir={direction} className="page-content">
           <div className="container-fluid">
-            <Breadcrumbs breadcrumbItem={this.props.t("Positions")} />
+            <Breadcrumbs
+              breadcrumbItem={this.props.t("Positions & Job Titles")}
+            />
             <Row>
               <Col>
                 <Card>
