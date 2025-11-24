@@ -21,6 +21,15 @@ import {
   GET_POSITIONS_OPT,
   GET_POSITIONS_OPT_FAIL,
   GET_POSITIONS_OPT_SUCCESS,
+  ADD_NEW_JOB_TITLE,
+  ADD_JOB_TITLE_SUCCESS,
+  ADD_JOB_TITLE_FAIL,
+  UPDATE_JOB_TITLE,
+  UPDATE_JOB_TITLE_SUCCESS,
+  UPDATE_JOB_TITLE_FAIL,
+  DELETE_JOB_TITLE,
+  DELETE_JOB_TITLE_SUCCESS,
+  DELETE_JOB_TITLE_FAIL,
 } from "./actionTypes";
 
 export const getPositions = positions => ({
@@ -124,5 +133,52 @@ export const getPositionsOptSuccess = positions => ({
 
 export const getPositionsOptFail = error => ({
   type: GET_POSITIONS_OPT_FAIL,
+  payload: error,
+});
+
+export const addNewJobTitle = jobTitle => ({
+  type: ADD_NEW_JOB_TITLE,
+  payload: jobTitle,
+});
+
+export const addJobTitleSuccess = jobTitle => ({
+  type: ADD_JOB_TITLE_SUCCESS,
+  payload: jobTitle,
+});
+
+export const addJobTitleFail = error => ({
+  type: ADD_JOB_TITLE_FAIL,
+  payload: error,
+});
+
+export const updateJobTitle = jobTitle => {
+  return {
+    type: UPDATE_JOB_TITLE,
+    payload: jobTitle,
+  };
+};
+
+export const updateJobTitleSuccess = jobTitle => ({
+  type: UPDATE_JOB_TITLE_SUCCESS,
+  payload: jobTitle,
+});
+
+export const updateJobTitleFail = error => ({
+  type: UPDATE_JOB_TITLE_FAIL,
+  payload: error,
+});
+
+export const deleteJobTitle = jobTitle => ({
+  type: DELETE_JOB_TITLE,
+  payload: jobTitle,
+});
+
+export const deleteJobTitleSuccess = jobTitle => ({
+  type: DELETE_JOB_TITLE_SUCCESS,
+  payload: jobTitle,
+});
+
+export const deleteJobTitleFail = error => ({
+  type: DELETE_JOB_TITLE_FAIL,
   payload: error,
 });

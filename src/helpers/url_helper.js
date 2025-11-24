@@ -1152,7 +1152,7 @@ export const ADD_NEW_CONTRACT = "/add/contract";
 export const UPDATE_CONTRACT = "/update/contract";
 export const DELETE_CONTRACT = "/deleted/contract";
 
-//CONTRACTS
+//POSITIONS
 export const GET_POSITIONS = "/positions";
 export const GET_POSITION_DELETED_VALUE = "/deleted";
 export const ADD_NEW_POSITION = "/add/position";
@@ -1160,6 +1160,11 @@ export const UPDATE_POSITION = "/update/position";
 export const DELETE_POSITION = "/deleted/position";
 export const GET_POSITION_TYPES = "/positionTypes";
 export const GET_POSITIONS_OPT = "/positionsOpt";
+
+//jobTitles
+export const ADD_NEW_JOB_TITLE = "/add/jobTitle";
+export const UPDATE_JOB_TITLE = "/update/jobTitle";
+export const DELETE_JOB_TITLE = "/deleted/jobTitle";
 
 //MARKS_OBJECTIONS
 export const GET_MARKS_OBJECTIONS = "/marksObjections";

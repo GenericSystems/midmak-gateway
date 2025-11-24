@@ -42,6 +42,9 @@ import {
   updatePosition,
   deletePosition,
   getPositionDeletedValue,
+  addNewJobTitle,
+  updateJobTitle,
+  deleteJobTitle,
 } from "store/job&position/actions";
 import paginationFactory, {
   PaginationProvider,
@@ -77,13 +80,15 @@ class PositionsList extends Component {
       isOpen: false,
       isAdd: false,
       selectedPositionType: null,
-      selectedPosition: null,
+      selectedPositionId: 0,
       positionTypeError: false,
       positionError: false,
       errorMessage: null,
       successMessage: null,
       values: "",
       isNestedModalOpen: false,
+      isModalOpen: false,
+      isShowJobTitle: false,
       languageState: "",
     };
     this.handleSelect = this.handleSelect.bind(this);
@@ -198,41 +203,15 @@ class PositionsList extends Component {
   };
 
   toggleNestedModal = () => {
-    const { isEdit, selectedOption, selectedSchedule } = this.state;
-    const { onGetScheduleTimings, onGetScheduleTimingDescs, onGetHallTimings } =
-      this.props;
-    console.log("isEdit", isEdit);
-    if (selectedOption === "Position") {
-      if (isEdit) {
-        this.setState({
-          positionJobTitleData: {
-            Capacity: "",
-            PositionNumber: "",
-          },
-          isEdit: false,
-          selectedOption: "",
-        });
-      }
-    } else {
-      if (isEdit) {
-        this.setState({
-          positionJobTitleData: {
-            Capacity: "",
-            LabNumber: "",
-          },
-          isEdit: false,
-          selectedOption: "",
-        });
-      }
-      this.setState({ selectedRow: null, selectedType: "" });
-    }
-
     this.setState(prevState => ({
       isNestedModalOpen: !prevState.isNestedModalOpen,
     }));
-    this.setState({
-      selectedRowPositionLab: null,
-    });
+  };
+
+  toggleModal = () => {
+    this.setState(prevState => ({
+      isModalOpen: !prevState.isModalOpen,
+    }));
   };
 
   onClickDelete = rowId => {
@@ -302,7 +281,7 @@ class PositionsList extends Component {
     }
   };
 
-  // handleSubmit = values => {
+  // handleSave = values => {
   //   console.log("values", values);
   //   let flag = 0;
   //   const { selectedRowData, selectedOption, isEdit, positionJobTitleData } =
@@ -422,54 +401,128 @@ class PositionsList extends Component {
   //   }
   // };
 
-  handleSubmit = values => {
+  handleSave = values => {
     const {
       selectedOption,
       isEdit,
       positionJobTitleData,
       selectedPositionType,
-      selectedPosition,
+      selectedPositionId,
+      isAdd,
       selectedCorporateKey,
     } = this.state;
     const { onAddNewPosition, onUpdatePosition, positions } = this.props;
+    values["arTitle"] = values["arTitle"] || "";
+    values["enTitle"] = values["enTitle"] || "";
+    values["positionCode"] = values["positionCode"] || "";
+    values["positionRank"] = values["positionRank"] || "";
+    values["positionTypeId"] = selectedPositionType;
+    console.log("valuesssssssssssssssssssss", values);
 
     let positionInfo = {};
+    if (
+      values.arTitle &&
+      values.enTitle &&
+      values.positionCode &&
+      values.positionRank &&
+      positionTypeId !== null
+    ) {
+      Object.keys(values).forEach(function (key) {
+        if (
+          values[key] != undefined &&
+          (values[key].length > 0 || values[key] != "")
+        )
+          console.log("9999999", positionInfo);
+        positionInfo[key] = values[key];
+      });
 
-    if (selectedOption === "Position") {
-      positionInfo = {
-        positionAr: values.positionAr,
-        positionEn: values.positionEn,
-        positionCode: values.positionCode,
-        positionRank: values.positionRank,
-        positionTypeId: selectedPositionType,
-        tablename: "Common_Position",
-      };
-    }
-
-    if (selectedOption === "JobTitle") {
-      positionInfo = {
-        jobTitleAr: values.jobTitleAr,
-        jobTitleEn: values.jobTitleEn,
-        jobTitleCode: values.jobTitleCode,
-        positionId: selectedPosition,
-        corporateNodeId: selectedCorporateKey,
-        tablename: "Common_JobTitle",
-      };
-    }
-    console.log(
-      "positionJobTitleDatapositionJobTitleDatapositionJobTitleData",
-      positionInfo
-    );
-
-    if (isEdit) {
-      positionInfo.Id = positionJobTitleData.Id;
-      // onUpdatePosition(positionInfo);
+      if (isEdit) {
+        console.log("333333", positionInfo);
+        onUpdatePosition(positionInfo);
+        // onGetDefinePeriods(positionInfo);
+        this.toggleNestedModal();
+      } else {
+        console.log("55555", positionInfo);
+        const response = onAddNewPosition(positionInfo);
+        if (response?.Id) {
+          this.setState({ positionId: response.Id });
+        }
+        this.setState({ isShowJobTitle: true });
+      }
+      this.setState({
+        errorMessages: {},
+      });
     } else {
-      // onAddNewPosition(positionInfo);
-    }
+      let emptyError = "";
+      if (selectedPositionType === undefined) {
+        emptyError = "Fill the empty select";
+      }
 
-    this.setState({ selectedOption: "" });
-    this.toggleNestedModal();
+      this.setState({ emptyError: emptyError });
+    }
+  };
+
+  handleSubmit = values => {
+    const { isAdd, selectedPositionId, selectedCorporateKey } = this.state;
+    const { onAddNewPosition, onUpdatePosition, positions, lastAddedId } =
+      this.props;
+
+    // if (selectedOption === "JobTitle") {
+    //   positionInfo = {
+    //     arTitle : values.arTitle ,
+    //     enTitle: values.enTitle,
+    //     jobTitleCode: values.jobTitleCode,
+    //     positionId: selectedPositionId,
+    //     corporateNodeId: selectedCorporateKey,
+    //     tablename: "Common_JobTitle",
+    //   };
+    // }
+    values["arTitle"] = values["arTitle"] || "";
+    values["enTitle"] = values["enTitle"] || "";
+    values["jobTitleCode"] = values["jobTitleCode"] || "";
+    values["corporateNodeId"] = selectedCorporateKey;
+    (values["positionId"] = isAdd ? lastAddedId : selectedPositionId),
+      console.log("valuesssssssssssssssssssss", values);
+
+    let positionInfo = {};
+    if (
+      values.arTitle &&
+      values.enTitle &&
+      values.positionCode &&
+      values.positionRank &&
+      positionTypeId !== null
+    ) {
+      Object.keys(values).forEach(function (key) {
+        if (
+          values[key] != undefined &&
+          (values[key].length > 0 || values[key] != "")
+        )
+          console.log("9999999", positionInfo);
+        positionInfo[key] = values[key];
+      });
+      if (isEdit) {
+        console.log("9999999", positionInfo);
+        onUpdatePosition(positionInfo);
+        // onGetDefinePeriods(positionInfo);
+        this.toggleNestedModal();
+      } else if (isAdd) {
+        const response = onAddNewPosition(positionInfo);
+        if (response?.Id) {
+          this.setState({ positionId: response.Id });
+        }
+        this.setState({ isShowJobTitle: true });
+      }
+      this.setState({
+        errorMessages: {},
+      });
+    } else {
+      let emptyError = "";
+      if (selectedPositionType === undefined) {
+        emptyError = "Fill the empty select";
+      }
+
+      this.setState({ emptyError: emptyError });
+    }
   };
 
   handleSelect = (fieldName, selectedValue) => {
@@ -641,7 +694,7 @@ class PositionsList extends Component {
       );
 
       this.setState({
-        selectedPosition: selectedValue,
+        selectedPositionId: selectedValue,
         positionId: name.label,
       });
     }
@@ -669,9 +722,11 @@ class PositionsList extends Component {
       showEditButton,
       showSearchButton,
       isNestedModalOpen,
+      isModalOpen,
       positionJobTitleData,
       positionTypeError,
       positionError,
+      isShowJobTitle,
       languageState,
     } = this.state;
 
@@ -692,14 +747,14 @@ class PositionsList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "jobPosition",
-        text: this.props.t("Position /Job Title"),
+        dataField: "position",
+        text: this.props.t("Position"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "jobPositionCode",
-        text: this.props.t("Position Code /Job Title Code"),
+        dataField: "positionCode",
+        text: this.props.t("Position Code"),
         sort: true,
         editable: false,
       },
@@ -712,6 +767,67 @@ class PositionsList extends Component {
       {
         dataField: "positionRank",
         text: this.props.t("Position Rank"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "menu",
+        text: "",
+        isDummyField: true,
+        editable: false,
+        //  hidden: !showDeleteButton,
+        formatter: (cellContent, position) => (
+          <div className="d-flex gap-3">
+            <Tooltip
+              title={this.props.t("View Employee Information")}
+              placement="top"
+            >
+              <IconButton
+                onClick={() => this.handleEmployeeDataClick(position)}
+              >
+                <i className="fas fa-male font-size-18" id="viewtooltip"></i>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={this.props.t("Edit")} placement="top">
+              <IconButton onClick={() => this.handlePositionClick(position)}>
+                <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={this.props.t("Delete")} placement="top">
+              <IconButton onClick={() => this.onClickDelete(position)}>
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  id="deletetooltip"
+                ></i>
+              </IconButton>
+            </Tooltip>
+          </div>
+        ),
+      },
+    ];
+    const columns2 = [
+      { dataField: "Id", text: this.props.t("ID"), hidden: true },
+      {
+        dataField: "arTitle ",
+        text: this.props.t("Job Title(ar)"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "enTitle",
+        text: this.props.t("Job Title(en)"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "jobTitleCode",
+        text: this.props.t("Job Title Code"),
+        sort: true,
+        editable: false,
+      },
+      {
+        dataField: "corporateNodeId",
+        text: this.props.t("Corporate Node"),
         sort: true,
         editable: false,
       },
@@ -902,405 +1018,62 @@ class PositionsList extends Component {
                                 >
                                   <ModalHeader toggle={this.toggleNestedModal}>
                                     {isEdit
-                                      ? t(
-                                          `Edit ${
-                                            selectedOption === "Position"
-                                              ? "Position"
-                                              : "JobTitle"
-                                          }`
-                                        )
-                                      : selectedOption === "Position"
-                                      ? t("Add Position")
-                                      : selectedOption === "JobTitle"
-                                      ? t("Add Job Title")
-                                      : t("Add Form")}
+                                      ? t("Edit Position")
+                                      : t("Add Position")}
                                   </ModalHeader>
                                   <ModalBody>
                                     <div>
                                       <div>
-                                        <Label>
-                                          <Input
-                                            type="radio"
-                                            id="Position"
-                                            name="radioOption"
-                                            value="Position"
-                                            checked={
-                                              selectedOption === "Position"
-                                            }
-                                            onChange={this.handleChangeOption}
-                                            disabled={
-                                              isEdit && isPositionRadioDisabled
-                                            }
-                                          />
-                                          {"  "} {t("Position")}
-                                        </Label>
-
-                                        <Label>
-                                          <Input
-                                            type="radio"
-                                            id="JobTitle"
-                                            name="radioOption"
-                                            value="JobTitle"
-                                            checked={
-                                              selectedOption === "JobTitle"
-                                            }
-                                            onChange={this.handleChangeOption}
-                                            disabled={
-                                              isEdit && isLabRadioDisabled
-                                            }
-                                          />
-                                          {"  "} {t("JobTitle")}
-                                        </Label>
-                                      </div>
-
-                                      <div>
-                                        {selectedOption === "Position" && (
-                                          <Formik
-                                            enableReinitialize={true}
-                                            initialValues={{
-                                              positionAr:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.positionAr) ||
-                                                "",
-                                              positionEn:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.positionEn) ||
-                                                "",
-                                              positionTypeId:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.positionTypeId) ||
-                                                "",
-                                              positionRank:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.positionRank) ||
-                                                "",
-                                              positionCode:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.positionCode) ||
-                                                "",
-                                            }}
-                                            validationSchema={Yup.object().shape(
-                                              {
-                                                positionAr:
-                                                  Yup.string().required(
-                                                    "Please Enter Your Position in Arabic"
-                                                  ),
-                                                positionEn:
-                                                  Yup.string().required(
-                                                    "Please Enter Your Position in English"
-                                                  ),
-                                                positionRank:
-                                                  Yup.string().required(
-                                                    "Please Enter Your Position Rank"
-                                                  ),
-                                                positionCode:
-                                                  Yup.string().required(
-                                                    "Please Enter Your Position Code"
-                                                  ),
-                                              }
-                                            )}
-                                            onSubmit={values => {}}
-                                          >
-                                            {({
-                                              errors,
-                                              status,
-                                              touched,
-                                              values,
-                                              handleChange,
-                                              handleBlur,
-                                            }) => (
-                                              <>
-                                                <div>
-                                                  {duplicateError && (
-                                                    <Alert
-                                                      color="danger"
-                                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                      role="alert"
-                                                    >
-                                                      {duplicateError}
-                                                      <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        aria-label="Close"
-                                                        onClick={() =>
-                                                          this.handleAlertClose(
-                                                            "duplicateError"
-                                                          )
-                                                        }
-                                                      ></button>
-                                                    </Alert>
-                                                  )}
-                                                  {emptyError && (
-                                                    <Alert
-                                                      color="danger"
-                                                      className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                      role="alert"
-                                                    >
-                                                      {emptyError}
-                                                      <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        aria-label="Close"
-                                                        onClick={() =>
-                                                          this.handleAlertClose(
-                                                            "emptyError"
-                                                          )
-                                                        }
-                                                      ></button>
-                                                    </Alert>
-                                                  )}
-                                                </div>
-                                                <Form className="needs-validation">
-                                                  <div className="bordered">
-                                                    <Row>
-                                                      <Col md="6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label htmlFor="validationCustom01">
-                                                            {t("Position(ar)")}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Field
-                                                            name="positionAr"
-                                                            placeholder={t(
-                                                              "Position(ar)"
-                                                            )}
-                                                            type="text"
-                                                            className={
-                                                              "form-control" +
-                                                              (errors.positionAr &&
-                                                              touched.positionAr
-                                                                ? " is-invalid"
-                                                                : "")
-                                                            }
-                                                            autoComplete="Off"
-                                                          />
-                                                          <ErrorMessage
-                                                            name="positionAr"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </FormGroup>
-                                                      </Col>
-                                                      <Col md="6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label htmlFor="validationCustom05">
-                                                            {t("Position(en)")}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Field
-                                                            name="positionEn"
-                                                            placeholder={t(
-                                                              "Position(en)"
-                                                            )}
-                                                            type="text"
-                                                            className={
-                                                              "form-control" +
-                                                              (errors.positionEn &&
-                                                              touched.positionEn
-                                                                ? " is-invalid"
-                                                                : "")
-                                                            }
-                                                            autoComplete="Off"
-                                                          />
-                                                          <ErrorMessage
-                                                            name="positionEn"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </FormGroup>
-                                                      </Col>
-                                                    </Row>
-
-                                                    <Row>
-                                                      <Col className="col-6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label for="positionTypeId">
-                                                            {this.props.t(
-                                                              "Position Type"
-                                                            )}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Select
-                                                            className={`form-control ${
-                                                              positionTypeError
-                                                                ? "is-invalid"
-                                                                : ""
-                                                            }`}
-                                                            name="positionTypeId"
-                                                            id="positionTypeId"
-                                                            key="positionType_select"
-                                                            options={
-                                                              positionTypes
-                                                            }
-                                                            onChange={newValue =>
-                                                              this.handleSelectChange(
-                                                                "positionTypeId",
-                                                                newValue.value,
-                                                                values
-                                                              )
-                                                            }
-                                                            defaultValue={positionTypes.find(
-                                                              opt =>
-                                                                opt.value ===
-                                                                positionJobTitleData?.positionTypeId
-                                                            )}
-                                                          />
-                                                          {positionTypeError && (
-                                                            <div className="invalid-feedback">
-                                                              {this.props.t(
-                                                                "Position Type is required"
-                                                              )}
-                                                            </div>
-                                                          )}
-                                                          <ErrorMessage
-                                                            name="positionTypeId"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </FormGroup>
-                                                      </Col>
-                                                      <Col md="6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label htmlFor="validationCustom02">
-                                                            {t("Position Rank")}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Field
-                                                            name="positionRank"
-                                                            placeholder={t(
-                                                              "Position Rank"
-                                                            )}
-                                                            type="number"
-                                                            className={
-                                                              "form-control" +
-                                                              (errors.positionRank &&
-                                                              touched.positionRank
-                                                                ? " is-invalid"
-                                                                : "")
-                                                            }
-                                                            autoComplete="Off"
-                                                          />
-                                                          <ErrorMessage
-                                                            name="positionRank"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </FormGroup>
-                                                      </Col>
-                                                    </Row>
-                                                    <Row>
-                                                      <Col md="6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label htmlFor="validationCustom03">
-                                                            {t("Position Code")}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Field
-                                                            name="positionCode"
-                                                            placeholder={t(
-                                                              "Position Code"
-                                                            )}
-                                                            type="number"
-                                                            className={
-                                                              "form-control" +
-                                                              (errors.positionCode &&
-                                                              touched.positionCode
-                                                                ? " is-invalid"
-                                                                : "")
-                                                            }
-                                                            autoComplete="Off"
-                                                          />
-                                                          <ErrorMessage
-                                                            name="positionCode"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </FormGroup>
-                                                      </Col>
-                                                    </Row>
-                                                  </div>
-                                                  <Row className="justify-content-center">
-                                                    <Col
-                                                      lg="3"
-                                                      className="d-flex justify-content-center"
-                                                    >
-                                                      <Link
-                                                        to="#"
-                                                        className="btn btn-primary me-2"
-                                                        onClick={() => {
-                                                          this.handleSubmit(
-                                                            values
-                                                          );
-                                                        }}
-                                                      >
-                                                        {t("Save")}
-                                                      </Link>
-                                                    </Col>
-                                                  </Row>
-                                                </Form>
-                                              </>
-                                            )}
-                                          </Formik>
-                                        )}
-
-                                        {selectedOption === "JobTitle" && (
-                                          <Formik
-                                            enableReinitialize={true}
-                                            initialValues={{
-                                              jobTitleAr:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.jobTitleAr) ||
-                                                "",
-                                              jobTitleEn:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.jobTitleEn) ||
-                                                "",
-                                              positionId:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.positionId) ||
-                                                "",
-                                              corporateNodeId:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.corporateNodeId) ||
-                                                "",
-                                              jobTitleCode:
-                                                (positionJobTitleData &&
-                                                  positionJobTitleData.jobTitleCode) ||
-                                                "",
-                                            }}
-                                            validationSchema={Yup.object().shape(
-                                              {
-                                                jobTitleAr:
-                                                  Yup.string().required(
-                                                    "Please Enter Your Job Title in Arabic"
-                                                  ),
-                                                jobTitleEn:
-                                                  Yup.string().required(
-                                                    "Please Enter Your Job Title in English"
-                                                  ),
-                                              }
-                                            )}
-                                            onSubmit={values => {}}
-                                          >
-                                            {({
-                                              errors,
-                                              status,
-                                              touched,
-                                              values,
-                                              handleChange,
-                                              handleBlur,
-                                            }) => (
-                                              <>
+                                        <Formik
+                                          enableReinitialize={true}
+                                          initialValues={{
+                                            arTitle:
+                                              (positionJobTitleData &&
+                                                positionJobTitleData.arTitle) ||
+                                              "",
+                                            enTitle:
+                                              (positionJobTitleData &&
+                                                positionJobTitleData.enTitle) ||
+                                              "",
+                                            positionTypeId:
+                                              (positionJobTitleData &&
+                                                positionJobTitleData.positionTypeId) ||
+                                              "",
+                                            positionRank:
+                                              (positionJobTitleData &&
+                                                positionJobTitleData.positionRank) ||
+                                              "",
+                                            positionCode:
+                                              (positionJobTitleData &&
+                                                positionJobTitleData.positionCode) ||
+                                              "",
+                                          }}
+                                          validationSchema={Yup.object().shape({
+                                            arTitle: Yup.string().required(
+                                              "Please Enter Your Position in Arabic"
+                                            ),
+                                            enTitle: Yup.string().required(
+                                              "Please Enter Your Position in English"
+                                            ),
+                                            positionRank: Yup.string().required(
+                                              "Please Enter Your Position Rank"
+                                            ),
+                                            positionCode: Yup.string().required(
+                                              "Please Enter Your Position Code"
+                                            ),
+                                          })}
+                                          onSubmit={values => {}}
+                                        >
+                                          {({
+                                            errors,
+                                            status,
+                                            touched,
+                                            values,
+                                            handleChange,
+                                            handleBlur,
+                                          }) => (
+                                            <>
+                                              <div>
                                                 {duplicateError && (
                                                   <Alert
                                                     color="danger"
@@ -1320,268 +1093,578 @@ class PositionsList extends Component {
                                                     ></button>
                                                   </Alert>
                                                 )}
-                                                <Form className="needs-validation">
-                                                  <div className="bordered">
-                                                    <Row>
-                                                      <Col md="6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label htmlFor="validationCustom06">
-                                                            {t("Job Title(ar)")}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Field
-                                                            name="jobTitleAr"
-                                                            placeholder={t(
-                                                              "Job Title(ar)"
-                                                            )}
-                                                            type="text"
-                                                            className={
-                                                              "form-control" +
-                                                              (errors.jobTitleAr &&
-                                                              touched.jobTitleAr
-                                                                ? " is-invalid"
-                                                                : "")
-                                                            }
-                                                            autoComplete="Off"
-                                                          />
-                                                          <ErrorMessage
-                                                            name="jobTitleAr"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </FormGroup>
-                                                      </Col>
-                                                      <Col md="6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label htmlFor="validationCustom05">
-                                                            {t("Job Title(en)")}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Field
-                                                            name="jobTitleEn"
-                                                            placeholder={t(
-                                                              "Job Title(en)"
-                                                            )}
-                                                            type="text"
-                                                            className={
-                                                              "form-control" +
-                                                              (errors.jobTitleEn &&
-                                                              touched.jobTitleEn
-                                                                ? " is-invalid"
-                                                                : "")
-                                                            }
-                                                            autoComplete="Off"
-                                                          />
-                                                          <ErrorMessage
-                                                            name="jobTitleEn"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </FormGroup>
-                                                      </Col>
-                                                    </Row>
-
-                                                    <Row>
-                                                      <Col className="col-6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label for="positionId">
-                                                            {this.props.t(
-                                                              "Position"
-                                                            )}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Select
-                                                            className={`form-control ${
-                                                              positionError
-                                                                ? "is-invalid"
-                                                                : ""
-                                                            }`}
-                                                            name="positionId"
-                                                            id="positionId"
-                                                            key="position_select"
-                                                            options={
-                                                              positionsOpt
-                                                            }
-                                                            onChange={newValue =>
-                                                              this.handleSelectChange(
-                                                                "positionId",
-                                                                newValue.value,
-                                                                values
-                                                              )
-                                                            }
-                                                            defaultValue={positionsOpt.find(
-                                                              opt =>
-                                                                opt.value ===
-                                                                positionJobTitleData?.positionId
-                                                            )}
-                                                          />
-                                                          {positionError && (
-                                                            <div className="invalid-feedback">
-                                                              {this.props.t(
-                                                                "Position is required"
-                                                              )}
-                                                            </div>
+                                                {emptyError && (
+                                                  <Alert
+                                                    color="danger"
+                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                    role="alert"
+                                                  >
+                                                    {emptyError}
+                                                    <button
+                                                      type="button"
+                                                      className="btn-close"
+                                                      aria-label="Close"
+                                                      onClick={() =>
+                                                        this.handleAlertClose(
+                                                          "emptyError"
+                                                        )
+                                                      }
+                                                    ></button>
+                                                  </Alert>
+                                                )}
+                                              </div>
+                                              <Form className="needs-validation">
+                                                <div className="bordered">
+                                                  <Row>
+                                                    <Col md="6">
+                                                      <FormGroup className="mb-3">
+                                                        <Label htmlFor="validationCustom01">
+                                                          {t("Position(ar)")}
+                                                        </Label>
+                                                        <span className="text-danger">
+                                                          *
+                                                        </span>
+                                                        <Field
+                                                          name="arTitle"
+                                                          placeholder={t(
+                                                            "Position(ar)"
                                                           )}
-                                                          <ErrorMessage
-                                                            name="positionId"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </FormGroup>
-                                                      </Col>
-                                                      <Col md="6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label for="corporateNode">
-                                                            {t(
-                                                              "Corporate Node"
-                                                            )}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Field
-                                                            name="corporateNodeId"
-                                                            as="input"
-                                                            type="text"
-                                                            id="corporateNode"
-                                                            placeholder="Search..."
-                                                            className={
-                                                              "form-control" +
-                                                              ((errors.corporateNodeId &&
-                                                                touched.corporateNodeId) ||
-                                                              corporateNodeError
-                                                                ? " is-invalid"
-                                                                : "")
-                                                            }
-                                                            value={
-                                                              corporateNodesOpt.find(
-                                                                h =>
-                                                                  h.key ===
-                                                                  this.state
-                                                                    .selectedCorporateKey
-                                                              )?.value || ""
-                                                            }
-                                                            onChange={e => {
-                                                              const newValue =
-                                                                e.target.value;
-
-                                                              const selectedCorporateNode =
-                                                                corporateNodesOpt.find(
-                                                                  h =>
-                                                                    h.value ===
-                                                                    newValue
-                                                                );
-
-                                                              if (
-                                                                selectedCorporateNode
-                                                              ) {
-                                                                this.setState({
-                                                                  selectedCorporateKey:
-                                                                    selectedCorporateNode.key,
-                                                                  corporateNodeName:
-                                                                    selectedCorporateNode.value,
-                                                                });
-                                                              } else {
-                                                                this.setState({
-                                                                  selectedCorporateKey:
-                                                                    null,
-                                                                  corporateNodeName:
-                                                                    newValue,
-                                                                });
-                                                              }
-                                                            }}
-                                                            list="corporateNodesList"
-                                                            autoComplete="off"
-                                                          />
-
-                                                          <datalist id="corporateNodesList">
-                                                            {corporateNodesOpt.map(
-                                                              corporateNode => (
-                                                                <option
-                                                                  key={
-                                                                    corporateNode.key
-                                                                  }
-                                                                  value={
-                                                                    corporateNode.value
-                                                                  }
-                                                                />
-                                                              )
-                                                            )}
-                                                          </datalist>
-                                                          {corporateNodeError && (
-                                                            <div className="invalid-feedback">
-                                                              {this.props.t(
-                                                                "Corporate Node is required"
-                                                              )}
-                                                            </div>
+                                                          type="text"
+                                                          className={
+                                                            "form-control" +
+                                                            (errors.arTitle &&
+                                                            touched.arTitle
+                                                              ? " is-invalid"
+                                                              : "")
+                                                          }
+                                                          autoComplete="Off"
+                                                        />
+                                                        <ErrorMessage
+                                                          name="arTitle"
+                                                          component="div"
+                                                          className="invalid-feedback"
+                                                        />
+                                                      </FormGroup>
+                                                    </Col>
+                                                    <Col md="6">
+                                                      <FormGroup className="mb-3">
+                                                        <Label htmlFor="validationCustom05">
+                                                          {t("Position(en)")}
+                                                        </Label>
+                                                        <span className="text-danger">
+                                                          *
+                                                        </span>
+                                                        <Field
+                                                          name="enTitle"
+                                                          placeholder={t(
+                                                            "Position(en)"
                                                           )}
-                                                        </FormGroup>
-                                                      </Col>
-                                                    </Row>
-                                                    <Row>
-                                                      <Col md="6">
-                                                        <FormGroup className="mb-3">
-                                                          <Label htmlFor="validationCustom07">
-                                                            {t(
-                                                              "Job Title Code"
-                                                            )}
-                                                          </Label>
-                                                          <span className="text-danger">
-                                                            *
-                                                          </span>
-                                                          <Field
-                                                            name="jobTitleCode"
-                                                            placeholder={t(
-                                                              "Job Title Code"
-                                                            )}
-                                                            type="number"
-                                                            className={
-                                                              "form-control" +
-                                                              (errors.jobTitleCode &&
-                                                              touched.jobTitleCode
-                                                                ? " is-invalid"
-                                                                : "")
-                                                            }
-                                                            autoComplete="Off"
-                                                          />
-                                                          <ErrorMessage
-                                                            name="jobTitleCode"
-                                                            component="div"
-                                                            className="invalid-feedback"
-                                                          />
-                                                        </FormGroup>
-                                                      </Col>
-                                                    </Row>
-                                                  </div>
-                                                  <Row className="justify-content-center">
-                                                    <Col
-                                                      lg="3"
-                                                      className="d-flex justify-content-center"
-                                                    >
-                                                      <Link
-                                                        className="btn btn-primary me-2"
-                                                        to="#"
-                                                        onClick={() => {
-                                                          this.handleSubmit(
-                                                            values
-                                                          );
-                                                        }}
-                                                      >
-                                                        {t("Save")}
-                                                      </Link>
+                                                          type="text"
+                                                          className={
+                                                            "form-control" +
+                                                            (errors.enTitle &&
+                                                            touched.enTitle
+                                                              ? " is-invalid"
+                                                              : "")
+                                                          }
+                                                          autoComplete="Off"
+                                                        />
+                                                        <ErrorMessage
+                                                          name="enTitle"
+                                                          component="div"
+                                                          className="invalid-feedback"
+                                                        />
+                                                      </FormGroup>
                                                     </Col>
                                                   </Row>
-                                                </Form>
-                                              </>
-                                            )}
-                                          </Formik>
-                                        )}
+
+                                                  <Row>
+                                                    <Col className="col-6">
+                                                      <FormGroup className="mb-3">
+                                                        <Label for="positionTypeId">
+                                                          {this.props.t(
+                                                            "Position Type"
+                                                          )}
+                                                        </Label>
+                                                        <span className="text-danger">
+                                                          *
+                                                        </span>
+                                                        <Select
+                                                          className={`form-control ${
+                                                            positionTypeError
+                                                              ? "is-invalid"
+                                                              : ""
+                                                          }`}
+                                                          name="positionTypeId"
+                                                          id="positionTypeId"
+                                                          key="positionType_select"
+                                                          options={
+                                                            positionTypes
+                                                          }
+                                                          onChange={newValue =>
+                                                            this.handleSelectChange(
+                                                              "positionTypeId",
+                                                              newValue.value,
+                                                              values
+                                                            )
+                                                          }
+                                                          defaultValue={positionTypes.find(
+                                                            opt =>
+                                                              opt.value ===
+                                                              positionJobTitleData?.positionTypeId
+                                                          )}
+                                                        />
+                                                        {positionTypeError && (
+                                                          <div className="invalid-feedback">
+                                                            {this.props.t(
+                                                              "Position Type is required"
+                                                            )}
+                                                          </div>
+                                                        )}
+                                                        <ErrorMessage
+                                                          name="positionTypeId"
+                                                          component="div"
+                                                          className="invalid-feedback"
+                                                        />
+                                                      </FormGroup>
+                                                    </Col>
+                                                    <Col md="6">
+                                                      <FormGroup className="mb-3">
+                                                        <Label htmlFor="validationCustom02">
+                                                          {t("Position Rank")}
+                                                        </Label>
+                                                        <span className="text-danger">
+                                                          *
+                                                        </span>
+                                                        <Field
+                                                          name="positionRank"
+                                                          placeholder={t(
+                                                            "Position Rank"
+                                                          )}
+                                                          type="number"
+                                                          className={
+                                                            "form-control" +
+                                                            (errors.positionRank &&
+                                                            touched.positionRank
+                                                              ? " is-invalid"
+                                                              : "")
+                                                          }
+                                                          autoComplete="Off"
+                                                        />
+                                                        <ErrorMessage
+                                                          name="positionRank"
+                                                          component="div"
+                                                          className="invalid-feedback"
+                                                        />
+                                                      </FormGroup>
+                                                    </Col>
+                                                  </Row>
+                                                  <Row>
+                                                    <Col md="6">
+                                                      <FormGroup className="mb-3">
+                                                        <Label htmlFor="validationCustom03">
+                                                          {t("Position Code")}
+                                                        </Label>
+                                                        <span className="text-danger">
+                                                          *
+                                                        </span>
+                                                        <Field
+                                                          name="positionCode"
+                                                          placeholder={t(
+                                                            "Position Code"
+                                                          )}
+                                                          type="number"
+                                                          className={
+                                                            "form-control" +
+                                                            (errors.positionCode &&
+                                                            touched.positionCode
+                                                              ? " is-invalid"
+                                                              : "")
+                                                          }
+                                                          autoComplete="Off"
+                                                        />
+                                                        <ErrorMessage
+                                                          name="positionCode"
+                                                          component="div"
+                                                          className="invalid-feedback"
+                                                        />
+                                                      </FormGroup>
+                                                    </Col>
+                                                  </Row>
+                                                </div>
+                                                {(isEdit || isShowJobTitle) && (
+                                                  <Row>
+                                                    <Row>
+                                                      <Col sm="4"></Col>
+                                                      {/*    {showAddButton && ( */}
+                                                      <Col sm="8">
+                                                        <div className="text-sm-end">
+                                                          <Tooltip
+                                                            title={this.props.t(
+                                                              "Add"
+                                                            )}
+                                                            placement="top"
+                                                          >
+                                                            <IconButton
+                                                              color="primary"
+                                                              onClick={
+                                                                this.toggleModal
+                                                              }
+                                                            >
+                                                              <i className="mdi mdi-plus-circle blue-noti-icon" />
+                                                            </IconButton>
+                                                          </Tooltip>
+                                                        </div>
+                                                      </Col>
+                                                    </Row>
+                                                    <BootstrapTable
+                                                      {...toolkitprops.baseProps}
+                                                      {...paginationTableProps}
+                                                      keyField="Id"
+                                                      data={positions}
+                                                      defaultSorted={
+                                                        defaultSorting
+                                                      }
+                                                      sectionLabs={
+                                                        "table align-middle table-nowrap table-hover"
+                                                      }
+                                                      //bootstrap4 To make table headings into one format
+                                                      bootstrap4
+                                                      hover
+                                                      columns={columns2}
+                                                      cellEdit={cellEditFactory(
+                                                        {
+                                                          mode: "click",
+                                                          blurToSave: true,
+                                                        }
+                                                      )}
+                                                      noDataIndication={t(
+                                                        "No Courses Offering"
+                                                      )}
+                                                    />
+                                                  </Row>
+                                                )}
+
+                                                <Modal
+                                                  isOpen={isModalOpen}
+                                                  toggle={this.toggleModal}
+                                                >
+                                                  <ModalHeader
+                                                    toggle={this.toggleModal}
+                                                  >
+                                                    {isEdit
+                                                      ? t("Edit Job Title")
+                                                      : t("Add Job Title")}
+                                                  </ModalHeader>
+                                                  <ModalBody>
+                                                    <Formik
+                                                      enableReinitialize={true}
+                                                      initialValues={{
+                                                        arTitle:
+                                                          (positionJobTitleData &&
+                                                            positionJobTitleData.arTitle) ||
+                                                          "",
+                                                        enTitle:
+                                                          (positionJobTitleData &&
+                                                            positionJobTitleData.enTitle) ||
+                                                          "",
+                                                        corporateNodeId:
+                                                          (positionJobTitleData &&
+                                                            positionJobTitleData.corporateNodeId) ||
+                                                          "",
+                                                        jobTitleCode:
+                                                          (positionJobTitleData &&
+                                                            positionJobTitleData.jobTitleCode) ||
+                                                          "",
+                                                      }}
+                                                      validationSchema={Yup.object().shape(
+                                                        {
+                                                          arTitle:
+                                                            Yup.string().required(
+                                                              "Please Enter Your Job Title in Arabic"
+                                                            ),
+                                                          enTitle:
+                                                            Yup.string().required(
+                                                              "Please Enter Your Job Title in English"
+                                                            ),
+                                                        }
+                                                      )}
+                                                      onSubmit={values => {}}
+                                                    >
+                                                      {({
+                                                        errors,
+                                                        status,
+                                                        touched,
+                                                        values,
+                                                        handleChange,
+                                                        handleBlur,
+                                                      }) => (
+                                                        <>
+                                                          {duplicateError && (
+                                                            <Alert
+                                                              color="danger"
+                                                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                              role="alert"
+                                                            >
+                                                              {duplicateError}
+                                                              <button
+                                                                type="button"
+                                                                className="btn-close"
+                                                                aria-label="Close"
+                                                                onClick={() =>
+                                                                  this.handleAlertClose(
+                                                                    "duplicateError"
+                                                                  )
+                                                                }
+                                                              ></button>
+                                                            </Alert>
+                                                          )}
+                                                          <Form className="needs-validation">
+                                                            <div className="bordered">
+                                                              <Row>
+                                                                <Col md="6">
+                                                                  <FormGroup className="mb-3">
+                                                                    <Label htmlFor="validationCustom06">
+                                                                      {t(
+                                                                        "Job Title(ar)"
+                                                                      )}
+                                                                    </Label>
+                                                                    <span className="text-danger">
+                                                                      *
+                                                                    </span>
+                                                                    <Field
+                                                                      name="arTitle"
+                                                                      placeholder={t(
+                                                                        "Job Title(ar)"
+                                                                      )}
+                                                                      type="text"
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.arTitle &&
+                                                                        touched.arTitle
+                                                                          ? " is-invalid"
+                                                                          : "")
+                                                                      }
+                                                                      autoComplete="Off"
+                                                                    />
+                                                                    <ErrorMessage
+                                                                      name="arTitle"
+                                                                      component="div"
+                                                                      className="invalid-feedback"
+                                                                    />
+                                                                  </FormGroup>
+                                                                </Col>
+                                                                <Col md="6">
+                                                                  <FormGroup className="mb-3">
+                                                                    <Label htmlFor="validationCustom05">
+                                                                      {t(
+                                                                        "Job Title(en)"
+                                                                      )}
+                                                                    </Label>
+                                                                    <span className="text-danger">
+                                                                      *
+                                                                    </span>
+                                                                    <Field
+                                                                      name="enTitle"
+                                                                      placeholder={t(
+                                                                        "Job Title(en)"
+                                                                      )}
+                                                                      type="text"
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.enTitle &&
+                                                                        touched.enTitle
+                                                                          ? " is-invalid"
+                                                                          : "")
+                                                                      }
+                                                                      autoComplete="Off"
+                                                                    />
+                                                                    <ErrorMessage
+                                                                      name="enTitle"
+                                                                      component="div"
+                                                                      className="invalid-feedback"
+                                                                    />
+                                                                  </FormGroup>
+                                                                </Col>
+                                                              </Row>
+                                                              <Row>
+                                                                <Col md="6">
+                                                                  <FormGroup className="mb-3">
+                                                                    <Label for="corporateNode">
+                                                                      {t(
+                                                                        "Corporate Node"
+                                                                      )}
+                                                                    </Label>
+                                                                    <span className="text-danger">
+                                                                      *
+                                                                    </span>
+                                                                    <Field
+                                                                      name="corporateNodeId"
+                                                                      as="input"
+                                                                      type="text"
+                                                                      id="corporateNode"
+                                                                      placeholder="Search..."
+                                                                      className={
+                                                                        "form-control" +
+                                                                        ((errors.corporateNodeId &&
+                                                                          touched.corporateNodeId) ||
+                                                                        corporateNodeError
+                                                                          ? " is-invalid"
+                                                                          : "")
+                                                                      }
+                                                                      value={
+                                                                        corporateNodesOpt.find(
+                                                                          h =>
+                                                                            h.key ===
+                                                                            this
+                                                                              .state
+                                                                              .selectedCorporateKey
+                                                                        )
+                                                                          ?.value ||
+                                                                        ""
+                                                                      }
+                                                                      onChange={e => {
+                                                                        const newValue =
+                                                                          e
+                                                                            .target
+                                                                            .value;
+
+                                                                        const selectedCorporateNode =
+                                                                          corporateNodesOpt.find(
+                                                                            h =>
+                                                                              h.value ===
+                                                                              newValue
+                                                                          );
+
+                                                                        if (
+                                                                          selectedCorporateNode
+                                                                        ) {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCorporateKey:
+                                                                                selectedCorporateNode.key,
+                                                                              corporateNodeName:
+                                                                                selectedCorporateNode.value,
+                                                                            }
+                                                                          );
+                                                                        } else {
+                                                                          this.setState(
+                                                                            {
+                                                                              selectedCorporateKey:
+                                                                                null,
+                                                                              corporateNodeName:
+                                                                                newValue,
+                                                                            }
+                                                                          );
+                                                                        }
+                                                                      }}
+                                                                      list="corporateNodesList"
+                                                                      autoComplete="off"
+                                                                    />
+
+                                                                    <datalist id="corporateNodesList">
+                                                                      {corporateNodesOpt.map(
+                                                                        corporateNode => (
+                                                                          <option
+                                                                            key={
+                                                                              corporateNode.key
+                                                                            }
+                                                                            value={
+                                                                              corporateNode.value
+                                                                            }
+                                                                          />
+                                                                        )
+                                                                      )}
+                                                                    </datalist>
+                                                                    {corporateNodeError && (
+                                                                      <div className="invalid-feedback">
+                                                                        {this.props.t(
+                                                                          "Corporate Node is required"
+                                                                        )}
+                                                                      </div>
+                                                                    )}
+                                                                  </FormGroup>
+                                                                </Col>
+                                                                <Col md="6">
+                                                                  <FormGroup className="mb-3">
+                                                                    <Label htmlFor="validationCustom07">
+                                                                      {t(
+                                                                        "Job Title Code"
+                                                                      )}
+                                                                    </Label>
+                                                                    <span className="text-danger">
+                                                                      *
+                                                                    </span>
+                                                                    <Field
+                                                                      name="jobTitleCode"
+                                                                      placeholder={t(
+                                                                        "Job Title Code"
+                                                                      )}
+                                                                      type="number"
+                                                                      className={
+                                                                        "form-control" +
+                                                                        (errors.jobTitleCode &&
+                                                                        touched.jobTitleCode
+                                                                          ? " is-invalid"
+                                                                          : "")
+                                                                      }
+                                                                      autoComplete="Off"
+                                                                    />
+                                                                    <ErrorMessage
+                                                                      name="jobTitleCode"
+                                                                      component="div"
+                                                                      className="invalid-feedback"
+                                                                    />
+                                                                  </FormGroup>
+                                                                </Col>
+                                                              </Row>
+                                                            </div>
+                                                            <Row className="justify-content-center">
+                                                              <Col
+                                                                lg="3"
+                                                                className="d-flex justify-content-center"
+                                                              >
+                                                                <Link
+                                                                  className="btn btn-primary me-2"
+                                                                  to="#"
+                                                                  onClick={() => {
+                                                                    this.handleSave(
+                                                                      values
+                                                                    );
+                                                                  }}
+                                                                >
+                                                                  {t("Save")}
+                                                                </Link>
+                                                              </Col>
+                                                            </Row>
+                                                          </Form>
+                                                        </>
+                                                      )}
+                                                    </Formik>
+                                                  </ModalBody>
+                                                </Modal>
+                                                <Row className="justify-content-center">
+                                                  <Col
+                                                    lg="3"
+                                                    className="d-flex justify-content-center"
+                                                  >
+                                                    <Link
+                                                      to="#"
+                                                      className="btn btn-primary me-2"
+                                                      onClick={() => {
+                                                        this.handleSubmit(
+                                                          values
+                                                        );
+                                                      }}
+                                                    >
+                                                      {t("Save")}
+                                                    </Link>
+                                                  </Col>
+                                                </Row>
+                                              </Form>
+                                            </>
+                                          )}
+                                        </Formik>
                                       </div>
                                     </div>
                                   </ModalBody>
@@ -1605,8 +1688,10 @@ class PositionsList extends Component {
 
 const mapStateToProps = ({ positions, menu_items, employees }) => ({
   positions: positions.positions,
+  jobTitles: positions.jobTitles,
   positionTypes: positions.positionTypes,
   positionsOpt: positions.positionsOpt,
+  lastAddedId: positions.lastAddedId,
   corporateNodesOpt: employees.corporateNodesOpt,
   deleted: positions.deleted,
   user_menu: menu_items.user_menu || [],
@@ -1618,6 +1703,9 @@ const mapDispatchToProps = dispatch => ({
   onUpdatePosition: position => dispatch(updatePosition(position)),
   onDeletePosition: position => dispatch(deletePosition(position)),
   onGetPositionDeletedValue: () => dispatch(getPositionDeletedValue()),
+  onAddNewJobTitle: jobTitle => dispatch(addNewJobTitle(jobTitle)),
+  onUpdateJobTitle: jobTitle => dispatch(updateJobTitle(jobTitle)),
+  onDeleteJobTitle: jobTitle => dispatch(deleteJobTitle(jobTitle)),
 });
 
 export default connect(

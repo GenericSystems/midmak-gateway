@@ -2367,6 +2367,16 @@ export const updatePosition = data => post(url.UPDATE_POSITION, data);
 //delete Position
 export const deletePosition = data => post(url.DELETE_POSITION, data);
 
+// add JobTitle
+
+export const addNewJobTitle = data => post(url.ADD_NEW_JOB_TITLE, data);
+
+//update JobTitle
+export const updateJobTitle = data => post(url.UPDATE_JOB_TITLE, data);
+
+//delete JobTitle
+export const deleteJobTitle = data => post(url.DELETE_JOB_TITLE, data);
+
 //MARK_OBJECTION
 export const getMarksObjections = data => post(url.GET_MARKS_OBJECTIONS, data);
 
