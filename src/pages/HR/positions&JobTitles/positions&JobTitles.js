@@ -334,10 +334,8 @@ class PositionsList extends Component {
         successMessage: saveMessage,
       });
     } else {
-      const errorSaveTraineeMessage = this.props.t(
-        "Fill the Required Fields to Save Trainee"
-      );
-      this.setState({ emptyErroe: errorSaveTraineeMessage }, () => {
+      const errorSaveMessage = this.props.t("Fill the Required Fields to Save");
+      this.setState({ emptyErroe: errorSaveMessage }, () => {
         window.scrollTo(0, 0);
       });
     }
@@ -488,6 +486,14 @@ class PositionsList extends Component {
         positionId: name.label,
       });
     }
+  };
+
+  handleAddRow = () => {
+    this.setState({
+      position: "",
+      isEdit: false,
+    });
+    this.toggleNestedModal();
   };
 
   render() {
@@ -756,7 +762,7 @@ class PositionsList extends Component {
                                       >
                                         <IconButton
                                           color="primary"
-                                          onClick={this.toggleNestedModal}
+                                          onClick={this.handleAddRow}
                                         >
                                           <i className="mdi mdi-plus-circle blue-noti-icon" />
                                         </IconButton>
