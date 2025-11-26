@@ -324,7 +324,7 @@ class MarksObjectionsList extends Component {
   //     objectioninfo["Id"] = markObjection["Id"];
   //     console.log("rrrrrrrrrrrrrrr", objectioninfo);
   //     onUpdateMarkObjection(objectioninfo);
-  //     const saveMessage = "Saved successfully ";
+  //     const saveMessage = "Saved successfully";
   //     this.setState({
   //       successMessage: saveMessage,
   //     });
@@ -333,7 +333,7 @@ class MarksObjectionsList extends Component {
   //   } else {
   //     console.log("objectioninfoobjectioninfo", objectioninfo);
   //     onAddNewMarkObjection(objectioninfo);
-  //     const saveMessage = "Saved successfully ";
+  //     const saveMessage = "Saved successfully";
   //     this.setState({
   //       successMessage: saveMessage,
   //     });

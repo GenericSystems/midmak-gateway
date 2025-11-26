@@ -352,7 +352,7 @@ class TraineesDeservesDeprivationList extends Component {
         // onAddNewEmployee(employeeinfo);
       }
 
-      const saveEmployeeMessage = "Saved successfully ";
+      const saveEmployeeMessage = "Saved successfully";
       this.setState({
         successMessage: saveEmployeeMessage,
       });

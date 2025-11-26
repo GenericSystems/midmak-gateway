@@ -435,14 +435,14 @@ class DecisionsList extends Component {
 
       if (isEdit) {
         onUpdateDecision(decisionInfo);
-        const saveDecisionMessage = "Saved successfully ";
+        const saveDecisionMessage = "Saved successfully";
         this.setState({
           successMessage: saveDecisionMessage,
         });
         this.toggle();
       } else {
         onAddNewDecision(decisionInfo);
-        const saveDecisionMessage = "Saved successfully ";
+        const saveDecisionMessage = "Saved successfully";
         this.setState({
           successMessage: saveDecisionMessage,
         });

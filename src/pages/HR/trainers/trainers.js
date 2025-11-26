@@ -479,7 +479,7 @@ class TrainersList extends Component {
         onAddNewTrainer(trainerinfo);
       }
 
-      const saveTrainerMessage = "Saved successfully ";
+      const saveTrainerMessage = "Saved successfully";
       this.setState({
         successMessage: saveTrainerMessage,
       });

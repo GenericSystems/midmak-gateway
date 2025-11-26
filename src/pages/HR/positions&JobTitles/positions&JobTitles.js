@@ -60,6 +60,8 @@ import {
   checkIsSearchForPage,
 } from "../../../utils/menuUtils";
 import academicLoadSaga from "store/academicloads/saga";
+import positions from "store/job&position/reducer";
+import { deleteYear } from "store/actions";
 class PositionsList extends Component {
   constructor(props) {
     super(props);
@@ -86,7 +88,7 @@ class PositionsList extends Component {
       selectedPositionType: null,
       selectedPositionId: 0,
       positionTypeError: false,
-      positionError: false,
+      corporateNodeError: false,
       errorMessage: null,
       successMessage: null,
       values: "",
@@ -94,7 +96,13 @@ class PositionsList extends Component {
       isModalOpen: false,
       isShowJobTitle: false,
       languageState: "",
-      successMessage: null,
+      arTitleError: false,
+      enTitleError: false,
+      positionCodeError: false,
+      positionRankError: false,
+      jobTitleCodeError: false,
+      arJobTitleError: false,
+      enJobTitleError: false,
     };
     this.handleSelect = this.handleSelect.bind(this);
   }
@@ -263,7 +271,7 @@ class PositionsList extends Component {
       this.setState({
         selectedRow: null,
         deleteModal1: false,
-        showAlert: true,
+        deleteMessage: this.props.t("Deleted Successfully"),
       });
     }
   };
@@ -313,6 +321,20 @@ class PositionsList extends Component {
         positionInfo[key] = values[key];
       });
 
+      const isDuplicateArTitle = positions.some(
+        position =>
+          position.arTitle && position.arTitle.trim() === values.arTitle.trim()
+      );
+
+      if (isDuplicateArTitle) {
+        const duplicateErrorMessage = this.props.t("Position already exists");
+        this.setState({
+          errorMessage: duplicateErrorMessage,
+        });
+        window.scrollTo(0, 0);
+        return;
+      }
+
       if (isEdit) {
         console.log("333333", positionInfo);
         onUpdatePosition(positionInfo);
@@ -329,22 +351,32 @@ class PositionsList extends Component {
       this.setState({
         errorMessages: {},
       });
-      const saveMessage = "Saved successfully ";
+      const saveMessage = this.props.t("Saved successfully");
       this.setState({
         successMessage: saveMessage,
       });
     } else {
-      const errorSaveMessage = this.props.t("Fill the Required Fields to Save");
-      this.setState({ emptyErroe: errorSaveMessage }, () => {
-        window.scrollTo(0, 0);
-      });
+      this.setState({ arTitleError: true, saveError: true });
+
+      this.setState({ enTitleError: true, saveError: true });
+
+      this.setState({ positionCodeError: true, saveError: true });
+
+      this.setState({ positionRankError: true, saveError: true });
+
+      this.setState({ positionTypeError: true, saveError: true });
+
+      const emptyError = this.props.t("Fill the Required Fields to Save");
+
+      this.setState({ emptyError: emptyError });
     }
   };
 
   handleSubmit = values => {
     const { isAdd, isEdit1, selectedPositionId, selectedCorporateKey, isEdit } =
       this.state;
-    const { onAddNewJobTitle, onUpdateJobTitle, lastAddedId } = this.props;
+    const { onAddNewJobTitle, onUpdateJobTitle, jobTitles, lastAddedId } =
+      this.props;
 
     console.log("selectedPositionIdselectedPositionId", selectedPositionId);
     values["arJobTitle"] = values["arJobTitle"] || "";
@@ -369,6 +401,22 @@ class PositionsList extends Component {
           console.log("9999999", jobTitlesInfo);
         jobTitlesInfo[key] = values[key];
       });
+
+      const isDuplicateArTitle = jobTitles.some(
+        jobTitle =>
+          jobTitle.arJobTitle &&
+          jobTitle.arJobTitle.trim() === values.arJobTitle.trim()
+      );
+
+      if (isDuplicateArTitle) {
+        const duplicateErrorMessage = this.props.t("Job Title already exists");
+        this.setState({
+          errorMessage1: duplicateErrorMessage,
+        });
+        window.scrollTo(0, 0);
+        return;
+      }
+
       if (isEdit1) {
         console.log("9999999", jobTitlesInfo);
         onUpdateJobTitle(jobTitlesInfo);
@@ -378,15 +426,24 @@ class PositionsList extends Component {
         this.toggleModal();
       }
       this.setState({
-        errorMessages: {},
+        errorMessages1: {},
+      });
+      const saveMessage = this.props.t("Saved successfully");
+      this.setState({
+        successMessage1: saveMessage,
       });
     } else {
-      let emptyError = "";
-      if (selectedCorporateKey === undefined) {
-        emptyError = "Fill the empty select";
-      }
+      this.setState({ arJobTitleError: true, saveError: true });
 
-      this.setState({ emptyError: emptyError });
+      this.setState({ enJobTitleError: true, saveError: true });
+
+      this.setState({ jobTitleCodeError: true, saveError: true });
+
+      this.setState({ corporateNodeError: true, saveError: true });
+
+      const errorMessage1 = this.props.t("Fill the Required Fields to Save");
+
+      this.setState({ errorMessage1: errorMessage1 });
     }
   };
 
@@ -496,6 +553,15 @@ class PositionsList extends Component {
     this.toggleNestedModal();
   };
 
+  handleAddJobTitle = () => {
+    this.setState({
+      position: "",
+      isEdit1: false,
+      selectedCorporateKey: null,
+    });
+    this.toggleModal();
+  };
+
   render() {
     const {
       positions,
@@ -528,7 +594,17 @@ class PositionsList extends Component {
       isShowJobTitle,
       languageState,
       errorMessage,
+      errorMessage1,
       successMessage,
+      successMessage1,
+      arJobTitleError,
+      arTitleError,
+      enJobTitleError,
+      enTitleError,
+      positionCodeError,
+      positionRankError,
+      jobTitleCodeError,
+      deleteMessage,
     } = this.state;
 
     const direction = languageState === "ar" ? "rtl" : "ltr";
@@ -822,7 +898,11 @@ class PositionsList extends Component {
                                               type="button"
                                               className="btn-close"
                                               aria-label="Close"
-                                              onClick={this.handleErrorClose}
+                                              onClick={() =>
+                                                this.handleAlertClose(
+                                                  "errorMessage"
+                                                )
+                                              }
                                             ></button>
                                           </Alert>
                                         )}
@@ -839,7 +919,11 @@ class PositionsList extends Component {
                                               type="button"
                                               className="btn-close"
                                               aria-label="Close"
-                                              onClick={this.handleSuccessClose}
+                                              onClick={() =>
+                                                this.handleAlertClose(
+                                                  "successMessage"
+                                                )
+                                              }
                                             ></button>
                                           </Alert>
                                         )}
@@ -949,36 +1033,21 @@ class PositionsList extends Component {
                                                     ></button>
                                                   </Alert>
                                                 )}
-                                                {deleted == 0 && showAlert && (
+                                                {deleteMessage && (
                                                   <Alert
                                                     color="danger"
                                                     className="d-flex justify-content-center align-items-center alert-dismissible fade show"
                                                     role="alert"
                                                   >
-                                                    {alertMessage}
+                                                    {deleteMessage}
                                                     <button
                                                       type="button"
                                                       className="btn-close"
                                                       aria-label="Close"
-                                                      onClick={
-                                                        this.handleErrorClose
-                                                      }
-                                                    ></button>
-                                                  </Alert>
-                                                )}
-                                                {deleted == 1 && showAlert && (
-                                                  <Alert
-                                                    color="success"
-                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                                                    role="alert"
-                                                  >
-                                                    {alertMessage}
-                                                    <button
-                                                      type="button"
-                                                      className="btn-close"
-                                                      aria-label="Close"
-                                                      onClick={
-                                                        this.handleSuccessClose
+                                                      onClick={() =>
+                                                        this.handleAlertClose(
+                                                          "deleteMessage"
+                                                        )
                                                       }
                                                     ></button>
                                                   </Alert>
@@ -1003,13 +1072,21 @@ class PositionsList extends Component {
                                                           type="text"
                                                           className={
                                                             "form-control" +
-                                                            (errors.arTitle &&
-                                                            touched.arTitle
+                                                            ((errors.arTitle &&
+                                                              touched.arTitle) ||
+                                                            arTitleError
                                                               ? " is-invalid"
                                                               : "")
                                                           }
                                                           autoComplete="Off"
                                                         />
+                                                        {arTitleError && (
+                                                          <div className="invalid-feedback">
+                                                            {this.props.t(
+                                                              "Position(ar) is required"
+                                                            )}
+                                                          </div>
+                                                        )}
                                                         <ErrorMessage
                                                           name="arTitle"
                                                           component="div"
@@ -1033,13 +1110,21 @@ class PositionsList extends Component {
                                                           type="text"
                                                           className={
                                                             "form-control" +
-                                                            (errors.enTitle &&
-                                                            touched.enTitle
+                                                            ((errors.enTitle &&
+                                                              touched.enTitle) ||
+                                                            enTitleError
                                                               ? " is-invalid"
                                                               : "")
                                                           }
                                                           autoComplete="Off"
                                                         />
+                                                        {enTitleError && (
+                                                          <div className="invalid-feedback">
+                                                            {this.props.t(
+                                                              "Position(en) is required"
+                                                            )}
+                                                          </div>
+                                                        )}
                                                         <ErrorMessage
                                                           name="enTitle"
                                                           component="div"
@@ -1115,13 +1200,21 @@ class PositionsList extends Component {
                                                           type="number"
                                                           className={
                                                             "form-control" +
-                                                            (errors.positionRank &&
-                                                            touched.positionRank
+                                                            ((errors.positionRank &&
+                                                              touched.positionRank) ||
+                                                            positionRankError
                                                               ? " is-invalid"
                                                               : "")
                                                           }
                                                           autoComplete="Off"
                                                         />
+                                                        {positionRankError && (
+                                                          <div className="invalid-feedback">
+                                                            {this.props.t(
+                                                              "Position Rank is required"
+                                                            )}
+                                                          </div>
+                                                        )}
                                                         <ErrorMessage
                                                           name="positionRank"
                                                           component="div"
@@ -1147,13 +1240,21 @@ class PositionsList extends Component {
                                                           type="text"
                                                           className={
                                                             "form-control" +
-                                                            (errors.positionCode &&
-                                                            touched.positionCode
+                                                            ((errors.positionCode &&
+                                                              touched.positionCode) ||
+                                                            positionCodeError
                                                               ? " is-invalid"
                                                               : "")
                                                           }
                                                           autoComplete="Off"
                                                         />
+                                                        {positionCodeError && (
+                                                          <div className="invalid-feedback">
+                                                            {this.props.t(
+                                                              "Position Code is required"
+                                                            )}
+                                                          </div>
+                                                        )}
                                                         <ErrorMessage
                                                           name="positionCode"
                                                           component="div"
@@ -1179,7 +1280,8 @@ class PositionsList extends Component {
                                                             <IconButton
                                                               color="primary"
                                                               onClick={
-                                                                this.toggleModal
+                                                                this
+                                                                  .handleAddJobTitle
                                                               }
                                                             >
                                                               <i className="mdi mdi-plus-circle blue-noti-icon" />
@@ -1210,7 +1312,7 @@ class PositionsList extends Component {
                                                         }
                                                       )}
                                                       noDataIndication={t(
-                                                        "No Courses Offering"
+                                                        "No Job Titles Found"
                                                       )}
                                                     />
                                                   </Row>
@@ -1227,6 +1329,50 @@ class PositionsList extends Component {
                                                       ? t("Edit Job Title")
                                                       : t("Add Job Title")}
                                                   </ModalHeader>
+                                                  <Row>
+                                                    <div>
+                                                      {errorMessage1 && (
+                                                        <Alert
+                                                          color="danger"
+                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                          role="alert"
+                                                        >
+                                                          {errorMessage1}
+                                                          <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            aria-label="Close"
+                                                            onClick={() =>
+                                                              this.handleAlertClose(
+                                                                "errorMessage1"
+                                                              )
+                                                            }
+                                                          ></button>
+                                                        </Alert>
+                                                      )}
+                                                    </div>
+                                                    <div>
+                                                      {successMessage1 && (
+                                                        <Alert
+                                                          color="success"
+                                                          className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                          role="alert"
+                                                        >
+                                                          {successMessage1}
+                                                          <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            aria-label="Close"
+                                                            onClick={() =>
+                                                              this.handleAlertClose(
+                                                                "successMessage1"
+                                                              )
+                                                            }
+                                                          ></button>
+                                                        </Alert>
+                                                      )}
+                                                    </div>
+                                                  </Row>
                                                   <ModalBody>
                                                     <Formik
                                                       enableReinitialize={true}
@@ -1315,13 +1461,21 @@ class PositionsList extends Component {
                                                                       type="text"
                                                                       className={
                                                                         "form-control" +
-                                                                        (errors.arJobTitle &&
-                                                                        touched.arJobTitle
+                                                                        ((errors.arJobTitle &&
+                                                                          touched.arJobTitle) ||
+                                                                        arJobTitleError
                                                                           ? " is-invalid"
                                                                           : "")
                                                                       }
                                                                       autoComplete="Off"
                                                                     />
+                                                                    {arJobTitleError && (
+                                                                      <div className="invalid-feedback">
+                                                                        {this.props.t(
+                                                                          "Job Title(ar) is required"
+                                                                        )}
+                                                                      </div>
+                                                                    )}
                                                                     <ErrorMessage
                                                                       name="arJobTitle"
                                                                       component="div"
@@ -1347,13 +1501,21 @@ class PositionsList extends Component {
                                                                       type="text"
                                                                       className={
                                                                         "form-control" +
-                                                                        (errors.enJobTitle &&
-                                                                        touched.enJobTitle
+                                                                        ((errors.enJobTitle &&
+                                                                          touched.enJobTitle) ||
+                                                                        enJobTitleError
                                                                           ? " is-invalid"
                                                                           : "")
                                                                       }
                                                                       autoComplete="Off"
                                                                     />
+                                                                    {enJobTitleError && (
+                                                                      <div className="invalid-feedback">
+                                                                        {this.props.t(
+                                                                          "Job Title(en) is required"
+                                                                        )}
+                                                                      </div>
+                                                                    )}
                                                                     <ErrorMessage
                                                                       name="enJobTitle"
                                                                       component="div"
@@ -1476,13 +1638,21 @@ class PositionsList extends Component {
                                                                       type="text"
                                                                       className={
                                                                         "form-control" +
-                                                                        (errors.jobTitleCode &&
-                                                                        touched.jobTitleCode
+                                                                        ((errors.jobTitleCode &&
+                                                                          touched.jobTitleCode) ||
+                                                                        jobTitleCodeError
                                                                           ? " is-invalid"
                                                                           : "")
                                                                       }
                                                                       autoComplete="Off"
                                                                     />
+                                                                    {jobTitleCodeError && (
+                                                                      <div className="invalid-feedback">
+                                                                        {this.props.t(
+                                                                          "Job Title Code is required"
+                                                                        )}
+                                                                      </div>
+                                                                    )}
                                                                     <ErrorMessage
                                                                       name="jobTitleCode"
                                                                       component="div"

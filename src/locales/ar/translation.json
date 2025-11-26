@@ -942,5 +942,11 @@
   "Add Job Title": "إضافة اللقب الوظيفي",
   "Edit Job Title": "تعديل اللقب الوظيفي",
   "Positions & Job Titles": "المناصب والألقاب الوظيفية",
+  "Fill the Required Fields to Save": "املأ الحقول المطلوبة للحفظ",
+  "Saved successfully": "تم الحفظ بنجاح",
+  "Position already exists": "المنصب موجود سابقاً",
+  "Job Title already exists": "اللقب الوظيفي موجود سابقاً",
+  "No Job Titles Found": "لا يوجد ألقاب وظيفية",
+  "No Position Found": "لا يوجد مناصب",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

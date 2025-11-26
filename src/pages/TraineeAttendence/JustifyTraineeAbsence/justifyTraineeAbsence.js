@@ -381,7 +381,7 @@ class JustifyTraineesAbsenceList extends Component {
 
       // onUpdateSectionLabDetail(justifyTraineeInfo);
 
-      const saveMessage = "Saved successfully ";
+      const saveMessage = "Saved successfully";
       this.setState({
         successMessage: saveMessage,
       });
