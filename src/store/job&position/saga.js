@@ -10,6 +10,7 @@ import {
   ADD_NEW_JOB_TITLE,
   UPDATE_JOB_TITLE,
   DELETE_JOB_TITLE,
+  GET_JOB_TITLES,
 } from "./actionTypes";
 
 import {
@@ -27,6 +28,8 @@ import {
   getPositionTypesFail,
   getPositionsOptSuccess,
   getPositionsOptFail,
+  getJobTitlesSuccess,
+  getJobTitlesFail,
   addJobTitleFail,
   addJobTitleSuccess,
   updateJobTitleSuccess,
@@ -47,6 +50,7 @@ import {
   addNewPosition,
   updatePosition,
   deletePosition,
+  getJobTitles,
   addNewJobTitle,
   updateJobTitle,
   deleteJobTitle,
@@ -63,10 +67,13 @@ function* fetchPositions(selectedpayload) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "_Settings_Position",
+    tablename: "_Settings_PositionTitles",
   };
   try {
     const response = yield call(getPositions, get_position_req);
+    response.map(resp => {
+      resp["jobTitles"] = JSON.parse(resp["jobTitles"]);
+    });
     console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", response);
     yield put(getPositionsSuccess(response));
   } catch (error) {
@@ -108,13 +115,37 @@ function* fetchPositions(selectedpayload) {
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_AcadmeyOrgStructureNames",
-    fields: `Id,${titleField}`,
+    fields: `Id,${titleField},strType`,
   };
   try {
     const response = yield call(getCorporateNodesOpt, get_CorporateNodes_req);
     yield put(getCorporateNodesOptSuccess(response));
   } catch (error) {
     yield put(getCorporateNodesOptFail(error));
+  }
+}
+
+function* fetchJobTitles(obj) {
+  // let lang = selectedpayload.payload;
+  // console.log("selectedpayloadselectedpayload", selectedpayload);
+  // const titleField = lang === "en" ? "enTitle" : "arTitle";
+  let positionId = obj.payload;
+  const get_JobTitles_req = {
+    source: "db",
+    procedure: "SisApp_getData",
+    apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
+    tablename: "Settings_JobTitles",
+    filter: `positionId = ${positionId}`,
+  };
+  try {
+    const response = yield call(getJobTitles, get_JobTitles_req);
+    // response.map(resp => {
+    //   resp["jobTitles"] = JSON.parse(resp["jobTitles"]);
+    // });
+    console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", response);
+    yield put(getJobTitlesSuccess(response));
+  } catch (error) {
+    yield put(getJobTitlesFail(error));
   }
 }
 
@@ -134,7 +165,7 @@ function* onAddNewPosition({ payload }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Settings_Position";
-  payload["queryname"] = "_Settings_Position";
+  // payload["queryname"] = "_Settings_Position";
 
   try {
     const response = yield call(addNewPosition, payload);
@@ -165,7 +196,7 @@ function* onUpdatePosition({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Settings_Position";
-  payload["queryname"] = "_Settings_Position";
+  // payload["queryname"] = "_Settings_PositionTitles";
   try {
     const respupdate = yield call(updatePosition, payload);
     console.log("UpdatePosition", respupdate);
@@ -190,8 +221,8 @@ function* onAddNewJobTitle({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_JobTitle";
-  payload["queryname"] = "_Settings_JobTitle";
+  payload["tablename"] = "Settings_JobTitles";
+  // payload["queryname"] = "_Settings_JobTitles";
 
   try {
     const response = yield call(addNewJobTitle, payload);
@@ -206,7 +237,7 @@ function* onDeleteJobTitle({ payload, position }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_JobTitle";
+  payload["tablename"] = "Settings_JobTitles";
 
   try {
     const response = yield call(deleteJobTitle, payload);
@@ -221,8 +252,8 @@ function* onUpdateJobTitle({ payload }) {
   payload["source"] = "db";
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
-  payload["tablename"] = "Settings_JobTitle";
-  payload["queryname"] = "_Settings_JobTitle";
+  payload["tablename"] = "Settings_JobTitles";
+  // payload["queryname"] = "_Settings_JobTitles";
   try {
     const respupdate = yield call(updateJobTitle, payload);
     console.log("UpdateJobTitle", respupdate);
@@ -234,6 +265,7 @@ function* onUpdateJobTitle({ payload }) {
 
 function* PositionsSaga() {
   yield takeEvery(GET_POSITIONS, fetchPositions);
+  yield takeEvery(GET_JOB_TITLES, fetchJobTitles);
   yield takeEvery(GET_POSITION_DELETED_VALUE, onGetPositionDeletedValue);
   yield takeEvery(GET_POSITION_DELETED_VALUE, getPositionProfile);
   yield takeEvery(ADD_NEW_POSITION, onAddNewPosition);

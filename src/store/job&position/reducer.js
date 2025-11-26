@@ -13,6 +13,8 @@ import {
   GET_POSITION_DELETED_VALUE_FAIL,
   DELETE_POSITION_SUCCESS,
   DELETE_POSITION_FAIL,
+  GET_JOB_TITLES_SUCCESS,
+  GET_JOB_TITLES_FAIL,
   ADD_JOB_TITLE_SUCCESS,
   ADD_JOB_TITLE_FAIL,
   UPDATE_JOB_TITLE_SUCCESS,
@@ -123,6 +125,19 @@ const positions = (state = INIT_STATE, action) => {
       };
 
     case GET_POSITIONS_OPT_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case GET_JOB_TITLES_SUCCESS:
+      return {
+        ...state,
+        jobTitles: action.payload,
+        deleted: {},
+      };
+
+    case GET_JOB_TITLES_FAIL:
       return {
         ...state,
         error: action.payload,

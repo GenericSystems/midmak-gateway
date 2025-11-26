@@ -42,6 +42,7 @@ import {
   updatePosition,
   deletePosition,
   getPositionDeletedValue,
+  getJobTitles,
   addNewJobTitle,
   updateJobTitle,
   deleteJobTitle,
@@ -65,6 +66,7 @@ class PositionsList extends Component {
     this.state = {
       positions: [],
       position: "",
+      jobTitles: [],
       selectConId: null,
       showAlert: null,
       showAddButton: false,
@@ -72,8 +74,10 @@ class PositionsList extends Component {
       showEditButton: false,
       showSearchButton: false,
       deleteModal: false,
+      deleteModal1: false,
       duplicateError: null,
       selectedRowId: null,
+      selectedRow: null,
       modal: false,
       modal2: false,
       isEdit: false,
@@ -90,6 +94,7 @@ class PositionsList extends Component {
       isModalOpen: false,
       isShowJobTitle: false,
       languageState: "",
+      successMessage: null,
     };
     this.handleSelect = this.handleSelect.bind(this);
   }
@@ -98,6 +103,7 @@ class PositionsList extends Component {
     const lang = localStorage.getItem("I18N_LANGUAGE");
     const {
       positions,
+      jobTitles,
       i18n,
       positionTypes,
       corporateNodesOpt,
@@ -122,6 +128,7 @@ class PositionsList extends Component {
       corporateNodesOpt,
       positionsOpt,
       languageState: lang,
+      jobTitles,
     });
     i18n.on("languageChanged", this.handleLanguageChange);
   }
@@ -190,9 +197,16 @@ class PositionsList extends Component {
       this.node.current.props.pagination.options.onPageChange(page);
     }
   };
+
   toggleDeleteModal = () => {
     this.setState(prevState => ({
       deleteModal: !prevState.deleteModal,
+    }));
+  };
+
+  toggleDeleteModal1 = () => {
+    this.setState(prevState => ({
+      deleteModal1: !prevState.deleteModal1,
     }));
   };
 
@@ -218,57 +232,40 @@ class PositionsList extends Component {
     this.setState({ selectedRowId: rowId, deleteModal: true });
   };
 
-  handleAddRow = () => {
-    this.setState({
-      position: "",
-      isEdit: false,
-      isOpen: false,
-      isAdd: true,
-    });
-    this.toggle();
+  onClickDelete1 = rowId => {
+    console.log("selectedRowselectedRow", rowId);
+    this.setState({ selectedRow: rowId, deleteModal1: true });
   };
 
-  handleDeletePositionLab = () => {
-    const { onDeletePositionLab, selectedOption } = this.props;
-    const { positionJobTitleData } = this.state;
-    if (positionJobTitleData.Id !== undefined) {
-      let onDelete = { Id: positionJobTitleData.Id };
-      onDelete["tablename"] =
-        positionJobTitleData.type === "JobTitle"
-          ? "Common_Lab"
-          : "Common_Position";
-      onDeletePositionLab(onDelete);
+  handleDeleteRow = () => {
+    const { onDeletePosition } = this.props;
+    const { selectedRowId } = this.state;
+
+    if (selectedRowId !== null) {
+      onDeletePosition(selectedRowId);
+
+      this.setState({
+        selectedRowId: null,
+        deleteModal: false,
+        showAlert: true,
+      });
     }
-    this.setState({ deleteModal: false, selectedOption: "" });
-    this.setState({
-      positionJobTitleData: {
-        Capacity: "",
-        PositionNumber: "",
-        LabNumber: "",
-      },
-      isEdit: false,
-    });
   };
 
-  handleEditPositionLab = SLD => {
-    console.log("ssssssssld", SLD);
-    this.setState({
-      // defaultHallName: SLD.hallName,
-      isEdit: true,
-      positionJobTitleData: {
-        Id: SLD.Id,
-        Capacity: SLD.Capacity,
-        PositionLabNumber: SLD.PositionLabNumber,
-        startDate: SLD.startDate,
-        endDate: SLD.endDate,
-        type: SLD.type,
-      },
-      selectedOption: SLD.type,
-      isPositionRadioDisabled: SLD.type === "JobTitle",
-      isLabRadioDisabled: SLD.type === "Position",
-    });
+  handleDeleteRow1 = () => {
+    const { onDeleteJobTitle } = this.props;
+    const { selectedRow } = this.state;
 
-    this.toggleNestedModal();
+    if (selectedRow !== null) {
+      console.log("selectedRowselectedRow", selectedRow);
+      onDeleteJobTitle(selectedRow);
+
+      this.setState({
+        selectedRow: null,
+        deleteModal1: false,
+        showAlert: true,
+      });
+    }
   };
 
   handleButtonClick = (fieldName, option) => {
@@ -281,131 +278,11 @@ class PositionsList extends Component {
     }
   };
 
-  // handleSave = values => {
-  //   console.log("values", values);
-  //   let flag = 0;
-  //   const { selectedRowData, selectedOption, isEdit, positionJobTitleData } =
-  //     this.state;
-
-  //   const { onAddNewPosition, onUpdatePosition, positions } = this.props;
-
-  //   let positionInfo = {};
-  //   if (!isEdit) {
-  //     Object.keys(values).forEach(function (key) {
-  //       if (
-  //         values[key] != undefined &&
-  //         (values[key].length > 0 || values[key] != "")
-  //       )
-  //         positionInfo[key] = values[key];
-  //     });
-  //   } else {
-  //     positionInfo = values;
-  //   }
-
-  //   console.log("positionInfo", positionInfo);
-  //   const fieldErrors = {};
-
-  //   // if (selectedOption === "Position") {
-  //   //   if (
-  //   //     !positionInfo.PositionNumber ||
-  //   //     (typeof positionInfo.PositionNumber === "string" &&
-  //   //       positionInfo.PositionNumber.trim() === "")
-  //   //   ) {
-  //   //     fieldErrors.PositionNumber = "Please enter Position Number.";
-  //   //   }
-  //   // }
-  //   // if (selectedOption === "Lab") {
-  //   //   if (
-  //   //     !positionInfo.LabNumber ||
-  //   //     (typeof positionInfo.LabNumber === "string" &&
-  //   //       positionInfo.LabNumber.trim() === "")
-  //   //   ) {
-  //   //     fieldErrors.LabNumber = "Please enter Lab Number.";
-  //   //   }
-  //   // }
-
-  //   // if (Object.keys(fieldErrors).length > 0) {
-  //   //   return fieldErrors;
-  //   // }
-
-  //   const enteredNumber =
-  //     selectedOption === "Position"
-  //       ? positionInfo.PositionNumber
-  //       : positionInfo.LabNumber;
-
-  //   const filteredPositionLabs = positions.filter(
-  //     position =>
-  //       (selectedOption === "Position" && position.type === "Position") ||
-  //       (selectedOption === "JobTitle" && position.type === "JobTitle")
-  //   );
-
-  //   // let isDuplicate = false;
-
-  //   // for (const positionLab of filteredPositionLabs) {
-  //   //   if (positionLab.PositionLabNumber == enteredNumber && !isEdit) {
-  //   //     isDuplicate = true;
-  //   //     break;
-  //   //   }
-  //   // }
-
-  //   // if (isDuplicate) {
-  //   //   const errorMessage = this.props.t(
-  //   //     `${selectedOption} Number already exists.`
-  //   //   );
-  //   //   this.setState({ duplicateError: errorMessage });
-  //   //   return;
-  //   // }
-
-  //   positionInfo["tablename"] =
-  //     selectedOption === "Position" ? "Common_Position" : "Common_JobTitle";
-  //   if (flag === 0) {
-  //     if (isEdit) {
-  //       positionInfo["Id"] = positionJobTitleData.Id;
-  //       const filteredPositionLabsEdit = position.filter(
-  //         position =>
-  //           (selectedOption === "Position" && position.type === "Position") ||
-  //           (selectedOption === "JobTitle" && position.type === "JobTitle")
-  //       );
-
-  //       // let isDuplicateEdit = false;
-
-  //       // for (const positionLab of filteredPositionLabsEdit) {
-  //       //   if (
-  //       //     positionInfo.Id != positionLab.Id &&
-  //       //     positionLab.PositionLabNumber == enteredNumber
-  //       //   ) {
-  //       //     isDuplicateEdit = true;
-  //       //     break;
-  //       //   }
-  //       // }
-  //       // if (!isDuplicateEdit) {
-  //       onUpdatePosition(positionInfo);
-  //       this.setState({ selectedOption: "" });
-
-  //       this.toggleNestedModal();
-  //       // }
-  //       // else {
-  //       //   const errorMessage = this.props.t(
-  //       //     `${selectedOption} Number already exists.`
-  //       //   );
-  //       //   this.setState({ duplicateError: errorMessage });
-  //       //   return;
-  //       // }
-  //     } else {
-  //       console.log("saaaaave", positionInfo);
-  //       onAddNewPosition(positionInfo);
-  //       this.setState({ selectedOption: "" });
-
-  //       this.toggleNestedModal();
-  //     }
-  //   }
-  // };
-
   handleSave = values => {
     const {
       selectedOption,
       isEdit,
-      positionJobTitleData,
+      position,
       selectedPositionType,
       selectedPositionId,
       isAdd,
@@ -452,72 +329,62 @@ class PositionsList extends Component {
       this.setState({
         errorMessages: {},
       });
+      const saveMessage = "Saved successfully ";
+      this.setState({
+        successMessage: saveMessage,
+      });
     } else {
-      let emptyError = "";
-      if (selectedPositionType === undefined) {
-        emptyError = "Fill the empty select";
-      }
-
-      this.setState({ emptyError: emptyError });
+      const errorSaveTraineeMessage = this.props.t(
+        "Fill the Required Fields to Save Trainee"
+      );
+      this.setState({ emptyErroe: errorSaveTraineeMessage }, () => {
+        window.scrollTo(0, 0);
+      });
     }
   };
 
   handleSubmit = values => {
-    const { isAdd, selectedPositionId, selectedCorporateKey } = this.state;
-    const { onAddNewPosition, onUpdatePosition, positions, lastAddedId } =
-      this.props;
+    const { isAdd, isEdit1, selectedPositionId, selectedCorporateKey, isEdit } =
+      this.state;
+    const { onAddNewJobTitle, onUpdateJobTitle, lastAddedId } = this.props;
 
-    // if (selectedOption === "JobTitle") {
-    //   positionInfo = {
-    //     arTitle : values.arTitle ,
-    //     enTitle: values.enTitle,
-    //     jobTitleCode: values.jobTitleCode,
-    //     positionId: selectedPositionId,
-    //     corporateNodeId: selectedCorporateKey,
-    //     tablename: "Common_JobTitle",
-    //   };
-    // }
-    values["arTitle"] = values["arTitle"] || "";
-    values["enTitle"] = values["enTitle"] || "";
+    console.log("selectedPositionIdselectedPositionId", selectedPositionId);
+    values["arJobTitle"] = values["arJobTitle"] || "";
+    values["enJobTitle"] = values["enJobTitle"] || "";
     values["jobTitleCode"] = values["jobTitleCode"] || "";
     values["corporateNodeId"] = selectedCorporateKey;
-    (values["positionId"] = isAdd ? lastAddedId : selectedPositionId),
+    (values["positionId"] = isEdit ? selectedPositionId : lastAddedId),
       console.log("valuesssssssssssssssssssss", values);
 
-    let positionInfo = {};
+    let jobTitlesInfo = {};
     if (
-      values.arTitle &&
-      values.enTitle &&
-      values.positionCode &&
-      values.positionRank &&
-      positionTypeId !== null
+      values.arJobTitle &&
+      values.enJobTitle &&
+      values.jobTitleCode &&
+      values["corporateNodeId"] !== null
     ) {
       Object.keys(values).forEach(function (key) {
         if (
           values[key] != undefined &&
           (values[key].length > 0 || values[key] != "")
         )
-          console.log("9999999", positionInfo);
-        positionInfo[key] = values[key];
+          console.log("9999999", jobTitlesInfo);
+        jobTitlesInfo[key] = values[key];
       });
-      if (isEdit) {
-        console.log("9999999", positionInfo);
-        onUpdatePosition(positionInfo);
-        // onGetDefinePeriods(positionInfo);
-        this.toggleNestedModal();
-      } else if (isAdd) {
-        const response = onAddNewPosition(positionInfo);
-        if (response?.Id) {
-          this.setState({ positionId: response.Id });
-        }
-        this.setState({ isShowJobTitle: true });
+      if (isEdit1) {
+        console.log("9999999", jobTitlesInfo);
+        onUpdateJobTitle(jobTitlesInfo);
+        this.toggleModal();
+      } else {
+        onAddNewJobTitle(jobTitlesInfo);
+        this.toggleModal();
       }
       this.setState({
         errorMessages: {},
       });
     } else {
       let emptyError = "";
-      if (selectedPositionType === undefined) {
+      if (selectedCorporateKey === undefined) {
         emptyError = "Fill the empty select";
       }
 
@@ -526,83 +393,10 @@ class PositionsList extends Component {
   };
 
   handleSelect = (fieldName, selectedValue) => {
-    // if (fieldName == "administrativeSupervisor") {
-    //   this.setState({
-    //     selectedAdministrativeSupervisor: selectedValue,
-    //   });
-    // }
-    /*  if (fieldName == "physicalWorkLocation") {
-      this.setState({
-        selectedPhysicalWorkLocations: selectedValue,
-      });
-    } */
-
-    if (fieldName == "jobRankId") {
-      this.setState({
-        selectedJobRank: selectedValue,
-      });
-    }
     if (fieldName == "positionTypeId") {
       this.setState({
         selectedPositionType: selectedValue,
       });
-    }
-    if (fieldName == "employmentCaseId") {
-      this.setState({
-        selectedEmploymentCase: selectedValue,
-      });
-    }
-    if (fieldName == "workClassificationId") {
-      this.setState({
-        selectedWorkClassification: selectedValue,
-      });
-    }
-    // if (fieldName == "corporateNodeId") {
-    //   this.setState({
-    //     selectedCorporateNode: selectedValue,
-    //   });
-    // }
-    // if (fieldName == "academicYearId") {
-    //   this.setState({
-    //     selectedAcademicYearId: selectedValue,
-    //   });
-    // }
-  };
-
-  handleSelectDatalist = e => {
-    const selectedValue = e.target.value;
-    if (fieldName === "jobTitleId") {
-      const selected = this.props.jobTitlesOpt.find(
-        job => job.value === selectedValue
-      );
-
-      this.setState({
-        selectedJobTitle: selected ? selected.key : null,
-        jobTitleName: selectedValue,
-      });
-    }
-
-    if (fieldName === "employeeId") {
-      const selected = this.props.employeesNames.find(
-        employeeName => employeeName.value === selectedValue
-      );
-
-      this.setState({
-        selectedFullName: selected ? selected.key : null,
-        employeeFullName: selectedValue,
-      });
-    }
-
-    if (fieldName === "academicYearId") {
-      const selected = this.props.academicYearsOpt.find(
-        aYear => aYear.value === selectedValue
-      );
-      this.setState({
-        selectedAcademicYearId: selected ? selected.key : null,
-        academicYear: selectedValue,
-      });
-
-      return;
     }
   };
 
@@ -624,40 +418,36 @@ class PositionsList extends Component {
 
   handlePositionClick = arg => {
     console.log("arg", arg);
+    const { jobTitles, onGetJobTitles } = this.props;
+    console.log("1", arg.jobTitles);
+    const filteredJobTitles = jobTitles.filter(
+      position => position.key != arg.Id
+    );
+    console.log("222", filteredJobTitles);
 
     this.setState({
       position: arg,
-      selectedFullName: arg.employeeId,
-      employeeFullName: arg.employeeName,
-      selectedJobRank: arg.jobRankId,
-      selectedJobTitle: arg.jobTitleId,
-      jobTitleName: arg.jobTitle,
-      selectedCorporateNode: arg.corporateNodeId,
+      filteredJobTitles: filteredJobTitles,
+      selectedPositionId: arg.Id,
       selectedPositionType: arg.positionTypeId,
-      selectedEmploymentCase: arg.employmentCaseId,
-      selectedHasMinistryApprove: arg.hasMinistryApprove,
-      selectedGovernmentWorker: arg.governmentWorker,
-      selectedWorkClassification: arg.workClassificationId,
-      selectedAcademicYearId: arg.academicYearId,
-      academicYear: arg.academicYear,
+      selectedPositionId: arg.Id,
       isEdit: true,
       isOpen: false,
     });
-    this.toggle();
+
+    onGetJobTitles(arg.Id);
+    this.toggleNestedModal();
   };
 
-  handleEmployeeDataClick = position => {
-    console.log("arg", position);
+  handleJobTitlesClick = arg => {
+    console.log("arg", arg);
 
     this.setState({
-      isOpen: true,
-      selectConId: position.Id,
-      modalPositionValue: position,
+      position: arg,
+      selectedCorporateKey: arg.corporateNodeId,
+      isEdit1: true,
     });
-    this.toggle2();
-  };
-  testselected = val => {
-    console.log(val, "vvvvvvvvvvvvvvvvvv");
+    this.toggleModal();
   };
 
   handleValidDate = date => {
@@ -703,6 +493,7 @@ class PositionsList extends Component {
   render() {
     const {
       positions,
+      jobTitles,
       corporateNodesOpt,
       positionTypes,
       positionsOpt,
@@ -711,7 +502,9 @@ class PositionsList extends Component {
     } = this.props;
     const {
       duplicateError,
+      isEdit1,
       deleteModal,
+      deleteModal1,
       isEdit,
       emptyError,
       showAlert,
@@ -723,11 +516,13 @@ class PositionsList extends Component {
       showSearchButton,
       isNestedModalOpen,
       isModalOpen,
-      positionJobTitleData,
+      position,
       positionTypeError,
       positionError,
       isShowJobTitle,
       languageState,
+      errorMessage,
+      successMessage,
     } = this.state;
 
     const direction = languageState === "ar" ? "rtl" : "ltr";
@@ -747,8 +542,11 @@ class PositionsList extends Component {
     const columns = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "position",
-        text: this.props.t("Position"),
+        dataField: languageState === "ar" ? "arTitle" : "enTitle",
+        text:
+          languageState === "ar"
+            ? this.props.t("Position(ar)")
+            : this.props.t("Position(en)"),
         sort: true,
         editable: false,
       },
@@ -759,7 +557,7 @@ class PositionsList extends Component {
         editable: false,
       },
       {
-        dataField: "positionType",
+        dataField: "positionTypeId",
         text: this.props.t("Position Type"),
         sort: true,
         editable: false,
@@ -778,16 +576,6 @@ class PositionsList extends Component {
         //  hidden: !showDeleteButton,
         formatter: (cellContent, position) => (
           <div className="d-flex gap-3">
-            <Tooltip
-              title={this.props.t("View Employee Information")}
-              placement="top"
-            >
-              <IconButton
-                onClick={() => this.handleEmployeeDataClick(position)}
-              >
-                <i className="fas fa-male font-size-18" id="viewtooltip"></i>
-              </IconButton>
-            </Tooltip>
             <Tooltip title={this.props.t("Edit")} placement="top">
               <IconButton onClick={() => this.handlePositionClick(position)}>
                 <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
@@ -808,13 +596,13 @@ class PositionsList extends Component {
     const columns2 = [
       { dataField: "Id", text: this.props.t("ID"), hidden: true },
       {
-        dataField: "arTitle ",
+        dataField: "arJobTitle",
         text: this.props.t("Job Title(ar)"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "enTitle",
+        dataField: "enJobTitle",
         text: this.props.t("Job Title(en)"),
         sort: true,
         editable: false,
@@ -837,28 +625,21 @@ class PositionsList extends Component {
         isDummyField: true,
         editable: false,
         //  hidden: !showDeleteButton,
-        formatter: (cellContent, position) => (
+        formatter: (cellContent, JobTitle) => (
           <div className="d-flex gap-3">
-            <Tooltip
-              title={this.props.t("View Employee Information")}
-              placement="top"
-            >
-              <IconButton
-                onClick={() => this.handleEmployeeDataClick(position)}
-              >
-                <i className="fas fa-male font-size-18" id="viewtooltip"></i>
-              </IconButton>
-            </Tooltip>
             <Tooltip title={this.props.t("Edit")} placement="top">
-              <IconButton onClick={() => this.handlePositionClick(position)}>
-                <i className="mdi mdi-pencil font-size-18" id="edittooltip"></i>
+              <IconButton onClick={() => this.handleJobTitlesClick(JobTitle)}>
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="editjobtooltip"
+                ></i>
               </IconButton>
             </Tooltip>
             <Tooltip title={this.props.t("Delete")} placement="top">
-              <IconButton onClick={() => this.onClickDelete(position)}>
+              <IconButton onClick={() => this.onClickDelete1(JobTitle)}>
                 <i
                   className="mdi mdi-delete font-size-18"
-                  id="deletetooltip"
+                  id="deletejobtooltip"
                 ></i>
               </IconButton>
             </Tooltip>
@@ -1022,30 +803,68 @@ class PositionsList extends Component {
                                       : t("Add Position")}
                                   </ModalHeader>
                                   <ModalBody>
+                                    <Row>
+                                      <div>
+                                        {errorMessage && (
+                                          <Alert
+                                            color="danger"
+                                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                            role="alert"
+                                          >
+                                            {errorMessage}
+                                            <button
+                                              type="button"
+                                              className="btn-close"
+                                              aria-label="Close"
+                                              onClick={this.handleErrorClose}
+                                            ></button>
+                                          </Alert>
+                                        )}
+                                      </div>
+                                      <div>
+                                        {successMessage && (
+                                          <Alert
+                                            color="success"
+                                            className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                            role="alert"
+                                          >
+                                            {successMessage}
+                                            <button
+                                              type="button"
+                                              className="btn-close"
+                                              aria-label="Close"
+                                              onClick={this.handleSuccessClose}
+                                            ></button>
+                                          </Alert>
+                                        )}
+                                      </div>
+                                    </Row>
                                     <div>
                                       <div>
                                         <Formik
                                           enableReinitialize={true}
                                           initialValues={{
+                                            ...(isEdit &&
+                                              position && {
+                                                Id: position.Id,
+                                              }),
                                             arTitle:
-                                              (positionJobTitleData &&
-                                                positionJobTitleData.arTitle) ||
+                                              (position && position.arTitle) ||
                                               "",
                                             enTitle:
-                                              (positionJobTitleData &&
-                                                positionJobTitleData.enTitle) ||
+                                              (position && position.enTitle) ||
                                               "",
                                             positionTypeId:
-                                              (positionJobTitleData &&
-                                                positionJobTitleData.positionTypeId) ||
+                                              (position &&
+                                                position.positionTypeId) ||
                                               "",
                                             positionRank:
-                                              (positionJobTitleData &&
-                                                positionJobTitleData.positionRank) ||
+                                              (position &&
+                                                position.positionRank) ||
                                               "",
                                             positionCode:
-                                              (positionJobTitleData &&
-                                                positionJobTitleData.positionCode) ||
+                                              (position &&
+                                                position.positionCode) ||
                                               "",
                                           }}
                                           validationSchema={Yup.object().shape({
@@ -1073,6 +892,18 @@ class PositionsList extends Component {
                                             handleBlur,
                                           }) => (
                                             <>
+                                              <DeleteModal
+                                                show={deleteModal1}
+                                                onDeleteClick={
+                                                  this.handleDeleteRow1
+                                                }
+                                                onCloseClick={() =>
+                                                  this.setState({
+                                                    deleteModal1: false,
+                                                    selectedRow: null,
+                                                  })
+                                                }
+                                              />
                                               <div>
                                                 {duplicateError && (
                                                   <Alert
@@ -1108,6 +939,40 @@ class PositionsList extends Component {
                                                         this.handleAlertClose(
                                                           "emptyError"
                                                         )
+                                                      }
+                                                    ></button>
+                                                  </Alert>
+                                                )}
+                                                {deleted == 0 && showAlert && (
+                                                  <Alert
+                                                    color="danger"
+                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                    role="alert"
+                                                  >
+                                                    {alertMessage}
+                                                    <button
+                                                      type="button"
+                                                      className="btn-close"
+                                                      aria-label="Close"
+                                                      onClick={
+                                                        this.handleErrorClose
+                                                      }
+                                                    ></button>
+                                                  </Alert>
+                                                )}
+                                                {deleted == 1 && showAlert && (
+                                                  <Alert
+                                                    color="success"
+                                                    className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                                    role="alert"
+                                                  >
+                                                    {alertMessage}
+                                                    <button
+                                                      type="button"
+                                                      className="btn-close"
+                                                      aria-label="Close"
+                                                      onClick={
+                                                        this.handleSuccessClose
                                                       }
                                                     ></button>
                                                   </Alert>
@@ -1211,7 +1076,7 @@ class PositionsList extends Component {
                                                           defaultValue={positionTypes.find(
                                                             opt =>
                                                               opt.value ===
-                                                              positionJobTitleData?.positionTypeId
+                                                              position?.positionTypeId
                                                           )}
                                                         />
                                                         {positionTypeError && (
@@ -1273,7 +1138,7 @@ class PositionsList extends Component {
                                                           placeholder={t(
                                                             "Position Code"
                                                           )}
-                                                          type="number"
+                                                          type="text"
                                                           className={
                                                             "form-control" +
                                                             (errors.positionCode &&
@@ -1321,7 +1186,7 @@ class PositionsList extends Component {
                                                       {...toolkitprops.baseProps}
                                                       {...paginationTableProps}
                                                       keyField="Id"
-                                                      data={positions}
+                                                      data={jobTitles}
                                                       defaultSorted={
                                                         defaultSorting
                                                       }
@@ -1352,7 +1217,7 @@ class PositionsList extends Component {
                                                   <ModalHeader
                                                     toggle={this.toggleModal}
                                                   >
-                                                    {isEdit
+                                                    {isEdit1
                                                       ? t("Edit Job Title")
                                                       : t("Add Job Title")}
                                                   </ModalHeader>
@@ -1360,21 +1225,25 @@ class PositionsList extends Component {
                                                     <Formik
                                                       enableReinitialize={true}
                                                       initialValues={{
-                                                        arTitle:
-                                                          (positionJobTitleData &&
-                                                            positionJobTitleData.arTitle) ||
+                                                        ...(isEdit &&
+                                                          position && {
+                                                            Id: position.Id,
+                                                          }),
+                                                        arJobTitle:
+                                                          (position &&
+                                                            position.arJobTitle) ||
                                                           "",
-                                                        enTitle:
-                                                          (positionJobTitleData &&
-                                                            positionJobTitleData.enTitle) ||
+                                                        enJobTitle:
+                                                          (position &&
+                                                            position.enJobTitle) ||
                                                           "",
                                                         corporateNodeId:
-                                                          (positionJobTitleData &&
-                                                            positionJobTitleData.corporateNodeId) ||
+                                                          (position &&
+                                                            position.corporateNodeId) ||
                                                           "",
                                                         jobTitleCode:
-                                                          (positionJobTitleData &&
-                                                            positionJobTitleData.jobTitleCode) ||
+                                                          (position &&
+                                                            position.jobTitleCode) ||
                                                           "",
                                                       }}
                                                       validationSchema={Yup.object().shape(
@@ -1433,22 +1302,22 @@ class PositionsList extends Component {
                                                                       *
                                                                     </span>
                                                                     <Field
-                                                                      name="arTitle"
+                                                                      name="arJobTitle"
                                                                       placeholder={t(
                                                                         "Job Title(ar)"
                                                                       )}
                                                                       type="text"
                                                                       className={
                                                                         "form-control" +
-                                                                        (errors.arTitle &&
-                                                                        touched.arTitle
+                                                                        (errors.arJobTitle &&
+                                                                        touched.arJobTitle
                                                                           ? " is-invalid"
                                                                           : "")
                                                                       }
                                                                       autoComplete="Off"
                                                                     />
                                                                     <ErrorMessage
-                                                                      name="arTitle"
+                                                                      name="arJobTitle"
                                                                       component="div"
                                                                       className="invalid-feedback"
                                                                     />
@@ -1465,22 +1334,22 @@ class PositionsList extends Component {
                                                                       *
                                                                     </span>
                                                                     <Field
-                                                                      name="enTitle"
+                                                                      name="enJobTitle"
                                                                       placeholder={t(
                                                                         "Job Title(en)"
                                                                       )}
                                                                       type="text"
                                                                       className={
                                                                         "form-control" +
-                                                                        (errors.enTitle &&
-                                                                        touched.enTitle
+                                                                        (errors.enJobTitle &&
+                                                                        touched.enJobTitle
                                                                           ? " is-invalid"
                                                                           : "")
                                                                       }
                                                                       autoComplete="Off"
                                                                     />
                                                                     <ErrorMessage
-                                                                      name="enTitle"
+                                                                      name="enJobTitle"
                                                                       component="div"
                                                                       className="invalid-feedback"
                                                                     />
@@ -1566,9 +1435,7 @@ class PositionsList extends Component {
                                                                       {corporateNodesOpt.map(
                                                                         corporateNode => (
                                                                           <option
-                                                                            key={
-                                                                              corporateNode.key
-                                                                            }
+                                                                            key={`${corporateNode.key}-${corporateNode.strType}`}
                                                                             value={
                                                                               corporateNode.value
                                                                             }
@@ -1600,7 +1467,7 @@ class PositionsList extends Component {
                                                                       placeholder={t(
                                                                         "Job Title Code"
                                                                       )}
-                                                                      type="number"
+                                                                      type="text"
                                                                       className={
                                                                         "form-control" +
                                                                         (errors.jobTitleCode &&
@@ -1628,7 +1495,7 @@ class PositionsList extends Component {
                                                                   className="btn btn-primary me-2"
                                                                   to="#"
                                                                   onClick={() => {
-                                                                    this.handleSave(
+                                                                    this.handleSubmit(
                                                                       values
                                                                     );
                                                                   }}
@@ -1652,9 +1519,7 @@ class PositionsList extends Component {
                                                       to="#"
                                                       className="btn btn-primary me-2"
                                                       onClick={() => {
-                                                        this.handleSubmit(
-                                                          values
-                                                        );
+                                                        this.handleSave(values);
                                                       }}
                                                     >
                                                       {t("Save")}
@@ -1699,6 +1564,7 @@ const mapStateToProps = ({ positions, menu_items, employees }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onGetPositions: lng => dispatch(getPositions(lng)),
+  onGetJobTitles: position => dispatch(getJobTitles(position)),
   onAddNewPosition: position => dispatch(addNewPosition(position)),
   onUpdatePosition: position => dispatch(updatePosition(position)),
   onDeletePosition: position => dispatch(deletePosition(position)),

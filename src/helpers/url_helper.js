@@ -1162,6 +1162,7 @@ export const GET_POSITION_TYPES = "/positionTypes";
 export const GET_POSITIONS_OPT = "/positionsOpt";
 
 //jobTitles
+export const GET_JOB_TITLES = "/jobTitles";
 export const ADD_NEW_JOB_TITLE = "/add/jobTitle";
 export const UPDATE_JOB_TITLE = "/update/jobTitle";
 export const DELETE_JOB_TITLE = "/deleted/jobTitle";

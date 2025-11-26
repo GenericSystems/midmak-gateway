@@ -21,6 +21,9 @@ import {
   GET_POSITIONS_OPT,
   GET_POSITIONS_OPT_FAIL,
   GET_POSITIONS_OPT_SUCCESS,
+  GET_JOB_TITLES,
+  GET_JOB_TITLES_FAIL,
+  GET_JOB_TITLES_SUCCESS,
   ADD_NEW_JOB_TITLE,
   ADD_JOB_TITLE_SUCCESS,
   ADD_JOB_TITLE_FAIL,
@@ -133,6 +136,21 @@ export const getPositionsOptSuccess = positions => ({
 
 export const getPositionsOptFail = error => ({
   type: GET_POSITIONS_OPT_FAIL,
+  payload: error,
+});
+
+export const getJobTitles = position => ({
+  type: GET_JOB_TITLES,
+  payload: position,
+});
+
+export const getJobTitlesSuccess = jobTitles => ({
+  type: GET_JOB_TITLES_SUCCESS,
+  payload: jobTitles,
+});
+
+export const getJobTitlesFail = error => ({
+  type: GET_JOB_TITLES_FAIL,
   payload: error,
 });
 

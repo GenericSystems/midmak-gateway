@@ -2367,6 +2367,9 @@ export const updatePosition = data => post(url.UPDATE_POSITION, data);
 //delete Position
 export const deletePosition = data => post(url.DELETE_POSITION, data);
 
+//JobTitle
+export const getJobTitles = data => post(url.GET_JOB_TITLES, data);
+
 // add JobTitle
 
 export const addNewJobTitle = data => post(url.ADD_NEW_JOB_TITLE, data);
