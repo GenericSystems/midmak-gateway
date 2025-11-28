@@ -173,7 +173,7 @@ function* onUpdateDecision({ payload }) {
   payload["queryname"] = "_Common_Decision";
   try {
     const response = yield call(updateDecision, payload);
-      const cleanedResponse = response.map(resp => {
+    const cleanedResponse = response.map(resp => {
       return {
         ...resp,
         employees: resp.employees ? JSON.parse(resp.employees) : [],
@@ -181,7 +181,6 @@ function* onUpdateDecision({ payload }) {
     });
 
     yield put(updateDecisionSuccess(cleanedResponse[0]));
-    // yield put(updateDecisionSuccess(response));
   } catch (error) {
     yield put(updateDecisionFail(error));
   }

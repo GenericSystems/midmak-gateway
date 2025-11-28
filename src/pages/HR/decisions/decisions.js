@@ -276,7 +276,7 @@ class DecisionsList extends Component {
     console.log("selectedRowId", selectedRowId);
     if (selectedRowId !== null) {
       let onDelete = { Id: selectedRowId.Id };
-      onDeleteDecision(selectedRowId);
+      onDeleteDecision(onDelete);
 
       this.setState({
         selectedRowId: null,
@@ -284,6 +284,7 @@ class DecisionsList extends Component {
         showAlert: true,
       });
     }
+    this.toggle();
   };
 
   handleAlertClose = alertName => {
