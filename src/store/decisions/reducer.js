@@ -44,20 +44,24 @@ const decisions = (state = INIT_STATE, action) => {
         ...state,
         error: action.payload,
       };
+
     case UPDATE_DECISION_SUCCESS:
+      console.log("Updated Decision:", action.payload);
       return {
         ...state,
         decisions: state.decisions.map(decision =>
           decision.Id.toString() === action.payload.Id.toString()
-            ? { decision, ...action.payload }
+            ? { ...decision, ...action.payload }
             : decision
         ),
       };
+
     case UPDATE_DECISION_FAIL:
       return {
         ...state,
         error: action.payload,
       };
+
     case DELETE_DECISION_SUCCESS:
       return {
         ...state,

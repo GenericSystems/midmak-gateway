@@ -60,6 +60,7 @@ import {
 } from "../../../utils/menuUtils";
 import { departments } from "common/data";
 import decisions from "store/decisions/reducer";
+import decisionsTypes from "../decisionsTypes/decisionsTypes";
 class DecisionsList extends Component {
   constructor(props) {
     super(props);
@@ -67,9 +68,10 @@ class DecisionsList extends Component {
       decisions: [],
       decision: "",
       decisionsTypes: [],
-      selectedDecisionMaker: "",
-      decisionMakerName: null,
-      selectedApplyDecisionTo: "",
+      decisionMakers: [],
+      selectedDecisionMaker: null,
+      decisionMakerName: "",
+      selectedApplyDecisionTo: null,
       selectedEmployeeName: null,
       employeeName: "",
       employeesArray: [],
@@ -81,6 +83,7 @@ class DecisionsList extends Component {
       decisionDateError: false,
       decisionMakerError: false,
       applyDecisionToError: false,
+      decisionTypeError: false,
       showAlert: null,
       showAddButton: false,
       showDeleteButton: false,
@@ -237,7 +240,7 @@ class DecisionsList extends Component {
       selectedCorporateNode: null,
       corporateNodeName: "",
       employeesArray: [],
-      employeesId: [],
+      multiArray: [],
       isEdit: false,
     });
     this.addToggle();
@@ -245,7 +248,7 @@ class DecisionsList extends Component {
 
   handleDecisionClick = arg => {
     console.log("arg", arg);
-    const employeesArray = arg.employees ? JSON.parse(arg.employees) : [];
+    const employeesArray = arg.employees;
     this.setState({
       decision: arg,
       selectedDecisionMaker: arg.decisionMakerId,
@@ -253,10 +256,13 @@ class DecisionsList extends Component {
       selectedApplyDecisionTo: arg.applyDecisionToId,
       selectedCorporateNode: arg.corporateId,
       corporateNodeName: arg.corporateNodeName,
-      // selectedEmployeeName: arg.employeesId,
+      // selectedEmployeeName: arg.multiArray,
       // employeeName: arg.employeeName,
       employeesArray,
-      employeesId: employeesArray.map(i => i.value),
+      multiArray: (employeesArray || []).map(emp => ({
+        value: emp.value,
+        label: emp.employeeName,
+      })),
       selectedDecisionType: arg.decisionTypeId,
       selectedDecisionStatus: arg.decisionStatusId,
       isEdit: true,
@@ -269,6 +275,7 @@ class DecisionsList extends Component {
     const { selectedRowId } = this.state;
     console.log("selectedRowId", selectedRowId);
     if (selectedRowId !== null) {
+      let onDelete = { Id: selectedRowId.Id };
       onDeleteDecision(selectedRowId);
 
       this.setState({
@@ -277,7 +284,6 @@ class DecisionsList extends Component {
         showAlert: true,
       });
     }
-    this.toggle();
   };
 
   handleAlertClose = alertName => {
@@ -298,7 +304,7 @@ class DecisionsList extends Component {
 
   handleDataListChange = (fieldName, selectedValue) => {
     if (fieldName === "decisionMakerId") {
-      const selected = this.state.decisionMakers.find(
+      const selected = this.props.decisionsMaker.find(
         decisionMaker => decisionMaker.value.trim() === selectedValue.trim()
       );
 
@@ -308,8 +314,8 @@ class DecisionsList extends Component {
       return;
     }
 
-    if (fieldName === "employeesId") {
-      const selected = this.state.employeesNames.find(
+    if (fieldName === "multiArray") {
+      const selected = this.props.employeesNames.find(
         employeeName => employeeName.value === selectedValue
       );
 
@@ -320,7 +326,7 @@ class DecisionsList extends Component {
     }
 
     if (fieldName === "corporateId") {
-      const selected = this.state.corporateNodesOpt.find(
+      const selected = this.props.corporateNodesOpt.find(
         corporateNode => corporateNode.value === selectedValue
       );
 
@@ -351,10 +357,10 @@ class DecisionsList extends Component {
     } = this.state;
 
     const { onAddNewDecision, onUpdateDecision } = this.props;
-
+    console.log("444444444", employeesArray);
     const formattedEmployees =
       employeesArray?.map(item => ({
-        label: item.label,
+        label: item.employeeName,
         value: item.value,
       })) || [];
 
@@ -363,7 +369,7 @@ class DecisionsList extends Component {
     values.decisionTypeId = selectedDecisionType;
     values.decisionStatusId = isEdit ? selectedDecisionStatus : 4;
     values["corporateId"] = selectedCorporateNode;
-    values["employeesId"] = formattedEmployees;
+    values["multiArray"] = formattedEmployees;
     console.log("selectedDecisionStatus at save:", selectedDecisionStatus);
 
     if (isEdit) {
@@ -413,20 +419,23 @@ class DecisionsList extends Component {
 
       if (values.corporateId) {
         const corporateObject = this.props.corporateNodesOpt.find(
-          corporate => String(corporate.value) === String(values.corporateId)
+          corporate => String(corporate.key) === String(values.corporateId)
         );
 
-        console.log("corporateObject", corporateObject);
+        console.log("corporateObject", this.props.corporateNodesOpt);
+        console.log("555555555555", values.corporateId);
+        console.log("66666666666", corporateObject);
 
-        if (corporateObject) {
-          decisionInfo["corporateId"] = corporateObject.key;
-        } else {
-          console.warn("No corporate found for", values.corporateId);
-        }
+        decisionInfo["corporateId"] = corporateObject.key;
       }
 
-      if (values.employeesId) {
-        decisionInfo["employeesId"] = formattedEmployees;
+      if (formattedEmployees) {
+        decisionInfo["multiArray"] = formattedEmployees;
+      }
+
+      if (selectedDecisionStatus !== 2) {
+        delete decisionInfo.turnUser;
+        delete decisionInfo.turnNotes;
       }
 
       this.setState({
@@ -435,43 +444,47 @@ class DecisionsList extends Component {
 
       if (isEdit) {
         onUpdateDecision(decisionInfo);
-        const saveDecisionMessage = "Saved successfully";
-        this.setState({
-          successMessage: saveDecisionMessage,
-        });
         this.toggle();
       } else {
         onAddNewDecision(decisionInfo);
-        const saveDecisionMessage = "Saved successfully";
-        this.setState({
-          successMessage: saveDecisionMessage,
-        });
         this.addToggle();
       }
+      const saveDecisionMessage = "Saved successfully";
+      this.setState({
+        successMessage: saveDecisionMessage,
+      });
     }
   };
 
   handleSelect = (fieldName, selectedValue) => {
     if (fieldName == "decisionTypeId") {
+      // const name = decisionsTypes.find(
+      //   decisionType => decisionType.value === selectedValue
+      // );
       this.setState({
         selectedDecisionType: selectedValue,
+        // decisionTypeId: name.label,
       });
     }
   };
 
   handleValidDate = date => {
-    const date1 = moment(new Date(date)).format("DD /MM/ Y");
-    return date1;
+    if (!date) return "";
+
+    const m = moment(date);
+    if (!m.isValid()) return "";
+
+    return m.format("DD / MM / YYYY");
   };
 
   handleMultiEmployees = (fieldName, selectedMulti) => {
-    if (fieldName === "employeesId") {
-      const selectedIds = selectedMulti
-        ? selectedMulti.map(option => option.value)
-        : [];
+    if (fieldName === "multiArray") {
+      // const selectedIds = selectedMulti
+      //   ? selectedMulti.map(option => option.value)
+      //   : [];
       this.setState({
         employeesArray: selectedMulti || [],
-        employeesId: selectedIds,
+        multiArray: selectedMulti ? selectedMulti.map(opt => opt.value) : [],
       });
     }
   };
@@ -498,6 +511,7 @@ class DecisionsList extends Component {
       selectedCorporateNode,
       selectedDecisionType,
       selectedDecisionStatus,
+      decisionTypeError,
       emptyError,
       showAlert,
       modal,
@@ -513,12 +527,13 @@ class DecisionsList extends Component {
       applyDecisionToError,
       employeesArray,
     } = this.state;
-    console.log("decisionMakers:", decisionMakers);
 
     const showDepartment = selectedApplyDecisionTo === 2;
 
     const showEmployee = selectedApplyDecisionTo === 3;
 
+    const decisionsMaker = decisionMakers;
+    console.log("1111111111", this.props.decisions);
     const { SearchBar } = Search;
     const alertMessage =
       deleted == 0
@@ -554,7 +569,7 @@ class DecisionsList extends Component {
       },
 
       {
-        dataField: "decisionTypeId",
+        dataField: "decisionType",
         text: this.props.t("Decision Type"),
         sort: true,
         editable: false,
@@ -564,7 +579,7 @@ class DecisionsList extends Component {
       },
 
       {
-        dataField: "decisionMakerId",
+        dataField: "decisionMaker",
         text: this.props.t("Decision Maker"),
         sort: true,
         editable: false,
@@ -573,7 +588,7 @@ class DecisionsList extends Component {
         }),
       },
       {
-        dataField: "isExecute",
+        dataField: "executeName",
         text: this.props.t("Is Execute"),
         sort: true,
         editable: false,
@@ -592,7 +607,7 @@ class DecisionsList extends Component {
         }),
       },
       {
-        dataField: "decisionStatusId",
+        dataField: "decisionStatus",
         text: this.props.t("Decision Status"),
         sort: true,
         editable: false,
@@ -607,15 +622,25 @@ class DecisionsList extends Component {
         editable: false,
         //  hidden: !showDeleteButton,
         formatter: (cellContent, decision) => (
-          <Tooltip title={this.props.t("Edit")} placement="top">
-            <Link className="text-sm-end" to="#">
-              <i
-                className="mdi mdi-pencil font-size-18"
-                id="edittooltip"
-                onClick={() => this.handleDecisionClick(decision)}
-              ></i>
-            </Link>
-          </Tooltip>
+          <div className="d-flex gap-3">
+            <Tooltip title={this.props.t("Edit")} placement="top">
+              <Link className="text-sm-end" to="#">
+                <i
+                  className="mdi mdi-pencil font-size-18"
+                  id="edittooltip"
+                  onClick={() => this.handleDecisionClick(decision)}
+                ></i>
+              </Link>
+            </Tooltip>
+            {/* <Tooltip title={this.props.t("Delete")} placement="top">
+              <IconButton onClick={() => this.onClickDelete(decision)}>
+                <i
+                  className="mdi mdi-delete font-size-18"
+                  id="deletetooltip"
+                ></i>
+              </IconButton>
+            </Tooltip>{" "} */}
+          </div>
         ),
       },
     ];
@@ -626,13 +651,6 @@ class DecisionsList extends Component {
     };
     return (
       <React.Fragment>
-        <DeleteModal
-          show={deleteModal}
-          onDeleteClick={this.handleDeleteRow}
-          onCloseClick={() =>
-            this.setState({ deleteModal: false, selectedRowId: null })
-          }
-        />
         <div className="page-content">
           <div className="container-fluid">
             <Breadcrumbs breadcrumbItem={this.props.t("Decisions")} />
@@ -774,20 +792,20 @@ class DecisionsList extends Component {
                                               : "",
                                             decisionMakerId:
                                               (decision &&
-                                                decision.decisionMakerId) ||
-                                              selectedDecisionMaker,
+                                                decision.decisionMakerName) ||
+                                              "",
                                             applyDecisionToId:
                                               (decision &&
                                                 decision.applyDecisionToId) ||
                                               "",
-                                            employeesId:
+                                            multiArray:
                                               (decision &&
-                                                decision.employeesId) ||
+                                                decision.multiArray) ||
                                               selectedEmployeeName,
                                             corporateId:
                                               (decision &&
                                                 decision.corporateId) ||
-                                              selectedCorporateNode,
+                                              "",
                                             decisionReason:
                                               (decision &&
                                                 decision.decisionReason) ||
@@ -795,7 +813,11 @@ class DecisionsList extends Component {
                                             decisionTypeId:
                                               (decision &&
                                                 decision.decisionTypeId) ||
-                                              selectedDecisionType,
+                                              "",
+                                            decisionText:
+                                              (decision &&
+                                                decision.decisionText) ||
+                                              "",
                                           }}
                                           validationSchema={Yup.object().shape({
                                             decisionNumber: Yup.number()
@@ -806,10 +828,10 @@ class DecisionsList extends Component {
                                             decisionDate: Yup.date().required(
                                               "Decision Date is required"
                                             ),
-                                            decisionMakerId:
-                                              Yup.string().required(
-                                                "Decision Maker Is Required"
-                                              ),
+                                            // decisionMakerId:
+                                            //   Yup.string().required(
+                                            //     "Decision Maker Is Required"
+                                            //   ),
                                             applyDecisionToId:
                                               Yup.string().required(
                                                 "Apply The Decision To Is Required"
@@ -934,7 +956,7 @@ class DecisionsList extends Component {
                                                                     : "")
                                                                 }
                                                                 value={
-                                                                  decisionMakers.find(
+                                                                  decisionsMaker.find(
                                                                     decisionMaker =>
                                                                       decisionMaker.key ===
                                                                       this.state
@@ -947,7 +969,7 @@ class DecisionsList extends Component {
                                                                       .value;
 
                                                                   const selectedMaker =
-                                                                    decisionMakers.find(
+                                                                    decisionsMaker.find(
                                                                       decisionMaker =>
                                                                         decisionMaker.value ===
                                                                         newValue
@@ -979,7 +1001,7 @@ class DecisionsList extends Component {
                                                                 autoComplete="off"
                                                               />
                                                               <datalist id="decisionMakerList">
-                                                                {decisionMakers.map(
+                                                                {decisionsMaker.map(
                                                                   decisionMaker => (
                                                                     <option
                                                                       key={
@@ -1023,15 +1045,15 @@ class DecisionsList extends Component {
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
-                                                                    name="employeesId"
+                                                                    name="multiArray"
                                                                     as="input"
                                                                     id="employee-Id"
                                                                     type="text"
                                                                     placeholder="Search..."
                                                                     className={
                                                                       "form-control" +
-                                                                      (errors.employeesId &&
-                                                                      touched.employeesId
+                                                                      (errors.multiArray &&
+                                                                      touched.multiArray
                                                                         ? " is-invalid"
                                                                         : "")
                                                                     }
@@ -1105,7 +1127,7 @@ class DecisionsList extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="employee-Id">
                                                                     {this.props.t(
-                                                                      "Employees"
+                                                                      "Specific Employees"
                                                                     )}
                                                                   </Label>
                                                                 </Col>
@@ -1114,20 +1136,21 @@ class DecisionsList extends Component {
                                                                   <Select
                                                                     classNamePrefix="select2-selection"
                                                                     id="employee-Id"
-                                                                    name="employeesId"
-                                                                    key={`employeesId`}
+                                                                    name="multiArray"
+                                                                    key={`multiArray`}
                                                                     options={
                                                                       employeesNames
                                                                     }
                                                                     onChange={selectedOption =>
                                                                       this.handleMultiEmployees(
-                                                                        "employeesId",
+                                                                        "multiArray",
                                                                         selectedOption
                                                                       )
                                                                     }
                                                                     isMulti
                                                                     value={
-                                                                      employeesArray
+                                                                      this.state
+                                                                        .employeesArray
                                                                     }
                                                                   />
                                                                 </Col>
@@ -1160,11 +1183,7 @@ class DecisionsList extends Component {
                                                                     type="text"
                                                                     placeholder="Search..."
                                                                     className={
-                                                                      "form-control" +
-                                                                      (errors.corporateId &&
-                                                                      touched.corporateId
-                                                                        ? " is-invalid"
-                                                                        : "")
+                                                                      "form-control"
                                                                     }
                                                                     value={
                                                                       corporateNodesOpt.find(
@@ -1362,7 +1381,7 @@ class DecisionsList extends Component {
                                                                   }
                                                                   className={`btn btn-outline-primary w-sm ${
                                                                     selectedApplyDecisionTo ===
-                                                                    "allEmployees"
+                                                                    1
                                                                       ? "active"
                                                                       : ""
                                                                   }`}
@@ -1390,7 +1409,7 @@ class DecisionsList extends Component {
                                                                   }
                                                                   className={`btn btn-outline-primary w-sm ${
                                                                     selectedApplyDecisionTo ===
-                                                                    "department"
+                                                                    2
                                                                       ? "active"
                                                                       : ""
                                                                   }`}
@@ -1411,7 +1430,7 @@ class DecisionsList extends Component {
                                                                   name="applyDecisionToId"
                                                                   value={
                                                                     selectedApplyDecisionTo ===
-                                                                    "employees"
+                                                                    3
                                                                       ? "active"
                                                                       : ""
                                                                   }
@@ -1429,7 +1448,7 @@ class DecisionsList extends Component {
                                                                   }
                                                                 >
                                                                   {this.props.t(
-                                                                    "Employees"
+                                                                    "Specific Employees"
                                                                   )}
                                                                 </button>
                                                               </div>
@@ -1475,7 +1494,11 @@ class DecisionsList extends Component {
                                                               options={
                                                                 decisionsTypes
                                                               }
-                                                              className={`form-control`}
+                                                              className={`form-control ${
+                                                                decisionTypeError
+                                                                  ? "is-invalid"
+                                                                  : ""
+                                                              }`}
                                                               onChange={newValue => {
                                                                 this.handleSelect(
                                                                   "decisionTypeId",
@@ -1485,16 +1508,23 @@ class DecisionsList extends Component {
                                                               defaultValue={decisionsTypes.find(
                                                                 opt =>
                                                                   opt.value ===
-                                                                  decision.decisionType
+                                                                  decision?.decisionTypeId
                                                               )}
                                                             />
+                                                            {decisionTypeError && (
+                                                              <div className="invalid-feedback">
+                                                                {this.props.t(
+                                                                  "Decision Type is required"
+                                                                )}
+                                                              </div>
+                                                            )}
                                                           </Col>
                                                         </Row>
                                                       </div>
                                                       <div className="md-3">
                                                         <Row>
                                                           <Col className="col-4 text-center">
-                                                            <Label for="note">
+                                                            <Label for="decisionText">
                                                               {this.props.t(
                                                                 "Decision Text"
                                                               )}
@@ -1503,9 +1533,9 @@ class DecisionsList extends Component {
                                                           <Col className="col-8">
                                                             <Field
                                                               type="textarea"
-                                                              name="note"
+                                                              name="decisionText"
                                                               as="textarea"
-                                                              id="note"
+                                                              id="decisionText"
                                                               className={
                                                                 "form-control"
                                                               }
@@ -1550,6 +1580,16 @@ class DecisionsList extends Component {
                                       : t("Add Decision")}
                                   </ModalHeader>
                                   <ModalBody>
+                                    <DeleteModal
+                                      show={deleteModal}
+                                      onDeleteClick={this.handleDeleteRow}
+                                      onCloseClick={() =>
+                                        this.setState({
+                                          deleteModal: false,
+                                          selectedRowId: null,
+                                        })
+                                      }
+                                    />
                                     <Row>
                                       <Col>
                                         <Formik
@@ -1563,26 +1603,28 @@ class DecisionsList extends Component {
                                               (decision &&
                                                 decision.decisionNumber) ||
                                               "",
-                                            decisionDate:
-                                              (decision &&
-                                                decision.decisionDate) ||
-                                              "",
+                                            decisionDate: decision?.decisionDate
+                                              ? moment
+                                                  .utc(decision.decisionDate)
+                                                  .local()
+                                                  .format("YYYY-MM-DD")
+                                              : "",
                                             decisionMakerId:
                                               (decision &&
-                                                decision.decisionMakerId) ||
-                                              selectedDecisionMaker,
+                                                decision.decisionMakerName) ||
+                                              "",
                                             applyDecisionToId:
                                               (decision &&
                                                 decision.applyDecisionToId) ||
                                               "",
-                                            employeesId:
+                                            multiArray:
                                               (decision &&
-                                                decision.employeesId) ||
-                                              selectedEmployeeName,
+                                                decision.multiArray) ||
+                                              "",
                                             corporateId:
                                               (decision &&
                                                 decision.corporateId) ||
-                                              selectedCorporateNode,
+                                              "",
                                             decisionReason:
                                               (decision &&
                                                 decision.decisionReason) ||
@@ -1590,7 +1632,7 @@ class DecisionsList extends Component {
                                             decisionTypeId:
                                               (decision &&
                                                 decision.decisionTypeId) ||
-                                              selectedDecisionType,
+                                              "",
                                             decisionStatusId:
                                               decision &&
                                               decision.decisionStatusId,
@@ -1598,6 +1640,10 @@ class DecisionsList extends Component {
                                             turnNotes:
                                               (decision &&
                                                 decision.turnNotes) ||
+                                              "",
+                                            decisionText:
+                                              (decision &&
+                                                decision.decisionText) ||
                                               "",
                                           }}
                                           validationSchema={Yup.object().shape({
@@ -1609,11 +1655,11 @@ class DecisionsList extends Component {
                                             decisionDate: Yup.date().required(
                                               "Decision Date is required"
                                             ),
-                                            decisionMakerId: Yup.string()
-                                              .matches(/^[\u0600-\u06FF\s]+$/)
-                                              .required(
-                                                "Decision Maker Is Required"
-                                              ),
+                                            // decisionMakerId: Yup.string()
+                                            //   .matches(/^[\u0600-\u06FF\s]+$/)
+                                            //   .required(
+                                            //     "Decision Maker Is Required"
+                                            //   ),
                                             applyDecisionToId:
                                               Yup.string().required(
                                                 "Apply The Decision To Is Required"
@@ -1736,7 +1782,7 @@ class DecisionsList extends Component {
                                                                     : "")
                                                                 }
                                                                 value={
-                                                                  decisionMakers.find(
+                                                                  decisionsMaker.find(
                                                                     decisionMaker =>
                                                                       decisionMaker.key ===
                                                                       this.state
@@ -1749,7 +1795,7 @@ class DecisionsList extends Component {
                                                                       .value;
 
                                                                   const selectedMaker =
-                                                                    decisionMakers.find(
+                                                                    decisionsMaker.find(
                                                                       decisionMaker =>
                                                                         decisionMaker.value ===
                                                                         newValue
@@ -1782,7 +1828,7 @@ class DecisionsList extends Component {
                                                               />
 
                                                               <datalist id="decisionMakerList">
-                                                                {decisionMakers.map(
+                                                                {decisionsMaker.map(
                                                                   decisionMaker => (
                                                                     <option
                                                                       key={
@@ -1828,15 +1874,15 @@ class DecisionsList extends Component {
                                                                 </Col>
                                                                 <Col className="col-8">
                                                                   <Field
-                                                                    name="employeesId"
+                                                                    name="multiArray"
                                                                     as="input"
                                                                     id="employee-Id"
                                                                     type="text"
                                                                     placeholder="Search..."
                                                                     className={
                                                                       "form-control" +
-                                                                      (errors.employeesId &&
-                                                                      touched.employeesId
+                                                                      (errors.multiArray &&
+                                                                      touched.multiArray
                                                                         ? " is-invalid"
                                                                         : "")
                                                                     }
@@ -1911,7 +1957,7 @@ class DecisionsList extends Component {
                                                                 <Col className="col-4">
                                                                   <Label for="employee-Id">
                                                                     {this.props.t(
-                                                                      "Employees"
+                                                                      "Specific Employees"
                                                                     )}
                                                                   </Label>
                                                                 </Col>
@@ -1920,20 +1966,21 @@ class DecisionsList extends Component {
                                                                   <Select
                                                                     classNamePrefix="select2-selection"
                                                                     id="employee-Id"
-                                                                    name="employeesId"
-                                                                    key={`employeesId`}
+                                                                    name="multiArray"
+                                                                    key={`multiArray`}
                                                                     options={
                                                                       employeesNames
                                                                     }
                                                                     onChange={selectedOption =>
                                                                       this.handleMultiEmployees(
-                                                                        "employeesId",
+                                                                        "multiArray",
                                                                         selectedOption
                                                                       )
                                                                     }
                                                                     isMulti
                                                                     value={
-                                                                      employeesArray
+                                                                      this.state
+                                                                        .multiArray
                                                                     }
                                                                   />
                                                                 </Col>
@@ -2159,13 +2206,13 @@ class DecisionsList extends Component {
                                                                   name="applyDecisionToId"
                                                                   value={
                                                                     selectedApplyDecisionTo ==
-                                                                    "allEmployees"
+                                                                    1
                                                                       ? "active"
                                                                       : ""
                                                                   }
                                                                   className={`btn btn-outline-primary w-sm ${
                                                                     selectedApplyDecisionTo ===
-                                                                    "allEmployees"
+                                                                    1
                                                                       ? "active"
                                                                       : ""
                                                                   }`}
@@ -2187,13 +2234,13 @@ class DecisionsList extends Component {
                                                                   name="applyDecisionToId"
                                                                   value={
                                                                     selectedApplyDecisionTo ===
-                                                                    "department"
+                                                                    2
                                                                       ? "active"
                                                                       : ""
                                                                   }
                                                                   className={`btn btn-outline-primary w-sm ${
                                                                     selectedApplyDecisionTo ===
-                                                                    "department"
+                                                                    2
                                                                       ? "active"
                                                                       : ""
                                                                   }`}
@@ -2214,13 +2261,13 @@ class DecisionsList extends Component {
                                                                   name="applyDecisionToId"
                                                                   value={
                                                                     selectedApplyDecisionTo ===
-                                                                    "employees"
+                                                                    3
                                                                       ? "active"
                                                                       : ""
                                                                   }
                                                                   className={`btn btn-outline-primary w-sm ${
                                                                     selectedApplyDecisionTo ===
-                                                                    "employees"
+                                                                    3
                                                                       ? "active"
                                                                       : ""
                                                                   }`}
@@ -2288,10 +2335,10 @@ class DecisionsList extends Component {
                                                                   values
                                                                 );
                                                               }}
-                                                              Value={decisionsTypes.find(
+                                                              defaultValue={decisionsTypes.find(
                                                                 opt =>
                                                                   opt.value ===
-                                                                  decision.decisionType
+                                                                  decision?.decisionTypeId
                                                               )}
                                                             />
                                                           </Col>
@@ -2300,7 +2347,7 @@ class DecisionsList extends Component {
                                                       <div className="md-3">
                                                         <Row>
                                                           <Col className="col-4 text-center">
-                                                            <Label for="note">
+                                                            <Label for="decisionText">
                                                               {this.props.t(
                                                                 "Decision Text"
                                                               )}
@@ -2309,9 +2356,9 @@ class DecisionsList extends Component {
                                                           <Col className="col-8">
                                                             <Field
                                                               type="textarea"
-                                                              name="note"
+                                                              name="decisionText"
                                                               as="textarea"
-                                                              id="note"
+                                                              id="decisionText"
                                                               className={
                                                                 "form-control"
                                                               }

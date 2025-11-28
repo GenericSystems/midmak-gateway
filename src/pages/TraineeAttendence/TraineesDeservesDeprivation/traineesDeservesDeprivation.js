@@ -516,27 +516,25 @@ class TraineesDeservesDeprivationList extends Component {
         editable: false,
       },
       {
-        dataField: "courseName",
+        dataField: "CourseName",
         text: this.props.t("Course Name"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "courseCode",
+        dataField: "code",
         text: this.props.t("Course Code"),
         sort: true,
         editable: false,
       },
       {
-        dataField: "minPercent",
+        dataField: "candidatingPercentage",
         text: this.props.t("% Min Percent"),
         sort: true,
         editable: false,
-        formatter: (cellContent, row) =>
-          this.handleValidDate(row.lastAbsenceDate),
       },
       {
-        dataField: "traineeResult",
+        dataField: "result",
         text: this.props.t("Trainee Result"),
         sort: true,
         editable: false,

@@ -414,7 +414,12 @@ class CourseCatalogeList extends Component {
     values["descriptionEn"] = values["descriptionEn"] || "";
     values["isNeedSection"] = selectedIsNeedSection;
     values["isNeedLab"] = selectedIsNeedLabs;
-
+    console.log(
+      "selectedTrainingFormatselectedTrainingFormat",
+      selectedTrainingFormat,
+      "selectedTrainingFormatselectedTrainingFormat",
+      selectedTrainingType
+    );
     // Validation
     if (values.arTitle === "") arCoursenameError = true;
     if (values.enTitle === "") enCoursenameError = true;

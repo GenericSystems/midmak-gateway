@@ -88,6 +88,7 @@ const decrees = (state = INIT_STATE, action) => {
         ...state,
         error: action.payload,
       };
+
     case DELETE_DECREE_SUCCESS:
       return {
         ...state,

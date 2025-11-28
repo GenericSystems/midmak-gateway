@@ -84,7 +84,7 @@ function* fetchPositions(selectedpayload) {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_ContractType",
+    tablename: "Settings_PositionType",
     fields: `Id,${titleField}`,
   };
 
@@ -99,7 +99,7 @@ function* fetchPositions(selectedpayload) {
     source: "db",
     procedure: "Generic_getOptions",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_ContractType",
+    tablename: "Settings_PositionType",
     fields: `Id,${titleField}`,
   };
 
@@ -115,7 +115,7 @@ function* fetchPositions(selectedpayload) {
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_AcadmeyOrgStructureNames",
-    fields: `Id,${titleField},strType`,
+    fields: `key,${titleField},strType`,
   };
   try {
     const response = yield call(getCorporateNodesOpt, get_CorporateNodes_req);
@@ -134,7 +134,7 @@ function* fetchJobTitles(obj) {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_JobTitles",
+    tablename: "_Settings_JobTitles",
     filter: `positionId = ${positionId}`,
   };
   try {

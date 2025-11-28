@@ -55,10 +55,13 @@ function* fetchDecisions() {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Common_Decision",
+    tablename: "_Common_Decision",
   };
   try {
     const response = yield call(getDecisions, get_decisions_req);
+    response.map(resp => {
+      resp["employees"] = JSON.parse(resp["employees"]);
+    });
     console.log("732656", response);
     yield put(getDecisionsSuccess(response));
   } catch (error) {
@@ -82,8 +85,8 @@ function* fetchDecisions() {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Gender",
-    fields: "Id,arTitle",
+    tablename: "_AcadmeyOrgStructureNames",
+    fields: "key,arTitle,strType",
   };
   try {
     const response = yield call(getCorporateNodesOpt, get_CorporateNodes_req);
@@ -114,8 +117,8 @@ function* fetchDecisionMakers() {
     source: "db",
     procedure: "Generic_Optiondatalist",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
-    tablename: "Settings_Country",
-    fields: "Id,arTitle",
+    tablename: "Settings_JobTitles",
+    fields: "Id,arJobTitle",
   };
   try {
     const response = yield call(getDecisionMakers, get_decisionMaker_req);
@@ -149,8 +152,12 @@ function* onAddNewDecision({ payload, decision }) {
   payload["procedure"] = "SisApp_addData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_Decision";
+  payload["queryname"] = "_Common_Decision";
   try {
     const response = yield call(addNewDecision, payload);
+    response.map(resp => {
+      resp["employees"] = JSON.parse(resp["employees"]);
+    });
     yield put(addDecisionSuccess(response[0]));
   } catch (error) {
     yield put(addDecisionFail(error));
@@ -163,16 +170,28 @@ function* onUpdateDecision({ payload }) {
   payload["procedure"] = "SisApp_updateData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
   payload["tablename"] = "Common_Decision";
+  payload["queryname"] = "_Common_Decision";
   try {
     const response = yield call(updateDecision, payload);
     console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", response);
+    // response.map(resp => {
+    //   resp["employees"] = JSON.parse(resp["employees"]);
+    // });
+    const cleanedResponse = response.map(resp => {
+      return {
+        ...resp,
+        employees: resp.employees ? JSON.parse(resp.employees) : [],
+      };
+    });
 
-    yield put(updateDecisionSuccess(response));
+    yield put(updateDecisionSuccess(cleanedResponse));
+    // yield put(updateDecisionSuccess(response));
   } catch (error) {
     yield put(updateDecisionFail(error));
   }
 }
 function* onDeleteDecision({ payload, decision }) {
+  console.log("11111111111", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";

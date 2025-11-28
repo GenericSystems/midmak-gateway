@@ -253,15 +253,15 @@ class CourseDistributionsList extends Component {
         text: "",
         formatter: (cellContent, distributingCoursesMethod) => (
           <div className="d-flex gap-3">
-            {showEditButton && (
-              <Link className="text-secondary" to="#">
-                <i
-                  className="mdi mdi-pencil font-size-18"
-                  id="edittooltip"
-                  onClick={() => this.handelEditData(distributingCoursesMethod)}
-                ></i>
-              </Link>
-            )}
+            {/* {showEditButton && ( */}
+            <Link className="text-secondary" to="#">
+              <i
+                className="mdi mdi-pencil font-size-18"
+                id="edittooltip"
+                onClick={() => this.handelEditData(distributingCoursesMethod)}
+              ></i>
+            </Link>
+            {/* )} */}
           </div>
         ),
       },

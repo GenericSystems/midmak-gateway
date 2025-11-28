@@ -321,10 +321,12 @@ class PositionsList extends Component {
         positionInfo[key] = values[key];
       });
 
-      const isDuplicateArTitle = positions.some(
-        position =>
+      const isDuplicateArTitle = positions.some(position => {
+        if (isEdit && position.Id === selectedPositionId) return false;
+        return (
           position.arTitle && position.arTitle.trim() === values.arTitle.trim()
-      );
+        );
+      });
 
       if (isDuplicateArTitle) {
         const duplicateErrorMessage = this.props.t("Position already exists");
@@ -338,7 +340,7 @@ class PositionsList extends Component {
       if (isEdit) {
         console.log("333333", positionInfo);
         onUpdatePosition(positionInfo);
-        // onGetDefinePeriods(positionInfo);
+        this.props.onGetPositions();
         this.toggleNestedModal();
       } else {
         console.log("55555", positionInfo);
@@ -378,7 +380,7 @@ class PositionsList extends Component {
     const { onAddNewJobTitle, onUpdateJobTitle, jobTitles, lastAddedId } =
       this.props;
 
-    console.log("selectedPositionIdselectedPositionId", selectedPositionId);
+    console.log("selectedPositionIdselectedPositionId", values.Id);
     values["arJobTitle"] = values["arJobTitle"] || "";
     values["enJobTitle"] = values["enJobTitle"] || "";
     values["jobTitleCode"] = values["jobTitleCode"] || "";
@@ -402,11 +404,13 @@ class PositionsList extends Component {
         jobTitlesInfo[key] = values[key];
       });
 
-      const isDuplicateArTitle = jobTitles.some(
-        jobTitle =>
+      const isDuplicateArTitle = jobTitles.some(jobTitle => {
+        if (isEdit1 && jobTitle.Id === values.Id) return false;
+        return (
           jobTitle.arJobTitle &&
           jobTitle.arJobTitle.trim() === values.arJobTitle.trim()
-      );
+        );
+      });
 
       if (isDuplicateArTitle) {
         const duplicateErrorMessage = this.props.t("Job Title already exists");
@@ -420,9 +424,11 @@ class PositionsList extends Component {
       if (isEdit1) {
         console.log("9999999", jobTitlesInfo);
         onUpdateJobTitle(jobTitlesInfo);
+        this.props.onGetJobTitles(values.positionId);
         this.toggleModal();
       } else {
         onAddNewJobTitle(jobTitlesInfo);
+        this.props.onGetJobTitles(values.positionId);
         this.toggleModal();
       }
       this.setState({
@@ -498,7 +504,7 @@ class PositionsList extends Component {
     console.log("arg", arg);
 
     this.setState({
-      position: arg,
+      jobTitle: arg,
       selectedCorporateKey: arg.corporateNodeId,
       isEdit1: true,
     });
@@ -555,7 +561,7 @@ class PositionsList extends Component {
 
   handleAddJobTitle = () => {
     this.setState({
-      position: "",
+      jobTitle: "",
       isEdit1: false,
       selectedCorporateKey: null,
     });
@@ -589,6 +595,7 @@ class PositionsList extends Component {
       isNestedModalOpen,
       isModalOpen,
       position,
+      jobTitle,
       positionTypeError,
       positionError,
       isShowJobTitle,
@@ -639,7 +646,7 @@ class PositionsList extends Component {
         editable: false,
       },
       {
-        dataField: "positionTypeId",
+        dataField: languageState === "ar" ? "postionType" : "enPostionType",
         text: this.props.t("Position Type"),
         sort: true,
         editable: false,
@@ -696,7 +703,7 @@ class PositionsList extends Component {
         editable: false,
       },
       {
-        dataField: "corporateNodeId",
+        dataField: languageState === "ar" ? "arTitle" : "enTitle",
         text: this.props.t("Corporate Node"),
         sort: true,
         editable: false,
@@ -1378,24 +1385,24 @@ class PositionsList extends Component {
                                                       enableReinitialize={true}
                                                       initialValues={{
                                                         ...(isEdit &&
-                                                          position && {
-                                                            Id: position.Id,
+                                                          jobTitle && {
+                                                            Id: jobTitle.Id,
                                                           }),
                                                         arJobTitle:
-                                                          (position &&
-                                                            position.arJobTitle) ||
+                                                          (jobTitle &&
+                                                            jobTitle.arJobTitle) ||
                                                           "",
                                                         enJobTitle:
-                                                          (position &&
-                                                            position.enJobTitle) ||
+                                                          (jobTitle &&
+                                                            jobTitle.enJobTitle) ||
                                                           "",
                                                         corporateNodeId:
-                                                          (position &&
-                                                            position.corporateNodeId) ||
+                                                          (jobTitle &&
+                                                            jobTitle.corporateNodeId) ||
                                                           "",
                                                         jobTitleCode:
-                                                          (position &&
-                                                            position.jobTitleCode) ||
+                                                          (jobTitle &&
+                                                            jobTitle.jobTitleCode) ||
                                                           "",
                                                       }}
                                                       validationSchema={Yup.object().shape(
