@@ -173,25 +173,20 @@ function* onUpdateDecision({ payload }) {
   payload["queryname"] = "_Common_Decision";
   try {
     const response = yield call(updateDecision, payload);
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", response);
-    // response.map(resp => {
-    //   resp["employees"] = JSON.parse(resp["employees"]);
-    // });
-    const cleanedResponse = response.map(resp => {
+      const cleanedResponse = response.map(resp => {
       return {
         ...resp,
         employees: resp.employees ? JSON.parse(resp.employees) : [],
       };
     });
 
-    yield put(updateDecisionSuccess(cleanedResponse));
+    yield put(updateDecisionSuccess(cleanedResponse[0]));
     // yield put(updateDecisionSuccess(response));
   } catch (error) {
     yield put(updateDecisionFail(error));
   }
 }
 function* onDeleteDecision({ payload, decision }) {
-  console.log("11111111111", payload);
   payload["source"] = "db";
   payload["procedure"] = "SisApp_removeData";
   payload["apikey"] = "30294470-b4dd-11ea-8c20-b036fd52a43e";
