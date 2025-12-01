@@ -75,7 +75,7 @@ function* loginUser2({ payload: { user, history } }) {
   } */
   const get_login_req = {
     source: "db",
-    procedure: "web_login",
+    procedure: "gate_login",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     email: user.email,
     password: user.password,

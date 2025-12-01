@@ -12,13 +12,12 @@ import {
 const INIT_STATE = {
   menu_items: [],
   filtered_items: [],
-  role_menuItems:[],
-  user_menu:[],
+  role_menuItems: [],
+  user_menu: [],
   error: {},
 };
 
 const menu_items = (state = INIT_STATE, action) => {
-  
   switch (action.type) {
     case GET_SIDEBAR_CONTENTS_SUCCESS:
       return {
@@ -31,28 +30,27 @@ const menu_items = (state = INIT_STATE, action) => {
         error: action.payload,
       };
 
-      case GET_USER_SIDEBAR_CONTENTS_SUCCESS:
-        return {
-          ...state,
-          user_menu: action.payload,
-        };
-      case GET_USER_SIDEBAR_CONTENTS_FAIL:
-        return {
-          ...state,
-          error: action.payload,
-        };
+    case GET_USER_SIDEBAR_CONTENTS_SUCCESS:
+      return {
+        ...state,
+        user_menu: action.payload,
+      };
+    case GET_USER_SIDEBAR_CONTENTS_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
 
-      case GET_SEARCH_MENU_SUCCESS:
-        return {
-          ...state,
-          filtered_items: action.payload,
-        };
-      case GET_SEARCH_MENU_FAIL:
-        return {
-          ...state,
-          error: action.payload,
-        };
-
+    case GET_SEARCH_MENU_SUCCESS:
+      return {
+        ...state,
+        filtered_items: action.payload,
+      };
+    case GET_SEARCH_MENU_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
 
     case GET_ROLE_SIDEBAR_SUCCESS:
       return {

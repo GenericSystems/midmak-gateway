@@ -37,7 +37,6 @@ import { toggleRightSidebar } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 import Select from "react-select";
 
-
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -52,9 +51,9 @@ class Header extends Component {
   }
 
   componentDidMount() {
-    const {yearSemesters, currentSemester } = this.props;
-    this.setState({ yearSemesters });
-    this.setState({ currentSemester });
+    // const {yearSemesters, currentSemester } = this.props;
+    // this.setState({ yearSemesters });
+    // this.setState({ currentSemester });
   }
 
   toggleSearch = () => {
@@ -102,7 +101,6 @@ class Header extends Component {
   }
 
   render() {
-   
     return (
       <React.Fragment>
         <header id="page-topbar">
@@ -301,7 +299,7 @@ class Header extends Component {
               </Dropdown>
             </div>
 
-            <div  className="d-flex">
+            <div className="d-flex">
               <Select
                 className={`select-style-std`}
                 name="NationalityId"
@@ -458,14 +456,13 @@ Header.propTypes = {
   toggleRightSidebar: PropTypes.func,
 };
 
-const mapStatetoProps = ({ state, semesters , generalManagements}) => ({
+const mapStatetoProps = ({ state, semesters, generalManagements }) => ({
   layoutType: state.Layout,
-  currentSemester: semesters.currentSemester,
-  yearSemesters: generalManagements.yearSemesters,
+  // currentSemester: semesters.currentSemester,
+  // yearSemesters: generalManagements.yearSemesters,
 });
 
-const mapDispatchToProps = dispatch => ({
-});
+const mapDispatchToProps = dispatch => ({});
 
 export default connect(mapStatetoProps, mapDispatchToProps, {
   toggleRightSidebar,

@@ -34,7 +34,6 @@ import { withTranslation } from "react-i18next";
 // Redux Store
 import { toggleRightSidebar } from "../../store/actions";
 
-
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
 
 class Header extends Component {
@@ -50,14 +49,13 @@ class Header extends Component {
   }
 
   componentDidMount() {
-    const {
-      
-      onGetYearSemester,
-      yearSemesters,
-      currentSemester,
-    } = this.props;
-    this.setState({ yearSemesters });
-    this.setState({ currentSemester });
+    // const {
+    //   onGetYearSemester,
+    //   yearSemesters,
+    //   currentSemester,
+    // } = this.props;
+    // this.setState({ yearSemesters });
+    // this.setState({ currentSemester });
   }
 
   /**
@@ -102,10 +100,10 @@ class Header extends Component {
   }
 
   render() {
-    const { currentSemester, yearSemesters } = this.props;
-  const semesterObj = yearSemesters.find(
-      opt => opt.key === currentSemester.cuYearSemesterId
-    ) || ""; 
+    //   const { currentSemester, yearSemesters } = this.props;
+    // const semesterObj = yearSemesters.find(
+    //     opt => opt.key === currentSemester.cuYearSemesterId
+    //   ) || "";
 
     return (
       <React.Fragment>
@@ -300,7 +298,7 @@ class Header extends Component {
               </Dropdown>
             </div>
 
-           <Label className="cu-Semes">{semesterObj.value} </Label>
+            {/* <Label className="cu-Semes">{semesterObj.value} </Label> */}
 
             <div className="d-flex">
               <div className="dropdown d-inline-block d-lg-none ms-2">
@@ -447,12 +445,11 @@ Header.propTypes = {
 const mapStatetoProps = ({ state, semesters, generalManagements }) => ({
   // layoutType : state.Layout,
   //showRightSidebar : state.Layout,
-  currentSemester: semesters.currentSemester,
-  yearSemesters: generalManagements.yearSemesters,
+  // currentSemester: semesters.currentSemester,
+  // yearSemesters: generalManagements.yearSemesters,
 });
 
-const mapDispatchToProps = dispatch => ({
-});
+const mapDispatchToProps = dispatch => ({});
 
 export default connect(
   mapStatetoProps,
