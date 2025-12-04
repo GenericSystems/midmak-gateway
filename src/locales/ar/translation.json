@@ -948,6 +948,10 @@
   "Job Title already exists": "اللقب الوظيفي موجود سابقاً",
   "No Job Titles Found": "لا يوجد ألقاب وظيفية",
   "No Position Found": "لا يوجد مناصب",
+  "Financial Summary": "ملخص مالي",
+  "Sum Debit": "مجموع مدين",
+  "Sum Credit": "مجموع دائن",
+  "Balance": "الرصيد",
   "Whatsapp Mobile": "رقم واتسآب",
   "Define Allowed Absence Percent": "تحديد نسب الغياب المسموحة"
 }

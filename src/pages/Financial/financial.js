@@ -507,49 +507,54 @@ class TraineesList extends Component {
                   </CardHeader>
                   <CardBody>
                     <React.Fragment>
-                      <Row>
-                        <div>
-                          {successMessage && (
-                            <Alert
-                              color="success"
-                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                              role="alert"
-                            >
-                              {successMessage}
-                              <button
-                                type="button"
-                                className="btn-close"
-                                aria-label="Close"
-                                onClick={this.handleSuccessClose}
-                              ></button>
-                            </Alert>
-                          )}
-                        </div>
-                      </Row>
-                      <Row>
-                        <div>
-                          {errorMessage && (
-                            <Alert
-                              color="danger"
-                              className="d-flex justify-content-center align-items-center alert-dismissible fade show"
-                              role="alert"
-                            >
-                              {errorMessage}
-                              <button
-                                type="button"
-                                className="btn-close"
-                                aria-label="Close"
-                                onClick={this.handleErrorClose}
-                              ></button>
-                            </Alert>
-                          )}
-                        </div>
-                      </Row>
-                      <Row>
-                        <Col xl="12">
-                          <div>
-                            <Formik enableReinitialize={true}>
-                              {/* {({
+                      <Card>
+                        <CardTitle>
+                          {this.props.t("Financial Summary")}
+                        </CardTitle>
+                        <CardBody>
+                          <Row>
+                            <div>
+                              {successMessage && (
+                                <Alert
+                                  color="success"
+                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                  role="alert"
+                                >
+                                  {successMessage}
+                                  <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                    onClick={this.handleSuccessClose}
+                                  ></button>
+                                </Alert>
+                              )}
+                            </div>
+                          </Row>
+                          <Row>
+                            <div>
+                              {errorMessage && (
+                                <Alert
+                                  color="danger"
+                                  className="d-flex justify-content-center align-items-center alert-dismissible fade show"
+                                  role="alert"
+                                >
+                                  {errorMessage}
+                                  <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                    onClick={this.handleErrorClose}
+                                  ></button>
+                                </Alert>
+                              )}
+                            </div>
+                          </Row>
+                          <Row>
+                            <Col xl="12">
+                              <div>
+                                <Formik enableReinitialize={true}>
+                                  {/* {({
                                 errors,
                                 status,
                                 touched,
@@ -559,69 +564,71 @@ class TraineesList extends Component {
                                 handleFocus,
                                 setFieldValue,
                               }) => ( */}
-                              <Form>
-                                <Row className="text-end">
-                                  {/* مجموع مدين */}
-                                  <Col md={4}>
-                                    <Card className="p-3 shadow-sm border-0 text-center">
-                                      <span className="fw-bold">
-                                        {/* {totalDebit} */}0
-                                      </span>
-                                      <div className="mt-1">
-                                        {/* <FaDollarSign
+                                  <Form>
+                                    <Row className="text-end">
+                                      {/* مجموع مدين */}
+                                      <Col md={4}>
+                                        <Card className="p-3 shadow-sm border-0 text-center">
+                                          <span className="fw-bold">
+                                            {/* {totalDebit} */}0
+                                          </span>
+                                          <div className="mt-1">
+                                            {/* <FaDollarSign
                                           size={18}
                                           color="#8b5cf6"
                                         /> */}
-                                      </div>
-                                      <div className="text-muted mt-2">
-                                        مجموع مدين
-                                      </div>
-                                    </Card>
-                                  </Col>
+                                          </div>
+                                          <div className="text-muted mt-2">
+                                            {this.props.t("Sum Debit")}
+                                          </div>
+                                        </Card>
+                                      </Col>
 
-                                  {/* مجموع دائن */}
-                                  <Col md={4}>
-                                    <Card className="p-3 shadow-sm border-0 text-center">
-                                      <span className="fw-bold">
-                                        {/* {totalCredit}
-                                         */}
-                                        0
-                                      </span>
-                                      <div className="mt-1">
-                                        {/* <FaDollarSign
+                                      {/* مجموع دائن */}
+                                      <Col md={4}>
+                                        <Card className="p-3 shadow-sm border-0 text-center">
+                                          <span className="fw-bold">
+                                            {/* {totalCredit}
+                                             */}
+                                            0
+                                          </span>
+                                          <div className="mt-1">
+                                            {/* <FaDollarSign
                                           size={18}
                                           color="#8b5cf6"
                                         /> */}
-                                      </div>
-                                      <div className="text-muted mt-2">
-                                        مجموع دائن
-                                      </div>
-                                    </Card>
-                                  </Col>
+                                          </div>
+                                          <div className="text-muted mt-2">
+                                            {this.props.t("Sum Credit")}
+                                          </div>
+                                        </Card>
+                                      </Col>
 
-                                  {/* الرصيد */}
-                                  <Col md={4}>
-                                    <Card className="p-3 shadow-sm border-0 text-center">
-                                      <span
-                                      // className={`fw-bold ${balanceColor}`}
-                                      >
-                                        {/* {balance} */}0
-                                      </span>
-                                      <div className="mt-1">
-                                        {/* <FaDollarSign size={18} color="green" /> */}
-                                      </div>
-                                      <div className="text-muted mt-2">
-                                        الرصيد
-                                      </div>
-                                    </Card>
-                                  </Col>
-                                </Row>
-                              </Form>
-                              {/* )} */}
-                            </Formik>
-                          </div>
-                        </Col>
-                      </Row>
+                                      {/* الرصيد */}
+                                      <Col md={4}>
+                                        <Card className="p-3 shadow-sm border-0 text-center">
+                                          <span
+                                          // className={`fw-bold ${balanceColor}`}
+                                          >
+                                            {/* {balance} */}0
+                                          </span>
+                                          <div className="mt-1">
+                                            {/* <FaDollarSign size={18} color="green" /> */}
+                                          </div>
+                                          <div className="text-muted mt-2">
+                                            {this.props.t("Balance")}
+                                          </div>
+                                        </Card>
+                                      </Col>
+                                    </Row>
+                                  </Form>
+                                  {/* )} */}
+                                </Formik>
+                              </div>
+                            </Col>
+                          </Row>
+                        </CardBody>
+                      </Card>
                     </React.Fragment>
                   </CardBody>
                 </Card>
