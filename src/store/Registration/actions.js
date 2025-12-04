@@ -43,8 +43,9 @@ import {
   SAVE_ALL_NON_ACTIVE_CURR_FAIL,
 } from "./actionTypes";
 
-export const getRegistrations = () => ({
+export const getRegistrations = registrations => ({
   type: GET_REGISTRATIONS,
+  payload: registrations,
 });
 
 export const getRegistrationsSuccess = registrations => ({

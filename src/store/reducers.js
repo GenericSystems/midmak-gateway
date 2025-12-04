@@ -54,6 +54,9 @@ import nationalities from "./nationality/reducer";
 //genders
 import genders from "./genders/reducer";
 
+//Financials
+import financials from "./financial/reducer";
+
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -76,6 +79,7 @@ const rootReducer = combineReducers({
   trainees,
   nationalities,
   genders,
+  financials,
 });
 
 export default rootReducer;

@@ -100,6 +100,9 @@ export const UPDATE_TRAINEE_REGREQDOC = "/update/trainee_regReqDoc";
 export const GET_TRAINEE_STATUS = "/traineeStatus";
 export const GET_TRAINEES_OPT = "/traineesOpt";
 
+//financials
+export const GET_FINANCIALS = "/financials";
+
 //regTraineesAttendance
 export const GET_REGISTER_TRAINEES_ATTENDANCE = "/regTrainees";
 export const GET_REGISTER_TRAINEE_ATTENDANCE_DELETED_VALUE = "/deleted";

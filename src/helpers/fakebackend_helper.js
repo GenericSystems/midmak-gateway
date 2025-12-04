@@ -281,6 +281,9 @@ export const updateTraineeRegReqDoc = data =>
 // get Trainee Opt
 export const getTraineesOpt = data => post(url.GET_TRAINEES_OPT, data);
 
+// get Financials
+export const getFinancials = data => post(url.GET_FINANCIALS, data);
+
 // get RegTraineesAttendance
 export const getRegisterTraineesAttendance = data =>
   post(url.GET_REGISTER_TRAINEES_ATTENDANCE, data);

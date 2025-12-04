@@ -150,6 +150,9 @@ import TraineesList from "../pages/AcadmeyTrainees/trainees";
 //Nationalities
 import NationalitiesList from "../pages/Nationalities/nationality-list";
 
+//financials
+import FinancialsList from "../pages/Financial/financial";
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -272,6 +275,10 @@ const authProtectedRoutes = [
   //nationalities
 
   { path: "/nationality-list", component: NationalitiesList },
+
+  //Financials
+
+  { path: "/financials", component: FinancialsList },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name

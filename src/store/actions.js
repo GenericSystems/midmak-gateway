@@ -62,3 +62,6 @@ export * from "./nationality/actions";
 
 //genders
 export * from "./genders/actions";
+
+//financials
+export * from "./financial/actions";

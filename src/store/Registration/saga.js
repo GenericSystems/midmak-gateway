@@ -137,12 +137,15 @@ function* fetchTraineeSchedules(obj) {
 //   }
 // }
 
-function* fetchRegistrations() {
+function* fetchRegistrations(obj) {
+  let traineeId = obj.payload;
+  console.log("333333", traineeId);
   const get_Registration_req = {
     source: "db",
     procedure: "SisApp_getData",
     apikey: "30294470-b4dd-11ea-8c20-b036fd52a43e",
     tablename: "_Common_Trainee",
+    filter: `Id = ${traineeId}`,
   };
   try {
     const response = yield call(getRegistrations, get_Registration_req);

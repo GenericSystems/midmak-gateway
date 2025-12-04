@@ -43,6 +43,7 @@ class Header extends Component {
       isSearch: false,
       open: false,
       position: "right",
+      selectedYear: null,
     };
     this.toggleMenu = this.toggleMenu.bind(this);
     this.toggleFullscreen = this.toggleFullscreen.bind(this);
@@ -50,12 +51,28 @@ class Header extends Component {
 
   componentDidMount() {
     // const {
+
     //   onGetYearSemester,
     //   yearSemesters,
     //   currentSemester,
     // } = this.props;
     // this.setState({ yearSemesters });
     // this.setState({ currentSemester });
+    let curentYeardata = localStorage.getItem("authUser");
+    if (curentYeardata) {
+      try {
+        const parsed = JSON.parse(curentYeardata);
+        const firstYear = parsed[0];
+        this.setState({
+          selectedYear: {
+            value: firstYear.currentYearId,
+            label: firstYear.currentYearName,
+          },
+        });
+      } catch (error) {
+        console.error("Error parsing authUser:", error);
+      }
+    }
   }
 
   /**
@@ -100,11 +117,11 @@ class Header extends Component {
   }
 
   render() {
-    //   const { currentSemester, yearSemesters } = this.props;
-    // const semesterObj = yearSemesters.find(
-    //     opt => opt.key === currentSemester.cuYearSemesterId
-    //   ) || "";
-
+    // const { currentSemester, yearSemesters } = this.props;
+    const { selectedYear } = this.state;
+    // const semesterObj =
+    //   yearSemesters.find(opt => opt.key === currentSemester.cuYearSemesterId) ||
+    //   "";
     return (
       <React.Fragment>
         <header id="page-topbar">
@@ -298,7 +315,7 @@ class Header extends Component {
               </Dropdown>
             </div>
 
-            {/* <Label className="cu-Semes">{semesterObj.value} </Label> */}
+            <Label className="cu-Semes">{selectedYear?.label || " "}</Label>
 
             <div className="d-flex">
               <div className="dropdown d-inline-block d-lg-none ms-2">
