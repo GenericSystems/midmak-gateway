@@ -132,6 +132,24 @@ import BlogList from "../pages/Blog/BlogList/index";
 import BlogGrid from "../pages/Blog/BlogGrid/index";
 import BlogDetails from "../pages/Blog/BlogDetails";
 
+//Registration
+import RegistrationList from "../pages/Registration/registration";
+
+//LecturePeriod
+import LecturePeriodsList from "pages/lecture-periods/lecture-periods";
+
+//Week Days
+import WeekDays from "pages/WeekDays/weekDays";
+
+//Years
+import YearsList from "pages/Years/years";
+
+//trainees
+import TraineesList from "../pages/AcadmeyTrainees/trainees";
+
+//Nationalities
+import NationalitiesList from "../pages/Nationalities/nationality-list";
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -235,6 +253,25 @@ const authProtectedRoutes = [
   { path: "/pages-timeline", component: PagesTimeline },
   { path: "/pages-faqs", component: PagesFaqs },
   { path: "/pages-pricing", component: PagesPricing },
+
+  // registration
+  { path: "/registration", component: RegistrationList },
+
+  //lecturePeriods
+  { path: "/lecturePeriods", component: LecturePeriodsList },
+
+  //Week Days
+  { path: "/weekDays", component: WeekDays },
+
+  //Years
+  { path: "/years", component: YearsList },
+
+  // trainees
+  { path: "/trainees", component: TraineesList },
+
+  //nationalities
+
+  { path: "/nationality-list", component: NationalitiesList },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name

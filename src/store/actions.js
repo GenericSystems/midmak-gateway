@@ -41,3 +41,24 @@ export * from "./sidebarcontent/actions";
 
 //transportLines
 export * from "./transportLines/actions";
+
+//registration
+export * from "./Registration/actions";
+
+//lecturePeriod
+export * from "./lecture-periods/actions";
+
+//Week Days
+export * from "./weekdays/actions";
+
+//Years
+export * from "./years/actions";
+
+//trainees
+export * from "./trainees/actions";
+
+//Nationalities
+export * from "./nationality/actions";
+
+//genders
+export * from "./genders/actions";

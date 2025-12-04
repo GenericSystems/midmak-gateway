@@ -33,6 +33,27 @@ import invoices from "./invoices/reducer";
 // _Common
 import _Common from "./_common/reducer";
 
+//registrations
+import registrations from "./Registration/reducer";
+
+//lecturePeriods
+import lecturePeriods from "./lecture-periods/reducer";
+
+//Week Days
+import weekDays from "./weekdays/reducer";
+
+//Years
+import years from "./years/reducer";
+
+//trainees
+import trainees from "./trainees/reducer";
+
+//nationalities
+import nationalities from "./nationality/reducer";
+
+//genders
+import genders from "./genders/reducer";
+
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -48,6 +69,13 @@ const rootReducer = combineReducers({
   menu_items,
   Dashboard,
   DashboardSaas,
+  registrations,
+  lecturePeriods,
+  weekDays,
+  years,
+  trainees,
+  nationalities,
+  genders,
 });
 
 export default rootReducer;
