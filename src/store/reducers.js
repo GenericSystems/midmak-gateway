@@ -57,6 +57,15 @@ import genders from "./genders/reducer";
 //Financials
 import financials from "./financial/reducer";
 
+//exams
+import exams from "./exams/reducer";
+
+//lectures
+import lectures from "./lectures/reducer";
+
+//decisions
+import decisions from "./decisions/reducer";
+
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -80,6 +89,9 @@ const rootReducer = combineReducers({
   nationalities,
   genders,
   financials,
+  exams,
+  lectures,
+  decisions,
 });
 
 export default rootReducer;

@@ -65,3 +65,12 @@ export * from "./genders/actions";
 
 //financials
 export * from "./financial/actions";
+
+//exams
+export * from "./exams/actions";
+
+//lectures
+export * from "./lectures/actions";
+
+///decisions
+export * from "./decisions/actions";

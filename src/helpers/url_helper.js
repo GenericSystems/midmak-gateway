@@ -103,6 +103,15 @@ export const GET_TRAINEES_OPT = "/traineesOpt";
 //financials
 export const GET_FINANCIALS = "/financials";
 
+//exams
+export const GET_EXAMS = "/exams";
+
+//lectures
+export const GET_LECTURES = "/lectures";
+
+//lectures
+export const GET_DECISIONS = "/decisions";
+
 //regTraineesAttendance
 export const GET_REGISTER_TRAINEES_ATTENDANCE = "/regTrainees";
 export const GET_REGISTER_TRAINEE_ATTENDANCE_DELETED_VALUE = "/deleted";
@@ -372,13 +381,6 @@ export const GET_ACADEMY_TRAINEES_DECREES = "/AcademyTraineesDecrees";
 
 // COURSES_DECREES
 export const GET_COURSES_DECREES = "/CoursesDecrees";
-
-// DECISION
-export const GET_DECISIONS = "/decisions";
-export const ADD_NEW_DECISION = "/add/decision";
-export const UPDATE_DECISION = "/update/decision";
-export const DELETE_DECISION = "/delete/decision";
-export const GET_DECISION_DELETED_VALUE = "/deleted";
 
 // DECISION MAKERS
 export const GET_DECISION_MAKERS = "/decisionMakers";

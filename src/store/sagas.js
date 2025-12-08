@@ -22,6 +22,9 @@ import traineesSaga from "./trainees/saga";
 import nationalitiesSaga from "./nationality/saga";
 import gendersSaga from "./genders/saga";
 import financialsSaga from "./financial/saga";
+import examsSaga from "./exams/saga";
+import lecturesSaga from "./lectures/saga";
+import decisionsSaga from "./decisions/saga";
 export default function* rootSaga() {
   yield all([
     //public
@@ -45,5 +48,8 @@ export default function* rootSaga() {
     fork(nationalitiesSaga),
     fork(gendersSaga),
     fork(financialsSaga),
+    fork(examsSaga),
+    fork(lecturesSaga),
+    fork(decisionsSaga),
   ]);
 }

@@ -284,6 +284,15 @@ export const getTraineesOpt = data => post(url.GET_TRAINEES_OPT, data);
 // get Financials
 export const getFinancials = data => post(url.GET_FINANCIALS, data);
 
+// get Exams
+export const getExams = data => post(url.GET_EXAMS, data);
+
+// get Lectures
+export const getLectures = data => post(url.GET_LECTURES, data);
+
+// get Decisions
+export const getDecisions = data => post(url.GET_DECISIONS, data);
+
 // get RegTraineesAttendance
 export const getRegisterTraineesAttendance = data =>
   post(url.GET_REGISTER_TRAINEES_ATTENDANCE, data);
@@ -882,18 +891,6 @@ export const getDecreeStatus = data => post(url.GET_DECREE_STATUS, data);
 
 export const getTraineeDecreesDismiss = data =>
   post(url.GET_TRAINEE_DECREES_DISMISS, data);
-
-// get Decisions
-export const getDecisions = data => post(url.GET_DECISIONS, data);
-
-export const addNewDecision = data => post(url.ADD_NEW_DECISION, data);
-
-export const updateDecision = data => post(url.UPDATE_DECISION, data);
-
-export const deleteDecision = data => post(url.DELETE_DECISION, data);
-
-export const getDecisionDeletedValue = () =>
-  get(url.GET_DECISION_DELETED_VALUE);
 
 // get Decision Makers
 export const getDecisionMakers = data => post(url.GET_DECISION_MAKERS, data);

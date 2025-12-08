@@ -153,6 +153,15 @@ import NationalitiesList from "../pages/Nationalities/nationality-list";
 //financials
 import FinancialsList from "../pages/Financial/financial";
 
+//exams
+import ExamsList from "../pages/ExamsTable/exams";
+
+//lectures
+import LecturesList from "../pages/LecturesTable/lectures";
+
+//Decisions
+import DecisionsList from "../pages/Decisions/decisions";
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -279,6 +288,18 @@ const authProtectedRoutes = [
   //Financials
 
   { path: "/financials", component: FinancialsList },
+
+  //Exams
+
+  { path: "/exams", component: ExamsList },
+
+  //Lectures
+
+  { path: "/lectures", component: LecturesList },
+
+  //Decisions
+
+  { path: "/decisions", component: DecisionsList },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
