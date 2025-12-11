@@ -72,5 +72,8 @@ export * from "./exams/actions";
 //lectures
 export * from "./lectures/actions";
 
-///decisions
+//decisions
 export * from "./decisions/actions";
+
+//grades
+export * from "./grades/actions";

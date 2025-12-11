@@ -23,6 +23,7 @@ import {
   FormGroup,
   TabContent,
   TabPane,
+  Table,
 } from "reactstrap";
 import * as Yup from "yup";
 import Tooltip from "@mui/material/Tooltip";
@@ -117,6 +118,8 @@ class LecturesList extends Component {
       mimeType: null,
       dataUrl: null,
       downloadfinished: 0,
+      weekDays: {},
+      traineeSchedules: {},
     };
   }
 
@@ -147,6 +150,8 @@ class LecturesList extends Component {
       mimeType,
       dataUrl,
       downloadfinished,
+      weekDays,
+      traineeSchedules,
     } = this.props;
     this.updateShowAddButton(user_menu, this.props.location.pathname);
     this.updateShowSearchButton(user_menu, this.props.location.pathname);
@@ -154,7 +159,7 @@ class LecturesList extends Component {
     onGetLectures(lang, traineeId);
     console.log("9999999999", traineeId);
     this.setState({ dataUrl, mimeType, downloadfinished });
-    this.setState({ lectures });
+    this.setState({ lectures, weekDays, traineeSchedules });
     this.setState({
       deleted,
     });
@@ -316,8 +321,16 @@ class LecturesList extends Component {
   }
 
   render() {
-    const { lectures, socialStatus, deleted, t, nationalities, genders } =
-      this.props;
+    const {
+      lectures,
+      socialStatus,
+      deleted,
+      t,
+      nationalities,
+      genders,
+      weekDays,
+      traineeSchedules,
+    } = this.props;
     const {
       trainee,
       languageState,
@@ -401,7 +414,122 @@ class LecturesList extends Component {
                   </CardHeader>
                   <CardBody>
                     <React.Fragment>
-                      <Row className="mt-4">
+                      {/* <div>
+                        {weekDays
+                          .filter(day => day.active === 1)
+                          .map(day => {
+                            const schedulesForDay = traineeSchedules.filter(
+                              s => s.dayTitle.trim() === day.arTitle.trim()
+                            );
+                            if (schedulesForDay.length === 0) return null;
+
+                            return (
+                              <div key={day.Id} className="mb-4">
+                                <h4>{day.arTitle}</h4>
+                                <Table striped bordered hover>
+                                  <thead>
+                                    <tr>
+                                      <th>{this.props.t("Course Name")}</th>
+                                      <th>{this.props.t("Section/Lab")}</th>
+                                      <th>{this.props.t("Time")}</th>
+                                      <th>{this.props.t("Hall")}</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {schedulesForDay.map((item, idx) => (
+                                      <tr
+                                        key={`${day.Id}-${item.lecturePeriodId}-${idx}`}
+                                      >
+                                        <td>{item.arTitle}</td>
+                                        <td>{item.sectionLabId}</td>
+                                        <td>{item.duration}</td>
+                                        <td>{item.hall}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </Table>
+                              </div>
+                            );
+                          })}
+                      </div> */}
+                      <div>
+                        {weekDays
+                          .filter(day => day.active === 1)
+                          .map(day => {
+                            const traineeSchedulesForDay =
+                              traineeSchedules.filter(
+                                s => s.dayTitle.trim() === day.arTitle.trim()
+                              );
+                            if (traineeSchedulesForDay.length === 0)
+                              return null;
+
+                            return (
+                              <div key={day.Id} className="mb-4">
+                                {/* Day header inside a blue rectangle */}
+                                <div
+                                  style={{
+                                    backgroundColor: "#c5ab5a",
+                                    textAlign: "center",
+                                    fontWeight: "bold",
+                                    fontSize: "1.3rem",
+                                    padding: "10px 0",
+                                    borderRadius: "5px",
+                                    // marginBottom: "10px",
+                                  }}
+                                >
+                                  {languageState === "en"
+                                    ? day.enTitle
+                                    : day.arTitle}
+                                </div>
+
+                                {/* Table */}
+                                <Table striped bordered hover>
+                                  <thead>
+                                    <tr>
+                                      <th>
+                                        {languageState === "en"
+                                          ? "Subject"
+                                          : "المادة"}
+                                      </th>
+                                      <th>
+                                        {languageState === "en"
+                                          ? "Time"
+                                          : "الوقت"}
+                                      </th>
+                                      <th>
+                                        {languageState === "en"
+                                          ? "Section/Room"
+                                          : "القسم/القاعة"}
+                                      </th>
+                                      <th>
+                                        {languageState === "en"
+                                          ? "Type"
+                                          : "نوع الحصة"}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {traineeSchedulesForDay.map((item, idx) => (
+                                      <tr
+                                        key={`${day.Id}-${item.lecturePeriodId}-${idx}`}
+                                      >
+                                        <td>
+                                          {languageState === "en"
+                                            ? item.enTitle
+                                            : item.arTitle}
+                                        </td>
+                                        <td>{item.duration}</td>
+                                        <td>{item.sectionLabId}</td>
+                                        <td>{item.type}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </Table>
+                              </div>
+                            );
+                          })}
+                      </div>
+                      {/* <Row className="mt-4">
                         <Col lg="12">
                           <Row>
                             <Col lg="6">
@@ -423,7 +551,7 @@ class LecturesList extends Component {
                             data={lectures}
                           />
                         </Col>
-                      </Row>
+                      </Row> */}
                     </React.Fragment>
                   </CardBody>
                 </Card>
@@ -436,8 +564,10 @@ class LecturesList extends Component {
   }
 }
 
-const mapStateToProps = ({ lectures }) => ({
+const mapStateToProps = ({ lectures, weekDays, registrations }) => ({
   lectures: lectures.lectures,
+  weekDays: weekDays.weekDays,
+  traineeSchedules: registrations.traineeSchedules,
 });
 
 const mapDispatchToProps = dispatch => ({

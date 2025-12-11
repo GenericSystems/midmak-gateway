@@ -145,7 +145,7 @@ import WeekDays from "pages/WeekDays/weekDays";
 import YearsList from "pages/Years/years";
 
 //trainees
-import TraineesList from "../pages/AcadmeyTrainees/trainees";
+import TraineesList from "../pages/AcadmeyTrainees/trainee";
 
 //Nationalities
 import NationalitiesList from "../pages/Nationalities/nationality-list";
@@ -161,6 +161,9 @@ import LecturesList from "../pages/LecturesTable/lectures";
 
 //Decisions
 import DecisionsList from "../pages/Decisions/decisions";
+
+//grades
+import GradesList from "../pages/Grades/grades";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
@@ -279,7 +282,7 @@ const authProtectedRoutes = [
   { path: "/years", component: YearsList },
 
   // trainees
-  { path: "/trainees", component: TraineesList },
+  { path: "/trainee", component: TraineesList },
 
   //nationalities
 
@@ -300,6 +303,10 @@ const authProtectedRoutes = [
   //Decisions
 
   { path: "/decisions", component: DecisionsList },
+
+  //Grades
+
+  { path: "/grades", component: GradesList },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name

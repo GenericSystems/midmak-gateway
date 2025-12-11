@@ -25,14 +25,6 @@ function* fetchExams(selectedpayload) {
 
   try {
     const response = yield call(getExams, get_Exam_req);
-    // response.map(resp => {
-    //   resp["ProfessionalExperiences"] = JSON.parse(
-    //     resp["ProfessionalExperiences"]
-    //   );
-    // });
-    // response.map(resp => {
-    //   resp["RegReqDocTempFinancial"] = JSON.parse(resp["RegReqDocTempFinancial"]);
-    // });
     console.log("experresponse", response);
     yield put(getExamsSuccess(response));
   } catch (error) {

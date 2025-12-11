@@ -435,7 +435,7 @@ class TraineesList extends Component {
 
   toggleTab(tab) {
     if (this.state.activeTab !== tab) {
-      if (tab >= 1 && tab <= 2) {
+      if (tab >= 1 && tab <= 3) {
         var modifiedSteps = [...this.state.passedSteps, tab];
         this.setState({
           activeTab: tab,
@@ -614,6 +614,34 @@ class TraineesList extends Component {
                                                 <h3 className="navItem-header">
                                                   <span className="number">
                                                     2.
+                                                  </span>
+                                                  {this.props.t(
+                                                    "Personal Information"
+                                                  )}
+                                                </h3>
+                                              </NavLink>
+                                            </NavItem>
+                                            <NavItem
+                                              key={3}
+                                              className={`nav-item ${
+                                                this.state.activeTab === 3
+                                                  ? "current"
+                                                  : ""
+                                              }`}
+                                            >
+                                              <NavLink
+                                                className={`nav-link ${
+                                                  this.state.activeTab === 3
+                                                    ? "active"
+                                                    : ""
+                                                }`}
+                                                onClick={() =>
+                                                  this.toggleTab(3)
+                                                }
+                                              >
+                                                <h3 className="navItem-header">
+                                                  <span className="number">
+                                                    3.
                                                   </span>
                                                   {this.props.t("Contact Info")}
                                                 </h3>
@@ -932,272 +960,271 @@ class TraineesList extends Component {
                                                   </CardBody>
                                                 </Card>
                                               </Row>
-
-                                              <Row>
-                                                <Accordion defaultActiveKey="1">
-                                                  <Accordion.Item eventKey="2">
-                                                    <Accordion.Header>
-                                                      {this.props.t(
-                                                        "Personal Informations and Passport"
-                                                      )}
-                                                    </Accordion.Header>
-                                                    <Accordion.Body>
-                                                      <Row>
-                                                        <Col
-                                                          className="bordered"
-                                                          lg="4"
-                                                        >
-                                                          <div className="mb-3">
-                                                            <Label for="idNum">
-                                                              {this.props.t(
-                                                                "National No"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                traineeData.nationalNo
-                                                              }
-                                                            </Label>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Label for="cardNum">
-                                                              {this.props.t(
-                                                                "Identity No"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                traineeData.identityNo
-                                                              }
-                                                            </Label>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Label for="emissionDate">
-                                                              {this.props.t(
-                                                                "Identity Issue Date"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {traineeData?.identityIssueDate &&
-                                                                new Date(
-                                                                  traineeData.identityIssueDate
-                                                                ).toLocaleDateString()}
-                                                            </Label>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Label for="cardCaza">
-                                                              {this.props.t(
-                                                                "Civic Zone"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                traineeData.amanaNum
-                                                              }
-                                                            </Label>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Label for="cardCazaReg">
-                                                              {this.props.t(
-                                                                "Register Zone"
-                                                              )}{" "}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                traineeData.registrationPlace
-                                                              }
-                                                            </Label>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Label for="cardRegNum">
-                                                              {this.props.t(
-                                                                "Register No"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                traineeData.registrationNum
-                                                              }
-                                                            </Label>
-                                                          </div>
-                                                        </Col>
-
-                                                        <Col
-                                                          className="bordered"
-                                                          lg="4"
-                                                        >
-                                                          <div className="mb-3">
-                                                            <Label for="passNum">
-                                                              {this.props.t(
-                                                                "Passport Number"
-                                                              )}{" "}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                traineeData.passNumber
-                                                              }
-                                                            </Label>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Label for="passGrantdate">
-                                                              {this.props.t(
-                                                                "Passport Issue Date"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {traineeData?.passportGrantDate &&
-                                                                new Date(
-                                                                  traineeData.passportGrantDate
-                                                                ).toLocaleDateString()}
-                                                            </Label>
-                                                          </div>
-                                                          <div className="mb-3">
-                                                            <Label for="passExpDate">
-                                                              {this.props.t(
-                                                                "Passport Expiry Date"
-                                                              )}{" "}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {traineeData?.passportExpirationDate &&
-                                                                new Date(
-                                                                  traineeData.passportExpirationDate
-                                                                ).toLocaleDateString()}
-                                                            </Label>
-                                                          </div>
-                                                        </Col>
-                                                      </Row>
-                                                    </Accordion.Body>
-                                                  </Accordion.Item>
-                                                </Accordion>
-                                              </Row>
                                             </TabPane>
+
                                             <TabPane key={2} tabId={2}>
-                                              <Row className="bordered">
-                                                <Row>
-                                                  <Col
-                                                    className="bordered"
-                                                    lg="4"
-                                                  >
-                                                    <div className="mb-3">
-                                                      <Label for="current-address">
-                                                        {this.props.t(
-                                                          "Current Address"
-                                                        )}
-                                                        {""}:
-                                                      </Label>
-                                                      <Label className="left-label">
-                                                        {
-                                                          traineeData.permanentAddress
-                                                        }
-                                                      </Label>
-                                                    </div>
-                                                    <div className="mb-3">
-                                                      <Label for="current-phone">
-                                                        {this.props.t(
-                                                          "Current Phone"
-                                                        )}
-                                                        {""}:
-                                                      </Label>
-                                                      <Label className="left-label">
-                                                        {
-                                                          traineeData.phoneNumber
-                                                        }
-                                                      </Label>
-                                                    </div>
-                                                    <div className="mb-3">
-                                                      <Label for="current-cell">
-                                                        {this.props.t(
-                                                          "Current Mobile"
-                                                        )}
-                                                        {""}:
-                                                      </Label>
-                                                      <Label className="left-label">
-                                                        {
-                                                          traineeData.mobileNumber
-                                                        }
-                                                      </Label>
-                                                    </div>
-                                                  </Col>
-                                                  <Col
-                                                    className="bordered"
-                                                    lg="4"
-                                                  >
-                                                    <div className="mb-3">
-                                                      <Label for="permenant-address">
-                                                        {this.props.t(
-                                                          "Permanent Address"
-                                                        )}
-                                                        {""}:
-                                                      </Label>
-                                                      <Label className="left-label">
-                                                        {
-                                                          traineeData.mobileNumber
-                                                        }
-                                                      </Label>
-                                                    </div>
-                                                    <div className="mb-3">
-                                                      <Label for="permenant-phone">
-                                                        {this.props.t(
-                                                          "Parent Phone"
-                                                        )}
-                                                        {""}:
-                                                      </Label>
-                                                      <Label className="left-label">
-                                                        {
-                                                          traineeData.mobileNumber
-                                                        }
-                                                      </Label>
-                                                    </div>
-                                                    <div className="mb-3">
-                                                      <Label for="permenant-cell">
-                                                        {this.props.t(
-                                                          "Whatsapp Mobile"
-                                                        )}
-                                                        {""}:
-                                                      </Label>
-                                                      <Label className="left-label">
-                                                        {
-                                                          traineeData.WhatsappMobileNum
-                                                        }
-                                                      </Label>
-                                                    </div>
-                                                  </Col>
-                                                </Row>
-                                                <Row>
-                                                  <Col
-                                                    className="bordered"
-                                                    lg="8"
-                                                  >
+                                              <Row>
+                                                <Card id="trainee-card">
+                                                  <CardBody className="cardBody">
                                                     <Row>
-                                                      <Col lg="6">
+                                                      <Col
+                                                        className="bordered"
+                                                        lg="4"
+                                                      >
                                                         <div className="mb-3">
-                                                          <Col>
-                                                            <Label for="email">
-                                                              {this.props.t(
-                                                                "Email"
-                                                              )}
-                                                              {""}:
-                                                            </Label>
-                                                            <Label className="left-label">
-                                                              {
-                                                                traineeData.Email
-                                                              }
-                                                            </Label>
-                                                          </Col>
+                                                          <Label for="idNum">
+                                                            {this.props.t(
+                                                              "National No"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.nationalNo
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="cardNum">
+                                                            {this.props.t(
+                                                              "Identity No"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.identityNo
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="emissionDate">
+                                                            {this.props.t(
+                                                              "Identity Issue Date"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {traineeData?.identityIssueDate &&
+                                                              new Date(
+                                                                traineeData.identityIssueDate
+                                                              ).toLocaleDateString()}
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="cardCaza">
+                                                            {this.props.t(
+                                                              "Civic Zone"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.amanaNum
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="cardCazaReg">
+                                                            {this.props.t(
+                                                              "Register Zone"
+                                                            )}{" "}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.registrationPlace
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="cardRegNum">
+                                                            {this.props.t(
+                                                              "Register No"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.registrationNum
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                      </Col>
+
+                                                      <Col
+                                                        className="bordered"
+                                                        lg="4"
+                                                      >
+                                                        <div className="mb-3">
+                                                          <Label for="passNum">
+                                                            {this.props.t(
+                                                              "Passport Number"
+                                                            )}{" "}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.passNumber
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="passGrantdate">
+                                                            {this.props.t(
+                                                              "Passport Issue Date"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {traineeData?.passportGrantDate &&
+                                                              new Date(
+                                                                traineeData.passportGrantDate
+                                                              ).toLocaleDateString()}
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="passExpDate">
+                                                            {this.props.t(
+                                                              "Passport Expiry Date"
+                                                            )}{" "}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {traineeData?.passportExpirationDate &&
+                                                              new Date(
+                                                                traineeData.passportExpirationDate
+                                                              ).toLocaleDateString()}
+                                                          </Label>
                                                         </div>
                                                       </Col>
                                                     </Row>
-                                                  </Col>
-                                                </Row>
+                                                  </CardBody>
+                                                </Card>
+                                              </Row>
+                                            </TabPane>
+                                            <TabPane key={3} tabId={3}>
+                                              <Row>
+                                                <Card id="trainee-card">
+                                                  <CardBody className="cardBody">
+                                                    <Row>
+                                                      <Col
+                                                        className="bordered"
+                                                        lg="4"
+                                                      >
+                                                        <div className="mb-3">
+                                                          <Label for="current-address">
+                                                            {this.props.t(
+                                                              "Current Address"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.permanentAddress
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="current-phone">
+                                                            {this.props.t(
+                                                              "Current Phone"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.phoneNumber
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="current-cell">
+                                                            {this.props.t(
+                                                              "Current Mobile"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.mobileNumber
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                      </Col>
+                                                      <Col
+                                                        className="bordered"
+                                                        lg="4"
+                                                      >
+                                                        <div className="mb-3">
+                                                          <Label for="permenant-address">
+                                                            {this.props.t(
+                                                              "Permanent Address"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.mobileNumber
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="permenant-phone">
+                                                            {this.props.t(
+                                                              "Parent Phone"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.mobileNumber
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                          <Label for="permenant-cell">
+                                                            {this.props.t(
+                                                              "Whatsapp Mobile"
+                                                            )}
+                                                            {""}:
+                                                          </Label>
+                                                          <Label className="left-label">
+                                                            {
+                                                              traineeData.WhatsappMobileNum
+                                                            }
+                                                          </Label>
+                                                        </div>
+                                                      </Col>
+                                                    </Row>
+                                                    <Row>
+                                                      <Col
+                                                        className="bordered"
+                                                        lg="8"
+                                                      >
+                                                        <Row>
+                                                          <Col lg="6">
+                                                            <div className="mb-3">
+                                                              <Col>
+                                                                <Label for="email">
+                                                                  {this.props.t(
+                                                                    "Email"
+                                                                  )}
+                                                                  {""}:
+                                                                </Label>
+                                                                <Label className="left-label">
+                                                                  {
+                                                                    traineeData.Email
+                                                                  }
+                                                                </Label>
+                                                              </Col>
+                                                            </div>
+                                                          </Col>
+                                                        </Row>
+                                                      </Col>
+                                                    </Row>
+                                                  </CardBody>
+                                                </Card>
                                               </Row>
                                             </TabPane>
                                           </TabContent>
@@ -1224,7 +1251,7 @@ class TraineesList extends Component {
                                             </li>
                                             <li
                                               className={
-                                                this.state.activeTab === 5
+                                                this.state.activeTab === 3
                                                   ? "next disabled"
                                                   : "next"
                                               }
