@@ -165,6 +165,9 @@ import DecisionsList from "../pages/Decisions/decisions";
 //grades
 import GradesList from "../pages/Grades/grades";
 
+//traineeRequests
+import TraineeRequestsList from "../pages/TraineeRequests/traineeRequests";
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: Dashboard },
   { path: "/dashboard-saas", component: DashboardSaas },
@@ -307,6 +310,10 @@ const authProtectedRoutes = [
   //Grades
 
   { path: "/grades", component: GradesList },
+
+  //TraineeRequests
+
+  { path: "/traineeRequests", component: TraineeRequestsList },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name

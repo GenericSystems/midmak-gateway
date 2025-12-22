@@ -707,21 +707,20 @@ export const updateStudentManagement = data =>
 export const deleteStudentManagement = data =>
   post(url.DELETE_STUDENTMANAGEMENT, data);
 
-// get studentsRequests
-export const getStudentsRequests = data =>
-  post(url.GET_STUDENTS_REQUESTS, data);
+// get TraineesRequests
+export const getTraineeRequests = data => post(url.GET_TRAINEE_REQUESTS, data);
 
-// add studentsRequests
-export const addNewStudentRequest = data =>
-  post(url.ADD_NEW_STUDENT_REQUEST, data);
+// add TraineesRequests
+export const addNewTraineeRequest = data =>
+  post(url.ADD_NEW_TRAINEE_REQUEST, data);
 
-//update studentsRequests
-export const updateStudentRequest = data =>
-  post(url.UPDATE_STUDENT_REQUEST, data);
+//update TraineesRequests
+export const updateTraineeRequest = data =>
+  post(url.UPDATE_TRAINEE_REQUEST, data);
 
-//delete studentsRequests
-export const deleteStudentRequest = data =>
-  post(url.DELETE_STUDENT_REQUEST, data);
+//delete TraineesRequests
+export const deleteTraineeRequest = data =>
+  post(url.DELETE_TRAINEE_REQUEST, data);
 
 // get lastReqNum
 export const getLastReqNum = data => post(url.GET_LAST_REQUEST_NUM, data);

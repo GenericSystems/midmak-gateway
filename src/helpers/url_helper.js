@@ -318,11 +318,12 @@ export const ADD_NEW_STUDENTMANAGEMENT = "/add/studentManagements";
 export const UPDATE_STUDENTMANAGEMENT = "/update/studentManagements";
 export const DELETE_STUDENTMANAGEMENT = "/delete/studentManagements";
 
-//STUDENTS_REQUESTS
-export const GET_STUDENTS_REQUESTS = "/studentsRequests";
-export const ADD_NEW_STUDENT_REQUEST = "/add/studentsRequests";
-export const UPDATE_STUDENT_REQUEST = "/update/studentsRequests";
-export const DELETE_STUDENT_REQUEST = "/delete/studentsRequests";
+//TRAINEES_REQUESTS
+export const GET_TRAINEE_REQUESTS = "/traineeRequests";
+export const ADD_NEW_TRAINEE_REQUEST = "/add/traineeRequests";
+export const UPDATE_TRAINEE_REQUEST = "/update/traineeRequests";
+export const DELETE_TRAINEE_REQUEST = "/delete/traineeRequests";
+
 export const GET_LAST_REQUEST_NUM = "/studentsRequests";
 export const GET_REQUEST_DETAILS = "/studentsRequests";
 

@@ -77,3 +77,6 @@ export * from "./decisions/actions";
 
 //grades
 export * from "./grades/actions";
+
+//traineeRequests
+export * from "./traineeRequests/actions";

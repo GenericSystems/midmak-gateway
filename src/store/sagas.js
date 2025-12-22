@@ -26,6 +26,7 @@ import examsSaga from "./exams/saga";
 import lecturesSaga from "./lectures/saga";
 import decisionsSaga from "./decisions/saga";
 import GradesSaga from "./grades/saga";
+import TraineeRequestSaga from "./traineeRequests/saga";
 export default function* rootSaga() {
   yield all([
     //public
@@ -53,5 +54,6 @@ export default function* rootSaga() {
     fork(lecturesSaga),
     fork(decisionsSaga),
     fork(GradesSaga),
+    fork(TraineeRequestSaga),
   ]);
 }

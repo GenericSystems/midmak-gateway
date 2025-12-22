@@ -69,6 +69,9 @@ import decisions from "./decisions/reducer";
 //grades
 import grades from "./grades/reducer";
 
+//trainee requests
+import traineesRequests from "./traineeRequests/reducer";
+
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -96,6 +99,7 @@ const rootReducer = combineReducers({
   lectures,
   decisions,
   grades,
+  traineesRequests,
 });
 
 export default rootReducer;
