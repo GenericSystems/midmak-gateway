@@ -343,6 +343,66 @@ class LecturesList extends Component {
 
     const traineeData = lectures && lectures.length > 0 ? lectures[0] : {};
 
+    const formattedSchedules = (
+      traineeSchedules.filter(item => item.active === 1) || []
+    ).reduce((acc, ts) => {
+      const labs = Array.isArray(ts.labs) ? ts.labs : [];
+      labs.forEach(lab => {
+        const labDetails = Array.isArray(lab.LabDetails) ? lab.LabDetails : [];
+        labDetails.forEach(ld => {
+          const sectionType = "ف";
+          const exists = acc.some(
+            item =>
+              item.arTitle === ts.CourseName &&
+              item.duration === ld.periodTime &&
+              item.sectionType === sectionType &&
+              item.type === ts.LType &&
+              item.dayId === ld.dayId
+          );
+          if (!exists) {
+            acc.push({
+              arTitle: ts.CourseName,
+              enTitle: ts.CourseName,
+              dayId: ld.dayId,
+              duration: ld.periodTime,
+              sectionType: sectionType,
+              type: ts.LType,
+            });
+          }
+        });
+      });
+
+      const sections = Array.isArray(ts.sections) ? ts.sections : [];
+      sections.forEach(section => {
+        const sectionDetails = Array.isArray(section.SectionDetails)
+          ? section.SectionDetails
+          : [];
+        sectionDetails.forEach(sd => {
+          const sectionType = "ش";
+          const exists = acc.some(
+            item =>
+              item.arTitle === ts.CourseName &&
+              item.duration === sd.periodTime &&
+              item.sectionType === sectionType &&
+              item.type === ts.LType &&
+              item.dayId === sd.dayId
+          );
+          if (!exists) {
+            acc.push({
+              arTitle: ts.CourseName,
+              enTitle: ts.CourseName,
+              dayId: sd.dayId,
+              duration: sd.periodTime,
+              sectionType: sectionType,
+              type: ts.LType,
+            });
+          }
+        });
+      });
+
+      return acc;
+    }, []);
+
     const { SearchBar } = Search;
 
     const alertMessage =
@@ -457,15 +517,14 @@ class LecturesList extends Component {
                           .filter(day => day.active === 1)
                           .map(day => {
                             const traineeSchedulesForDay =
-                              traineeSchedules.filter(
-                                s => s.dayTitle.trim() === day.arTitle.trim()
+                              formattedSchedules.filter(
+                                s => s.dayId === day.Id
                               );
                             if (traineeSchedulesForDay.length === 0)
                               return null;
 
                             return (
                               <div key={day.Id} className="mb-4">
-                                {/* Day header inside a blue rectangle */}
                                 <div
                                   style={{
                                     backgroundColor: "#c5ab5a",
@@ -474,7 +533,6 @@ class LecturesList extends Component {
                                     fontSize: "1.3rem",
                                     padding: "10px 0",
                                     borderRadius: "5px",
-                                    // marginBottom: "10px",
                                   }}
                                 >
                                   {languageState === "en"
@@ -482,7 +540,6 @@ class LecturesList extends Component {
                                     : day.arTitle}
                                 </div>
 
-                                {/* Table */}
                                 <Table striped bordered hover>
                                   <thead>
                                     <tr>
@@ -499,7 +556,7 @@ class LecturesList extends Component {
                                       <th>
                                         {languageState === "en"
                                           ? "Section/Room"
-                                          : "القسم/القاعة"}
+                                          : "الشعبة/الفئة"}
                                       </th>
                                       <th>
                                         {languageState === "en"
@@ -510,16 +567,21 @@ class LecturesList extends Component {
                                   </thead>
                                   <tbody>
                                     {traineeSchedulesForDay.map((item, idx) => (
-                                      <tr
-                                        key={`${day.Id}-${item.lecturePeriodId}-${idx}`}
-                                      >
+                                      <tr key={idx}>
                                         <td>
                                           {languageState === "en"
                                             ? item.enTitle
                                             : item.arTitle}
                                         </td>
-                                        <td>{item.duration}</td>
-                                        <td>{item.sectionLabId}</td>
+                                        <td>
+                                          {item.duration
+                                            ? item.duration.replace(
+                                                /.*\(\s*|\s*\)/g,
+                                                ""
+                                              )
+                                            : ""}
+                                        </td>
+                                        <td>{item.sectionType}</td>
                                         <td>{item.type}</td>
                                       </tr>
                                     ))}

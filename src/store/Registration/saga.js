@@ -326,11 +326,28 @@ function* fetchNonActiveCurr(obj) {
   };
   try {
     const response = yield call(getNonActiveCurrs, get_availablecourse_req);
-    response.map(resp => {
-      resp["sections"] = JSON.parse(resp["sections"]);
-    });
-    response.map(resp => {
-      resp["labs"] = JSON.parse(resp["labs"]);
+    response.forEach(resp => {
+      if (resp["sections"]) {
+        try {
+          resp["sections"] = JSON.parse(resp["sections"]);
+        } catch (e) {
+          resp["sections"] = [];
+          console.warn("Error parsing sections:", e);
+        }
+      } else {
+        resp["sections"] = [];
+      }
+
+      if (resp["labs"]) {
+        try {
+          resp["labs"] = JSON.parse(resp["labs"]);
+        } catch (e) {
+          resp["labs"] = [];
+          console.warn("Error parsing labs:", e);
+        }
+      } else {
+        resp["labs"] = [];
+      }
     });
     console.log("rreeeeeeennnnon", response);
     yield put(getNonActiveCurrSuccess(response));

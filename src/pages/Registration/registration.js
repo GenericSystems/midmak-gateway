@@ -619,7 +619,7 @@ class RegistrationList extends Component {
     }
   };
   resetNonActiveCurrs = row => {
-    const { traineeEdit, timings } = this.state;
+    const { traineeId, timings } = this.state;
     const { onUpdateNonActiveCurr, onGetNonActiveCurr } = this.props;
 
     const newTimings = timings.filter(timing => timing.rowId !== row.Id);
@@ -1009,20 +1009,13 @@ class RegistrationList extends Component {
       //         (nonActiveCurrs.find(item => item.Id === row.Id) || {})
       //           .sections || []
       //       }
-      //       onChange={newValue => {
-      //         this.handleActiveSelectChange(
-      //           row.Id,
-      //           "section",
-      //           newValue,
-      //           row.SectionId
-      //         );
-      //       }}
       //       value={
       //         (
       //           (nonActiveCurrs.find(item => item.Id === row.Id) || {})
       //             .sections || []
       //         ).find(section => section.value === row.SectionId) || null
       //       }
+      //       isDisabled
       //     />
       //   ),
       // },
@@ -1031,31 +1024,20 @@ class RegistrationList extends Component {
       //   text: this.props.t("Lab"),
       //   sort: true,
       //   formatter: (cell, row) => {
-      //     if (row.hasLab === 0) {
-      //       return null;
-      //     }
+      //     if (row.hasLab === 0) return null;
 
       //     const rowLabs =
       //       (nonActiveCurrs.find(item => item.Id === row.Id) || {}).labs || [];
 
-      //     if (rowLabs.length === 0) {
-      //       return null;
-      //     }
+      //     if (rowLabs.length === 0) return null;
 
       //     return (
       //       <Select
       //         name="secLabId"
       //         key={`secLab_select`}
       //         options={rowLabs}
-      //         onChange={newValue => {
-      //           this.handleActiveSelectChange(
-      //             row.Id,
-      //             "lab",
-      //             newValue,
-      //             row.LabId
-      //           );
-      //         }}
       //         value={rowLabs.find(lab => lab.value === row.LabId) || null}
+      //         isDisabled
       //       />
       //     );
       //   },
@@ -1073,55 +1055,23 @@ class RegistrationList extends Component {
         dataField: "sections",
         text: this.props.t("Section"),
         sort: true,
-        formatter: (cell, row) => (
-          <Select
-            name="secLabId"
-            key={`secLab_select`}
-            options={
-              (nonActiveCurrs.find(item => item.Id === row.Id) || {})
-                .sections || []
-            }
-            value={
-              (
-                (nonActiveCurrs.find(item => item.Id === row.Id) || {})
-                  .sections || []
-              ).find(section => section.value === row.SectionId) || null
-            }
-            isDisabled
-          />
-        ),
+        formatter: (cell, row) => <span>{row.SectionNumber || "-"}</span>,
       },
       {
         dataField: "labs",
         text: this.props.t("Lab"),
         sort: true,
         formatter: (cell, row) => {
-          if (row.hasLab === 0) return null;
-
-          const rowLabs =
-            (nonActiveCurrs.find(item => item.Id === row.Id) || {}).labs || [];
-
-          if (rowLabs.length === 0) return null;
-
-          return (
-            <Select
-              name="secLabId"
-              key={`secLab_select`}
-              options={rowLabs}
-              value={rowLabs.find(lab => lab.value === row.LabId) || null}
-              isDisabled
-            />
-          );
+          if (row.hasLab === 0) return "-";
+          return <span>{row.LabNumber || "-"}</span>;
         },
-        style: (cell, row) => {
-          return {
-            backgroundImage:
-              row.hasLab === 0
-                ? "linear-gradient(45deg, #FFFFFF 25%, #DFDFDF 25%, #A1A1A1 50%, #FFFFFF 50%, #FFFFFF 75%, #CFCFCF 75%)"
-                : "none",
-            backgroundSize: "8px 8px",
-          };
-        },
+        style: (cell, row) => ({
+          backgroundImage:
+            row.hasLab === 0
+              ? "linear-gradient(45deg, #FFFFFF 25%, #DFDFDF 25%, #A1A1A1 50%, #FFFFFF 50%, #FFFFFF 75%, #CFCFCF 75%)"
+              : "none",
+          backgroundSize: "8px 8px",
+        }),
       },
       {
         dataField: "delete",
